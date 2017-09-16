@@ -15,8 +15,8 @@ Suggests: car, lattice, mediation, multcompView, ordinal, pbkrtest (>= 0.4-1),
           MASS, MCMCglmm, nnet, pscl, rsm, rstan, rstanarm
 Enhances: MCMCpack, CARBayes, coxme, gee, geepack, glmmADMB, lme4.0, survival         
 Additional_repositories: http://glmmadmb.r-forge.r-project.org/repos, http://lme4.0.r-forge.r-project.org/repos
-URL: https://github.com/rvlenth/lsmeans
-BugReports: https://github.com/rvlenth/lsmeans/issues
+URL: https://github.com/rvlenth/emmeans
+BugReports: https://github.com/rvlenth/emmeans/issues
 LazyData: yes
 ByteCompile: yes
 Description: Obtain least-squares means for many linear, generalized linear, 

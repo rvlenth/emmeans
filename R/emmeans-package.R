@@ -116,6 +116,6 @@
 #' @importFrom graphics pairs plot
 #' @importFrom methods as is new slot<- slotNames
 #' @importFrom nlme fixef
-#' @importFrom utils installed.packages methods str
+#' @importFrom utils installed.packages hasName methods str
 #' @name emmeans-package
 NULL
