@@ -1,0 +1,32 @@
+Changelog for 'emmeans' package
+
+0.99.9xxx
+    Major overhaul of lsmeans* package with emphasis on "estimated marginal means" 
+        rather than "least-squares means"
+    The flagship functions are now emmeans(), emtrends(), emmip(), etc.
+        But lsmeans(), lstrends(), etc. as well as pmmeans() etc. are
+        mapped to their corresponding emxxxx() function.
+    In addition, we are trying to avoid names that could get confused as
+        S3 methods. So, ref.grid -> ref_grid, lsm.options -> emm_options, etc.
+    Classes "ref.grid" and "lsmobj" are gone (but backward-supported).
+        Both are replaced by class "emm". Existing ref.grid and lsmobj objects
+        inherit from emm so will still be usable.
+    I decided to revert back to "kenward-roger" as the default degrees-of-freedom
+        method for lmerMod models.
+    Documentation and NAMESPACE are now "ROxygenated"
+    Additional 'pigs' dataset
+    Dispatching of emmmeans methods is now top-down rather than convoluted
+        intermingling of S3 methods
+    Improved user options for contrasts when log or logit transformation
+        applies. New "log.contrast" option allows user to choose between
+        showing ratios or differences when type = "response". Also, when
+        showing ratios, we change any ' - 's in labels to ' / 's.
+    Greatly overhauled help page for models, with a quick reference and
+        organization by similarilties instead of packages.
+    Moved Suggests pkgs not needed for building/testing to Enhances
+
+
+Past history
+    'emmeans' is a continuation of the 'lsmeans' package. New developments
+        will take place in 'emmeans', and 'lsmeans' will remain static
+        and will be retired.

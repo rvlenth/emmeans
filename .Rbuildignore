@@ -1,0 +1,25 @@
+^\.Rproj\.user$
+^.*\.Rproj$
+^\.svn$
+^\.gitignore$
+^\.travis\.yml$
+
+# Not yet ready for prime time
+tests/tests1.R
+tests/tests1.Rout.save
+tests/tests2.R
+tests/tests2.Rout.save
+
+
+# Vignette intermediate files (also in svn ignore list)
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.aux
+vignettes/*.log
+vignettes/*.gz
+vignettes/*.idx
+vignettes/*.blg
+vignettes/*.ilg
+vignettes/*.ind
+
+
