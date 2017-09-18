@@ -126,10 +126,14 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
 }
 
 # Workhorse for plot.summary_emm
-.plot.srg = function(x, y, horizontal = TRUE, xlab, ylab, layout, intervals = TRUE, extra = NULL, ...) {
-        
-    if (!requireNamespace("lattice"))
-        stop("This function requires the 'lattice' package be installed.")
+.plot.srg = function(x, y, 
+        horizontal = TRUE, xlab, ylab, layout, engine = c("ggplot", "lattice"), intervals = TRUE, extra = NULL, ...) {
+
+    engine = match.arg(engine)
+    if ((engine == "ggplot") && !requireNamespace("ggplot2"))
+        stop("The 'ggplot' engine requires the 'ggplot2' package be installed.")
+    if ((engine == "lattice") && !requireNamespace("lattice"))
+        stop("The 'lattice' engine requires the 'lattice' package be installed.")
     
     summ = x # so I don't get confused
     estName = "the.emmean"
@@ -144,59 +148,63 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         ucl = summ[[clNames[2]]]
     }
     
-    # Panel functions...
-    prepanel.ci = function(x, y, horizontal=TRUE, intervals=TRUE,
-                           lcl, ucl, subscripts, ...) {
-        x = as.numeric(x)
-        lcl = as.numeric(lcl[subscripts])
-        ucl = as.numeric(ucl[subscripts])
-        if (!intervals) # no special scaling needed
-            list()
-        else if (horizontal)
-            list(xlim = range(x, ucl, lcl, finite = TRUE)) 
-        else
-            list(ylim = range(y, ucl, lcl, finite = TRUE)) 
-    }
-    panel.ci <- function(x, y, horizontal=TRUE, intervals=TRUE,
-                         lcl, ucl, lcmpl, rcmpl,                          subscripts, pch = 16, 
-                         lty = dot.line$lty, lwd = dot.line$lwd, 
-                         col = dot.symbol$col, col.line = dot.line$col, ...) {
-        dot.line <- lattice::trellis.par.get("dot.line")
-        dot.symbol <- lattice::trellis.par.get("dot.symbol")
-        x = as.numeric(x)
-        y = as.numeric(y)
-        lcl = as.numeric(lcl[subscripts])
-        ucl = as.numeric(ucl[subscripts])
-        compare = !is.null(lcmpl)
-        if(compare) {
-            lcmpl = as.numeric(lcmpl[subscripts])
-            rcmpl = as.numeric(rcmpl[subscripts])
+    if (engine == "lattice") { # ---------- lattice-specific stuff ----------
+        
+        # Panel functions...
+        prepanel.ci = function(x, y, horizontal=TRUE, intervals=TRUE,
+                               lcl, ucl, subscripts, ...) {
+            x = as.numeric(x)
+            lcl = as.numeric(lcl[subscripts])
+            ucl = as.numeric(ucl[subscripts])
+            if (!intervals) # no special scaling needed
+                list()
+            else if (horizontal)
+                list(xlim = range(x, ucl, lcl, finite = TRUE)) 
+            else
+                list(ylim = range(y, ucl, lcl, finite = TRUE)) 
         }
-        if(horizontal) {
-            lattice::panel.abline(h = unique(y), col = col.line, lty = lty, lwd = lwd)
-            if(intervals) 
-                lattice::panel.arrows(lcl, y, ucl, y, col = col, length = .6, unit = "char", angle = 90, code = 3)
+        panel.ci <- function(x, y, horizontal=TRUE, intervals=TRUE,
+                             lcl, ucl, lcmpl, rcmpl,                          subscripts, pch = 16, 
+                             lty = dot.line$lty, lwd = dot.line$lwd, 
+                             col = dot.symbol$col, col.line = dot.line$col, ...) {
+            dot.line <- lattice::trellis.par.get("dot.line")
+            dot.symbol <- lattice::trellis.par.get("dot.symbol")
+            x = as.numeric(x)
+            y = as.numeric(y)
+            lcl = as.numeric(lcl[subscripts])
+            ucl = as.numeric(ucl[subscripts])
+            compare = !is.null(lcmpl)
             if(compare) {
-                s = (x > min(x))
-                lattice::panel.arrows(lcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
-                s = (x < max(x))
-                lattice::panel.arrows(rcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
+                lcmpl = as.numeric(lcmpl[subscripts])
+                rcmpl = as.numeric(rcmpl[subscripts])
             }
-        }
-        else {
-            lattice::panel.abline(v = unique(x), col = col.line, lty = lty, lwd = lwd)
-            if(intervals)
-                lattice::panel.arrows(x, lcl, x, ucl, col=col, length = .6, unit = "char", angle = 90, code = 3)
-            if(compare) {
-                s = (y > min(y))
-                lattice::panel.arrows(x[s], lcmpl[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
-                s = (y < max(y))
-                lattice::panel.arrows(x[s], rcmpl[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
+            if(horizontal) {
+                lattice::panel.abline(h = unique(y), col = col.line, lty = lty, lwd = lwd)
+                if(intervals) 
+                    lattice::panel.arrows(lcl, y, ucl, y, col = col, length = .6, unit = "char", angle = 90, code = 3)
+                if(compare) {
+                    s = (x > min(x))
+                    lattice::panel.arrows(lcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
+                    s = (x < max(x))
+                    lattice::panel.arrows(rcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
+                }
             }
+            else {
+                lattice::panel.abline(v = unique(x), col = col.line, lty = lty, lwd = lwd)
+                if(intervals)
+                    lattice::panel.arrows(x, lcl, x, ucl, col=col, length = .6, unit = "char", angle = 90, code = 3)
+                if(compare) {
+                    s = (y > min(y))
+                    lattice::panel.arrows(x[s], lcmpl[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
+                    s = (y < max(y))
+                    lattice::panel.arrows(x[s], rcmpl[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
+                }
+            }
+            lattice::panel.xyplot(x, y, pch=16, ...)
         }
-        lattice::panel.xyplot(x, y, pch=16, ...)
-    }
-    my.strip = lattice::strip.custom(strip.names = c(TRUE,TRUE), strip.levels = c(TRUE,TRUE), sep = " = ")
+        my.strip = lattice::strip.custom(strip.names = c(TRUE,TRUE), strip.levels = c(TRUE,TRUE), sep = " = ")
+        
+    } # ---------- end lattice-specific -----------
     
     priv = attr(summ, "pri.vars")
     pf = do.call(paste, summ[priv])
@@ -298,9 +306,9 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         # shorten arrows that go past the data range
         rng = range(est)
         ii = which(est - llen < rng[1])
-        llen[ii] = est[ii] - rng[1]
+        llen[ii] = est[ii] - rng[1] + .05 * diff(rng)
         ii = which(est + rlen > rng[2])
-        rlen[ii] = rng[2] - est[ii]
+        rlen[ii] = rng[2] - est[ii] + .05 * diff(rng)
         
         invtran = I
         if (typeid == 1) {
@@ -314,36 +322,76 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
                 invtran = tran$linkinv
         }
         
-        lcmpl = invtran(est - llen)
-        rcmpl = invtran(est + rlen)
+        lcmpl = summ$lcmpl = invtran(est - llen)
+        rcmpl = summ$rcmpl = invtran(est + rlen)
     }
     else lcmpl = rcmpl = NULL
     
     
-    if (missing(layout)) {
-        layout = c(1, length(ubv))
-        if(!horizontal) 
-            layout = rev(layout)
-    }
-    
     facName = paste(priv, collapse=":")
-    form = as.formula(chform)
-    if (horizontal) {
-        if (missing(xlab)) xlab = attr(summ, "estName")
-        if (missing(ylab)) ylab = facName
-        lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
-                strip = my.strip, horizontal = TRUE,
-                ylab = ylab, xlab = xlab,
-                data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
-                lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
-    }
-    else {
-        if (missing(xlab)) xlab = facName
-        if (missing(ylab)) ylab = attr(summ, "estName")
-        lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
-                strip = my.strip, horizontal = FALSE,
-                xlab = xlab, ylab = ylab,
-                data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
-                lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
+    
+    if (engine == "lattice") {
+        if (missing(layout)) {
+            layout = c(1, length(ubv))
+            if(!horizontal) 
+                layout = rev(layout)
+        }
+        
+        form = as.formula(chform)
+        if (horizontal) {
+            if (missing(xlab)) xlab = attr(summ, "estName")
+            if (missing(ylab)) ylab = facName
+            lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
+                             strip = my.strip, horizontal = TRUE,
+                             ylab = ylab, xlab = xlab,
+                             data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
+                             lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
+        }
+        else {
+            if (missing(xlab)) xlab = facName
+            if (missing(ylab)) ylab = attr(summ, "estName")
+            lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
+                             strip = my.strip, horizontal = FALSE,
+                             xlab = xlab, ylab = ylab,
+                             data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
+                             lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
+        }
+    } # --- lattice plot
+    else {  ## ggplot method
+        if (horizontal) {
+            grobj = ggplot2::ggplot(summ, aes(x = the.emmean, y = pri.fac)) + 
+                ggplot2::geom_point(size = 2)
+            if (intervals) 
+                grobj = grobj + ggplot2::geom_segment(aes(x = lcl, xend = ucl, 
+                    y = pri.fac, yend = pri.fac), color = "blue", lwd = 4, alpha = .25)
+            if (!is.null(extra))
+                grobj = grobj + ggplot2::geom_segment(aes(x = lcmpl, xend = rcmpl, 
+                    y = pri.fac, yend = pri.fac), 
+                    arrow = arrow(length = unit(.07, "inches"), ends = "both", type = "closed"),
+                    color = "red")
+            if (length(byv) > 0)
+                grobj = grobj + ggplot2::facet_grid(paste(paste(byv, collapse = "+"), " ~ ."), 
+                                           labeller = "label_both")
+            if (missing(xlab)) xlab = attr(summ, "estName")
+            if (missing(ylab)) ylab = facName
+        }
+        else {
+            grobj = ggplot2::ggplot(summ, aes(y = the.emmean, x = pri.fac)) + 
+                ggplot2::geom_point(size = 2)
+            if (intervals) 
+                grobj = grobj + ggplot2::geom_segment(aes(y = lcl, yend = ucl, 
+                    x = pri.fac, xend = pri.fac), color = "blue", lwd = 4, alpha = .25)
+            if (!is.null(extra))
+                grobj = grobj + ggplot2::geom_segment(aes(y = lcmpl, yend = rcmpl, 
+                    x = pri.fac, xend = pri.fac), 
+                    arrow = arrow(length = unit(.07, "inches"), ends = "both", type = "closed"),
+                    color = "red")
+            if (length(byv) > 0)
+                grobj = grobj + ggplot2::facet_grid(paste(". ~ ", paste(byv, collapse = "+")), 
+                                           labeller = "label_both")
+            if (missing(ylab)) ylab = attr(summ, "estName")
+            if (missing(xlab)) xlab = facName
+        }
+        grobj + ggplot2::labs(x = xlab, y = ylab)
     }
 }

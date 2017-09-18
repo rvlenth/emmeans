@@ -31,9 +31,10 @@
 #     }
 # }
 
-# Just define the function for now. Maybe in a year we require R >= 3.4
-#   (we now require that)
-## hasName = function(x, name)
-##    match(name, names(x), nomatch = 0L) > 0L
+# Just define the function for now. When we get to R version 3.6 or so
+# maybe we can we require R >= 3.4 (first that has hasName())
+
+hasName = function(x, name)
+   match(name, names(x), nomatch = 0L) > 0L
 
 

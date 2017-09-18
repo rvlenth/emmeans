@@ -85,7 +85,6 @@ recover_data = function(object, ...) {
 # Later addition: na.action arg req'd - vector of row indexes removed due to NAs
 #    na.action is ignored when data is non-NULL
 
-#' 
 #' @rdname extending-emmeans
 #' @param trms The \code{\link{terms}} component of \code{object} (typically with
 #'   the response deleted, e.g. via \code{\link{delete.response}})
