@@ -1,6 +1,9 @@
 R package **emmeans**: Estimated marginal means (least-squares means)
 ====
 
+#### Note
+**emmeans** is a continuation of the package **lsmeans**. The latter will eventually be retired.
+
 ## Features
 Estimated marginal means (EMMs, previously known as least-squares means in the context of traditional regression models) are derived by using a model to make predictions over a regular grid of pridictor combinations (called a *reference grid*). These predictions may possibly be averaged (typically with equal weights) over one or more of the predictors. Such marginally-averaged predictions are useful for describing the results of fitting a model, particularly in presenting the effects of factors. The **emmeans** package can easily produce these results, as well as various graphs of them (interaction-style plots and side-by-side intervals).
 * Estimation and testing of pairwise comparisons of EMMs, and several other types of contrasts, are provided. There is also a `cld` method for display of grouping symbols.
