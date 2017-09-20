@@ -20,13 +20,12 @@ Changelog for 'emmeans' package
     Additional 'pigs' dataset
     Dispatching of emmmeans methods is now top-down rather than convoluted
         intermingling of S3 methods
-    Improved user options for contrasts when log or logit transformation
-        applies. New "log.contrast" option allows user to choose between
-        showing ratios or differences when type = "response". Also, when
-        showing ratios, we change any ' - 's in labels to ' / 's.
+    Improved display of back-transformed contrasts when log or logit 
+        transformation was used: We change any ' - 's in labels to ' / 's
+        to emphasize that thnese results are ratios.
     Greatly overhauled help page for models, with a quick reference and
         organization by similarilties instead of packages.
     Graphics methods 'plot' and 'emmip' are now **ggplot2**-based.
-    Moved Suggests pkgs not needed for building/testing to Enhances
+    Moved 'Suggests' pkgs to 'Enhances' when not needed for building/testing
 
 

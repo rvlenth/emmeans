@@ -109,9 +109,9 @@ emmip.default = function(object, formula, type, CIs = FALSE,
         engine = c("ggplot", "lattice"),
         pch = c(1,2,6,7,9,10,15:20), lty = 1, col = NULL, plotit = TRUE, ...) {
     engine = match.arg(engine)
-    if ((engine == "ggplot") && !requireNamespace("ggplot2"))
+    if ((engine == "ggplot") && !requireNamespace("ggplot2", quietly = TRUE))
         stop("The 'ggplot' engine requires the 'lattice' package be installed.")
-    if ((engine == "lattice") && !requireNamespace("lattice"))
+    if ((engine == "lattice") && !requireNamespace("lattice", quietly = TRUE))
         stop("The 'lattice' engine requires the 'lattice' package be installed.")
     
     # If no lhs, we create one named ".single."
@@ -217,20 +217,20 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     else {  # engine = "ggplot"
         pos = ggplot2::position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
         if (!one.trace) {
-            grobj = ggplot2::ggplot(emms, aes(x = xvar, y = yvar, color = tvar)) +
+            grobj = ggplot2::ggplot(emms, ggplot2::aes(x = xvar, y = yvar, color = tvar)) +
                 ggplot2::geom_point(position = pos) +
-                ggplot2::geom_line(aes(group = tvar), position = pos) +
+                ggplot2::geom_line(ggplot2::aes(group = tvar), position = pos) +
                 ggplot2::labs(x = xlab, y = ylab, color = tlab)
         }
         else { # just one trace per plot
-            grobj = ggplot2::ggplot(emms, aes(x = xvar, y = yvar)) +
+            grobj = ggplot2::ggplot(emms, ggplot2::aes(x = xvar, y = yvar)) +
                 ggplot2::geom_point() +
-                ggplot2::geom_line(aes(group = tvar)) +
+                ggplot2::geom_line(ggplot2::aes(group = tvar)) +
                 ggplot2::labs(x = xlab, y = ylab)
             
         }
         if (CIs) # using linerange w/ extra width and semi-transparent
-            grobj = grobj + ggplot2::geom_linerange(aes(ymin = LCL, ymax = UCL), 
+            grobj = grobj + ggplot2::geom_linerange(ggplot2::aes(ymin = LCL, ymax = UCL), 
                                 position = pos, lwd = 2, alpha = .5)
         if (length(rhs) > 1) {  # we have by variables 
             if (length(byvars) > 1) {
