@@ -76,7 +76,8 @@ To create a reference grid, the \code{ref_grid} function needs to reconstruct
 the data used in fitting the model, and then obtain a matrix of linear
 functions of the regression coefficients for a given grid of predictor
 values. These tasks are performed by calls to \code{recover_data} and
-\code{emm_basis} respectively.
+\code{emm_basis} respectively. A vignette giving details and examples
+is available via \href{../doc/extending.pdf}{vignette("extending", "emmeans")}
 
 To extend \pkg{emmeans}'s support to additional model types, one need only
 write S3 methods for these two functions. The existing methods serve as
@@ -103,8 +104,9 @@ estimability of each
 prediction, using the \code{\link[estimability]{nonest.basis}} function in
 the \pkg{estimability} package.
 
-The models already supported are detailed in \code{\link{models}}. Some
-packages may provide additional \pkg{emmeans} support for its object classes.
+The models already supported are detailed in \href{../doc/models.html}{the
+"models" vignette}. Some packages may provide additional \pkg{emmeans}
+support for its object classes.
 }
 
 \section{Optional hooks}{
@@ -129,3 +131,6 @@ described. It should return the covariance matrix for the estimates. Finally,
 should return a suitably modified \code{emm} object.
 }
 
+\seealso{
+\href{../doc/extending.pdf}{Vignette on extending emmeans}
+}

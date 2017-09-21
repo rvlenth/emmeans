@@ -134,7 +134,7 @@ emmeans.list = function(object, specs, ...) {
 #' @param object An object of class \code{ref.grid}; or a fitted model object
 #'   that is supported, such as the result of a call to \code{lm} or
 #'   \code{lmer}. Many fitted-model objects are supported; see
-#'   \code{link{models}} for details.
+#'   \code{\href{../doc/models.html}{vignette("models", "emmeans")}} for details.
 #' @param specs A \code{character} vector specifying the names of the predictors
 #'   over which EMMs are desired. \code{specs} may also be a \code{formula}
 #'   or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
@@ -159,7 +159,7 @@ emmeans.list = function(object, specs, ...) {
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
 #'   examples are \code{at}, \code{cov.reduce}, \code{data}, code{type},
 #'   \code{transform}, \code{df}, and \code{vcov.}. Model-type-specific options
-#'   (see \link{models}), commonly \code{mode}, may be used here as well. In
+#'   (see \href{../doc/models.html}{vignette("models", "emmeans")}), commonly \code{mode}, may be used here as well. In
 #'   addition, if the model formula contains references to variables that are
 #'   not predictors, you must provide a \code{params} argument with a list of
 #'   their names.
@@ -239,7 +239,8 @@ emmeans.list = function(object, specs, ...) {
 #'
 #' @export
 #' 
-#' @seealso \code{\link{ref_grid}}, \code{\link{contrast}}, \link{models}
+#' @seealso \code{\link{ref_grid}}, \code{\link{contrast}}, 
+#' \href{../doc/models.html}{vignette("models", "emmeans")}
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)

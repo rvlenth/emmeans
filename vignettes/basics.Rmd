@@ -13,4 +13,246 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
-I haven't written this one yet.
+## Contents {#contents}
+
+  1. [Motivating example](#motivation)
+  2. [EMMs defined](#EMMdef)
+      a. [Reference grids](#ref_grid)
+      b. [Estimated marginal means](#emmeans)
+      c. [Weighting](#weights)
+      d. [Multivariate models](#multiv)
+  3. [Summary](#summary)
+  4. [Further reading](#more)
+
+## Why we need EMMs {#motivation}
+Consider the `pigs` dataset provided with the package (`help("pigs")` provides
+details). These data come from an unbalanced experiment where pigs are given
+different percentages of protein (`percent`) from different sources (`source`)
+in their diet, and later we measure the concentration (`conc`) of leucine.
+Here's an interaction plot showing the mean `conc` at each combination of 
+the other factors.
+```{r}
+par(mar = .1 + c(4, 4, 1, 1))   # reduce head space
+with(pigs, interaction.plot(percent, source, conc))
+```
+
+This plot suggests that with each `source`, `conc` tends to go up with 
+`percent`, but that the mean differs with each `source`.
+
+Now, suppose that we want to assess, numerically, the marginal results for
+`percent`.  The natural thing to do is to obtain the marginal means:
+```{r}
+with(pigs, tapply(conc, percent, mean))
+```
+Looking at the plot, it seems a bit surprising that the last three means
+are all about the same, with the one for 15 percent being the largest.
+
+Hmmmm, so let's try another approach -- actually averaging together the values
+we see in the plot. First, we need the means that are shown there:
+```{r}
+cell.means <- matrix(with(pigs, 
+    tapply(conc, interaction(source, percent), mean)), 
+    nrow = 3)
+cell.means
+```
+Confirm that the rows of this matrix match the plotted values for fish,
+soy, and skim, respectively. Now, average each column:
+```{r}
+apply(cell.means, 2, mean)
+```
+These results are decidedly different from the ordinary marginal means we 
+obtained earlier. What's going on? The answer is that some observations were
+lost, making the data unbalanced:
+```{r}
+with(pigs, table(source, percent))
+```
+We can reproduce the marginal means by weighting the cell means with these
+frequencies. For example, in the last column:
+```{r}
+sum(c(3, 1, 1) * cell.means[, 4]) / 5
+```
+The big discrepancy between the ordinary mean for `percent = 18` and the marginal
+mean from `cell.means` is due to the fact that the lowest value receives 3 times
+the weight as the other two values.
+
+### The point
+The point is that the marginal means of `cell.means` give *equal weight* to each
+cell. In many situations (especially with experimental data), that is a much
+fairer way to compute marginal means, in that they are not biased by imbalances
+in the data. we are, in a sense, estimating what the marginal means *would* be,
+had the experiment been balanced. Estimated marginal means (EMMs) serve that
+need.
+
+All this said, there are certainly situations where equal weighting is *not* 
+appropriate. Suppose, for example, we have data on sales of a product given 
+different packaging and features. The data could be unbalanced because customers
+are more attracted to some combinations than others. If our goal is to 
+understand scientifically what packaging and features are inherently more 
+profitable, then equally weighted EMMs may be appropriate; but if our goal is to
+predict or maximize profit, the ordinary marginal means provide better estimates
+of what we can expect in the marketplace.
+
+[Contents](#contents)
+
+## What exactly are EMMs? {#EMMdef}
+
+### Model and reference grid {#ref_grid}
+Estimated marginal means are based on a *model* -- not directly on data. 
+The basis for them is what we call the *reference grid* for a given model.
+To obtain the reference grid, consider all the predictors in the model.
+Here are the default rules for constructing the reference grid
+
+  * For each predictor that is a *factor*, use its levels (dropping unused ones)
+  * For each numeric predictor (covariate), use its average
+  
+The reference grid is then a regular grid of all combinations of these
+reference levels.
+
+As a simple example, consider again the `pigs` dataset (see `help("fiber")` for
+details). Examination of residual plots from preliminary models suggests that it
+is a good idea to work in terms of log concentration.
+
+If we treat the predictor `percent` as a factor, we might fit the 
+following model:
+```{r}
+pigs.lm1 <- lm(log(conc) ~ source + factor(percent), data = pigs)
+```
+The reference grid for this model can be found via the `ref_grid` function:
+```{r}
+ref_grid(pigs.lm1)
+```
+Both predictors are factors, and the reference grid consists of the 
+$3\times4 = 12$ combinations of these factor levels. It can be seen explicitly
+by looking at the `grid` slot of this object:
+```{r}
+ref_grid(pigs.lm1) @ grid
+``` 
+Note that other information is retained in the reference grid, e.g., the
+transformation used on the response, and the cell counts as the `.wgt.` column.
+
+Now, suppose instead that we treat `percent` as a numeric predictor. 
+This leads to a different model -- and a different reference grid.
+```{r}
+pigs.lm2 <- lm(log(conc) ~ source + percent, data = pigs)
+ref_grid(pigs.lm2)
+```
+This reference grid has the levels of `source`, but only one `percent` value, 
+its average. Thus, the grid has only three elements:
+```{r}
+ref_grid(pigs.lm2) @ grid
+```
+It is possible to alter the reference grid. We might, for example, want to 
+define a reference grid for `pigs.lm2` that is comparable to the one for 
+`pigs.lm1`.
+```{r}
+ref_grid(pigs.lm2, cov.reduce = FALSE)
+```
+
+[Contents](#contents)
+
+### Estimated marginal means {#emmeans}
+Once the reference grid is established, we can consider using the model to
+estimate the mean at each point in the reference grid. (Curiously, the
+convention is to call this "prediction" rather than "estimation"). For
+`pigs.lm1`, we have
+```{r}
+pigs.pred1 <- matrix(predict(ref_grid(pigs.lm1)), nrow = 3)
+pigs.pred1
+```
+Estimated marginal means (EMMs) are defined as equally weighted means of these
+predictions at specified margins:
+```{r}
+apply(pigs.pred1, 1, mean) ### EMMs for source
+
+apply(pigs.pred1, 2, mean) ### EMMs for percent
+``` 
+For the other model, `pigs.lm2`, we have only one point in the reference
+grid for each `source` level; so the EMMs for `source` are just the predictions
+themselves:
+```{r}
+predict(ref_grid(pigs.lm2))
+```
+These are slightly different from the previous EMMs for `source`, emphasizing
+the fact that EMMs are model-dependent. In models with covariates, EMMs are
+often called *adjusted means*.
+
+The `emmeans` function computes EMMs, accompanied by standard errors and 
+confidence intervals. For example,
+```{r}
+emmeans(pigs.lm1, "percent")
+```
+
+In these examples, all the results are presented on the `log(conc)` scale
+(and the annotations in the output warn of this).
+It is possible to convert them back to the `conc` scale by back-transforming.
+This topic is discussed in [the vignette on transformations](transformations).
+
+[Contents](#contents)
+
+### Using weights {#weights}
+It is possible to override the equal-weighting method for computing EMMs. Using
+`weights = "cells"` in the call will weight the predictions according to their
+cell frequencies (recall this information is retained in the reference grid).
+This produces results comparable to ordinary marginal means:
+```{r}
+emmeans(pigs.lm1, "percent", weights = "cells")
+```
+Note that, as in the ordinary means in [the motivating example](#motivation),
+the highest estimate is for `percent = 15` rather than `percent = 18`. It is
+interesting to compare this with the results for a model that includes only
+`percent` as a predictor.
+```{r}
+pigs.lm3 <- lm(log(conc) ~ factor(percent), data = pigs)
+emmeans(pigs.lm3, "percent")
+```
+The EMMs in these two tables are identical, but their standard errors are
+considerably different. That is because the model `pigs.lm1` accounts for 
+variations due to `source`. The lesson here is that it is possible to obtain 
+statistics comparable to ordinary marginal means, while still accounting for
+variations due to the factors that are being averaged over.
+
+[Contents](#contents)
+
+### Multivariate responses {#multiv}
+The **emmeans** package supports various multivariate models. When there
+is a multivariate response, the dimensions of that response are treated as if
+they were levels of a factor. For example, the `MOats` dataset provided in the
+package has predictors `Block` and `Variety`, and a four-dimensional response
+`yield` giving yields observed with varying amounts of nitrogen added to the soil.
+Here is a model and reference grid:
+```{r}
+MOats.lm <- lm (yield ~ Block + Variety, data = MOats)
+ref_grid (MOats.lm, mult.name = "nitro")
+```
+So, `nitro` is in essence a factor having 4 levels corresponding to the 4
+dimensions of `yield`. We can subsequently obtain EMMs for any of the factors
+`Block`, `Variety`, `nitro`, or combinations thereof. The argument `mult.name =
+"nitro"` is optional; if it had been excluded, the multivariate levels would
+have been named `rep.meas`.
+
+[Contents](#contents)
+
+## Summary of main points {#summary}
+  * EMMs are based on a *model*. A different model for the same data may lead
+    to different EMMs.
+  * EMMs are based on a *reference grid* consisting of all combinations
+    of factor levels, with each covariate set to its average (by default).
+  * For purposes of defining the reference grid, dimensions of
+    a multivariate response are treated as levels of a factor.
+  * EMMs are then predictions on this reference grid, or marginal
+    averages thereof (equally weighted by default).
+
+## Further reading {#more}
+The reader is referred to other vignettes for more details and advanced use.
+The strings linked below are the names of the vignettes; i.e., they can
+also be accessed via `vignette("`*name*`", "emmeans")`
+
+  * Models that are supported in **emmeans** (there are lots of them)
+    ["models"](models.html)
+  * Often, users want to compare or contrast EMMs: ["comparisons"](comparisons.html)
+  * Working with response transformations and link functions:
+    ["transformations"](transformations.html)
+  * Multi-factor models with interactions: ["interactions"](interactions.html)
+  * Models with nested fixed effects: ["nesting"](nesting.html)
+  * Frequently asked questions: ["FAQs"](FAQs.html)
+  

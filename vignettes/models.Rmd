@@ -1,0 +1,326 @@
+---
+title: "Models supported by emmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Models supported by emmeans}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Here we document what model objects may be used with **emmeans**, and some
+special features of some of them that may be accessed by passing additional
+arguments through `ref_grid` or `emmeans()`.
+
+Certain objects are affected by optional arguments to functions that
+construct `emm` objects, including `ref_grid()`,
+`emmeans()`, `emtrends()`, and `emmip()`. When
+"*arguments*" are mentioned in the subsequent quick reference and
+object-by-object documentation, we are talking about arguments in these
+constructors.
+
+Additional models can be supported by writing appropriate `recover_data`
+and `emm_basis` methods. See the package documentation for 
+`extending-emmeans` and `vignette("extending")` for details.
+
+## Quick reference for supported objects and options
+
+Here is an alphabetical list of model classes that are supported, and
+the arguments that apply. Detailed documentation follows, with objects
+grouped by the code in the "Group" column. 
+Scroll down or follow the links to those groups for more information.
+
+|Object.class |Package  |Group    |Arguments / notes                                            |
+|:------------|:--------|:-------:|:------------------------------------------------------------|
+|aov          |stats    |[A](#A)  |                                                             |
+|aovList      |stats    |[V](#V)  |Best with balanced designs, orthogonal coding                |
+|betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
+|             |         |         |`  "variance", "quantile")`                                  |
+|carbayes     |CARBayes |[S](#S)  |`data` is required                                           |
+|clm          |ordinal  |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
+|             |         |         |`  "exc.prob", "prob", "mean.class", "scale")`               |
+|clmm         |ordinal  |[O](#O)  |Like `clm` but no `"scale"` mode                             |
+|coxme        |coxme    |[G](#G)  |                                                             |
+|coxph        |survival |[G](#G)  |                                                             |
+|gee          |gee      |[E](#E)  |`vcov.method = c("naive", "robust")`                         |
+|geeglm       |geepack  |[E](#E)  |`vcov.method = c("vbeta", "vbeta.naiv", "vbeta.j1s",`        |
+|             |         |         |`"vbeta.fij", "robust", "naive")` or a matrix                |
+|geese        |geepack  |[E](#E)  |Like `geeglm`                                                |
+|glm          |stats    |[G](#G)  |                                                             |
+|glm.nb       |MASS     |[G](#G)  |Requires `data` argument                                     |
+|glmmadmb     |glmmADMB |[G](#G)  |                                                             |
+|glmerMod     |lme4     |[G](#G)  |                                                             |
+|glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
+|gls          |nlme     |[G](#G)  |                                                             |
+|hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
+|             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
+|lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
+|lme          |nlme     |[A](#A)  |`sigmaAdjust = c(TRUE, FALSE)`                               |
+|lmerMod      |lme4     |[L](#L)  |`mode = c("kenward-roger", "satterthwaite",`                 |
+|             |         |         |`"asymptotic")`. Also `emm_options(disable.pbkrtest =,`      |
+|             |         |         |`lmer.df =, pbkrtest.limit =)`                               |
+|manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
+|maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
+|mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
+|MCMCglmm     |MCMCglmm |[M](#M),[S](#S) |`mult.name`, `mult.levs`                              |
+|             |         |         |`data` is required                                           |
+|mer          |lme4.0   |[A](#A)  |May become obsolete                                          |
+|mixed        |afex     |[P](#P)  |Supported in **afex** package                                |
+|mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
+|multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |
+|             |         |         |Always include response in specs for `emmeans()`             |
+|nauf         |         |[P](#P)  |Supported in **nauf** package                                |
+|nlme         |nlme     |[A](#A)  |Supports fixed part. Requires `param`                        |
+|polr         |MASS     |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
+|             |         |         |`"exc.prob", "prob", "mean.class")`                          |
+|rlm          |MASS     |[A](#A)  |inherits `lm` support                                        |
+|rms          |rms      |[O](#O)  |`mode = ("middle", "latent", "linear.predictor",`            |
+|             |         |         |`"cum.prob", "exc.prob", "prob", "mean.class")`              |
+|rsm          |rsm      |[P](#P)  |Supported in **rsm** package                                 |
+|stanreg      |rstanarm |[S](#S)  |Args for `stanreg_`*xxx* similar to those for *xxx*          |
+|survreg      |survival |[A](#A)  |                                                             |
+|zeroinfl     |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0")`,            |
+|             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
+
+
+## Group A -- "Standard" models (typically linear and mixed) {#A}
+
+Models in this group, such as `lm`, do not have unusual features that
+need special support; hence no extra arguments are needed.
+
+
+## B -- Beta regression {#B}
+
+The additional `mode` argument for `betareg` objects has possible
+values of `"response"`, `"link"`, `"precision"`,
+`"phi.link"`, `"variance"`, and `"quantile"`, which have the
+same meaning as the `type` argument in `predict.betareg` -- with
+the addition that `"phi.link"` is like `"link"`, but for the
+precision portion of the model. When `mode = "quantile"` is specified,
+the additional argument `quantile` (a numeric scalar or vector)
+specifies which quantile(s) to compute; the default is 0.5 (the median). Also
+in `"quantile"` mode, an additional variable `quantile` is added to
+the reference grid, and its levels are the values supplied.
+
+
+## Group C -- Count models {#C}
+
+Two optional arguments -- `mode` and `lin.pred` -- are provided.
+The `mode` argument has possible values `"response"` (the default),
+`"count"`, `"zero"`, or `"prob0"`. `lin.pred` is logical
+and defaults to `FALSE`.
+
+With `lin.pred = FALSE`, the results are comparable to those returned by
+`predict(..., type = "response")`, `predict(..., type = "count")`,
+`predict(..., type = "zero")`, or `predict(..., type = "prob")[,
+1]`. See the documentation for `predict.hurdle` and
+`predict.zeroinfl`.
+
+The option `lin.pred = TRUE` only applies to `mode = "count"` and
+`mode = "zero"`. The results returned are on the linear-predictor scale,
+with the same transformation as the link function in that part of the model.
+The predictions for a reference grid with `mode = "count"`,
+`lin.pred = TRUE`, and `type = "response"` will be the same as
+those obtained with `lin.pred = FALSE` and `mode = "count"`;
+however, any EMMs derived from these grids will be different, because the
+averaging is done on the log-count scale and the actual count scale,
+respectively -- thereby producing geometric means versus arithmetic means of
+the predictions.
+
+If the `vcov.` argument is used (see details in the documentation for `ref_grid`),
+it must yield a matrix of the same size as would be obtained using
+`vcov.hurdle` or `vcov.zeroinfl` with its
+`model` argument set to `("full", "count", "zero")` in respective
+correspondence with `mode` of `("mean", "count", "zero")`. If
+`vcov.` is a function, it must support the `model` argument.
+
+
+## Group E -- GEE models {#E}
+
+These models all have more than one covariance estimate available, and it may
+be selected by supplying a string as the `vcov.method` argument. It is
+partially matched with the available choices shown in the quick reference. In
+`geese` and `geeglm`, the aliases `"robust"` (for
+`"vbeta"`) and `"naive"` (for `"vbeta.naiv"` are also
+accepted.
+
+If a matrix or function is supplied as `vcov.method`, it is
+interpreted as a `vcov.` specification as described for `...`
+in the documentation for `ref_grid`.
+
+
+## Group G -- Generalized linear models and relatives {#G}
+
+Models in this group receive only standard support as in [Group A](#A), but
+typically the tests and confidence intervals are asymptotic. Thus the
+`df` column for tabular results will be `NA`.
+
+
+## Group L -- `lmerMod` models {#L}
+
+There is an optional `mode` argument that defaults to 
+`get_EMM_option("lmer.df")` (which in turn defaults to 
+`"kenward-roger"`). The possible values are `"kenward-roger"`,
+`"satterthwaite"`, and `"asymptotic"` (these are partially matched and 
+case-insensitive). With `"kenward-roger"`, d.f. are obtained using code
+from the **pbkrtest** package, if installed. With `"satterthwaite"`,
+d.f. are obtained using code from the **lmerTest** package, if installed. 
+With `"asymptotic"`, or if the needed package is not installed, d.f. are
+set to `NA`.
+
+A by-product of the Kenward-Roger method is that the covariance matrix is 
+adjusted using `pbkrtest::vcovAdj()`. This can require considerable
+computation; so to avoid that overhead, the user should opt for the 
+Satterthwaite or asymptotic method; or, for backward compatibility, may 
+disable the use of **pbkrtest** via `emm_options(disable.pbkrtest =
+TRUE)` (this does not disable the **pbkrtest** package entirely, just its
+use in **emmeans**). The computation time required depends roughly on the
+number of observations, *N*, in the design matrix (because a major part
+of the computation involves inverting an *N* x *N* matrix). Thus,
+**pbkrtest** is automatically disabled if *N* exceeds the value of 
+`get_emm_option("pbkrtest.limit")`. If desired, the user may use 
+`emm_options` to adjust this limit from the default of 3000.
+
+The `df` argument may be used to specify some other degrees of freedom.
+Note that if `df` and `method = "satterthwaite"` are both
+specified, the covariance matrix is adjusted but the K-R degrees of freedom
+are not used.
+
+
+## Group M -- Multivariate models {#M}
+
+When there is a multivariate response, the different responses are treated as
+if they were levels of a factor -- named `rep.meas` by default. The
+`mult.name` argument may be used to change this name. The
+`mult.levs` argument may specify a named list of one or more sets of
+levels. If this has more than one element, then the multivariate levels are
+expressed as combinations of the named factor levels via the function
+`base::expand.grid`.
+
+
+## N - Multinomial responses {#N}
+
+The reference grid includes a pseudo-factor with the same name and levels as
+the multinomial response. There is an optional `mode` argument which
+should match `"prob"` or `"latent"`. With `mode = "prob"`, the
+reference-grid predictions consist of the estimated multinomial
+probabilities. The `"latent"` mode returns the linear predictor,
+recentered so that it averages to zero over the levels of the response
+variable (similar to sum-to-zero contrasts). Thus each latent variable can be
+regarded as the log probability at that level minus the average log
+probability over all levels.
+
+There are two optional arguments: `mode` and `rescale` (which
+defaults to `c(0, 1)`).
+
+Please note that, because the probabilities sum to 1 (and the latent values
+sum to 0) over the multivariate-response levels, all sensible results from
+`emmeans()` must involve that response as one of the factors. For example,
+if `resp` is a response with *k* levels, `emmeans(model, ~ resp
+| trt)` will yield the estimated multinomial distribution for each
+`trt`; but `emmeans(model, ~ trt)` will just yield the average
+probability of 1/*k* for each `trt`.
+
+
+## Group O - Ordinal responses {#O}
+
+The reference grid for ordinal models will include all variables that appear in
+the main model
+as well as those in the `scale` or `nominal` models (if provided). 
+There are two optional arguments: `mode` (a character string) and 
+`rescale` (which defaults to `c(0, 1)`). `mode` should match 
+one of `"latent"` (the default), `"linear.predictor"`, 
+`"cum.prob"`, `"exc.prob"`, `"prob"`, `"mean.class"`, or
+`"scale"` -- see the quick reference and note which are supported.
+
+With `mode = "latent"`, the reference-grid predictions are made on the
+scale of the latent variable implied by the model. The scale and location of
+this latent variable are arbitrary, and may be altered via `rescale`.
+The predictions are multiplied by `rescale[2]`, then added to `rescale[1]`.
+Keep in mind that the scaling is related to the link function used
+in the model; for example, changing from a probit link to a logistic link
+will inflate the latent values by around $\pi/\sqrt{3}$, all
+other things being equal. `rescale` has no effect for other values of
+`mode`.
+
+With `mode = "linear.predictor"`, `mode = "cum.prob"`, and
+`mode = "exc.prob"`, the boundaries between categories (i.e.,
+thresholds) in the ordinal response are included in  the reference grid as a
+pseudo-factor named `cut`. The reference-grid predictions are then of
+the cumulative probabilities at each threshold (for `mode =
+"cum.prob"`), exceedance probabilities (one minus cumulative probabilities,
+for `mode = "exc.prob"`), or the link function thereof (for `mode =
+"linear.predictor"`).
+
+With `mode = "prob"`, a pseudo-factor with the same name as the model's
+response variable is created, and the grid predictions are of the
+probabilities of each class of the ordinal response. With
+`"mean.class"`, the returned results are means of the ordinal response,
+interpreted as a numeric value from 1 to the number of classes, using the
+`"prob"` results as the estimated probability distribution for each
+case.
+
+With `mode = "scale"`, and the fitted object incorporates a scale model,
+EMMs are obtained for the factors in the scale model (with a log response)
+instead of the response model. The grid is constructed using only the factors
+in the scale model.
+
+Any grid point that is non-estimable by either the location or the scale
+model (if present) is set to `NA`, and any EMMs involving such a
+grid point will also be non-estimable. A consequence of this is that if there
+is a rank-deficient `scale` model, then *all* latent responses
+become non-estimable because the predictions are made using the average
+log-scale estimate.
+
+`rms` models have an additional `mode`. With `mode = "middle"`
+(this is the default), the middle intercept is used, comparable to the
+default for `rms::Predict()`. This is quite similar in
+concept to `mode = "latent"`, where all intercepts are averaged
+together.
+
+
+## P -- Other packages {#P}
+
+Models in this group have their **emmeans** support provided by the package
+that implements the model-fitting procedure. Users should refer to the
+package documentation for details on **emmeans** support.
+
+
+## S -- Sampling (MCMC) methods {#S}
+
+Models fitted using MCMC methods contain a sample from the posterior
+distribution of fixed-effect coefficients. In some cases (e.g., results of
+`MCMCpack::MCMCregress()` and `MCMCpack::MCMCpoisson()`), the object may include a
+`"call"` attribute that `emmeans()` can use to reconstruct the data
+and obtain a basis for the EMMs. If not, a `formula` and
+`data` argument are provided that may help produce the right results. In
+addition, the `contrasts` specifications are not necessarily recoverable
+from the object, so the system default must match what was actually used in
+fitting the model.
+
+The `summary.emm()`, `test.emm()`,
+etc. methods provide frequentist analyses of the results based on the
+posterior means and covariances. However, an `as.mcmc()` method is
+provided that creates an `mcmc` object that can be summarized or plotted
+using the **coda** package. It provides a posterior sample of EMMs for the
+given reference grid, based on the posterior sample of the fixed effects from
+the model object.
+
+
+## Group V -- `aovList` objects {#V}
+
+Support for these objects is limited. To avoid strong biases in the
+predictions, the `contrasts` attribute of all factors should be of a
+type that sums to zero -- for example, `"contr.sum"`,
+`"contr.poly"`, or `"contr.helmert"` but *not
+`"contr.treatment"`.  Only intra-block estimates of covariances are
+used. That is, if a factor appears in more than one error stratum, only the
+covariance structure from its lowest stratum is used in estimating standard
+errors. Degrees of freedom are obtained using the Satterthwaite method. In
+general, `aovList` support is best with balanced designs, with due
+caution in the use of contrasts. If a `vcov.` argument is supplied, it
+must yield a single covariance matrix for the unique fixed effects
+(not a set of them for each error stratum). In that case, the
+degrees of freedom are set to `NA`.
+

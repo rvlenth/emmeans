@@ -17,6 +17,10 @@ Some graphical displays of these results are provided.
 \section{Overview}{
 
 \describe{
+\item{Vignettes}{A number of vignettes are provided to help the user get
+acquainted with thepkg{emmeans} package and see some examples. 
+See the \href{../doc/index.html}{vignette index}.}
+
 \item{Concept}{Estimated marginal means (see Searle \emph{et al.} 1980 are
 popular for summarizing linear models that include factors. For balanced
 experimental designs, they are just the marginal means. For unbalanced data,
@@ -41,9 +45,10 @@ definitions of EMMs, in that it is possible to include multiple levels of
 covariates in the grid. }
 
 \item{Models supported}{As is mentioned in the package description, many
-types of models are supported by the package. See \code{help("models", package
-= "emmeans")} for full details. Some models require other packages be
-installed in order to  obtain all the available features.}
+types of models are supported by the package. 
+See \href{../doc/models.html}{vignette("models", "emmeans")} for full details. 
+Some models may require other packages be
+installed in order to  access all of the available features.}
 
 \item{Estimated marginal means}{
 The \code{\link{emmeans}} function computes EMMs given a fitted model (or a
