@@ -53,12 +53,17 @@ Otherwise, one may use the \code{"lattice"} attribute of the returned
 object and print it, perhaps after additional manipulation.}
 }
 \value{
-If \code{plotit = FALSE}, a \code{\link{data.frame}} (invisibly) with
-  the table of EMMs that would be plotted. This data frame has an added
-  \code{"labs"} attribute containing the labels \code{alab}, \code{ylab}, and
-  \code{tlab} for the x, y, and trace variables, respectively. If
-  \code{plotit = TRUE}, an object of class \code{"ggplot"} or a
-  \code{"trellis"}, depending on \code{engine}.
+If \code{plotit = FALSE}, a \code{data.frame} (actually, a
+  \code{summary_emm} object) with the table of EMMs that would be plotted.
+  The variables plotted are named \code{xvar} and \code{yvar}, and the trace
+  factor is named \code{tvar}. This data frame has an added \code{"labs"}
+  attribute containing the labels \code{xlab}, \code{ylab}, and \code{tlab}
+  for these respective variables. The confidence limits are also
+  included, renamed \code{LCL} and \code{UCL}.
+
+If \code{plotit = TRUE}, the function
+  returns an object of class \code{"ggplot"} or a \code{"trellis"}, depending
+  on \code{engine}.
 }
 \description{
 Creates an interaction plot of EMMs based on a fitted model and a simple

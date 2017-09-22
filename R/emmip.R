@@ -74,12 +74,17 @@ emmip = function(object, formula, ...) {
 #' used, and it must contain one estimate for each combination of the factors
 #' present in \code{formula}.
 #'
-#' @return If \code{plotit = FALSE}, a \code{\link{data.frame}} (invisibly) with
-#'   the table of EMMs that would be plotted. This data frame has an added
-#'   \code{"labs"} attribute containing the labels \code{alab}, \code{ylab}, and
-#'   \code{tlab} for the x, y, and trace variables, respectively. If
-#'   \code{plotit = TRUE}, an object of class \code{"ggplot"} or a
-#'   \code{"trellis"}, depending on \code{engine}.
+#' @return If \code{plotit = FALSE}, a \code{data.frame} (actually, a
+#'   \code{summary_emm} object) with the table of EMMs that would be plotted.
+#'   The variables plotted are named \code{xvar} and \code{yvar}, and the trace
+#'   factor is named \code{tvar}. This data frame has an added \code{"labs"}
+#'   attribute containing the labels \code{xlab}, \code{ylab}, and \code{tlab}
+#'   for these respective variables. The confidence limits are also
+#'   included, renamed \code{LCL} and \code{UCL}.
+#'   
+#' @return If \code{plotit = TRUE}, the function
+#'   returns an object of class \code{"ggplot"} or a \code{"trellis"}, depending
+#'   on \code{engine}.
 #'   
 #' @note Conceptually, this function is equivalent to 
 #'   \code{\link{interaction.plot}} where the summarization function is thought 
@@ -143,10 +148,12 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     }
     type = .validate.type(type)
 
-    # Ensure the estimate is named "yvar" and the conf limits are "LCL" and "UCL"
-    emmo = update(emmo, estName = "yvar")
     emms = summary(emmo, type = type, infer = c(CIs, F))
-    names(emms) = gsub("upper.", "U", gsub("lower.", "L", gsub("asymp.", "", names(emms))))
+    # Ensure the estimate is named "yvar" and the conf limits are "LCL" and "UCL"
+    nm = names(emms)
+    nm[nm == attr(emms, "estName")] = "yvar"
+    names(emms) = gsub("upper.", "U", gsub("lower.", "L", gsub("asymp.", "", nm)))
+    attr(emms, "estName") = "yvar"
     
 
     # Set up trace vars and key
@@ -195,7 +202,7 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     if (!plotit) {
         emms$.single. = NULL   # in case we have that trick column
         attr(emms, "labs") = list(xlab = xlab, ylab = ylab, tlab = tlab)
-        return (invisible(emms))
+        return (emms)
     }
     
     if (engine == "lattice") {
@@ -215,30 +222,30 @@ emmip.default = function(object, formula, type, CIs = FALSE,
         lattice::trellis.par.set(TP.orig)
     }
     else {  # engine = "ggplot"
-        pos = ggplot2::position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
+        pos = position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
         if (!one.trace) {
-            grobj = ggplot2::ggplot(emms, ggplot2::aes(x = xvar, y = yvar, color = tvar)) +
-                ggplot2::geom_point(position = pos) +
-                ggplot2::geom_line(ggplot2::aes(group = tvar), position = pos) +
-                ggplot2::labs(x = xlab, y = ylab, color = tlab)
+            grobj = ggplot(emms, aes(x = xvar, y = yvar, color = tvar)) +
+                geom_point(position = pos) +
+                geom_line(aes(group = tvar), position = pos) +
+                labs(x = xlab, y = ylab, color = tlab)
         }
         else { # just one trace per plot
-            grobj = ggplot2::ggplot(emms, ggplot2::aes(x = xvar, y = yvar)) +
-                ggplot2::geom_point() +
-                ggplot2::geom_line(ggplot2::aes(group = tvar)) +
-                ggplot2::labs(x = xlab, y = ylab)
+            grobj = ggplot(emms, aes(x = xvar, y = yvar)) +
+                geom_point() +
+                geom_line(aes(group = tvar)) +
+                labs(x = xlab, y = ylab)
             
         }
         if (CIs) # using linerange w/ extra width and semi-transparent
-            grobj = grobj + ggplot2::geom_linerange(ggplot2::aes(ymin = LCL, ymax = UCL), 
+            grobj = grobj + geom_linerange(aes(ymin = LCL, ymax = UCL), 
                                 position = pos, lwd = 2, alpha = .5)
         if (length(rhs) > 1) {  # we have by variables 
             if (length(byvars) > 1) {
                 byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))
-                grobj = grobj + ggplot2::facet_grid(byform, labeller = "label_both")
+                grobj = grobj + facet_grid(byform, labeller = "label_both")
             }
             else
-                grobj = grobj + ggplot2::facet_wrap(byvars, labeller = "label_both")
+                grobj = grobj + facet_wrap(byvars, labeller = "label_both")
         }
     }
     

@@ -1,0 +1,222 @@
+---
+title: "Confidence intervals and tests in emmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Confidence intervals and tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, results = "hide", message = FALSE}
+require("emmeans")
+knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
+```
+
+## Contents {#contents}
+This vignette describes various ways of summarizing `emm` objects.
+
+  1. [`emm` objects, described](#emmobj)
+  2. [`summary(), `confint()`, and `test()`](#summary)
+  3. [Back-transforming to response scale](#tran)
+     (See also the ["transformations" vignette](transformations.html))
+  4. [Multiplicity adjustments](#adjust)
+  5. [Using "by" variables](#byvars)
+  6. [Joint (omnibus) tests](#joint)
+  7. [Testing equivalence, noninferiority, nonsuperiority](#equiv)
+  8. Graphics (in ["basics" vignette](basics.html#plots))
+
+## Objects, structures, and methods {#emmobj}
+The `ref_grid()` and `emmeans()` functions are introduced in 
+[the "Basics" vignette](basics.html). These functions, and a few related ones,
+return an object of class `emm`:
+```{r}
+pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+pigs.rg <- ref_grid(pigs.lm)
+class(pigs.rg)
+
+pigs.emm.s <- emmeans(pigs.rg, "source")
+class(pigs.emm.s)
+```
+If you simply show these objects, you get different-looking results:
+```{r}
+pigs.rg
+
+pigs.emm.s
+```
+This is based on guessing what users most need to see when displaying the object.
+You can override these defaults; for example,
+```{r}
+str(pigs.emm.s)
+```
+The most important method for `emm` objects is `summary()`. It is used as the
+default for displaying an `emmeans()` result like `pigs.emm.s`. This `summary()`
+method for `emm` objects) actually produces a `data.frame`, but with extra bells and
+whistles:
+```{r}
+class(summary(pigs.emm.s))
+```
+This can be useful to know because if you want to actually *use* `emmeans()` results
+in other computations, you should save its summary, and then you can access those
+results just like you would access data in a data frame. The `emm` object itself
+is not so accessible. There is a `print.summary_emm()` function that is what
+actually produces the output you see above -- a data frame with extra
+annotations.
+
+[Back to Contents](#contents)
+
+## `summary()` and its relatives {#summary}
+As you may have gathered, the most important method for `emm` objects is `summary()`.
+It has a lot of options, and the detailed documentation via 
+[`help("summary.emm")`](../html/summary.emm.html) is worth a look.
+
+Just `summary(<object>)` by itself will produce a summary that varies somewhat
+according to context. It does this by setting different defaults for the `infer`
+argument, which consists of two logical values, specifying confidence intervals 
+and tests, respectively. 
+The summary of a newly made reference grid will show just estimates and
+standard errors, but not confidence intervals or tests (that is, `infer =
+c(FALSE, FALSE)`). The summary of an `emmeans()` result, as we see above, will
+have intervals, but no tests (i.e., `infer = c(TRUE, FALSE)`); and the result of
+a `contrast()` call (see [comparisons and contrasts](comparisons.html)) will
+show test statistics and *P* values, but not intervals (i.e., `infer = c(FALSE,
+TRUE)`). There are courtesy methods `confint()` and `test()` that just call
+`summary()` with the appropriate `infer` setting; for example,
+```{r}
+test(pigs.emm.s)
+```
+It is not particularly useful, though, to test these EMMs against the default of 
+zero -- which is why tests are not usually shown. It makes a lot more sense
+to test them against some target concentration, say 40. And suppose we want to do a one-sided test to see if the concentration is greater than 40. Remembering that the
+response is log-transformed in this model, 
+```{r}
+test(pigs.emm.s, null = log(40), side = ">")
+```
+[Back to Contents](#contents)
+
+
+## Back-transforming {#tran}
+Transformations and link functions are supported an several ways in **emmeans**,
+making this a complex topic worthy of [its own vignette](transformations.html).
+Here, we show just the most basic approach. Namely, specifying the argument
+`type = "response"` will cause the displayed results to be back-transformed
+to the response scale, when a transformation or link function is incorporated
+in the model. For example, let's try the preceding `test()` call again:
+```{r}
+test(pigs.emm.s, null = log(40), side = ">", type = "response")
+```
+Note what changes and what doesn't change. In the `test()` call, we *still* use
+the log of 40 as the null value; `null` must always be specified on the
+linear-prediction scale, in this case the log. In the output, the displayed
+estimates, as well as the `null` value, are shown back-transformed. As well, the
+standard errors are altered (using the delta method). However, the *t* ratios
+and *P* values are identical to the preceding results. That is, the tests
+themselves are still conducted on the linear-predictor scale (as is noted in the
+output).
+
+Similar statements apply to confidence intervals on the response scale:
+```{r}
+confint(pigs.emm.s, side = ">", level = .90, type = "response")
+```
+With `side = ">"`, a *lower* confidence limit is computed on the log scale, then
+that limit is back-transformed to the response scale. (We have also illustrated 
+how to change the confidence level.)
+
+[Back to Contents](#contents)
+
+
+## Multiplicity adjustments {#adjust}
+Both tests and confidence intervals may be adjusted for simultaneous inference. 
+Such adjustments ensure that the confidence coefficient for a whole set of 
+intervals is at least the specified level, or to control the overall
+significance level for a whole family of tests. This is done via the `adjust`
+argument. For `ref_grid()` and `emmeans()` results, the default is `adjust =
+"none"`. For most `contrast()` results, `adjust` is often something else,
+depending on what type of contrasts are created. For example, pairwise
+comparisons default to `adjust = "tukey"`, i.e., the Tukey HSD method.
+The `summary()` function sometimes *changes* `adjust` if it is inappropriate.
+For example, with
+```{r}
+confint(pigs.emm.s, adjust = "tukey")
+```
+the adjustment is changed to the Sidak method because the Tukey adjustment is inappropriate unless you are doing pairwise comparisons.
+
+The adjustment method that is *never* inappropriate is Bonferroni; however, it
+can be quite conservative. Using `adjust = "mvt"` is the closest to being the
+"exact" all-around method, as it uses the multivariate *t* distribution (and the
+**mvtnorm** package) with the same covariance structure as the estimates to
+determine the adjustment. However, this comes at high computational expense as
+the computations are done using simulation techniques. For a large set of tests
+(and especially confidence intervals), the computational lag becomes noticeable
+if not intolerable.
+
+For tests, `adjust` increases the *P* values over those otherwise obtained with
+`adjust = "none"`, making it harder to declare an individual test as
+"significant." Compare the following adjusted tests with the unadjusted ones
+previously computed.
+```{r}
+test(pigs.emm.s, null = log(40), side = ">", adjust = "bonferroni")
+```
+
+[Back to Contents](#contents)
+
+
+## "By" variables {#byvars}
+Sometimes you want to break a summary down into smaller pieces; for this
+purpose, the `by` argument in `summary()` is useful. For example,
+```{r}
+confint(pigs.rg, by = "source")
+```
+If there is also an `adjust` in force when `by` variables are used, the 
+adjustment is made *separately* on each `by` group; e.g., in the above, we would
+be adjusting for sets of 4 intervals, not all 12 together.
+
+There can be a `by` specification in `emmeans()` (or equivalently, a `|` in the
+formula); and if so, it is passed on to `summary()` and used unless overridden
+by another `by`. Here are examples, not run:
+```{r eval = FALSE}
+emmeans(pigs.lm, ~ percent | source)     ### same results as above
+summary(.Last.value, by = percent)       ### grouped the other way
+```
+Specifying `by = NULL` will remove all grouping.
+
+
+[Back to Contents](#contents)
+
+
+## Joint tests {#joint}
+From the above, we already know how to test individual results. For pairwise comparisons (details in [the "comparisons" vignette](comparisons.html)), we might do
+```{r}
+pigs.prs.s <- pairs(pigs.emm.s)
+pigs.prs.s
+```
+But suppose we want an *omnibus* test that all these comparisons are zero.
+Easy enough, using the `joint` argument in `test` (note: *not* available 
+in `summary()`):
+```{r}
+test(pigs.prs.s, joint = TRUE)
+```
+Notice that there are three comparisons, but only 2 d.f. for the test,
+as cautioned in the message.
+
+[Back to Contents](#contents)
+
+
+## Testing equivalence, noninferiority, and nonsuperiority {#equiv}
+The `delta` argument in `summary()` or `test()` allows the user to
+specify a threshold value to use in a test of equivalence, noninferiority, or nonsuperiority. An equivalence test is kind of a backwards significance test, where differences enough smaller than `delta` are the ones that can be significant.  The help page for `summary.emm` gives the details of these tests.
+Suppose in the present example, we consider two sources to be equivalent if they 
+are within 25% of each other. We can test this as follows:
+```{r}
+test(pigs.prs.s, delta = log(1.25), adjust = "none")
+```
+By our 25% standard, soy and skim are equivalent at the $\alpha = .05$ level,
+when no multiplicity adjustment is used.
+
+[Back to Contents](#contents)
+
+
+## Graphics {#graphics}
+Graphical displays of `emm` objects are described in the 
+["basics" vignette](basics.html#plots)
+

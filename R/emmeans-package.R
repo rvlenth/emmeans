@@ -118,6 +118,7 @@
 #' @import estimability
 #' @import mvtnorm
 #' @import stats
+#' @import ggplot2
 #' @importFrom graphics pairs plot
 #' @importFrom methods as is new slot<- slotNames
 #' @importFrom nlme fixef

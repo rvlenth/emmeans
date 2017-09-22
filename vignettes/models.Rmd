@@ -313,7 +313,7 @@ the model object.
 Support for these objects is limited. To avoid strong biases in the
 predictions, the `contrasts` attribute of all factors should be of a
 type that sums to zero -- for example, `"contr.sum"`,
-`"contr.poly"`, or `"contr.helmert"` but *not
+`"contr.poly"`, or `"contr.helmert"` but *not*
 `"contr.treatment"`.  Only intra-block estimates of covariances are
 used. That is, if a factor appears in more than one error stratum, only the
 covariance structure from its lowest stratum is used in estimating standard

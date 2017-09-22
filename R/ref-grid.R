@@ -452,16 +452,18 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1
     nms = union(names(xlev), coerced$factors) # only factors, no covariates or mult.resp
-    # originally, I used 'plyr::count', but there are probs when there is a 'freq' variable
-    id = plyr::id(data[, nms, drop = FALSE], drop = TRUE)
-    uid = !duplicated(id)
-    key = do.call(paste, data[uid, nms, drop = FALSE])
-    key = key[order(id[uid])]
-    #frq = tabulate(id, attr(id, "n"))
-    tgt = do.call(paste, grid[, nms, drop = FALSE])
-    wgt = rep(0, nrow(grid))
-    for (i in seq_along(key))
-        wgt[tgt == key[i]] = sum(data[["(weights)"]][id==i])
+    if (length(nms) == 0)
+        wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
+    else {
+        id = plyr::id(data[, nms, drop = FALSE], drop = TRUE)
+        uid = !duplicated(id)
+        key = do.call(paste, data[uid, nms, drop = FALSE])
+        key = key[order(id[uid])]
+        tgt = do.call(paste, grid[, nms, drop = FALSE])
+        wgt = rep(0, nrow(grid))
+        for (i in seq_along(key))
+            wgt[tgt == key[i]] = sum(data[["(weights)"]][id==i])
+    }
     grid[[".wgt."]] = wgt
     
     model.info = list(call = attr(data,"call"), terms = trms, xlev = xlev)

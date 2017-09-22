@@ -3,7 +3,10 @@ Changelog for 'emmeans' package
 0.99.9xxx
     NOTE: 'emmeans' is a continuation of the 'lsmeans' package. New developments
         will take place in 'emmeans', and 'lsmeans' will remain static
-        and eventually will be retired.    
+        and eventually will be retired.
+    Notes preceded by >> below reflect changes that could change results
+        that users have expected in the past
+    
     This is a major overhaul of lsmeans* package with emphasis on "estimated 
         marginal means" rather than "least-squares means"
     The flagship functions are now emmeans(), emtrends(), emmip(), etc.
@@ -14,7 +17,7 @@ Changelog for 'emmeans' package
     Classes "ref.grid" and "lsmobj" are gone (but backward-supported).
         Both are replaced by class "emm". Existing ref.grid and lsmobj objects
         inherit from emm so will still be usable.
-    I decided to revert back to "kenward-roger" as the default degrees-of-freedom
+ >> I decided to revert back to "kenward-roger" as the default degrees-of-freedom
         method for lmerMod models.
     Documentation and NAMESPACE are now "ROxygenated"
     Additional 'pigs' dataset

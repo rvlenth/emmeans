@@ -19,6 +19,8 @@ knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
   2. [EMMs defined](#EMMdef)
       a. [Reference grids](#ref_grid)
       b. [Estimated marginal means](#emmeans)
+      b. [Altering the reference grid](#altering)
+      b. [Graphical displays](#plots)
       c. [Weighting](#weights)
       d. [Multivariate models](#multiv)
   3. [Summary](#summary)
@@ -92,7 +94,7 @@ profitable, then equally weighted EMMs may be appropriate; but if our goal is to
 predict or maximize profit, the ordinary marginal means provide better estimates
 of what we can expect in the marketplace.
 
-[Contents](#contents)
+[Back to Contents](#contents)
 
 ## What exactly are EMMs? {#EMMdef}
 
@@ -141,14 +143,8 @@ its average. Thus, the grid has only three elements:
 ```{r}
 ref_grid(pigs.lm2) @ grid
 ```
-It is possible to alter the reference grid. We might, for example, want to 
-define a reference grid for `pigs.lm2` that is comparable to the one for 
-`pigs.lm1`.
-```{r}
-ref_grid(pigs.lm2, cov.reduce = FALSE)
-```
 
-[Contents](#contents)
+[Back to Contents](#contents)
 
 ### Estimated marginal means {#emmeans}
 Once the reference grid is established, we can consider using the model to
@@ -187,7 +183,100 @@ In these examples, all the results are presented on the `log(conc)` scale
 It is possible to convert them back to the `conc` scale by back-transforming.
 This topic is discussed in [the vignette on transformations](transformations).
 
-[Contents](#contents)
+[Back to Contents](#contents)
+
+### Altering the reference grid {#altering}
+It is possible to alter the reference grid. We might, for example, want to 
+define a reference grid for `pigs.lm2` that is comparable to the one for 
+`pigs.lm1`.
+```{r}
+ref_grid(pigs.lm2, cov.reduce = FALSE)
+```
+Using `cov.reduce = FALSE` specifies that, instead of using the mean, the
+reference grid should use all the unique values of each covariate. Be careful
+with this: it can create quite a mess if there is a covariate that was measured
+rather than experimentally varied. Another option is to give a function; e.g.,
+```{r}
+ref_grid(pigs.lm2, cov.reduce = range)
+```
+
+Perhaps more common is to use the `at` argument. Consider this model for the
+built-in `cars` dataset:
+```{r}
+mtcars.lm <- lm(mpg ~ disp * cyl, data = mtcars)
+ref_grid(mtcars.lm)
+```
+Since both predictors are numeric, the default reference grid has only one 
+point. For purposes of describing the fitted model, you might want to obtain
+predictions at a grid of points, like this:
+```{r}
+mtcars.rg <- ref_grid(mtcars.lm, 
+    at = list(disp = c(100, 200, 300), cyl = c(4, 6, 8)))
+```
+... which will create a 3 x 3 grid. (We'll look at this model again shortly.)
+Another use of `at` is to focus on only some of the levels of a factor. Note that
+`at` does not need to specify every predictor; those not mentioned in `at` are
+handled by `cov.reduce` or the default methods.
+
+
+[Back to Contents](#contents)
+
+### Graphical displays {#plots}
+The results of `ref_grid()` or `emmeans()` (these are objects of class `emm`)
+may be plotted in two different 
+ways. One is an interaction-style plot, using `emmip()`. In the following, let's 
+use it to compare the predictions from `pigs.lm1` and `pigs.lm2`:
+```{r}
+emmip(pigs.lm1, source ~ percent)
+emmip(ref_grid(pigs.lm2, cov.reduce = FALSE), source ~ percent)
+```
+
+Notice that `emmip()` may also be used on a fitted model. The formula
+specification needs the *x* variable on the right-hand side and the "trace"
+factor (what is used to define the different curves) on the left.
+This is a good time to yet again emphasize that EMMs are based on a *model*.
+Neither of these plots is an interaction plot of the *data*; they are 
+interaction plots of model predictions; and since both models do not include
+an interaction, no interaction at all is evident in the plots.
+
+The other graphics option offered is the `plot()` method for `emm` objects. In
+the following, we display the estimates and 95% confidence intervals for
+`mtcars.rg` in separate panels for each `disp`.
+```{r}
+plot(mtcars.rg, by = "disp")
+```
+
+This plot illistrates, as much as anything else, how silly it is to try to
+predict mileage for a 4-cylinder car having high displacement, or an 8-cylinder
+car having low displacement. The widths of the intervals give us a clue that we
+are extrapolating. A better idea is to acknowledge that displacement largely
+depends on the number of cylinders. So here is yet another way to 
+use `cov.reduce` to modify the reference grid:
+```{r}
+mtcars.rg_d.c <- ref_grid(mtcars.lm, at = list(cyl = c(4,6,8)),
+                          cov.reduce = disp ~ cyl)
+mtcars.rg_d.c @ grid
+```
+The `ref_grid` call specifies that `disp` depends on `cyl`; so a linear model 
+is fitted with the given formula and its fitted values are used as the `disp`
+values -- only one for each `cyl`. If we plot this grid, the results are 
+sensible, reflecting what the model predicts for typical cars with each 
+number of cylinders:
+```{r fig.height = 1.5}
+plot(mtcars.rg_d.c)
+```
+
+Wizards with the **ggplot2** package can further enhance these plots if 
+they like. For example, we can add the data to an interaction plot -- this
+time we opt to include confidence intervals and put the three sources 
+in separate panels:
+```{r}
+require("ggplot2")
+emmip(pigs.lm1, ~ percent | source, CIs = TRUE) +
+    geom_point(aes(x = factor(percent), y = log(conc)), data = pigs, pch = 2, color = "blue")
+```
+
+[Back to Contents](#contents)
 
 ### Using weights {#weights}
 It is possible to override the equal-weighting method for computing EMMs. Using
@@ -211,7 +300,7 @@ variations due to `source`. The lesson here is that it is possible to obtain
 statistics comparable to ordinary marginal means, while still accounting for
 variations due to the factors that are being averaged over.
 
-[Contents](#contents)
+[Back to Contents](#contents)
 
 ### Multivariate responses {#multiv}
 The **emmeans** package supports various multivariate models. When there
@@ -230,7 +319,7 @@ dimensions of `yield`. We can subsequently obtain EMMs for any of the factors
 "nitro"` is optional; if it had been excluded, the multivariate levels would
 have been named `rep.meas`.
 
-[Contents](#contents)
+[Back to Contents](#contents)
 
 ## Summary of main points {#summary}
   * EMMs are based on a *model*. A different model for the same data may lead
@@ -241,6 +330,11 @@ have been named `rep.meas`.
     a multivariate response are treated as levels of a factor.
   * EMMs are then predictions on this reference grid, or marginal
     averages thereof (equally weighted by default).
+  * Reference grids may be modified using `at` or `cov.reduce`;
+    the latter may be logical, a function, or a formula.
+  * Refernce grids and `emmeans()` results may be plotted via `plot()`
+    (for parallel confidence intervals) or `emmip()` (for an interaction-style
+    plot).
 
 ## Further reading {#more}
 The reader is referred to other vignettes for more details and advanced use.
