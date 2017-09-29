@@ -1,5 +1,5 @@
 ---
-title: "Comparisons and contrasts"
+title: "Comparisons and contrasts in emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -13,4 +13,189 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
-I haven't written this yet.
+## Contents
+This vignette covers techniques for comparing EMMs at levels of a factor
+predictor, and other related analyses.
+
+  1. [Pairwise comparisons](#pairwise)
+  2. [Other contrasts](#contrasts)
+  3. [Formula interface](#formulas)
+  4. [Custom contrasts and linear functions](#linfcns)
+  5. [Special behavior with log transformations](#logs)
+  6. Interaction contrasts (see ["interactions" vignette](interactions.html))
+  
+[Vignette index](index.html)
+
+## Pairwise comparisons {#pairwise}
+The most common follow-up analysis for models having factors as predictors is
+to compare the EMMs with one another. This may be done simply via the `pairs()`
+method for `emm` objects. In the code below, we obtain the EMMs for `source` for
+the `pigs` data, and then compare the sources pairwise.
+```{r}
+pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+pigs.emm.s <- emmeans(pigs.lm, "source")
+pairs(pigs.emm.s)
+```
+In its out-of-the-box configuration, `pairs()` sets two defaults for 
+[`summary()`](confidence-intervals.html#summary): `adjust = "tukey"`
+(multiplicity adjustment), and `infer = c(FALSE, TRUE)` (test statistics, not
+confidence intervals). You may override these, of course, by calling `summary()`
+on the result with different values for these.
+
+In the example above, EMMs for later factor levels are subtracted from those for
+earlier levels; if you want the comparisons to go in the other direction, use
+`pairs(pigs.emm.s, reverse = TRUE)`. Also, in multi-factor situations,
+you may specify `by` factor(s) to perform the comparisons separately at the 
+levels of those factors.
+
+[Back to Contents](#contents)
+
+
+## Other contrasts {#contrasts}
+Pairwise comparisons are an example of linear functions of EMMs.
+You may use `coef()` to see the coefficients of these linear functions:
+```{r}
+coef(pairs(pigs.emm.s))
+```
+The pairwise comparisons correspond to columns of the above results.
+For example, the first pairwise comparison, `fish - soy`, gives coefficients
+of 1, -1, and 0 to fish, soy, and skim, respectively. In cases, such as this
+one, where each column of coefficients sums to zero, the linear functions
+are termed *contrasts*
+
+The `contrast()` function provides for general contrasts (and linear functions,
+as well) of factor levels. Its second argument, `method`, is used to specify
+what method is to be used. In this section we describe the built-in ones,
+where we simply provide the name of the built-in method. Consider, for example,
+the factor `percent` in the model `pigs.lm` . It is treated as a factor in 
+the model, but it corresponds to equally-spaced values of a numeric variable.
+In such cases, users often want to compute orthogonal polynomial contrasts:
+```{r}
+pigs.emm.p <- emmeans(pigs.lm, "percent")
+ply <- contrast(pigs.emm.p, "poly")
+ply
+
+coef(ply)
+```
+We obtain tests for the linear, quadratic, and cubic trends. The coefficients
+are those that can be found in tables in many experimental-design texts.
+It is important to understand that the estimated linear contrast is *not* the
+slope of a line fitted to the data. It is simply a contrast having coefficients
+that increase linearly. It *does* test the linear trend, however.
+
+There are a number of other named contrast methods, for example `"trt.vs.ctrl"`,
+`"eff"`, and `"consec"`. The `"pairwise"` and `"revpairwise"` methods in `contrast()` are the same as `Pairs()` and `pairs(..., reverse = TRUE)`. See
+[help("contrast-methods")](../html/emmc-functions.html) for details.
+
+[Back to Contents](#contents)
+
+
+
+## Formula interface {#formulas}
+If you already know what contrasts you will want before calling `emmeans()`, 
+a quick way to get them is to specify the method as the left-hand side of the formula in its second argument. For example, with the `oranges` dataset
+provided in the package,
+```{r}
+org.aov <- aov(sales1 ~ day + Error(store), data = oranges,
+               contrasts = list(day = "contr.sum"))
+org.emml <- emmeans(org.aov, consec ~ day)
+org.emml
+```
+The contrasts shown are the day-to-day changes.
+
+This two-sided formula technique is quite convenient, but it can also create
+confusion. For one thing, the result is not an `emm` object anymore; it is a
+`list` of `emm` objects, called an `emm_list`. You may need to be cognizant of
+that if you are to do further contrasts or other analyzes. For example if you
+want `"eff"` contrasts as well, you need to do `contrast(org.emml[[1]],
+"eff")` or `contrast(org.emml, "eff", which = 1)`.
+
+Another issue is that it may be unclear which part of the results is
+affected by certain options. For example, if you were to add `adjust = "bonf"`
+to the `org.emm` call above, would the Bonferroni adjustment be applied to the
+EMMs, or to the contrasts? (See the documentation if interested; but the best practice is to avoid such dilemmas.)
+
+[Back to Contents](#contents)
+
+## Custom contrasts and linear functions {#linfcns}
+The user may write a custom contrast function for use in `contrast()`.
+What's needed is a function having the desired name with `".emmc"` appended,
+that generates the needed coefficients as a list or data frame. The
+function should take a vector of levels as its first argument, 
+and any optional parameters as additional arguments. For example,
+suppose we want to compare every third level of a treatment. 
+The following function provides for this:
+```{r}
+skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE) {
+    if((k <- length(levels)) < skip + 1)
+        stop("Need at least ", skip + 1, " levels")
+    coef <- data.frame()
+    coef <- as.data.frame(lapply(seq_len(k - skip - 1), function(i) {
+        sgn <- ifelse(reverse, -1, 1)
+        sgn * c(rep(0, i - 1), 1, rep(0, skip), -1, rep(0, k - i - skip - 1))
+    }))
+    names(coef) <- sapply(coef, function(x)
+        paste(which(x == 1), "-", which(x == -1)))
+    attr(coef, "adjust") = "fdr"   # default adjustment method
+    coef
+}
+```
+To test it, try 5 levels:
+```{r}
+skip_comp.emmc(1:5)
+
+skip_comp.emmc(1:5, skip = 0, reverse = TRUE)
+```
+(The latter is the same as `"consec"` contrasts.)
+Now try it with the `oranges` example we had previously:
+```{r}
+contrast(org.emml[[1]], "skip_comp", skip = 2, reverse = TRUE)
+```
+
+The `contrast()` function may in fact be used to compute arbitrary linear
+functions of EMMs. Suppose for some reason we want to estimate the quantities
+$\lambda_1 = \mu_1+2\mu_2-7$ and $\lambda_2 = 3\mu_2-2\mu_3+1$, where the
+$\mu_j$ are the population values of the `source` EMMs in the `pigs` example. 
+This may be done by providing the coefficients in a list, and the added
+constants in the `offset` argument:
+```{r}
+LF <- contrast(pigs.emm.s, 
+               list(lambda1 = c(1, 2, 0), lambda2 = c(0, 3, -2)),
+               offset = c(-7, 1))
+confint(LF, adjust = "bonferroni")
+```
+
+[Back to Contents](#contents)
+
+## Special properties of log (and logit) transformations {#logs}
+Suppose we obtain EMMs for a model having a response transformation 
+or link function. In most cases, when we compute contrasts of those EMMs,
+there is no natural way to express those contrasts on anything other
+than the transformed scale. For example, in a model fitted using `glm()`
+with the `gamma()` family, the default link function is the inverse.
+Predictions on such a model are estimates of $1/\mu_j$ for various $j$.
+Comparisons of predictions will be estimates of $1/\mu_j - 1/\mu_{k}$
+for $j \ne k$. There is no natural way to back-transform these 
+differences to some other interpretable scale.
+
+However, logs are an exception, in that 
+$\log\mu_j - \log\mu_k = \log(\mu_j/\mu_k)$. Accordingly, when `contrast()`
+(or `pairs()`) notices that the response is on the log scale, it back-transforms contrasts to ratios when results are to be of `response` type. For example:
+```{r}
+pairs(pigs.emm.s, type = "lp")
+
+pairs(pigs.emm.s, type = "response")
+```
+As is true of EMM summaries with `type = "response"`, the tests and confidence
+intervals are done before back-transforming. The ratios estimated here are
+actually ratios of *geometric* means. In general, a model with a log response is
+in fact a model for *relative* effects of any of its linear predictors, and this
+back-transformation to ratios goes hand-in-hand with that.
+
+In generalized linear models, this behaviors will occur in two common cases:
+Poisson or count regression, for which the usual link is the log; and logistic
+regression, because logits are logs of odds ratios.
+
+[Back to Contents](#contents)
+
+

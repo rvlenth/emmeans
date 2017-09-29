@@ -3,6 +3,7 @@
 \name{pairwise.emmc}
 \alias{pairwise.emmc}
 \alias{emmc-functions}
+\alias{contrast-methods}
 \alias{revpairwise.emmc}
 \alias{tukey.emmc}
 \alias{poly.emmc}

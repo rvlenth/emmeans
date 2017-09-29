@@ -25,6 +25,9 @@ knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
       d. [Multivariate models](#multiv)
   3. [Summary](#summary)
   4. [Further reading](#more)
+  
+[Vignette index](index.html)
+
 
 ## Why we need EMMs {#motivation}
 Consider the `pigs` dataset provided with the package (`help("pigs")` provides
@@ -182,6 +185,11 @@ In these examples, all the results are presented on the `log(conc)` scale
 (and the annotations in the output warn of this).
 It is possible to convert them back to the `conc` scale by back-transforming.
 This topic is discussed in [the vignette on transformations](transformations).
+
+An additional note: There is an exception to the definition of EMMs given
+here. If the model has a nested structure in the fixed effects, then averaging
+is performed separately in each nesting group. See the [section on nesting in the
+"messy-data" vignette](messy-data.html#nesting) for an example.
 
 [Back to Contents](#contents)
 
@@ -343,10 +351,15 @@ also be accessed via `vignette("`*name*`", "emmeans")`
 
   * Models that are supported in **emmeans** (there are lots of them)
     ["models"](models.html)
+  * Confidence intervals and tests: 
+    ["confidence-intervals"](confidence-intervals.html)
   * Often, users want to compare or contrast EMMs: ["comparisons"](comparisons.html)
   * Working with response transformations and link functions:
     ["transformations"](transformations.html)
   * Multi-factor models with interactions: ["interactions"](interactions.html)
-  * Models with nested fixed effects: ["nesting"](nesting.html)
+  * Working with messy data and nested effects: ["messy-data"](messy-data.html)
   * Frequently asked questions: ["FAQs"](FAQs.html)
-  
+
+[Back to Contents](#contents)
+
+[Vignette index](index.html)

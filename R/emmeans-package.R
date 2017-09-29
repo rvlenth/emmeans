@@ -34,7 +34,7 @@
 #' @section Overview:
 #' \describe{
 #' \item{Vignettes}{A number of vignettes are provided to help the user get
-#' acquainted with thepkg{emmeans} package and see some examples. 
+#' acquainted with the \pkg{emmeans} package and see some examples. 
 #' See the \href{../doc/index.html}{vignette index}.}
 #' 
 #' \item{Concept}{Estimated marginal means (see Searle \emph{et al.} 1980 are

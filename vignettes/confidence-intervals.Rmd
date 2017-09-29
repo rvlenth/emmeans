@@ -25,6 +25,8 @@ This vignette describes various ways of summarizing `emm` objects.
   6. [Joint (omnibus) tests](#joint)
   7. [Testing equivalence, noninferiority, nonsuperiority](#equiv)
   8. Graphics (in ["basics" vignette](basics.html#plots))
+  
+[Vignette index](index.html)
 
 ## Objects, structures, and methods {#emmobj}
 The `ref_grid()` and `emmeans()` functions are introduced in 

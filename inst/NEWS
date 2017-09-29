@@ -20,7 +20,7 @@ Changelog for 'emmeans' package
  >> I decided to revert back to "kenward-roger" as the default degrees-of-freedom
         method for lmerMod models.
     Documentation and NAMESPACE are now "ROxygenated"
-    Additional 'pigs' dataset
+    Additional 'neuralgia' and 'pigs' datasets
     Dispatching of emmmeans methods is now top-down rather than convoluted
         intermingling of S3 methods
     Improved display of back-transformed contrasts when log or logit 
