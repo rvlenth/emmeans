@@ -1,8 +1,14 @@
 Changelog for 'emmeans' package
 
 0.99.9xxx
-    Major overhaul of lsmeans* package with emphasis on "estimated marginal means" 
-        rather than "least-squares means"
+    NOTE: 'emmeans' is a continuation of the 'lsmeans' package. New developments
+        will take place in 'emmeans', and 'lsmeans' will remain static
+        and eventually will be retired.
+    Notes preceded by >> below reflect changes that could change results
+        that users have expected in the past
+    
+    This is a major overhaul of lsmeans* package with emphasis on "estimated 
+        marginal means" rather than "least-squares means"
     The flagship functions are now emmeans(), emtrends(), emmip(), etc.
         But lsmeans(), lstrends(), etc. as well as pmmeans() etc. are
         mapped to their corresponding emxxxx() function.
@@ -11,22 +17,24 @@ Changelog for 'emmeans' package
     Classes "ref.grid" and "lsmobj" are gone (but backward-supported).
         Both are replaced by class "emm". Existing ref.grid and lsmobj objects
         inherit from emm so will still be usable.
-    I decided to revert back to "kenward-roger" as the default degrees-of-freedom
+ >> I decided to revert back to "kenward-roger" as the default degrees-of-freedom
         method for lmerMod models.
     Documentation and NAMESPACE are now "ROxygenated"
-    Additional 'pigs' dataset
+    Additional 'neuralgia' and 'pigs' datasets
     Dispatching of emmmeans methods is now top-down rather than convoluted
         intermingling of S3 methods
-    Improved user options for contrasts when log or logit transformation
-        applies. New "log.contrast" option allows user to choose between
-        showing ratios or differences when type = "response". Also, when
-        showing ratios, we change any ' - 's in labels to ' / 's.
-    Greatly overhauled help page for models, with a quick reference and
-        organization by similarilties instead of packages.
-    Moved Suggests pkgs not needed for building/testing to Enhances
+    Improved display of back-transformed contrasts when log or logit 
+        transformation was used: We change any ' - 's in labels to ' / 's
+        to emphasize that thnese results are ratios.
+    A message is now displayed when nesting is auto-detected in 'ref_grid'.
+    Greatly overhauled help page for models. It is now a vignette, 
+        with a quick reference chart linked to details, and is
+        organized by similarities instead of packages.
+    A large number of smaller interlinked vignettes replaces the one
+        big one on using the package. Several vignettes are linked in the
+        help pages (why didn't I learn how to do this years ago?)
+    Graphics methods 'plot' and 'emmip' are now **ggplot2**-based.
+        Old **lattice**-based functionality is still available too.
+    Moved 'Suggests' pkgs to 'Enhances' when not needed for building/testing
 
 
-Past history
-    'emmeans' is a continuation of the 'lsmeans' package. New developments
-        will take place in 'emmeans', and 'lsmeans' will remain static
-        and will be retired.

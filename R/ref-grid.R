@@ -47,7 +47,7 @@
 #' 
 #'
 #' @param object An object produced by a supported model-fitting function, such
-#'   as \code{lm}. Many models are supported. See \code{\link{models}}.
+#'   as \code{lm}. Many models are supported. See \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
 #' @param at Optional named list of levels for the corresponding variables
 #' @param cov.reduce A function, logical value, or formula; or a named list of
 #'   these. Each covariate \emph{not} specified in \code{at} is reduced
@@ -83,7 +83,7 @@
 #'   is automatically detected. See Details.
 #' @param ... Optional arguments passed to \code{\link{emm_basis}}, such as
 #'   \code{vcov.} (see Details below) or options for certain models (see
-#'   \link{models}).
+#'   \href{../doc/models.html}{vignette("models", "emmeans")}).
 #' 
 #' @section Using \code{cov.reduce}:
 #' \code{cov.reduce} may be a function, logical value, formula, or a named list of
@@ -185,7 +185,7 @@
 #' @seealso Reference grids are of class \code{\link{emm-class}} and several
 #'   methods exist for them -- for example \code{\link{summary.emm}}. Reference
 #'   grids are fundamental to \code{\link{emmeans}}. Supported models are
-#'   detailed in \code{\link{models}}.
+#'   detailed in \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
 #'   
 #' @export
 #'
@@ -452,16 +452,18 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1
     nms = union(names(xlev), coerced$factors) # only factors, no covariates or mult.resp
-    # originally, I used 'plyr::count', but there are probs when there is a 'freq' variable
-    id = plyr::id(data[, nms, drop = FALSE], drop = TRUE)
-    uid = !duplicated(id)
-    key = do.call(paste, data[uid, nms, drop = FALSE])
-    key = key[order(id[uid])]
-    #frq = tabulate(id, attr(id, "n"))
-    tgt = do.call(paste, grid[, nms, drop = FALSE])
-    wgt = rep(0, nrow(grid))
-    for (i in seq_along(key))
-        wgt[tgt == key[i]] = sum(data[["(weights)"]][id==i])
+    if (length(nms) == 0)
+        wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
+    else {
+        id = plyr::id(data[, nms, drop = FALSE], drop = TRUE)
+        uid = !duplicated(id)
+        key = do.call(paste, data[uid, nms, drop = FALSE])
+        key = key[order(id[uid])]
+        tgt = do.call(paste, grid[, nms, drop = FALSE])
+        wgt = rep(0, nrow(grid))
+        for (i in seq_along(key))
+            wgt[tgt == key[i]] = sum(data[["(weights)"]][id==i])
+    }
     grid[[".wgt."]] = wgt
     
     model.info = list(call = attr(data,"call"), terms = trms, xlev = xlev)
@@ -501,6 +503,10 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     
     if (!missing(nesting))
         result@model.info$nesting = .parse_nest(nesting)
+    else if (!is.null(nst <- result@model.info$nesting))
+        message("NOTE: A nesting structure was detected in the fitted model:\n    ",
+                 .fmt.nest(nst), 
+                "\nIf this is incorrect, re-run or update with `nesting` specified")
 
     if(!is.null(options)) {
         options$object = result

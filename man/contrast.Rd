@@ -11,7 +11,7 @@ contrast(object, ...)
 
 \method{contrast}{emm}(object, method = "eff", interaction = FALSE, by,
   offset = NULL, name = "contrast", options = get_emm_option("contrast"),
-  log.contrast = get_emm_option("log.contrast"), adjust, ...)
+  type, adjust, ...)
 
 \method{pairs}{emm}(x, reverse = FALSE, ...)
 
@@ -48,18 +48,9 @@ used in table headings or subsequent contrasts of the returned object.}
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
 to \code{\link{update.emm}}, just after the object is constructed.}
 
-\item{log.contrast}{Character value matching \code{"ratio"} or 
-\code{"difference"}. This only has an effect when a log or logit 
-transformation is in force, \emph{and} every set of contrast coefficients 
-sums to zero (true contrasts). In such a case, contrasts can (usually) be 
-interpreted as logs of ratios. Subsequently if summarizing using \code{type
-= "response"}, do we want those results presented as ratios (specify 
-\code{"ratio"}), or as differences of back-transformed EMMs (specify 
-\code{"difference"})?}
+\item{type}{Character: prediction type (e.g., \code{"response"}) -- added to \code{options}}
 
-\item{adjust}{Method to use for adjusting \emph{P} values and confidence
-intervals. This is an alternative to specifying it as part of
-\code{options}.}
+\item{adjust}{Character: adjustment method (e.g., \code{"bonferroni"}) -- added to \code{options}}
 
 \item{x}{An \code{emm} object}
 

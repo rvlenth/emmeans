@@ -54,16 +54,16 @@ back-transformation. The default is \code{"link"}, unless the
 use in constructing confidence intervals and \emph{P} values (\code{NA}
 specifies asymptotic results).}
 
-\item{null}{Numeric. Null hypothesis value(s) against which estimates are
-tested. May be a single value used for all, or a numeric vector of length
-equal to the number of tests in each family (i.e., \code{by} group in the
-displayed table).}
+\item{null}{Numeric. Null hypothesis value(s), on the linear-predictor scale,
+against which estimates are tested. May be a single value used for all, or
+a numeric vector of length equal to the number of tests in each family
+(i.e., \code{by} group in the displayed table).}
 
-\item{delta}{Numeric value. If zero, ordinary tests of significance are
-performed. If positive, this specifies a threshold for testing equivalence
-(using the TOST or two-one-sided-test method), non-inferiority, or
-non-superiority, depending on \code{side}. See Details for how the test
-statistics are defined.}
+\item{delta}{Numeric value (on the linear-predictor scale). If zero, ordinary
+tests of significance are performed. If positive, this specifies a
+threshold for testing equivalence (using the TOST or two-one-sided-test
+method), non-inferiority, or non-superiority, depending on \code{side}. See
+Details for how the test statistics are defined.}
 
 \item{side}{Numeric or character value specifying whether the test is
 left-tailed (\code{-1}, \code{"-"}, code{"<"}, \code{"left"}, or
@@ -95,13 +95,14 @@ missing, all rows of L are used. If not missing, \code{by} variables are
 ignored.}
 }
 \value{
-\code{summary.emm}, \code{confint.emm}, and \code{test.emm} return an object of class
-  \code{"summary_emm"}, which is an extension of \code{\link{data.frame}} but
-  with a special \code{print} method that with custom formatting. For models
-  fitted using MCMC methods, the result is typically a frequentist summary,
-  based on the empirical mean and covariance matrix of the \code{post.beta}
-  slot. A Bayesian summary may be obtained using \code{\link{as.mcmc.emm}}
-  and summarizing that result using tools for Bayesian estimation.
+\code{summary.emm}, \code{confint.emm}, and \code{test.emm} return an
+  object of class \code{"summary_emm"}, which is an extension of
+  \code{\link{data.frame}} but with a special \code{print} method that with
+  custom formatting. For models fitted using MCMC methods, the result is
+  typically a frequentist summary, based on the empirical mean and covariance
+  matrix of the \code{post.beta} slot. A Bayesian summary may be obtained
+  using \code{\link{as.mcmc.emm}} and summarizing that result using tools for
+  Bayesian estimation.
 
 \code{predict} returns a vector of predictions for each row of \code{object@grid}.
 }
@@ -125,6 +126,14 @@ contrasts is tested. Linear dependence and nonzero \code{null} cause an
 error.
 }
 \note{
+In doing testing and a transformation and/or link is in force, any
+  \code{null} and/or \code{delta} values specified must always be on the
+  scale of the linear predictor, regardless of the setting for `type`. If
+  \code{type = "response"}, the null value displayed in the summary table 
+  will be back-transformed from the value supplied by the user. But the
+  displayed \code{delta} will not be changed, because there (usually) is
+  not a natural way to back-transform it.
+
 The default \code{show} method for \code{emm} objects (with the
   exception of newly created reference grids) is \code{print(summary())}.
   Thus, with ordinary usage of \code{\link{emmeans}} and such, it is
@@ -138,7 +147,8 @@ When \code{delta = 0}, test statistics are of the usual form \samp{(estimate
 our estimate of \eqn{\theta}; then left, right, or two-sided \eqn{p} values
 are produced.
 
-When \code{delta} is positive, the test statistic depends on \code{side} as follows. 
+When \code{delta} is positive, the test statistic depends on \code{side} as
+follows.
 \describe{
 \item{Left-sided (nonsuperiority)}{\eqn{H_0: \theta \ge \theta_0 + \delta}
   versus \eqn{H_1: \theta < \theta_0 + \delta}\cr 
@@ -151,7 +161,8 @@ When \code{delta} is positive, the test statistic depends on \code{side} as foll
 \item{Two-sided (equivalence)}{\eqn{H_0: |\theta - \theta_0| \ge \delta}
   versus \eqn{H_1: |\theta - \theta_0| < \delta}\cr
   \eqn{t = (|Q - \theta_0| - \delta)/SE}\cr
-  The \eqn{p} value is the \emph{lower}-tail probability.}}
+  The \eqn{p} value is the \emph{lower}-tail probability.}
+}
 }
 
 \examples{

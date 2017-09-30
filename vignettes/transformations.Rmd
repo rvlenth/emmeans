@@ -1,0 +1,282 @@
+---
+title: "Transformations and link functions in emmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Transformations and link functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, results = "hide", message = FALSE}
+require("emmeans")
+knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
+```
+
+## Contents {#contents}
+This vignette covers the intricacies of transformations and link functions in **emmeans**.
+
+  1. [Overview](#timing)
+  2. [Re-gridding](#regrid)
+  3. [Link functions](#links)
+  4. [Both a response transformation and a link](#tranlink)
+  5. [Special transformations](#special)
+  6. [Specifying a transformation after the fact](#after)
+  7. [Faking a log transformation](#logs)
+  
+[Vignette index](index.html)
+
+## Overview {#timing}
+Consider the same example with the `pigs` dataset that is used in many of 
+these vignettes:
+```{r}
+pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+```
+This model has two factors, `source` and `percent` (coerced to a factor), as 
+predictors; and log-transformed `conc` as the response. Here we obtain the EMMs
+for `source`, examine its structure, and finally produce a summary, including a
+test against a null value of log(35):
+```{r}
+pigs.emm.s <- emmeans(pigs.lm, "source")
+str(pigs.emm.s)
+
+summary(pigs.emm.s, infer = TRUE, null = log(35))
+```
+Now suppose that we want the EMMs expressed on the same scale as `conc`. This 
+can be done by adding `type = "response"` to the `summary()` call: 
+```{r}
+summary(pigs.emm.s, infer = TRUE, null = log(35), type = "response")
+```
+
+### Timing is everything
+Dealing with transformations in **emmeans** is somewhat complex, due to the 
+large number of possibilities. But the key is understanding what happens, when.
+These results come from a sequence of steps. Here is what happens (and doesn't
+happen) at each step:
+
+  1. The reference grid is constructed for the `log(conc)` model. The
+     fact that a log transformation is used is recorded, but nothing else
+     is done with that information.
+  2. The predictions on the reference grid are averaged
+     over the four `percent` levels, for each `source`, to obtain the EMMs
+     for `source` -- *still* on the `log(conc)` scale.
+  3. The standard errors and confidence intervals for these EMMs are
+     computed -- *still* on the `log(conc)` scale.
+  4. Only now do we do back-transformation...
+     a. The EMMs are back-transformed to the `conc` scale.
+     b. The endpoints of the confidence intervals are back-transformed.
+     c. The *t* tests and *P* values are left as-is.
+     d. The standard errors are converted to the `conc` scale using the
+        delta method. These SEs were *not* used in constructing the 
+        tests and confidence intervals.
+
+### The model is our best guide
+This choice of timing is based on the idea that *the model is right*. In
+particular, the fact that the response is transformed suggests that the
+transformed scale is the best scale to be working with. In addition, the model
+specifies that the effects of `source` and `percent` are *linear* on the
+transformed scale; inasmuch as marginal averaging to obtain EMMs is a linear
+operation, that averaging is best done on the transformed scale. For those two
+good reasons, back-transforming to the response scale is delayed until the very
+end by default.
+
+[Back to Contents](#contents)
+
+## Re-gridding {#regrid}
+As well-advised as it is, some users may not want the default timing of things.
+The tool for changing when back-transformation is performed is the `regrid()`
+function -- which, with default settings of its arguments, back-transforms an
+`emm` object and adjusts everything in it appropriately. For example:
+```{r}
+str(regrid(pigs.emm.s))
+
+summary(regrid(pigs.emm.s), infer = TRUE, null = 35)
+```
+Notice that the structure no longer includes the transformation. That's because
+it is no longer relevant; the reference grid is on the `conc` scale, and how we got there is now forgotten. Compare this `summary()` result with the preceding one, and note the following:
+
+  * It no longer has annotations concerning transformations.
+  * The estimates and SEs are identical.
+  * The confidence intervals, *t* ratios, and *P* values are *not*
+    identical. This is because, this time, the SEs shown in the table
+    are the ones actually used to construct the tests and intervals.
+
+Understood, right? But think carefully about how these EMMs were obtained. 
+They are back-transformed from `pigs.emm.s`, in which *the marginal averaging
+was done on the log scale*. If we want to back-transform *before* doing the
+averaging, we need to call `regrid()` after the reference grid is constructed but
+before the averaging takes place:
+```{r}
+pigs.rg <- ref_grid(pigs.lm)
+pigs.remm.s <- emmeans(regrid(pigs.rg), "source")
+summary(pigs.remm.s, infer = TRUE, null = 35)
+```
+These results all differ from either of the previous two summaries -- again,
+because the averaging is done on the `conc` scale rather than the `log(conc)` 
+scale.
+
+Note: For those who want to routinely back-transform before averaging,
+the `transform` argument in `ref_grid()` simplifies this. The first two
+steps above could have been done more easily as follows:
+```{r eval = FALSE}
+pigs.remm.s <- emmeans(pigs.lm, "source", transform = "response")
+```
+But don't get `transform` and `type` confused. The `transform` argument is 
+passed to `regrid()` after the reference grid is constructed, whereas the `type`
+argument is simply remembered and used by `summary()`. So a similar-looking
+call:
+```{r eval = FALSE}
+emmeans(pigs.lm, "source", type = "response")
+```
+will compute the results we have seen for `pigs.emm.s` -- back-transformed 
+*after* averaging on the log scale.
+
+Remember again: When it comes to transformations, timing is everything.
+
+
+[Back to Contents](#contents)
+
+
+#
+## Link functions {#links}
+Exactly the same ideas we have presented for response transformations apply to
+generalized linear models having non-identity link functions. As far as
+**emmeans** is concerned, there is no difference at all.
+
+To illustrate, consider the `neuralgia` dataset provided in the package. These 
+data come from an experiment reported in a SAS technical report where different
+treatments for neuralgia are compared. The patient's sex is an additional
+factor, and their age is a covariate. The response is `Pain`, a binary variable
+on whether or not the patient reports neuralgia pain after treatment.
+The model suggested in the SAS report is equivalent to the following. We use
+it to obtain estimated probabilities of experiencing pain:
+```{r}
+neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), data = neuralgia)
+neuralgia.emm <- emmeans(neuralgia.glm, "Treatment", type = "response")
+neuralgia.emm
+```
+(The note about the interaction is discussed shortly.) Note that the averaging 
+over `Sex` is done on the logit scale, *before* the results are back-transformed
+for the summary. We may use `pairs()` to compare these estimates; note that 
+logits are logs of odds; so thias is another instance where log-differences are
+back-transformed -- in this case to odds ratios:
+```{r}
+pairs(neuralgia.emm, reverse = TRUE)
+```
+So there is evidence of considereably more pain being reported with placebo 
+(treatment `P`) than with either of the other two treatments. The estimated odds
+of pain with `B` are about half that for `A`, but this finding is not 
+statistically significant. (The odds that this is a made-up dataset seem quite
+high, but that finding is strictly this author's impression.)
+
+Observe that there is a note in the output for `neuralgia.emm` that the results
+may be misleading. It is important to take it seriously, because if two factors
+interact, it may be the case that marginal averages of predictions don't reflect
+what is happening at any level of the factors being averaged over. To find out,
+look at an interaction plot of the fitted model:
+```{r}
+emmip(neuralgia.glm, Sex ~ Treatment)
+```
+
+There is no practical difference between females and males in the patterns of
+response to `Treatment`; so I think most people would be quite comfortable with
+the marginal results that are reported earlier.
+
+
+
+[Back to Contents](#contents)
+
+## Models having both a response transformation and a link function {#tranlink}
+It is possible to have a generalized linear model with a non-identity link *and* a response transformation. Here is an example, with the built-in `wapbreaks` dataset:
+```{r}
+warp.glm <- glm(sqrt(breaks) ~ wool*tension, family = Gamma, data = warpbreaks)
+ref_grid(warp.glm)
+```
+The canonical link for a gamma model is the reciprocal (or inverse); and there is the square-root response transformation besides. If we choose `type = "response"`
+in summarizing, we undo *both* transformations:
+```{r}
+emmeans(warp.glm, ~ tension | wool, type = "response")
+```
+What happened here is first the linear predictor was back-transformed from the link scale (inverse); then the squares were obtained to back-transform the rest of the way. It is possible to undo the link, and not the response transformation:
+```{r}
+emmeans(warp.glm, ~ tension | wool, type = "unlink")
+```
+It is *not* possible to undo the response transformation and leave the link 
+in place, because the response was transform first, then the link model was applied;
+we have to undo those in reverse order to make sense.
+
+One may also use `"unlink"` as a `transform` argument in `regrid()` or through
+`ref_grid()`.
+
+[Back to Contents](#contents)
+
+
+
+## Special transformations {#special}
+The `make.tran()` function provides several spcial transformations and sets
+things up so they can be handled in **emmeans** with relative ease. 
+(See [`help("make.tran", "emmeans")](../html/make.tran.html) for descriptions
+of what is available.) `make.tran()` works much like `stats::make.link()` in
+that it returns a list of functions `linkfun()`, `linkinv()`, etc. that serve
+in managing results on a transformed scale. The difference is that most 
+transformations with `make.tran()` require additional arguments.
+
+To use this capability in `emmeans()`, it is fortuitous to first obtain the 
+`make.tran()` result, and then to use it as the enclosing environment
+for fitting the model, with `linkfun` as the transformation. 
+For example, suppose we want to use the response
+transformation $\log(y + \frac12)$. Then proceed like this:
+```{r eval = FALSE}
+tran <- make.tran("genlog", 1/2)
+my.model <- with(tran, 
+    lmer(linkfun(yield) ~ treatment + (1|Block), data = mydata))
+```
+Subsequent calls to `ref_grid()`, `emmeans()`, `regrid()`, etc. will then 
+be able to access the transformation information correctly.
+
+The help page for `make.tran()` has an example like this
+using a Box-Cox transformation.
+
+[Back to Contents](#contents)
+
+## Specifying a transformation after the fact {#after}
+It is not at all uncommon to fit a model using statements like the following:
+```{r eval = FALSE}
+mydata <- transform(mydata, logy.5 = log(yield + .5))
+my.model <- lmer(logy.5 ~ treatment + (1|Block), data = mydata)
+```
+In this case, there is no way for `ref_grid()` to figure out that a response
+transformation was used. What can be done is to update the reference grid
+with the required information:
+```{r eval = FALSE}
+my.rg <- update(ref_grid(my.model), tran = make.tran("genlog", .5))
+```
+Subsequently, use `my.rg` in place of `my.mnodel` in any `emmeans()` analyses,
+and the transformation information will be there.
+
+For standard transformations (those in `stats::make.link()`), just give the name
+of the transformation; e.g.,
+```{r eval = FALSE}
+model.rg <- update(ref_grid(model), tran = "sqrt")
+```
+
+[Back to Contents](#contents)
+
+## Faking a log transformation {#logs}
+The `regrid()` dunction makes it possible to fake a log transformation of the response. Why would you want to do this? So that you can make comparisons using
+ratios instead of differences.
+
+Consider the `pigs` example once again, but suppose we had fitted a model with a square-root transformation instead of a log:
+```{r}
+pigroot.lm <- lm(sqrt(conc) ~ source + factor(percent), data = pigs)
+piglog.emm.s <- regrid(emmeans(pigroot.lm, "source"), transform = "log")
+confint(piglog.emm.s, type = "response")
+pairs(piglog.emm.s, type = "response")
+```
+These results are not identical, but very similar to the back-transformed
+confidence intervals [above](#timing) for the EMMs and the [pairwise ratios in
+the "comparisons" vignette](comparisons.html#logs), where the fitted model
+actually used a log response.
+
+
+[Back to Contents](#contents)

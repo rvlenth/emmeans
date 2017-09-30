@@ -73,8 +73,8 @@ The \code{type} argument specifies the following transformations:
   require \eqn{p > 0} in order for the transformation to be monotone and
   continuous.}
 \item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
-  \eqn{sin^(-1)(y/p)^{1/2)}. Typically, the parameter \eqn{p} is equal to 1 for
-  a fraction, or 100 for a percentage.}}
+  \eqn{sin^(-1)(y/p)^{1/2)}}. Typically, the parameter \eqn{p} is equal to 1 for
+  a fraction, or 100 for a percentage.}
 }
 The user may include a second element in \code{param} to specify an
 alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},

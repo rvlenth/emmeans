@@ -44,6 +44,11 @@ summary.emm_list <- function(object, ..., which = seq_along(object))
         else summary.emm(x, ...)
     })
 
+#' @export
+#' @method print emm_list
+print.emm_list = function(x, ...) {
+    print(summary(x, ...))
+}
 
 #' @export
 #' @method contrast emm_list
@@ -54,7 +59,7 @@ contrast.emm_list = function(object, ... , which = seq_along(object)) {
 #' @export
 #' @method pairs emm_list
 pairs.emm_list = function(x, ..., which = seq_along(object)) {
-    lapply(object[which], pairs, ...)
+    lapply(x[which], pairs, ...)
 }
 
 #' @export

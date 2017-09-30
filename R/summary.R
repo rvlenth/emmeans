@@ -69,15 +69,15 @@
 #' @param df Numeric. If non-missing, a constant number of degrees of freedom to
 #'   use in constructing confidence intervals and \emph{P} values (\code{NA}
 #'   specifies asymptotic results).
-#' @param null Numeric. Null hypothesis value(s) against which estimates are
-#'   tested. May be a single value used for all, or a numeric vector of length
-#'   equal to the number of tests in each family (i.e., \code{by} group in the
-#'   displayed table).
-#' @param delta Numeric value. If zero, ordinary tests of significance are
-#'   performed. If positive, this specifies a threshold for testing equivalence
-#'   (using the TOST or two-one-sided-test method), non-inferiority, or
-#'   non-superiority, depending on \code{side}. See Details for how the test
-#'   statistics are defined.
+#' @param null Numeric. Null hypothesis value(s), on the linear-predictor scale,
+#'   against which estimates are tested. May be a single value used for all, or
+#'   a numeric vector of length equal to the number of tests in each family
+#'   (i.e., \code{by} group in the displayed table).
+#' @param delta Numeric value (on the linear-predictor scale). If zero, ordinary
+#'   tests of significance are performed. If positive, this specifies a
+#'   threshold for testing equivalence (using the TOST or two-one-sided-test
+#'   method), non-inferiority, or non-superiority, depending on \code{side}. See
+#'   Details for how the test statistics are defined.
 #' @param side Numeric or character value specifying whether the test is
 #'   left-tailed (\code{-1}, \code{"-"}, code{"<"}, \code{"left"}, or
 #'   \code{"nonsuperiority"}); right-tailed (\code{1}, \code{"+"}, \code{">"},
@@ -89,13 +89,14 @@
 #'   \code{confint.emm} and \code{test.emm}, these arguments are passed to
 #'   \code{summary.emm}.
 #'
-#' @return \code{summary.emm}, \code{confint.emm}, and \code{test.emm} return an object of class
-#'   \code{"summary_emm"}, which is an extension of \code{\link{data.frame}} but
-#'   with a special \code{print} method that with custom formatting. For models
-#'   fitted using MCMC methods, the result is typically a frequentist summary,
-#'   based on the empirical mean and covariance matrix of the \code{post.beta}
-#'   slot. A Bayesian summary may be obtained using \code{\link{as.mcmc.emm}}
-#'   and summarizing that result using tools for Bayesian estimation.
+#' @return \code{summary.emm}, \code{confint.emm}, and \code{test.emm} return an
+#'   object of class \code{"summary_emm"}, which is an extension of
+#'   \code{\link{data.frame}} but with a special \code{print} method that with
+#'   custom formatting. For models fitted using MCMC methods, the result is
+#'   typically a frequentist summary, based on the empirical mean and covariance
+#'   matrix of the \code{post.beta} slot. A Bayesian summary may be obtained
+#'   using \code{\link{as.mcmc.emm}} and summarizing that result using tools for
+#'   Bayesian estimation.
 #'   
 #' @section Testing nonsuperiority, noninferiority, or equivalence:
 #' When \code{delta = 0}, test statistics are of the usual form \samp{(estimate
@@ -103,7 +104,8 @@
 #' our estimate of \eqn{\theta}; then left, right, or two-sided \eqn{p} values
 #' are produced.
 #' 
-#' When \code{delta} is positive, the test statistic depends on \code{side} as follows. 
+#' When \code{delta} is positive, the test statistic depends on \code{side} as
+#' follows.
 #' \describe{
 #' \item{Left-sided (nonsuperiority)}{\eqn{H_0: \theta \ge \theta_0 + \delta}
 #'   versus \eqn{H_1: \theta < \theta_0 + \delta}\cr 
@@ -116,7 +118,16 @@
 #' \item{Two-sided (equivalence)}{\eqn{H_0: |\theta - \theta_0| \ge \delta}
 #'   versus \eqn{H_1: |\theta - \theta_0| < \delta}\cr
 #'   \eqn{t = (|Q - \theta_0| - \delta)/SE}\cr
-#'   The \eqn{p} value is the \emph{lower}-tail probability.}}
+#'   The \eqn{p} value is the \emph{lower}-tail probability.}
+#' }
+#' 
+#' @note In doing testing and a transformation and/or link is in force, any
+#'   \code{null} and/or \code{delta} values specified must always be on the
+#'   scale of the linear predictor, regardless of the setting for `type`. If
+#'   \code{type = "response"}, the null value displayed in the summary table 
+#'   will be back-transformed from the value supplied by the user. But the
+#'   displayed \code{delta} will not be changed, because there (usually) is
+#'   not a natural way to back-transform it.
 #' 
 #' @note The default \code{show} method for \code{emm} objects (with the
 #'   exception of newly created reference grids) is \code{print(summary())}.
@@ -231,8 +242,12 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
         infer = c(infer,infer)
     
     if(inv && !is.null(misc$tran)) {
-        if (!is.null(misc$inv.lbl))
+        if (!is.null(misc$inv.lbl)) {
             names(result)[1] = misc$inv.lbl
+            if (!is.null(misc$log.contrast))  # contrast of logs - relabel as ratios
+                for (ell in seq_along(lbls))
+                levels(lbls[[ell]]) = gsub(" - ", " / ", levels(lbls[[ell]]))
+        }
         else
             names(result)[1] = "response"
     }
@@ -297,8 +312,8 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
     if(infer[2]) { # add tests
         if (!all(null == 0)) {
             result[["null"]] = null
-            if (!is.null(link))
-                result[["null"]] = link$linkinv(result[["null"]])
+            if (inv && !is.null(link))
+                result[["null"]] = link$linkinv(null)
         }
         tnm = ifelse (zFlag, "z.ratio", "t.ratio")
         tail = ifelse(side == 0, -sign(abs(delta)), side)
@@ -317,7 +332,7 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
         mesg = c(mesg, apv$mesg)
         if (delta > 0)
             mesg = c(mesg, paste("Statistics are tests of", c("nonsuperiority","equivalence","noninferiority")[side+2],
-                                 "with a threshold of", delta))
+                                 "with a threshold of", signif(delta, 5)))
         if(tail != 0) 
             mesg = c(mesg, paste("P values are ", ifelse(tail<0,"left-","right-"),"tailed", sep=""))
         if (inv) 
@@ -776,6 +791,8 @@ predict.emm <- function(object, type, ...) {
 }
 
 # Format a data.frame produced by summary.emm
+#' @method print summary_emm
+#' @export
 print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     x.save = x
     if (!is.null(x$df)) x$df = round(x$df, 2)

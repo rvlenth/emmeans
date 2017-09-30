@@ -11,7 +11,7 @@ emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
 \item{object}{An object of class \code{ref.grid}; or a fitted model object
 that is supported, such as the result of a call to \code{lm} or
 \code{lmer}. Many fitted-model objects are supported; see
-\code{link{models}} for details.}
+\code{\href{../doc/models.html}{vignette("models", "emmeans")}} for details.}
 
 \item{specs}{A \code{character} vector specifying the names of the predictors
 over which EMMs are desired. \code{specs} may also be a \code{formula}
@@ -42,12 +42,13 @@ weights to use in averaging predictions. See \dQuote{Weights} section below.}
 
 \item{...}{This is used only when \code{object} is not already a \code{"ess"}
 object, these arguments are passed to \code{\link{ref_grid}}. Common
-examples are \code{at}, \code{cov.reduce}, \code{data}, code{type},
-\code{transform}, \code{df}, and \code{vcov.}. Model-type-specific options
-(see \link{models}), commonly \code{mode}, may be used here as well. In
-addition, if the model formula contains references to variables that are
-not predictors, you must provide a \code{params} argument with a list of
-their names.}
+examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
+\code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.
+Model-type-specific options (see
+\href{../doc/models.html}{vignette("models", "emmeans")}), commonly
+\code{mode}, may be used here as well. In addition, if the model formula
+contains references to variables that are not predictors, you must provide
+a \code{params} argument with a list of their names.}
 }
 \value{
 When \code{specs} is a \code{character} vector or one-sided formula,
@@ -139,5 +140,6 @@ emmeans (warp.lm,  ~ wool | tension)
 emmeans (warp.lm, poly ~ tension | wool)
 }
 \seealso{
-\code{\link{ref_grid}}, \code{\link{contrast}}, \link{models}
+\code{\link{ref_grid}}, \code{\link{contrast}}, 
+\href{../doc/models.html}{vignette("models", "emmeans")}
 }

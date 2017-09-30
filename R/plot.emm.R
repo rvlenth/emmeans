@@ -25,6 +25,7 @@
 
 #' @rdname plot
 #' @importFrom graphics plot
+#' @import ggplot2
 #' @method plot emm
 #' @export
 plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE, 
@@ -326,24 +327,70 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
             layout = rev(layout)
     }
     
-    facName = paste(priv, collapse=":")
-    form = as.formula(chform)
-    if (horizontal) {
-        if (missing(xlab)) xlab = attr(summ, "estName")
-        if (missing(ylab)) ylab = facName
-        lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
-                strip = my.strip, horizontal = TRUE,
-                ylab = ylab, xlab = xlab,
-                data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
-                lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
-    }
-    else {
-        if (missing(xlab)) xlab = facName
-        if (missing(ylab)) ylab = attr(summ, "estName")
-        lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
-                strip = my.strip, horizontal = FALSE,
-                xlab = xlab, ylab = ylab,
-                data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
-                lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
+    if (engine == "lattice") {
+        if (missing(layout)) {
+            layout = c(1, length(ubv))
+            if(!horizontal) 
+                layout = rev(layout)
+        }
+        
+        form = as.formula(chform)
+        if (horizontal) {
+            if (missing(xlab)) xlab = attr(summ, "estName")
+            if (missing(ylab)) ylab = facName
+            lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
+                             strip = my.strip, horizontal = TRUE,
+                             ylab = ylab, xlab = xlab,
+                             data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
+                             lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
+        }
+        else {
+            if (missing(xlab)) xlab = facName
+            if (missing(ylab)) ylab = attr(summ, "estName")
+            lattice::dotplot(form, prepanel=prepanel.ci, panel=panel.ci, 
+                             strip = my.strip, horizontal = FALSE,
+                             xlab = xlab, ylab = ylab,
+                             data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
+                             lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
+        }
+    } # --- lattice plot
+    else {  ## ggplot method
+        summ$lcl = lcl
+        summ$ucl = ucl
+        if (horizontal) {
+            grobj = ggplot(summ, aes(x = the.emmean, y = pri.fac)) + 
+                geom_point(size = 2)
+            if (intervals) 
+                grobj = grobj + geom_segment(aes(x = lcl, xend = ucl, 
+                    y = pri.fac, yend = pri.fac), color = "blue", lwd = 4, alpha = .25)
+            if (!is.null(extra))
+                grobj = grobj + geom_segment(aes(x = lcmpl, xend = rcmpl, 
+                    y = pri.fac, yend = pri.fac), 
+                    arrow = arrow(length = unit(.07, "inches"), ends = "both", type = "closed"),
+                    color = "red")
+            if (length(byv) > 0)
+                grobj = grobj + facet_grid(paste(paste(byv, collapse = "+"), " ~ ."), 
+                                           labeller = "label_both")
+            if (missing(xlab)) xlab = attr(summ, "estName")
+            if (missing(ylab)) ylab = facName
+        }
+        else {
+            grobj = ggplot(summ, aes(y = the.emmean, x = pri.fac)) + 
+                geom_point(size = 2)
+            if (intervals) 
+                grobj = grobj + geom_segment(aes(y = lcl, yend = ucl, 
+                    x = pri.fac, xend = pri.fac), color = "blue", lwd = 4, alpha = .25)
+            if (!is.null(extra))
+                grobj = grobj + geom_segment(aes(y = lcmpl, yend = rcmpl, 
+                    x = pri.fac, xend = pri.fac), 
+                    arrow = arrow(length = unit(.07, "inches"), ends = "both", type = "closed"),
+                    color = "red")
+            if (length(byv) > 0)
+                grobj = grobj + facet_grid(paste(". ~ ", paste(byv, collapse = "+")), 
+                                           labeller = "label_both")
+            if (missing(ylab)) ylab = attr(summ, "estName")
+            if (missing(xlab)) xlab = facName
+        }
+        grobj + labs(x = xlab, y = ylab)
     }
 }

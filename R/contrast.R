@@ -54,17 +54,8 @@ contrast = function(object, ...)
 #'   used in table headings or subsequent contrasts of the returned object.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
 #'   to \code{\link{update.emm}}, just after the object is constructed.
-#' @param log.contrast Character value matching \code{"ratio"} or 
-#'   \code{"difference"}. This only has an effect when a log or logit 
-#'   transformation is in force, \emph{and} every set of contrast coefficients 
-#'   sums to zero (true contrasts). In such a case, contrasts can (usually) be 
-#'   interpreted as logs of ratios. Subsequently if summarizing using \code{type
-#'   = "response"}, do we want those results presented as ratios (specify 
-#'   \code{"ratio"}), or as differences of back-transformed EMMs (specify 
-#'   \code{"difference"})?
-#' @param adjust Method to use for adjusting \emph{P} values and confidence
-#'   intervals. This is an alternative to specifying it as part of
-#'   \code{options}.
+#' @param type Character: prediction type (e.g., \code{"response"}) -- added to \code{options}
+#' @param adjust Character: adjustment method (e.g., \code{"bonferroni"}) -- added to \code{options}
 #' @param ... Additional arguments passed to other methods
 #'
 #' @return \code{contrast} and \code{pairs} return an object of class \code{emm}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
@@ -108,8 +99,7 @@ contrast = function(object, ...)
 contrast.emm = function(object, method = "eff", interaction = FALSE, 
                         by, offset = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
-                        log.contrast = get_emm_option("log.contrast"), 
-                        adjust, ...) 
+                        type, adjust, ...) 
 {
     if(missing(by)) 
         by = object@misc$by.vars
@@ -272,11 +262,8 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
     if (!is.null(misc$tran)) {
         misc$orig.tran = misc$tran
         true.con = all(zapsmall(apply(cmat, 2, sum)) == 0) # each set of coefs sums to 0
-        # If we don't want ratios, skip the special provisions for logs
-        if (pmatch(log.contrast, c("ratio", "difference"), nomatch = 2) == 2)
-            true.con = FALSE
         if (true.con && misc$tran %in% c("log", "genlog", "logit")) {
-            levels(grid[[con.name]]) = gsub(" - ", " / ", levels(grid[[con.name]]))
+            misc$log.contrast = TRUE      # remember how we got here; used by summary
             misc$orig.inv.lbl = misc$inv.lbl
             if (misc$tran == "logit") {
                 misc$inv.lbl = "odds.ratio"
@@ -307,7 +294,8 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
     result@misc = misc
     result@roles$predictors = setdiff(names(result@levels), result@roles$multresp)
     
-    
+    if (!missing(type))
+        options = as.list(c(options, predict.type = type))
     if(!is.null(options)) {
         options$object = result
         result = do.call("update.emm", options)

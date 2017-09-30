@@ -30,7 +30,7 @@
 #' Contrast families
 #'
 #' @rdname emmc-functions
-#' @aliases emmc-functions
+#' @aliases emmc-functions contrast-methods
 #' 
 #' @param levs Vector of factor levels
 #' @param ... Additional arguments (these are ignored, but needed to make these functions 

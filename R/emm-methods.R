@@ -328,13 +328,8 @@ update.emm = function(object, ..., silent = FALSE) {
 #' \item{\code{estble.tol}}{Tolerance for determining estimability in
 #' rank-deficient cases. If absent, the value in \code{emm_defaults$estble.tol)}
 #' is used.}
-#' \item{\code{log.contrast}}{Character value matching \code{"ratio"} or
-#' \code{"difference"}. When a log transformation applies and we compute 
-#' contrasts of EMMs, these can (usually) be interpreted as logs of ratios.
-#' Subsequently if summarizing using \code{type = "response"}, do we want
-#' those results presented as ratios (specify \code{"ratio"}), 
-#' or as differences of back-transformed EMMs (specify \code{"difference"})?}
-#' \item{code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the latest reference grid created to be saved in \code{.Last.ref_grid}}
+#' \item{code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
+#' latest reference grid created to be saved in \code{.Last.ref_grid}}
 #' \item{Options for \code{lme4::lmerMod} models}{Options \code{lmer.df},
 #' \code{disable.pbkrtest}, and \code{pbkrtest.limit} options affect how degrees
 #' of freedom are computed for \code{lmerMod} objects produced by the \pkg{lme4} package). See that section of \link{models} for details.}
@@ -396,7 +391,6 @@ get_emm_option = function(x, default = emm_defaults[[x]]) {
 #' @export
 emm_defaults = list(
     estble.tol = 1e-8,        # tolerance for estimability checks
-    log.contrast = "ratio",   # How to handle contrasts on log scale with type = "r"
     lmer.df = "kenward",      # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling adj V
