@@ -60,6 +60,8 @@
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
 #' @importFrom coda as.mcmc
+#' @export as.mcmc
+#' @method as.mcmc emm
 #' @export
 as.mcmc.emm = function(x, names = TRUE, sep.chains = TRUE, ...) {
     object = x
@@ -214,3 +216,69 @@ emm_basis.carbayes = function(object, trms, xlev, grid, ...) {
          dffun = function(k, dfargs) NA, dfargs = list(), 
          misc = misc, post.beta = samp)
 }
+
+
+
+### Support for the rstanarm package (stanreg objects)
+###
+recover_data.stanreg = function(object, ...) {
+    recover_data.lm(object, ...)
+}
+
+# note: mode and rescale are ignored for some models
+emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
+    m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
+    if(is.null(contr <- object$contrasts))
+        contr = attr(model.matrix(object), "contrasts")
+    X = model.matrix(trms, m, contrasts.arg = contr)
+    bhat = fixef(object)
+    V = vcov(object)
+    misc = list()
+    if (!is.null(object$family)) {
+        if (is.character(object$family)) # work around bug for stan_polr
+            misc$tran = object$method
+        else
+            misc = .std.link.labels(object$family, misc)
+    }
+    if(!is.null(object$zeta)) {   # Polytomous regression model
+        if (missing(mode))
+            mode = "latent"
+        else
+            mode = match.arg(mode, 
+                             c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
+        
+        xint = match("(Intercept)", colnames(X), nomatch = 0L)
+        if (xint > 0L) 
+            X = X[, -xint, drop = FALSE]
+        k = length(object$zeta)
+        if (mode == "latent") {
+            if (missing(rescale)) 
+                rescale = c(0,1)
+            X = rescale[2] * cbind(X, matrix(- 1/k, nrow = nrow(X), ncol = k))
+            bhat = c(bhat, object$zeta - rescale[1] / rescale[2])
+            misc = list(offset.mult = rescale[2])
+        }
+        else {
+            bhat = c(bhat, object$zeta)
+            j = matrix(1, nrow=k, ncol=1)
+            J = matrix(1, nrow=nrow(X), ncol=1)
+            X = cbind(kronecker(-j, X), kronecker(diag(1,k), J))
+            link = object$method
+            if (link == "logistic") link = "logit"
+            misc = list(ylevs = list(cut = names(object$zeta)), 
+                        tran = link, inv.lbl = "cumprob", offset.mult = -1)
+            if (mode != "linear.predictor") {
+                misc$mode = mode
+                misc$postGridHook = ".clm.postGrid" # we probably need to adapt this
+            }
+        }
+        
+        misc$respName = as.character(terms(object))[2]
+    }
+    samp = as.matrix(object$stanfit)[, names(bhat)]
+    attr(samp, "n.chains") = object$stanfit@sim$chains
+    list(X = X, bhat = bhat, nbasis = estimability::all.estble, V = V, 
+         dffun = function(k, dfargs) NA, dfargs = list(), 
+         misc = misc, post.beta = samp)
+}
+

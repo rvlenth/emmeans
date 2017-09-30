@@ -23,7 +23,7 @@ fig.width = 4.5)
   4. [Nested fixed effects](#nesting)
      a. [Avoiding mis-identified nesting](#nest-trap)
 
-[Vignette index](#index.html)
+[Vignette index](index.html)
 
 ## Issues with observational data {#issues} 
 In experiments, we control the
@@ -230,7 +230,7 @@ cows <- data.frame (
 cows.lm <- lm(resp ~ route + drug, data = cows)
 ```
 The `ref_grid` function finds a nested structure in this model:
-```{r}
+```{r message = FALSE}
 cows.rg <- ref_grid(cows.lm)
 cows.rg
 ```
@@ -263,16 +263,18 @@ ways: first, by identifying factors whose levels appear in combination with only
 one level of another factor; and second, by examining the `terms` attribute of
 the fixed effects. In the latter approach, if an interaction `A:B` appears
 in the model but `A` is not present as a main effect, then `A` is deemed to
-be nested in `B`. Note that this *can* create a trap: some users take shortcuts
+be nested in `B`. Note that this can create a trap: some users take shortcuts
 by omitting some fixed effects, knowing that this won't affect the fitted
-values. But such shortcuts *dO* affect the interpretation of model parameters,
+values. But such shortcuts *do* affect the interpretation of model parameters,
 ANOVA tables, etc., and I advise against ever taking such shortcuts. 
 Here are some ways you may notice mistakenly-identified nesting:
 
+  * A message is displayed when nesting is detected
   * A `str()` listing of the `emm` object shows a nesting component
   * An `emmeans()` summary unexpectedly includes one or more factors
     that you didn't specify
-  * There are `NA`s or `NonEst` cases where there should be estimates
+  * EMMs obtained using `by` factors don't seem to behave right, or
+    give the same results with different specifications
 
 To override the auto-detection of nested effects, use the `nesting` argument
 in `ref_grid()` or `emmeans()`. Specifying `nesting = NULL` will ignore

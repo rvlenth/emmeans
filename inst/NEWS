@@ -26,6 +26,7 @@ Changelog for 'emmeans' package
     Improved display of back-transformed contrasts when log or logit 
         transformation was used: We change any ' - 's in labels to ' / 's
         to emphasize that thnese results are ratios.
+    A message is now displayed when nesting is auto-detected in 'ref_grid'.
     Greatly overhauled help page for models. It is now a vignette, 
         with a quick reference chart linked to details, and is
         organized by similarities instead of packages.

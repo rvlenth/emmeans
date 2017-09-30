@@ -503,6 +503,10 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     
     if (!missing(nesting))
         result@model.info$nesting = .parse_nest(nesting)
+    else if (!is.null(nst <- result@model.info$nesting))
+        message("NOTE: A nesting structure was detected in the fitted model:\n    ",
+                 .fmt.nest(nst), 
+                "\nIf this is incorrect, re-run or update with `nesting` specified")
 
     if(!is.null(options)) {
         options$object = result
