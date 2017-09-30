@@ -5,5 +5,5 @@
 \title{Models supported in \pkg{emmeans}}
 \description{
 Documentation for models has been moved to a vignette. To access it,
-use \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
+use \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 }

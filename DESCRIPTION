@@ -1,14 +1,14 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means (aka Least-Squares Means)
-Version: 0.99.9008
-Date: 2017-09-29
+Version: 0.99.9009
+Date: 2017-09-30
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Jonathon", "Love", role = "ctb"),
     person("Maxime", "Herve", role = "ctb"))
 Depends: R (>= 3.2)
-Imports: estimability, graphics, methods, stats, utils, nlme,
+Imports: estimability, ggplot2, graphics, methods, stats, utils, nlme,
          coda (>= 0.17), multcomp, plyr, mvtnorm, xtable (>= 1.8-2)
 Suggests: bayesplot, car, lattice, mediation, multcompView, ordinal, 
           pbkrtest (>= 0.4-1), lme4, lmerTest (>= 2.0.32), 
@@ -21,9 +21,9 @@ URL: https://github.com/rvlenth/emmeans
 BugReports: https://github.com/rvlenth/emmeans/issues
 LazyData: yes
 ByteCompile: yes
-Description: Obtain least-squares means for many linear, generalized linear, 
-  and mixed models. Compute contrasts or linear functions of least-squares
-  means, and comparisons of slopes. Plots and compact letter displays.
+Description: Obtain estimated marginal means for many linear, generalized 
+  linear, and mixed models. Compute contrasts or linear functions of EMMs,
+  trends, and comparisons of slopes. Plots and compact letter displays.
 License: GPL-2 | GPL-3
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

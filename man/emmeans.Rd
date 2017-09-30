@@ -11,7 +11,7 @@ emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
 \item{object}{An object of class \code{ref.grid}; or a fitted model object
 that is supported, such as the result of a call to \code{lm} or
 \code{lmer}. Many fitted-model objects are supported; see
-\code{\href{../doc/models.html}{vignette("models", "emmeans")}} for details.}
+\href{../doc/models.html}{\code{vignette("models", "emmeans")}} for details.}
 
 \item{specs}{A \code{character} vector specifying the names of the predictors
 over which EMMs are desired. \code{specs} may also be a \code{formula}
@@ -45,7 +45,7 @@ object, these arguments are passed to \code{\link{ref_grid}}. Common
 examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
 \code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.
 Model-type-specific options (see
-\href{../doc/models.html}{vignette("models", "emmeans")}), commonly
+\href{../doc/models.html}{\code{vignette("models", "emmeans")}}), commonly
 \code{mode}, may be used here as well. In addition, if the model formula
 contains references to variables that are not predictors, you must provide
 a \code{params} argument with a list of their names.}

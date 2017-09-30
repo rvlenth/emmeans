@@ -30,7 +30,8 @@ rst_ex.rg <- ref_grid(example_model)
 ```
 <!--- here's the system file with the ref_grid --->
 ```{r echo = FALSE}
-load(system.file("extdata", "rst_ex.RData", package = "emmeans"))
+load(system.file("extdata", "rstex.RData", package = "emmeans"))
+rst_ex.rg <- do.call(emmobj, rstex)
 ```
 Here is the structure of the reference grid:
 ```{r}
@@ -47,6 +48,7 @@ We can access these posterior results via the `as.mcmc` method for `emm` objects
 This gives us an object of class `mcmc` (defined in the **coda** package), which
 can be summarized and explored as we please.
 ```{r}
+require("coda")  ### needed to access generic for as.mcmc()
 summary(as.mcmc(period.emm))
 ```
 Note that `as.mcmc` will actually produce an `mcmc.list` when there is more than
