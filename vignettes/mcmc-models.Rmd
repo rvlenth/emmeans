@@ -64,7 +64,7 @@ bayesplot::mcmc_areas(as.mcmc(regrid(period.emm)))
 the important part of the call in an extra `as.mcmc(as.matrix(...))` so as to
 combine the two chains into one.
 ```{r}
-coda::HPDinterval(as.mcmc(as.matrix(
+HPDinterval(as.mcmc(as.matrix(
     as.mcmc(contrast(period.emm, "consec", reverse = TRUE), names = FALSE))))
 ```
 The only interval that excludes zero is the one that compares periods 1 and 2.
