@@ -10,7 +10,8 @@ ref_grid(object, at, cov.reduce = mean, mult.name, mult.levs,
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
-as \code{lm}. Many models are supported. See \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.}
+as \code{lm}. Many models are supported. 
+See \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.}
 
 \item{at}{Optional named list of levels for the corresponding variables}
 
@@ -210,5 +211,5 @@ ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 Reference grids are of class \code{\link{emm-class}} and several
   methods exist for them -- for example \code{\link{summary.emm}}. Reference
   grids are fundamental to \code{\link{emmeans}}. Supported models are
-  detailed in \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
+  detailed in \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 }

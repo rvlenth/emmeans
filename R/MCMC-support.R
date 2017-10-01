@@ -60,7 +60,6 @@
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
 #' @importFrom coda as.mcmc
-#' @export as.mcmc
 #' @method as.mcmc emm
 #' @export
 as.mcmc.emm = function(x, names = TRUE, sep.chains = TRUE, ...) {

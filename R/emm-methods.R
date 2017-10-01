@@ -267,7 +267,8 @@ update.emm = function(object, ..., silent = FALSE) {
     args = list(...)
     valid.misc = c("adjust","alpha","avgd.over","by.vars","delta","df",
                    "initMesg","estName","estType","famSize","infer","inv.lbl",
-                   "level","methDesc","nesting","null","predict.type","pri.vars","side","tran","tran.mult","tran2")
+                   "level","methDesc","nesting","null","predict.type","pri.vars"
+                   ,"side","tran","tran.mult","tran2","is.new.rg")
     valid.slots = slotNames(object)
     valid.choices = union(valid.misc, valid.slots)
     misc = object@misc

@@ -58,7 +58,7 @@ contrast.emm_list = function(object, ... , which = seq_along(object)) {
 
 #' @export
 #' @method pairs emm_list
-pairs.emm_list = function(x, ..., which = seq_along(object)) {
+pairs.emm_list = function(x, ..., which = seq_along(x)) {
     lapply(x[which], pairs, ...)
 }
 

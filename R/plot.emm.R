@@ -358,7 +358,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         summ$lcl = lcl
         summ$ucl = ucl
         if (horizontal) {
-            grobj = ggplot(summ, aes(x = the.emmean, y = pri.fac)) + 
+            grobj = ggplot(data = summ, aes(x = the.emmean, y = pri.fac)) + 
                 geom_point(size = 2)
             if (intervals) 
                 grobj = grobj + geom_segment(aes(x = lcl, xend = ucl, 

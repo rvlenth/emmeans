@@ -47,7 +47,8 @@
 #' 
 #'
 #' @param object An object produced by a supported model-fitting function, such
-#'   as \code{lm}. Many models are supported. See \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
+#'   as \code{lm}. Many models are supported. 
+#'   See \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 #' @param at Optional named list of levels for the corresponding variables
 #' @param cov.reduce A function, logical value, or formula; or a named list of
 #'   these. Each covariate \emph{not} specified in \code{at} is reduced
@@ -185,7 +186,7 @@
 #' @seealso Reference grids are of class \code{\link{emm-class}} and several
 #'   methods exist for them -- for example \code{\link{summary.emm}}. Reference
 #'   grids are fundamental to \code{\link{emmeans}}. Supported models are
-#'   detailed in \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
+#'   detailed in \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 #'   
 #' @export
 #'

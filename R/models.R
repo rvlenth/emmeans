@@ -24,7 +24,7 @@
 #' Models supported in \pkg{emmeans}
 #' 
 #' Documentation for models has been moved to a vignette. To access it,
-#' use \code{\href{../doc/models.html}{vignette("models", "emmeans")}}.
+#' use \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 #' 
 #' @name models
 NULL
