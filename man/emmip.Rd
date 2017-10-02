@@ -7,7 +7,8 @@
 \usage{
 emmip(object, formula, ...)
 
-\method{emmip}{default}(object, formula, type, pch = c(1, 2, 6, 7, 9, 10,
+\method{emmip}{default}(object, formula, type, CIs = FALSE,
+  engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9, 10,
   15:20), lty = 1, col = NULL, plotit = TRUE, ...)
 }
 \arguments{
@@ -22,14 +23,22 @@ panels. Each element of this formula may be a single factor in the model,
 or a combination of factors using the \code{*} operator.}
 
 \item{...}{Additional arguments passed to \code{\link{emmeans}} (when
-\code{object} is not already an \code{emm} object), or to
-\code{\link[lattice]{xyplot}}.}
+\code{object} is not already an \code{emm} object),
+\code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.}
 
 \item{type}{As in \code{\link{predict.emm}}, this determines
 whether we want to inverse-transform the predictions
 (\code{type = "response"}) or not (any other choice). The default is
 \code{"link"}, unless the \code{"predict.type"} option is in force; see
 \code{\link{emm_options}}.}
+
+\item{CIs}{Logical value. If \code{TRUE}, confidence intervals are added 
+to the plot (works only with \code{engine = "ggplot"})}
+
+\item{engine}{Character value matching \code{"ggplot"} (default) or 
+\code{"lattice"}. The graphics engine to be used to produce the plot.
+These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
+be installed.}
 
 \item{pch}{The plotting characters to use for each group (i.e., levels of
 \code{trace.factors}). They are recycled as needed.}
@@ -44,18 +53,6 @@ Otherwise, one may use the \code{"lattice"} attribute of the returned
 object and print it, perhaps after additional manipulation.}
 }
 \value{
-<<<<<<< HEAD
-(Invisibly), a \code{\link{data.frame}} with the table of
-  least-squares means that were plotted, with an additional \code{"lattice"}
-  attribute containing the \code{trellis} object for the plot.
-||||||| merged common ancestors
-If \code{plotit = FALSE}, a \code{\link{data.frame}} (invisibly) with
-  the table of EMMs that would be plotted. This data frame has an added
-  \code{"labs"} attribute containing the labels \code{alab}, \code{ylab}, and
-  \code{tlab} for the x, y, and trace variables, respectively. If
-  \code{plotit = TRUE}, an object of class \code{"ggplot"} or a
-  \code{"trellis"}, depending on \code{engine}.
-=======
 If \code{plotit = FALSE}, a \code{data.frame} (actually, a
   \code{summary_emm} object) with the table of EMMs that would be plotted.
   The variables plotted are named \code{xvar} and \code{yvar}, and the trace
@@ -67,19 +64,15 @@ If \code{plotit = FALSE}, a \code{data.frame} (actually, a
 If \code{plotit = TRUE}, the function
   returns an object of class \code{"ggplot"} or a \code{"trellis"}, depending
   on \code{engine}.
->>>>>>> 84d614609b11fcd48b185df4040fcc0ce4ccb781
 }
 \description{
 Creates an interaction plot of EMMs based on a fitted model and a simple
 formula specification.
 }
 \note{
-This function uses the \code{\link[lattice]{xyplot}} function in the
-  \code{lattice} package (an error is returned if \code{lattice} is not
-  installed). Conceptually, it is equivalent to
-  \code{\link{interaction.plot}} where the summarization function is thought
-  to return the
-  EMMs.
+Conceptually, this function is equivalent to 
+  \code{\link{interaction.plot}} where the summarization function is thought 
+  to return the EMMs.
 }
 \section{Details}{
 
@@ -94,12 +87,6 @@ present in \code{formula}.
 }
 
 \examples{
-#--- Two-factor example
-warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-
-# Following plot is the same as the usual interaction plot of the data
-emmip(warp.lm, wool ~ tension)
-
 #--- Three-factor example
 noise.lm = lm(noise ~ size * type * side, data = auto.noise)
 
@@ -110,12 +97,10 @@ emmip(noise.lm, type ~ size | side)
 emmip(noise.lm, type ~ side * size)
 
 # One interaction plot using combinations of type and side as the trace factor
-# customize the colors, line types, and symbols to suggest these combinations
-emmip(noise.lm, type * side ~ size, lty=1:2, col=1:2, pch=c(1,1,2,2))
+emmip(noise.lm, type * side ~ size)
 
-# 3-way interaction is significant, but doesn't much visual difference...
-noise.lm2 = update(noise.lm, . ~ . - size:type:side)
-emmip(noise.lm2, type * side ~ size, lty=1:2, col=1:2, pch=c(1,1,2,2))
+# Individual traces in panels
+emmip(noise.lm, ~ size | type * side)
 
 }
 \seealso{

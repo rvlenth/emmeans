@@ -285,7 +285,8 @@ emm_basis.gls = function(object, trms, xlev, grid, ...) {
 
 #--------------------------------------------------------------
 ### polr objects (MASS package)
-recover_data.polr = recover_data.lm
+recover_data.polr = function(object, ...)
+    recover_data.lm(object, ...)
 
 emm_basis.polr = function(object, trms, xlev, grid, 
                           mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 

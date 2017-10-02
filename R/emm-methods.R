@@ -220,10 +220,11 @@ vcov.emm = function(object, ...) {
 #' \item{\code{delta}}{(numeric) \code{delta} specification for \code{summary}
 #' or \code{test} (taken to be zero if missing).}
 #' 
-#' \item{\code{predict.type}}{(character) sets the default method of displaying
-#' predictions in \code{\link{summary.emm}}, \code{\link{predict.emm}}, and
-#' \code{\link{emmip}}. Valid values are \code{"link"} (with synonyms
-#' \code{"lp"} and \code{"linear"}), or \code{"response"}.}
+#' \item{\code{predict.type} or \code{type}}{(character) sets the default method
+#' of displaying predictions in \code{\link{summary.emm}},
+#' \code{\link{predict.emm}}, and \code{\link{emmip}}. Valid values are
+#' \code{"link"} (with synonyms \code{"lp"} and \code{"linear"}), or
+#' \code{"response"}.}
 #' 
 #' \item{\code{avgd.over}}{(\code{character)} vector) are the names of the 
 #' variables whose levels are averaged over in obtaining marginal averages of 
@@ -268,7 +269,7 @@ update.emm = function(object, ..., silent = FALSE) {
     valid.misc = c("adjust","alpha","avgd.over","by.vars","delta","df",
                    "initMesg","estName","estType","famSize","infer","inv.lbl",
                    "level","methDesc","nesting","null","predict.type","pri.vars"
-                   ,"side","tran","tran.mult","tran2","is.new.rg")
+                   ,"side","tran","tran.mult","tran2","type","is.new.rg")
     valid.slots = slotNames(object)
     valid.choices = union(valid.misc, valid.slots)
     misc = object@misc
@@ -280,6 +281,7 @@ update.emm = function(object, ..., silent = FALSE) {
                         paste(valid.choices, collapse=", "))
         }
         else {
+            if (fullname == "type") fullname = "predict.type"
             if (fullname %in% valid.slots)
                 slot(object, fullname) = args[[nm]]
             else {
@@ -316,14 +318,36 @@ update.emm = function(object, ..., silent = FALSE) {
 #' \code{ref_grid} and this option will affect the resulting \code{emm}
 #' object.}
 #' \item{\code{emmeans}}{A named \code{list} of defaults for objects created by
-#' \code{\link{emmeans}} or \code{\link{emtrends}}.}
+#'   \code{\link{emmeans}} or \code{\link{emtrends}}.}
 #' \item{\code{contrast}}{A named \code{list} of defaults for objects created by
-#' \code{\link{contrast.emm}} or \code{\link{pairs.emm}}.}
+#'   \code{\link{contrast.emm}} or \code{\link{pairs.emm}}.}
 #' \item{\code{summary}}{A named \code{list} of defaults used by the methods
-#' \code{\link{summary.emm}}, \code{\link{predict.emm}}, \code{\link{test.emm}},
-#' \code{\link{confint.emm}}, and \code{\link{emmip}}. The only option that can
-#' affect the latter four is \code{"predict.method"}.}
-#' }
+#'   \code{\link{summary.emm}}, \code{\link{predict.emm}}, \code{\link{test.emm}},
+#'   \code{\link{confint.emm}}, and \code{\link{emmip}}. The only option that can
+#'   affect the latter four is \code{"predict.method"}.}
+#' \item{\code{graphics.engine}}{A character value matching 
+#'   \code{c("ggplot", "lattice")}, setting the default engine to use in
+#'   \code{\link{emmip}} and \code{\link{plot.emm}}.  Defaults to \code{"ggplot"}.}
+#' \item{\code{msg.data.call}}{Logical value controlling whether or not
+#'   a warning is displayed when a model's \code{data} or \code{subset}
+#'   component contains a call. This can be hazardous; for example, if a model
+#'   call contains something like \code{subset = sample(...)}, then that same
+#'   call to \code{sample} will be run again when the reference grid is
+#'   constructed -- but it will be a different subset! This will definitely
+#'   affect the covariate settings, and may even affect the factor levels.
+#'   Defaults to \code{TRUE}.} 
+#' \item{\code{msg.interaction}}{A logical value controlling whether or not
+#'   a message is displayed when \code{emmeans} averages over a factor involved
+#'   in an interaction. It is probably not appropriate to do this, unless
+#'   the interaction is weak. Defaults to \code{TRUE}.}
+#' \item{\code{msg.nesting}}{A logical value controlling whether or not to
+#'   display a message when a nesting structure is auto-detected. The existence
+#'   of such a structure affects computations of EMMs. Sometimes, a nesting
+#'   structure is falsely detected -- namely when a user has omitted some
+#'   main effects but included them in interactions. This does not change the
+#'   model fit, but it produces a different parameterization that is picked
+#'   up when the reference grid is constructed. Defaults to \code{TRUE}.}
+#' }%%% end describe{}
 #' Some other options have more specific purposes:
 #' \describe{
 #' \item{\code{estble.tol}}{Tolerance for determining estimability in
@@ -390,12 +414,19 @@ get_emm_option = function(x, default = emm_defaults[[x]]) {
 ### Exported defaults for certain options
 #' @rdname update.emm
 #' @export
-emm_defaults = list(
+emm_defaults = list (
+    ref_grid = list(is.new.rg = TRUE, infer = c(FALSE, FALSE)),
+    emmeans = list(infer = c(TRUE, FALSE)),
+    contrast = list(infer = c(FALSE, TRUE)),
+    save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
+    graphics.engine = "ggplot",  # default for emmip and plot.emm
+    msg.data.call = TRUE,     # message when there's a call in data or subset
+    msg.interaction = TRUE,   # message about averaging w/ interactions
+    msg.nesting = TRUE,       # message when nesting is detected
     estble.tol = 1e-8,        # tolerance for estimability checks
     lmer.df = "kenward",      # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
-    pbkrtest.limit = 3000,    # limit on N for enabling adj V
-    save.ref_grid = TRUE      # save new ref_grid in .Last.ref_grid
+    pbkrtest.limit = 3000     # limit on N for enabling adj V
 )
 
 

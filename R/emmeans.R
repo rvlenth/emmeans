@@ -375,7 +375,9 @@ emmeans = function(object, specs, by = NULL,
         row.names(linfct) = NULL
         
         if(.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
-            message("NOTE: Results may be misleading due to involvement in interactions")
+            if(get_emm_option("msg.interaction"))
+                message("NOTE: Results may be misleading due ", 
+                        "to involvement in interactions")
         
         # Figure offset, if any
         if (hasName(RG@grid, ".offset.")) {
@@ -462,10 +464,12 @@ emmeans = function(object, specs, by = NULL,
 #'   named \code{"level"}
 #' @param linfct Matrix. Linear functions of \code{bhat} for each combination 
 #'   of \code{levels}. 
-#' @param df Numeric value or function with arguments \code{(x, dfargs)}. If a number,
-#'   that is used for the degrees of freedom. If a function, it should return
-#'   the degrees of freedom for \code{sum(x*bhat)}, with any additional parameters 
-#'   in \code{dfargs}.
+#' @param df Numeric value or function with arguments \code{(x, dfargs)}. If a
+#'   number, that is used for the degrees of freedom. If a function, it should
+#'   return the degrees of freedom for \code{sum(x*bhat)}, with any additional
+#'   parameters in \code{dfargs}.
+#' @param dffun Overrides \code{df} if specified. This is a convenience
+#'   to match the slot names of the returned object.
 #' @param dfargs List containing arguments for \code{df}.
 #'   This is ignored if df is numeric.
 #' @param post.beta Matrix whose columns comprise a sample from the posterior
@@ -498,7 +502,7 @@ emmeans = function(object, specs, by = NULL,
 #' ( dose.emm <- emmeans(expt.rg, "dose") )
 #' 
 #' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
-emmobj = function(bhat, V, levels, linfct, df = NA, dfargs = list(), 
+emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(), 
                   post.beta = matrix(NA), ...) {
     if ((nrow(V) != ncol(V)) || (nrow(V) != ncol(linfct)) || (length(bhat) != ncol(linfct)))
         stop("bhat, V, and linfct are incompatible")
@@ -507,8 +511,11 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dfargs = list(),
     grid = do.call(expand.grid, levels)
     if (nrow(grid) != nrow(linfct))
         stop("linfct should have ", nrow(grid), "rows")
-    model.info = list(call = match.call(), xlev = levels)
-    roles = list(predictors= names(grid), responses=character(0), multresp=character(0))
+    model.info = list(call = quote(match.call()), xlev = levels)
+    roles = list(predictors= names(grid), responses=character(0), 
+                 multresp=character(0))
+    if (!missing(dffun))
+        df = dffun
     if (is.function(df)) {
         dffun = df
     } 
@@ -528,7 +535,41 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dfargs = list(),
     update(result, ..., silent=TRUE)
 }
 
-
+#' Coerce an \code{emm} object to a list
+#' 
+#' This is a useful utility for creating a compact version of an \code{emm} object
+#' that may be saved and later reconstructed.
+#' 
+#' An \code{emm} object is an S4 object, and as such cannot be saved in a
+#' text format or saved without a lot of overhead. By using \code{as.list},
+#' the essential parts of the object are converted to a list format that can be
+#' easily and compactly saved for use, say, in another session or by another user.
+#' Providing this list as the arguments for \code{\link{emmobj}} allows the user 
+#' to restore a working \code{emm} object. See the example below.
+#' 
+#' @param x An \code{emm} object
+#' @param ... (Required argument, but ignored)
+#' 
+#' @seealso \code{\link{emmobj}}
+#' 
+#' @method as.list emm
+#' @export
+#' 
+#' @examples
+#' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+#' pigs.sav <- as.list(ref_grid(pigs.lm))
+#' 
+#' pigs.anew <- do.call(emmobj, pigs.sav)
+#' emmeans(pigs.anew, "source")
+as.list.emm = function(x, ...) {
+    slots = c("bhat", "V", "levels", "linfct", "dffun", "dfargs", "post.beta")
+    result = lapply(slots,function(nm) slot(x, nm))
+    names(result) = slots
+    result = c(result, x@misc)
+    result$nesting = x@model.info$nesting
+    result$pri.vars = NULL
+    result
+}
 
 #### --- internal stuff used only by emmeans -------------
 

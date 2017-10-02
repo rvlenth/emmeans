@@ -19,15 +19,15 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-#' @title Support functions for model extensions
+#' Support functions for model extensions
 #' 
-#' @description This documents the methods that \code{\link{ref_grid}} calls. A user
+#' This documents the methods that \code{\link{ref_grid}} calls. A user
 #' or package developer may add \pkg{emmeans} support for a model
 #' class by writing \code{recover_data} and \code{emm_basis} methods
 #' for that class.
 #' 
-#' @rdname extending-emmeans
-#' @aliases extending-emmeans
+## #' @rdname extending-emmeans
+#' @name extending-emmeans
 #' @param object An object of the same class as is supported by a new method.
 #' @param ... Additional parameters that may be supported by the method.
 #' 
@@ -90,7 +90,6 @@ recover_data = function(object, ...) {
 # Later addition: na.action arg req'd - vector of row indexes removed due to NAs
 #    na.action is ignored when data is non-NULL
 
-#' 
 #' @rdname extending-emmeans
 #' @param trms The \code{\link{terms}} component of \code{object} (typically with
 #'   the response deleted, e.g. via \code{\link{delete.response}})
@@ -119,17 +118,19 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
         fcall = fcall[c(1L, m)]
         
         # check to see if there are any function calls to worry about
-        # [e.g., subset = sample(1:n, 50) will give us a different subset than model used]
+        # [e.g., subset = sample(1:n, 50) will give us a 
+        #    different subset than model used]
         mm = match(c("data", "subset"), names(fcall), 0L)
         if(any(mm > 0)) {
             fcns = unlist(lapply(fcall[mm], 
                      function(x) setdiff(all.names(x), 
                                          c("::",":::","[[","]]",all.vars(x)))))
             if(max(nchar(c("", fcns))) > 1)
-                warning("Function call in data or subset: ", 
-                        "ref_grid/emmeans results may not\n   match the fitted ",
-                        "model if randomization is involved",
-                        call. = FALSE)
+                if(get_emm_option("msg.data.call"))
+                    warning("Function call in data or subset: ", 
+                            "ref_grid/emmeans results may not\n   match the fitted ",
+                            "model if randomization is involved",
+                            call. = FALSE)
         }
         
         fcall$drop.unused.levels = TRUE

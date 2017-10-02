@@ -88,8 +88,19 @@ rbind.emm = function(..., deparse.level = 1, adjust = "bonferroni") {
     obj@roles$predictors = setdiff(names(obj@levels), obj@roles$multresp)
     update(obj, pri.vars = gnms, by.vars = NULL, adjust = adjust,
            famSize = round((1 + sqrt(1 + 8*n)) / 2, 3),
-           estType = "contrast", infer = c(FALSE, TRUE),
            avgd.over = avgd.over)
+}
+#' @rdname rbind.emm
+#' 
+#' @param e1 An \code{emm} object
+#' @param e2 Another \code{emm} object
+#' @return The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
+#' @method + emm
+#' @export
+"+.emm" = function(e1, e2) {
+    if(!is(e2, "emm"))
+        stop("'+.emm' works only when all objects are class `emm`", call. = FALSE)
+    rbind(e1, e2)
 }
 
 
@@ -116,6 +127,7 @@ rbind.emm = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
 #' t.w <- pairs(emmeans(warp.rg, ~ tension | wool))
 #' rbind(w.t, t.w, adjust = "mvt")
+#' update(w.t + t.w, adjust = "fdr")  ## same as abve except for adjustment
 #'
 "[.emm" = function(x, i, adjust, drop.levels = TRUE, ...) {
     x@linfct = x@linfct[i, , drop = FALSE]

@@ -120,7 +120,7 @@
 #' @import stats
 #' @import ggplot2
 #' @importFrom graphics pairs plot
-#' @importFrom methods as is new slot<- slotNames
+#' @importFrom methods as is new slot slot<- slotNames
 #' @importFrom nlme fixef
 #' @importFrom utils installed.packages methods str
 #' @name emmeans-package

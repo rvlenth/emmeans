@@ -245,8 +245,10 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
         if (!is.null(misc$inv.lbl)) {
             names(result)[1] = misc$inv.lbl
             if (!is.null(misc$log.contrast))  # contrast of logs - relabel as ratios
-                for (ell in seq_along(lbls))
-                levels(lbls[[ell]]) = gsub(" - ", " / ", levels(lbls[[ell]]))
+                for (ell in seq_along(lbls)){
+                    lbls[[ell]] = factor(lbls[[ell]])
+                    levels(lbls[[ell]]) = gsub(" - ", " / ", levels(lbls[[ell]]))
+                }
         }
         else
             names(result)[1] = "response"

@@ -2,10 +2,13 @@
 % Please edit documentation in R/rbind.R
 \name{rbind.emm}
 \alias{rbind.emm}
+\alias{+.emm}
 \alias{[.emm}
 \title{Combine or subset \code{emm} objects}
 \usage{
 \method{rbind}{emm}(..., deparse.level = 1, adjust = "bonferroni")
+
+\method{+}{emm}(e1, e2)
 
 \method{[}{emm}(x, i, adjust, drop.levels = TRUE, ...)
 }
@@ -17,6 +20,10 @@ In \code{"["}, it is ignored.}
 
 \item{adjust}{Character value passed to \code{\link{update.emm}}}
 
+\item{e1}{An \code{emm} object}
+
+\item{e2}{Another \code{emm} object}
+
 \item{x}{An \code{emm} object to be subsetted}
 
 \item{i}{Integer vector of indexes}
@@ -26,6 +33,8 @@ the returned object is updated to hold only the predictor levels that actually o
 }
 \value{
 A revised object opf class \code{emm}
+
+The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 }
 \description{
 These functions provide methods for \code{\link[base]{rbind}} and
@@ -52,5 +61,6 @@ summary(warp.rg[c(2,4,5)])
 w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
 t.w <- pairs(emmeans(warp.rg, ~ tension | wool))
 rbind(w.t, t.w, adjust = "mvt")
+update(w.t + t.w, adjust = "fdr")  ## same as abve except for adjustment
 
 }

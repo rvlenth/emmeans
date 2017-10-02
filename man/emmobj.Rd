@@ -4,7 +4,7 @@
 \alias{emmobj}
 \title{Construct an \code{emm} object from scratch}
 \usage{
-emmobj(bhat, V, levels, linfct, df = NA, dfargs = list(),
+emmobj(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
   post.beta = matrix(NA), ...)
 }
 \arguments{
@@ -19,10 +19,13 @@ named \code{"level"}}
 \item{linfct}{Matrix. Linear functions of \code{bhat} for each combination 
 of \code{levels}.}
 
-\item{df}{Numeric value or function with arguments \code{(x, dfargs)}. If a number,
-that is used for the degrees of freedom. If a function, it should return
-the degrees of freedom for \code{sum(x*bhat)}, with any additional parameters 
-in \code{dfargs}.}
+\item{df}{Numeric value or function with arguments \code{(x, dfargs)}. If a
+number, that is used for the degrees of freedom. If a function, it should
+return the degrees of freedom for \code{sum(x*bhat)}, with any additional
+parameters in \code{dfargs}.}
+
+\item{dffun}{Overrides \code{df} if specified. This is a convenience
+to match the slot names of the returned object.}
 
 \item{dfargs}{List containing arguments for \code{df}.
 This is ignored if df is numeric.}

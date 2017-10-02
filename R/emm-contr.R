@@ -30,7 +30,7 @@
 #' Contrast families
 #'
 #' @rdname emmc-functions
-#' @aliases emmc-functions contrast-methods
+#' @aliases emmc-functions 
 #' 
 #' @param levs Vector of factor levels
 #' @param ... Additional arguments (these are ignored, but needed to make these functions 
@@ -104,6 +104,7 @@
 #' # See what is used for polynomial contrasts with 6 levels
 #' emmeans:::poly.emmc(1:6)
 #' }
+#' @name contrast-methods
 pairwise.emmc = function(levs, ...) {
     k = length(levs)
     M = data.frame(levs=levs)

@@ -1,0 +1,163 @@
+---
+title: "Utilities and options for emmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Utilities and options}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, results = "hide", message = FALSE} 
+require("emmeans") 
+knitr::opts_chunk$set(collapse = TRUE,
+fig.width = 4.5) 
+```
+
+## Contents {#contents}
+
+  1. [Updating an `emm` object](#update)
+  2. [Setting options and defaults](#options)
+  3. [Combining and subsetting `emm` objects](#rbind)
+  4. [Adding grouping factors](#groups)
+  
+[Vignette index](index.html)
+
+## Updating an `emm` object {#update}
+Several internal settings are saved when functions like `ref_grid()`, `emmeans()`,
+`contrast()`, etc. are run. Those settings can be manipulated via the `update()`
+method for `emm`s. To illustrate, consider the `pigs` dataset and model yet again:
+```{r}
+pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+pigs.emm.s <- emmeans(pigs.lm, "source")
+pigs.emm.s
+```
+We see confidence intervals but not tests, by default. This happens as a result
+of internal settings in `pigs.emm.s` that are passed to `summary()` when the
+object is displayed. If we are going to work with this object a lot, we might
+want to change its internal settings rather than having to rely on explicitly
+calling `summary()` with several arguments. If so, just update the internal
+settings to what is desired; for example:
+```{r}
+pigs.emm.s <- update(pigs.emm.s, infer = c(TRUE, TRUE), null = log(35))
+pigs.emm.s
+```
+See [`help("update.emm")](../doc/update.emm.html) for details on the keywords
+that can be changed. Mostly, they are the same as the names of arguments
+in the functions that construct these objects.
+
+Of course, we can always get what we want via calls to `test()`, `confint()` or
+`summary()` with appropriate arguments. But the `update()` function is more
+useful in sophisticated manipulations of objects, or called implicitly via the
+`options` argument in `emmeans()` and other functions. Those options are passed
+to `update()` just before the object is returned. For example, we could have
+done the above update within the `emmeans()` call as follows:
+```{r eval = FALSE}
+emmeans(pigs.lm, "source", options = list(infer = c(TRUE, TRUE), null = log(35)))
+```
+
+[Back to contents](#contents)
+
+## Setting options and defaults {#options}
+Speaking of the `options` argument, note that the default in `emmeans()` 
+is `options = get_emm_option("emmeans")`. Let's see what that is:
+```{r}
+get_emm_option("emmeans")
+```
+So, by default, confidence intervals, but not tests, are displayed
+when the result is summarized. The reverse is true for results of 
+`contrast()` (and also the default for `pairs()` which calls `contrast()`):
+```{r}
+get_emm_option("contrast")
+```
+Finally, there are defaults for a newly constructed reference grid:
+```{r}
+get_emm_option("ref_grid")
+```
+The default is to display neither intervals nor tests when summarizing.
+In addition, the flag `is.new.rg` is set to `TRUE`, and that is why one 
+sees a `str()` listing rather than a summary as the default when the object
+is simply shown by typing its name at the console.
+
+The user may have other preferences. She may want to see both intervals 
+and tests whenever contrasts are produced; and perhaps she also wants to
+alweays default to the response scale when transformations or links
+are present. We can change the defaults by setting the corresponding options;
+and that is done via the `emm_options()` function:
+```{r}
+emm_options(emmeans = list(type = "response"),
+            contrast = list(infer = c(TRUE, TRUE)))
+```
+Now, new `emmeans()` results and contrasts follow the new defaults:
+```{r}
+pigs.anal.p <- emmeans(pigs.lm, consec ~ percent)
+pigs.anal.p
+```
+Observe that the contrasts "inherited" the `type = "response"` default from
+the EMMs.
+
+NOTE: Setting options does *not* change how existing `emm` objects are 
+displayed; it only affects ones constructed in the future.
+
+To temporarily revert to factory defaults in a single call to `emmeans()` or `contrast()` or `pairs()`, specify `options = NULL` in the call.
+To reset everything to factory defaults (which we do presently), null-out
+all of the **emmeans** package options:
+```{r}
+options(emmeans = NULL)
+```
+
+[Back to contents](#contents)
+
+## Combining and subsetting `emm` objects {#rbind}
+Two or more `emm` objects may be combined using the `rbind()` or `+`
+methods. The most common reason (or perhaps the only good reason) to do this
+is to combine EMMs or contrasts into one family for purposes of applying
+a multiplicity adjustment to tests or intervals. 
+A user may want to combine the three pairwise comparisons of sources 
+with the three comparisons above of consecutive percents into a single family of six tests with a suitable 
+multiplicity adjustment. This is done quite simply:
+```{r}
+rbind(pairs(pigs.emm.s), pigs.anal.p[[2]])
+```
+The default adjustment is `"bonferroni"`; we could have specified something different via the `adjust` argument. An equivalent way to combine `emm`s is via the addition
+operator. Any options may be provided by `update()`. Below, we combine the same
+results into a family but ask for the "exact" multiplicity adjustment.
+```{r}
+update(pigs.anal.p[[2]] + pairs(pigs.emm.s), adjust = "mvt")
+```
+Also evident in comparing these results is that settings are obtained from the
+first object combined. So in the second output, where they are combined in
+reverse order, we get both confidence intervals and tests, and transformation to
+the response scale.
+
+To subset an `emm` object, just use the subscripting operator `[]`.
+For instance,
+```{r}
+pigs.emm.s[2:3]
+```
+
+[Back to contents](#contents)
+
+
+
+## Adding grouping factors {#groups}
+Sometimes, users want to group levels of a factor into a smaller number of groups.
+Those groups may then be, say, averaged esparately and compared, or used as a
+`by` factor. The `add_grouping()` function serves this purpose. The function
+takes four arguments: the object, the name of the grouping factor to be created,
+the name of the reference factor that is being grouped, and a vector of level 
+names of the grouping factor corresponding to levels of the reference factor.
+Suppose for example that we want to distinguish animal and non-animal sources of
+protein in the `pigs` example:
+```{r}
+pigs.emm.ss <- add_grouping(pigs.emm.s, "type", "source",
+                            c("animal", "vegetable", "animal"))
+str(pigs.emm.ss)
+```
+Note that the new object has a nesting structure (see more about this in the ["messy-data" vignette](messy-data.html#nesting)), with the reference factor nested in the new grouping factor. Now we can obtain means and comparisons for each group
+```{r}
+emmeans(pigs.emm.ss, pairwise ~ type)
+```
+
+[Back to contents](#contents)
+

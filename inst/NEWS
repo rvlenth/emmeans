@@ -27,6 +27,8 @@ Changelog for 'emmeans' package
         transformation was used: We change any ' - 's in labels to ' / 's
         to emphasize that thnese results are ratios.
     A message is now displayed when nesting is auto-detected in 'ref_grid'.
+    Options were added for several messages that users may want to suppress,
+        e.g., ones about inrteractions and nesting.
     Greatly overhauled help page for models. It is now a vignette, 
         with a quick reference chart linked to details, and is
         organized by similarities instead of packages.

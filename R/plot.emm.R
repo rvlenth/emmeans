@@ -128,9 +128,11 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
 
 # Workhorse for plot.summary_emm
 .plot.srg = function(x, y, 
-                     horizontal = TRUE, xlab, ylab, layout, engine = c("ggplot", "lattice"), intervals = TRUE, extra = NULL, ...) {
+                     horizontal = TRUE, xlab, ylab, layout, 
+                     engine = get_emm_option("graphics.engine"),
+                     intervals = TRUE, extra = NULL, ...) {
     
-    engine = match.arg(engine)
+    engine = match.arg(engine, c("ggplot", "lattice"))
     if ((engine == "ggplot") && !requireNamespace("ggplot2"))
         stop("The 'ggplot' engine requires the 'ggplot2' package be installed.")
     if ((engine == "lattice") && !requireNamespace("lattice"))
@@ -362,7 +364,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         summ$lcl = lcl
         summ$ucl = ucl
         if (horizontal) {
-            grobj = ggplot(data = summ, aes(x = the.emmean, y = pri.fac)) + 
+            grobj = ggplot(summ, aes(x = the.emmean, y = pri.fac)) + 
                 geom_point(size = 2)
             if (intervals) 
                 grobj = grobj + geom_segment(aes(x = lcl, xend = ucl, 
