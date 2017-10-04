@@ -13,4 +13,54 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
-I haven't written this one yet.
+Models in which predictors interact seem to create a lot of confusion
+concerning what kinds of post hoc methods should be used. It is hoped that
+this vignette will be helpful in shedding some light on how to use the 
+**emmeans** package effectively in such situations.
+
+## Contents {#contents}
+
+  1. [Interacting factors](#factors)
+  2. [Interaction contrasts](#contrasts)
+  3. [Interactions with covariates](#covariates)
+
+[Vignette index](index.html)
+
+
+## Interacting factors {#factors}
+As an example for this topic, consider the `auto.noise` dataset included with
+the package. This is a balanced 3x2x2 experiment with three replications. Let's
+fit a model and obtain the ANOVA table:
+```{r}
+noise.lm <- lm(noise ~ size * type * side, data = auto.noise)
+anova(noise.lm)
+```
+There are statistically strong 2- and 3-way interactions. To understand more,
+a good first step is always to try to visualize the nature of the
+interactions. The following plot helps.
+```{r}
+emmip(noise.lm, type ~ size | side)
+```
+
+One mistake that a lot of people seem to make is to proceed too hastily to
+estimating marginal means. For example:
+```{r}
+emmeans(noise.lm, "size")
+```
+As is seen in the message, `emmeans` valiantly tries to warn you that it may not
+be a good idea to average over factors that interact with the factor of interest.
+It isn't always a bad idea to do this, but sometimes it definitely is. 
+What about this time?
+
+
+[Back to Contents](#contents)
+
+## Interaction contrasts {#contrasts}
+
+[Back to Contents](#contents)
+
+## Interactions with covariates {#covariates}
+
+[Back to Contents](#contents)
+
+
