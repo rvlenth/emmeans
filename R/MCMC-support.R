@@ -274,7 +274,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
         
         misc$respName = as.character(terms(object))[2]
     }
-    samp = as.matrix(object$stanfit)[, names(bhat)]
+    samp = as.matrix(object$stanfit)[, names(bhat), drop = FALSE]
     attr(samp, "n.chains") = object$stanfit@sim$chains
     list(X = X, bhat = bhat, nbasis = estimability::all.estble, V = V, 
          dffun = function(k, dfargs) NA, dfargs = list(), 

@@ -128,7 +128,7 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
     }
     grid[[var]] = grid[[var]] + delta.var
     
-    basis = .chk_emm_basis(model, attr(data, "terms"), RG@roles$xlev, grid, ...)
+    basis = .chk_emm_basis(model, attr(data, "terms"), RG@model.info$xlev, grid, ...)
     if (is.null(fcn))
         newlf = (basis$X - RG@linfct) / delta.var
     else {
