@@ -13,7 +13,7 @@ ref.grid(...)
 
 lsm.options(...)
 
-get.lsm.option(...)
+get.lsm.option(x, default = emm_defaults[[x]])
 
 recover.data(object, ...)
 

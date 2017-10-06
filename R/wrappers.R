@@ -61,7 +61,7 @@
 #' 
 #' @param ... Arguments passed to the corresponding \code{em}\emph{xxxx} function
 #' 
-#' @return The result of the call to \code{em}\emph{xxxx}, suitably modified
+#' @return The result of the call to \code{em}\emph{xxxx}, suitably modified.
 #' @rdname wrappers
 #' @aliases wrappers
 #' @export
@@ -124,3 +124,27 @@ lsmobj = function(...)
 pmmobj = function(...)
     .emwrap(emmobj, subst = "pm", ...)
 
+#' @rdname wrappers
+#' @export
+lsm.options = function(...) {
+    args = list(...)
+    nms = names(args)
+    nms = gsub("ref.grid", "ref_grid", nms)
+    nms = gsub("lsmeans", "emmeans", nms)
+    names(args) = nms
+    do.call(emm_options, args)
+}
+
+#' @rdname wrappers
+#' @param x Character name of desired option
+#' @param default default value to return if \code{x} not found
+#' 
+#' @return \code{get.lsm.option} and \code{lsm.options} remap options from
+#'   and to corresponding options in the \pkg{lsmeans} options system.
+#' @export
+get.lsm.option = function(x, default = emm_defaults[[x]]) {
+    if(x == "ref.grid") x = "ref_grid"
+    if(x == "lsmeans") x = "emmeans"
+    get_emm_option(x, default = default)
+}
+    

@@ -31,9 +31,12 @@ two responses. There is one observation per factor combination.
 oranges.lm <- lm(sales1 ~ price1*day, data = oranges)
 emmeans(oranges.lm, "day")
 
-# Example on p.246
+# Example on p.246 of Littell et al.
 emmeans(oranges.lm, "day", at = list(price1 = 0))
 
+# A more sensible model to consider, IMHO (see vignette("interactions"))
+org.mlm <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, 
+              data = oranges)
 }
 \references{
 Littell, R., Stroup W., Freund, R. (2002) \emph{SAS For Linear Models} (4th

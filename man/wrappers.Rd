@@ -12,6 +12,8 @@
 \alias{pmm}
 \alias{lsmobj}
 \alias{pmmobj}
+\alias{lsm.options}
+\alias{get.lsm.option}
 \title{Wrappers for alternative naming of EMMs}
 \usage{
 lsmeans(...)
@@ -33,12 +35,23 @@ pmm(...)
 lsmobj(...)
 
 pmmobj(...)
+
+lsm.options(...)
+
+get.lsm.option(x, default = emm_defaults[[x]])
 }
 \arguments{
 \item{...}{Arguments passed to the corresponding \code{em}\emph{xxxx} function}
+
+\item{x}{Character name of desired option}
+
+\item{default}{default value to return if \code{x} not found}
 }
 \value{
-The result of the call to \code{em}\emph{xxxx}, suitably modified
+The result of the call to \code{em}\emph{xxxx}, suitably modified.
+
+\code{get.lsm.option} and \code{lsm.options} remap options from
+  and to corresponding options in the \pkg{lsmeans} options system.
 }
 \description{
 These are wrappers for \code{\link{emmeans}} and realated functions to provide
