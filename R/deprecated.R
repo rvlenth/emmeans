@@ -46,18 +46,19 @@ ref.grid = function(...) {
     ref_grid(...)
 }
 
-#' @rdname emmeans-deprecated
-#' @export
-lsm.options = function(...) {
-    .Deprecated("emm_options")
-    emm_options(...)
-}
-#' @rdname emmeans-deprecated
-#' @export
-get.lsm.option = function(...) {
-    .Deprecated("get_emm_option")
-    get_emm_option(...)
-}
+### These are in wrappers.R ###
+# #' @rdname emmeans-deprecated
+# #' @export
+# lsm.options = function(...) {
+#     .Deprecated("emm_options")
+#     emm_options(...)
+# }
+# #' @rdname emmeans-deprecated
+# #' @export
+# get.lsm.option = function(...) {
+#     .Deprecated("get_emm_option")
+#     get_emm_option(...)
+# }
 
 
 

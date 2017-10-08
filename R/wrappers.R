@@ -127,6 +127,7 @@ pmmobj = function(...)
 #' @rdname wrappers
 #' @export
 lsm.options = function(...) {
+    .Deprecated("emm_options")
     args = list(...)
     nms = names(args)
     nms = gsub("ref.grid", "ref_grid", nms)
@@ -143,6 +144,7 @@ lsm.options = function(...) {
 #'   and to corresponding options in the \pkg{lsmeans} options system.
 #' @export
 get.lsm.option = function(x, default = emm_defaults[[x]]) {
+    .Deprecated("get_emm_option")
     if(x == "ref.grid") x = "ref_grid"
     if(x == "lsmeans") x = "emmeans"
     get_emm_option(x, default = default)

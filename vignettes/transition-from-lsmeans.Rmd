@@ -1,0 +1,127 @@
+---
+title: "Transitioning to emmeans from lsmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Transitioning to emmeans from lsmeans}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, results = "hide", message = FALSE}
+require("emmeans")
+knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
+```
+
+## Overview
+**emmeans** is a continuation of the **lsmeans** package. The name is
+changed for two reasons:
+
+  1. The term "least-squares means" is misleading in terms of describing 
+     the analyses it provides. The term "estimated marginal means" (EMMs) is
+     well-accepted, and it better describes the basic idea that we use
+     marginal means of predictions over a reference grid. When we do that
+     with, say, an ordinal model, the concept "estimated marginal mean"
+     makes sense while "least-squares mean" does not, because no 
+     least-squares methods are used to fit the model or obtain the EMMs.
+  2. A number of changes are made to the internal architecture of the
+     package. The **lsmeans** package had two classes, `ref.grid` and `lsmobj`,
+     and it was confusing to some users that they needed to use primarily
+     `ref.grid` methods to summarize `lsmobj` objects. The **emmeans**
+     package has only an `emm` class that covers both of the old classes.
+     Changing the name of the package at the same time as the object 
+     classes are changed makes for a cleaner transition.
+
+## User impact
+For the most part, all that most users need to do to transition from
+using the **lsmeans** package is ... nothing except using `require(emmeans)` or `library(emmeans)` to load the package. With that one change,
+*all* the code in the *using-lsmeans* vignette runs without alteration,
+and all examples from the help system for **lsmeans** also work as-is except
+one portion of the help on contrast methods (described below). Even though we
+now emphasize using the `emmeans()` function and related "em" functions,
+`lsmeans()` and its relatives are still available as wrappers for the new
+functions.
+
+That said, here are a few changes that former **lsmeans** users may
+need to be aware of:
+
+  * Some functions are deprecated, e.g. `ref.grid()`, `lsm.options()`, etc.
+    They will work, but you will get a deprecated message advising you to
+    use `ref_grid()` and `emm_options()`, etc.[^1]
+    
+    [^1]: Many of the deprecated functions, like `ref.grid()`, are renamed to
+    avoid possible confusion in S3 method dispatch: how do we know that
+    `summary.ref.grid()` wasn't a `summary.ref()` method for class `grid`,
+    rather than a `summary()` method for class `ref.grid`?
+    
+  * While the functions `lsmeans()`, `lsmip()`, etc. will continue to be
+    provided, all the help-page and vignette descriptions refer to their
+    new counterparts `emmeans()`, `emmip()`, etc. So you will need to
+    get accustomed to new terminology like "EMMs", even if you don't
+    choose to use it in your own work.[^2]
+    
+    [^2]: By the way, the `pmmeans()`, `pmmip()`, etc. wrappers already
+    provided in **lsmeans** are also still available.
+    
+  * If you have any scripts that include calls prefixed by `lsmeans::`,
+    or calls to `require(lsmeans)` or `library(lsmeans)`, obviously you
+    need to change these to use `emmeans` instead.
+  * If you have any custom contrast functions, you need to rename them
+    with an extension of `.emmc` instead of `lsmc`. See the example
+    under `help("contrast-methods")`.
+  * If you have saved results from previous runs in **lsmeans** (i.e.,
+    `ref.grid` or `lsmobj` objects), they should still work in **emmeans**. The
+    issue you may face, though, is that the **lsmeans** package could get loaded
+    simply because these objects are present, and put in the `search()` path. To
+    make sure you're using the new package, convert the objects to class `emm`:
+```
+my_new_ref_grid <- as(my.old.ref.grid, "emm")
+```
+    After ensuring that the converted objects all work correctly, delete
+    the old ones from your workspace, and save the revised workspace. Do 
+    `detach(package:lsmeans, unload = TRUE)` (or quit and start a new session).
+  * The `emmip()` and `plot()` functions use graphics from the **ggplot2**
+    package by default. If you prefer the **lattice** graphics produced
+    by the **lsmeans** package, they are still available: Use 
+    `emm_options(graphics.engine = "lattice")` to change the default,
+    or add `engine = "lattice"` to the call to for a particular plot.
+  * To get complete information about models supported by **emmeans**,
+    use `vignette("models")` rather than the help page of the same name.
+    It includes a quick reference chart at the beginning that should
+    prove helpful.
+  * The "using-lsmeans" vignette has been replaced by a number of
+    smaller vignettes that cover specific topics. Start with 
+    `vignette("basics")` to obtain an overview.
+  * The options `lsmeans` and `ref.grid` have been 
+    remapped to `emmeans` and `ref_grid` respectively. For example, calling 
+    `lsm.options(lsmeans = ...)` remaps as `emm_options(emmeans = ...)`. 
+    See `help("emm_options", package = "emmeans")` and 
+    `help("lsm.options", package = "lsmeans")` for explanations of these 
+    options.
+  * The degrees-of-freedom saga, continued... Initially, **lsmeans** used the
+    **pbkrtest** package to compute degrees of freedom (via the Kenward-Roger 
+    method) for `lme4::lmerMod` models. Later, the default was changed to the 
+    Satterthwaite method, implemented in the **lmerTest** package. Both methods 
+    are problematic; but I have decided to revert to the Kenward-Roger method 
+    as the system default. The default may be changed via 
+    `emm_options(lmer.df = ...)`. See `vignette("models")` for details.
+
+## Notes for package developers to transition to emmeans support
+if you are the developer of a package that supports **lsmeans**, and you want to transition to supporting **emmeans**, I make the following suggestions:
+
+ 1. Currently, your package provides methods `recover.data.xyz()` and
+    `lsm.basis.xyz()`. Rename these functions `recover_data.xyz()` and
+    `emm_basis.xyz()`.
+ 2. Any calls to `lsmeans::` functions in the above methods should be changed
+    to the corresponding `emmeans::` functions.
+ 3. For a period of time, you may want to continue support for **lsmeans** 
+    as well. So write new functions `ref.grid.xyz()` and `lsm.basis.xyz()`
+    that just call their counterparts.
+ 4. In your `DESCRIPTION` file, add `emmeans` to `Imports`, and make sure that
+    `lsmeans` is *not* in `Imports`.
+ 5. In your `NAMESPACE` file,
+     a. add `importFrom(emmeans, recover_data, emm_basis)`
+     b. add `S3method(recover_data, xyz)`
+     c. add `S3method(emm_basis, xyz)`
+     d. add `export(ref.grid, lsm.basis)`. That is, export them as *functions*,
+        and *not* as S3 methods
