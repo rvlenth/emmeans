@@ -109,9 +109,9 @@ my_new_ref_grid <- as(my.old.ref.grid, "emm")
 ## Notes for package developers to transition to emmeans support
 if you are the developer of a package that supports **lsmeans**, and you want to transition to supporting **emmeans**, I make the following suggestions:
 
- 1. Currently, your package provides methods `recover.data.xyz()` and
-    `lsm.basis.xyz()`. Rename these functions `recover_data.xyz()` and
-    `emm_basis.xyz()`.
+ 1. Currently, your package provides methods `recover.data.xyz()` and 
+    `lsm.basis.xyz()`, where `xyz` stands in for the class of your object. Rename
+    these functions `recover_data.xyz()` and `emm_basis.xyz()`.
  2. Any calls to `lsmeans::` functions in the above methods should be changed
     to the corresponding `emmeans::` functions.
  3. For a period of time, you may want to continue support for **lsmeans** 
@@ -123,5 +123,8 @@ if you are the developer of a package that supports **lsmeans**, and you want to
      a. add `importFrom(emmeans, recover_data, emm_basis)`
      b. add `S3method(recover_data, xyz)`
      c. add `S3method(emm_basis, xyz)`
-     d. add `export(ref.grid, lsm.basis)`. That is, export them as *functions*,
+     d. add `export(ref.grid.xyz, lsm.basis.xyz)`. 
+        That is, export them as *functions*,
         and *not* as S3 methods
+     e. In lieu of (a)-(c) above, you could just export the functions
+        `recover_data.xyz` and `emm_basis.xyz`. 

@@ -11,6 +11,137 @@ vignette: >
 ```{r, echo = FALSE, results = "hide", message = FALSE}
 require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
+options(show.signif.starts = FALSE)
 ```
 
-I haven't written this one yet.
+This vignette contains answers to questions received from users or posted on discussion boards like [Cross Validated](https://stats.stackexchange.com) and 
+[Stack Overflow](https://stackoverflow.com/)
+
+## Contents {#contents}
+
+ 1. [What are lsmeans/EMMs?](#what)
+ 2. [I have three (or two or four) factors that interact](#interactions)
+ 3. [I have covariate(s) that interact(s) with factor(s)](#trends)
+ 4. [lsmeans/emmeans doesn't work unless you have factors](#numeric)
+ 5. [If I analyze subsets of the data separately, I get different results](#model)
+ 6. [My lsmeans/EMMs are way off from what I expected](#transformations)
+ 7. [Some or all of the results shown say NA or NonEst](#NAs)
+
+[Vignettes index](index.html)
+
+## What are lsmeans/EMMs? {#what}
+Estimated marginal means (EMMs), a.k.a. least-squares means, are
+predictions on a reference grid of predictor settings, or marginal
+averages thereof. See details in [the "basics" vignette](basics.html).
+
+## I have three (or two or four) factors that interact {#interactions}
+Perhaps your question has to do with interacting factors, and you want to do
+some kind of *post hoc* analysis comparing levels of one (or more) of the 
+factors on the response. Some specific versions of this question...
+
+  * Perhaps you tried to do a simple comparison for one treatment and 
+    got a warning message you don't understand
+  * You do pairwise comparisons of factor combinations and it's 
+    just too much -- want just some of them
+  * How do I even approach this?
+  
+My first answer is: plots almost always help. If you have factors A, B, and C,
+try something like `emmip(model, A ~ B | C)`, which creates an interaction-style
+plot of the predictions against B, for each A, with separate panels for each C.
+This will help visualize what effects stand out in a practical way. This
+can guide you in what post-hoc tests would make sense. See the
+["interactions" vignette](interactions.html) for more discussion and examples.
+
+[Back to Contents](#contents)
+
+## I have covariate(s) that interact(s) with factor(s) {#trends}
+This is a situation where it may well be appropriate to compare the
+slopes of trend lines, rather than the EMMs. See the 
+[help page for `emtrends()`](../doc/emtrends.html) and the discussion of this
+topic in [the "interactions" vignette](interactions.html#covariates)
+
+
+## lsmeans/emmeans doesn't work unless you have factors {#numeric}
+Equivalently, users ask how to get *post hoc* comparisons when we have
+covariates rather than factors.
+Yes, it does work, but you have to tell it the appropriate reference grid.
+
+But before saying more, I have a question for you: *Are you sure your model
+is meaningful?*
+
+  * If your question concerns *only* two-level predictors such as `sex` 
+    (coded 1 for female, 2 for male), no problem. The model will produce
+    the same predictions as you'd get if you'd used these as factors.
+  * If *any* of the predictors has 3 or more levels, you may have fitted
+    a nonsense model, in which case you need to fit a different model that
+    does make sense before doing any kind of *post hoc* analysis. For instance,
+    the model contains a covariate `brand` (coded 1 for Acme, 2 for Ajax, and
+    3 for Al's), this model is implying that the difference between 
+    Acme and Ajax is exactly equal to the difference between Ajax and Al's,
+    owing to the fact that a linear trend in `brand` has been fitted. 
+    If you had instead coded 1 for Ajax, 2 for Al's, and 3 for Acme, the model
+    would produce different fitted values. You need to fit another model using 
+    `factor(brand)` in place of `brand`.
+
+Assuming that issue is settled, you can do something like
+`emmeans(model, "sex", at = list(sex = 1:2))`, to get get separate
+EMMs for each sex rather than one EMM for the average numeric value of `sex`.
+
+An alternative to the `at` list is to use `cov.reduce = FALSE`, which specifies
+that the unique values of covariates are to be used rather than reducing them
+to their means. However, the specification applies to *all* covariates, so
+if you have another one, say `age`, that has 43 different values in your data,
+you will have a mess on your hands.
+
+See "altering the reference grid" in the ["basics" vignette](basics.html#altering)
+for more discussion.
+
+[Back to Contents](#contents)
+
+
+## If I analyze subsets of the data separately, I get different results {#model}
+Estimated marginal means summarize the *model* that you fitted to the data
+-- not the data themselves. Many of the most common models rely on
+several simplifying assumptions -- that certain effects are linear, that the
+error variance is constant, etc. -- and those assumptions are passed forward
+into the `emmeans()` results. Doing separate analyses on subsets usually
+comprises departing from that overall model, so of course the results are 
+different.
+
+
+## My lsmeans/EMMs are way off from what I expected {#transformations}
+First step: Carefully read the annotations below the output. Do they say
+something like "results are on the log scale, not the response scale"?
+If so, that explains it. A Poisson or logistic model involves a link function,
+and by default, `emmeans()` produces its results on that same scale.
+You can add `type = "response"` to the `emmeans()` call and it will
+put the results of the scale you expect. But that is not always
+the best approach. The ["transformations" vignette](transformations.html)
+has examples and discussion.
+
+[Back to Contents](#contents)
+
+
+## Some or all of the results shown say NA or NonEst {#NAs}
+Such a situation typically arises in observational data. What this
+means is that the model is not capable of producing estimates for
+all points in the reference grid. For example, you have data on combinations
+of factors A and B, but there are no data at certain combinations of 
+these two factors. If the model includes the `A:B` interaction, then it
+can't estimate those missing combinations. Here are a couple of possibilities:
+
+  * Try fitting a simpler model. In the example above, a model with `A + B`,
+    without `A:B`, may be able to estimate the needed combinations.
+  * Use `at` to focus (at least mostly) on factor settings where estimates
+    are possible
+  * Possibly you have a nested structure that needs to be included in the
+    model or specified via the `nesting` argument. Perhaps the levels that B
+    can have depend on which level of A is in force. Then B is nested in A and
+    the model should specify `A + A:B`, with no main effect for `B`.
+
+The ["messy-data" vignette](messy-data.html) has more examples and discussion.
+
+
+[Back to Contents](#contents)
+
+
