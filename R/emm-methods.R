@@ -28,16 +28,18 @@
 ### S4 show method
 ## use S3 for this setMethod("summary", "emm", summary.emm)
 setMethod("show", "emm", function(object) {
-    if (is.logical(isnewrg <- object@misc$is.new.rg)) {
-        if (isnewrg)
-            str.emm(object)
-    }
+    isnewrg = object@misc$is.new.rg
+    if (is.null(isnewrg)) 
+        isnewrg = FALSE
+    
+    if (isnewrg)
+        str.emm(object)
     else
-        print(summary(object))
+        print(summary.emm(object))
 })
 
 
-### Others are all S3
+### Others are all S3 methods
 
 #' @rdname emm-methods
 #' @method str emm
@@ -356,8 +358,11 @@ update.emm = function(object, ..., silent = FALSE) {
 #' \item{code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
 #' latest reference grid created to be saved in \code{.Last.ref_grid}}
 #' \item{Options for \code{lme4::lmerMod} models}{Options \code{lmer.df},
-#' \code{disable.pbkrtest}, and \code{pbkrtest.limit} options affect how degrees
-#' of freedom are computed for \code{lmerMod} objects produced by the \pkg{lme4} package). See that section of \link{models} for details.}
+#' \code{disable.pbkrtest}, \code{pbkrtest.limit}, \code{disable.lmerTest},
+#' and \code{lmerTest.limit}
+#' options affect how degrees of freedom are computed for \code{lmerMod} objects
+#' produced by the \pkg{lme4} package). See that section of the "models" vignette
+#' for details.}
 #' } %%%%%% end \describe
 
 #' @return \code{emm_options} returns the current options (same as the result 
@@ -424,9 +429,11 @@ emm_defaults = list (
     msg.interaction = TRUE,   # message about averaging w/ interactions
     msg.nesting = TRUE,       # message when nesting is detected
     estble.tol = 1e-8,        # tolerance for estimability checks
-    lmer.df = "kenward",      # Use Kenward-Roger for df
+    lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
-    pbkrtest.limit = 3000     # limit on N for enabling adj V
+    pbkrtest.limit = 3000,    # limit on N for enabling K-R
+    disable.lmerTest = FALSE, # whether to bypass lmerTest routines for lmerMod
+    lmerTest.limit = 3000     # limit on N for enabling Satterthwaite
 )
 
 

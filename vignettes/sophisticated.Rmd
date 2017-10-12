@@ -1,0 +1,168 @@
+---
+title: "Sophisticated models in emmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sophisticated models in emmeans}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, results = "hide", message = FALSE} 
+require("emmeans") 
+options(show.signif.stars = FALSE) 
+knitr::opts_chunk$set(collapse = TRUE,
+fig.width = 4.5) 
+```
+
+This vignette gives a few examples of the use of the **emmeans** package to
+analyze other than the basic types of models provided by the **stats**
+package. Emphasis here is placed on accessing the optional capabilities
+that are typically not needed for the more basic models. A reference for
+all supported models is provided in the ["models" vignette](models.html).
+
+## Contents {#contents}
+
+ 1. [Linear mixed models (lmer)](#lmer)
+    a. [System options for lmerMod models](#lmerOpts)
+ 2. [Ordinal models](#ordinal)
+ 3. [Models fitted using MCMC methods](#mcmc)
+ 4. [Reference for supported models](models.html)
+ 
+[Vignette index](index.html) 
+
+
+## Linear mixed models (lmer) {#lmer}
+Linear mixed models are really important in statistics. Emphasis here is placed
+on those fitted using `lme4::lmer()`, but **emmeans** also supports other
+mixed-model packages such as **nlme**.
+
+To illustrate, consider the `Oats` dataset in the **nlme** package. It has the
+results of a balanced split-plot experiment: experimental blocks are divided 
+into plots that are randomly assigned to oat varieties, and the plots are
+subdivided into subplots that are randomly assigned to amounts of nitrogen
+within each plot. We will consider a linear mixed model for these data, 
+excluding interaction (which is justified in this case). For sake of 
+illustration, we will exclude a few observations.
+```{r}
+Oats.lmer <- lme4::lmer(yield ~ Variety + factor(nitro) + (1|Block/Variety),
+                        data = nlme::Oats, subset = -c(1,2,3,5,8,13,21,34,55))
+```
+Let's look at the EMMs for `nitro`:
+```{r}
+Oats.emm.n <- emmeans(Oats.lmer, "nitro")
+Oats.emm.n
+```
+You will notice that the degrees of freedom are fractional: that is due to the
+fact that whole-plot and subplot variations are combined when standard errors
+are estimated. Diffferent degrees-of-freedom methods are available. By default, 
+the Kenward-Roger method is used, and that's why you see a message about the
+**pbkrtest** package being loaded, as it implements that method. We may specify
+a different degrees-of-freedom method via the optional argument `lmer.df`:
+```{r}
+emmeans(Oats.lmer, "nitro", lmer.df = "satterthwaite")
+```
+This latest result uses the Satterthwaite method, which is implemented in the
+**lmerTest** package. Note that, with this method, not only are the degrees of
+freedom slightly different, but so are the standard errors. That is because the 
+Kenward-Roger method also entails making a bias adjustment to the covariance
+matrix of the fixed effects; that is the principal difference between the
+methods. A third possibility is `"asymptotic"`:
+```{r}
+emmeans(Oats.lmer, "nitro", lmer.df = "asymptotic")
+```
+This just sets all the degrees of freedom to `NA` -- that's **emmeans**'s way of
+using *z* statistics rather than *t* statistics. The asymptotic methods tend to
+make confidence intervals a bit too narrow and P values a bit too low; but they
+involve much, much less computation. Note that the SEs are the same as obtained
+using the Satterthwaite method.
+
+Comparisons and contrasts are pretty much the same as with other models. As
+`nitro` has quantitative levels, we might want to test polynomial contrasts:
+```{r}
+contrast(Oats.emm.n, "poly")
+```
+The interesting thing here is that the degrees of freedom are much larger than
+they are for the EMMs. The reason is because `nitro` within-plot factor, so
+inter-plot variations have little role in estimating contrasts among `nitro`
+levels. On the other hand, `Variety` is a whole-plot factor, and there is not 
+much of a bump in degrees of freedom for comparisons:
+```{r}
+emmeans(Oats.lmer, pairwise ~ Variety)
+```
+
+### System options for lmerMod models {#lmerOpts}
+The computation required to compute the adjusted covariance matrix and degrees 
+of freedom may become cumbersome. Some user options (i.e., `emm_options()` 
+calls) make it possible to streamline these computations through default methods
+and limitations on them. First, the option `lmer.df`, which may have values of 
+`"kenward-roger"`, `"satterthwaite"`, or `"asymptotic"` (partial matches are 
+OK!) specifies the default degrees-of-freedom method.
+
+The options `disable.pbkrtest` and `disable.lmerTest` may be `TRUE` or `FALSE`,
+and comprise another way of controlling which method is used (e.g., the
+Kenward-Roger method will not be used if `get_emm_option("disable.pbkrtest") ==
+TRUE`). Finally, the options `pbkrtest.limit` and `lmerTest.limit`, which should
+be set to numeric values, enable the given package conditionally on whether the
+number of data rows does not exceed the given limit. The factory default is 3000
+for both limits.
+
+
+## Ordinal models {#ordinal}
+
+## Models fitted using MCMC methods {#mcmc}
+To illustrate **emmeans**'s support for models fitted using MCMC methods,
+consider the `example_model` available in the **rstanarm** package. 
+The example concerns CBPP, a serious disease of cattle in Ethiopia.
+A generalized linear mixed model was fitted to the data using the
+code below. We subsequently obtain its reference grid in the usual way.
+<!--- I'm faking this; I actually saved the ref_grid in a system file --->
+```{r eval = FALSE}
+example_model <- rstanarm::stan_glmer(
+    cbind(incidence, size - incidence) ~ size + period + (1|herd),
+    data = lme4::cbpp, family = binomial,
+    chains = 2, cores = 1, seed = 12345, iter = 500)
+rst_ex.rg <- ref_grid(example_model)
+```
+<!--- here's the system file with the ref_grid --->
+```{r echo = FALSE}
+load(system.file("extdata", "rstex.RData", package = "emmeans"))
+rst_ex.rg <- do.call(emmobj, rstex)
+```
+Here is the structure of the reference grid:
+```{r}
+rst_ex.rg
+```
+And, again in the usual way, we can obtain EMMs:
+```{r}
+period.emm <- emmeans(rst_ex.rg, "period")
+period.emm
+```
+The summary shows a frequentist summary of the EMMs. Under the hood, though, is a posterior sample of 500 sets of EMMs -- each one being the EMMs computed from each set of parameter values in the posterior sample of regression coefficients. The summary we see is based on the sample means and covariances of that sample.
+
+We can access these posterior results via the `as.mcmc` method for `emm` objects.
+This gives us an object of class `mcmc` (defined in the **coda** package), which
+can be summarized and explored as we please.
+```{r}
+require("coda")  ### needed to access generic for as.mcmc()
+summary(as.mcmc(period.emm))
+```
+Note that `as.mcmc` will actually produce an `mcmc.list` when there is more than
+one chain present, as in this example.
+The 2.5th and 97.5th quantiles are similar, but not identical, to the
+95% confidence intervals in the frequentist summary. Here is a plot of
+the posterior EMMs, back-transformed:
+```{r}
+bayesplot::mcmc_areas(as.mcmc(regrid(period.emm)))
+```
+
+... and here are intervals for each period compared with its neighbor; we wrap 
+the important part of the call in an extra `as.mcmc(as.matrix(...))` so as to
+combine the two chains into one.
+```{r}
+HPDinterval(as.mcmc(as.matrix(
+    as.mcmc(contrast(period.emm, "consec", reverse = TRUE), names = FALSE))))
+```
+The only interval that excludes zero is the one that compares periods 1 and 2.
+
+In summary, to do Bayesian analysis in the **emmeans** package, use the same tools that are available for other models, extract the MCMC samples using `as.mcmc()`, and summarize or plot from there.

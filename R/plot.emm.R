@@ -364,16 +364,17 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         summ$lcl = lcl
         summ$ucl = ucl
         if (horizontal) {
-            grobj = ggplot(summ, aes(x = the.emmean, y = pri.fac)) + 
+            grobj = ggplot(summ, aes_(x = ~the.emmean, y = ~pri.fac)) + 
                 geom_point(size = 2)
             if (intervals) 
-                grobj = grobj + geom_segment(aes(x = lcl, xend = ucl, 
-                                                 y = pri.fac, yend = pri.fac), color = "blue", lwd = 4, alpha = .25)
+                grobj = grobj + geom_segment(aes_(x = ~lcl, xend = ~ucl, 
+                        y = ~pri.fac, yend = ~pri.fac), 
+                    color = "blue", lwd = 4, alpha = .25)
             if (!is.null(extra))
-                grobj = grobj + geom_segment(aes(x = lcmpl, xend = rcmpl, 
-                                                 y = pri.fac, yend = pri.fac), 
-                                             arrow = arrow(length = unit(.07, "inches"), ends = "both", type = "closed"),
-                                             color = "red")
+                grobj = grobj + geom_segment(aes_(x = ~lcmpl, xend = ~rcmpl, 
+                        y = ~pri.fac, yend = ~pri.fac), 
+                    arrow = arrow(length = unit(.07, "inches"), 
+                        ends = "both", type = "closed"), color = "red")
             if (length(byv) > 0)
                 grobj = grobj + facet_grid(paste(paste(byv, collapse = "+"), " ~ ."), 
                                            labeller = "label_both")
@@ -381,16 +382,17 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
             if (missing(ylab)) ylab = facName
         }
         else {
-            grobj = ggplot(summ, aes(y = the.emmean, x = pri.fac)) + 
+            grobj = ggplot(summ, aes_(y = ~the.emmean, x = ~pri.fac)) + 
                 geom_point(size = 2)
             if (intervals) 
-                grobj = grobj + geom_segment(aes(y = lcl, yend = ucl, 
-                                                 x = pri.fac, xend = pri.fac), color = "blue", lwd = 4, alpha = .25)
+                grobj = grobj + geom_segment(aes_(y = ~lcl, yend = ~ucl, 
+                        x = ~pri.fac, xend = ~pri.fac), 
+                    color = "blue", lwd = 4, alpha = .25)
             if (!is.null(extra))
-                grobj = grobj + geom_segment(aes(y = lcmpl, yend = rcmpl, 
-                                                 x = pri.fac, xend = pri.fac), 
-                                             arrow = arrow(length = unit(.07, "inches"), ends = "both", type = "closed"),
-                                             color = "red")
+                grobj = grobj + geom_segment(aes_(y = ~lcmpl, yend = ~rcmpl, 
+                        x = ~pri.fac, xend = ~pri.fac), 
+                    arrow = arrow(length = unit(.07, "inches"), ends = "both", 
+                        type = "closed"), color = "red")
             if (length(byv) > 0)
                 grobj = grobj + facet_grid(paste(". ~ ", paste(byv, collapse = "+")), 
                                            labeller = "label_both")

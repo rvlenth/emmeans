@@ -2,18 +2,12 @@
 % Please edit documentation in R/deprecated.R
 \name{ref.grid}
 \alias{ref.grid}
-\alias{lsm.options}
-\alias{get.lsm.option}
 \alias{recover.data}
 \alias{lsm.basis}
 \alias{emmeans-deprecated}
 \title{Deprecated functions and arguments from \pkg{lsmeans}}
 \usage{
 ref.grid(...)
-
-lsm.options(...)
-
-get.lsm.option(x, default = emm_defaults[[x]])
 
 recover.data(object, ...)
 

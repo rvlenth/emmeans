@@ -57,9 +57,9 @@ Scroll down or follow the links to those groups for more information.
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
 |lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
 |lme          |nlme     |[A](#A)  |`sigmaAdjust = c(TRUE, FALSE)`                               |
-|lmerMod      |lme4     |[L](#L)  |`mode = c("kenward-roger", "satterthwaite",`                 |
-|             |         |         |`"asymptotic")`. Also `emm_options(disable.pbkrtest =,`      |
-|             |         |         |`lmer.df =, pbkrtest.limit =)`                               |
+|lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
+|             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
+|             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
@@ -159,7 +159,7 @@ typically the tests and confidence intervals are asymptotic. Thus the
 
 ## Group L -- `lmerMod` models {#L}
 
-There is an optional `mode` argument that defaults to 
+There is an optional `lmer.df` argument that defaults to 
 `get_EMM_option("lmer.df")` (which in turn defaults to 
 `"kenward-roger"`). The possible values are `"kenward-roger"`,
 `"satterthwaite"`, and `"asymptotic"` (these are partially matched and 
@@ -167,7 +167,8 @@ case-insensitive). With `"kenward-roger"`, d.f. are obtained using code
 from the **pbkrtest** package, if installed. With `"satterthwaite"`,
 d.f. are obtained using code from the **lmerTest** package, if installed. 
 With `"asymptotic"`, or if the needed package is not installed, d.f. are
-set to `NA`.
+set to `NA`. (For backward compatibility, the user may specify
+`mode` in lieu of `lmer.df`.)
 
 A by-product of the Kenward-Roger method is that the covariance matrix is 
 adjusted using `pbkrtest::vcovAdj()`. This can require considerable
@@ -179,13 +180,19 @@ use in **emmeans**). The computation time required depends roughly on the
 number of observations, *N*, in the design matrix (because a major part
 of the computation involves inverting an *N* x *N* matrix). Thus,
 **pbkrtest** is automatically disabled if *N* exceeds the value of 
-`get_emm_option("pbkrtest.limit")`. If desired, the user may use 
-`emm_options` to adjust this limit from the default of 3000.
+`get_emm_option("pbkrtest.limit")`, for which the factory default is 3000.
+
+Similarly to the above, the `disable.lmerTest` and `lmerTest.limit` options
+affect whether Satterthwaite methods can be implemented.
 
 The `df` argument may be used to specify some other degrees of freedom.
 Note that if `df` and `method = "satterthwaite"` are both
 specified, the covariance matrix is adjusted but the K-R degrees of freedom
-are not used.
+are not used. 
+
+Finally, note that a user-specified covariance matrix 
+(via the `vcov.` argument) will also disable the Kenward-Roger method; in
+that case, the Satterthwaite method is used in place of Kenward-Roger.
 
 
 ## Group M -- Multivariate models {#M}

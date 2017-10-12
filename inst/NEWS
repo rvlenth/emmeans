@@ -18,7 +18,8 @@ Changelog for 'emmeans' package
         Both are replaced by class "emm". Existing ref.grid and lsmobj objects
         inherit from emm so will still be usable.
  >> I decided to revert back to "kenward-roger" as the default degrees-of-freedom
-        method for lmerMod models.
+        method for lmerMod models. Also added options 'disable.lmerTest'
+        and 'lmerTest.limit', similar to those for pbkrtest.
     Documentation and NAMESPACE are now "ROxygenated"
     Additional 'neuralgia' and 'pigs' datasets
     Dispatching of emmmeans methods is now top-down rather than convoluted
@@ -28,7 +29,7 @@ Changelog for 'emmeans' package
         to emphasize that thnese results are ratios.
     A message is now displayed when nesting is auto-detected in 'ref_grid'.
     Options were added for several messages that users may want to suppress,
-        e.g., ones about inrteractions and nesting.
+        e.g., ones about interactions and nesting.
     Greatly overhauled help page for models. It is now a vignette, 
         with a quick reference chart linked to details, and is
         organized by similarities instead of packages.
@@ -36,7 +37,8 @@ Changelog for 'emmeans' package
         big one on using the package. Several vignettes are linked in the
         help pages (why didn't I learn how to do this years ago?)
     Graphics methods 'plot' and 'emmip' are now **ggplot2**-based.
-        Old **lattice**-based functionality is still available too.
+        Old **lattice**-based functionality is still available too,
+        and there is a 'graphics.engine' option to choose the default.
     Moved 'Suggests' pkgs to 'Enhances' when not needed for building/testing
 
 

@@ -29,8 +29,8 @@
 
 
 ## 1. We're changing ref.grid and lsmobj classes to emm
-setClass("ref.grid", contains="emm")
-setClass("lsmobj", contains="ref.grid")
+# setClass("ref.grid", contains = "emm")
+# setClass("lsmobj", contains = "ref.grid")
 
 # For reasons I don't quite understand, I need a new plot.ref.grid method
 plot.ref.grid = function(x, ...) {

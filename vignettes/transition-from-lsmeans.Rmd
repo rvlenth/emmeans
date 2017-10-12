@@ -73,13 +73,11 @@ need to be aware of:
     `ref.grid` or `lsmobj` objects), they should still work in **emmeans**. The
     issue you may face, though, is that the **lsmeans** package could get loaded
     simply because these objects are present, and put in the `search()` path. To
-    make sure you're using the new package, convert the objects to class `emm`:
-```
-my_new_ref_grid <- as(my.old.ref.grid, "emm")
-```
-    After ensuring that the converted objects all work correctly, delete
-    the old ones from your workspace, and save the revised workspace. Do 
-    `detach(package:lsmeans, unload = TRUE)` (or quit and start a new session).
+    make sure you're using the new package, convert the objects to class `emm`
+    -- e.g., `my_new_ref_grid <- as.emm(my.old.ref.grid)`.
+    Running the non-exported function `emmeans:::convert_workspace()` may
+    be used to convert all the objects in an environment (the global
+    one by default) and clean out any dependencies on **lsmeans**.
   * The `emmip()` and `plot()` functions use graphics from the **ggplot2**
     package by default. If you prefer the **lattice** graphics produced
     by the **lsmeans** package, they are still available: Use 

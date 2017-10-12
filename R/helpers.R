@@ -89,7 +89,8 @@ recover_data.merMod = function(object, ...) {
 }
 
 emm_basis.merMod = function(object, trms, xlev, grid, vcov., 
-                            mode = get_emm_option("lmer.df"), lmer.df, ...) {
+                            mode = get_emm_option("lmer.df"), 
+                            lmer.df, ...) {
     if (missing(vcov.))
         V = as.matrix(vcov(object, correlation = FALSE))
     else
@@ -97,28 +98,28 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
     dfargs = misc = list()
     
     if (lme4::isLMM(object)) {
-        # Allow user to specify mode as 'lmer.df'
+        # Allow lmer.df in lieu of mode
         if (!missing(lmer.df))
             mode = lmer.df
+
         mode = match.arg(tolower(mode), c("satterthwaite", "kenward-roger", "asymptotic"))
         
-        if (mode == "satterthwaite") {
-            if (requireNamespace("lmerTest")) {
-                dfargs = list(object = object)
-                dffun = function(k, dfargs) 
-                    suppressMessages(lmerTest::calcSatterth(dfargs$object, k)$denom)
-            }
-            else {
-                message("Install package 'lmerTest' to obtain Satterthwaite degrees of freedom")
-                mode = "asymptotic"
-            }
+        # set flags
+        objN = lme4::getME(object, "N")
+        disable.pbkrtest = get_emm_option("disable.pbkrtest")
+        tooBig.k = (objN > get_emm_option("pbkrtest.limit"))
+        disable.lmerTest = get_emm_option("disable.lmerTest")
+        tooBig.s = (objN > get_emm_option("lmerTest.limit"))
+        
+        tooBigMsg = function(pkg, limit) {  
+            message("Note: D.f. calculations have been",
+                    " disabled because the number of observations exceeds ", limit, ".\n",
+                    "To enable adjustments, set emm_options(", pkg, ".limit = ", objN, ") or larger,\n",
+                    "but be warned that this may result in large computation time and memory use.")
         }
-        else if (mode == "kenward-roger") {
-            pbdis = .emm.is.true("disable.pbkrtest")
-            Nlim = get_emm_option("pbkrtest.limit")
-            objN = lme4::getME(object, "N")
-            toobig = objN > Nlim
-            if (!pbdis && !toobig && requireNamespace("pbkrtest") && missing(vcov.)) {
+        
+        if ((mode == "kenward-roger") && !disable.pbkrtest && requireNamespace("pbkrtest")) {
+            if (!disable.pbkrtest && !tooBig.k  && missing(vcov.)) {
                 dfargs = list(unadjV = V, 
                               adjV = pbkrtest::vcovAdj.lmerMod(object, 0))
                 V = as.matrix(dfargs$adjV)
@@ -127,18 +128,26 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
                     dffun = function(k, dfargs) pbkrtest::Lb_ddf (k, dfargs$unadjV, dfargs$adjV)
                 else {
                     mode = "asymptotic"
-                    warning("To obtain d.f., install 'pbkrtest' version 0.4-1 or later")
+                    warning("Failure in loading pbkrtest routines - reverted to \"asymptotic\"")
                 }
             }
+            else if(tooBig.k) {
+                tooBigMsg("pbkrtest", get_emm_option("pbkrtest.limit"))
+                mode = "asymptotic"
+            }
+            else if (!missing(vcov.)) {
+                message("Kenward-Roger method can't be used with user-supplied covariances")
+                mode = "satterthwaite"
+            }
+        }
+        if (mode == "satterthwaite" && !disable.lmerTest && requireNamespace("lmerTest")) {
+            if (!tooBig.s) {
+                dfargs = list(object = object)
+                dffun = function(k, dfargs) 
+                    suppressMessages(lmerTest::calcSatterth(dfargs$object, k)$denom)
+            }
             else {
-                if(!pbdis && !("pbkrtest" %in% row.names(installed.packages())))
-                    message("Install package 'pbkrtest' to obtain bias corrections and degrees of freedom")
-                else if(toobig)
-                    message("Note: Adjusted covariance and degrees-of-freedom calculations have been\n",
-                            "disabled because the number of observations exceeds ", Nlim, ".\n",
-                            "Standard errors and tests may be more biased than if they were adjusted.\n",
-                            "To enable adjustments, set emm_options(pbkrtest.limit = ", objN, ") or larger,\n",
-                            "but be warned that this may result in large computation time and memory use.")
+                tooBigMsg("lmerTest", get_emm_option("lmerTest.limit"))
                 mode = "asymptotic"
             }
         }

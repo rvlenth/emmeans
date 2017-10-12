@@ -225,21 +225,21 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     else {  # engine = "ggplot"
         pos = position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
         if (!one.trace) {
-            grobj = ggplot(emms, aes(x = xvar, y = yvar, color = tvar)) +
+            grobj = ggplot(emms, aes_(x = ~xvar, y = ~yvar, color = ~tvar)) +
                 geom_point(position = pos) +
-                geom_line(aes(group = tvar), position = pos) +
+                geom_line(aes_(group = ~tvar), position = pos) +
                 labs(x = xlab, y = ylab, color = tlab)
         }
         else { # just one trace per plot
-            grobj = ggplot(emms, aes(x = xvar, y = yvar)) +
+            grobj = ggplot(emms, aes_(x = ~xvar, y = ~yvar)) +
                 geom_point() +
-                geom_line(aes(group = tvar)) +
+                geom_line(aes_(group = ~tvar)) +
                 labs(x = xlab, y = ylab)
             
         }
         if (CIs) # using linerange w/ extra width and semi-transparent
-            grobj = grobj + geom_linerange(aes(ymin = LCL, ymax = UCL), 
-                                           position = pos, lwd = 2, alpha = .5)
+            grobj = grobj + geom_linerange(aes_(ymin = ~LCL, ymax = ~UCL), 
+                        position = pos, lwd = 2, alpha = .5)
         if (length(rhs) > 1) {  # we have by variables 
             if (length(byvars) > 1) {
                 byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))

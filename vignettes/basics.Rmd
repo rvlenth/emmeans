@@ -358,6 +358,9 @@ also be accessed via `vignette("`*name*`", "emmeans")`
     ["transformations"](transformations.html)
   * Multi-factor models with interactions: ["interactions"](interactions.html)
   * Working with messy data and nested effects: ["messy-data"](messy-data.html)
+  * Examples of more sophisticated models (e.g., mixed, ordinal, MCMC)
+    ["sophisticated"](sophisticated.html)
+  * Utilities for working with `emm` objects: ["utilities"](utilities.html)
   * Frequently asked questions: ["FAQs"](FAQs.html)
 
 [Back to Contents](#contents)

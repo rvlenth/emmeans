@@ -406,7 +406,7 @@ emmeans = function(object, specs, by = NULL,
         RG@misc$methDesc = "emmeans"
         RG@roles$predictors = names(levs)
 ### Pass up 'new' as we're not changing its class  result = new("emm", RG, linfct = linfct, levels = levs, grid = combs)
-        result = as(RG, "emm")
+        result = as.emm(RG)
         result@linfct = linfct
         result@levels = levs
         result@grid = combs
@@ -511,7 +511,7 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
     grid = do.call(expand.grid, levels)
     if (nrow(grid) != nrow(linfct))
         stop("linfct should have ", nrow(grid), "rows")
-    model.info = list(call = quote(match.call()), xlev = levels)
+    model.info = list(call = match.call(), xlev = levels)
     roles = list(predictors= names(grid), responses=character(0), 
                  multresp=character(0))
     if (!missing(dffun))
@@ -535,32 +535,68 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
     update(result, ..., silent=TRUE)
 }
 
-#' Coerce an \code{emm} object to a list
+#' Convert to and from \code{emm} objects
 #' 
-#' This is a useful utility for creating a compact version of an \code{emm} object
-#' that may be saved and later reconstructed.
+#' These are useful utility functions for creating a compact version of an
+#' \code{emm} object that may be saved and later reconstructed, or for
+#' converting old \code{ref.grid} or \code{lsmobj} objects into \code{emm}
+#' objects.
 #' 
 #' An \code{emm} object is an S4 object, and as such cannot be saved in a
 #' text format or saved without a lot of overhead. By using \code{as.list},
 #' the essential parts of the object are converted to a list format that can be
 #' easily and compactly saved for use, say, in another session or by another user.
 #' Providing this list as the arguments for \code{\link{emmobj}} allows the user 
-#' to restore a working \code{emm} object. See the example below.
+#' to restore a working \code{emm} object.
 #' 
-#' @param x An \code{emm} object
-#' @param ... (Required argument, but ignored)
+#' @param object Object to be converted to class \code{emm}. It may
+#'   be a \code{list} returned by \code{as.list.emm}, or a \code{ref.grid}
+#'   or \code{lsmobj} object created by \pkg{emmeans}'s predecessor, the 
+#'   \pkg{lsmeans} package. An error is thrown if \code{object} cannot
+#'   be converted.
+#' @param ... In \code{as.emm}, additional arguments passed to 
+#'   \code{\link{update.emm}} before returning the object. This
+#'   argument is ignored in \code{as.list.emm}
+#'   
+#' @return \code{as.emm} returns an object of class \code{emm}. 
 #' 
 #' @seealso \code{\link{emmobj}}
-#' 
-#' @method as.list emm
 #' @export
+#' 
 #' 
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 #' pigs.sav <- as.list(ref_grid(pigs.lm))
 #' 
-#' pigs.anew <- do.call(emmobj, pigs.sav)
+#' pigs.anew <- as.emm(pigs.sav)
 #' emmeans(pigs.anew, "source")
+#' 
+#' \dontrun{
+#' ## Convert an entire workspace saved from an old **lsmeans** session
+#' emmeans:::convert_workspace()
+#' }
+as.emm = function(object, ...) {
+    if (cls <- class(object)[1] %in% c("ref.grid", "lsmobj")) {
+        object = as.list.emm(object)
+        if (is.null(object$misc$is.new.rg))
+            object$misc$is.new.rg = (cls == "ref.grid")
+    }
+    # above keeps us from having to define these classes in emmeans
+    if (is.list(object))
+        result = do.call(emmobj, object)
+    else {
+        result = try(as(object, "emm", strict = FALSE), silent = TRUE)
+        if (inherits(result, "try-error"))
+            stop("Object cannot be coerced to class 'emm'")
+    }
+    update(result, ...)
+}
+
+#' @rdname as.emm
+#' @param x An \code{emm} object
+#' @return \code{as.list.emm} returns an object of class \code{list}. 
+#' @method as.list emm
+#' @export
 as.list.emm = function(x, ...) {
     slots = c("bhat", "V", "levels", "linfct", "dffun", "dfargs", "post.beta")
     result = lapply(slots,function(nm) slot(x, nm))
@@ -570,6 +606,8 @@ as.list.emm = function(x, ...) {
     result$pri.vars = NULL
     result
 }
+
+
 
 #### --- internal stuff used only by emmeans -------------
 
@@ -584,6 +622,30 @@ as.list.emm = function(x, ...) {
     }
     return(FALSE)
 }
+
+
+## Here is a utility that we won't export, but can help clean out lsmeans
+## stuff from one's workspace, and unload unnecessary junk
+convert_workspace = function(envir = .GlobalEnv) {
+    if (exists(".Last.ref.grid", envir = envir)) {
+        cat("Deleted .Last.ref.grid\n")
+        remove(".Last.ref.grid", envir = envir)
+    }
+    for (nm in names(envir)) {
+        obj <- get(nm)
+        if (is(obj, "ref.grid")) {
+            cat(paste("Converted", nm, "to class 'emm'\n"))
+            assign(nm, as.emm(obj), envir = envir)
+        }
+    }
+    if ("package:lsmeans" %in% search())
+        detach("package:lsmeans")
+    if ("lsmeans" %in% loadedNamespaces())
+        unloadNamespace("lsmeans")
+    message("The environment has been converted and lsmeans's namespace is unloaded.\n",
+            "Now you probably should save it.")
+}
+
 
 # utility to parse 'by' part of a formula
 .find.by = function(rhs) {
