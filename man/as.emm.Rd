@@ -50,14 +50,13 @@ emmeans(pigs.anew, "source")
 
 \dontrun{
 ## Convert an entire workspace saved from an old **lsmeans** session
-remove(".Last.ref.grid")
-for (nm in names(.GlobalEnv)) {
-    obj <- get(nm)
-    if (is(obj, "ref.grid"))
-        assign(nm, as.emm(obj))
-}
-unloadNamespace("lsmeans")
-## Now, save your updated workspace
+a.problem <- lsmeans::lsmeans(pigs.lm, "source")
+#- Now global env contains at least two ref.grid and lsmobj objects,
+#- and the "lsmeans" namespace is loaded
+emmeans:::convert_workspace()
+class(a.problem)
+"lsmeans" \%in\% loadedNamespaces()
+#- It's all better now
 }
 }
 \seealso{

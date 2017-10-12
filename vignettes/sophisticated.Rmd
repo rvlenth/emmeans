@@ -55,7 +55,7 @@ Oats.emm.n
 ```
 You will notice that the degrees of freedom are fractional: that is due to the
 fact that whole-plot and subplot variations are combined when standard errors
-are estimated. Diffferent degrees-of-freedom methods are available. By default, 
+are estimated. Different degrees-of-freedom methods are available. By default, 
 the Kenward-Roger method is used, and that's why you see a message about the
 **pbkrtest** package being loaded, as it implements that method. We may specify
 a different degrees-of-freedom method via the optional argument `lmer.df`:
@@ -107,8 +107,86 @@ be set to numeric values, enable the given package conditionally on whether the
 number of data rows does not exceed the given limit. The factory default is 3000
 for both limits.
 
+[Back to Contents](#contents)
+
 
 ## Ordinal models {#ordinal}
+Ordinal-response models comprise an example where several options are 
+available for obtaining EMMs. To illustrate, consider the `wine` data
+in the **ordinal** package. The response is a rating of bitterness on
+a five-point scale. we will consider a probit model in two factors
+during fermentation: `temp` (temperature) and `contact` (contact with 
+grape skins), with the judge making the rating as a scale predictor:
+```{r}
+require("ordinal")
+wine.clm <- clm(rating ~ temp + contact, scale = ~ judge,
+                data = wine, link = "probit")
+```
+(in earlier modeling, we found little interaction between the factors.)
+Here are the EMMs for each factor using default options:
+```{r}
+emmeans(wine.clm, list(pairwise ~ temp, pairwise ~ contact))
+```
+These results are on the "latent" scale; the idea is that there is a continuous 
+random variable (in this case normal, due to the probit link) having a mean that
+depends on the predictors; and that the ratings are a discretization of the 
+latent variable based on a fixed set of cut points (which are estimated). In 
+this particular example, we also have a scale model that says that the variance 
+of the latent variable depends on the judges. The latent results are quite a bit
+like those for measurement data, making them easy to interpret. The only catch 
+is that they are not uniquely defined: we could apply a linear transformation to
+them, and the same linear transformation to the cut points, and the results
+would be the same.
+
+The `clm` function actually fits the model using an ordinary probit model
+but with different intercepts for each cut point. We can get detailed 
+information for this model by specifying `mode = "linear.predictor"`:
+```{r}
+tmp <- ref_grid(wine.clm, mode = "lin")
+tmp
+```
+Note that this reference grid involves an additional constructed predictor named
+`cut` that accounts for the different intercepts in the model. Let's obtain EMMs
+for `temp` on the linear-predictor scale:
+```{r}
+emmeans(tmp, "temp")
+```
+These are just the negatives of the latent results obtained earlier (the sign is
+changed to make the comparisons go the right direction). Closely related to this
+is `mode = "cum.prob"` and `mode = "exc.prob"`, which simply transform the 
+linear predictor to cumulative probabilities and exceedance (1 - cumulative) 
+probabilities. These modes give us access to the details of the fitted model but
+are cumbersome to use for describing results. When they can become useful is
+when you want to work in terms of a particular cut point. Let's look at `temp`
+again in terms of the probability that the rating will be at least 4:
+```{r}
+emmeans(wine.clm, ~ temp, mode = "exc.prob", at = list(cut = "3|4"))
+```
+
+There are yet more modes! With `mode = "prob"`, we obtain estimates of the probability distribution of each rating. Its reference grid includes a factor
+with the same name as the model response -- in this case `rating`. We usually 
+want to use that as the primary factor, and the factors of interest as `by` variables:
+```{r}
+emmeans(wine.clm, ~ rating | temp, mode = "prob")
+```
+Using `mode = "mean.class"` obtains the average of these probability 
+distributions as probabilities of the integers 1--5:
+```{r}
+emmeans(wine.clm, "temp", mode = "mean.class")
+```
+
+And there is a mode for the scale model too. In this example, the scale model
+involves only judges, and that is the only factor in the grid:
+```{r}
+summary(ref_grid(wine.clm, mode = "scale"), type = "response")
+```
+Judge 8's ratings don't vary much, relative to the others.
+The scale model is in terms of log(SD). Again, these are not uniquely
+identifiable, and the first level's estimate is set to log(1) = 0. so,
+actually, each estimate shown is a comparison with judge 1.
+
+[Back to Contents](#contents)
+
 
 ## Models fitted using MCMC methods {#mcmc}
 To illustrate **emmeans**'s support for models fitted using MCMC methods,
@@ -166,3 +244,5 @@ HPDinterval(as.mcmc(as.matrix(
 The only interval that excludes zero is the one that compares periods 1 and 2.
 
 In summary, to do Bayesian analysis in the **emmeans** package, use the same tools that are available for other models, extract the MCMC samples using `as.mcmc()`, and summarize or plot from there.
+
+[Back to Contents](#contents)

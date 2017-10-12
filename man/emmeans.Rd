@@ -8,7 +8,7 @@ emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
   2, mean), contr, options = get_emm_option("emmeans"), weights, trend, ...)
 }
 \arguments{
-\item{object}{An object of class \code{ref.grid}; or a fitted model object
+\item{object}{An object of class \code{emm}; or a fitted model object
 that is supported, such as the result of a call to \code{lm} or
 \code{lmer}. Many fitted-model objects are supported; see
 \href{../doc/models.html}{\code{vignette("models", "emmeans")}} for details.}

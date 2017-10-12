@@ -24,7 +24,7 @@
 recover_data.clm = function(object, mode = "latent", ...) {
     if (!is.na(pmatch(mode, "scale"))) {
         if (is.null(trms <- object$S.terms))
-            return("Specified mode=\"scale\", but no scale model is present") # ref.grid's error handler takes it from here
+            return("Specified mode=\"scale\", but no scale model is present") # ref_grid's error handler takes it from here
         recover_data(object$call, trms, object$na.action, ...)
     }
     else if (is.null(object$S.terms) && is.null(object$nom.terms))
@@ -46,7 +46,7 @@ recover_data.clmm = recover_data.lm
 # Note also that some functions of cut are constrained to be zero when
 # threshold != "flexible". Can get basis using nonest.basis(t(tJac))
 #
-# opt arg 'mode' - determines what goes into ref.grid
+# opt arg 'mode' - determines what goes into ref_grid
 #         'rescale' - (loc, scale) for linear transformation of latent result
 
 emm_basis.clm = function (object, trms, xlev, grid, 
@@ -203,7 +203,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
          dfargs = list(), misc = misc)
 }
 
-# fuction called at end of ref.grid
+# fuction called at end of ref_grid
 # I use this for polr as well
 # Also used for stanreg result of stan_polr & potentially other MCMC ordinal models
 .clm.postGrid = function(object) {
@@ -234,7 +234,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
 }
 
 
-# Make the linear-predictor ref.grid into one for class probabilities
+# Make the linear-predictor ref_grid into one for class probabilities
 # This assumes that object has already been re-gridded and back-transformed
 .clm.prob.grid = function(object, thresh = "cut", newname = object@misc$respName) {
     byv = setdiff(names(object@levels), thresh)
@@ -245,8 +245,9 @@ emm_basis.clm = function (object, trms, xlev, grid,
         newrg@grid[[".wgt."]] = rep(wgt, each = km1 + 1)
     }
     # proceed to disavow that this was ever exposed to 'emmeans' or 'contrast'
-    class(newrg) = "ref.grid"
+    ## class(newrg) = "ref.grid"
     misc = newrg@misc
+    misc$is.new.rg = TRUE
     misc$infer = c(FALSE,FALSE)
     misc$estName = "prob"
     misc$pri.vars = misc$by.vars = misc$con.coef = misc$orig.grid = NULL
@@ -267,8 +268,8 @@ emm_basis.clm = function (object, trms, xlev, grid,
     newrg@levels$contrast = newrg@grid$contrast = NULL
     prg@roles$multresp = NULL
     newrg@roles = prg@roles
-    class(newrg) = "ref.grid"
-    newrg
+    ## class(newrg) = "ref.grid"
+    update(newrg, is.new.rg = TRUE)
 }
 
 # Contrast fcn for turning estimates of cumulative probabilities

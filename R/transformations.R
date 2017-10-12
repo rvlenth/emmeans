@@ -124,7 +124,7 @@
 #' 
 #' \dontrun{
 #' # An existing model 'mod' was fitted with a log(y + 1) transformation...
-#' mod.rg <- update(ref.grid(mod), tran = make.tran("genlog", 1))
+#' mod.rg <- update(ref_grid(mod), tran = make.tran("genlog", 1))
 #' emmeans(mod.rg, "treatment")
 #' }
 make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt"), param = 1) {

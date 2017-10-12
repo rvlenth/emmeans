@@ -62,7 +62,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
-# post-processing of ref.grid for "prob" mode
+# post-processing of ref_grid for "prob" mode
 .multinom.postGrid = function(object) {
     # will replace portions of these as we go
     bhat = object@bhat

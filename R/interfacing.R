@@ -192,7 +192,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
 #              -- For transformations or link fcns, use misc$tran
 #                 for name (see 'make.link'), and use misc$inv.lbl
 #                 for label to use in 'summary' when tran is inverted
-#                 (ref.grid looks at lhs of model for tran if none found)
+#                 (ref_grid looks at lhs of model for tran if none found)
 # Note: if no df exists, set dffun = function(...) NA and dfargs = list()
 #--------------------------------------------------------------
 
@@ -237,7 +237,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
 #' \code{vcovHook} function should have arguments \samp{(object, tol, ...)} as
 #' described. It should return the covariance matrix for the estimates. Finally,
 #' \code{postGridHook}, if present, is called at the very end of
-#' \code{ref.grid}; it takes one argument, the constructed \code{object}, and
+#' \code{ref_grid}; it takes one argument, the constructed \code{object}, and
 #' should return a suitably modified \code{emm} object.
 emm_basis = function(object, trms, xlev, grid, ...) {
     UseMethod("emm_basis")

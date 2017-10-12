@@ -142,7 +142,7 @@ NULL
 #-#' respectively -- thereby producing geometric means versus arithmetic means of
 #-#' the predictions.
 #-#'
-#-#' If the \code{vcov.} argument is used (see details in \code{\link{ref.grid}}),
+#-#' If the \code{vcov.} argument is used (see details in \code{\link{ref_grid}}),
 #-#' it must yield a matrix of the same size as would be obtained using
 #-#' \code{\link[pscl]{vcov.hurdle}} or \code{\link[pscl]{vcov.zeroinfl}} with its
 #-#' \code{model} argument set to \code{("full", "count", "zero")} in respective

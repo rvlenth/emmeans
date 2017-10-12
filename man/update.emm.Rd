@@ -7,7 +7,7 @@
 \alias{get_emm_option}
 \alias{emm_defaults}
 \title{Set or retrieve options for objects and summaries}
-\format{An object of class \code{list} of length 12.}
+\format{An object of class \code{list} of length 14.}
 \usage{
 \method{update}{emm}(object, ..., silent = FALSE)
 
@@ -205,8 +205,11 @@ is used.}
 \item{code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
 latest reference grid created to be saved in \code{.Last.ref_grid}}
 \item{Options for \code{lme4::lmerMod} models}{Options \code{lmer.df},
-\code{disable.pbkrtest}, and \code{pbkrtest.limit} options affect how degrees
-of freedom are computed for \code{lmerMod} objects produced by the \pkg{lme4} package). See that section of \link{models} for details.}
+\code{disable.pbkrtest}, \code{pbkrtest.limit}, \code{disable.lmerTest},
+and \code{lmerTest.limit}
+options affect how degrees of freedom are computed for \code{lmerMod} objects
+produced by the \pkg{lme4} package). See that section of the "models" vignette
+for details.}
 } %%%%%% end \describe
 }
 

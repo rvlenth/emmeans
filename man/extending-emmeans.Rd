@@ -127,7 +127,7 @@ number of rows should be the same as \samp{object@linfct}. The
 \code{vcovHook} function should have arguments \samp{(object, tol, ...)} as
 described. It should return the covariance matrix for the estimates. Finally,
 \code{postGridHook}, if present, is called at the very end of
-\code{ref.grid}; it takes one argument, the constructed \code{object}, and
+\code{ref_grid}; it takes one argument, the constructed \code{object}, and
 should return a suitably modified \code{emm} object.
 }
 

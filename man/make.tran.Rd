@@ -108,7 +108,7 @@ emmeans(warp.bc, ~ tension | wool, type = "response")
 
 \dontrun{
 # An existing model 'mod' was fitted with a log(y + 1) transformation...
-mod.rg <- update(ref.grid(mod), tran = make.tran("genlog", 1))
+mod.rg <- update(ref_grid(mod), tran = make.tran("genlog", 1))
 emmeans(mod.rg, "treatment")
 }
 }

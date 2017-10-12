@@ -131,7 +131,7 @@ emmeans.list = function(object, specs, ...) {
 #' or factor combinations in a linear model; and optionally, comparisons or
 #' contrasts among them. EMMs are also known as least-squares means.
 #'
-#' @param object An object of class \code{ref.grid}; or a fitted model object
+#' @param object An object of class \code{emm}; or a fitted model object
 #'   that is supported, such as the result of a call to \code{lm} or
 #'   \code{lmer}. Many fitted-model objects are supported; see
 #'   \href{../doc/models.html}{\code{vignette("models", "emmeans")}} for details.
@@ -563,7 +563,6 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
 #' @seealso \code{\link{emmobj}}
 #' @export
 #' 
-#' 
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 #' pigs.sav <- as.list(ref_grid(pigs.lm))
@@ -573,7 +572,13 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
 #' 
 #' \dontrun{
 #' ## Convert an entire workspace saved from an old **lsmeans** session
+#' a.problem <- lsmeans::lsmeans(pigs.lm, "source")
+#' #- Now global env contains at least two ref.grid and lsmobj objects,
+#' #- and the "lsmeans" namespace is loaded
 #' emmeans:::convert_workspace()
+#' class(a.problem)
+#' "lsmeans" %in% loadedNamespaces()
+#' #- It's all better now
 #' }
 as.emm = function(object, ...) {
     if (cls <- class(object)[1] %in% c("ref.grid", "lsmobj")) {
