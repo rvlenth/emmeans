@@ -39,6 +39,8 @@ Changelog for 'emmeans' package
     Graphics methods 'plot' and 'emmip' are now **ggplot2**-based.
         Old **lattice**-based functionality is still available too,
         and there is a 'graphics.engine' option to choose the default.
+    Non-exported utilities convert_workspace() and convert_scripts() to
+        help with transition
     Moved 'Suggests' pkgs to 'Enhances' when not needed for building/testing
 
 

@@ -629,29 +629,6 @@ as.list.emm = function(x, ...) {
 }
 
 
-## Here is a utility that we won't export, but can help clean out lsmeans
-## stuff from one's workspace, and unload unnecessary junk
-convert_workspace = function(envir = .GlobalEnv) {
-    if (exists(".Last.ref.grid", envir = envir)) {
-        cat("Deleted .Last.ref.grid\n")
-        remove(".Last.ref.grid", envir = envir)
-    }
-    for (nm in names(envir)) {
-        obj <- get(nm)
-        if (is(obj, "ref.grid")) {
-            cat(paste("Converted", nm, "to class 'emm'\n"))
-            assign(nm, as.emm(obj), envir = envir)
-        }
-    }
-    if ("package:lsmeans" %in% search())
-        detach("package:lsmeans")
-    if ("lsmeans" %in% loadedNamespaces())
-        unloadNamespace("lsmeans")
-    message("The environment has been converted and lsmeans's namespace is unloaded.\n",
-            "Now you probably should save it.")
-}
-
-
 # utility to parse 'by' part of a formula
 .find.by = function(rhs) {
     b = strsplit(rhs, "\\|")[[1]]

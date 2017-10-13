@@ -34,10 +34,11 @@ changed for two reasons:
 
 ## User impact
 For the most part, all that most users need to do to transition from
-using the **lsmeans** package is ... nothing except using `require(emmeans)` or `library(emmeans)` to load the package. With that one change,
-*all* the code in the *using-lsmeans* vignette runs without alteration,
-and all examples from the help system for **lsmeans** also work as-is except
-one portion of the help on contrast methods (described below). Even though we
+using the **lsmeans** package is to use `require(emmeans)` 
+or `library(emmeans)` to load the package. With that one change,
+almost all of the code in the *using-lsmeans* vignette runs without alteration,
+and almost all examples from the help system for **lsmeans** also work as-is. 
+Even though we
 now emphasize using the `emmeans()` function and related "em" functions,
 `lsmeans()` and its relatives are still available as wrappers for the new
 functions.
@@ -45,6 +46,9 @@ functions.
 That said, here are a few changes that former **lsmeans** users may
 need to be aware of:
 
+  * The package provides a utility `emmeans:::convert_scripts()` that may be
+    used to convert old scripts that used **lsmeans** to use **emmeans** instead.
+    [See more below](#scripts)
   * Some functions are deprecated, e.g. `ref.grid()`, `lsm.options()`, etc.
     They will work, but you will get a deprecated message advising you to
     use `ref_grid()` and `emm_options()`, etc.[^1]
@@ -77,19 +81,21 @@ need to be aware of:
     -- e.g., `my_new_ref_grid <- as.emm(my.old.ref.grid)`.
     Running the non-exported function `emmeans:::convert_workspace()` may
     be used to convert all the objects in an environment (the global
-    one by default) and clean out any dependencies on **lsmeans**.
+    one by default) and clean out any dependencies on **lsmeans**. 
+    [See more below](#workspaces)
   * The `emmip()` and `plot()` functions use graphics from the **ggplot2**
     package by default. If you prefer the **lattice** graphics produced
     by the **lsmeans** package, they are still available: Use 
     `emm_options(graphics.engine = "lattice")` to change the default,
     or add `engine = "lattice"` to the call to for a particular plot.
   * To get complete information about models supported by **emmeans**,
-    use `vignette("models")` rather than the help page of the same name.
+    use [`vignette("models")`](models.html) rather than the help page of the same name.
     It includes a quick reference chart at the beginning that should
     prove helpful.
   * The "using-lsmeans" vignette has been replaced by a number of
     smaller vignettes that cover specific topics. Start with 
-    `vignette("basics")` to obtain an overview.
+    [`vignette("basics")`](basics.html) to obtain an overview.  The
+    [vignette index](index.html) has links to all the vignettes.
   * The options `lsmeans` and `ref.grid` have been 
     remapped to `emmeans` and `ref_grid` respectively. For example, calling 
     `lsm.options(lsmeans = ...)` remaps as `emm_options(emmeans = ...)`. 
@@ -102,7 +108,51 @@ need to be aware of:
     Satterthwaite method, implemented in the **lmerTest** package. Both methods 
     are problematic; but I have decided to revert to the Kenward-Roger method 
     as the system default. The default may be changed via 
-    `emm_options(lmer.df = ...)`. See `vignette("models")` for details.
+    `emm_options(lmer.df = ...)`. See [`vignette("models")`](models.html#L) for details.
+    
+## Converting scripts {#scripts}
+The user may run 
+```
+emmeans:::convert_scripts()
+```
+to convert R scripts or R Markdown files to use **emmeans** functions. 
+(This is a non-exported function -- you need three `:`s in there.)
+
+  * You will get a file-open dialog
+    where you can browse for the files -- multiple files may be selected. 
+  * You will also be prompted for whether or not you want calls to `lsmeans()` 
+    or `pmmeans()`to be replaced by calls to `emmeans()` (it's your choice; the
+    former still work).
+  * Each converted file is saved in the same directory with `-emm` added to the
+    root name; for example, `myfile.R` is converted and saved as `myfile-emm.R`.
+
+The conversion routines will convert the following to their `emmeans` counterparts:
+
+  * `require(lsmeans)` and `library(lsmeans)` to `require(emmeans)` and `library(emmeans)`
+  * `lsmeans::` to `emmeans::`
+  * `ref.grid(` to `ref_grid(`
+  * `lsm.options(` and `get.lsm.option(` to `emm_options(` and `get_emm_option(`
+    (arguments thereof are also converted).
+  * `.lsmc` to `.emmc` (contrast-method names)
+  * `lsmeans(` and relatives to `emmeans(` and relatives, if opted for
+  * `pmmeans(` and relatives to `emmeans(` and relatives, if opted for
+
+## Converting workspaces {#workspaces}
+If you have any objects from the **lsmeans** package laying around, it is
+all too likely that the **lsmeans** package will be loaded, and perhaps
+even get added to the search path. This can create annoying messages, if not
+conflicts. When this happens, type 
+```
+emmeans:::convert_workspace()
+``` 
+on the console. This will convert any `ref.grid` or `lsmobj` objects laying
+around to the new `emm` class, and unload all vestiges of **lsmeans**.
+
+Once you are comfortable using **emmeans** in place of **lsmeans**, you
+may effect a permanent solution (the "nuclear option?") by uninstalling
+the **lsmeans** package. Doing so will *not* prevent you from converting old
+workspaces or scripts. Watch your package updates carefully, though,
+as it may get re-installed if it is still imported by another package. 
 
 ## Notes for package developers to transition to emmeans support
 if you are the developer of a package that supports **lsmeans**, and you want to transition to supporting **emmeans**, I make the following suggestions:
