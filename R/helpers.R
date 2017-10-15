@@ -25,11 +25,14 @@
 
 #--------------------------------------------------------------
 ### lm objects (and also aov, rlm, others that inherit) -- but NOT aovList
+#' @method recover_data lm
+#' @export
 recover_data.lm = function(object, ...) {
         fcall = object$call
     recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
 }
 
+#' @export
 emm_basis.lm = function(object, trms, xlev, grid, ...) {
     # coef() works right for lm but coef.aov tosses out NAs
     bhat = object$coefficients
@@ -63,6 +66,7 @@ emm_basis.lm = function(object, trms, xlev, grid, ...) {
 ### mlm objects
 # (recover_data.lm works just fine)
 
+#' @export
 emm_basis.mlm = function(object, trms, xlev, grid, ...) {
     class(object) = c("mlm", "lm") # avoids error in vcov for "maov" objects
     bas = emm_basis.lm(object, trms, xlev, grid, ...)
@@ -80,6 +84,7 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
 
 #--------------------------------------------------------------
 ### merMod objects (lme4 package)
+#' @export
 recover_data.merMod = function(object, ...) {
     if(!lme4::isLMM(object) && !lme4::isGLMM(object)) 
         return("Can't handle a nonlinear mixed model")
@@ -88,6 +93,7 @@ recover_data.merMod = function(object, ...) {
                  attr(object@frame, "na.action"), ...)
 }
 
+#' @export
 emm_basis.merMod = function(object, trms, xlev, grid, vcov., 
                             mode = get_emm_option("lmer.df"), 
                             lmer.df, ...) {
@@ -234,6 +240,7 @@ emm_basis.mer = function(object, trms, xlev, grid, ...) {
 
 #--------------------------------------------------------------
 ### lme objects (nlme package)
+#' @export
 recover_data.lme = function(object, data, ...) {
     fcall = object$call
     if (!is.null(fcall$weights))
@@ -241,6 +248,7 @@ recover_data.lme = function(object, data, ...) {
     recover_data(fcall, delete.response(terms(object)), object$na.action, data = data, ...)
 }
 
+#' @export
 emm_basis.lme = function(object, trms, xlev, grid, sigmaAdjust = TRUE, ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)

@@ -21,6 +21,7 @@
 
 # emmeans support for aovlist objects
 
+#' @export
 recover_data.aovlist = function(object, ...) {
     fcall = attr(object, "call")
     trms = terms(object)
@@ -34,6 +35,7 @@ recover_data.aovlist = function(object, ...) {
 
 # This works great for balanced experiments, and goes horribly wrong
 # even for slightly unbalanced ones. So I abort on these kinds of cases
+#' @export
 emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     contr = attr(object, "contrasts")

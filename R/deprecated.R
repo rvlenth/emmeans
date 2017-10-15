@@ -163,16 +163,17 @@ convert_workspace = function(envir = .GlobalEnv) {
 ## Here is a non-exported utility to convert .R and .Rmd files
 ## It's entirely menu-driven.
 convert_scripts = function() {
-    infiles = choose.files(
+    infiles = utils::choose.files(
         caption = "Select R script(s) or markdown file(s) to be converted",
         multi = TRUE)
-    lsm.to.emm = menu(c("yes", "no"), graphics = TRUE, 
+    lsm.to.emm = utils::menu(c("yes", "no"), graphics = TRUE, 
                       "lsmxxx() -> emmxxx()?") == 1
-    pmm.to.emm = menu(c("yes", "no"), graphics = TRUE, 
+    pmm.to.emm = utils::menu(c("yes", "no"), graphics = TRUE, 
                       "pmmxxx() -> emmxxx()?") == 1
     
     for (infile in infiles) {
-        buffer = scan(infile, what=character(0), sep="\n", blank=FALSE)
+        buffer = scan(infile, what = character(0), sep = "\n", 
+                      blank.lines.skip = FALSE)
         
         buffer = gsub("library *\\(\"*'*lsmeans\"*'*\\)", "library(\"emmeans\")", buffer)
         buffer = gsub("require *\\(\"*'*lsmeans\"*'*\\)", "require(\"emmeans\")", buffer)
