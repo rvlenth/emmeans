@@ -22,16 +22,16 @@
 ### S4 class definitions for emmeans package
 
 
-### emm object - For reference grids, emmeans results, etc.
+### emmGrid object - For reference grids, emmeans results, etc.
 
-#' The \code{emm} class
+#' The \code{emmGrid} class
 #' 
-#' The \code{emm} class encapsulates everything needed to
+#' The \code{emmGrid} class encapsulates everything needed to
 #'   compute estimated marginal means, independently of the underlying model
 #'   object. Instances are created primarily by \code{\link{ref_grid}} and
 #'   \code{\link{emmeans}}, and several related functions.
 #'   
-#' @rdname emm-class 
+#' @rdname emmGrid-class 
 #' @slot model.info list. Contains the elements \code{call} (the call that
 #'   produced the model), \code{terms} (its \code{terms} object), and
 #'   \code{xlev} (factor-level information)
@@ -76,29 +76,29 @@
 #' @slot misc list. Additional information used by methods. These include at
 #'   least the following: \code{estName} (the label for the estimates of linear
 #'   functions), and the default values of \code{infer}, \code{level}, and
-#'   \code{adjust} to be used in the \code{\link{summary.emm}} method. Elements in
-#'   this slot may be modified if desired using the \code{\link{update.emm}}
+#'   \code{adjust} to be used in the \code{\link{summary.emmGrid}} method. Elements in
+#'   this slot may be modified if desired using the \code{\link{update.emmGrid}}
 #'   method.
 #' @slot post.beta matrix. A sample from the posterior distribution of the
 #'   regression coefficients, if MCMC methods were used; or a 1 x 1 matrix of
-#'   \code{NA} otherwise. When it is non-trivial, the \code{\link{as.mcmc.emm}}
+#'   \code{NA} otherwise. When it is non-trivial, the \code{\link{as.mcmc.emmGrid}}
 #'   method returns \code{post.beta \%*\% t(linfct)}, which is a sample from the
 #'   posterior distribution of the EMMs.
 #' 
 #' @section Methods:
 #'   All methods for these objects are S3 methods except for \code{show}. 
-#'   They include \code{\link{[.emm}}, \code{\link{as.glht.emm}},
-#'   \code{\link{as.mcmc.emm}}, \code{\link{as.mcmc.list.emm}},
-#'   \code{\link{cld.emm}}, \code{\link{coef.emm}}, \code{\link{confint.emm}}, 
-#'   \code{\link{contrast.emm}}, \code{\link{pairs.emm}},
-#'   \code{\link{plot.emm}}, \code{\link{predict.emm}}, \code{\link{print.emm}},
-#'   \code{\link{rbind.emm}}, \code{show.emm}, \code{\link{str.emm}}, 
-#'   \code{\link{summary.emm}}, \code{\link{test.emm}}, 
-#'   \code{\link{update.emm}}, \code{\link{vcov.emm}}, and 
-#'   \code{\link{xtable.emm}}
+#'   They include \code{\link{[.emmGrid}}, \code{\link{as.glht.emmGrid}},
+#'   \code{\link{as.mcmc.emmGrid}}, \code{\link{as.mcmc.list.emmGrid}},
+#'   \code{\link{cld.emmGrid}}, \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}}, 
+#'   \code{\link{contrast.emmGrid}}, \code{\link{pairs.emmGrid}},
+#'   \code{\link{plot.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{print.emmGrid}},
+#'   \code{\link{rbind.emmGrid}}, \code{show.emmGrid}, \code{\link{str.emmGrid}}, 
+#'   \code{\link{summary.emmGrid}}, \code{\link{test.emmGrid}}, 
+#'   \code{\link{update.emmGrid}}, \code{\link{vcov.emmGrid}}, and 
+#'   \code{\link{xtable.emmGrid}}
 #' 
 #' @export
-setClass("emm", slots = c(
+setClass("emmGrid", slots = c(
     model.info = "list",
     roles = "list",
     grid = "data.frame", 

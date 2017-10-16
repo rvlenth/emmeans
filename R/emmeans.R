@@ -131,7 +131,7 @@ emmeans.list = function(object, specs, ...) {
 #' or factor combinations in a linear model; and optionally, comparisons or
 #' contrasts among them. EMMs are also known as least-squares means.
 #'
-#' @param object An object of class \code{emm}; or a fitted model object
+#' @param object An object of class \code{emmGrid}; or a fitted model object
 #'   that is supported, such as the result of a call to \code{lm} or
 #'   \code{lmer}. Many fitted-model objects are supported; see
 #'   \href{../doc/models.html}{\code{vignette("models", "emmeans")}} for details.
@@ -151,7 +151,7 @@ emmeans.list = function(object, specs, ...) {
 #'   added. See \code{\link{contrast}}. NOTE: \code{contr} is ignored when
 #'   \code{specs} is a formula.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
-#'   to \code{\link{update.emm}}, just after the object is constructed.
+#'   to \code{\link{update.emmGrid}}, just after the object is constructed.
 #' @param weights Character value, numeric vector, or numeric matrix specifying
 #'   weights to use in averaging predictions. See \dQuote{Weights} section below.
 #' @param trend This is now deprecated. Use \code{\link{emtrends}} instead.
@@ -166,16 +166,16 @@ emmeans.list = function(object, specs, ...) {
 #'   a \code{params} argument with a list of their names.
 #'   
 #' @return   When \code{specs} is a \code{character} vector or one-sided formula,
-#'   an object of class \code{"emm"}. A number of methods
+#'   an object of class \code{"emmGrid"}. A number of methods
 #'   are provided for further analysis, including
-#'   \code{\link{summary.emm}}, \code{\link{confint.emm}},
-#'   \code{\link{test.emm}}, \code{\link{contrast.emm}},
-#'   \code{\link{pairs.emm}}, and \code{\link{cld.emm}}.
+#'   \code{\link{summary.emmGrid}}, \code{\link{confint.emmGrid}},
+#'   \code{\link{test.emmGrid}}, \code{\link{contrast.emmGrid}},
+#'   \code{\link{pairs.emmGrid}}, and \code{\link{cld.emmGrid}}.
 
 #' When \code{specs} is a \code{list} or a \code{formula} having a left-hand
 #' side, the return value is an \code{emm_list} object, which is simply a
-#' \code{list} of \code{emm} objects. Methods for \code{emm_list} objects are
-#' the same as those for \code{emm}, but they apply to only one member of the
+#' \code{list} of \code{emmGrid} objects. Methods for \code{emm_list} objects are
+#' the same as those for \code{emmGrid}, but they apply to only one member of the
 #' list, determined by its \code{which} argument.
 #' 
 #' @section Details:
@@ -253,7 +253,7 @@ emmeans = function(object, specs, by = NULL,
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 
                    contr, options = get_emm_option("emmeans"), weights, trend, ...) {
     
-    if(!is(object, "emm")) {
+    if(!is(object, "emmGrid")) {
         object = ref_grid(object, ...)
     }
     if (is.list(specs)) {
@@ -405,8 +405,8 @@ emmeans = function(object, specs, by = NULL,
         RG@misc$avgd.over = union(RG@misc$avgd.over, avgd.over)
         RG@misc$methDesc = "emmeans"
         RG@roles$predictors = names(levs)
-### Pass up 'new' as we're not changing its class  result = new("emm", RG, linfct = linfct, levels = levs, grid = combs)
-        result = as.emm(RG)
+### Pass up 'new' as we're not changing its class  result = new("emmGrid", RG, linfct = linfct, levels = levs, grid = combs)
+        result = as.emmGrid(RG)
         result@linfct = linfct
         result@levels = levs
         result@grid = combs
@@ -414,7 +414,7 @@ emmeans = function(object, specs, by = NULL,
         
         if(!is.null(options)) {
             options$object = result
-            result = do.call("update.emm", options)
+            result = do.call("update.emmGrid", options)
         }
     }
     
@@ -441,12 +441,12 @@ emmeans = function(object, specs, by = NULL,
 
 
 
-# Construct a new emm object with given arguments
+# Construct a new emmGrid object with given arguments
 
-#' Construct an \code{emm} object from scratch
+#' Construct an \code{emmGrid} object from scratch
 #' 
 #' This allows the user to incorporate results obtained by some analysis
-#' into an \code{emm} object, enabling the use of \code{emm} methods
+#' into an \code{emmGrid} object, enabling the use of \code{emmGrid} methods
 #' to perform related follow-up analyses.
 #' 
 #'  The arguments must be conformable. This includes that the length of
@@ -476,9 +476,9 @@ emmeans = function(object, specs, by = NULL,
 #'   distribution of the regression coefficients (so that typically, the column
 #'   averages will be \code{bhat}). A 1 x 1 matrix of \code{NA} indicates that
 #'   such a sample is unavailable.
-#' @param ... Arguments passed to \code{\link{update.emm}}
+#' @param ... Arguments passed to \code{\link{update.emmGrid}}
 #'
-#' @return An \code{emm} object
+#' @return An \code{emmGrid} object
 #' @export
 #'
 #' @examples
@@ -498,10 +498,10 @@ emmeans = function(object, specs, by = NULL,
 #'     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
 #' plot(expt.rg)
 #' 
-#' ( trt.emm <- emmeans(expt.rg, "trt") )
-#' ( dose.emm <- emmeans(expt.rg, "dose") )
+#' ( trt.emmGrid <- emmeans(expt.rg, "trt") )
+#' ( dose.emmGrid <- emmeans(expt.rg, "dose") )
 #' 
-#' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
+#' rbind(pairs(trt.emmGrid), pairs(dose.emmGrid), adjust = "mvt")
 emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(), 
                   post.beta = matrix(NA), ...) {
     if ((nrow(V) != ncol(V)) || (nrow(V) != ncol(linfct)) || (length(bhat) != ncol(linfct)))
@@ -527,7 +527,7 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
                 adjust = "none", famSize = nrow(linfct), 
                 avgd.over = character(0), pri.vars = names(grid),
                 methDesc = "emmobj")
-    result = new("emm", model.info=model.info, roles=roles, grid=grid,
+    result = new("emmGrid", model.info=model.info, roles=roles, grid=grid,
                  levels = levels, matlevs=list(),
                  linfct=linfct, bhat=bhat, nbasis=all.estble, V=V,
                  dffun=dffun, dfargs=dfargs, misc=misc, post.beta=post.beta)
@@ -535,30 +535,30 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
     update(result, ..., silent=TRUE)
 }
 
-#' Convert to and from \code{emm} objects
+#' Convert to and from \code{emmGrid} objects
 #' 
 #' These are useful utility functions for creating a compact version of an
-#' \code{emm} object that may be saved and later reconstructed, or for
-#' converting old \code{ref.grid} or \code{lsmobj} objects into \code{emm}
+#' \code{emmGrid} object that may be saved and later reconstructed, or for
+#' converting old \code{ref.grid} or \code{lsmobj} objects into \code{emmGrid}
 #' objects.
 #' 
-#' An \code{emm} object is an S4 object, and as such cannot be saved in a
+#' An \code{emmGrid} object is an S4 object, and as such cannot be saved in a
 #' text format or saved without a lot of overhead. By using \code{as.list},
 #' the essential parts of the object are converted to a list format that can be
 #' easily and compactly saved for use, say, in another session or by another user.
 #' Providing this list as the arguments for \code{\link{emmobj}} allows the user 
-#' to restore a working \code{emm} object.
+#' to restore a working \code{emmGrid} object.
 #' 
-#' @param object Object to be converted to class \code{emm}. It may
-#'   be a \code{list} returned by \code{as.list.emm}, or a \code{ref.grid}
+#' @param object Object to be converted to class \code{emmGrid}. It may
+#'   be a \code{list} returned by \code{as.list.emmGrid}, or a \code{ref.grid}
 #'   or \code{lsmobj} object created by \pkg{emmeans}'s predecessor, the 
 #'   \pkg{lsmeans} package. An error is thrown if \code{object} cannot
 #'   be converted.
-#' @param ... In \code{as.emm}, additional arguments passed to 
-#'   \code{\link{update.emm}} before returning the object. This
-#'   argument is ignored in \code{as.list.emm}
+#' @param ... In \code{as.emmGrid}, additional arguments passed to 
+#'   \code{\link{update.emmGrid}} before returning the object. This
+#'   argument is ignored in \code{as.list.emmGrid}
 #'   
-#' @return \code{as.emm} returns an object of class \code{emm}. 
+#' @return \code{as.emmGrid} returns an object of class \code{emmGrid}. 
 #' 
 #' @seealso \code{\link{emmobj}}
 #' @export
@@ -567,7 +567,7 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 #' pigs.sav <- as.list(ref_grid(pigs.lm))
 #' 
-#' pigs.anew <- as.emm(pigs.sav)
+#' pigs.anew <- as.emmGrid(pigs.sav)
 #' emmeans(pigs.anew, "source")
 #' 
 #' \dontrun{
@@ -580,9 +580,9 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
 #' "lsmeans" %in% loadedNamespaces()
 #' #- It's all better now
 #' }
-as.emm = function(object, ...) {
+as.emmGrid = function(object, ...) {
     if (cls <- class(object)[1] %in% c("ref.grid", "lsmobj")) {
-        object = as.list.emm(object)
+        object = as.list.emmGrid(object)
         if (is.null(object$misc$is.new.rg))
             object$misc$is.new.rg = (cls == "ref.grid")
     }
@@ -590,19 +590,19 @@ as.emm = function(object, ...) {
     if (is.list(object))
         result = do.call(emmobj, object)
     else {
-        result = try(as(object, "emm", strict = FALSE), silent = TRUE)
+        result = try(as(object, "emmGrid", strict = FALSE), silent = TRUE)
         if (inherits(result, "try-error"))
-            stop("Object cannot be coerced to class 'emm'")
+            stop("Object cannot be coerced to class 'emmGrid'")
     }
     update(result, ...)
 }
 
-#' @rdname as.emm
-#' @param x An \code{emm} object
-#' @return \code{as.list.emm} returns an object of class \code{list}. 
-#' @method as.list emm
+#' @rdname as.emmGrid
+#' @param x An \code{emmGrid} object
+#' @return \code{as.list.emmGrid} returns an object of class \code{list}. 
+#' @method as.list emmGrid
 #' @export
-as.list.emm = function(x, ...) {
+as.list.emmGrid = function(x, ...) {
     slots = c("bhat", "V", "levels", "linfct", "dffun", "dfargs", "post.beta")
     result = lapply(slots,function(nm) slot(x, nm))
     names(result) = slots

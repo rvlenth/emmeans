@@ -20,31 +20,31 @@
 ##############################################################################
 
 
-### =========== Various methods for emm class =============================
+### =========== Various methods for emmGrid class =============================
 # (note: some major ones have their own file)
 
 
 
 ### S4 show method
-## use S3 for this setMethod("summary", "emm", summary.emm)
-setMethod("show", "emm", function(object) {
+## use S3 for this setMethod("summary", "emmGrid", summary.emmGrid)
+setMethod("show", "emmGrid", function(object) {
     isnewrg = object@misc$is.new.rg
     if (is.null(isnewrg)) 
         isnewrg = FALSE
     
     if (isnewrg)
-        str.emm(object)
+        str.emmGrid(object)
     else
-        print(summary.emm(object))
+        print(summary.emmGrid(object))
 })
 
 
 ### Others are all S3 methods
 
-#' @rdname emm-methods
-#' @method str emm
+#' @rdname emmGrid-methods
+#' @method str emmGrid
 #' @export
-str.emm <- function(object, ...) {
+str.emmGrid <- function(object, ...) {
     showlevs = function(x) { # internal convenience function
         if (is.null(x)) cat("(predicted by other variables)")
         else cat(paste(format(x, digits = 5, justify = "none"), collapse=", "))
@@ -94,27 +94,27 @@ str.emm <- function(object, ...) {
 }
 
 
-#' @rdname emm-methods
-#' @method print emm
-#' @param x An \code{emm} object
+#' @rdname emmGrid-methods
+#' @method print emmGrid
+#' @param x An \code{emmGrid} object
 #' @export
-print.emm = function(x,...)
-    print(summary.emm(x, ...))
+print.emmGrid = function(x,...)
+    print(summary.emmGrid(x, ...))
 
 
 # vcov method
-#' Miscellaneous methods for \code{emm} objects
-#' @rdname emm-methods
+#' Miscellaneous methods for \code{emmGrid} objects
+#' @rdname emmGrid-methods
 #' 
-#' @param object An \code{emm} object
+#' @param object An \code{emmGrid} object
 #' @param ... (required but not used)
 #' 
 #' @return The \code{vcov} method returns a ymmetric matrix of variances and
-#'   covariances for \code{predict.emm(object, type = "lp")}
+#'   covariances for \code{predict.emmGrid(object, type = "lp")}
 #'
-#' @method vcov emm
+#' @method vcov emmGrid
 #' @export
-vcov.emm = function(object, ...) {
+vcov.emmGrid = function(object, ...) {
     tol = get_emm_option("estble.tol")
     if (!is.null(hook <- object@misc$vcovHook)) {
         if (is.character(hook)) 
@@ -135,29 +135,29 @@ vcov.emm = function(object, ...) {
 
 #' Set or retrieve options for objects and summaries
 #' 
-#' Objects of class \code{emm} contain several settings that affect primarily 
-#' the defaults used by \code{\link{summary.emm}}. This \code{update} method allows
+#' Objects of class \code{emmGrid} contain several settings that affect primarily 
+#' the defaults used by \code{\link{summary.emmGrid}}. This \code{update} method allows
 #' them to be changed more safely than by modifying this slot directly.
 #' In addition, the user may set or retrieve defaults for these settings.
 #'
-#' @param object An \code{emm} object
+#' @param object An \code{emmGrid} object
 #' @param ... Options to be set. These must match a list of known options (see
 #'   Details)
 #' @param silent Logical value. If \code{FALSE} (the default), a message is
 #'   displayed if any options are not matched. If \code{TRUE}, no messages are
 #'   shown.
 #'
-#' @return \code{update.emm} returns an updated \code{emm} object.
-#' @method update emm
+#' @return \code{update.emmGrid} returns an updated \code{emmGrid} object.
+#' @method update emmGrid
 #' @export
 #' 
-#' @section Details for \code{update.emm}:
+#' @section Details for \code{update.emmGrid}:
 #' In \code{update}, the names in \code{\dots} are partially matched against those that are valid, and if a match is found, it adds or replaces the current setting. The valid names are
 #' 
 #' \describe{
 #' \item{\code{tran}, \code{tran2}}{(\code{list} or \code{character}) specifies
 #' the transformation which, when inverted, determines the results displayed by
-#' \code{\link{summary.emm}}, \code{\link{predict.emm}}, or \code{\link{emmip}} when
+#' \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, or \code{\link{emmip}} when
 #' \code{type="response"}. The value may be the name of a standard
 #' transformation from \code{\link{make.link}} or additional ones supported by
 #' name, such as \code{"log2"}; or, for a custom transformation, a \code{list}
@@ -187,14 +187,14 @@ vcov.emm = function(object, ...) {
 #' 
 #' \item{\code{pri.vars}}{(\code{character} vector) are the names of the grid
 #' variables that are not in \code{by.vars}. Thus, the combinations of their
-#' levels are used as columns in each table produced by \code{\link{summary.emm}}.}
+#' levels are used as columns in each table produced by \code{\link{summary.emmGrid}}.}
 #' 
 #' \item{\code{alpha}}{(numeric) is the default significance level for tests, in
-#' \code{\link{summary.emm}} as well as \code{\link{cld.emm}} and \code{\link{plot.emm}}
+#' \code{\link{summary.emmGrid}} as well as \code{\link{cld.emmGrid}} and \code{\link{plot.emmGrid}}
 #' when \samp{intervals = TRUE}}
 #' 
 #' \item{\code{adjust}}{(\code{character)}) is the default for the \code{adjust}
-#' argument in \code{\link{summary.emm}}.}
+#' argument in \code{\link{summary.emmGrid}}.}
 #' 
 #' \item{\code{estType}}{(\code{character}) is the type of the estimate. It
 #' should match one of \samp{c("prediction", "contrast", "pairs")}. This is used
@@ -205,10 +205,10 @@ vcov.emm = function(object, ...) {
 #' \code{\link{ptukey}} when \code{adjust="tukey"}. }
 #' 
 #' \item{\code{infer}}{(\code{logical} vector of length 2) is the default value
-#' of \code{infer} in \code{\link{summary.emm}}.}
+#' of \code{infer} in \code{\link{summary.emmGrid}}.}
 #' 
 #' \item{\code{level}}{(numeric) is the default confidence level, \code{level},
-#' in \code{\link{summary.emm}}}
+#' in \code{\link{summary.emmGrid}}}
 #' 
 #' \item{\code{df}}{(numeric) overrides the default degrees of freedom with a
 #' specified single value.}
@@ -223,8 +223,8 @@ vcov.emm = function(object, ...) {
 #' or \code{test} (taken to be zero if missing).}
 #' 
 #' \item{\code{predict.type} or \code{type}}{(character) sets the default method
-#' of displaying predictions in \code{\link{summary.emm}},
-#' \code{\link{predict.emm}}, and \code{\link{emmip}}. Valid values are
+#' of displaying predictions in \code{\link{summary.emmGrid}},
+#' \code{\link{predict.emmGrid}}, and \code{\link{emmip}}. Valid values are
 #' \code{"link"} (with synonyms \code{"lp"} and \code{"linear"}), or
 #' \code{"response"}.}
 #' 
@@ -235,16 +235,16 @@ vcov.emm = function(object, ...) {
 #' \dQuote{averaged over} message in the summary.}
 #' 
 #' \item{\code{initMesg}}{(\code{character}) is a string that is added to the
-#' beginning of any annotations that appear below the \code{\link{summary.emm}}
+#' beginning of any annotations that appear below the \code{\link{summary.emmGrid}}
 #' display.}
 #' 
 #' \item{\code{methDesc}}{(\code{character}) is a string that may be used for
-#' creating names for a list of \code{emm} objects. }
+#' creating names for a list of \code{emmGrid} objects. }
 #' 
 #' \item{\code{nesting}}{(Character or named \code{list}) specifies the nesting
 #' structure. See \dQuote{Recovering or overriding model information} in the
 #' documentation for \code{\link{ref_grid}}. The current nesting structure is
-#' displayed by \code{\link{str.emm}}.}
+#' displayed by \code{\link{str.emmGrid}}.}
 #' 
 #' \item{(any slot name)}{If the name matches an element of
 #' \code{slotNames(object)}, that slot is replaced by the supplied value, if it
@@ -266,7 +266,7 @@ vcov.emm = function(object, ...) {
 #' mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log", 
 #'                     predict.type = "response")
 #' emmeans(mypigs.rg, "source")
-update.emm = function(object, ..., silent = FALSE) {
+update.emmGrid = function(object, ..., silent = FALSE) {
     args = list(...)
     valid.misc = c("adjust","alpha","avgd.over","by.vars","delta","df",
                    "initMesg","estName","estType","famSize","infer","inv.lbl",
@@ -307,29 +307,29 @@ update.emm = function(object, ..., silent = FALSE) {
 }
 
 ### set or change emmeans options
-#' @rdname update.emm
+#' @rdname update.emmGrid
 #' @section Using \code{emm_options}:
 #' In \code{emm_options}, we may set or change the \emph{default} values for the
 #' above options. These defaults are set separately for different contexts in
-#' which \code{emm} objects are created, in a named list of option lists.
+#' which \code{emmGrid} objects are created, in a named list of option lists.
 #' Currently, the following main list entries are supported:
 #' \describe{
 #' \item{\code{ref_grid}}{A named \code{list} of defaults for objects created by
 #' \code{\link{ref_grid}}. This could affect other objects as well. For example,
 #' if \code{emmeans} is called with a fitted model object, it calls
-#' \code{ref_grid} and this option will affect the resulting \code{emm}
+#' \code{ref_grid} and this option will affect the resulting \code{emmGrid}
 #' object.}
 #' \item{\code{emmeans}}{A named \code{list} of defaults for objects created by
 #'   \code{\link{emmeans}} or \code{\link{emtrends}}.}
 #' \item{\code{contrast}}{A named \code{list} of defaults for objects created by
-#'   \code{\link{contrast.emm}} or \code{\link{pairs.emm}}.}
+#'   \code{\link{contrast.emmGrid}} or \code{\link{pairs.emmGrid}}.}
 #' \item{\code{summary}}{A named \code{list} of defaults used by the methods
-#'   \code{\link{summary.emm}}, \code{\link{predict.emm}}, \code{\link{test.emm}},
-#'   \code{\link{confint.emm}}, and \code{\link{emmip}}. The only option that can
+#'   \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{test.emmGrid}},
+#'   \code{\link{confint.emmGrid}}, and \code{\link{emmip}}. The only option that can
 #'   affect the latter four is \code{"predict.method"}.}
 #' \item{\code{graphics.engine}}{A character value matching 
 #'   \code{c("ggplot", "lattice")}, setting the default engine to use in
-#'   \code{\link{emmip}} and \code{\link{plot.emm}}.  Defaults to \code{"ggplot"}.}
+#'   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
 #' \item{\code{msg.data.call}}{Logical value controlling whether or not
 #'   a warning is displayed when a model's \code{data} or \code{subset}
 #'   component contains a call. This can be hazardous; for example, if a model
@@ -402,7 +402,7 @@ emm_options = function(...) {
 }
 
 # equivalent of getOption()
-#' @rdname update.emm
+#' @rdname update.emmGrid
 #' @param x Character value - the name of an option to be queried
 #' @param default Value to return if \code{x} is not found
 #' @return \code{get_emm_option} returns the currently stored option for \code{x}, 
@@ -417,14 +417,14 @@ get_emm_option = function(x, default = emm_defaults[[x]]) {
 }
 
 ### Exported defaults for certain options
-#' @rdname update.emm
+#' @rdname update.emmGrid
 #' @export
 emm_defaults = list (
     ref_grid = list(is.new.rg = TRUE, infer = c(FALSE, FALSE)),
     emmeans = list(infer = c(TRUE, FALSE)),
     contrast = list(infer = c(FALSE, TRUE)),
     save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
-    graphics.engine = "ggplot",  # default for emmip and plot.emm
+    graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
     msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions
     msg.nesting = TRUE,       # message when nesting is detected
@@ -437,8 +437,8 @@ emm_defaults = list (
 )
 
 
-### Utility to change the internal structure of an emm object
-### Returned emm object has linfct = I and bhat = estimates
+### Utility to change the internal structure of an emmGrid object
+### Returned emmGrid object has linfct = I and bhat = estimates
 ### Primary reason to do this is with transform = TRUE, then can 
 ### work with linear functions of the transformed predictions
 
@@ -454,7 +454,7 @@ emm_defaults = list (
 #' that its \code{linfct} slot is the identity matrix and its \code{bhat} slot
 #' consists of the estimates at the grid points. If \code{transform} is
 #' \code{TRUE}, the inverse transform is applied to the estimates. Outwardly,
-#' when \code{transform = "response"}, the result of \code{\link{summary.emm}}
+#' when \code{transform = "response"}, the result of \code{\link{summary.emmGrid}}
 #' after applying \code{regrid} is identical to the summary of the original
 #' object using \samp{type="response"}. But subsequent EMMs or
 #' contrasts will be conducted on the new scale -- which is
@@ -468,7 +468,7 @@ emm_defaults = list (
 #' coefficients. This is kind of an \emph{ad hoc} method, and it can
 #' over-estimate the degrees of freedom in some cases.
 #'
-#' @param object An object of class \code{emm}
+#' @param object An object of class \code{emmGrid}
 #' @param transform Character or logical value. If \code{"response"} or
 #'   \code{"mu"}, the inverse transformation is applied to the estimates in the
 #'   grid (but if there is both a link function and a response transformation,
@@ -484,14 +484,14 @@ emm_defaults = list (
 #'   with \code{type = "response"}.
 #' @param predict.type Character value. If provided, the returned object is
 #'   updated with the given type, e.g., \code{"response"}. 
-#'   See \code{\link{update.emm}}.
+#'   See \code{\link{update.emmGrid}}.
 #'   
 #' @note Another way to use \code{regrid} is to supply a \code{transform} 
 #'   argument to \code{\link{ref_grid}} (either directly of indirectly via
 #'   \code{\link{emmeans}}). This is often a simpler approach if the reference
 #'   grid has not already been constructed.
 #'
-#' @return An \code{emm} object with the requested changes
+#' @return An \code{emmGrid} object with the requested changes
 #' @export
 #'
 #' @examples

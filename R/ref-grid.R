@@ -65,14 +65,14 @@
 #'   match the number of dimensions. If \code{mult.name} is specified, this
 #'   argument is ignored.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
-#'   to \code{\link{update.emm}}, just after the object is constructed.
+#'   to \code{\link{update.emmGrid}}, just after the object is constructed.
 #' @param data A \code{data.frame} to use to obtain information about the
 #'   predictors (e.g. factor levels). If missing, then
 #'   \code{\link{recover_data}} is used to attempt to reconstruct the data.
 #' @param df Numeric value. This is equivalent to specifying
-#'   \code{options(df = df)}. See \code{\link{update.emm}}.
+#'   \code{options(df = df)}. See \code{\link{update.emmGrid}}.
 #' @param type Character value. If provided, this is saved as the
-#'   \code{"predict.type"} setting. See \code{\link{update.emm}} and the section
+#'   \code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the section
 #'   below on prediction types and transformations.
 #' @param transform Character value. If other than \code{"none"}, the reference 
 #'   grid is reconstructed via \code{\link{regrid}} with the given 
@@ -143,7 +143,7 @@
 #' combination thereof) of the grouping factors. \code{ref_grid} tries to 
 #' discern which factors are nested in other factors, but it is not always 
 #' obvious, and if it misses some, the user must specify this structure via 
-#' \code{nesting}; or later using \code{\link{update.emm}}. The \code{nesting}
+#' \code{nesting}; or later using \code{\link{update.emmGrid}}. The \code{nesting}
 #' argument may be a character vector or a named \code{list}. If a \code{list},
 #' each name should be the name of a single factor in the grid, and its entry a
 #' character vector of the name(s) of its grouping factor(s). \code{nested} may
@@ -178,13 +178,13 @@
 #' \samp{emm_options(save.ref_grid = FALSE)}, and re-enabled by specifying
 #' \code{TRUE}.
 #' 
-#' @return An object of the S4 class \code{"emm"} (see 
-#'   \code{\link{emm-class}}). These objects encapsulate everything needed 
+#' @return An object of the S4 class \code{"emmGrid"} (see 
+#'   \code{\link{emmGrid-class}}). These objects encapsulate everything needed 
 #'   to do calculations and inferences for estimated marginal means, and contain
 #'   nothing that depends on the model-fitting procedure.
 #'   
-#' @seealso Reference grids are of class \code{\link{emm-class}} and several
-#'   methods exist for them -- for example \code{\link{summary.emm}}. Reference
+#' @seealso Reference grids are of class \code{\link{emmGrid-class}} and several
+#'   methods exist for them -- for example \code{\link{summary.emmGrid}}. Reference
 #'   grids are fundamental to \code{\link{emmeans}}. Supported models are
 #'   detailed in \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 #'   
@@ -487,7 +487,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     if (is.null(post.beta))
         post.beta = matrix(NA)
     
-    result = new("emm",
+    result = new("emmGrid",
          model.info = model.info,
          roles = list(predictors = attr(data, "predictors"), 
                       responses = attr(data, "responses"), 
@@ -512,7 +512,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
 
     if(!is.null(options)) {
         options$object = result
-        result = do.call("update.emm", options)
+        result = do.call("update.emmGrid", options)
     }
 
     if(!is.null(hook <- misc$postGridHook)) {

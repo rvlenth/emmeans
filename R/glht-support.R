@@ -20,10 +20,10 @@
 ##############################################################################
 
 ### Code for an enhancement of 'glht' in 'multcomp' package
-### Provides for using 'emm' in similar way to 'mcp'
+### Provides for using 'emmGrid' in similar way to 'mcp'
 ### This is implemented via the class "emmlf" -- linear functions for emmeans
 
-# emm(specs) will be used as 'linfct' argument in glht
+# emmGrid(specs) will be used as 'linfct' argument in glht
 # all we need to do is class it and save the arguments
 
 #' Support for \code{multcomp::glht}
@@ -32,22 +32,22 @@
 #' the \code{\link[multcomp]{glht}} function for simultaneous inference provided
 #' by the \pkg{multcomp} package.
 #' 
-#' \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
+#' \code{emmGrid} is meant to be called only \emph{from} \code{"glht"} as its second
 #' (\code{linfct}) argument. It works similarly to \code{\link[multcomp]{mcp}},
 #' except with \code{specs} (and optionally \code{by} and \code{contr}
 #' arguments) provided as in a call to \code{\link{emmeans}}.
 #' 
 #' @rdname glht-support
 #' @aliases glht-support
-#' @param ... In \code{emm}, the \code{specs}, \code{by}, and \code{contr}
+#' @param ... In \code{emmGrid}, the \code{specs}, \code{by}, and \code{contr}
 #'   arguments you would normally supply to \code{\link{emmeans}}. Only
 #'   \code{specs} is required. Otherwise, arguments that are passed to other
 #'   methods.
 #'
-#' @return \code{emm} returns an object of an intermediate class for which
+#' @return \code{emmGrid} returns an object of an intermediate class for which
 #'   there is a \code{\link[multcomp]{glht}} method.
 #' @export
-emm <- function(...) {
+emmGrid <- function(...) {
     result <- list(...)
     class(result) <- "emmlf"
     result
@@ -67,16 +67,16 @@ glht.emmlf <- function(model, linfct, ...) {
     emmo <- do.call("emmeans", linfct)
     if (is.list(emmo)) 
         emmo = emmo[[length(emmo)]]
-    # Then call the method for emm objject
+    # Then call the method for emmGrid objject
     glht(model, emmo, ...)
 }
 
 
-# S3 method for an emm object
+# S3 method for an emmGrid object
 # Note: model is redundant, really, so can be omitted
-#' @method glht emm
+#' @method glht emmGrid
 #' @export
-glht.emm <- function(model, linfct, by, ...) {
+glht.emmGrid <- function(model, linfct, by, ...) {
     if (!requireNamespace("multcomp"))
         stop(sQuote("glht")," requires ", dQuote("multcomp"), " to be installed")
     object = linfct # so I don't get confused
@@ -124,10 +124,10 @@ glht.emm <- function(model, linfct, by, ...) {
 
 ### as. glht -- convert my object to glht object
 #' @rdname glht-support
-#' @param object An object of class \code{emm} or \code{emm_list}
+#' @param object An object of class \code{emmGrid} or \code{emm_list}
 #' 
 #' @return \code{as.glht} returns an object of class \code{glht} or \code{glht_list}
-#'   according to whether \code{object} is of class \code{emm} or \code{emm_list}. 
+#'   according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}. 
 #'   See Details below for more on \code{glht_list}s.
 #'   
 #' @section Details:
@@ -148,15 +148,15 @@ glht.emm <- function(model, linfct, by, ...) {
 #' 
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 #' 
-#' # Using 'emm'
-#' summary(glht(warp.lm, emm(pairwise ~ tension | wool)))
+#' # Using 'emmGrid'
+#' summary(glht(warp.lm, emmGrid(pairwise ~ tension | wool)))
 #' 
 #' # Same, but using an existing 'emmeans' result
-#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' summary(as.glht(pairs(warp.emm)))
+#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
+#' summary(as.glht(pairs(warp.emmGrid)))
 #' 
 #' # Same contrasts, but treat as one family
-#' summary(as.glht(pairs(warp.emm), by = NULL))
+#' summary(as.glht(pairs(warp.emmGrid), by = NULL))
 #' 
 #' @rdname glht-support
 #' @export
@@ -171,9 +171,9 @@ as.glht.default <- function(object, ...)
          " to a ", sQuote("glht"), " object")
 
 #' @rdname glht-support
-#' @method as.glht emm
+#' @method as.glht emmGrid
 #' @export
-as.glht.emm <- function(object, ...)
+as.glht.emmGrid <- function(object, ...)
     glht( , object, ...)   # 1st arg not necessary
 
 #' @method as.glht emm_list
@@ -182,7 +182,7 @@ as.glht.emm_list <- function(object, ..., which = 1)
     as.glht(object[[which]], ...)
 
 
-# S3 modelparm method for emmwrap (S3 wrapper for an emm obj - see glht.emm)
+# S3 modelparm method for emmwrap (S3 wrapper for an emmGrid obj - see glht.emmGrid)
 #' @importFrom multcomp modelparm
 #' @method modelparm emmwrap
 #' @export

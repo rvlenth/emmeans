@@ -7,7 +7,7 @@
 add_grouping(object, newname, refname, newlevs)
 }
 \arguments{
-\item{object}{An \code{emm} object}
+\item{object}{An \code{emmGrid} object}
 
 \item{newname}{Character name of grouping factor to add (different from any
 existing factor in the grid)}
@@ -19,12 +19,12 @@ existing factor in the grid)}
 values of \code{newlevs} as its levels.}
 }
 \value{
-A revised \code{emm} object having an additional factor named 
+A revised \code{emmGrid} object having an additional factor named 
   \code{newname}, and a new nesting structure \code{refname \%in\% newname}
 }
 \description{
 This function adds a grouping factor to an existing reference grid or other 
-\code{emm} object, such that the levels of an existing factor (call it the
+\code{emmGrid} object, such that the levels of an existing factor (call it the
 reference factor) are mapped to a smaller number of levels of the new
 grouping factor. The reference factor is then nested in the grouping factor. 
 This facilitates obtaining marginal means of the grouping factor, and 

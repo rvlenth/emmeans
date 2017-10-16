@@ -40,8 +40,8 @@ str.emm_list = function(object, ...) {
 #' @method summary emm_list
 summary.emm_list <- function(object, ..., which = seq_along(object))
     lapply(object[which], function(x) {
-        if (inherits(x, "summary.emm"))  x
-        else summary.emm(x, ...)
+        if (inherits(x, "summary.emmGrid"))  x
+        else summary.emmGrid(x, ...)
     })
 
 #' @export

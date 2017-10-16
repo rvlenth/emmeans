@@ -28,13 +28,13 @@
 ##    to emmeans(), etc. See file synonyms.R
 
 
-## 1. We're changing ref.grid and lsmobj classes to emm
-# setClass("ref.grid", contains = "emm")
+## 1. We're changing ref.grid and lsmobj classes to emmGrid
+# setClass("ref.grid", contains = "emmGrid")
 # setClass("lsmobj", contains = "ref.grid")
 
 # For reasons I don't quite understand, I need a new plot.ref.grid method
 plot.ref.grid = function(x, ...) {
-    plot(x = as(x, "emm"), ...)
+    plot(x = as(x, "emmGrid"), ...)
 }
 
 ## 2. Change "dot" names to "underscore" names...
@@ -66,7 +66,7 @@ ref.grid = function(...) {
 
 # Keep old generics for now, and add .chk_ routines (which we call in ref_grid and emtrends)
 #' @rdname emmeans-deprecated
-#' @param object An \code{emm} object
+#' @param object An \code{emmGrid} object
 #' @export
 recover.data = function(object, ...)
     UseMethod("recover.data")
@@ -121,14 +121,14 @@ lsm.basis = function(object, ...)
 #' the results using functions in \pkg{bayesplot}.}
 #' .
 #' \CLS{lsmobj}{Both this  and the \cls{ref.grid} have been replaced by the
-#' \cls{emm}.}
+#' \cls{emmGrid}.}
 #' 
 #' \FCN{ref.grid}{This has been replaced by \code{ref_grid()}, in hopes of
 #' reducing the chance that \code{ref.grid} will be mistaken as an S3 method for
 #' class \code{grid}.}
 #' 
 #' \CLS{ref.grid}{Both this  and the \cls{lsmobj} have been replaced by the
-#' \cls{emm}.}
+#' \cls{emmGrid}.}
 #' 
 #' \ARG{trend}{The \code{trend} argument in \code{lsmeans} (now \code{emmeans})
 #' is now deprecated. Use \code{emtrends()} instead.}
@@ -147,8 +147,8 @@ convert_workspace = function(envir = .GlobalEnv) {
     for (nm in names(envir)) {
         obj <- get(nm)
         if (is(obj, "ref.grid")) {
-            cat(paste("Converted", nm, "to class 'emm'\n"))
-            assign(nm, as.emm(obj), envir = envir)
+            cat(paste("Converted", nm, "to class 'emmGrid'\n"))
+            assign(nm, as.emmGrid(obj), envir = envir)
         }
     }
     if ("package:lsmeans" %in% search())
@@ -166,9 +166,9 @@ convert_scripts = function() {
     infiles = utils::choose.files(
         caption = "Select R script(s) or markdown file(s) to be converted",
         multi = TRUE)
-    lsm.to.emm = utils::menu(c("yes", "no"), graphics = TRUE, 
+    lsm.to.emmGrid = utils::menu(c("yes", "no"), graphics = TRUE, 
                       "lsmxxx() -> emmxxx()?") == 1
-    pmm.to.emm = utils::menu(c("yes", "no"), graphics = TRUE, 
+    pmm.to.emmGrid = utils::menu(c("yes", "no"), graphics = TRUE, 
                       "pmmxxx() -> emmxxx()?") == 1
     
     for (infile in infiles) {
@@ -188,21 +188,21 @@ convert_scripts = function() {
         }
         buffer = gsub("\\.lsmc", ".emmc", buffer)
         
-        if (lsm.to.emm) {
+        if (lsm.to.emmGrid) {
             buffer = gsub("lsmeans *\\(", "emmeans(", buffer)
             buffer = gsub("lsmip *\\(", "emmip(", buffer)
             buffer = gsub("lstrends *\\(", "emtrends(", buffer)
-            buffer = gsub("lsm *\\(", "emm(", buffer)
+            buffer = gsub("lsm *\\(", "emmGrid(", buffer)
             buffer = gsub("lsmobj *\\(", "emmobj(", buffer)
         }
-        if (pmm.to.emm) {
+        if (pmm.to.emmGrid) {
             buffer = gsub("pmmeans *\\(", "emmeans(", buffer)
             buffer = gsub("pmmip *\\(", "emmip(", buffer)
             buffer = gsub("pmtrends *\\(", "emtrends(", buffer)
-            buffer = gsub("pmm *\\(", "emm(", buffer)
+            buffer = gsub("pmm *\\(", "emmGrid(", buffer)
             buffer = gsub("pmmobj *\\(", "emmobj(", buffer)
         }
-        outfile = file.path(dirname(infile), sub("\\.", "-emm.", basename(infile)))
+        outfile = file.path(dirname(infile), sub("\\.", "-emmGrid.", basename(infile)))
         write(buffer, outfile)
         cat(paste(infile, "\n\twas converted to\n", outfile, "\n"))
     }

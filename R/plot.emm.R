@@ -19,16 +19,16 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-# S3 plot method for emm objects (but NOT a new ref grid as relies on pri.fac attribute etc.)
+# S3 plot method for emmGrid objects
 # ... are arguments sent to update()
 
 
 #' @rdname plot
 #' @importFrom graphics plot
 #' @import ggplot2
-#' @method plot emm
+#' @method plot emmGrid
 #' @export
-plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE, 
+plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE, 
                     alpha = .05, adjust = "tukey", int.adjust = "none", ...) {
     if(!missing(type))
         object = update(x, predict.type = type, ..., silent = TRUE)
@@ -59,18 +59,18 @@ plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE,
     .plot.srg(x=summ, intervals = intervals, extra = extra, ...)
 }
 
-# May use in place of plot.emm but no control over level etc.
+# May use in place of plot.emmGrid but no control over level etc.
 # extra is a placeholder for comparison-interval stuff
 
 
 
-#' Plot an \code{emm} or \code{summary_emm} object
+#' Plot an \code{emmGrid} or \code{summary_emm} object
 #' 
 #' Methods are provided to plot EMMs as side-by-side intervals, and optionally to display 
 #'   \dQuote{comparison arrows} for displaying pairwise comparisons.
 #'
 #' @rdname plot
-#' @param x Object of class \code{emm} or \code{summary_emm}
+#' @param x Object of class \code{emmGrid} or \code{summary_emm}
 #' @param y (Required but ignored)
 #' @param horizontal Logical value specifying whether the intervals should be
 #'   plotted horizontally or vertically
@@ -79,7 +79,7 @@ plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #' @param layout Numeric value passed to \code{\link[lattice]{dotplot}}
 #' @param type Character value specifying the type of prediction desired
 #'   (matching \code{"linear.predictor"}, \code{"link"}, or \code{"response"}).
-#'   See details under \code{\link{summary.emm}}.
+#'   See details under \code{\link{summary.emmGrid}}.
 #' @param intervals Logical value. If \code{TRUE}, confidence intervals are
 #'   plotted for each estimate.
 #' @param comparisons Logical value. If \code{TRUE}, \dQuote{comparison arrows}
@@ -89,7 +89,7 @@ plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
-#' @param ... Additional arguments passed to \code{\link{update.emm}} or
+#' @param ... Additional arguments passed to \code{\link{update.emmGrid}} or
 #'   \code{\link[lattice]{dotplot}}
 #'
 #' @section Details:
@@ -97,7 +97,7 @@ plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #' panels. These functions use the \code{\link[lattice]{dotplot}} function, and
 #' thus require that the \pkg{lattice} package be installed. For
 #' \code{"summary_emm"} objects, the \code{\dots} arguments in \code{plot}
-#' are passed \emph{only} to \code{dotplot}, whereas for \code{"emm"}
+#' are passed \emph{only} to \code{dotplot}, whereas for \code{"emmGrid"}
 #' objects, the object is updated using \code{\dots} before summarizing and
 #' plotting.
 #' 
@@ -110,7 +110,7 @@ plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #' 
 #' If \code{adjust} or \code{int.adjust} are not supplied, they default to the 
 #' internal \code{adjust} setting saved in \code{pairs(x)} and \code{x} 
-#' respectively (see \code{\link{update.emm}}).
+#' respectively (see \code{\link{update.emmGrid}}).
 #' 
 #' @importFrom graphics plot
 #' @method plot summary_emm
@@ -118,9 +118,9 @@ plot.emm = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' plot(warp.emm)
-#' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
+#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
+#' plot(warp.emmGrid)
+#' plot(warp.emmGrid, by = NULL, comparisons = TRUE, adjust = "mvt", 
 #'      horizontal = FALSE)
 plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
     .plot.srg (x, y, horizontal, xlab, ylab, layout, ...)

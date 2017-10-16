@@ -15,8 +15,8 @@ Changelog for 'emmeans' package
     In addition, we are trying to avoid names that could get confused as
         S3 methods. So, ref.grid -> ref_grid, lsm.options -> emm_options, etc.
     Classes "ref.grid" and "lsmobj" are gone (but backward-supported).
-        Both are replaced by class "emm". Existing ref.grid and lsmobj objects
-        inherit from emm so will still be usable.
+        Both are replaced by class "emmGrid". An as.emmGrid() function
+        is provided to convert old objects to class emmGrid.
  >> I decided to revert back to "kenward-roger" as the default degrees-of-freedom
         method for lmerMod models. Also added options 'disable.lmerTest'
         and 'lmerTest.limit', similar to those for pbkrtest.

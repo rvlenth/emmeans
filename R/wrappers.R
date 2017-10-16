@@ -26,7 +26,7 @@
 .emwrap = function(emmfcn, subst, ...) {
     result = emmfcn(...)
 
-        if (inherits(result, "emm"))
+        if (inherits(result, "emmGrid"))
         result = .sub.em(result, subst)
     else if(inherits(result, "emm_list")) {
         for (i in seq_along(result))
@@ -36,7 +36,7 @@
     result
 }
 
-# returns an updated emm object with estName "em..." replaced by "xx..."
+# returns an updated emmGrid object with estName "em..." replaced by "xx..."
 .sub.em = function(object, subst) {
     nm = object@misc$estName
     update(object, estName = gsub("^em", subst, nm))
@@ -105,12 +105,12 @@ pmmip = function(...)
 #' @rdname wrappers
 #' @export
 lsm = function(...)
-    emm(...)
+    emmGrid(...)
 
 #' @rdname wrappers
 #' @export
 pmm = function(...)
-    emm(...)
+    emmGrid(...)
 
 
 

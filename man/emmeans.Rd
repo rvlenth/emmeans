@@ -8,7 +8,7 @@ emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
   2, mean), contr, options = get_emm_option("emmeans"), weights, trend, ...)
 }
 \arguments{
-\item{object}{An object of class \code{emm}; or a fitted model object
+\item{object}{An object of class \code{emmGrid}; or a fitted model object
 that is supported, such as the result of a call to \code{lm} or
 \code{lmer}. Many fitted-model objects are supported; see
 \href{../doc/models.html}{\code{vignette("models", "emmeans")}} for details.}
@@ -33,7 +33,7 @@ added. See \code{\link{contrast}}. NOTE: \code{contr} is ignored when
 \code{specs} is a formula.}
 
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
-to \code{\link{update.emm}}, just after the object is constructed.}
+to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
 \item{weights}{Character value, numeric vector, or numeric matrix specifying
 weights to use in averaging predictions. See \dQuote{Weights} section below.}
@@ -52,15 +52,15 @@ a \code{params} argument with a list of their names.}
 }
 \value{
 When \code{specs} is a \code{character} vector or one-sided formula,
-  an object of class \code{"emm"}. A number of methods
+  an object of class \code{"emmGrid"}. A number of methods
   are provided for further analysis, including
-  \code{\link{summary.emm}}, \code{\link{confint.emm}},
-  \code{\link{test.emm}}, \code{\link{contrast.emm}},
-  \code{\link{pairs.emm}}, and \code{\link{cld.emm}}.
+  \code{\link{summary.emmGrid}}, \code{\link{confint.emmGrid}},
+  \code{\link{test.emmGrid}}, \code{\link{contrast.emmGrid}},
+  \code{\link{pairs.emmGrid}}, and \code{\link{cld.emmGrid}}.
 When \code{specs} is a \code{list} or a \code{formula} having a left-hand
 side, the return value is an \code{emm_list} object, which is simply a
-\code{list} of \code{emm} objects. Methods for \code{emm_list} objects are
-the same as those for \code{emm}, but they apply to only one member of the
+\code{list} of \code{emmGrid} objects. Methods for \code{emm_list} objects are
+the same as those for \code{emmGrid}, but they apply to only one member of the
 list, determined by its \code{which} argument.
 }
 \description{

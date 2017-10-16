@@ -2,23 +2,23 @@
 % Please edit documentation in R/contrast.R
 \name{contrast}
 \alias{contrast}
-\alias{contrast.emm}
-\alias{pairs.emm}
-\alias{coef.emm}
+\alias{contrast.emmGrid}
+\alias{pairs.emmGrid}
+\alias{coef.emmGrid}
 \title{Contrasts and linear functions of EMMs}
 \usage{
 contrast(object, ...)
 
-\method{contrast}{emm}(object, method = "eff", interaction = FALSE, by,
+\method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE, by,
   offset = NULL, name = "contrast", options = get_emm_option("contrast"),
   type, adjust, ...)
 
-\method{pairs}{emm}(x, reverse = FALSE, ...)
+\method{pairs}{emmGrid}(x, reverse = FALSE, ...)
 
-\method{coef}{emm}(object, ...)
+\method{coef}{emmGrid}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{emm}}
+\item{object}{An object of class \code{emmGrid}}
 
 \item{...}{Additional arguments passed to other methods}
 
@@ -46,23 +46,23 @@ when \code{interaction} is specified.)}
 used in table headings or subsequent contrasts of the returned object.}
 
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
-to \code{\link{update.emm}}, just after the object is constructed.}
+to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
 \item{type}{Character: prediction type (e.g., \code{"response"}) -- added to \code{options}}
 
 \item{adjust}{Character: adjustment method (e.g., \code{"bonferroni"}) -- added to \code{options}}
 
-\item{x}{An \code{emm} object}
+\item{x}{An \code{emmGrid} object}
 
 \item{reverse}{Logical value - determines whether to use \code{"pairwise"} (if \code{TRUE}) or \code{"revpairwise"} (if \code{FALSE}).}
 }
 \value{
-\code{contrast} and \code{pairs} return an object of class \code{emm}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
+\code{contrast} and \code{pairs} return an object of class \code{emmGrid}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
 
 \code{coef} returns a \code{data.frame} containing the object's grid, along with columns named \code{c.1, c.2, ...} containing the contrast coefficients. If
 }
 \description{
-These methods provide for follow-up analyses of \code{emm} objects:
+These methods provide for follow-up analyses of \code{emmGrid} objects:
 Contrasts, pairwise comparisons, tests, and confidence intervals. They may
 also be used to compute arbitrary linear functions of predictions or EMMs.
 }
@@ -71,7 +71,7 @@ When \code{object} has a nesting structure (this can be seen via
   \code{str(object)}), then any grouping factors involved are forced into
   service as \code{by} variables, and the contrasts are thus computed
   separately in each nest. This in turn may lead to an irregular grid in the
-  returned \code{emm} object, which may not be valid for subsequent
+  returned \code{emmGrid} object, which may not be valid for subsequent
   \code{emmeans} calls.
 }
 \section{Pairs method}{
@@ -95,13 +95,13 @@ specify the respective contrast method(s); they are recycled as needed.
 
 \examples{
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
-warp.emm <- emmeans(warp.lm, ~ tension | wool)
-contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
-pairs(warp.emm)               # ditto
-contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
+contrast(warp.emmGrid, "poly")    # inherits 'by = "wool"' from warp.emmGrid
+pairs(warp.emmGrid)               # ditto
+contrast(warp.emmGrid, "eff", by = NULL)  # contrasts of the 6 factor combs
 
 # An interaction contrast for tension:wool
-tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
-tw.emm          # see the estimates
-coef(tw.emm)    # see the contrast coefficients
+tw.emmGrid <- contrast(warp.emmGrid, interaction = c("poly", "consec"), by = NULL)
+tw.emmGrid          # see the estimates
+coef(tw.emmGrid)    # see the contrast coefficients
 }

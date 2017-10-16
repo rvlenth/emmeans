@@ -28,7 +28,7 @@ changed for two reasons:
      package. The **lsmeans** package had two classes, `ref.grid` and `lsmobj`,
      and it was confusing to some users that they needed to use primarily
      `ref.grid` methods to summarize `lsmobj` objects. The **emmeans**
-     package has only an `emm` class that covers both of the old classes.
+     package has only an `emmGrid` class that covers both of the old classes.
      Changing the name of the package at the same time as the object 
      classes are changed makes for a cleaner transition.
 
@@ -77,8 +77,8 @@ need to be aware of:
     `ref.grid` or `lsmobj` objects), they should still work in **emmeans**. The
     issue you may face, though, is that the **lsmeans** package could get loaded
     simply because these objects are present, and put in the `search()` path. To
-    make sure you're using the new package, convert the objects to class `emm`
-    -- e.g., `my_new_ref_grid <- as.emm(my.old.ref.grid)`.
+    make sure you're using the new package, convert the objects to class `emmGrid`
+    -- e.g., `my_new_ref_grid <- as.emmGrid(my.old.ref.grid)`.
     Running the non-exported function `emmeans:::convert_workspace()` may
     be used to convert all the objects in an environment (the global
     one by default) and clean out any dependencies on **lsmeans**. 
@@ -123,8 +123,8 @@ to convert R scripts or R Markdown files to use **emmeans** functions.
   * You will also be prompted for whether or not you want calls to `lsmeans()` 
     or `pmmeans()`to be replaced by calls to `emmeans()` (it's your choice; the
     former still work).
-  * Each converted file is saved in the same directory with `-emm` added to the
-    root name; for example, `myfile.R` is converted and saved as `myfile-emm.R`.
+  * Each converted file is saved in the same directory with `-emmGrid` added to the
+    root name; for example, `myfile.R` is converted and saved as `myfile-emmGrid.R`.
 
 The conversion routines will convert the following to their `emmeans` counterparts:
 
@@ -146,7 +146,7 @@ conflicts. When this happens, type
 emmeans:::convert_workspace()
 ``` 
 on the console. This will convert any `ref.grid` or `lsmobj` objects laying
-around to the new `emm` class, and unload all vestiges of **lsmeans**.
+around to the new `emmGrid` class, and unload all vestiges of **lsmeans**.
 
 Once you are comfortable using **emmeans** in place of **lsmeans**, you
 may effect a permanent solution (the "nuclear option?") by uninstalling

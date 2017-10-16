@@ -34,8 +34,8 @@
 #'
 #' @rdname mcmc-support
 #' @aliases mcmc-support
-#' @method as.mcmc emm
-#' @param x An object of class \code{emm}
+#' @method as.mcmc emmGrid
+#' @param x An object of class \code{emmGrid}
 #' @param names Logical scalar or vector specifying whether variable names are
 #'   appended to levels in the column labels for the \code{as.mcmc} or
 #'   \code{as.mcmc.list} result -- e.g., column names of \code{treat A} and
@@ -60,9 +60,9 @@
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
 #' @importFrom coda as.mcmc
-#' @method as.mcmc emm
+#' @method as.mcmc emmGrid
 #' @export
-as.mcmc.emm = function(x, names = TRUE, sep.chains = TRUE, ...) {
+as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     object = x
     if (is.na(x@post.beta[1]))
         stop("No posterior sample -- can't make an 'mcmc' object")
@@ -95,9 +95,9 @@ as.mcmc.emm = function(x, names = TRUE, sep.chains = TRUE, ...) {
 #' @rdname mcmc-support
 #' @importFrom coda as.mcmc.list
 #' @export
-#' @method as.mcmc.list emm
-as.mcmc.list.emm = function(x, names = TRUE, ...) {
-    result = as.mcmc.emm(x, names = names, sep.chains = TRUE, ...)
+#' @method as.mcmc.list emmGrid
+as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
+    result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
     if(!inherits(result, "mcmc.list"))
         result = coda::mcmc.list(result)
     result

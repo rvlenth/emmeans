@@ -33,17 +33,17 @@ match the number of dimensions. If \code{mult.name} is specified, this
 argument is ignored.}
 
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
-to \code{\link{update.emm}}, just after the object is constructed.}
+to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
 \item{data}{A \code{data.frame} to use to obtain information about the
 predictors (e.g. factor levels). If missing, then
 \code{\link{recover_data}} is used to attempt to reconstruct the data.}
 
 \item{df}{Numeric value. This is equivalent to specifying
-\code{options(df = df)}. See \code{\link{update.emm}}.}
+\code{options(df = df)}. See \code{\link{update.emmGrid}}.}
 
 \item{type}{Character value. If provided, this is saved as the
-\code{"predict.type"} setting. See \code{\link{update.emm}} and the section
+\code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the section
 below on prediction types and transformations.}
 
 \item{transform}{Character value. If other than \code{"none"}, the reference 
@@ -61,8 +61,8 @@ is automatically detected. See Details.}
 \href{../doc/models.html}{vignette("models", "emmeans")}).}
 }
 \value{
-An object of the S4 class \code{"emm"} (see 
-  \code{\link{emm-class}}). These objects encapsulate everything needed 
+An object of the S4 class \code{"emmGrid"} (see 
+  \code{\link{emmGrid-class}}). These objects encapsulate everything needed 
   to do calculations and inferences for estimated marginal means, and contain
   nothing that depends on the model-fitting procedure.
 }
@@ -143,7 +143,7 @@ in \code{emmeans} in that it is done separately for each level (or
 combination thereof) of the grouping factors. \code{ref_grid} tries to 
 discern which factors are nested in other factors, but it is not always 
 obvious, and if it misses some, the user must specify this structure via 
-\code{nesting}; or later using \code{\link{update.emm}}. The \code{nesting}
+\code{nesting}; or later using \code{\link{update.emmGrid}}. The \code{nesting}
 argument may be a character vector or a named \code{list}. If a \code{list},
 each name should be the name of a single factor in the grid, and its entry a
 character vector of the name(s) of its grouping factor(s). \code{nested} may
@@ -208,8 +208,8 @@ ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 
 }
 \seealso{
-Reference grids are of class \code{\link{emm-class}} and several
-  methods exist for them -- for example \code{\link{summary.emm}}. Reference
+Reference grids are of class \code{\link{emmGrid-class}} and several
+  methods exist for them -- for example \code{\link{summary.emmGrid}}. Reference
   grids are fundamental to \code{\link{emmeans}}. Supported models are
   detailed in \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 }

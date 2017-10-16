@@ -36,7 +36,7 @@ NULL
 #-#' arguments through \code{\link{ref_grid}} or \code{\link{emmeans}}.
 #-#'
 #-#' Certain objects are affected by optional arguments to functions that
-#-#' construct \code{emm} objects, including \code{\link{ref_grid}},
+#-#' construct \code{emmGrid} objects, including \code{\link{ref_grid}},
 #-#' \code{\link{emmeans}}, \code{\link{emtrends}}, and \code{\link{emmip}}. When
 #-#' \dQuote{arguments} are mentioned in the subsequent quick reference and
 #-#' object-by-object documentation, we are talking about arguments in these

@@ -230,7 +230,7 @@ handled by `cov.reduce` or the default methods.
 [Back to Contents](#contents)
 
 ### Graphical displays {#plots}
-The results of `ref_grid()` or `emmeans()` (these are objects of class `emm`)
+The results of `ref_grid()` or `emmeans()` (these are objects of class `emmGrid`)
 may be plotted in two different 
 ways. One is an interaction-style plot, using `emmip()`. In the following, let's 
 use it to compare the predictions from `pigs.lm1` and `pigs.lm2`:
@@ -247,7 +247,7 @@ Neither of these plots is an interaction plot of the *data*; they are
 interaction plots of model predictions; and since both models do not include
 an interaction, no interaction at all is evident in the plots.
 
-The other graphics option offered is the `plot()` method for `emm` objects. In
+The other graphics option offered is the `plot()` method for `emmGrid` objects. In
 the following, we display the estimates and 95% confidence intervals for
 `mtcars.rg` in separate panels for each `disp`.
 ```{r}
@@ -360,7 +360,7 @@ also be accessed via `vignette("`*name*`", "emmeans")`
   * Working with messy data and nested effects: ["messy-data"](messy-data.html)
   * Examples of more sophisticated models (e.g., mixed, ordinal, MCMC)
     ["sophisticated"](sophisticated.html)
-  * Utilities for working with `emm` objects: ["utilities"](utilities.html)
+  * Utilities for working with `emmGrid` objects: ["utilities"](utilities.html)
   * Frequently asked questions: ["FAQs"](FAQs.html)
 
 [Back to Contents](#contents)

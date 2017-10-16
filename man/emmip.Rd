@@ -12,7 +12,7 @@ emmip(object, formula, ...)
   15:20), lty = 1, col = NULL, plotit = TRUE, ...)
 }
 \arguments{
-\item{object}{An object of class \code{emm}, or a fitted model of a class
+\item{object}{An object of class \code{emmGrid}, or a fitted model of a class
 supported by the \pkg{emmeans} package}
 
 \item{formula}{Formula of the form 
@@ -23,10 +23,10 @@ panels. Each element of this formula may be a single factor in the model,
 or a combination of factors using the \code{*} operator.}
 
 \item{...}{Additional arguments passed to \code{\link{emmeans}} (when
-\code{object} is not already an \code{emm} object),
+\code{object} is not already an \code{emmGrid} object),
 \code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.}
 
-\item{type}{As in \code{\link{predict.emm}}, this determines
+\item{type}{As in \code{\link{predict.emmGrid}}, this determines
 whether we want to inverse-transform the predictions
 (\code{type = "response"}) or not (any other choice). The default is
 \code{"link"}, unless the \code{"predict.type"} option is in force; see
@@ -81,7 +81,7 @@ appropriate specification to obtain estimated marginal means for each
 combination of the factors present in \code{formula} (in addition, any 
 arguments in \code{\dots} that match \code{at}, \code{trend}, 
 \code{cov.reduce}, or \code{fac.reduce} are passed to \code{emmeans}). 
-Otherwise, if \code{object} is an \code{emm} object, its first element is 
+Otherwise, if \code{object} is an \code{emmGrid} object, its first element is 
 used, and it must contain one estimate for each combination of the factors
 present in \code{formula}.
 }

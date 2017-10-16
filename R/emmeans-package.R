@@ -53,7 +53,7 @@
 #' dimensions of the grid. The function \code{\link{ref_grid}} explicitly
 #' creates a reference grid that can subsequently be used to obtain
 #' least-squares means. The object returned by \code{ref_grid} is of class
-#' \code{"emm"}, the same class as is used for estimated marginal means (see
+#' \code{"emmGrid"}, the same class as is used for estimated marginal means (see
 #' below).
 #' 
 #' Our reference-grid framework expands slightly upon Searle \emph{et al.}'s
@@ -68,31 +68,31 @@
 #' 
 #' \item{Estimated marginal means}{
 #' The \code{\link{emmeans}} function computes EMMs given a fitted model (or a
-#' previously constructed \code{emm} object), using a specification indicating
+#' previously constructed \code{emmGrid} object), using a specification indicating
 #' what factors to include. The \code{\link{emtrends}} function creates the same
 #' sort of results for estimating and comparing slopes of fitted lines. Both
-#' return an \code{emm} object.}
+#' return an \code{emmGrid} object.}
 #' 
 #' \item{Summaries and analysis}{
-#' The \code{\link{summary.emm}}  method may be used to display an \code{emm}
-#' object. Special-purpose summaries are available via \code{\link{confint.emm}} and
-#' \code{\link{test.emm}}, the latter of which can also do a joint test of several
+#' The \code{\link{summary.emmGrid}}  method may be used to display an \code{emmGrid}
+#' object. Special-purpose summaries are available via \code{\link{confint.emmGrid}} and
+#' \code{\link{test.emmGrid}}, the latter of which can also do a joint test of several
 #' estimates. The user may specify by variables, multiplicity-adjustment
 #' methods, confidence levels, etc., and if a transformation or link function is
 #' involved, may reverse-transform the results to the response scale.}
 #' 
 #' \item{Contrasts and comparisons}{
-#' The \code{\link{contrast}} method for \code{emm} objects is used to obtain
+#' The \code{\link{contrast}} method for \code{emmGrid} objects is used to obtain
 #' contrasts among the estimates; several standard contrast families are
 #' available such as deviations from the mean, polynomial contrasts, and
-#' comparisons with one or more controls. Another \code{emm} object is returned,
-#' which can be summarized or further analyzed. For convenience, a \code{pairs.emm}
+#' comparisons with one or more controls. Another \code{emmGrid} object is returned,
+#' which can be summarized or further analyzed. For convenience, a \code{pairs.emmGrid}
 #' method is provided for the case of pairwise comparisons. Related to this is
-#' the \code{\link{cld.emm}} method, which provides a compact letter display for
+#' the \code{\link{cld.emmGrid}} method, which provides a compact letter display for
 #' grouping pairs of means that are not significantly different. \code{cld}
 #' requires the \pkg{multcompView} package.
 #' }
-#' \item{Graphs}{The \code{\link{plot.emm}} method will display
+#' \item{Graphs}{The \code{\link{plot.emmGrid}} method will display
 #' side-by-side confidence intervals for the estimates, and/or
 #' \dQuote{comparison arrows} whereby the significance of pairwise differences
 #' can be judged by how much they overlap. The \code{\link{emmip}} function
@@ -107,10 +107,10 @@
 #' \pkg{bayesplot}.}
 #' 
 #' \item{\pkg{multcomp} interface}{The \code{\link{as.glht}} function and
-#' \code{glht} method for \code{emm}s provide an interface to the
+#' \code{glht} method for \code{emmGrid}s provide an interface to the
 #' \code{\link[multcomp]{glht}} function in the \pkg{multcomp} package, thus
 #' providing for more exacting simultaneous estimation or testing. The package
-#' also provides an \code{\link{emm}} method that works as an alternative to
+#' also provides an \code{\link{emmGrid}} method that works as an alternative to
 #' \code{\link[multcomp]{mcp}} in a call to \code{glht}.
 #' }
 #' } %%% end describe

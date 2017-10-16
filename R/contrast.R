@@ -24,7 +24,7 @@
 ### 'contrast' S3 generic and method
 #' Contrasts and linear functions of EMMs
 #' 
-#' These methods provide for follow-up analyses of \code{emm} objects:
+#' These methods provide for follow-up analyses of \code{emmGrid} objects:
 #' Contrasts, pairwise comparisons, tests, and confidence intervals. They may
 #' also be used to compute arbitrary linear functions of predictions or EMMs.
 #'
@@ -33,7 +33,7 @@ contrast = function(object, ...)
     UseMethod("contrast")
 
 #' @rdname contrast 
-#' @param object An object of class \code{emm}
+#' @param object An object of class \code{emmGrid}
 #' @param method Character value giving the root name of a contrast method (e.g.
 #'   \code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a named 
 #'   \code{list} of coefficients (for a contrast or linear function) that must
@@ -53,12 +53,12 @@ contrast = function(object, ...)
 #' @param name Character name to use to override the default label for contrasts
 #'   used in table headings or subsequent contrasts of the returned object.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
-#'   to \code{\link{update.emm}}, just after the object is constructed.
+#'   to \code{\link{update.emmGrid}}, just after the object is constructed.
 #' @param type Character: prediction type (e.g., \code{"response"}) -- added to \code{options}
 #' @param adjust Character: adjustment method (e.g., \code{"bonferroni"}) -- added to \code{options}
 #' @param ... Additional arguments passed to other methods
 #'
-#' @return \code{contrast} and \code{pairs} return an object of class \code{emm}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
+#' @return \code{contrast} and \code{pairs} return an object of class \code{emmGrid}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
 #' 
 #' @section Pairs method:
 #' The call \code{pairs(object)} is equivalent to \code{contrast(object, method = "pairwise")}; and \code{pairs(object, reverse = TRUE)} is the same as \code{contrast(object, method = "revpairwise")}.
@@ -79,24 +79,24 @@ contrast = function(object, ...)
 #'   \code{str(object)}), then any grouping factors involved are forced into
 #'   service as \code{by} variables, and the contrasts are thus computed
 #'   separately in each nest. This in turn may lead to an irregular grid in the
-#'   returned \code{emm} object, which may not be valid for subsequent
+#'   returned \code{emmGrid} object, which may not be valid for subsequent
 #'   \code{emmeans} calls.
 #' 
-#' @method contrast emm
+#' @method contrast emmGrid
 #' @export
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
-#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
-#' pairs(warp.emm)               # ditto
-#' contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
+#' contrast(warp.emmGrid, "poly")    # inherits 'by = "wool"' from warp.emmGrid
+#' pairs(warp.emmGrid)               # ditto
+#' contrast(warp.emmGrid, "eff", by = NULL)  # contrasts of the 6 factor combs
 #' 
 #' # An interaction contrast for tension:wool
-#' tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
-#' tw.emm          # see the estimates
-#' coef(tw.emm)    # see the contrast coefficients
-contrast.emm = function(object, method = "eff", interaction = FALSE, 
+#' tw.emmGrid <- contrast(warp.emmGrid, interaction = c("poly", "consec"), by = NULL)
+#' tw.emmGrid          # see the estimates
+#' coef(tw.emmGrid)    # see the contrast coefficients
+contrast.emmGrid = function(object, method = "eff", interaction = FALSE, 
                         by, offset = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
                         type, adjust, ...) 
@@ -131,7 +131,7 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
         tcm = NULL
         for (i in k:1) {
             nm = paste(vars[i], interaction[i], sep = "_")
-            object = contrast.emm(object, interaction[i], by = vars[-i], name = nm)
+            object = contrast.emmGrid(object, interaction[i], by = vars[-i], name = nm)
             if(is.null(tcm))
                 tcm = object@misc$con.coef
             else
@@ -144,7 +144,7 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
         object@misc$con.coef = tcm
         if(!is.null(options)) {
             options$object = object
-            object = do.call(update.emm, options)
+            object = do.call(update.emmGrid, options)
         }
         return(object)
     }
@@ -286,8 +286,8 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
     for (nm in setdiff(names(grid), ".offset."))
         levels[[nm]] = unique(grid[[nm]])
     
-    ### bypass new as we're not re-classing    result = new("emm", object, linfct = linfct, levels = levels, grid = grid, misc = misc)
-    result = as(object, "emm")
+    ### bypass new as we're not re-classing    result = new("emmGrid", object, linfct = linfct, levels = levels, grid = grid, misc = misc)
+    result = as(object, "emmGrid")
     result@linfct = linfct
     result@levels = levels
     result@grid = grid
@@ -298,7 +298,7 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
         options = as.list(c(options, predict.type = type))
     if(!is.null(options)) {
         options$object = result
-        result = do.call("update.emm", options)
+        result = do.call("update.emmGrid", options)
     }
     result
 }
@@ -307,12 +307,12 @@ contrast.emm = function(object, method = "eff", interaction = FALSE,
 # pairs method
 
 #' @rdname contrast 
-#' @param x An \code{emm} object
+#' @param x An \code{emmGrid} object
 #' @param reverse Logical value - determines whether to use \code{"pairwise"} (if \code{TRUE}) or \code{"revpairwise"} (if \code{FALSE}).
-#' @inheritParams contrast.emm 
+#' @inheritParams contrast.emmGrid 
 #' @importFrom graphics pairs
 #' @export
-pairs.emm = function(x, reverse = FALSE, ...) {
+pairs.emmGrid = function(x, reverse = FALSE, ...) {
     object = x # for my sanity
     if (reverse)
         contrast(object, method = "revpairwise", ...)
@@ -326,8 +326,8 @@ pairs.emm = function(x, reverse = FALSE, ...) {
 #' @return \code{coef} returns a \code{data.frame} containing the object's grid, along with columns named \code{c.1, c.2, ...} containing the contrast coefficients. If 
 #' @export
 #' @importFrom stats coef
-#' @method coef emm
-coef.emm = function(object, ...) {
+#' @method coef emmGrid
+coef.emmGrid = function(object, ...) {
     if (is.null(cc <- object@misc$con.coef)) {
         message("No contrast coefficients are available")
         return (NULL)

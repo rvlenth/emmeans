@@ -19,33 +19,33 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-# rbind method for emm objects
+# rbind method for emmGrid objects
 
-#' Combine or subset \code{emm} objects
+#' Combine or subset \code{emmGrid} objects
 #'
 #' These functions provide methods for \code{\link[base]{rbind}} and
-#' \code{\link[base]{[}} that may be used to combine \code{emm} objects
+#' \code{\link[base]{[}} that may be used to combine \code{emmGrid} objects
 #' together, or to extract a subset of cases. The primary reason for 
 #' doing this would be to obtain multiplicity-adjusted results for smaller
 #' or larger families of tests or confidence intervals. 
 #' 
-#' @param ... In \code{rbind}, object(s) of class \code{emm}. 
+#' @param ... In \code{rbind}, object(s) of class \code{emmGrid}. 
 #'   In \code{"["}, it is ignored.
 #' @param deparse.level (required but not used)
-#' @param adjust Character value passed to \code{\link{update.emm}}
+#' @param adjust Character value passed to \code{\link{update.emmGrid}}
 #' 
 #' @note \code{rbind} throws an error if there are incompatibilities in
 #'   the objects' coefficients, covariance structures, etc. But they 
 #'   are allowed to have different factors; a missing level \code{'.'}
 #'   is added to factors as needed.
 #'
-#' @return A revised object opf class \code{emm}
-#' @method rbind emm
+#' @return A revised object opf class \code{emmGrid}
+#' @method rbind emmGrid
 #' @export
-rbind.emm = function(..., deparse.level = 1, adjust = "bonferroni") {
+rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
     objs = list(...)
-    if (!all(sapply(objs, inherits, "emm")))
-        stop("All objects must inherit from 'emm'")
+    if (!all(sapply(objs, inherits, "emmGrid")))
+        stop("All objects must inherit from 'emmGrid'")
     bhats = lapply(objs, function(o) o@bhat)
     bhat = bhats[[1]]
     if(!all(sapply(bhats, function(b) (length(b) == length(bhat)) 
@@ -90,29 +90,29 @@ rbind.emm = function(..., deparse.level = 1, adjust = "bonferroni") {
            famSize = round((1 + sqrt(1 + 8*n)) / 2, 3),
            avgd.over = avgd.over)
 }
-#' @rdname rbind.emm
+#' @rdname rbind.emmGrid
 #' 
-#' @param e1 An \code{emm} object
-#' @param e2 Another \code{emm} object
+#' @param e1 An \code{emmGrid} object
+#' @param e2 Another \code{emmGrid} object
 #' @return The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
-#' @method + emm
+#' @method + emmGrid
 #' @export
-"+.emm" = function(e1, e2) {
-    if(!is(e2, "emm"))
-        stop("'+.emm' works only when all objects are class `emm`", call. = FALSE)
+"+.emmGrid" = function(e1, e2) {
+    if(!is(e2, "emmGrid"))
+        stop("'+.emmGrid' works only when all objects are class `emmGrid`", call. = FALSE)
     rbind(e1, e2)
 }
 
 
 ### Subset a reference grid
 # if drop = TRUE, the levels of factors are reduced
-#' @rdname rbind.emm
-#' @param x An \code{emm} object to be subsetted
+#' @rdname rbind.emmGrid
+#' @param x An \code{emmGrid} object to be subsetted
 #' @param i Integer vector of indexes
 #' @param drop.levels Logical value. If \code{TRUE}, the \code{"levels"} slot in
 #'   the returned object is updated to hold only the predictor levels that actually occur
 #'   
-#' @method [ emm
+#' @method [ emmGrid
 #' @export
 #'
 #' @examples
@@ -129,7 +129,7 @@ rbind.emm = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' rbind(w.t, t.w, adjust = "mvt")
 #' update(w.t + t.w, adjust = "fdr")  ## same as abve except for adjustment
 #'
-"[.emm" = function(x, i, adjust, drop.levels = TRUE, ...) {
+"[.emmGrid" = function(x, i, adjust, drop.levels = TRUE, ...) {
     x@linfct = x@linfct[i, , drop = FALSE]
     x@grid = x@grid[i, , drop = FALSE]                  
     x = update(x, pri.vars = names(x@grid), famSize = length(i))

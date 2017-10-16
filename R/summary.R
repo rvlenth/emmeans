@@ -19,22 +19,22 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-### This file has summary.emm S3 method and related functions
+### This file has summary.emmGrid S3 method and related functions
 
 
 # S3 summary method
 
-#' Summaries, predictions, intervals, and tests for \code{emm} objects
+#' Summaries, predictions, intervals, and tests for \code{emmGrid} objects
 #' 
 #' These are the primary methods for obtaining numerical or tabular results 
-#' from an \code{emm} object.
+#' from an \code{emmGrid} object.
 #' 
-#' \code{summary.emm} is the general function for summarizing \code{emm} objects. 
-#' \code{confint.emm} is equivalent to \code{summary.emm with 
-#' infer = c(TRUE, FALSE)}. When called with \code{joint = FALSE}, \code{test.emm}
-#' is equivalent to \code{summary.emm} with \code{infer = c(FALSE, TRUE)}. 
+#' \code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
+#' \code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
+#' infer = c(TRUE, FALSE)}. When called with \code{joint = FALSE}, \code{test.emmGrid}
+#' is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 
 #' 
-#' With \code{joint = TRUE}, \code{test.emm} calculates the Wald test of the
+#' With \code{joint = TRUE}, \code{test.emmGrid} calculates the Wald test of the
 #' hypothesis \code{linfct \%*\% bhat = null}, where \code{linfct} and
 #' \code{bhat} refer to slots in \code{object} (possibly subsetted according to
 #' \code{by} or \code{rows}). An error is thrown if any row of \code{linfct} is
@@ -43,7 +43,7 @@
 #' contrasts is tested. Linear dependence and nonzero \code{null} cause an 
 #' error.
 #'
-#' @param object An object of class \code{"emm"} (see \link{emm-class})
+#' @param object An object of class \code{"emmGrid"} (see \link{emmGrid-class})
 #' @param infer A vector of one or two two logical values. The first determines
 #'   whether confidence intervals are displayed, and the second determines
 #'   whether \emph{t} tests and \emph{P} values are displayed. If only one value
@@ -85,17 +85,17 @@
 #'   \code{2}, \code{"!="}, \code{"two-sided"}, \code{"both"},
 #'   \code{"equivalence"}, or \code{"="}). See the special section below for
 #'   more details.
-#' @param ... Not used by \code{summary.emm} or \code{predict.emm}. In
-#'   \code{confint.emm} and \code{test.emm}, these arguments are passed to
-#'   \code{summary.emm}.
+#' @param ... Not used by \code{summary.emmGrid} or \code{predict.emmGrid}. In
+#'   \code{confint.emmGrid} and \code{test.emmGrid}, these arguments are passed to
+#'   \code{summary.emmGrid}.
 #'
-#' @return \code{summary.emm}, \code{confint.emm}, and \code{test.emm} return an
+#' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and \code{test.emmGrid} return an
 #'   object of class \code{"summary_emm"}, which is an extension of
 #'   \code{\link{data.frame}} but with a special \code{print} method that with
 #'   custom formatting. For models fitted using MCMC methods, the result is
 #'   typically a frequentist summary, based on the empirical mean and covariance
 #'   matrix of the \code{post.beta} slot. A Bayesian summary may be obtained
-#'   using \code{\link{as.mcmc.emm}} and summarizing that result using tools for
+#'   using \code{\link{as.mcmc.emmGrid}} and summarizing that result using tools for
 #'   Bayesian estimation.
 #'   
 #' @section Testing nonsuperiority, noninferiority, or equivalence:
@@ -129,36 +129,36 @@
 #'   displayed \code{delta} will not be changed, because there (usually) is
 #'   not a natural way to back-transform it.
 #' 
-#' @note The default \code{show} method for \code{emm} objects (with the
+#' @note The default \code{show} method for \code{emmGrid} objects (with the
 #'   exception of newly created reference grids) is \code{print(summary())}.
 #'   Thus, with ordinary usage of \code{\link{emmeans}} and such, it is
 #'   unnecessary to call \code{summary} unless there is a need to
 #'   specify other than its default options.
 #'   
-#' @method summary emm  
+#' @method summary emmGrid  
 #' @export
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' warp.emm    # implicitly runs 'summary'
+#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
+#' warp.emmGrid    # implicitly runs 'summary'
 #' 
-#' confint(warp.emm, by = NULL, level = .90)
+#' confint(warp.emmGrid, by = NULL, level = .90)
 #' 
 #' # --------------------------------------------------------------
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
-#' pigs.emm <- emmeans(pigs.lm, "percent", type = "response")
-#' summary(pigs.emm)    # (inherits type = "response")
+#' pigs.emmGrid <- emmeans(pigs.lm, "percent", type = "response")
+#' summary(pigs.emmGrid)    # (inherits type = "response")
 #' 
 #' # For which percents is EMM non-inferior to 35, based on a 10% threshold?
 #' # Note the test is done on the log scale even though we have type = "response"
-#' test(pigs.emm, null = log(35), delta = log(1.10), side = ">")
+#' test(pigs.emmGrid, null = log(35), delta = log(1.10), side = ">")
 #'
-#' test(contrast(pigs.emm, "consec"))
+#' test(contrast(pigs.emmGrid, "consec"))
 #' 
-#' test(contrast(pigs.emm, "consec"), joint = TRUE)
+#' test(contrast(pigs.emmGrid, "consec"), joint = TRUE)
 #'
-summary.emm <- function(object, infer, level, adjust, by, type, df, 
+summary.emmGrid <- function(object, infer, level, adjust, by, type, df, 
                         null, delta, side, ...) {
     misc = object@misc
     use.elts = if (is.null(misc$display))  rep(TRUE, nrow(object@grid)) 
@@ -181,7 +181,7 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
         type = .validate.type(type)
     
     if (!is.na(object@post.beta[1]))
-        message("This is a frequentist summary. See `?as.mcmc.emm' for more on what you can do.")
+        message("This is a frequentist summary. See `?as.mcmc.emmGrid' for more on what you can do.")
     
     # if there are two transformations and we want response, then we need to undo both
     if ((type == "response") && (!is.null(misc$tran2)))
@@ -213,7 +213,7 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
     opt = get_emm_option("summary")
     if(!is.null(opt)) {
         opt$object = object
-        object = do.call("update.emm", opt)
+        object = do.call("update.emmGrid", opt)
     }
     
     
@@ -366,16 +366,16 @@ summary.emm <- function(object, infer, level, adjust, by, type, df,
 
 # S3 predict method
 
-#' @rdname summary.emm
-#' @method predict emm
+#' @rdname summary.emmGrid
+#' @method predict emmGrid
 #' @export
 #' @return \code{predict} returns a vector of predictions for each row of \code{object@grid}.
-predict.emm <- function(object, type, ...) {
+predict.emmGrid <- function(object, type, ...) {
     # update with any "summary" options
     opt = get_emm_option("summary")
     if(!is.null(opt)) {
         opt$object = object
-        object = do.call("update.emm", opt)
+        object = do.call("update.emmGrid", opt)
     }
     
     if (missing(type))
@@ -792,7 +792,7 @@ predict.emm <- function(object, type, ...) {
     m
 }
 
-# Format a data.frame produced by summary.emm
+# Format a data.frame produced by summary.emmGrid
 #' @method print summary_emm
 #' @export
 print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {

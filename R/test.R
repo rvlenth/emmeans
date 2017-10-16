@@ -22,23 +22,23 @@
 # confint and test methods
 
 # confint method
-#' @rdname summary.emm
+#' @rdname summary.emmGrid
 #' @param parm (Required argument for \code{confint} methods, but not used)
-#' @method confint emm
+#' @method confint emmGrid
 #' @export
-confint.emm = function(object, parm, level = .95, ...) {
+confint.emmGrid = function(object, parm, level = .95, ...) {
     summary(object, infer = c(TRUE, FALSE), level = level, ...)
 }
 
-#' @rdname summary.emm
+#' @rdname summary.emmGrid
 #' @export
 test = function(object, null, ...) {
     UseMethod("test")
 }
 
-#' @rdname summary.emm
+#' @rdname summary.emmGrid
 #' @param joint Logical value. If \code{FALSE}, the arguments are passed to 
-#'   \code{\link{summary.emm}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
+#'   \code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
 #'   TRUE}, a joint test of the hypothesis L beta = null is performed, where L 
 #'   is \code{object@linfct} and beta is the vector of fixed effects estimated 
 #'   by \code{object@betahat}. This will be either an \emph{F} test or a 
@@ -49,9 +49,9 @@ test = function(object, null, ...) {
 #' @param rows Integer values. The rows of L to be tested in the joint test. If
 #'   missing, all rows of L are used. If not missing, \code{by} variables are
 #'   ignored.
-#' @method test emm
+#' @method test emmGrid
 #' @export
-test.emm = function(object, null = 0, 
+test.emmGrid = function(object, null = 0, 
                     joint = FALSE, verbose = FALSE, rows, by, ...) {
     # if joint = FALSE, this is a courtesy method for 'contrast'
     # else it computes the F test or Wald test of H0: L*beta = null

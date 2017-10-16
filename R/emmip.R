@@ -33,7 +33,7 @@ emmip = function(object, formula, ...) {
 
 # Our one method
 #' @rdname emmip
-#' @param object An object of class \code{emm}, or a fitted model of a class
+#' @param object An object of class \code{emmGrid}, or a fitted model of a class
 #'   supported by the \pkg{emmeans} package
 #' @param formula Formula of the form 
 #'   \code{trace.factors ~ x.factors | by.factors}. The EMMs are
@@ -41,7 +41,7 @@ emmip = function(object, formula, ...) {
 #'   \code{by.factors} is optional, but if present, it determines separate
 #'   panels. Each element of this formula may be a single factor in the model,
 #'   or a combination of factors using the \code{*} operator.
-#' @param type As in \code{\link{predict.emm}}, this determines
+#' @param type As in \code{\link{predict.emmGrid}}, this determines
 #'   whether we want to inverse-transform the predictions
 #'   (\code{type = "response"}) or not (any other choice). The default is
 #'   \code{"link"}, unless the \code{"predict.type"} option is in force; see
@@ -61,7 +61,7 @@ emmip = function(object, formula, ...) {
 #'   Otherwise, one may use the \code{"lattice"} attribute of the returned
 #'   object and print it, perhaps after additional manipulation.
 #' @param ... Additional arguments passed to \code{\link{emmeans}} (when
-#'   \code{object} is not already an \code{emm} object),
+#'   \code{object} is not already an \code{emmGrid} object),
 #'   \code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.
 #'   
 #' @section Details:
@@ -70,7 +70,7 @@ emmip = function(object, formula, ...) {
 #' combination of the factors present in \code{formula} (in addition, any 
 #' arguments in \code{\dots} that match \code{at}, \code{trend}, 
 #' \code{cov.reduce}, or \code{fac.reduce} are passed to \code{emmeans}). 
-#' Otherwise, if \code{object} is an \code{emm} object, its first element is 
+#' Otherwise, if \code{object} is an \code{emmGrid} object, its first element is 
 #' used, and it must contain one estimate for each combination of the factors
 #' present in \code{formula}.
 #'

@@ -40,17 +40,17 @@
 
 ### Get Roxygen to document cld generic. Then remove it in favor of imported one from multcomp
 #
-# #' @rdname cld.emm
+# #' @rdname cld.emmGrid
 # cld = function (object, ...)
 #     UseMethod("cld")
 
 # S3 method for ref.grid
 #' Extract and display information on all pairwise comparisons of least-squares means.
 #'
-#' @method cld emm
+#' @method cld emmGrid
 #' @aliases cld
 #' 
-#' @param object An object of class \code{emm}
+#' @param object An object of class \code{emmGrid}
 #' @param details Logical value determining whether detailed information on tests of 
 #'   pairwise comparisons is displayed
 #' @param sort Logical value determining whether the EMMs are sorted before the comparisons 
@@ -96,13 +96,13 @@
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' cld(warp.emm)                  # implicitly uses by = "wool"
-#' cld(warp.emm, by = "tension")  # overrides implicit 'by'
+#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
+#' cld(warp.emmGrid)                  # implicitly uses by = "wool"
+#' cld(warp.emmGrid, by = "tension")  # overrides implicit 'by'
 #' 
 #' # Mimic grouping bars and compare all 6 means
-#' cld(warp.emm, by = NULL, Letters = "||||||||", alpha = .01)
-cld.emm = function(object, details=FALSE, sort=TRUE, 
+#' cld(warp.emmGrid, by = NULL, Letters = "||||||||", alpha = .01)
+cld.emmGrid = function(object, details=FALSE, sort=TRUE, 
                     by, alpha=.05, 
                     Letters = c("1234567890",LETTERS,letters), 
                     reversed=FALSE, ...) {
@@ -112,7 +112,7 @@ cld.emm = function(object, details=FALSE, sort=TRUE,
     if (sort) {
         args = list()
         for (nm in by) args[[nm]] = emmtbl[[nm]]
-        args$.emm. = emmtbl[[attr(emmtbl, "estName")]]
+        args$.emmGrid. = emmtbl[[attr(emmtbl, "estName")]]
         ord = do.call("order", args)
         emmtbl = emmtbl[ord, ]
         object@grid = object@grid[ord, , drop=FALSE]

@@ -59,7 +59,7 @@
 #' 
 #' In models where a non-full-rank result is possible (often you can tell by
 #' seeing if there is a \code{singular.ok} argument in the model-fitting
-#' function), \code{\link{summary.emm}} and its relatives check the
+#' function), \code{\link{summary.emmGrid}} and its relatives check the
 #' estimability of each
 #' prediction, using the \code{\link[estimability]{nonest.basis}} function in
 #' the \pkg{estimability} package.
@@ -228,7 +228,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
 #' is retrieved using \code{\link{get}}.
 #' 
 #' The \code{estHook} function should have arguments \samp{(object, do.se, tol,
-#' ...)} where \code{object} is the \code{emm} object,
+#' ...)} where \code{object} is the \code{emmGrid} object,
 #' \code{do.se} is a logical flag for whether to return the standard error, and
 #' \code{tol} is the tolerance for assessing estimability. It should return a
 #' matrix with 3 columns: the estimates, standard errors (\code{NA} when
@@ -238,7 +238,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
 #' described. It should return the covariance matrix for the estimates. Finally,
 #' \code{postGridHook}, if present, is called at the very end of
 #' \code{ref_grid}; it takes one argument, the constructed \code{object}, and
-#' should return a suitably modified \code{emm} object.
+#' should return a suitably modified \code{emmGrid} object.
 emm_basis = function(object, trms, xlev, grid, ...) {
     UseMethod("emm_basis")
 }

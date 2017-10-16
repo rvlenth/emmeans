@@ -19,7 +19,7 @@
 \def\dqt#1{\code{\dq{}#1\dq{}}}
 
 % The objects I want to talk about
-\def\emmo{\dqt{emm}}
+\def\emmo{\dqt{emmGrid}}
 
 \def\R{\proglang{R}}
 \def\SAS{\proglang{SAS}}

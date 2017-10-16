@@ -30,13 +30,13 @@
 #' Add a grouping factor
 #' 
 #' This function adds a grouping factor to an existing reference grid or other 
-#' \code{emm} object, such that the levels of an existing factor (call it the
+#' \code{emmGrid} object, such that the levels of an existing factor (call it the
 #' reference factor) are mapped to a smaller number of levels of the new
 #' grouping factor. The reference factor is then nested in the grouping factor. 
 #' This facilitates obtaining marginal means of the grouping factor, and 
 #' contrasts thereof.
 #'
-#' @param object An \code{emm} object
+#' @param object An \code{emmGrid} object
 #' @param newname Character name of grouping factor to add (different from any
 #'   existing factor in the grid)
 #' @param refname Character name of the reference factor
@@ -44,7 +44,7 @@
 #'   \code{refname}. The grouping factor \code{newname} will have the unique
 #'   values of \code{newlevs} as its levels.
 #'
-#' @return A revised \code{emm} object having an additional factor named 
+#' @return A revised \code{emmGrid} object having an additional factor named 
 #'   \code{newname}, and a new nesting structure \code{refname \%in\% newname}
 #' 
 #' @note By default, the levels of \code{newname} will be ordered
@@ -122,12 +122,12 @@ add_grouping = function(object, newname, refname, newlevs) {
 ### ----- Rest of this file is used only internally ---------
 
 # Internal function to deal with nested structures. 
-#   rgobj        -- an emm object
+#   rgobj        -- an emmGrid object
 #   specs, ...   -- arguments for emmeans
 #   nesting      -- a named list of nesting info
 # This function works by subsetting rgobj as needed, and applying emmeans
 # to each subsetted object
-# This is a servant to emmeans.character.emm, so we can assume specs is character
+# This is a servant to emmeans.character.emmGrid, so we can assume specs is character
 .nested_emm = function(rgobj, specs, by = NULL, ..., nesting) {
     # # Trap something not supported for these... This doesn't work
     # dots = list(...)
@@ -175,12 +175,12 @@ add_grouping = function(object, newname, refname, newlevs) {
             rg@linfct = lf[rows, , drop = FALSE]
             for (j in seq_along(grpfacs))
                 rg@levels[[grpfacs[j]]] = grps[i, j]
-            emm = suppressMessages(emmeans(rg, gspecs, ...))
+            emmGrid = suppressMessages(emmeans(rg, gspecs, ...))
             if (is.null(result))
-                result = emm
+                result = emmGrid
             else {
-                result@grid = rbind(result@grid, emm@grid)
-                result@linfct = rbind(result@linfct, emm@linfct)
+                result@grid = rbind(result@grid, emmGrid@grid)
+                result@linfct = rbind(result@linfct, emmGrid@linfct)
             }
         }
         for (j in seq_along(grpfacs))
@@ -240,14 +240,14 @@ add_grouping = function(object, newname, refname, newlevs) {
         result = contrast(wkrg, method = method, by = by, ...)
     else {
         result = lapply(by.rows, function(rows) {
-            contrast.emm(wkrg[rows, drop.levels = TRUE], method = method, 
+            contrast.emmGrid(wkrg[rows, drop.levels = TRUE], method = method, 
                               by = by, adjust = adjust, ...)
         })
-        # Have to define .wgt. for nested emm. Use average weight - seems most sensible
+        # Have to define .wgt. for nested emmGrid. Use average weight - seems most sensible
         for (i in seq_along(by.rows))
             result[[i]]@grid$.wgt. = mean(wkrg@grid[[".wgt."]][by.rows[[i]]])
         result$adjust = ifelse(is.null(adjust), "none", adjust)
-        result = do.call(rbind.emm, result)
+        result = do.call(rbind.emmGrid, result)
         result = update(result, by = by, 
                         estType = ifelse(is.null(estType), "contrast", estType))
         cname = setdiff(names(result@levels), by)

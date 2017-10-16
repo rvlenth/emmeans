@@ -14,7 +14,7 @@ special features of some of them that may be accessed by passing additional
 arguments through `ref_grid` or `emmeans()`.
 
 Certain objects are affected by optional arguments to functions that
-construct `emm` objects, including `ref_grid()`,
+construct `emmGrid` objects, including `ref_grid()`,
 `emmeans()`, `emtrends()`, and `emmip()`. When
 "*arguments*" are mentioned in the subsequent quick reference and
 object-by-object documentation, we are talking about arguments in these
@@ -306,7 +306,7 @@ addition, the `contrasts` specifications are not necessarily recoverable
 from the object, so the system default must match what was actually used in
 fitting the model.
 
-The `summary.emm()`, `test.emm()`,
+The `summary.emmGrid()`, `test.emmGrid()`,
 etc. methods provide frequentist analyses of the results based on the
 posterior means and covariances. However, an `as.mcmc()` method is
 provided that creates an `mcmc` object that can be summarized or plotted

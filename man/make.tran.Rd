@@ -26,7 +26,7 @@ variable, including inverting the transformation and estimating variances of
 back-transformed predictions via the delta method. \code{make.tran} is
 similar to \code{\link{make.link}}, but it covers additional transformations.
 The result can be used as an environment in which the model is fitted, or as
-the \code{tran} argument in \code{\link{update.emm}} (when the given
+the \code{tran} argument in \code{\link{update.emmGrid}} (when the given
 transformation was already applied in an existing model).
 }
 \details{
@@ -38,16 +38,16 @@ well as (for a response variable \code{y}) \code{asin(sqrt(y))},
 \code{asinh(sqrt(y))}, and \code{sqrt(y) + sqrt(y+1)}. In addition, any
 constant multiple of these (e.g., \code{2*sqrt(y)}) is auto-detected and
 appropriately scaled (see also the \code{tran.mult} argument in
-\code{\link{update.emm}}).
+\code{\link{update.emmGrid}}).
 
 A few additional character strings may be supplied as the \code{tran}
-argument in \code{\link{update.emm}}: \code{"identity"},
+argument in \code{\link{update.emmGrid}}: \code{"identity"},
 \code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"asin.sqrt"},
 and \code{"asinh.sqrt"}.
 
 More general transformations may be provided as a list of functions and
 supplied as the \code{tran} argument as documented in
-\code{\link{update.emm}}. The \code{make.tran} function returns a
+\code{\link{update.emmGrid}}. The \code{make.tran} function returns a
 suitable list of functions for several popular transformations. Besides being
 usable with \code{update}, the user may use this list as an enclosing
 environment in fitting the model itself, in which case the transformation is

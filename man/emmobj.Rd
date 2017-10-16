@@ -2,7 +2,7 @@
 % Please edit documentation in R/emmeans.R
 \name{emmobj}
 \alias{emmobj}
-\title{Construct an \code{emm} object from scratch}
+\title{Construct an \code{emmGrid} object from scratch}
 \usage{
 emmobj(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
   post.beta = matrix(NA), ...)
@@ -35,14 +35,14 @@ distribution of the regression coefficients (so that typically, the column
 averages will be \code{bhat}). A 1 x 1 matrix of \code{NA} indicates that
 such a sample is unavailable.}
 
-\item{...}{Arguments passed to \code{\link{update.emm}}}
+\item{...}{Arguments passed to \code{\link{update.emmGrid}}}
 }
 \value{
-An \code{emm} object
+An \code{emmGrid} object
 }
 \description{
 This allows the user to incorporate results obtained by some analysis
-into an \code{emm} object, enabling the use of \code{emm} methods
+into an \code{emmGrid} object, enabling the use of \code{emmGrid} methods
 to perform related follow-up analyses.
 }
 \details{
@@ -71,8 +71,8 @@ expt.rg <- emmobj(bhat = ybar, V = diag(se2),
     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
 plot(expt.rg)
 
-( trt.emm <- emmeans(expt.rg, "trt") )
-( dose.emm <- emmeans(expt.rg, "dose") )
+( trt.emmGrid <- emmeans(expt.rg, "trt") )
+( dose.emmGrid <- emmeans(expt.rg, "dose") )
 
-rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
+rbind(pairs(trt.emmGrid), pairs(dose.emmGrid), adjust = "mvt")
 }

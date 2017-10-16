@@ -79,7 +79,7 @@
 }
 
 # Utility that returns TRUE if getOption("emmeans")[[opt]] is TRUE
-.emm.is.true = function(opt) {
+.emmGrid.is.true = function(opt) {
     x = get_emm_option(opt)
     if (is.logical(x))  x
     else FALSE

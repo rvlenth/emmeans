@@ -37,34 +37,34 @@
 #' uses \code{\link[xtable]{print.xtableList}}, and any \code{\dots} arguments are
 #' passed there.
 #'
-#' @param x Object of class \code{emm}
+#' @param x Object of class \code{emmGrid}
 #' @param caption Passed to \code{\link[xtable]{xtableList}}
 #' @param label Passed to \code{xtableList}
 #' @param align Passed to \code{xtableList}
 #' @param digits Passed to \code{xtableList}
 #' @param display Passed to \code{xtableList}
 #' @param auto Passed to \code{xtableList}
-#' @param ... Arguments passed to \code{\link{summary.emm}}
+#' @param ... Arguments passed to \code{\link{summary.emmGrid}}
 #'
 #' @return The \code{xtable} methods return an \code{xtable_emm}
 #' object, for which its print method is \code{print.xtable_emm} .
 #' 
-#' @method xtable emm
+#' @method xtable emmGrid
 #' @importFrom xtable xtable
 #' @importFrom xtable xtableList
 #' @export
 #' @examples
 #' pigsint.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
-#' pigsint.emm <- emmeans(pigsint.lm, ~ percent | source)
-#' xtable::xtable(pigsint.emm, type = "response")
-xtable.emm = function(x, caption = NULL, label = NULL, align = NULL, digits = 4, 
+#' pigsint.emmGrid <- emmeans(pigsint.lm, ~ percent | source)
+#' xtable::xtable(pigsint.emmGrid, type = "response")
+xtable.emmGrid = function(x, caption = NULL, label = NULL, align = NULL, digits = 4, 
     display = NULL, auto = FALSE, ...) 
 {
     xtable.summary_emm(summary(x, ...), caption = caption, label = label, align = align, digits = digits, 
            display = display, auto = auto)
 }
 
-#' @rdname xtable.emm
+#' @rdname xtable.emmGrid
 #' @method xtable summary_emm
 #' @export
 xtable.summary_emm = function (x, caption = NULL, label = NULL, 
@@ -114,7 +114,7 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
     result
 }
 
-#' @rdname xtable.emm
+#' @rdname xtable.emmGrid
 #' @param type Passed to \code{\link[xtable]{print.xtable}}
 #' @param include.rownames Passed to \code{print.xtable}
 #' @param sanitize.message.function Passed to \code{print.xtable}

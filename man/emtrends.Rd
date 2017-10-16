@@ -47,7 +47,7 @@ object is re-gridded to the new scale (see also \code{\link{regrid}}).}
 \code{\link{ref_grid}}}
 }
 \value{
-An \code{emm} or \code{emm_list} object, according to \code{specs}.
+An \code{emmGrid} or \code{emm_list} object, according to \code{specs}.
 See \code{\link{emmeans}} for more details on when a list is returned.
 }
 \description{

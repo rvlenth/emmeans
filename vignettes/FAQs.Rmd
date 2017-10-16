@@ -182,7 +182,7 @@ that package are still in your workspace. Try this:
 emmeans:::convert_workspace()
 ```
 This non-exported function removes `Last.ref.grid` if it exists, 
-converts every `ref.grid` or `lsmobj` object to class `emm`, and
+converts every `ref.grid` or `lsmobj` object to class `emmGrid`, and
 unloads any vestige of the **lsmeans** package. [Note: You may get
 an error message if there are other packages loaded that depend on
 **lsmeans**. If so, `detach(package:`*pkg*`, unload = TRUE)` any 

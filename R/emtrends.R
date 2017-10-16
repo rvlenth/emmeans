@@ -74,7 +74,7 @@
 #' transformation of those slopes, making the predicted trends vary depending on
 #' \code{dose}.
 #' 
-#' @return An \code{emm} or \code{emm_list} object, according to \code{specs}.
+#' @return An \code{emmGrid} or \code{emm_list} object, according to \code{specs}.
 #' See \code{\link{emmeans}} for more details on when a list is returned.
 #' 
 #' @seealso \code{link{emmeans}}, \code{\link{ref_grid}}
