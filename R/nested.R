@@ -296,7 +296,7 @@ add_grouping = function(object, newname, refname, newlevs) {
 #     trms$factors
 # The function returns a named list, e.g., list(A = "B")
 # If none found, an empty list is returned.
-.find_nests = function(grid, trms, levels) {
+.find_nests = function(grid, trms, coerce, levels) {
     result = list()
     
     # only consider cases where levels has length > 1
@@ -321,6 +321,12 @@ add_grouping = function(object, newname, refname, newlevs) {
     # Now look at factors attribute
     fac = attr(trms, "factors")
     if (!is.null(fac)) {
+        if (!is.null(coerce)) for (stg in coerce) {
+            subst = paste(.all.vars(stats::reformulate(stg)), collapse = ":")
+            for (i in 1:2)
+                dimnames(fac)[[i]] = gsub(stg, subst, dimnames(fac)[[i]], 
+                                          fixed = TRUE)
+        }
         fac = fac[intersect(nms, row.names(fac)), , drop = FALSE]
         for (j in seq_len(ncol(fac))) {
             if (any(fac[, j] == 2)) {

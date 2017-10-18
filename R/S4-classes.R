@@ -26,10 +26,12 @@
 
 #' The \code{emmGrid} class
 #' 
-#' The \code{emmGrid} class encapsulates everything needed to
-#'   compute estimated marginal means, independently of the underlying model
-#'   object. Instances are created primarily by \code{\link{ref_grid}} and
-#'   \code{\link{emmeans}}, and several related functions.
+#' The \code{emmGrid} class encapsulates linear functions of regression
+#' parameters, defined over a grid of predictors. This includes reference
+#' grids and grids of marginal means thereof (aka estimated marginal means).
+#' Objects of class `emmGrid` may be used independently of the underlying model
+#' object. Instances are created primarily by \code{\link{ref_grid}} and
+#' \code{\link{emmeans}}, and several related functions.
 #'   
 #' @rdname emmGrid-class 
 #' @slot model.info list. Contains the elements \code{call} (the call that

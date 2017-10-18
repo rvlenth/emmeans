@@ -1,46 +1,70 @@
-Changelog for 'emmeans' package
+Changelog for **emmeans** package
+===========================-===
 
-0.99.9xxx
-    NOTE: 'emmeans' is a continuation of the 'lsmeans' package. New developments
-        will take place in 'emmeans', and 'lsmeans' will remain static
-        and eventually will be retired.
-    Notes preceded by >> below reflect changes that could change results
-        that users have expected in the past
+NOTE: **emmeans** is a continuation of the **lsmeans** package. New developments
+    will take place in 'emmeans', and 'lsmeans' will remain static
+    and eventually will be retired.
+
+## Version 0.9
+This is the initial major version that replaces the **lsmeans** package.
+Changes shown below are changes made to the last real release of **lsmeans**
+(version 2.27-2). **lsmeans** versions greater than that are transitional
+to that package being retired.
+
+
+  * We now emphasize the terminology "estimated marginal means" rather 
+    than "least-squares means"
+
+  * The flagship functions are now `emmeans()`, `emtrends()`, `emmip()`, etc.
+    But `lsmeans()`, `lstrends()`, etc. as well as `pmmeans()` etc. are
+    mapped to their corresponding `emxxxx()` functions.
     
-    This is a major overhaul of lsmeans* package with emphasis on "estimated 
-        marginal means" rather than "least-squares means"
-    The flagship functions are now emmeans(), emtrends(), emmip(), etc.
-        But lsmeans(), lstrends(), etc. as well as pmmeans() etc. are
-        mapped to their corresponding emxxxx() function.
-    In addition, we are trying to avoid names that could get confused as
-        S3 methods. So, ref.grid -> ref_grid, lsm.options -> emm_options, etc.
-    Classes "ref.grid" and "lsmobj" are gone (but backward-supported).
-        Both are replaced by class "emmGrid". An as.emmGrid() function
-        is provided to convert old objects to class emmGrid.
- >> I decided to revert back to "kenward-roger" as the default degrees-of-freedom
-        method for lmerMod models. Also added options 'disable.lmerTest'
-        and 'lmerTest.limit', similar to those for pbkrtest.
-    Documentation and NAMESPACE are now "ROxygenated"
-    Additional 'neuralgia' and 'pigs' datasets
-    Dispatching of emmmeans methods is now top-down rather than convoluted
-        intermingling of S3 methods
-    Improved display of back-transformed contrasts when log or logit 
-        transformation was used: We change any ' - 's in labels to ' / 's
-        to emphasize that thnese results are ratios.
-    A message is now displayed when nesting is auto-detected in 'ref_grid'.
-    Options were added for several messages that users may want to suppress,
-        e.g., ones about interactions and nesting.
-    Greatly overhauled help page for models. It is now a vignette, 
-        with a quick reference chart linked to details, and is
-        organized by similarities instead of packages.
-    A large number of smaller interlinked vignettes replaces the one
-        big one on using the package. Several vignettes are linked in the
-        help pages (why didn't I learn how to do this years ago?)
-    Graphics methods 'plot' and 'emmip' are now **ggplot2**-based.
-        Old **lattice**-based functionality is still available too,
-        and there is a 'graphics.engine' option to choose the default.
-    Non-exported utilities convert_workspace() and convert_scripts() to
-        help with transition
-    Moved 'Suggests' pkgs to 'Enhances' when not needed for building/testing
+  * In addition, we are trying to avoid names that could get confused as
+    S3 methods. So, `ref.grid -> ref_grid`, `lsm.options -> emm_options`, etc.
+    
+  * Classes `ref.grid` and `lsmobj` are gone.
+    Both are replaced by class `emmGrid`. An `as.emmGrid()` function
+    is provided to convert old objects to class `emmGrid`.
+    
+  * I decided to revert back to "kenward-roger" as the default degrees-of-freedom
+    method for `lmerMod models`. Also added options `disable.lmerTest`
+    and `lmerTest.limit`, similar to those for **pbkrtest**.
+    
+  * Documentation and NAMESPACE are now "ROxygenated"
+  
+  * Additional `neuralgia` and `pigs` datasets
+  
+  * Dispatching of `emmmeans()` methods is now top-down rather than convoluted
+    intermingling of S3 methods
+    
+  * Improved display of back-transformed contrasts when log or logit 
+    transformation was used: We change any ` - `s in labels to ` / `s
+    to emphasize that thnese results are ratios.
+    
+  * A message is now displayed when nesting is auto-detected in `ref_grid`.
+    (Can be disabled via `emm_options()`)
+  
+  * Options were added for several messages that users may want to suppress,
+    e.g., ones about interactions and nesting.
+    
+  * Greatly overhauled help page for models. It is now a vignette, 
+    with a quick reference chart linked to details, and is
+    organized by similarities instead of packages.
+    
+  * A large number of smaller interlinked vignettes replaces the one
+    big one on using the package. Several vignettes are linked in the
+    help pages.
+    
+  * Graphics methods `plot()` and `emmip()` are now **ggplot2**-based.
+    Old **lattice**-based functionality is still available too,
+    and there is a `graphics.engine` option to choose the default.
+    
+  * Non-exported utilities convert_workspace() and convert_scripts() to
+    help with transition
+    
+  * Moved `Suggests` pkgs to `Enhances` when not needed for 
+    building/testing
 
+  * NEWS file is now structured for Markdown, even though not officially
+    a markdown file.
 

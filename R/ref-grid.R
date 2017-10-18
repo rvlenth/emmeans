@@ -469,7 +469,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     
     model.info = list(call = attr(data,"call"), terms = trms, xlev = xlev)
     # Detect any nesting structures
-    nst = .find_nests(grid, trms, ref.levels)
+    nst = .find_nests(grid, trms, coerced$orig, ref.levels)
     if (length(nst) > 0)
         model.info$nesting = nst
 
@@ -563,7 +563,8 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     
     # Exclude the terms that are already factors
     # What's left will be things like "factor(dose)", "interact(dose,treat)", etc
-    cfac = setdiff(facs.m, facs.d)
+    # we're saving these in orig
+    orig = cfac = setdiff(facs.m, facs.d)
     if(length(cfac) != 0) {
         cvars = lapply(cfac, function(x) .all.vars(stats::reformulate(x))) # Strip off the function calls
         cfac = intersect(unique(unlist(cvars)), covs.d) # Exclude any variables that are already factors
@@ -571,12 +572,13 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     
     # Do same with covariates
     ccov = setdiff(covs.m, covs.d)
+    orig = c(orig, ccov)
     if(length(ccov) > 0) {
         cvars = lapply(ccov, function(x) .all.vars(stats::reformulate(x)))
         ccov = intersect(unique(unlist(cvars)), facs.d)
     }
     
-    list(factors = cfac, covariates = ccov)
+    list(factors = cfac, covariates = ccov, orig = orig)
 }
 
 
