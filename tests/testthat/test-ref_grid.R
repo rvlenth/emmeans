@@ -11,11 +11,6 @@ rg2c = ref_grid(pigs.lm2, cov.reduce = FALSE)
 rg2m = ref_grid(pigs.lm2, cov.reduce = min)
 
 pigs.lm3 = update(pigs.lm2, . ~ source + source:factor(percent))
-# Detecting nesting in above now fails & fix is tricky
-# Whereas this one should work:
-pg = transform(pigs, pf = factor(percent))
-pg.lm3 = lm(conc ~ source + source:pf, data = pg)
-
 
 test_that("Reference grid is constructed correctly", {
     expect_equal(nrow(rg@grid), 12)
@@ -34,5 +29,4 @@ test_that("Reference grid extras are detected", {
     expect_true(is.null(rg2@misc$tran))
     expect_true(is.null(rg2@model.info$nesting))
     expect_is(ref_grid(pigs.lm3)@model.info$nesting, "list") # see note above
-    expect_is(ref_grid(pg.lm3)@model.info$nesting, "list") 
 })

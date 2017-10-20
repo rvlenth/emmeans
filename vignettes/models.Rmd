@@ -65,7 +65,6 @@ Scroll down or follow the links to those groups for more information.
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
 |MCMCglmm     |MCMCglmm |[M](#M),[S](#S) |`mult.name`, `mult.levs`                              |
 |             |         |         |`data` is required                                           |
-|mer          |lme4.0   |[A](#A)  |May become obsolete                                          |
 |mixed        |afex     |[P](#P)  |Supported in **afex** package                                |
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |

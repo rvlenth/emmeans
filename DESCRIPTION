@@ -1,8 +1,8 @@
 Package: emmeans
 Type: Package
-Title: Estimated Marginal Means (aka Least-Squares Means)
+Title: Estimated Marginal Means, aka Least-Squares Means
 Version: 0.9
-Date: 2017-10-18
+Date: 2017-10-19
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Jonathon", "Love", role = "ctb"),
@@ -15,16 +15,20 @@ Suggests: bayesplot, car, lattice, mediation, multcompView, ordinal,
           MASS, rsm, 
           knitr, rmarkdown,
     testthat
-Enhances: CARBayes, coxme, gee, geepack, glmmADMB, lme4.0, 
-          MCMCglmm, MCMCpack, nnet, pscl, rstanarm, survival         
-Additional_repositories: http://glmmadmb.r-forge.r-project.org/repos, http://lme4.0.r-forge.r-project.org/repos
+Enhances: CARBayes, coxme, gee, geepack, glmmADMB, MCMCglmm, MCMCpack, 
+          nnet, pscl, rstanarm, survival         
+Additional_repositories: http://glmmadmb.r-forge.r-project.org/repos
 URL: https://github.com/rvlenth/emmeans
 BugReports: https://github.com/rvlenth/emmeans/issues
 LazyData: yes
 ByteCompile: yes
-Description: Obtain estimated marginal means for many linear, generalized 
+Description: Obtain estimated marginal means (EMMs) for many linear, generalized 
   linear, and mixed models. Compute contrasts or linear functions of EMMs,
   trends, and comparisons of slopes. Plots and compact letter displays.
+  Least-squares means are discussed, and the term "estimated marginal means"
+  is suggested, in Searle, Speed, and Milliken (1980) Population marginal means 
+  in the linear model: An alternative to least squares means, The American 
+  Statistician 34(4), 216-221 <doi:10.1080/00031305.1980.10483031>.
 License: GPL-2 | GPL-3
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

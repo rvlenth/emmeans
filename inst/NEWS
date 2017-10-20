@@ -1,5 +1,5 @@
 Changelog for **emmeans** package
-===========================-===
+=================================
 
 NOTE: **emmeans** is a continuation of the **lsmeans** package. New developments
     will take place in 'emmeans', and 'lsmeans' will remain static
@@ -50,6 +50,8 @@ to that package being retired.
   * Greatly overhauled help page for models. It is now a vignette, 
     with a quick reference chart linked to details, and is
     organized by similarities instead of packages.
+    
+  * Support for 'mer' objects (lme4.0 package) removed.
     
   * A large number of smaller interlinked vignettes replaces the one
     big one on using the package. Several vignettes are linked in the
