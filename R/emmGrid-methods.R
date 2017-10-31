@@ -330,14 +330,14 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' \item{\code{graphics.engine}}{A character value matching 
 #'   \code{c("ggplot", "lattice")}, setting the default engine to use in
 #'   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
-#' \item{\code{msg.data.call}}{Logical value controlling whether or not
-#'   a warning is displayed when a model's \code{data} or \code{subset}
-#'   component contains a call. This can be hazardous; for example, if a model
-#'   call contains something like \code{subset = sample(...)}, then that same
-#'   call to \code{sample} will be run again when the reference grid is
-#'   constructed -- but it will be a different subset! This will definitely
-#'   affect the covariate settings, and may even affect the factor levels.
-#'   Defaults to \code{TRUE}.} 
+#'% \item{\code{msg.data.call}}{Logical value controlling whether or not
+#'%   a warning is displayed when a model's \code{data} or \code{subset}
+#'%   component contains a call. This can be hazardous; for example, if a model
+#'%   call contains something like \code{subset = sample(...)}, then that same
+#'%   call to \code{sample} will be run again when the reference grid is
+#'%   constructed -- but it will be a different subset! This will definitely
+#'%   affect the covariate settings, and may even affect the factor levels.
+#'%   Defaults to \code{TRUE}.} 
 #' \item{\code{msg.interaction}}{A logical value controlling whether or not
 #'   a message is displayed when \code{emmeans} averages over a factor involved
 #'   in an interaction. It is probably not appropriate to do this, unless
@@ -425,7 +425,7 @@ emm_defaults = list (
     contrast = list(infer = c(FALSE, TRUE)),
     save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
     graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
-    msg.data.call = TRUE,     # message when there's a call in data or subset
+###    msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions
     msg.nesting = TRUE,       # message when nesting is detected
     estble.tol = 1e-8,        # tolerance for estimability checks

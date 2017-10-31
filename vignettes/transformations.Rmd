@@ -158,12 +158,12 @@ neuralgia.emmGrid
 (The note about the interaction is discussed shortly.) Note that the averaging 
 over `Sex` is done on the logit scale, *before* the results are back-transformed
 for the summary. We may use `pairs()` to compare these estimates; note that 
-logits are logs of odds; so thias is another instance where log-differences are
+logits are logs of odds; so this is another instance where log-differences are
 back-transformed -- in this case to odds ratios:
 ```{r}
 pairs(neuralgia.emmGrid, reverse = TRUE)
 ```
-So there is evidence of considereably more pain being reported with placebo 
+So there is evidence of considerably more pain being reported with placebo 
 (treatment `P`) than with either of the other two treatments. The estimated odds
 of pain with `B` are about half that for `A`, but this finding is not 
 statistically significant. (The odds that this is a made-up dataset seem quite
@@ -213,7 +213,7 @@ One may also use `"unlink"` as a `transform` argument in `regrid()` or through
 
 
 ## Special transformations {#special}
-The `make.tran()` function provides several spcial transformations and sets
+The `make.tran()` function provides several special transformations and sets
 things up so they can be handled in **emmeans** with relative ease. 
 (See [`help("make.tran", "emmeans")](../html/make.tran.html) for descriptions
 of what is available.) `make.tran()` works much like `stats::make.link()` in
@@ -263,7 +263,7 @@ model.rg <- update(ref_grid(model), tran = "sqrt")
 [Back to Contents](#contents)
 
 ## Faking a log transformation {#logs}
-The `regrid()` dunction makes it possible to fake a log transformation of the response. Why would you want to do this? So that you can make comparisons using
+The `regrid()` function makes it possible to fake a log transformation of the response. Why would you want to do this? So that you can make comparisons using
 ratios instead of differences.
 
 Consider the `pigs` example once again, but suppose we had fitted a model with a square-root transformation instead of a log:

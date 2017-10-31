@@ -122,15 +122,18 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
         #    different subset than model used]
         mm = match(c("data", "subset"), names(fcall), 0L)
         if(any(mm > 0)) {
+            # Flag cases where there is a function call in data or subset
+            # May indicate a situation where data are randomized
             fcns = unlist(lapply(fcall[mm], 
                      function(x) setdiff(all.names(x), 
                                          c("::",":::","[[","]]",all.vars(x)))))
-            if(max(nchar(c("", fcns))) > 1)
-                if(get_emm_option("msg.data.call"))
-                    warning("Function call in data or subset: ", 
-                            "ref_grid/emmeans results may not\n   match the fitted ",
-                            "model if randomization is involved",
-                            call. = FALSE)
+            possibly.random = (max(nchar(c("", fcns))) > 1)
+            # if(max(nchar(c("", fcns))) > 1)
+            #     if(get_emm_option("msg.data.call"))
+            #         warning("Function call in data or subset: ", 
+            #                 "ref_grid/emmeans results may not\n   match the fitted ",
+            #                 "model if randomization is involved",
+            #                 call. = FALSE)
         }
         
         fcall$drop.unused.levels = TRUE
@@ -151,6 +154,14 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
         if (is.null(env)) 
             env = parent.frame()
         tbl = eval(fcall, env, parent.frame())
+        if (possibly.random) {
+            chk = eval(fcall, env, parent.frame())
+            if (!all(chk == tbl))
+                stop("Data appear to be randomized -- ", 
+                     "cannot consistently recover the data\n",
+                     "Move the randomization ",
+                     "outside of the model-fitting call.")
+        }
         
         # Now we can drop na.action's rows
         if (!is.null(na.action))

@@ -184,7 +184,7 @@ emmeans(pigs.lm1, "percent")
 In these examples, all the results are presented on the `log(conc)` scale
 (and the annotations in the output warn of this).
 It is possible to convert them back to the `conc` scale by back-transforming.
-This topic is discussed in [the vignette on transformations](transformations).
+This topic is discussed in [the vignette on transformations](transformations.html).
 
 An additional note: There is an exception to the definition of EMMs given
 here. If the model has a nested structure in the fixed effects, then averaging
@@ -254,7 +254,7 @@ the following, we display the estimates and 95% confidence intervals for
 plot(mtcars.rg, by = "disp")
 ```
 
-This plot illistrates, as much as anything else, how silly it is to try to
+This plot illustrates, as much as anything else, how silly it is to try to
 predict mileage for a 4-cylinder car having high displacement, or an 8-cylinder
 car having low displacement. The widths of the intervals give us a clue that we
 are extrapolating. A better idea is to acknowledge that displacement largely
@@ -340,7 +340,7 @@ have been named `rep.meas`.
     averages thereof (equally weighted by default).
   * Reference grids may be modified using `at` or `cov.reduce`;
     the latter may be logical, a function, or a formula.
-  * Refernce grids and `emmeans()` results may be plotted via `plot()`
+  * Reference grids and `emmeans()` results may be plotted via `plot()`
     (for parallel confidence intervals) or `emmip()` (for an interaction-style
     plot).
 

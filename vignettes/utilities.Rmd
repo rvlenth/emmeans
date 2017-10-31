@@ -81,7 +81,7 @@ is simply shown by typing its name at the console.
 
 The user may have other preferences. She may want to see both intervals 
 and tests whenever contrasts are produced; and perhaps she also wants to
-alweays default to the response scale when transformations or links
+always default to the response scale when transformations or links
 are present. We can change the defaults by setting the corresponding options;
 and that is done via the `emm_options()` function:
 ```{r}
@@ -142,7 +142,7 @@ pigs.emmGrid.s[2:3]
 
 ## Adding grouping factors {#groups}
 Sometimes, users want to group levels of a factor into a smaller number of groups.
-Those groups may then be, say, averaged esparately and compared, or used as a
+Those groups may then be, say, averaged separately and compared, or used as a
 `by` factor. The `add_grouping()` function serves this purpose. The function
 takes four arguments: the object, the name of the grouping factor to be created,
 the name of the reference factor that is being grouped, and a vector of level 

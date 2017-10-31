@@ -163,7 +163,7 @@ if you are the developer of a package that supports **lsmeans**, and you want to
  2. Any calls to `lsmeans::` functions in the above methods should be changed
     to the corresponding `emmeans::` functions.
  3. For a period of time, you may want to continue support for **lsmeans** 
-    as well. So write new functions `ref.grid.xyz()` and `lsm.basis.xyz()`
+    as well. So write new functions `recover.data.xyz()` and `lsm.basis.xyz()`
     that just call their counterparts.
  4. In your `DESCRIPTION` file, add `emmeans` to `Imports`, and make sure that
     `lsmeans` is *not* in `Imports`.
@@ -171,7 +171,7 @@ if you are the developer of a package that supports **lsmeans**, and you want to
      a. add `importFrom(emmeans, recover_data, emm_basis)`
      b. add `S3method(recover_data, xyz)`
      c. add `S3method(emm_basis, xyz)`
-     d. add `export(ref.grid.xyz, lsm.basis.xyz)`. 
+     d. add `export(recover.data.xyz, lsm.basis.xyz)`. 
         That is, export them as *functions*,
         and *not* as S3 methods
      e. In lieu of (a)-(c) above, you could just export the functions
