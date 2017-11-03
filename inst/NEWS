@@ -8,8 +8,11 @@ Changelog for **emmeans** package
 ## Version 0.95
 
   * Documentation corrections (broken links, misspellings, mistakes)
+  
   * More sophisticated check for randomized data in `recover_data()`
     now throws an error when it finds recovered data not reproducible
+    
+  * Added support for gam::gam objects
   
 
 ## Version 0.9

@@ -249,6 +249,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             grid[[".offset."]] = 0
         grid[[".offset."]] = grid[[".offset."]] + rep(offset, length(by.rows))
     }
+    misc$is.new.rg = FALSE
     misc$adjust = adjust
     misc$infer = c(FALSE, TRUE)
     misc$by.vars = by

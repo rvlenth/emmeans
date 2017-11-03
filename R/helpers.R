@@ -539,10 +539,10 @@ emm_basis.glmmadmb = function (object, trms, xlev, grid, ...)
 # --------------------------------------------------------------
 ### Explicit non-support for 'gam' objects (runs, but results are wrong)
 
-emm_basis.gam = function(object, trms, xlev, grid, ...) {
-    stop("Can't handle an object of class", dQuote(class(object)[1]), "\n",
-         .show_supported())
-}
+# emm_basis.gam = function(object, trms, xlev, grid, ...) {
+#     stop("Can't handle an object of class ", dQuote(class(object)[1]), "\n",
+#          .show_supported())
+# }
 
 
 
@@ -564,7 +564,7 @@ emm_basis.gam = function(object, trms, xlev, grid, ...) {
 # Call this to do the standard stuff with link labels
 # Returns a modified misc
 .std.link.labels = function(fam, misc) {
-    if (is.null(fam))
+    if (is.null(fam) || !is.list(fam))
         return(misc)
     if (fam$link == "identity")
         return(misc)

@@ -24,6 +24,8 @@ Additional models can be supported by writing appropriate `recover_data`
 and `emm_basis` methods. See the package documentation for 
 `extending-emmeans` and `vignette("extending")` for details.
 
+[Vignette index](index.html)
+
 ## Quick reference for supported objects and options
 
 Here is an alphabetical list of model classes that are supported, and
@@ -43,6 +45,7 @@ Scroll down or follow the links to those groups for more information.
 |clmm         |ordinal  |[O](#O)  |Like `clm` but no `"scale"` mode                             |
 |coxme        |coxme    |[G](#G)  |                                                             |
 |coxph        |survival |[G](#G)  |                                                             |
+|gam          |gam      |[G](#G)  |`nboot = 800`                                                |
 |gee          |gee      |[E](#E)  |`vcov.method = c("naive", "robust")`                         |
 |geeglm       |geepack  |[E](#E)  |`vcov.method = c("vbeta", "vbeta.naiv", "vbeta.j1s",`        |
 |             |         |         |`"vbeta.fij", "robust", "naive")` or a matrix                |
@@ -154,6 +157,10 @@ in the documentation for `ref_grid`.
 Models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `NA`.
+
+In the case of `gam::gam` objects, there is an optional `nboot` argument
+that sets the number of bootstrap replications used to estimate the 
+variances and covariances of the smoothing portions of the model.
 
 
 ## Group L -- `lmerMod` models {#L}
