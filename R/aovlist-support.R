@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2016 Russell V. Lenth                                #
+#    Copyright (c) 2012-2017 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -68,7 +68,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     #++Work thru strata in reverse order
     for (nm in rev(nonint)) {
         x = object[[nm]]
-        bi = coef(x)
+        bi = coef(x) # complete=FALSE [in the future]
         bi = bi[!is.na(bi)]
         ii = match(names(bi), xnms)
         Vidx[[nm]] = use = setdiff(ii, which(!is.na(bhat))) #++ omit elts already filled
@@ -76,7 +76,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
             ii.left = seq_along(ii)[!is.na(match(ii,use))]
             wts[nm, use] = 1
             bhat[use] = bi[ii.left]
-            Vi = vcov(x)[ii.left, ii.left, drop=FALSE]
+            Vi = vcov(x, complete=FALSE)[ii.left, ii.left, drop=FALSE]
             Vmats[[nm]] = Vi
             V[use,use] = Vi
         }

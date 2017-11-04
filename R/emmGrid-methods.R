@@ -526,8 +526,8 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
         PB = PB %*% t(object@linfct)
     
     est = .est.se.df(object, do.se = TRUE) ###FALSE)
-    estble = !(is.na(est[[1]]))
-    object@V = vcov(object)[estble, estble, drop=FALSE]
+    estble = !is.na(est[[1]])
+    object@V = vcov(object, complete=FALSE)[estble, estble, drop=FALSE]
     object@bhat = est[[1]]
     object@linfct = diag(1, length(estble))
     if(all(estble))
