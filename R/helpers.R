@@ -552,8 +552,11 @@ emm_basis.glmmadmb = function (object, trms, xlev, grid, ...)
 ### ----- Auxiliary routines -------------------------
 # Provide for vcov. argument in ref_grid call, which could be a function or a matrix
 
+.statsvcov = function(object, ...)
+    stats::vcov(object, complete = FALSE, ...)
+
 #' @export
-.my.vcov = function(object, vcov. = stats::vcov, ...) {
+.my.vcov = function(object, vcov. = .statsvcov, ...) {
     if (is.function(vcov.))
         vcov. = vcov.(object)
     else if (!is.matrix(vcov.))

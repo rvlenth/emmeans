@@ -5,7 +5,7 @@ Changelog for **emmeans** package
     New developments will take place in **emmeans**, and **lsmeans** 
     will remain static and eventually will be archived.
 
-## Version 0.95
+## Version 0.9.1
 
   * Documentation corrections (broken links, misspellings, mistakes)
   
@@ -13,6 +13,8 @@ Changelog for **emmeans** package
     now throws an error when it finds recovered data not reproducible
     
   * Added support for gam::gam objects
+  
+  * Fixes to `vcov()` calls to comply with recent R-devel changes
   
 
 ## Version 0.9

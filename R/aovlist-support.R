@@ -76,7 +76,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
             ii.left = seq_along(ii)[!is.na(match(ii,use))]
             wts[nm, use] = 1
             bhat[use] = bi[ii.left]
-            Vi = vcov(x)[ii.left, ii.left, drop=FALSE]
+            Vi = vcov(x, complete = FALSE)[ii.left, ii.left, drop=FALSE]
             Vmats[[nm]] = Vi
             V[use,use] = Vi
         }
