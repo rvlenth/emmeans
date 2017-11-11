@@ -350,6 +350,9 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
         ref.levels[[xnm]] = NULL
     }
     
+    if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss
+        attr(object, "data") = data
+    
     basis = .chk_emm_basis(object, trms, xlev, grid, ...)
     
     misc = basis$misc

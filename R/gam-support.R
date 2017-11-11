@@ -25,7 +25,7 @@
 # still serves for these (I hope)
 
 
-# Right now I'm assuming gam package. Will add or trap-out mgcv later
+# Right now I'm assuming gam package. Will add mgcv::gam later, maybe
 
 # We have two args:
 #   nboot   # of bootstrap reps to get variances of smooths
@@ -77,4 +77,42 @@ emm_basis.gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 ### emm_basis method for mgcv::gam objects
 emm_basis.gam_mgcv = function(object, trms, xlev, grid, ...) {
     stop("Can't handle mgcv::gam objects")
+}
+
+
+
+###===================================================================
+# Support for gamlss objects
+# 'what' parameter mimics predict.gamlss
+
+recover_data.gamlss = function(object, what = c("mu", "sigma", "nu", "tau"), ...) {
+    fcall = object$call
+    what = match.arg(what)
+    trms = terms(formula(object, what = what))
+    recover_data(fcall, delete.response(trms), object$na.action, ...)
+}
+
+emm_basis.gamlss = function(object, trms, xlev, grid, 
+                            what = c("mu", "sigma", "nu", "tau"), vcov., ...) {
+    what = match.arg(what)
+    smo.mat = object[[paste0(what, ".s")]]
+    if (!is.null(smo.mat))
+        stop("gamlss models with smoothing are not yet supported in 'emmeans'",
+             call. = NULL)
+    
+    object$coefficients = object[[paste0(what, ".coefficients")]]
+    if (missing(vcov.)) {
+        # tedious code to pull needed vcov elements
+        # Gotta do this before messing up the object
+        V = suppressWarnings(vcov(object))
+        len = sapply(object$parameters, function(p) length(object[[paste0(p, ".coefficients")]]))
+        before = which(object$parameters == what) - 1
+        if (before > 0)  before = sum(len[seq_len(before)])
+        idx = before + seq_along(object$coefficients)
+        vcov. = V[idx, idx, drop = FALSE]
+    }
+    if (!is.null(link <- object[[paste0(what, ".link")]]))
+        object$family = list(link = link)
+    object$qr = object[[paste0(what, ".qr")]]
+    NextMethod("emm_basis", vcov. = vcov., ...)
 }

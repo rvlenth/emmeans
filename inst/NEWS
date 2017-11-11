@@ -4,6 +4,13 @@ Changelog for **emmeans** package
 ### NOTE: **emmeans** is a continuation of the **lsmeans** package. 
     New developments will take place in **emmeans**, and **lsmeans** 
     will remain static and eventually will be archived.
+    
+## Version 0.9.1.9001
+
+  * Added preliminary support for `gamlss` objects (but doesn't support
+    smoothing). Additional argument is `what = c("mu", "sigma", "nu", "tau")`
+    It seems to be flaky when the model of interest is just `~1`.
+    
 
 ## Version 0.9.1
 
