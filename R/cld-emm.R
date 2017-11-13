@@ -96,12 +96,12 @@
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
-#' cld(warp.emmGrid)                  # implicitly uses by = "wool"
-#' cld(warp.emmGrid, by = "tension")  # overrides implicit 'by'
+#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' cld(warp.emm)                  # implicitly uses by = "wool"
+#' cld(warp.emm, by = "tension")  # overrides implicit 'by'
 #' 
 #' # Mimic grouping bars and compare all 6 means
-#' cld(warp.emmGrid, by = NULL, Letters = "||||||||", alpha = .01)
+#' cld(warp.emm, by = NULL, Letters = "||||||||", alpha = .01)
 cld.emmGrid = function(object, details=FALSE, sort=TRUE, 
                     by, alpha=.05, 
                     Letters = c("1234567890",LETTERS,letters), 

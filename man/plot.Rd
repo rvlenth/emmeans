@@ -73,8 +73,8 @@ respectively (see \code{\link{update.emmGrid}}).
 
 \examples{
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
-plot(warp.emmGrid)
-plot(warp.emmGrid, by = NULL, comparisons = TRUE, adjust = "mvt", 
+warp.emm <- emmeans(warp.lm, ~ tension | wool)
+plot(warp.emm)
+plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
      horizontal = FALSE)
 }

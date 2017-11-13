@@ -95,13 +95,13 @@ specify the respective contrast method(s); they are recycled as needed.
 
 \examples{
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
-warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
-contrast(warp.emmGrid, "poly")    # inherits 'by = "wool"' from warp.emmGrid
-pairs(warp.emmGrid)               # ditto
-contrast(warp.emmGrid, "eff", by = NULL)  # contrasts of the 6 factor combs
+warp.emm <- emmeans(warp.lm, ~ tension | wool)
+contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
+pairs(warp.emm)               # ditto
+contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
 
 # An interaction contrast for tension:wool
-tw.emmGrid <- contrast(warp.emmGrid, interaction = c("poly", "consec"), by = NULL)
-tw.emmGrid          # see the estimates
-coef(tw.emmGrid)    # see the contrast coefficients
+tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
+tw.emm          # see the estimates
+coef(tw.emm)    # see the contrast coefficients
 }
