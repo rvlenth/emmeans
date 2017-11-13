@@ -119,10 +119,7 @@ emmip.default = function(object, formula, type, CIs = FALSE,
         stop("The 'ggplot' engine requires the 'lattice' package be installed.")
     if ((engine == "lattice") && !requireNamespace("lattice", quietly = TRUE))
         stop("The 'lattice' engine requires the 'lattice' package be installed.")
-    
-    # If no lhs, we create one named ".single."
-    if (length(formula) < 3)
-        formula = stats::reformulate(as.character(formula)[[2]], response = ".single.")
+    specs = .parse.by.formula(formula) # list of lhs, rhs, by
     
     # Glean the parts of ... to use in emmeans call
     # arguments allowed to be passed
@@ -138,9 +135,8 @@ emmip.default = function(object, formula, type, CIs = FALSE,
         }
     }
     
-    allvars = setdiff(.all.vars(formula), ".single.")
     emmopts$object = object
-    emmopts$specs = stats::reformulate(allvars)
+    emmopts$specs = .reformulate(unlist(specs))
     emmo = do.call("emmeans", emmopts)
     if(missing(type)) {
         type = get_emm_option("summary")$predict.type
@@ -158,9 +154,10 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     
     
     # Set up trace vars and key
-    tvars = .all.vars(update(formula, . ~ 1))
-    if (one.trace <- all(tvars == ".single.")) {
+    tvars = specs$lhs
+    if (one.trace <- (length(tvars) == 0)) {
         tlab = ""
+        tvars = ".single."
         emms$.single. = 1
         my.key = function(tvars) list()
     }
@@ -176,18 +173,15 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     tv = do.call(paste, emms[tvars])
     emms$tvar = factor(tv, levels=unique(tv))
     
-    # figure out 'x' and 'by' vars
-    rhs = strsplit(as.character(formula[3]), "\\|")[[1]]
-    xvars = .all.vars(stats::reformulate(rhs[[1]]))
+    xvars = specs$rhs
     xv = do.call(paste, emms[xvars])
     emms$xvar = factor(xv, levels = unique(xv))
     emms = emms[order(emms$xvar), ]
     plotform = yvar ~ xvar
     
-    # see if we have any 'by' vars
-    if (length(rhs) > 1) {
-        byvars = .all.vars(stats::reformulate(rhs[[2]]))
-        plotform = as.formula(paste("yvar ~ xvar |", paste(byvars, collapse="*")))
+    byvars = specs$by
+    if (length(byvars) > 0) {
+         plotform = as.formula(paste("yvar ~ xvar |", paste(byvars, collapse="*")))
     }
     xlab = ifelse(is.null(xargs$xlab),
                   paste("Levels of", paste(xvars, collapse=" * ")), xargs$xlab)
@@ -240,7 +234,7 @@ emmip.default = function(object, formula, type, CIs = FALSE,
         if (CIs) # using linerange w/ extra width and semi-transparent
             grobj = grobj + geom_linerange(aes_(ymin = ~LCL, ymax = ~UCL), 
                         position = pos, lwd = 2, alpha = .5)
-        if (length(rhs) > 1) {  # we have by variables 
+        if (length(byvars) > 0) {  # we have by variables 
             if (length(byvars) > 1) {
                 byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))
                 grobj = grobj + facet_grid(byform, labeller = "label_both")

@@ -165,7 +165,7 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
     .save.ref_grid(RG)  # save in .Last.ref_grid, if enabled
     
     # args for emmeans calls
-    args = list(object=RG, specs=specs, ...)
+    args = list(object = RG, specs = specs, ...)
     args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = NULL
     do.call("emmeans", args)
 }

@@ -43,9 +43,30 @@
     for (i in seq_along(retain))
         vars = gsub(repl[i], retain[i], vars)
     if(length(vars) == 0) vars = "1"   # no vars ---> intercept
-    vars
+    vars = trimws(unlist(strsplit(vars, "[*:+]")))
 }
 
+### parse a formula of the form lhs ~ rhs | by into a list
+### of variable names in each part
+### Returns character(0) for any missing pieces
+.parse.by.formula = function(form) {
+    allv = .all.vars(form)
+    ridx = ifelse(length(form) == 2, 2, 3)
+    allrhs = as.character(form)[ridx]
+    allrhs = gsub("\\|", "+ .by. +", allrhs) # '|' --> '.by.'
+    allrhs = .all.vars(stats::reformulate(allrhs))
+    bidx = grep(".by.", allrhs, fixed = TRUE)
+    if (length(bidx) == 0) { # no 'by' vars
+        by = character(0)
+        rhs = allrhs
+    }
+    else {
+        rhs = allrhs[seq_len(bidx - 1)]
+        by = setdiff(allrhs, c(rhs, ".by."))
+    }
+    lhs = setdiff(allv, allrhs)
+    list(lhs = lhs, rhs = rhs, by = by)
+}
 
 
 # Utility to pick out the args that can be passed to a function
@@ -128,7 +149,7 @@
         stop("'termlabels' must be a character vector of length at least one")
     has.resp <- !is.null(response)
     termtext <- paste(if (has.resp)
-        "response", "~", paste0("`", termlabels, "`", collapse = "+"), collapse = "")
+        "response", "~", paste0("`", trimws(termlabels), "`", collapse = "+"), collapse = "")
     if (!intercept)
         termtext <- paste(termtext, "- 1")
     rval <- eval(parse(text = termtext, keep.source = FALSE)[[1L]])

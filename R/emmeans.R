@@ -22,49 +22,7 @@
 # emmeans and related functions
 
 
-### emmeans S3 generics ...
-### I am opting to use S3 methods, cascaded for two arguments
-### rather than messing with S4 methods
-
-# emmeans = function(object, specs, ...)
-#     UseMethod("emmeans", specs)
-# 
-# # 
-# emmeans.default = function(object, specs, nesting, ...) {
-#     rgargs = list(object = object, ...)
-#     rgargs$options = NULL  # don't pass options to ref_grid
-#     if (!missing(nesting))
-#         rgargs$nesting = nesting
-#     RG = do.call("ref_grid", rgargs)
-#     lsargs = list(object = RG, specs = specs, ...)
-#     #for (nm in names(rgargs)[-1]) lsargs[[nm]] = NULL
-#     do.call("emmeans", lsargs)###emmeans(RG, specs, ...)
-# }
-# 
-# emmeans.formula =
-# function(object, specs, contr.list, trend, ...) {
-#     if (!missing(trend))
-#         return(lstrends(object, specs, var=trend, ...))
-#     
-#     if(length(specs) == 2) { # just a rhs
-#         by = .find.by(as.character(specs[2]))
-#         emmeans(object, .all.vars(specs), by = by, ...)
-#     }
-#     else {
-#         contr.spec = .all.vars(specs[-3])[1]
-#         by = .find.by(as.character(specs[3]))
-#         # Handle old-style case where contr is a list of lists
-#         if (!missing(contr.list)) {
-#             cmat = contr.list[[contr.spec]]
-#             if (!is.null(cmat))
-#                 contr.spec = cmat
-#         }
-#         emmeans(object, specs = .all.vars(specs[-2]), 
-#                 by = by, contr = contr.spec, ...)
-#     }
-# }
-
-# List of specs
+# emmeans utility for a list of specs
 emmeans.list = function(object, specs, ...) {
     result = list()
     nms = names(specs)
@@ -260,17 +218,12 @@ emmeans = function(object, specs, by = NULL,
         return (emmeans.list(object, specs, by = by, contr = contr, ...))
     }
     if (inherits(specs, "formula")) {
-        if(length(specs) == 2) { # just a rhs
-            if (!is.null(byv <- .find.by(as.character(specs[2]))))
-                by = byv
-            specs = .all.vars(specs)
-        }
-        else {
-            if (!is.null(byv <- .find.by(as.character(specs[3]))))
-                by = byv
-            contr = .all.vars(specs[-3])[1]
-            specs = .all.vars(specs[-2])
-        }
+        spc = .parse.by.formula(specs)
+        specs = spc$rhs
+        by = if (length(spc$by) == 0) NULL
+             else spc$by
+        if (length(spc$lhs) > 0) 
+            contr = spc$lhs
     }
     
     if (!missing(trend)) {
@@ -626,15 +579,6 @@ as.list.emmGrid = function(x, ...) {
                 return(TRUE)
     }
     return(FALSE)
-}
-
-
-# utility to parse 'by' part of a formula
-.find.by = function(rhs) {
-    b = strsplit(rhs, "\\|")[[1]]
-    if (length(b) > 1) 
-        .all.vars(as.formula(paste("~",b[2])))
-    else NULL
 }
 
 
