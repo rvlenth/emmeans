@@ -451,10 +451,10 @@ emmeans = function(object, specs, by = NULL,
 #'     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
 #' plot(expt.rg)
 #' 
-#' ( trt.emmGrid <- emmeans(expt.rg, "trt") )
-#' ( dose.emmGrid <- emmeans(expt.rg, "dose") )
+#' ( trt.emm <- emmeans(expt.rg, "trt") )
+#' ( dose.emm <- emmeans(expt.rg, "dose") )
 #' 
-#' rbind(pairs(trt.emmGrid), pairs(dose.emmGrid), adjust = "mvt")
+#' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
 emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(), 
                   post.beta = matrix(NA), ...) {
     if ((nrow(V) != ncol(V)) || (nrow(V) != ncol(linfct)) || (length(bhat) != ncol(linfct)))

@@ -89,8 +89,8 @@
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
-#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
-#' contrast(warp.emmGrid, "poly")
+#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' contrast(warp.emm, "poly")
 #' 
 #' ### Setting up a custom contrast function
 #' helmert.emmc <- function(levs, ...) {
@@ -99,7 +99,7 @@
 #'     attr(M, "desc") <- "Helmert contrasts"
 #'     M
 #' }
-#' contrast(warp.emmGrid, "helmert")
+#' contrast(warp.emm, "helmert")
 #' \dontrun{
 #' # See what is used for polynomial contrasts with 6 levels
 #' emmeans:::poly.emmc(1:6)

@@ -118,9 +118,9 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
-#' plot(warp.emmGrid)
-#' plot(warp.emmGrid, by = NULL, comparisons = TRUE, adjust = "mvt", 
+#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' plot(warp.emm)
+#' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
 #'      horizontal = FALSE)
 plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
     .plot.srg (x, y, horizontal, xlab, ylab, layout, ...)

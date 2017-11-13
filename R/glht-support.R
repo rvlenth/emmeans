@@ -152,11 +152,11 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #' summary(glht(warp.lm, emmGrid(pairwise ~ tension | wool)))
 #' 
 #' # Same, but using an existing 'emmeans' result
-#' warp.emmGrid <- emmeans(warp.lm, ~ tension | wool)
-#' summary(as.glht(pairs(warp.emmGrid)))
+#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' summary(as.glht(pairs(warp.emm)))
 #' 
 #' # Same contrasts, but treat as one family
-#' summary(as.glht(pairs(warp.emmGrid), by = NULL))
+#' summary(as.glht(pairs(warp.emm), by = NULL))
 #' 
 #' @rdname glht-support
 #' @export

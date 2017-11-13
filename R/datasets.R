@@ -233,13 +233,13 @@
 #' nutr.aov <- aov(gain ~ (group + age + race)^2, data = nutrition)
 #' 
 #' # Summarize predictions for age group 3
-#' nutr.emmGrid <- emmeans(nutr.aov, ~ race * group, at = list(age="3"))
+#' nutr.emm <- emmeans(nutr.aov, ~ race * group, at = list(age="3"))
 #'                    
-#' emmip(nutr.emmGrid, race ~ group)
+#' emmip(nutr.emm, race ~ group)
 #' 
 #' # Hispanics seem exceptional; but this doesn't test out due to very sparse data
-#' cld(nutr.emmGrid, by = "group")
-#' cld(nutr.emmGrid, by = "race")
+#' cld(nutr.emm, by = "group")
+#' cld(nutr.emm, by = "race")
 "nutrition"
 
 
