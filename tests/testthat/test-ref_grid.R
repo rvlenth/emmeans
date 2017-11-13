@@ -30,3 +30,10 @@ test_that("Reference grid extras are detected", {
     expect_true(is.null(rg2@model.info$nesting))
     expect_is(ref_grid(pigs.lm3)@model.info$nesting, "list") # see note above
 })
+
+colnames(ToothGrowth) <- c('len', 'choice of supplement', 'dose')
+model <- stats::aov(`len` ~ `choice of supplement`, ToothGrowth)
+
+test_that("Reference grid handles variables with spaces", {
+    ref_grid(model, ~`choice of supplement`)
+})

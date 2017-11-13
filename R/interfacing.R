@@ -148,7 +148,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
             fcall$na.action = na.pass
         else  # exclude incomplete cases
             fcall$na.action = na.omit
-        form = reformulate(vars)
+        form = .reformulate(vars)
         fcall$formula = update(trms, form)
         env = environment(trms)
         if (is.null(env)) 
