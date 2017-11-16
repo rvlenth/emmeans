@@ -94,7 +94,7 @@ like any other MCMC results, using tools in, say \pkg{coda} or
 \code{glht} method for \code{emmGrid}s provide an interface to the
 \code{\link[multcomp]{glht}} function in the \pkg{multcomp} package, thus
 providing for more exacting simultaneous estimation or testing. The package
-also provides an \code{\link{emmGrid}} method that works as an alternative to
+also provides an \code{\link{emm}} function that works as an alternative to
 \code{\link[multcomp]{mcp}} in a call to \code{glht}.
 }
 } %%% end describe

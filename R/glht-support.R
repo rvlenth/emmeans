@@ -20,10 +20,10 @@
 ##############################################################################
 
 ### Code for an enhancement of 'glht' in 'multcomp' package
-### Provides for using 'emmGrid' in similar way to 'mcp'
+### Provides for using 'emm' in similar way to 'mcp'
 ### This is implemented via the class "emmlf" -- linear functions for emmeans
 
-# emmGrid(specs) will be used as 'linfct' argument in glht
+# emm(specs) will be used as 'linfct' argument in glht
 # all we need to do is class it and save the arguments
 
 #' Support for \code{multcomp::glht}
@@ -32,22 +32,22 @@
 #' the \code{\link[multcomp]{glht}} function for simultaneous inference provided
 #' by the \pkg{multcomp} package.
 #' 
-#' \code{emmGrid} is meant to be called only \emph{from} \code{"glht"} as its second
+#' \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
 #' (\code{linfct}) argument. It works similarly to \code{\link[multcomp]{mcp}},
 #' except with \code{specs} (and optionally \code{by} and \code{contr}
 #' arguments) provided as in a call to \code{\link{emmeans}}.
 #' 
 #' @rdname glht-support
 #' @aliases glht-support
-#' @param ... In \code{emmGrid}, the \code{specs}, \code{by}, and \code{contr}
+#' @param ... In \code{emm}, the \code{specs}, \code{by}, and \code{contr}
 #'   arguments you would normally supply to \code{\link{emmeans}}. Only
 #'   \code{specs} is required. Otherwise, arguments that are passed to other
 #'   methods.
 #'
-#' @return \code{emmGrid} returns an object of an intermediate class for which
+#' @return \code{emm} returns an object of an intermediate class for which
 #'   there is a \code{\link[multcomp]{glht}} method.
 #' @export
-emmGrid <- function(...) {
+emm <- function(...) {
     result <- list(...)
     class(result) <- "emmlf"
     result
@@ -67,7 +67,7 @@ glht.emmlf <- function(model, linfct, ...) {
     emmo <- do.call("emmeans", linfct)
     if (is.list(emmo)) 
         emmo = emmo[[length(emmo)]]
-    # Then call the method for emmGrid objject
+    # Then call the method for emmo objject
     glht(model, emmo, ...)
 }
 
@@ -148,8 +148,8 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #' 
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 #' 
-#' # Using 'emmGrid'
-#' summary(glht(warp.lm, emmGrid(pairwise ~ tension | wool)))
+#' # Using 'emm'
+#' summary(glht(warp.lm, emm(pairwise ~ tension | wool)))
 #' 
 #' # Same, but using an existing 'emmeans' result
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)

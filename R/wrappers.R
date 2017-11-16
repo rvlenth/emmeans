@@ -105,12 +105,12 @@ pmmip = function(...)
 #' @rdname wrappers
 #' @export
 lsm = function(...)
-    emmGrid(...)
+    emm(...)
 
 #' @rdname wrappers
 #' @export
 pmm = function(...)
-    emmGrid(...)
+    emm(...)
 
 
 

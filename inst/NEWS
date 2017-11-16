@@ -9,10 +9,13 @@ Changelog for **emmeans** package
 
   * Added preliminary support for `gamlss` objects (but doesn't support
     smoothing). Additional argument is `what = c("mu", "sigma", "nu", "tau")`
-    It seems to be flaky when the model of interest is just `~1`.
+    It seems to be flaky when the model of interest is just `~ 1`.
     
   * Improved support for models with fancy variable names 
     (containing spaces and such)
+    
+  * Changed `emmGrid()` function to `emm()` as had been intended,
+    as alternative to `mcp()` in `multcomp::glht()`.
     
 
 ## Version 0.9.1

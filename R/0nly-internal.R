@@ -43,7 +43,7 @@
     for (i in seq_along(retain))
         vars = gsub(repl[i], retain[i], vars)
     if(length(vars) == 0) vars = "1"   # no vars ---> intercept
-    vars = trimws(unlist(strsplit(vars, "[*:+]")))
+    vars
 }
 
 ### parse a formula of the form lhs ~ rhs | by into a list
@@ -56,12 +56,12 @@
     allrhs = gsub("\\|", "+ .by. +", allrhs) # '|' --> '.by.'
     allrhs = .all.vars(stats::reformulate(allrhs))
     bidx = grep(".by.", allrhs, fixed = TRUE)
-    if (length(bidx) == 0) { # no 'by' vars
+    if (length(bidx) == 0) { # no '|' in formula
         by = character(0)
         rhs = allrhs
     }
     else {
-        rhs = allrhs[seq_len(bidx - 1)]
+        rhs = allrhs[seq_len(bidx[1] - 1)]
         by = setdiff(allrhs, c(rhs, ".by."))
     }
     lhs = setdiff(allv, allrhs)
