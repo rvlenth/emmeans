@@ -116,7 +116,7 @@ emmip.default = function(object, formula, type, CIs = FALSE,
                          lty = 1, col = NULL, plotit = TRUE, ...) {
     engine = match.arg(engine, c("ggplot", "lattice"))
     if ((engine == "ggplot") && !requireNamespace("ggplot2", quietly = TRUE))
-        stop("The 'ggplot' engine requires the 'lattice' package be installed.")
+        stop("The 'ggplot' engine requires the 'ggplot2' package be installed.")
     if ((engine == "lattice") && !requireNamespace("lattice", quietly = TRUE))
         stop("The 'lattice' engine requires the 'lattice' package be installed.")
     specs = .parse.by.formula(formula) # list of lhs, rhs, by
