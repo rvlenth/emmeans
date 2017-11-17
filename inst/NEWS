@@ -5,7 +5,7 @@ Changelog for **emmeans** package
     New developments will take place in **emmeans**, and **lsmeans** 
     will remain static and eventually will be archived.
     
-## Version 0.9.1.9002
+## Version 0.9.1.9004
 
   * Added preliminary support for `gamlss` objects (but doesn't support
     smoothing). Additional argument is `what = c("mu", "sigma", "nu", "tau")`
@@ -16,6 +16,8 @@ Changelog for **emmeans** package
     
   * Changed `emmGrid()` function to `emm()` as had been intended,
     as alternative to `mcp()` in `multcomp::glht()`.
+    
+  * Fixed a bug whereby `emmeans()` might pass `data` to `contrast()`
     
 
 ## Version 0.9.1

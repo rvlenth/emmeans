@@ -209,7 +209,8 @@ emmeans.list = function(object, specs, ...) {
 #' emmeans (warp.lm, poly ~ tension | wool)
 emmeans = function(object, specs, by = NULL, 
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 
-                   contr, options = get_emm_option("emmeans"), weights, trend, ...) {
+                   contr, options = get_emm_option("emmeans"), 
+                   weights, trend, ...) {
     
     if(!is(object, "emmGrid")) {
         object = ref_grid(object, ...)
@@ -383,7 +384,12 @@ emmeans = function(object, specs, by = NULL,
         # TO DO: provide for passing dots to cld                
             return(cld(result, by = by))
         }
-        ctrs = contrast(result, method = contr, by = by, ...)
+        args = list(...)
+        args$data = NULL   # ensure 'data' not passed
+        args$object = result
+        args$method = contr
+        args$by = by
+        ctrs = do.call(contrast, args)
         result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)
         if(!is.null(lbl <- object@misc$methDesc))
             names(result)[1] = lbl
