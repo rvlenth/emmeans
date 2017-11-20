@@ -21,6 +21,33 @@
 
 # Methods for emm_list objects
 
+# First, ehere is documentation for the emm_list class
+
+
+#' The \code{emm_list} class
+#' 
+#' An \code{emm_list} object is simply a list of
+#' \code{\link[emmGrid-class]{emmGrid}} objects. Such a list is returned,
+#' for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
+#' \code{specs} argument.
+#' 
+#' Methods for \code{emm_list} objects include \code{summary}, \code{cld},
+#' \code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{print}, and
+#' \code{test}. These are all the same as those methods for \code{emmGrid}
+#' objects, with an additional \code{which} argument (integer) to specify which 
+#' members of the list to use. The default is \code{which = seq_along(object)};
+#' i.e., the method is applied to every member of the \code{emm_list} object.
+#' 
+#' As an example,
+#' to summarize a single member -- say the second one -- of an \code{emm_list}, 
+#' one may use \code{summary(object, which = 2)}, but it is probably preferable 
+#' to directly summarize it using \code{summary(object[[2]])}.
+#'
+#' @rdname emm_list-object
+#' @name emm_list
+NULL
+
+
 #' @export
 #' @method str emm_list
 str.emm_list = function(object, ...) {
@@ -75,7 +102,7 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 }
 
 #' @export
-#' @method confint emm_list
+#' @method cld emm_list
 cld.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], cld, ...)
 }

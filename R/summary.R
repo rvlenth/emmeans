@@ -52,20 +52,21 @@
 #'   intervals, if \code{infer[1]} is \code{TRUE}.
 #' @param adjust Character value naming the method used to adjust \eqn{p} values
 #'   or confidence limits; or to adjust comparison arrows in \code{plot}. See
-#'   Details.
+#'   the P-value adjustments section below.
 #' @param by Character name(s) of variables to use for grouping into separate 
 #'   tables. This affects the family of tests considered in adjusted \emph{P}
 #'   values. 
 #' @param type Character: type of prediction desired. This only has an effect if
-#'   there is a known transformation or link function. \code{"response"}
-#'   specifies that the inverse transformation be applied. \code{"mu"} (or
-#'   equivalently, \code{"unlink"}) is usually the same as \code{"response"}, but
-#'   in the case where the model has both a link function and a response
-#'   transformation, only the link part is back-transformed. Other valid values
-#'   are \code{"link"}, \code{"lp"}, and \code{"linear.predictor"}; these are equivalent,
-#'   and request that results be shown for the linear predictor, with no 
-#'   back-transformation. The default is \code{"link"}, unless the 
-#'   \code{"predict.type"} option is in force; see \code{\link{emm_options}}.
+#'   there is a known transformation or link function. \code{"response"} 
+#'   specifies that the inverse transformation be applied. \code{"mu"} (or 
+#'   equivalently, \code{"unlink"}) is usually the same as \code{"response"},
+#'   but in the case where the model has both a link function and a response 
+#'   transformation, only the link part is back-transformed. Other valid values 
+#'   are \code{"link"}, \code{"lp"}, and \code{"linear.predictor"}; these are
+#'   equivalent, and request that results be shown for the linear predictor,
+#'   with no back-transformation. The default is \code{"link"}, unless the 
+#'   \code{"predict.type"} option is in force; see \code{\link{emm_options}},
+#'   and also the section below on transformations and links.
 #' @param df Numeric. If non-missing, a constant number of degrees of freedom to
 #'   use in constructing confidence intervals and \emph{P} values (\code{NA}
 #'   specifies asymptotic results).
@@ -89,37 +90,124 @@
 #'   \code{confint.emmGrid} and \code{test.emmGrid}, these arguments are passed to
 #'   \code{summary.emmGrid}.
 #'
-#' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and \code{test.emmGrid} return an
-#'   object of class \code{"summary_emm"}, which is an extension of
-#'   \code{\link{data.frame}} but with a special \code{print} method that with
-#'   custom formatting. For models fitted using MCMC methods, the result is
+#' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and \code{test.emmGrid} 
+#'   return an object of class \code{"summary_emm"}, which is an extension of 
+#'   \code{\link{data.frame}} but with a special \code{print} method that with 
+#'   custom formatting. For models fitted using MCMC methods, the result is 
 #'   typically a frequentist summary, based on the empirical mean and covariance
-#'   matrix of the \code{post.beta} slot. A Bayesian summary may be obtained
-#'   using \code{\link{as.mcmc.emmGrid}} and summarizing that result using tools for
-#'   Bayesian estimation.
+#'   matrix of the \code{post.beta} slot. A Bayesian summary may be obtained 
+#'   using \code{\link{as.mcmc.emmGrid}} and summarizing that result using tools
+#'   for Bayesian estimation.
 #'   
-#' @section Testing nonsuperiority, noninferiority, or equivalence:
-#' When \code{delta = 0}, test statistics are of the usual form \samp{(estimate
-#' - null)/SE}, or notationally, \eqn{t = (Q - \theta_0)/SE} where \eqn{Q} is
-#' our estimate of \eqn{\theta}; then left, right, or two-sided \eqn{p} values
-#' are produced.
+#' @section Defaults:
+#'   The \code{misc} slot in \code{object} contains default values for
+#'   \code{by}, \code{infer}, \code{level}, \code{adjust}, \code{type},
+#'   \code{null}, \code{side}, and \code{delta}. These defaults vary depending
+#'   on the code that created the object. The \code{\link{update}} method may be
+#'   used to change these defaults. In addition, any options set using 
+#'   \samp{emm_options(summary = ...)} will trump those stored in the object's 
+#'   \code{misc} slot.
 #' 
-#' When \code{delta} is positive, the test statistic depends on \code{side} as
-#' follows.
-#' \describe{
-#' \item{Left-sided (nonsuperiority)}{\eqn{H_0: \theta \ge \theta_0 + \delta}
-#'   versus \eqn{H_1: \theta < \theta_0 + \delta}\cr 
-#'   \eqn{t = (Q - \theta_0 - \delta)/SE}\cr 
-#'   The \eqn{p} value is the lower-tail probability.}
-#' \item{Right-sided (noninferiority)}{\eqn{H_0: \theta \le \theta_0 - \delta}
-#'   versus \eqn{H_1: \theta > \theta_0 - \delta}\cr 
-#'   \eqn{t = (Q - \theta_0 + \delta)/SE}\cr
-#'   The \eqn{p} value is the upper-tail probability.}
-#' \item{Two-sided (equivalence)}{\eqn{H_0: |\theta - \theta_0| \ge \delta}
-#'   versus \eqn{H_1: |\theta - \theta_0| < \delta}\cr
-#'   \eqn{t = (|Q - \theta_0| - \delta)/SE}\cr
-#'   The \eqn{p} value is the \emph{lower}-tail probability.}
-#' }
+#' @section Transformations and links:
+#'   With \code{type = "response"}, the transformation assumed can be found in
+#'   \samp{object@misc$tran}, and its label, for the summary is in
+#'   \samp{object@misc$inv.lbl}. Any \eqn{t} or \eqn{z} tests are still performed
+#'   on the scale of the linear predictor, not the inverse-transformed one.
+#'   Similarly, confidence intervals are computed on the linear-predictor scale,
+#'   then inverse-transformed.
+#' 
+#' @section P-value adjustments:
+#'   The \code{adjust} argument specifies a multiplicity adjustment for tests or
+#'   confidence intervals. This adjustment always is applied \emph{separately}
+#'   to each table or sub-table that you see in the printed output (see
+#'   \code{\link{rbind.emmGrid}} for how to combine tables). 
+#'   
+#'   The valid values of \code{adjust} are as follows:
+#'   \describe{
+#'   \item{\code{"tukey"}}{Uses the Studentized range distribution with the number
+#'     of means in the family. (Available for two-sided cases only.)}
+#'   \item{\code{"scheffe"}}{Computes \eqn{p} values from the \eqn{F}
+#'     distribution, according to the Scheffe critical value of
+#'     \eqn{\sqrt{kF(k,d)}}{sqrt[k*F(k,d)]}, where \eqn{d} is the error degrees of
+#'     freedom and \eqn{k} is (family size minus 1) for contrasts, and (number of
+#'     estimates) otherwise. (Available for two-sided cases only.)}
+#'   \item{\code{"sidak"}}{Makes adjustments as if the estimates were independent
+#'     (a conservative adjustment in many cases).}
+#'   \item{\code{"bonferroni"}}{Multiplies \eqn{p} values, or divides significance
+#'     levels by the number of estimates. This is a conservative adjustment.}
+#'   \item{\code{"dunnettx"}}{Uses our own\emph{ad hoc} approximation to the 
+#'     Dunnett distribution for a family of estimates having pairwise
+#'     correlations of \eqn{0.5} (as is true when comparing treatments with a
+#'     control with equal sample sizes). The accuracy of the approximation
+#'     improves with the number of simultaneous estimates, and is much faster
+#'     than \code{"mvt"}. (Available for two-sided cases only.)}
+#'   \item{\code{"mvt"}}{Uses the multivariate \eqn{t} distribution to assess the
+#'     probability or critical value for the maximum of \eqn{k} estimates. This
+#'     method produces the same \eqn{p} values and intervals as the default
+#'     \code{summary} or \code{confint} methods to the results of
+#'     \code{\link{as.glht}}. In the context of pairwise comparisons or comparisons
+#'     with a control, this produces \dQuote{exact} Tukey or Dunnett adjustments,
+#'     respectively. However, the algorithm (from the \pkg{mvtnorm} package) uses a
+#'     Monte Carlo method, so results are not exactly repeatable unless the same
+#'     random-number seed is used (see \code{\link[base]{set.seed}}). As the family
+#'     size increases, the required computation time will become noticeable or even
+#'     intolerable, making the \code{"tukey"}, \code{"dunnettx"}, or others more
+#'     attractive.}
+#'   \item{\code{"none"}}{Makes no adjustments to the \eqn{p} values.}
+#'   } %%%%%%%%%%%%%%%% end \describe {}
+#' 
+#'   For tests, not confidence intervals, the Bonferroni-inequality-based adjustment
+#'   methods in \code{\link{p.adjust}} are also available (currently, these
+#'   include \code{"holm"}, \code{"hochberg"}, \code{"hommel"},
+#'   \code{"bonferroni"}, \code{"BH"}, \code{"BY"}, \code{"fdr"}, and
+#'   \code{"none"}). If a \code{p.adjust.methods} method other than
+#'   \code{"bonferroni"} or \code{"none"} is specified for confidence limits, the
+#'   straight Bonferroni adjustment is used instead. Also, if an adjustment method
+#'   is not appropriate (e.g., using \code{"tukey"} with one-sided tests, or with
+#'   results that are not pairwise comparisons), a more appropriate method
+#'   (usually \code{"sidak"}) is substituted.
+#' 
+#'   In some cases, confidence and \eqn{p}-value adjustments are only approximate
+#'   -- especially when the degrees of freedom or standard errors vary greatly
+#'   within the family of tests. The \code{"mvt"} method is always the correct
+#'   one-step adjustment, but it can be very slow. One may use
+#'   \code{\link{as.glht}} with methods in the \pkg{multcomp} package to obtain
+#'   non-conservative multi-step adjustments to tests.
+#'
+#' @section Testing nonsuperiority, noninferiority, or equivalence:
+#'   When \code{delta = 0}, test statistics are of the usual form 
+#'   \samp{(estimate - null)/SE}, or notationally, \eqn{t = (Q - \theta_0)/SE} 
+#'   where \eqn{Q} is our estimate of \eqn{\theta}; 
+#'   then left, right, or two-sided \eqn{p} values are produced.
+#' 
+#'   When \code{delta} is positive, the test statistic depends on \code{side} as
+#'   follows.
+#'   \describe{
+#'   \item{Left-sided (nonsuperiority)}{\eqn{H_0: \theta \ge \theta_0 + \delta}
+#'     versus \eqn{H_1: \theta < \theta_0 + \delta}\cr 
+#'     \eqn{t = (Q - \theta_0 - \delta)/SE}\cr 
+#'     The \eqn{p} value is the lower-tail probability.}
+#'   \item{Right-sided (noninferiority)}{\eqn{H_0: \theta \le \theta_0 - \delta}
+#'     versus \eqn{H_1: \theta > \theta_0 - \delta}\cr 
+#'     \eqn{t = (Q - \theta_0 + \delta)/SE}\cr
+#'     The \eqn{p} value is the upper-tail probability.}
+#'   \item{Two-sided (equivalence)}{\eqn{H_0: |\theta - \theta_0| \ge \delta}
+#'     versus \eqn{H_1: |\theta - \theta_0| < \delta}\cr
+#'     \eqn{t = (|Q - \theta_0| - \delta)/SE}\cr
+#'     The \eqn{p} value is the \emph{lower}-tail probability.}
+#'   } %%%%%%%%%%%% end \describe{}
+#' 
+#' @section Non-estimable cases:
+#'   When the model is rank-deficient, each row \code{x} of \code{object}'s
+#'   \code{linfct} slot is checked for estimability. If \code{sum(x*bhat)}
+#'   is found to be non-estimable, then the string \code{NonEst} is displayed for the
+#'   estimate, and associated statistics are set to \code{NA}. 
+#'   The estimability check is performed
+#'   using the orthonormal basis \code{N} in the \code{nbasis} slot for the null
+#'   space of the rows of the model matrix. Estimability fails when
+#'   \eqn{||Nx||^2 / ||x||^2} exceeds \code{tol}, which by default is
+#'   \code{1e-8}. You may change it via \code{\link{emm_options}} by setting
+#'   \code{estble.tol} to the desired value.
 #' 
 #' @note In doing testing and a transformation and/or link is in force, any
 #'   \code{null} and/or \code{delta} values specified must always be on the
@@ -160,6 +248,14 @@
 #'
 summary.emmGrid <- function(object, infer, level, adjust, by, type, df, 
                         null, delta, side, ...) {
+
+    # Any "summary" options override built-in
+    opt = get_emm_option("summary")
+    if(!is.null(opt)) {
+        opt$object = object
+        object = do.call("update.emmGrid", opt)
+    }
+    
     misc = object@misc
     use.elts = if (is.null(misc$display))  rep(TRUE, nrow(object@grid)) 
     else                        misc$display
@@ -208,13 +304,6 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         delta = .nul.eq.zero(misc$delta)
     if(missing(side))
         side = .nul.eq.zero(misc$side)
-    
-    # update with any "summary" options
-    opt = get_emm_option("summary")
-    if(!is.null(opt)) {
-        opt$object = object
-        object = do.call("update.emmGrid", opt)
-    }
     
     
     # reconcile all the different ways we could specify the alternative

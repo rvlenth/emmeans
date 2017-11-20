@@ -58,10 +58,8 @@ When \code{specs} is a \code{character} vector or one-sided formula,
   \code{\link{test.emmGrid}}, \code{\link{contrast.emmGrid}},
   \code{\link{pairs.emmGrid}}, and \code{\link{cld.emmGrid}}.
 When \code{specs} is a \code{list} or a \code{formula} having a left-hand
-side, the return value is an \code{emm_list} object, which is simply a
-\code{list} of \code{emmGrid} objects. Methods for \code{emm_list} objects are
-the same as those for \code{emmGrid}, but they apply to only one member of the
-list, determined by its \code{which} argument.
+side, the return value is an \code{\link{emm_list}} object, which is simply a
+\code{list} of \code{emmGrid} objects.
 }
 \description{
 Compute estimated marginal means (EMMs) for specified factors
