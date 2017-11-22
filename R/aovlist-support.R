@@ -109,7 +109,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     if(!missing(vcov.)) {
         V = .my.vcov(object, vcov.)
         dfargs = list()
-        dffun = function(k, dfargs) NA
+        dffun = function(k, dfargs) Inf
     }
     else {
         dfargs = list(Vmats=Vmats, Vidx=Vidx, Vdf=unlist(Vdf), wts = wts)

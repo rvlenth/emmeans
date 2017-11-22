@@ -50,7 +50,7 @@ emm_basis.lm = function(object, trms, xlev, grid, ...) {
     misc = list()
     if (inherits(object, "glm")) {
         misc = .std.link.labels(object$family, misc)
-        dffun = function(k, dfargs) NA
+        dffun = function(k, dfargs) Inf
         dfargs = list()
     }
     else {
@@ -158,12 +158,12 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
             }
         }
         if (mode == "asymptotic") {
-            dffun = function(k, dfargs) NA
+            dffun = function(k, dfargs) Inf
         }
         misc$initMesg = paste("Degrees-of-freedom method:", mode)
     }
     else if (lme4::isGLMM(object)) {
-        dffun = function(k, dfargs) NA
+        dffun = function(k, dfargs) Inf
         misc = .std.link.labels(family(object), misc)
     }
     else 
@@ -297,7 +297,7 @@ emm_basis.polr = function(object, trms, xlev, grid,
     }
     misc$respName = as.character(terms(object))[2]
     nbasis = estimability::all.estble
-    dffun = function(...) NA
+    dffun = function(...) Inf
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=list(), misc=misc)
 }
 
@@ -380,7 +380,7 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     for (j in seq_along(X[1, ]))
         X[, j] = (X[, j] - object$means[j]) ### / object$scale[j]
     nbasis = estimability::all.estble
-    dffun = function(k, dfargs) NA
+    dffun = function(k, dfargs) Inf
     misc = list(tran = "log", inv.lbl = "hazard")
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
          dfargs = list(), misc = misc)
@@ -426,7 +426,7 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     
     misc = .std.link.labels(object$family, list())
     misc$initMesg = attr(V, "methMesg")
-    dffun = function(k, dfargs) NA
+    dffun = function(k, dfargs) Inf
     dfargs = list()
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
@@ -459,7 +459,7 @@ emm_basis.geeglm = function(object, trms, xlev, grid, vcov.method = "vbeta", ...
     
     misc = .std.link.labels(object$family, list())
     misc$initMesg = attr(V, "methMesg")
-    dffun = function(k, dfargs) NA
+    dffun = function(k, dfargs) Inf
     dfargs = list()
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
@@ -499,7 +499,7 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
     if (!is.null(fam <- object$call$family))
         misc = .std.link.labels(eval(fam)(), misc)
     misc$initMesg = attr(V, "methMesg")
-    dffun = function(k, dfargs) NA
+    dffun = function(k, dfargs) Inf
     dfargs = list()
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
@@ -530,7 +530,7 @@ emm_basis.glmmadmb = function (object, trms, xlev, grid, ...)
             misc$inv.lbl = "rate"
     }
     nbasis = estimability::all.estble
-    dffun = function(...) NA
+    dffun = function(...) Inf
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
          dfargs = list(), misc = misc)
 }

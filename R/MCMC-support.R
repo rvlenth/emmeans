@@ -133,7 +133,7 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov., ...) {
         V = .my.vcov(object, vcov.)
     misc = list()
     list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
-         dffun = function(k, dfargs) NA, dfargs = list(), 
+         dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = Sol)
 }
 
@@ -173,7 +173,7 @@ emm_basis.mcmc = function(object, trms, xlev, grid, vcov., ...) {
         V = .my.vcov(object, vcov.)
     misc = list()
     list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
-         dffun = function(k, dfargs) NA, dfargs = list(), 
+         dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = samp)
 }
 
@@ -212,7 +212,7 @@ emm_basis.carbayes = function(object, trms, xlev, grid, ...) {
     V = cov(samp)
     misc = list()
     list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
-         dffun = function(k, dfargs) NA, dfargs = list(), 
+         dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = samp)
 }
 
@@ -277,7 +277,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     samp = as.matrix(object$stanfit)[, names(bhat), drop = FALSE]
     attr(samp, "n.chains") = object$stanfit@sim$chains
     list(X = X, bhat = bhat, nbasis = estimability::all.estble, V = V, 
-         dffun = function(k, dfargs) NA, dfargs = list(), 
+         dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = samp)
 }
 

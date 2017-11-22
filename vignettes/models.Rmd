@@ -157,7 +157,7 @@ in the documentation for `ref_grid`.
 
 Models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
-`df` column for tabular results will be `NA`.
+`df` column for tabular results will be `Inf`.
 
 In the case of `gam::gam` objects, there is an optional `nboot` argument
 that sets the number of bootstrap replications used to estimate the 
@@ -181,7 +181,7 @@ case-insensitive). With `"kenward-roger"`, d.f. are obtained using code
 from the **pbkrtest** package, if installed. With `"satterthwaite"`,
 d.f. are obtained using code from the **lmerTest** package, if installed. 
 With `"asymptotic"`, or if the needed package is not installed, d.f. are
-set to `NA`. (For backward compatibility, the user may specify
+set to `Inf`. (For backward compatibility, the user may specify
 `mode` in lieu of `lmer.df`.)
 
 A by-product of the Kenward-Roger method is that the covariance matrix is 

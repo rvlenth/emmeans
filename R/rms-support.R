@@ -101,13 +101,13 @@ emm_basis.rms = function(object, trms, xlev, grid,
                 lrm = ifelse(nint == 1, "prob", "exc.prob"),
                 "response")
         }
-        dffun = function(k, dfargs) NA
+        dffun = function(k, dfargs) Inf
         dfargs = list()
     }
     else {
         dfargs = list(df = object$df.residual)
         if (is.null(dfargs$df)) 
-            dfargs$df = NA
+            dfargs$df = Inf
         dffun = function(k, dfargs) dfargs$df
     }
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, 

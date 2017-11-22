@@ -59,7 +59,7 @@ emm_basis.betareg = function(object, trms, xlev, grid,
     bhat = coef(object, model = model)
     
     nbasis = estimability::all.estble
-    dffun = function(k, dfargs) NA
+    dffun = function(k, dfargs) Inf
     dfargs = list()
     
     

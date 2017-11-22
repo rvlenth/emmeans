@@ -319,7 +319,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
                      c(object@roles$responses, ".offset.", ".wgt."))
     lbls = grid[lblnms]
     
-    zFlag = (all(is.na(result$df)))
+    zFlag = (all(is.na(result$df) | is.infinite(result$df)))
     inv = (type %in% c("response", "mu", "unlink")) # flag to inverse-transform
     link = attr(result, "link")
     if (inv && is.null(link))
@@ -524,6 +524,7 @@ predict.emmGrid <- function(object, type, ...) {
                 if(do.se) {
                     se = sqrt(.qf.non0(object@V, x))
                     df = object@dffun(x, object@dfargs)
+                    ### Brute force: if (is.na(df)) df = Inf    ### Added
                 }
                 else # if these unasked-for results are used, we're bound to get an error!
                     se = df = 0
@@ -670,7 +671,7 @@ predict.emmGrid <- function(object, type, ...) {
     
     ragged.by = (is.character(fam.size))   # flag that we need to do groups separately
     if (!ragged.by)
-        by.rows = list(seq_along(t))       # not ragged, we can do all as one by group
+        by.rows = list(seq_along(DF))       # not ragged, we can do all as one by group
     
     if (!ragged.by && n.contr == 1) # Force no adjustment when just one interval
         adjust = "none"

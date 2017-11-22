@@ -25,6 +25,12 @@ Changelog for **emmeans** package
     advertised. 
     
   * Fixed error in exporting `cld.emm_list()`
+  
+  * Fixed bug whereby all CIs were computed using the first estimate's 
+    degrees of freedom.
+    
+  * Now using `Inf` to display d.f. for asymptotic (z) tests. (`NA` will
+    still work too but `Inf` is a better choice for consistency and meaning.)
     
 
 ## Version 0.9.1

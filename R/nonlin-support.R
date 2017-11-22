@@ -39,7 +39,7 @@ emm_basis.nls = function(object, trms, xlev, grid, ...) {
     V = grad %*% Vbeta %*% t(grad)
     X = diag(1, nrow(grid))
     list(X=X, bhat=bhat, nbasis=all.estble, V=V, 
-         dffun=function(k, dfargs) NA, dfargs=list(), 
+         dffun=function(k, dfargs) Inf, dfargs=list(), 
          misc=list())
 }
     

@@ -63,7 +63,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     bhat = coef(object)
     V = .my.vcov(object, ...)
     tJac = object$tJac
-    dffun = function(...) NA
+    dffun = function(...) Inf
     link = as.character(object$info$link)
     cnm = dimnames(object$tJac)[[1]]
     if (is.null(cnm))
@@ -315,7 +315,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
 .clm.estHook = function(object, do.se = TRUE, tol = 1e-8, ...) {
     raw.matl = .clm.hook(object, tol)
     SE = if (do.se) sqrt(diag(raw.matl$V))  else NA
-    cbind(est = raw.matl$est, SE = SE, df = NA)
+    cbind(est = raw.matl$est, SE = SE, df = Inf)
 }
 
 .clm.vcovHook = function(object, tol = 1e-8, ...) {
@@ -340,7 +340,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     V = cbind(0, rbind(0,V))
     misc = list(tran = "log")
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
-         dffun = function(...) NA, dfargs = list(), misc = misc)
+         dffun = function(...) Inf, dfargs = list(), misc = misc)
 }
 
 emm_basis.clmm = function (object, trms, xlev, grid, ...) {

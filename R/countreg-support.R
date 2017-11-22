@@ -19,7 +19,7 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-# Support for zeroinfl and hurdle models (pscl [& future countreg package?])
+# Support for zeroinfl and hurdle models (pscl)
 
 # We'll support two optional arguments:
 # mode     -- type of result required
@@ -110,7 +110,7 @@ emm_basis.zeroinfl = function(object, trms, xlev, grid,
         misc = list(offset.mult = 0)
     }
     nbasis = estimability::all.estble
-    dffun = function(k, dfargs) NA
+    dffun = function(k, dfargs) Inf
     dfargs = list()
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = dffun, dfargs = dfargs, misc = misc)
