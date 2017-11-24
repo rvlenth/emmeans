@@ -5,7 +5,7 @@ Changelog for **emmeans** package
     New developments will take place in **emmeans**, and **lsmeans** 
     will remain static and eventually will be archived.
     
-## Version 0.9.1.9005
+## Version 0.9.1.9007
 
   * Added preliminary support for `gamlss` objects (but doesn't support
     smoothing). Additional argument is `what = c("mu", "sigma", "nu", "tau")`
@@ -31,6 +31,8 @@ Changelog for **emmeans** package
     
   * Now using `Inf` to display d.f. for asymptotic (z) tests. (`NA` will
     still work too but `Inf` is a better choice for consistency and meaning.)
+    
+  * Bug fix in nesting-detection code when model has only an intercept
     
 
 ## Version 0.9.1

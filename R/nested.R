@@ -320,7 +320,7 @@ add_grouping = function(object, newname, refname, newlevs) {
     
     # Now look at factors attribute
     fac = attr(trms, "factors")
-    if (!is.null(fac)) {
+    if (length(fac) > 0) {
         if (!is.null(coerce)) for (stg in coerce) {
             subst = paste(.all.vars(stats::reformulate(stg)), collapse = ":")
             for (i in 1:2)

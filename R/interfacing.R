@@ -109,7 +109,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
     tbl = data
-    if (length(vars) == 0) {
+    if (length(vars) == 0 || vars[1] == "1") {
         tbl = data.frame(c(1,1))
         vars = names(tbl) = 1
     }
