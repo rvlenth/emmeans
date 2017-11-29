@@ -183,7 +183,8 @@
 #'   to do calculations and inferences for estimated marginal means, and contain
 #'   nothing that depends on the model-fitting procedure.
 #'   
-#' @seealso Reference grids are of class \code{\link{emmGrid-class}} and several
+#' @seealso Reference grids are of class \code{\link[=emmGrid-class]{emmGrid}},
+#'   and several
 #'   methods exist for them -- for example \code{\link{summary.emmGrid}}. Reference
 #'   grids are fundamental to \code{\link{emmeans}}. Supported models are
 #'   detailed in \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.

@@ -5,7 +5,7 @@
 \title{The \code{emm_list} class}
 \description{
 An \code{emm_list} object is simply a list of
-\code{\link[emmGrid-class]{emmGrid}} objects. Such a list is returned,
+\code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 \code{specs} argument.
 }
