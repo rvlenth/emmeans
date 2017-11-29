@@ -37,26 +37,26 @@ pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 pigs.rg <- ref_grid(pigs.lm)
 class(pigs.rg)
 
-pigs.emmGrid.s <- emmeans(pigs.rg, "source")
-class(pigs.emmGrid.s)
+pigs.emm.s <- emmeans(pigs.rg, "source")
+class(pigs.emm.s)
 ```
 If you simply show these objects, you get different-looking results:
 ```{r}
 pigs.rg
 
-pigs.emmGrid.s
+pigs.emm.s
 ```
 This is based on guessing what users most need to see when displaying the object.
 You can override these defaults; for example,
 ```{r}
-str(pigs.emmGrid.s)
+str(pigs.emm.s)
 ```
 The most important method for `emmGrid` objects is `summary()`. It is used as the
-default for displaying an `emmeans()` result like `pigs.emmGrid.s`. This `summary()`
+default for displaying an `emmeans()` result like `pigs.emm.s`. This `summary()`
 method for `emmGrid` objects) actually produces a `data.frame`, but with extra bells and
 whistles:
 ```{r}
-class(summary(pigs.emmGrid.s))
+class(summary(pigs.emm.s))
 ```
 This can be useful to know because if you want to actually *use* `emmeans()` results
 in other computations, you should save its summary, and then you can access those
@@ -70,7 +70,7 @@ annotations.
 ## `summary()` and its relatives {#summary}
 As you may have gathered, the most important method for `emmGrid` objects is `summary()`.
 It has a lot of options, and the detailed documentation via 
-[`help("summary.emmGrid")`](../html/summary.emmGrid.html) is worth a look.
+[`help("summary.emm")`](../html/summary.emm.html) is worth a look.
 
 Just `summary(<object>)` by itself will produce a summary that varies somewhat
 according to context. It does this by setting different defaults for the `infer`
@@ -85,14 +85,14 @@ show test statistics and *P* values, but not intervals (i.e., `infer = c(FALSE,
 TRUE)`). There are courtesy methods `confint()` and `test()` that just call
 `summary()` with the appropriate `infer` setting; for example,
 ```{r}
-test(pigs.emmGrid.s)
+test(pigs.emm.s)
 ```
 It is not particularly useful, though, to test these EMMs against the default of 
 zero -- which is why tests are not usually shown. It makes a lot more sense
 to test them against some target concentration, say 40. And suppose we want to do a one-sided test to see if the concentration is greater than 40. Remembering that the
 response is log-transformed in this model, 
 ```{r}
-test(pigs.emmGrid.s, null = log(40), side = ">")
+test(pigs.emm.s, null = log(40), side = ">")
 ```
 [Back to Contents](#contents)
 
@@ -105,7 +105,7 @@ Here, we show just the most basic approach. Namely, specifying the argument
 to the response scale, when a transformation or link function is incorporated
 in the model. For example, let's try the preceding `test()` call again:
 ```{r}
-test(pigs.emmGrid.s, null = log(40), side = ">", type = "response")
+test(pigs.emm.s, null = log(40), side = ">", type = "response")
 ```
 Note what changes and what doesn't change. In the `test()` call, we *still* use
 the log of 40 as the null value; `null` must always be specified on the
@@ -118,7 +118,7 @@ output).
 
 Similar statements apply to confidence intervals on the response scale:
 ```{r}
-confint(pigs.emmGrid.s, side = ">", level = .90, type = "response")
+confint(pigs.emm.s, side = ">", level = .90, type = "response")
 ```
 With `side = ">"`, a *lower* confidence limit is computed on the log scale, then
 that limit is back-transformed to the response scale. (We have also illustrated 
@@ -139,7 +139,7 @@ comparisons default to `adjust = "tukey"`, i.e., the Tukey HSD method.
 The `summary()` function sometimes *changes* `adjust` if it is inappropriate.
 For example, with
 ```{r}
-confint(pigs.emmGrid.s, adjust = "tukey")
+confint(pigs.emm.s, adjust = "tukey")
 ```
 the adjustment is changed to the Sidak method because the Tukey adjustment is inappropriate unless you are doing pairwise comparisons.
 
@@ -157,7 +157,7 @@ For tests, `adjust` increases the *P* values over those otherwise obtained with
 "significant." Compare the following adjusted tests with the unadjusted ones
 previously computed.
 ```{r}
-test(pigs.emmGrid.s, null = log(40), side = ">", adjust = "bonferroni")
+test(pigs.emm.s, null = log(40), side = ">", adjust = "bonferroni")
 ```
 
 [Back to Contents](#contents)
@@ -189,7 +189,7 @@ Specifying `by = NULL` will remove all grouping.
 ## Joint tests {#joint}
 From the above, we already know how to test individual results. For pairwise comparisons (details in [the "comparisons" vignette](comparisons.html)), we might do
 ```{r}
-pigs.prs.s <- pairs(pigs.emmGrid.s)
+pigs.prs.s <- pairs(pigs.emm.s)
 pigs.prs.s
 ```
 But suppose we want an *omnibus* test that all these comparisons are zero.
@@ -206,7 +206,11 @@ as cautioned in the message.
 
 ## Testing equivalence, noninferiority, and nonsuperiority {#equiv}
 The `delta` argument in `summary()` or `test()` allows the user to
-specify a threshold value to use in a test of equivalence, noninferiority, or nonsuperiority. An equivalence test is kind of a backwards significance test, where differences enough smaller than `delta` are the ones that can be significant.  The help page for `summary.emmGrid` gives the details of these tests.
+specify a threshold value to use in a test of equivalence, noninferiority, 
+or nonsuperiority. An equivalence test is kind of a backwards significance 
+test, where differences enough smaller than `delta` are the ones that can 
+be significant.  The help page for `summary.emmGrid` gives the details of 
+these tests.
 Suppose in the present example, we consider two sources to be equivalent if they 
 are within 25% of each other. We can test this as follows:
 ```{r}

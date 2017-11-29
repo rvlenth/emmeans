@@ -5,7 +5,7 @@ Changelog for **emmeans** package
     New developments will take place in **emmeans**, and **lsmeans** 
     will remain static and eventually will be archived.
     
-## Version 0.9.1.9007
+## Version 0.9.1.9008
 
   * Added preliminary support for `gamlss` objects (but doesn't support
     smoothing). Additional argument is `what = c("mu", "sigma", "nu", "tau")`
@@ -23,6 +23,9 @@ Changelog for **emmeans** package
   
   * Repaired handling of `emm_options(summary = ...)` to work as
     advertised. 
+    
+  * Changed many object names in examples and vignettes from xxx.emmGrid
+    to xxx.emm (result of overdoing the renaming the object class itself)
     
   * Fixed error in exporting `cld.emm_list()`
   

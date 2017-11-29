@@ -237,19 +237,19 @@ cows.rg
 
 When there is nesting, `emmeans` computes averages separately in each group\ldots
 ```{r}
-route.emmGrid <- emmeans(cows.rg, "route")
-route.emmGrid
+route.emm <- emmeans(cows.rg, "route")
+route.emm
 ```
 ... and insists on carrying along any grouping factors that a factor is nested in:
 ```{r}
-drug.emmGrid <- emmeans(cows.rg, "drug")
-drug.emmGrid
+drug.emm <- emmeans(cows.rg, "drug")
+drug.emm
 ```
 Here are the associated pairwise comparisons:
 ```{r}
-pairs(route.emmGrid, reverse = TRUE)
+pairs(route.emm, reverse = TRUE)
 
-pairs(drug.emmGrid, by = "route", reverse = TRUE)
+pairs(drug.emm, by = "route", reverse = TRUE)
 ```
 In the latter result, the contrast itself becomes a nested factor in the
 returned `emmGrid` object. That would not be the case if there had been no `by`

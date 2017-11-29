@@ -37,15 +37,15 @@ predictors; and log-transformed `conc` as the response. Here we obtain the EMMs
 for `source`, examine its structure, and finally produce a summary, including a
 test against a null value of log(35):
 ```{r}
-pigs.emmGrid.s <- emmeans(pigs.lm, "source")
-str(pigs.emmGrid.s)
+pigs.emm.s <- emmeans(pigs.lm, "source")
+str(pigs.emm.s)
 
-summary(pigs.emmGrid.s, infer = TRUE, null = log(35))
+summary(pigs.emm.s, infer = TRUE, null = log(35))
 ```
 Now suppose that we want the EMMs expressed on the same scale as `conc`. This 
 can be done by adding `type = "response"` to the `summary()` call: 
 ```{r}
-summary(pigs.emmGrid.s, infer = TRUE, null = log(35), type = "response")
+summary(pigs.emm.s, infer = TRUE, null = log(35), type = "response")
 ```
 
 ### Timing is everything
@@ -88,9 +88,9 @@ The tool for changing when back-transformation is performed is the `regrid()`
 function -- which, with default settings of its arguments, back-transforms an
 `emmGrid` object and adjusts everything in it appropriately. For example:
 ```{r}
-str(regrid(pigs.emmGrid.s))
+str(regrid(pigs.emm.s))
 
-summary(regrid(pigs.emmGrid.s), infer = TRUE, null = 35)
+summary(regrid(pigs.emm.s), infer = TRUE, null = 35)
 ```
 Notice that the structure no longer includes the transformation. That's because
 it is no longer relevant; the reference grid is on the `conc` scale, and how we got there is now forgotten. Compare this `summary()` result with the preceding one, and note the following:
@@ -102,7 +102,7 @@ it is no longer relevant; the reference grid is on the `conc` scale, and how we 
     are the ones actually used to construct the tests and intervals.
 
 Understood, right? But think carefully about how these EMMs were obtained. 
-They are back-transformed from `pigs.emmGrid.s`, in which *the marginal averaging
+They are back-transformed from `pigs.emm.s`, in which *the marginal averaging
 was done on the log scale*. If we want to back-transform *before* doing the
 averaging, we need to call `regrid()` after the reference grid is constructed but
 before the averaging takes place:
@@ -128,7 +128,7 @@ call:
 ```{r eval = FALSE}
 emmeans(pigs.lm, "source", type = "response")
 ```
-will compute the results we have seen for `pigs.emmGrid.s` -- back-transformed 
+will compute the results we have seen for `pigs.emm.s` -- back-transformed 
 *after* averaging on the log scale.
 
 Remember again: When it comes to transformations, timing is everything.
@@ -152,8 +152,8 @@ The model suggested in the SAS report is equivalent to the following. We use
 it to obtain estimated probabilities of experiencing pain:
 ```{r}
 neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), data = neuralgia)
-neuralgia.emmGrid <- emmeans(neuralgia.glm, "Treatment", type = "response")
-neuralgia.emmGrid
+neuralgia.emm <- emmeans(neuralgia.glm, "Treatment", type = "response")
+neuralgia.emm
 ```
 (The note about the interaction is discussed shortly.) Note that the averaging 
 over `Sex` is done on the logit scale, *before* the results are back-transformed
@@ -161,7 +161,7 @@ for the summary. We may use `pairs()` to compare these estimates; note that
 logits are logs of odds; so this is another instance where log-differences are
 back-transformed -- in this case to odds ratios:
 ```{r}
-pairs(neuralgia.emmGrid, reverse = TRUE)
+pairs(neuralgia.emm, reverse = TRUE)
 ```
 So there is evidence of considerably more pain being reported with placebo 
 (treatment `P`) than with either of the other two treatments. The estimated odds
@@ -169,7 +169,7 @@ of pain with `B` are about half that for `A`, but this finding is not
 statistically significant. (The odds that this is a made-up dataset seem quite
 high, but that finding is strictly this author's impression.)
 
-Observe that there is a note in the output for `neuralgia.emmGrid` that the results
+Observe that there is a note in the output for `neuralgia.emm` that the results
 may be misleading. It is important to take it seriously, because if two factors
 interact, it may be the case that marginal averages of predictions don't reflect
 what is happening at any level of the factors being averaged over. To find out,
@@ -269,9 +269,9 @@ ratios instead of differences.
 Consider the `pigs` example once again, but suppose we had fitted a model with a square-root transformation instead of a log:
 ```{r}
 pigroot.lm <- lm(sqrt(conc) ~ source + factor(percent), data = pigs)
-piglog.emmGrid.s <- regrid(emmeans(pigroot.lm, "source"), transform = "log")
-confint(piglog.emmGrid.s, type = "response")
-pairs(piglog.emmGrid.s, type = "response")
+piglog.emm.s <- regrid(emmeans(pigroot.lm, "source"), transform = "log")
+confint(piglog.emm.s, type = "response")
+pairs(piglog.emm.s, type = "response")
 ```
 These results are not identical, but very similar to the back-transformed
 confidence intervals [above](#timing) for the EMMs and the [pairwise ratios in

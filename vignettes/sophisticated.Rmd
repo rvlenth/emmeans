@@ -50,8 +50,8 @@ Oats.lmer <- lme4::lmer(yield ~ Variety + factor(nitro) + (1|Block/Variety),
 ```
 Let's look at the EMMs for `nitro`:
 ```{r}
-Oats.emmGrid.n <- emmeans(Oats.lmer, "nitro")
-Oats.emmGrid.n
+Oats.emm.n <- emmeans(Oats.lmer, "nitro")
+Oats.emm.n
 ```
 You will notice that the degrees of freedom are fractional: that is due to the
 fact that whole-plot and subplot variations are combined when standard errors
@@ -80,7 +80,7 @@ using the Satterthwaite method.
 Comparisons and contrasts are pretty much the same as with other models. As
 `nitro` has quantitative levels, we might want to test polynomial contrasts:
 ```{r}
-contrast(Oats.emmGrid.n, "poly")
+contrast(Oats.emm.n, "poly")
 ```
 The interesting thing here is that the degrees of freedom are much larger than
 they are for the EMMs. The reason is because `nitro` within-plot factor, so
@@ -213,8 +213,8 @@ rst_ex.rg
 ```
 And, again in the usual way, we can obtain EMMs:
 ```{r}
-period.emmGrid <- emmeans(rst_ex.rg, "period")
-period.emmGrid
+period.emm <- emmeans(rst_ex.rg, "period")
+period.emm
 ```
 The summary shows a frequentist summary of the EMMs. Under the hood, though, is a posterior sample of 500 sets of EMMs -- each one being the EMMs computed from each set of parameter values in the posterior sample of regression coefficients. The summary we see is based on the sample means and covariances of that sample.
 
@@ -223,7 +223,7 @@ This gives us an object of class `mcmc` (defined in the **coda** package), which
 can be summarized and explored as we please.
 ```{r}
 require("coda")  ### needed to access generic for as.mcmc()
-summary(as.mcmc(period.emmGrid))
+summary(as.mcmc(period.emm))
 ```
 Note that `as.mcmc` will actually produce an `mcmc.list` when there is more than
 one chain present, as in this example.
@@ -231,7 +231,7 @@ The 2.5th and 97.5th quantiles are similar, but not identical, to the
 95% confidence intervals in the frequentist summary. Here is a plot of
 the posterior EMMs, back-transformed:
 ```{r}
-bayesplot::mcmc_areas(as.mcmc(regrid(period.emmGrid)))
+bayesplot::mcmc_areas(as.mcmc(regrid(period.emm)))
 ```
 
 ... and here are intervals for each period compared with its neighbor; we wrap 
@@ -239,7 +239,7 @@ the important part of the call in an extra `as.mcmc(as.matrix(...))` so as to
 combine the two chains into one.
 ```{r}
 HPDinterval(as.mcmc(as.matrix(
-    as.mcmc(contrast(period.emmGrid, "consec", reverse = TRUE), names = FALSE))))
+    as.mcmc(contrast(period.emm, "consec", reverse = TRUE), names = FALSE))))
 ```
 The only interval that excludes zero is the one that compares periods 1 and 2.
 

@@ -33,8 +33,8 @@ method for `emmGrid` objects. In the code below, we obtain the EMMs for `source`
 the `pigs` data, and then compare the sources pairwise.
 ```{r}
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
-pigs.emmGrid.s <- emmeans(pigs.lm, "source")
-pairs(pigs.emmGrid.s)
+pigs.emm.s <- emmeans(pigs.lm, "source")
+pairs(pigs.emm.s)
 ```
 In its out-of-the-box configuration, `pairs()` sets two defaults for 
 [`summary()`](confidence-intervals.html#summary): `adjust = "tukey"`
@@ -44,14 +44,14 @@ on the result with different values for these.
 
 In the example above, EMMs for later factor levels are subtracted from those for
 earlier levels; if you want the comparisons to go in the other direction, use
-`pairs(pigs.emmGrid.s, reverse = TRUE)`. Also, in multi-factor situations,
+`pairs(pigs.emm.s, reverse = TRUE)`. Also, in multi-factor situations,
 you may specify `by` factor(s) to perform the comparisons separately at the 
 levels of those factors.
 
 Comparisons may be summarized graphically via the `comparisons` argument
-in `plot.emmGrid()`:
+in `plot.emm()`:
 ```{r fig.height = 1.5}
-plot(pigs.emmGrid.s, comparisons = TRUE)
+plot(pigs.emm.s, comparisons = TRUE)
 ```
 
 The blue bars are confidence intervals for the EMMs, and the red arrows are for 
@@ -62,7 +62,7 @@ EMMs to perform comparisons; they can be very misleading.)
 
 Another way to depict comparisons is by compact-letter displays:
 ```{r}
-cld(pigs.emmGrid.s)
+cld(pigs.emm.s)
 ```
 Two EMMs sharing one or more grouping symbols are not significantly different.
 I really don't recommend this method, though, as it imposes a stark difference
@@ -75,7 +75,7 @@ between *P* values slightly less and slightly more than `alpha`.
 Pairwise comparisons are an example of linear functions of EMMs.
 You may use `coef()` to see the coefficients of these linear functions:
 ```{r}
-coef(pairs(pigs.emmGrid.s))
+coef(pairs(pigs.emm.s))
 ```
 The pairwise comparisons correspond to columns of the above results.
 For example, the first pairwise comparison, `fish - soy`, gives coefficients
@@ -91,8 +91,8 @@ the factor `percent` in the model `pigs.lm` . It is treated as a factor in
 the model, but it corresponds to equally-spaced values of a numeric variable.
 In such cases, users often want to compute orthogonal polynomial contrasts:
 ```{r}
-pigs.emmGrid.p <- emmeans(pigs.lm, "percent")
-ply <- contrast(pigs.emmGrid.p, "poly")
+pigs.emm.p <- emmeans(pigs.lm, "percent")
+ply <- contrast(pigs.emm.p, "poly")
 ply
 
 coef(ply)
@@ -132,7 +132,7 @@ want `"eff"` contrasts as well, you need to do `contrast(org.emml[[1]],
 
 Another issue is that it may be unclear which part of the results is
 affected by certain options. For example, if you were to add `adjust = "bonf"`
-to the `org.emmGrid` call above, would the Bonferroni adjustment be applied to the
+to the `org.emm` call above, would the Bonferroni adjustment be applied to the
 EMMs, or to the contrasts? (See the documentation if interested; but the best practice is to avoid such dilemmas.)
 
 [Back to Contents](#contents)
@@ -179,7 +179,7 @@ $\mu_j$ are the population values of the `source` EMMs in the `pigs` example.
 This may be done by providing the coefficients in a list, and the added
 constants in the `offset` argument:
 ```{r}
-LF <- contrast(pigs.emmGrid.s, 
+LF <- contrast(pigs.emm.s, 
                list(lambda1 = c(1, 2, 0), lambda2 = c(0, 3, -2)),
                offset = c(-7, 1))
 confint(LF, adjust = "bonferroni")
@@ -200,11 +200,12 @@ differences to some other interpretable scale.
 
 However, logs are an exception, in that 
 $\log\mu_j - \log\mu_k = \log(\mu_j/\mu_k)$. Accordingly, when `contrast()`
-(or `pairs()`) notices that the response is on the log scale, it back-transforms contrasts to ratios when results are to be of `response` type. For example:
+(or `pairs()`) notices that the response is on the log scale, it back-transforms 
+contrasts to ratios when results are to be of `response` type. For example:
 ```{r}
-pairs(pigs.emmGrid.s, type = "lp")
+pairs(pigs.emm.s, type = "lp")
 
-pairs(pigs.emmGrid.s, type = "response")
+pairs(pigs.emm.s, type = "response")
 ```
 As is true of EMM summaries with `type = "response"`, the tests and confidence
 intervals are done before back-transforming. The ratios estimated here are

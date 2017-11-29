@@ -29,18 +29,18 @@ Several internal settings are saved when functions like `ref_grid()`, `emmeans()
 method for `emmGrid`s. To illustrate, consider the `pigs` dataset and model yet again:
 ```{r}
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
-pigs.emmGrid.s <- emmeans(pigs.lm, "source")
-pigs.emmGrid.s
+pigs.emm.s <- emmeans(pigs.lm, "source")
+pigs.emm.s
 ```
 We see confidence intervals but not tests, by default. This happens as a result
-of internal settings in `pigs.emmGrid.s` that are passed to `summary()` when the
+of internal settings in `pigs.emm.s` that are passed to `summary()` when the
 object is displayed. If we are going to work with this object a lot, we might
 want to change its internal settings rather than having to rely on explicitly
 calling `summary()` with several arguments. If so, just update the internal
 settings to what is desired; for example:
 ```{r}
-pigs.emmGrid.s <- update(pigs.emmGrid.s, infer = c(TRUE, TRUE), null = log(35))
-pigs.emmGrid.s
+pigs.emm.s <- update(pigs.emm.s, infer = c(TRUE, TRUE), null = log(35))
+pigs.emm.s
 ```
 See [`help("update.emmGrid")](../doc/update.emmGrid.html) for details on the keywords
 that can be changed. Mostly, they are the same as the names of arguments
@@ -124,13 +124,13 @@ A user may want to combine the three pairwise comparisons of sources
 with the three comparisons above of consecutive percents into a single family of six tests with a suitable 
 multiplicity adjustment. This is done quite simply:
 ```{r}
-rbind(pairs(pigs.emmGrid.s), pigs.anal.p[[2]])
+rbind(pairs(pigs.emm.s), pigs.anal.p[[2]])
 ```
 The default adjustment is `"bonferroni"`; we could have specified something different via the `adjust` argument. An equivalent way to combine `emmGrid`s is via the addition
 operator. Any options may be provided by `update()`. Below, we combine the same
 results into a family but ask for the "exact" multiplicity adjustment.
 ```{r}
-update(pigs.anal.p[[2]] + pairs(pigs.emmGrid.s), adjust = "mvt")
+update(pigs.anal.p[[2]] + pairs(pigs.emm.s), adjust = "mvt")
 ```
 Also evident in comparing these results is that settings are obtained from the
 first object combined. So in the second output, where they are combined in
@@ -140,7 +140,7 @@ the response scale.
 To subset an `emmGrid` object, just use the subscripting operator `[]`.
 For instance,
 ```{r}
-pigs.emmGrid.s[2:3]
+pigs.emm.s[2:3]
 ```
 
 [Back to contents](#contents)
@@ -157,13 +157,13 @@ names of the grouping factor corresponding to levels of the reference factor.
 Suppose for example that we want to distinguish animal and non-animal sources of
 protein in the `pigs` example:
 ```{r}
-pigs.emmGrid.ss <- add_grouping(pigs.emmGrid.s, "type", "source",
+pigs.emm.ss <- add_grouping(pigs.emm.s, "type", "source",
                             c("animal", "vegetable", "animal"))
-str(pigs.emmGrid.ss)
+str(pigs.emm.ss)
 ```
 Note that the new object has a nesting structure (see more about this in the ["messy-data" vignette](messy-data.html#nesting)), with the reference factor nested in the new grouping factor. Now we can obtain means and comparisons for each group
 ```{r}
-emmeans(pigs.emmGrid.ss, pairwise ~ type)
+emmeans(pigs.emm.ss, pairwise ~ type)
 ```
 
 [Back to contents](#contents)
