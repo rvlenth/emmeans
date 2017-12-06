@@ -1,11 +1,7 @@
 Changelog for **emmeans** package
 =================================
 
-### NOTE: **emmeans** is a continuation of the **lsmeans** package. 
-    New developments will take place in **emmeans**, and **lsmeans** 
-    will remain static and eventually will be archived.
-    
-## Version 0.9.1.9008
+## Version 1.0
 
   * Added preliminary support for `gamlss` objects (but doesn't support
     smoothing). Additional argument is `what = c("mu", "sigma", "nu", "tau")`
@@ -13,9 +9,6 @@ Changelog for **emmeans** package
     
   * Improved support for models with fancy variable names 
     (containing spaces and such)
-    
-  * Changed `emmGrid()` function to `emm()` as had been intended,
-    as alternative to `mcp()` in `multcomp::glht()`.
     
   * Fixed a bug whereby `emmeans()` might pass `data` to `contrast()`
   
@@ -27,9 +20,12 @@ Changelog for **emmeans** package
   * Changed many object names in examples and vignettes from xxx.emmGrid
     to xxx.emm (result of overdoing the renaming the object class itself)
     
+  * Changed `emmGrid()` function to `emm()` as had been intended
+    as alternative to `mcp()` in `multcomp::glht()` (result of ditto).
+    
   * Fixed error in exporting `cld.emm_list()`
   
-  * Fixed bug whereby all CIs were computed using the first estimate's 
+  * Fixed a bug whereby all CIs were computed using the first estimate's 
     degrees of freedom.
     
   * Now using `Inf` to display d.f. for asymptotic (z) tests. (`NA` will
@@ -50,6 +46,10 @@ Changelog for **emmeans** package
   * Fixes to `vcov()` calls to comply with recent R-devel changes
   
 
+### NOTE: **emmeans** is a continuation of the **lsmeans** package. 
+    New developments will take place in **emmeans**, and **lsmeans** 
+    will remain static and eventually will be archived.
+    
 ## Version 0.9
 This is the initial major version that replaces the **lsmeans** package.
 Changes shown below are changes made to the last real release of **lsmeans**
