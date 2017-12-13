@@ -14,9 +14,11 @@ Estimated marginal means (EMMs, previously known as least-squares means in the c
 * Package developers may provide **emmeans** support for their models by providing `recover_data` and `emm_basis` methods. See `vignette("extending", package = "emmeans")`
 
 
-* To install the latest development version from Github, have the newest **devtools** package installed, then run
+* To install the latest development version from Github, install the newest version of the **devtools** package; then run
 ```
 devtools::install_github("rvlenth/emmeans", dependencies = TRUE,
                         build_vignettes = TRUE)
 ```
-For latest release notes on this development version, see the [NEWS file](https://github.com/rvlenth/emmeans/blob/master/inst/NEWS)
+*Note:* If you are a Windows user, you should also first download and install the latest version of [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). 
+
+For the latest release notes on this development version, see the [NEWS file](https://github.com/rvlenth/emmeans/blob/master/inst/NEWS)

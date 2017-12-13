@@ -1,6 +1,10 @@
 Changelog for **emmeans** package
 =================================
 
+## Version 1.0.0.9001
+  * Fixed a bug in `emmeans()` wherein `weights` was ignored 
+    when `specs` is a `list`
+
 ## Version 1.0
 
   * Added preliminary support for `gamlss` objects (but doesn't support

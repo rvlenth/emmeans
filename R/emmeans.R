@@ -214,7 +214,8 @@ emmeans = function(object, specs, by = NULL,
         object = ref_grid(object, ...)
     }
     if (is.list(specs)) {
-        return (emmeans.list(object, specs, by = by, contr = contr, ...))
+        return (emmeans.list(object, specs, by = by, 
+                             contr = contr, weights = weights, ...))
     }
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)
