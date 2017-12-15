@@ -1,9 +1,11 @@
 Changelog for **emmeans** package
 =================================
 
-## Version 1.0.0.9001
+## Version 1.0.0.9002
   * Fixed a bug in `emmeans()` wherein `weights` was ignored 
     when `specs` is a `list`
+  * Coerce `data` argument, if supplied to a data.frame 
+    (`recover_data()` doesn't like tibbles...)
 
 ## Version 1.0
 

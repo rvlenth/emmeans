@@ -232,7 +232,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
             stop("Perhaps a 'data' or 'params' argument is needed")
     }
     else # attach needed attributes to given data
-        data = .chk_recover_data(object, data = data, ...)
+        data = .chk_recover_data(object, data = as.data.frame(data), ...)
     
     if(is.character(data)) # 'data' is in fact an error message
         stop(data)
