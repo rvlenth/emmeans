@@ -3,6 +3,7 @@
 \name{summary.emmGrid}
 \alias{summary.emmGrid}
 \alias{predict.emmGrid}
+\alias{as.data.frame.emmGrid}
 \alias{confint.emmGrid}
 \alias{test}
 \alias{test.emmGrid}
@@ -12,6 +13,8 @@
   delta, side, ...)
 
 \method{predict}{emmGrid}(object, type, ...)
+
+\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE, ...)
 
 \method{confint}{emmGrid}(object, parm, level = 0.95, ...)
 
@@ -74,9 +77,16 @@ left-tailed (\code{-1}, \code{"-"}, code{"<"}, \code{"left"}, or
 \code{"equivalence"}, or \code{"="}). See the special section below for
 more details.}
 
-\item{...}{Not used by \code{summary.emmGrid} or \code{predict.emmGrid}. In
-\code{confint.emmGrid} and \code{test.emmGrid}, these arguments are passed to
+\item{...}{(Not used by \code{summary.emmGrid} or \code{predict.emmGrid}.) In
+\code{as.data.frame.emmGrid}, \code{confint.emmGrid}, and 
+\code{test.emmGrid}, these arguments are passed to
 \code{summary.emmGrid}.}
+
+\item{x}{emmGrid object}
+
+\item{row.names}{passed to \code{\link{as.data.frame}}}
+
+\item{optional}{passed to \code{\link{as.data.frame}}}
 
 \item{parm}{(Required argument for \code{confint} methods, but not used)}
 
@@ -106,6 +116,9 @@ ignored.}
   for Bayesian estimation.
 
 \code{predict} returns a vector of predictions for each row of \code{object@grid}.
+
+The \code{as.data.frame} method returns a plain data frame,
+  equivalent to \code{as.data.frame(summary(.))}.
 }
 \description{
 These are the primary methods for obtaining numerical or tabular results 

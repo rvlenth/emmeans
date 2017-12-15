@@ -86,8 +86,9 @@
 #'   \code{2}, \code{"!="}, \code{"two-sided"}, \code{"both"},
 #'   \code{"equivalence"}, or \code{"="}). See the special section below for
 #'   more details.
-#' @param ... Not used by \code{summary.emmGrid} or \code{predict.emmGrid}. In
-#'   \code{confint.emmGrid} and \code{test.emmGrid}, these arguments are passed to
+#' @param ... (Not used by \code{summary.emmGrid} or \code{predict.emmGrid}.) In
+#'   \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, and 
+#'   \code{test.emmGrid}, these arguments are passed to
 #'   \code{summary.emmGrid}.
 #'
 #' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and \code{test.emmGrid} 
@@ -452,7 +453,6 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     summ
 }
 
-
 # S3 predict method
 
 #' @rdname summary.emmGrid
@@ -488,6 +488,22 @@ predict.emmGrid <- function(object, type, ...) {
         }
     }
     result
+}
+
+# as.data.frame method
+
+#' @rdname summary.emmGrid
+#' @param x emmGrid object
+#' @param row.names passed to \code{\link{as.data.frame}}
+#' @param optional passed to \code{\link{as.data.frame}}
+#' @return The \code{as.data.frame} method returns a plain data frame,
+#'   equivalent to \code{as.data.frame(summary(.))}.
+#' @method as.data.frame emmGrid
+#' @export
+#'
+#' @examples
+as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
+    as.data.frame(summary(x, ...), row.names = row.names, optional = optional)
 }
 
 

@@ -6,6 +6,9 @@ Changelog for **emmeans** package
     when `specs` is a `list`
   * Coerce `data` argument, if supplied to a data.frame 
     (`recover_data()` doesn't like tibbles...)
+  * Added `as.data.frame` method for `emmGrid` objects, making it
+    often possible to pass it directly to other functions as a `data` 
+    argument.
 
 ## Version 1.0
 
