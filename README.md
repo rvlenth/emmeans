@@ -21,4 +21,4 @@ devtools::install_github("rvlenth/emmeans", dependencies = TRUE,
 ```
 *Note:* If you are a Windows user, you should also first download and install the latest version of [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/). 
 
-For the latest release notes on this development version, see the [NEWS file](https://github.com/rvlenth/emmeans/blob/master/inst/NEWS)
+For the latest release notes on this development version, see the [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS)
