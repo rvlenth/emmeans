@@ -142,6 +142,18 @@ the comparison of that comparison of the quadratic contrasts, not so much. Refer
 again to the plot, and this can be discerned as a comparison of the interaction
 in the left panel versus the interaction in the right panel.
 
+Finally, **emmeans** provides a `joint_tests()` function that obtains and tests
+the interaction contrasts for all effects in the model and compiles them in one
+Type-III-ANOVA-like table:
+```{r}
+joint_tests(noise.lm)
+```
+You may even add `by` variable(s) to obtain separate ANOVA tables for the
+remaining factors:
+```{r}
+joint_tests(noise.lm, by = "side")
+```
+
 [Back to Contents](#contents)
 
 ## Interactions with covariates {#covariates}

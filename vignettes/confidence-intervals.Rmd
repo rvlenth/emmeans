@@ -201,6 +201,11 @@ test(pigs.prs.s, joint = TRUE)
 Notice that there are three comparisons, but only 2 d.f. for the test,
 as cautioned in the message.
 
+The test produced with `joint = TRUE` is a "type III" test (assuming the default
+equal weights are used to obtain the EMMs). See more on these types of tests for
+higher-order effects in the ["interactions" vignette section on
+contrasts](interactions.html#contrasts).
+
 [Back to Contents](#contents)
 
 

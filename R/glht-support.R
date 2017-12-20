@@ -86,6 +86,7 @@ glht.emmGrid <- function(model, linfct, by, ...) {
     # add a df value if not supplied
     if (is.null(args$df)) {
         df = summary(linfct)$df
+        df[is.infinite(df)] = NA
         if(any(!is.na(df))) {
             args$df = max(1, as.integer(mean(df, na.rm=TRUE) + .25))
             if (any(args$df != df))
@@ -196,7 +197,7 @@ modelparm.emmwrap <- function(model, coef., vcov., df, ...) {
         bhat = predict(object)
         V = vcov(object)
     }
-    if(missing(df) || is.na(df))
+    if(missing(df) || is.na(df) || is.infinite(df))
         df = 0
     .cls.list("modelparm", coef = bhat, vcov = V,
                 df = df, estimable = !is.na(bhat))

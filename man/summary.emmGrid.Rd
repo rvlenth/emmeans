@@ -106,14 +106,14 @@ missing, all rows of L are used. If not missing, \code{by} variables are
 ignored.}
 }
 \value{
-\code{summary.emmGrid}, \code{confint.emmGrid}, and \code{test.emmGrid} 
-  return an object of class \code{"summary_emm"}, which is an extension of 
-  \code{\link{data.frame}} but with a special \code{print} method that with 
-  custom formatting. For models fitted using MCMC methods, the result is 
-  typically a frequentist summary, based on the empirical mean and covariance
-  matrix of the \code{post.beta} slot. A Bayesian summary may be obtained 
-  using \code{\link{as.mcmc.emmGrid}} and summarizing that result using tools
-  for Bayesian estimation.
+\code{summary.emmGrid}, \code{confint.emmGrid}, and
+  \code{test.emmGrid} return an object of class \code{"summary_emm"}, which
+  is an extension of \code{\link{data.frame}} but with a special \code{print}
+  method that displays it with custom formatting. For models fitted using
+  MCMC methods, the result is typically a frequentist summary, based on the
+  empirical mean and covariance matrix of the \code{post.beta} slot. A
+  Bayesian summary may be obtained using \code{\link{as.mcmc.emmGrid}} and
+  summarizing that result using tools for Bayesian estimation.
 
 \code{predict} returns a vector of predictions for each row of \code{object@grid}.
 

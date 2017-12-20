@@ -91,14 +91,14 @@
 #'   \code{test.emmGrid}, these arguments are passed to
 #'   \code{summary.emmGrid}.
 #'
-#' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and \code{test.emmGrid} 
-#'   return an object of class \code{"summary_emm"}, which is an extension of 
-#'   \code{\link{data.frame}} but with a special \code{print} method that with 
-#'   custom formatting. For models fitted using MCMC methods, the result is 
-#'   typically a frequentist summary, based on the empirical mean and covariance
-#'   matrix of the \code{post.beta} slot. A Bayesian summary may be obtained 
-#'   using \code{\link{as.mcmc.emmGrid}} and summarizing that result using tools
-#'   for Bayesian estimation.
+#' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and
+#'   \code{test.emmGrid} return an object of class \code{"summary_emm"}, which
+#'   is an extension of \code{\link{data.frame}} but with a special \code{print}
+#'   method that displays it with custom formatting. For models fitted using
+#'   MCMC methods, the result is typically a frequentist summary, based on the
+#'   empirical mean and covariance matrix of the \code{post.beta} slot. A
+#'   Bayesian summary may be obtained using \code{\link{as.mcmc.emmGrid}} and
+#'   summarizing that result using tools for Bayesian estimation.
 #'   
 #' @section Defaults:
 #'   The \code{misc} slot in \code{object} contains default values for

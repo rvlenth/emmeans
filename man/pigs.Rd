@@ -10,7 +10,7 @@
     fish meal, soybean meal, dried skim milk)}
   \item{percent}{Protein percentage in the diet (numeric with 4 values:
     9, 12, 15, and 18)}
-  \item{conc}{Conentration of free plasma leucine, in mcg/ml}
+  \item{conc}{Concentration of free plasma leucine, in mcg/ml}
 }}
 \source{
 Windels HF (1964) PhD thesis, Univ. of Minnesota. (Reported as

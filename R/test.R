@@ -134,3 +134,88 @@ test.emmGrid = function(object, null = 0,
         result
     }
 }
+
+# Do all joint tests of contrasts. by, ... passed to emmeans() calls
+
+#' Compute \dQuote{type III} tests of the terms in a model
+#'
+#' This function produces an analysis-of-variance table based on linear
+#' functions of predictors in a model or \code{emmGrid} object. Optionally, one
+#' or more of the predictors may be used as a \dQuote{by} variable, so that
+#' separate tables of tests are produced for each combination of them. When
+#' equal weighting is used, the tests correspond to \dQuote{type III} tests such
+#' as \pkg{SAS} produces; but other weighting schemes provide generalizations.
+#' 
+#' The \code{joint_tests} function constructs, for each combination of factors,
+#' a set of (interaction) contrasts via \code{\link{contrast}}, and then tests
+#' them using \code{\link{test}} with \code{joint = TRUE}. This is more robust
+#' than the model-reduction approach used in \code{\link[car]{Anova}} in the
+#' \pkg{car} package. In the latter, the user must fit the model using
+#' sum-to-zero contrast specifications such as \code{contr.sum} in order to
+#' obtain correct type-III tests. But \code{joint_tests} does them correctly
+#' regardless of which contrast functions were used to construct the model
+#' matrix.
+#' 
+#' @param object a fitted model or an \code{emmGrid}. If a fitted model, it is
+#'    replaced by \code{ref_grid(object, cov.reduce = range, ...)}
+#' @param by character names of \code{by} variables. Separate sets of tests are
+#'    run for each combination of these.
+#' @param ... additional arguments passed to \code{ref_grid} and \code{emmeans}
+#'
+#' @return a \code{summary_emm} object (same as is produced by 
+#'   \code{\link{summary.emmGrid}})
+#'   
+#' @seealso \code{\link{test}}
+#' @export
+#'
+#' @examples
+#' pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
+#' 
+#' joint_tests(pigs.lm)                     ## type III ANOVA
+#' 
+#' joint_tests(pigs.lm, weights = "outer")  ## differently weighted
+#' 
+#' joint_tests(pigs.lm, by = "source")      ## separate type III tests of 'percent'
+joint_tests = function(object, by = NULL, ...) {
+    if (!inherits(object, "emmGrid"))
+        object = ref_grid(object, cov.reduce = range, ...)
+    facs = setdiff(names(object@levels), by)
+    do.test = function(these, facs, result, ...) {
+        if ((k <- length(these)) > 0) {
+            emm = emmeans(object, these, by = by, ...)
+            tst = test(contrast(emm, interaction = "consec"), joint = TRUE)
+            tst = cbind(ord = k, `model term` = paste(these, collapse = ":"), tst)
+            result = rbind(result, tst)
+            last = max(match(these, facs))
+        }
+        else
+            last = 0
+        if (last < (n <- length(facs)))
+            for (i in last + seq_len(n - last))
+                result = do.test(c(these, facs[i]), facs, result, ...)
+        result
+    }
+    result = suppressMessages(do.test(character(0), facs, NULL, ...))
+    result = result[order(result[[1]]), -1, drop = FALSE]
+    result = result[result$df1 > 0, , drop = FALSE]
+    class(result) = c("summary_emm", "data.frame")
+    attr(result, "estName") = "F.ratio"
+    attr(result, "by.vars") = by
+    result
+}
+
+# provide for displaying in standard 'anova' format (with astars etc.)
+# I'm not going there now. Maybe later, probably not
+
+#' #' @export
+#' as.anova = function(object, ...)
+#'     UseMethod("as.anova")
+#' 
+#' as.anova.summary_emm = function(object, ...) {
+#'     class(object) = c("anova", "data.frame")
+#'     row.names(object) = as.character(object[[1]])
+#'     names(object) = gsub("p.value", "Pr(>F)", names(object))
+#'     object[-1]
+#' }
+
+

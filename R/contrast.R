@@ -120,7 +120,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             stop("interaction requires named contrast function(s)")
         if(missing(adjust))
             adjust = "none"
-        by = NULL
+        ### by = NULL why was this here before ???
         vars = names(object@levels)
         k = length(vars)
         if(!is.null(by)) {
