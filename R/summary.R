@@ -500,8 +500,6 @@ predict.emmGrid <- function(object, type, ...) {
 #'   equivalent to \code{as.data.frame(summary(.))}.
 #' @method as.data.frame emmGrid
 #' @export
-#'
-#' @examples
 as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     as.data.frame(summary(x, ...), row.names = row.names, optional = optional)
 }

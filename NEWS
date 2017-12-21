@@ -1,4 +1,4 @@
-emmeans 1.0.0.9002
+emmeans 1.0.0.9005
 ------------------
 
   * Fixed a bug in `emmeans()` wherein `weights` was ignored 
@@ -11,8 +11,7 @@ emmeans 1.0.0.9002
   * Fixed bug in `contrast()` where `by` was ignored for 
     interaction contrasts
   * Fixed bug in `as.glht()` where it choked on `df = Inf`
-  * New `joint_tests()` function produces a type-III ANOVA
-    but can generalize to something else if unequal weights are used
+  * New `joint_tests()` function produces a type-III-like ANOVA
 
 emmeans 1.0
 -----------

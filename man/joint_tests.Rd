@@ -17,26 +17,37 @@ run for each combination of these.}
 }
 \value{
 a \code{summary_emm} object (same as is produced by 
-  \code{\link{summary.emmGrid}})
+  \code{\link{summary.emmGrid}}). All effects for which there are no
+  estimable contrasts are omitted from the results.
 }
 \description{
-This function produces an analysis-of-variance table based on linear
-functions of predictors in a model or \code{emmGrid} object. Optionally, one
-or more of the predictors may be used as a \dQuote{by} variable, so that
-separate tables of tests are produced for each combination of them. When
-equal weighting is used, the tests correspond to \dQuote{type III} tests such
-as \pkg{SAS} produces; but other weighting schemes provide generalizations.
+This function produces an analysis-of-variance-like table based on linear
+functions of predictors in a model or \code{emmGrid} object. Specifically,
+the function constructs, for each combination of factors, a set of
+(interaction) contrasts via \code{\link{contrast}}, and then tests them using
+\code{\link{test}} with \code{joint = TRUE}. Optionally, one or more of the
+predictors may be used as a \dQuote{by} variable, so that separate tables of
+tests are produced for each combination of them.
 }
 \details{
-The \code{joint_tests} function constructs, for each combination of factors,
-a set of (interaction) contrasts via \code{\link{contrast}}, and then tests
-them using \code{\link{test}} with \code{joint = TRUE}. This is more robust
+Usually, but not always, these tests correspond to \dQuote{type III} tests
+a la \pkg{SAS} (see more details later). It is more robust
 than the model-reduction approach used in \code{\link[car]{Anova}} in the
 \pkg{car} package. In the latter, the user must fit the model using
 sum-to-zero contrast specifications such as \code{contr.sum} in order to
 obtain correct type-III tests. But \code{joint_tests} does them correctly
 regardless of which contrast functions were used to construct the model
 matrix.
+
+While \code{joint_tests} always tests contrasts of EMMs,
+\pkg{SAS}'s type-III tests are not always constructed that way. 
+For example, if a factor interacts with a covariate, contrasts of 
+the factor EMMs give nonzero weights to the interaction effects
+whereas SAS's type-III estimable functions give zero weight to the 
+interactions; thus, the joint test of the EMM contrasts is not a 
+type-III test. In short, type-III tests are tests of terms in a 
+model, while \code{joint_tests} tests contrasts of EMMs. See the 
+illustration in the examples below.
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
@@ -46,6 +57,25 @@ joint_tests(pigs.lm)                     ## type III ANOVA
 joint_tests(pigs.lm, weights = "outer")  ## differently weighted
 
 joint_tests(pigs.lm, by = "source")      ## separate type III tests of 'percent'
+
+### Illustration of discrepancies with type III tests
+toydf = data.frame(
+    treat = rep(c("A", "B"), c(4, 6)),
+    female = c(1, 0, 0, 1,   0, 0, 0, 1, 1, 0 ),
+    resp = c(17, 12, 14, 19, 28, 26, 26, 34, 33, 27))
+options(contrasts = c("contr.sum", "contr.poly"))
+toy.lmc = lm(resp ~ treat * female, data = toydf)
+toy.lmf = lm(resp ~ treat * factor(female), data = toydf)
+# (These two models have identical fitted values and residuals)
+
+joint_tests(toy.lmc)           # table 1
+joint_tests(toy.lmf)           # table 2
+car::Anova(toy.lmc, type = 3)  # table 3
+car::Anova(toy.lmf, type = 3)  # table 4
+## Observe that tables 1 and 2, and 4 are the same, but 
+##   table 3 is different in its test for 'treat'
+## Exercise: Compare the F ratios with the squares of the t ratios
+##           of these models' coefficients.
 }
 \seealso{
 \code{\link{test}}

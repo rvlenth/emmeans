@@ -21,7 +21,7 @@
 test(object, null, ...)
 
 \method{test}{emmGrid}(object, null = 0, joint = FALSE, verbose = FALSE,
-  rows, by, ...)
+  rows, by, status = FALSE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{"emmGrid"} (see \link{emmGrid-class})}
@@ -104,6 +104,11 @@ of the effects being tested is printed.}
 \item{rows}{Integer values. The rows of L to be tested in the joint test. If
 missing, all rows of L are used. If not missing, \code{by} variables are
 ignored.}
+
+\item{status}{logical. If \code{TRUE}, a \code{note} column showing status
+flags (for rank deficiencies and estimability issues) is displayed even 
+when empty. If \code{FALSE}, the column is included only if there are 
+such issues.}
 }
 \value{
 \code{summary.emmGrid}, \code{confint.emmGrid}, and
