@@ -63,19 +63,26 @@ toydf = data.frame(
     treat = rep(c("A", "B"), c(4, 6)),
     female = c(1, 0, 0, 1,   0, 0, 0, 1, 1, 0 ),
     resp = c(17, 12, 14, 19, 28, 26, 26, 34, 33, 27))
-options(contrasts = c("contr.sum", "contr.poly"))
 toy.lmc = lm(resp ~ treat * female, data = toydf)
 toy.lmf = lm(resp ~ treat * factor(female), data = toydf)
 # (These two models have identical fitted values and residuals)
 
 joint_tests(toy.lmc)           # table 1
 joint_tests(toy.lmf)           # table 2
-car::Anova(toy.lmc, type = 3)  # table 3
-car::Anova(toy.lmf, type = 3)  # table 4
-## Observe that tables 1 and 2, and 4 are the same, but 
-##   table 3 is different in its test for 'treat'
-## Exercise: Compare the F ratios with the squares of the t ratios
-##           of these models' coefficients.
+
+# Results are the same with both models; but this is NOT true for SAS:
+
+## SAS output -- female as covariate
+## Source          DF    Type III SS    Mean Square   F Value   Pr > F
+## treat            1    252.0833333    252.0833333    208.62   <.0001
+## female           1     78.8928571     78.8928571     65.29   0.0002
+## female*treat     1      1.7500000      1.7500000      1.45   0.2741
+## 
+## SAS output -- female as factor
+## Source          DF    Type III SS    Mean Square   F Value   Pr > F
+## treat            1    488.8928571    488.8928571    404.60   <.0001
+## female           1     78.8928571     78.8928571     65.29   0.0002
+## treat*female     1      1.7500000      1.7500000      1.45   0.2741
 }
 \seealso{
 \code{\link{test}}
