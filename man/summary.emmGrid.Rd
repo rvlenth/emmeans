@@ -96,7 +96,7 @@ TRUE}, a joint test of the hypothesis L beta = null is performed, where L
 is \code{object@linfct} and beta is the vector of fixed effects estimated 
 by \code{object@betahat}. This will be either an \emph{F} test or a 
 chi-square (Wald) test depending on whether degrees of freedom are 
-available.}
+available. See also \code{\link{joint_tests}}.}
 
 \item{verbose}{Logical value. If \code{TRUE} and \code{joint = TRUE}, a table
 of the effects being tested is printed.}

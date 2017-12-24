@@ -2,7 +2,7 @@
 % Please edit documentation in R/test.R
 \name{joint_tests}
 \alias{joint_tests}
-\title{Compute \dQuote{type III} tests of the terms in a model}
+\title{Compute joint tests of the terms in a model}
 \usage{
 joint_tests(object, by = NULL, ...)
 }
@@ -23,66 +23,59 @@ a \code{summary_emm} object (same as is produced by
 \description{
 This function produces an analysis-of-variance-like table based on linear
 functions of predictors in a model or \code{emmGrid} object. Specifically,
-the function constructs, for each combination of factors, a set of
-(interaction) contrasts via \code{\link{contrast}}, and then tests them using
-\code{\link{test}} with \code{joint = TRUE}. Optionally, one or more of the
-predictors may be used as a \dQuote{by} variable, so that separate tables of
-tests are produced for each combination of them.
+the function constructs, for each combination of factors (or covariates
+reduced to two or more levels), a set of (interaction) contrasts via
+\code{\link{contrast}}, and then tests them using \code{\link{test}} with
+\code{joint = TRUE}. Optionally, one or more of the predictors may be used as
+\code{by} variable(s), so that separate tables of tests are produced for
+each combination of them.
 }
 \details{
-Usually, but not always, these tests correspond to \dQuote{type III} tests
-a la \pkg{SAS} (see more details later). It is more robust
-than the model-reduction approach used in \code{\link[car]{Anova}} in the
-\pkg{car} package. In the latter, the user must fit the model using
-sum-to-zero contrast specifications such as \code{contr.sum} in order to
-obtain correct type-III tests. But \code{joint_tests} does them correctly
-regardless of which contrast functions were used to construct the model
-matrix.
-
-While \code{joint_tests} always tests contrasts of EMMs,
-\pkg{SAS}'s type-III tests are not always constructed that way. 
-For example, if a factor interacts with a covariate, contrasts of 
-the factor EMMs give nonzero weights to the interaction effects
-whereas SAS's type-III estimable functions give zero weight to the 
-interactions; thus, the joint test of the EMM contrasts is not a 
-type-III test. In short, type-III tests are tests of terms in a 
-model, while \code{joint_tests} tests contrasts of EMMs. See the 
-illustration in the examples below.
+In models with only factors, no covariates, we believe these tests correspond
+to \dQuote{type III} tests a la \pkg{SAS}, as long as equal-weighted
+averaging is used and there are no estimability issues. When covariates are
+present and interact with factors, the results depend on how the covariate is
+handled in constructing the reference grid. See the example at the end of
+this documentation. The point that one must always remember is that
+\code{joint_tests} always tests contrasts among EMMs, in the context of the
+reference grid, whereas type III tests are tests of model coefficients --
+which may or may not have anything to do with EMMs or contrasts.
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 
-joint_tests(pigs.lm)                     ## type III ANOVA
+joint_tests(pigs.lm)                     ## will be same as type III ANOVA
 
 joint_tests(pigs.lm, weights = "outer")  ## differently weighted
 
-joint_tests(pigs.lm, by = "source")      ## separate type III tests of 'percent'
+joint_tests(pigs.lm, by = "source")      ## separate joint tests of 'percent'
 
-### Illustration of discrepancies with type III tests
-toydf = data.frame(
+### Comparisons with type III tests
+toy = data.frame(
     treat = rep(c("A", "B"), c(4, 6)),
     female = c(1, 0, 0, 1,   0, 0, 0, 1, 1, 0 ),
     resp = c(17, 12, 14, 19, 28, 26, 26, 34, 33, 27))
-toy.lmc = lm(resp ~ treat * female, data = toydf)
-toy.lmf = lm(resp ~ treat * factor(female), data = toydf)
+toy.fac = lm(resp ~ treat * factor(female), data = toy)
+toy.cov = lm(resp ~ treat * female, data = toy)
 # (These two models have identical fitted values and residuals)
 
-joint_tests(toy.lmc)           # table 1
-joint_tests(toy.lmf)           # table 2
+joint_tests(toy.fac)
 
-# Results are the same with both models; but this is NOT true for SAS:
+joint_tests(toy.cov)                      # ref grid uses mean(female) = 0.4
+joint_tests(toy.cov, cov.reduce = FALSE)  # ref grid uses female = c(0, 1) 
+joint_tests(toy.cov, at = list(female = c(-1, 1)))  # center on intercept
 
-## SAS output -- female as covariate
-## Source          DF    Type III SS    Mean Square   F Value   Pr > F
-## treat            1    252.0833333    252.0833333    208.62   <.0001
-## female           1     78.8928571     78.8928571     65.29   0.0002
-## female*treat     1      1.7500000      1.7500000      1.45   0.2741
-## 
-## SAS output -- female as factor
+# -- Compare with SAS output -- female as factor --
 ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 ## treat            1    488.8928571    488.8928571    404.60   <.0001
 ## female           1     78.8928571     78.8928571     65.29   0.0002
 ## treat*female     1      1.7500000      1.7500000      1.45   0.2741
+# 
+# -- Compare with SAS output -- female as covariate --
+## Source          DF    Type III SS    Mean Square   F Value   Pr > F
+## treat            1    252.0833333    252.0833333    208.62   <.0001
+## female           1     78.8928571     78.8928571     65.29   0.0002
+## female*treat     1      1.7500000      1.7500000      1.45   0.2741
 }
 \seealso{
 \code{\link{test}}
