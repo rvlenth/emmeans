@@ -114,6 +114,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
         vars = names(tbl) = 1
     }
     if (is.null(tbl)) {
+        possibly.random = FALSE
         m = match(c("formula", "data", "subset", "weights"), names(fcall), 0L)
         fcall = fcall[c(1L, m)]
         
@@ -128,12 +129,6 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
                      function(x) setdiff(all.names(x), 
                                          c("::",":::","[[","]]",all.vars(x)))))
             possibly.random = (max(nchar(c("", fcns))) > 1)
-            # if(max(nchar(c("", fcns))) > 1)
-            #     if(get_emm_option("msg.data.call"))
-            #         warning("Function call in data or subset: ", 
-            #                 "ref_grid/emmeans results may not\n   match the fitted ",
-            #                 "model if randomization is involved",
-            #                 call. = FALSE)
         }
         
         fcall$drop.unused.levels = TRUE
