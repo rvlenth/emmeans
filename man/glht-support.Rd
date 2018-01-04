@@ -36,7 +36,7 @@ by the \pkg{multcomp} package.
 }
 \details{
 \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
-(\code{linfct}) argument. It works similarly to \code{\link[multcomp]{mcp}},
+(\code{linfct}) argument. It works similarly to \code{\link[multcomp:glht]{mcp}},
 except with \code{specs} (and optionally \code{by} and \code{contr}
 arguments) provided as in a call to \code{\link{emmeans}}.
 }

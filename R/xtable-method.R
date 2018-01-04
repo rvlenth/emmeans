@@ -34,7 +34,7 @@
 #' an extension of \code{"xtableList"}. Unlike other \code{xtable} methods, the
 #' number of digits defaults to 4; and degrees of freedom and \emph{t} ratios
 #' are always formatted independently of \code{digits}. The \code{print} method
-#' uses \code{\link[xtable]{print.xtableList}}, and any \code{\dots} arguments are
+#' uses \code{\link[xtable:xtableList]{print.xtableList}}, and any \code{\dots} arguments are
 #' passed there.
 #'
 #' @param x Object of class \code{emmGrid}

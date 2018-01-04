@@ -37,8 +37,8 @@ A revised object opf class \code{emmGrid}
 The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 }
 \description{
-These functions provide methods for \code{\link[base]{rbind}} and
-\code{\link[base]{[}} that may be used to combine \code{emmGrid} objects
+These functions provide methods for \code{\link[base:cbind]{rbind}} and
+\code{\link[base:Extract]{[}} that may be used to combine \code{emmGrid} objects
 together, or to extract a subset of cases. The primary reason for 
 doing this would be to obtain multiplicity-adjusted results for smaller
 or larger families of tests or confidence intervals.

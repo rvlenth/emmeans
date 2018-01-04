@@ -76,7 +76,7 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #'   plotted horizontally or vertically
 #' @param xlab Character label for horizontal axis
 #' @param ylab Character label for vertical axis
-#' @param layout Numeric value passed to \code{\link[lattice]{dotplot}}
+#' @param layout Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
 #' @param type Character value specifying the type of prediction desired
 #'   (matching \code{"linear.predictor"}, \code{"link"}, or \code{"response"}).
 #'   See details under \code{\link{summary.emmGrid}}.
@@ -90,11 +90,11 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
 #' @param ... Additional arguments passed to \code{\link{update.emmGrid}} or
-#'   \code{\link[lattice]{dotplot}}
+#'   \code{\link[lattice:xyplot]{dotplot}}
 #'
 #' @section Details:
 #' If any \code{by} variables are in force, the plot is divided into separate
-#' panels. These functions use the \code{\link[lattice]{dotplot}} function, and
+#' panels. These functions use the \code{\link[lattice:xyplot]{dotplot}} function, and
 #' thus require that the \pkg{lattice} package be installed. For
 #' \code{"summary_emm"} objects, the \code{\dots} arguments in \code{plot}
 #' are passed \emph{only} to \code{dotplot}, whereas for \code{"emmGrid"}

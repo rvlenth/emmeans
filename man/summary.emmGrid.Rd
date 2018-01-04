@@ -214,7 +214,7 @@ The default \code{show} method for \code{emmGrid} objects (with the
     with a control, this produces \dQuote{exact} Tukey or Dunnett adjustments,
     respectively. However, the algorithm (from the \pkg{mvtnorm} package) uses a
     Monte Carlo method, so results are not exactly repeatable unless the same
-    random-number seed is used (see \code{\link[base]{set.seed}}). As the family
+    random-number seed is used (see \code{\link[base:Random]{set.seed}}). As the family
     size increases, the required computation time will become noticeable or even
     intolerable, making the \code{"tukey"}, \code{"dunnettx"}, or others more
     attractive.}

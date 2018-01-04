@@ -34,7 +34,7 @@ the two estimates. (A warning is issued if this can't be done.)}
 \item{int.adjust}{Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.}
 
 \item{...}{Additional arguments passed to \code{\link{update.emmGrid}} or
-\code{\link[lattice]{dotplot}}}
+\code{\link[lattice:xyplot]{dotplot}}}
 
 \item{horizontal}{Logical value specifying whether the intervals should be
 plotted horizontally or vertically}
@@ -43,7 +43,7 @@ plotted horizontally or vertically}
 
 \item{ylab}{Character label for vertical axis}
 
-\item{layout}{Numeric value passed to \code{\link[lattice]{dotplot}}}
+\item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}}
 }
 \description{
 Methods are provided to plot EMMs as side-by-side intervals, and optionally to display 
@@ -52,7 +52,7 @@ Methods are provided to plot EMMs as side-by-side intervals, and optionally to d
 \section{Details}{
 
 If any \code{by} variables are in force, the plot is divided into separate
-panels. These functions use the \code{\link[lattice]{dotplot}} function, and
+panels. These functions use the \code{\link[lattice:xyplot]{dotplot}} function, and
 thus require that the \pkg{lattice} package be installed. For
 \code{"summary_emm"} objects, the \code{\dots} arguments in \code{plot}
 are passed \emph{only} to \code{dotplot}, whereas for \code{"emmGrid"}
