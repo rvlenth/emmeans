@@ -1,4 +1,4 @@
-emmeans 1.0.0.9007
+emmeans 1.1
 ------------------
 
   * Fixed a bug in `emmeans()` wherein `weights` was ignored 
@@ -13,6 +13,7 @@ emmeans 1.0.0.9007
   * Fixed bug in `as.glht()` where it choked on `df = Inf`
   * Fixed bug occurring when a model call has no `data` or `subset`
   * New `joint_tests()` function tests all [interaction] contrasts
+
 
 emmeans 1.0
 -----------
