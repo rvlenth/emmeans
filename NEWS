@@ -1,5 +1,13 @@
-emmeans 1.1
+emmeans 1.1.0999.1
 ------------------
+ 
+  * Changed the way `terms` is accessed with `lme` objects to make
+    it more robust
+  * `emmeans:::convert_scripts()` renames output file more simply
+
+
+emmeans 1.1
+-----------
 
   * Fixed a bug in `emmeans()` wherein `weights` was ignored 
     when `specs` is a `list`

@@ -202,7 +202,7 @@ convert_scripts = function() {
             buffer = gsub("pmm *\\(", "emmGrid(", buffer)
             buffer = gsub("pmmobj *\\(", "emmobj(", buffer)
         }
-        outfile = file.path(dirname(infile), sub("\\.", "-emmGrid.", basename(infile)))
+        outfile = file.path(dirname(infile), sub("\\.", "-emm.", basename(infile)))
         write(buffer, outfile)
         cat(paste(infile, "\n\twas converted to\n", outfile, "\n"))
     }

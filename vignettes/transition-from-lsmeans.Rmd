@@ -123,8 +123,8 @@ to convert R scripts or R Markdown files to use **emmeans** functions.
   * You will also be prompted for whether or not you want calls to `lsmeans()` 
     or `pmmeans()`to be replaced by calls to `emmeans()` (it's your choice; the
     former still work).
-  * Each converted file is saved in the same directory with `-emmGrid` added to the
-    root name; for example, `myfile.R` is converted and saved as `myfile-emmGrid.R`.
+  * Each converted file is saved in the same directory with `-emm` added to the
+    root name; for example, `myfile.R` is converted and saved as `myfile-emm.R`.
 
 The conversion routines will convert the following to their `emmeans` counterparts:
 

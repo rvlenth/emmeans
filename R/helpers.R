@@ -202,7 +202,7 @@ recover_data.lme = function(object, data, ...) {
     fcall = object$call
     if (!is.null(fcall$weights))
         fcall$weights = nlme::varWeights(object$modelStruct)
-    recover_data(fcall, delete.response(terms(object)), object$na.action, data = data, ...)
+    recover_data(fcall, delete.response(object$terms), object$na.action, data = data, ...)
 }
 
 #' @export
