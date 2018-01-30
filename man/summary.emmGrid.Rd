@@ -4,6 +4,7 @@
 \alias{summary.emmGrid}
 \alias{predict.emmGrid}
 \alias{as.data.frame.emmGrid}
+\alias{[.summary_emm}
 \alias{confint.emmGrid}
 \alias{test}
 \alias{test.emmGrid}
@@ -15,6 +16,8 @@
 \method{predict}{emmGrid}(object, type, ...)
 
 \method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE, ...)
+
+\method{[}{summary_emm}(x, ...)
 
 \method{confint}{emmGrid}(object, parm, level = 0.95, ...)
 
@@ -82,7 +85,7 @@ more details.}
 \code{test.emmGrid}, these arguments are passed to
 \code{summary.emmGrid}.}
 
-\item{x}{emmGrid object}
+\item{x}{object of the given class}
 
 \item{row.names}{passed to \code{\link{as.data.frame}}}
 

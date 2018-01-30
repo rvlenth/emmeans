@@ -2,6 +2,7 @@
 
 S3method("+",emmGrid)
 S3method("[",emmGrid)
+S3method("[",summary_emm)
 S3method(as.data.frame,emmGrid)
 S3method(as.glht,default)
 S3method(as.glht,emmGrid)

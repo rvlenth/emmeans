@@ -493,7 +493,7 @@ predict.emmGrid <- function(object, type, ...) {
 # as.data.frame method
 
 #' @rdname summary.emmGrid
-#' @param x emmGrid object
+#' @param x object of the given class
 #' @param row.names passed to \code{\link{as.data.frame}}
 #' @param optional passed to \code{\link{as.data.frame}}
 #' @return The \code{as.data.frame} method returns a plain data frame,
@@ -503,6 +503,13 @@ predict.emmGrid <- function(object, type, ...) {
 as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     as.data.frame(summary(x, ...), row.names = row.names, optional = optional)
 }
+
+
+#' @rdname summary.emmGrid
+#' @method [ summary_emm
+#' @export
+"[.summary_emm" = function(x, ...)
+    as.data.frame(x)[...]
 
 
 
