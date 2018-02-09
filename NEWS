@@ -1,10 +1,12 @@
-emmeans 1.1.0999.2
+emmeans 1.1.0999.3
 ------------------
  
   * Changed the way `terms` is accessed with `lme` objects to make
     it more robust
   * `emmeans:::convert_scripts()` renames output file more simply
   * Added `[` method for class `summary_emm`
+  * Added `simple` argument for `contrast` - essentially the complement of `by`
+  * Various bug fixes, bullet-proofing
 
 
 emmeans 1.1

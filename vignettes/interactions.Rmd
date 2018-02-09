@@ -22,6 +22,7 @@ this vignette will be helpful in shedding some light on how to use the
 ## Contents {#contents}
 
   1. [Interacting factors](#factors)
+     a. [Simple contrasts](#simple)
   2. [Interaction contrasts](#contrasts)
   3. [Interactions with covariates](#covariates)
   4. [Summary](#summary)
@@ -97,6 +98,35 @@ Failure to describe what is actually going on in the data is a failure to do an 
 this vignette. I habitually opt out of star-gazing via 
 `options(show.signif.stars = FALSE)`
 
+### Simple contrasts {#simple}
+An alternative way to specify conditional contrasts or comparisons is through
+the use of the `simple` argument to `contrast()` or `pairs()`, which amounts to
+specifying which factors are *not* used as `by` variables. For example, consider:
+```{r}
+noise.emm <- emmeans(noise.lm, ~ size * side * type)
+```
+Then `pairs(noise.emm, simple = "size")` is the same as 
+`pairs(noise.emm, by = c("side", "type"))`.
+
+One may specify a list for `simple`, in which case separate runs are made with
+each element of the list. Thus, `pairs(noise.emm, simple = list("size",
+c("side", "type"))` returns two sets of contrasts: comparisons of `size` for
+each combination of the other two factors; and comparisons of `side*type`
+combinations for each `size`.
+
+A shortcut that generates all simple main-effect comparisons is to use `simple =
+"each"`. In this example, the result is the same as obtained using `simple =
+list("size", "side", "type")`.
+
+Ordinarily, when `simple` is a list (or equal to `"each"`), a list of contrast sets is returned. However, if the additional argument `combine` is set to `TRUE`, they are all combined into one family:
+```{r}
+contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")
+```
+The dots (`.`) in this result correspond to which simple effect is being
+displayed. If we re-run this same call with `combine = FALSE` or omitted, these
+twenty comparisons would be displayed in three broad sets of contrasts, each
+broken down further by combinations of `by` variables, each separately
+multiplicity-adjusted (a total of 16 different tables).
 
 [Back to Contents](#contents)
 

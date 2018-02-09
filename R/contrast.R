@@ -32,14 +32,14 @@
 contrast = function(object, ...)
     UseMethod("contrast")
 
-#' @rdname contrast 
+#' @rdname contrast
 #' @param object An object of class \code{emmGrid}
 #' @param method Character value giving the root name of a contrast method (e.g.
-#'   \code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a named 
+#'   \code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a named
 #'   \code{list} of coefficients (for a contrast or linear function) that must
-#'   each conform to the number of results in each \code{by} group.
-#'   In a multi-factor situation, the factor levels are combined and treated
-#'   like a single factor.
+#'   each conform to the number of results in each \code{by} group. In a
+#'   multi-factor situation, the factor levels are combined and treated like a
+#'   single factor.
 #' @param interaction Character vector or logical value. If this is specified,
 #'   \code{method} is ignored. See the \dQuote{Interaction contrasts} section
 #'   below for details.
@@ -54,34 +54,64 @@ contrast = function(object, ...)
 #'   used in table headings or subsequent contrasts of the returned object.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
 #'   to \code{\link{update.emmGrid}}, just after the object is constructed.
-#' @param type Character: prediction type (e.g., \code{"response"}) -- added to \code{options}
-#' @param adjust Character: adjustment method (e.g., \code{"bonferroni"}) -- added to \code{options}
+#' @param type Character: prediction type (e.g., \code{"response"}) -- added to
+#'   \code{options}
+#' @param adjust Character: adjustment method (e.g., \code{"bonferroni"}) --
+#'   added to \code{options}
+#' @param simple Character vector or list: Specify the factor(s) \emph{not} in
+#'   \code{by}, or a list thereof. See the section below on simple contrasts.
+#' @param combine Logical value that determines what is returned when
+#'   \code{simple} is a list. See the section on simple contrasts.
 #' @param ... Additional arguments passed to other methods
 #'
-#' @return \code{contrast} and \code{pairs} return an object of class \code{emmGrid}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
-#' 
-#' @section Pairs method:
-#' The call \code{pairs(object)} is equivalent to \code{contrast(object, method = "pairwise")}; and \code{pairs(object, reverse = TRUE)} is the same as \code{contrast(object, method = "revpairwise")}.
-#' 
-#' @section Interaction contrasts:
-#' When \code{interaction} is specified, interaction
-#' contrasts are computed: Contrasts are generated for each factor separately,
-#' one at a time; and these contrasts are applied to the object (the first time
-#' around) or to the previous result (subsequently). (Any factors specified in
-#' \code{by} are skipped.) The final result comprises contrasts of contrasts,
-#' or, equivalently, products of contrasts for the factors involved. Processing
-#' is done in the order of appearance in \code{object@levels}. With
-#' \code{interaction = TRUE}, \code{method} (if specified as character) is used
-#' for each contrast. If \code{interaction} is a character vector, the elements
-#' specify the respective contrast method(s); they are recycled as needed.
-#' 
+#' @return \code{contrast} and \code{pairs} return an object of class
+#'   \code{emmGrid}. Its grid will correspond to the levels of the contrasts and
+#'   any \code{by} variables. The exception is that an \code{\link{emm_list}}
+#'   object is returned if \code{simple} is a list and \code{complete} is
+#'   \code{FALSE}.
+#'
+#' @section Pairs method: The call \code{pairs(object)} is equivalent to
+#'   \code{contrast(object, method = "pairwise")}; and \code{pairs(object,
+#'   reverse = TRUE)} is the same as \code{contrast(object, method =
+#'   "revpairwise")}.
+#'
+#' @section Interaction contrasts: When \code{interaction} is specified,
+#'   interaction contrasts are computed: Contrasts are generated for each factor
+#'   separately, one at a time; and these contrasts are applied to the object
+#'   (the first time around) or to the previous result (subsequently). (Any
+#'   factors specified in \code{by} are skipped.) The final result comprises
+#'   contrasts of contrasts, or, equivalently, products of contrasts for the
+#'   factors involved. Processing is done in the order of appearance in
+#'   \code{object@levels}. With \code{interaction = TRUE}, \code{method} (if
+#'   specified as character) is used for each contrast. If \code{interaction} is
+#'   a character vector, the elements specify the respective contrast method(s);
+#'   they are recycled as needed.
+#'   
+#' @section Simple contrasts:
+#'   \code{simple} is essentially the complement of \code{by}: When
+#'   \code{simple} is a character vector, \code{by} is set to all the factors in
+#'   the grid \emph{except} those in \code{simple}. If \code{simple} is a list,
+#'   each element is used in turn as \code{simple}, and assembled in an
+#'   \code{"emm_list"}. To generate \emph{all} simple main effects, use
+#'   \code{simple = "each"} (this works unless there actually is a factor named
+#'   \code{"each"}). Note that a non-missing \code{simple} will cause \code{by}
+#'   to be ignored.
+#'   
+#'   Ordinarily, when \code{simple} is a list or \code{"each"}, the return value
+#'   is an \code{\link{emm_list}} object with each entry in correspondence with
+#'   the entries of \code{simple}. However, with \code{combine = TRUE}, the
+#'   elements are all combined into one family of contrasts in a single
+#'   \code{\link[=emmGrid-class]{emmGrid}} object using
+#'   \code{\link{rbind.emmGrid}}.. In that case, the \code{adjust} argument sets
+#'   the adjustment method for the combined set of contrasts.
+#'
 #' @note When \code{object} has a nesting structure (this can be seen via
 #'   \code{str(object)}), then any grouping factors involved are forced into
 #'   service as \code{by} variables, and the contrasts are thus computed
 #'   separately in each nest. This in turn may lead to an irregular grid in the
 #'   returned \code{emmGrid} object, which may not be valid for subsequent
 #'   \code{emmeans} calls.
-#' 
+#'
 #' @method contrast emmGrid
 #' @export
 #'
@@ -91,7 +121,22 @@ contrast = function(object, ...)
 #' contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
 #' pairs(warp.emm)               # ditto
 #' contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+#' pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
 #' 
+#' # Do all "simple" comparisons, combined into one family
+#' pairs(warp.emm, simple = "each", combine = TRUE)
+#' 
+#' \dontrun{
+#' 
+#' ## Note that the following are NOT the same:
+#' contrast(warp.emm, simple = c("wool", "tension"))
+#' contrast(warp.emm, simple = list("wool", "tension"))
+#' ## The first generates contrasts for combinations of wool and tension
+#' ##   (same as by = NULL)
+#' ## The second generates contrasts for wool by tension, and for 
+#' ##   tension by wool, respectively.
+#' }
+#'
 #' # An interaction contrast for tension:wool
 #' tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
 #' tw.emm          # see the estimates
@@ -99,8 +144,13 @@ contrast = function(object, ...)
 contrast.emmGrid = function(object, method = "eff", interaction = FALSE, 
                         by, offset = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
-                        type, adjust, ...) 
+                        type, adjust, simple, combine = FALSE, ...) 
 {
+    if(!missing(simple))
+        return(.simcon(object, method = method, interaction = interaction,
+                      offset = offset, name = name, options = options,
+                      type = type, simple = simple, combine = combine, 
+                      adjust = adjust, ...))
     if(missing(by)) 
         by = object@misc$by.vars
     if(length(by) == 0) # character(0) --> NULL
@@ -162,6 +212,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     }
     args$sep = ","
     levs = do.call("paste", args)  # NOTE - these are levels for the first (or only) by-group
+    if (length(levs) == 0)   # prevent error when there are no levels to contrast
+        method = "eff"
     
     
     if (is.list(method)) {
@@ -263,6 +315,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if (!is.null(misc$tran)) {
         misc$orig.tran = misc$tran
         true.con = all(zapsmall(apply(cmat, 2, sum)) == 0) # each set of coefs sums to 0
+        if(is.na(true.con)) # prevent error when there are no contrasts
+            true.con = FALSE
         if (true.con && misc$tran %in% c("log", "genlog", "logit")) {
             misc$log.contrast = TRUE      # remember how we got here; used by summary
             misc$orig.inv.lbl = misc$inv.lbl
@@ -300,6 +354,45 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if(!is.null(options)) {
         options$object = result
         result = do.call("update.emmGrid", options)
+    }
+    result
+}
+
+
+# Add-on to support `simple` argument - the complement of `by`
+# e.g., with factors A, B, C, simple = "A" <==> by = c("B", "C")
+# Note `by` is an argument so that it can be ignored and never duplicated
+# If `simple` is a list, we run this on each element
+# If simple = "each", we run it on each factorin the grid
+# We handle `adjust`` ourselves rather than passing it to `contrast``
+.simcon = function(object, ..., simple, by, combine = FALSE, adjust) {
+    if (is.list(simple)) {
+        if(is.null(names(simple)))
+            names(simple) = sapply(simple, function(.) 
+                paste("simple contrasts of", paste0(., collapse = "*")))
+        result = lapply(simple, function(.) 
+            .simcon(object, ..., simple = .))
+        class(result) = c("emm_list", "list")
+        if(combine)
+            result = do.call(rbind.emmGrid, result)
+    }
+    else if ((simple == "each") && !("each" %in% names(object@levels))) {
+        result = .simcon(object, ..., 
+            simple = as.list(names(object@levels)), combine = combine)
+    }
+    else {
+        facs = names(object@levels)
+        by = setdiff(facs, simple)
+        if (length(by) == 0) by = NULL
+        result = contrast.emmGrid(object, ..., by = by)
+    }
+    if (!missing(adjust)) {
+        if (is.list(result)) {
+            for (i in seq_along(result))
+                result[[i]] = update(result[[i]], adjust = adjust)
+        }
+        else
+            result = update(result, adjust = adjust)
     }
     result
 }

@@ -11,7 +11,7 @@ contrast(object, ...)
 
 \method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE, by,
   offset = NULL, name = "contrast", options = get_emm_option("contrast"),
-  type, adjust, ...)
+  type, adjust, simple, combine = FALSE, ...)
 
 \method{pairs}{emmGrid}(x, reverse = FALSE, ...)
 
@@ -23,11 +23,11 @@ contrast(object, ...)
 \item{...}{Additional arguments passed to other methods}
 
 \item{method}{Character value giving the root name of a contrast method (e.g.
-\code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a named 
+\code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a named
 \code{list} of coefficients (for a contrast or linear function) that must
-each conform to the number of results in each \code{by} group.
-In a multi-factor situation, the factor levels are combined and treated
-like a single factor.}
+each conform to the number of results in each \code{by} group. In a
+multi-factor situation, the factor levels are combined and treated like a
+single factor.}
 
 \item{interaction}{Character vector or logical value. If this is specified,
 \code{method} is ignored. See the \dQuote{Interaction contrasts} section
@@ -48,16 +48,28 @@ used in table headings or subsequent contrasts of the returned object.}
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
 to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
-\item{type}{Character: prediction type (e.g., \code{"response"}) -- added to \code{options}}
+\item{type}{Character: prediction type (e.g., \code{"response"}) -- added to
+\code{options}}
 
-\item{adjust}{Character: adjustment method (e.g., \code{"bonferroni"}) -- added to \code{options}}
+\item{adjust}{Character: adjustment method (e.g., \code{"bonferroni"}) --
+added to \code{options}}
+
+\item{simple}{Character vector or list: Specify the factor(s) \emph{not} in
+\code{by}, or a list thereof. See the section below on simple contrasts.}
+
+\item{combine}{Logical value that determines what is returned when
+\code{simple} is a list. See the section on simple contrasts.}
 
 \item{x}{An \code{emmGrid} object}
 
 \item{reverse}{Logical value - determines whether to use \code{"pairwise"} (if \code{TRUE}) or \code{"revpairwise"} (if \code{FALSE}).}
 }
 \value{
-\code{contrast} and \code{pairs} return an object of class \code{emmGrid}. Its grid will correspond to the levels of the contrasts and any \code{by} variables.
+\code{contrast} and \code{pairs} return an object of class
+  \code{emmGrid}. Its grid will correspond to the levels of the contrasts and
+  any \code{by} variables. The exception is that an \code{\link{emm_list}}
+  object is returned if \code{simple} is a list and \code{complete} is
+  \code{FALSE}.
 
 \code{coef} returns a \code{data.frame} containing the object's grid, along with columns named \code{c.1, c.2, ...} containing the contrast coefficients. If
 }
@@ -75,22 +87,44 @@ When \code{object} has a nesting structure (this can be seen via
   \code{emmeans} calls.
 }
 \section{Pairs method}{
-
-The call \code{pairs(object)} is equivalent to \code{contrast(object, method = "pairwise")}; and \code{pairs(object, reverse = TRUE)} is the same as \code{contrast(object, method = "revpairwise")}.
+ The call \code{pairs(object)} is equivalent to
+  \code{contrast(object, method = "pairwise")}; and \code{pairs(object,
+  reverse = TRUE)} is the same as \code{contrast(object, method =
+  "revpairwise")}.
 }
 
 \section{Interaction contrasts}{
+ When \code{interaction} is specified,
+  interaction contrasts are computed: Contrasts are generated for each factor
+  separately, one at a time; and these contrasts are applied to the object
+  (the first time around) or to the previous result (subsequently). (Any
+  factors specified in \code{by} are skipped.) The final result comprises
+  contrasts of contrasts, or, equivalently, products of contrasts for the
+  factors involved. Processing is done in the order of appearance in
+  \code{object@levels}. With \code{interaction = TRUE}, \code{method} (if
+  specified as character) is used for each contrast. If \code{interaction} is
+  a character vector, the elements specify the respective contrast method(s);
+  they are recycled as needed.
+}
 
-When \code{interaction} is specified, interaction
-contrasts are computed: Contrasts are generated for each factor separately,
-one at a time; and these contrasts are applied to the object (the first time
-around) or to the previous result (subsequently). (Any factors specified in
-\code{by} are skipped.) The final result comprises contrasts of contrasts,
-or, equivalently, products of contrasts for the factors involved. Processing
-is done in the order of appearance in \code{object@levels}. With
-\code{interaction = TRUE}, \code{method} (if specified as character) is used
-for each contrast. If \code{interaction} is a character vector, the elements
-specify the respective contrast method(s); they are recycled as needed.
+\section{Simple contrasts}{
+
+  \code{simple} is essentially the complement of \code{by}: When
+  \code{simple} is a character vector, \code{by} is set to all the factors in
+  the grid \emph{except} those in \code{simple}. If \code{simple} is a list,
+  each element is used in turn as \code{simple}, and assembled in an
+  \code{"emm_list"}. To generate \emph{all} simple main effects, use
+  \code{simple = "each"} (this works unless there actually is a factor named
+  \code{"each"}). Note that a non-missing \code{simple} will cause \code{by}
+  to be ignored.
+  
+  Ordinarily, when \code{simple} is a list or \code{"each"}, the return value
+  is an \code{\link{emm_list}} object with each entry in correspondence with
+  the entries of \code{simple}. However, with \code{combine = TRUE}, the
+  elements are all combined into one family of contrasts in a single
+  \code{\link[=emmGrid-class]{emmGrid}} object using
+  \code{\link{rbind.emmGrid}}.. In that case, the \code{adjust} argument sets
+  the adjustment method for the combined set of contrasts.
 }
 
 \examples{
@@ -99,6 +133,21 @@ warp.emm <- emmeans(warp.lm, ~ tension | wool)
 contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
 pairs(warp.emm)               # ditto
 contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
+
+# Do all "simple" comparisons, combined into one family
+pairs(warp.emm, simple = "each", combine = TRUE)
+
+\dontrun{
+
+## Note that the following are NOT the same:
+contrast(warp.emm, simple = c("wool", "tension"))
+contrast(warp.emm, simple = list("wool", "tension"))
+## The first generates contrasts for combinations of wool and tension
+##   (same as by = NULL)
+## The second generates contrasts for wool by tension, and for 
+##   tension by wool, respectively.
+}
 
 # An interaction contrast for tension:wool
 tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
