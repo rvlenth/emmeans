@@ -369,7 +369,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if (is.list(simple)) {
         if(is.null(names(simple)))
             names(simple) = sapply(simple, function(.) 
-                paste("simple contrasts of", paste0(., collapse = "*")))
+                paste("simple contrasts for", paste0(., collapse = "*")))
         result = lapply(simple, function(.) 
             .simcon(object, ..., simple = .))
         class(result) = c("emm_list", "list")

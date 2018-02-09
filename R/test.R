@@ -254,11 +254,10 @@ joint_tests = function(object, by = NULL, ...) {
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
     if (any(result$note != "")) {
-        if (any(result$note %in% c("d", "d e")))  
+        msg = character(0)
+        if (any(result$note %in% c(" d", " d e")))  
             msg = .dep.msg
-        else 
-            msg = character(0)
-        if (any(result$note %in% c("  e", "d e")))
+        if (any(result$note %in% c("  e", " d e")))
             msg = c(msg, .est.msg)
         attr(result, "mesg") = msg
     }
