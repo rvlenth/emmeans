@@ -1,0 +1,110 @@
+---
+title: "Routine analyses with emmeans"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{IRoutine analyses in emmeans}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, results = "hide", message = FALSE}
+require("emmeans")
+options(show.signif.stars = FALSE)
+knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
+```
+This vignette contains examples of "routine" use of the **emmeans** package.
+This is provided with the caveat that **routine analysis is to statistics what
+fast food is to nutrition** -- often not healthy. I am an advocate for "slow
+analysis": Proceeding in small steps, carefully considering the results at each
+stage (or at least reading them). Nonetheless, there is some value in seeing
+some uncomplicated examples of common scenarios; and the kinds of uses that I
+most frequently receive questions about. Generally, ANOVA tables, diagnostic
+plots, etc. are omitted; only the follow-up analyses using the **emmeans**
+package (assumed already loaded) are shown.
+
+## Contents {#contents}
+
+  1. [One factor, measurement data, with multiple comparisons](#onetreat)
+  
+
+## One factor (measurement data), with multiple comparisons {#onetreat}
+See `?pigs` for data details. Here is a one-factor model (not necessarily a good one)
+```{r}
+pigs.lm = lm(conc ~ source, data = pigs)
+```
+Obtain the `source` means:
+```{r}
+emm = emmeans(pigs.lm, "source")
+emm
+```
+Plot the means:
+```{r fig.height = 1.5}
+plot(emm)
+```
+
+This plot shows the means and 95% confidence intervals. 
+
+Multiple comparisons of the means:
+```{r}
+pairs(emm)
+```
+By default, the Tukey adjustment is applied. Note that `fish` and `soy` differ
+significantly (at the .05 level) but their confidence intervals overlap. **Don't
+ever use confidence intervals for individual means to judge comparisons between
+means** -- this is an incorrect use of confidence intervals.
+
+Here is a correct use of confidence intervals to do comparisons -- plot the
+confidence intervals for the differences among means:
+```{r fig.height = 1.5}
+plot(pairs(emm))
+```
+
+The intervals that contain zero correspond to nonsignificant differences.
+
+The tables of means and comparisons can be obtained in one step using
+`emmeans(pigs.lm, pairwise ~ source)`. However, I recommend doing this in two
+steps because often you'll want to do other things with just one set of results
+(e.g., plotting them).
+
+### Other contrasts
+Sometimes you want other contrasts than pairwise comparisons. For example:
+```{r}
+contrast(emm, "trt.vs.ctrl1")   # Comparisons with the first
+
+contrast(emm, list(con1 = c(-1, .5, .5), con2 = c(0, 1, -1))) # custom contrasts
+```
+See `?"contrast-methods"` for more details
+
+## One factor and one covariate {#covariate}
+The `pigs` dataset has the factor `source` and the numeric predictor `percent`.
+The above model is replaced by one that includes a linear trend for `percent`:
+```{r}
+pigs.lm = lm(conc ~ source + percent, data = pigs)
+```
+The estimated marginal means for this model are in fact the usual adjusted means:
+```{r}
+emm = emmeans(pigs.lm, "source")
+emm
+```
+You may plot, compare, or contrast these like in the preceding example.
+
+### Covariate in the causal path
+The above adjusted means are useful for comparing `source`s when `percent` is
+held constant at its mean. However, if `source` can affect `percent`, then
+`percent` becomes a mediating covariate and it is no longer approriate to act as
+though it can be controlled independently of `source`. In that case, we should
+predict `percent` separately for each `source`. In such instances, it is best to
+compute the reference grid separately:
+```{r}
+rg = ref_grid(pigs.lm, cov.reduce = percent ~ source)
+emmeans(rg, "source")
+```
+Here we can see the `percent` values used:
+```{r}
+rg@grid
+```
+
+Disclaimer: This works as a numerical example, but in the context of the actual
+experiment, `souce` and `percent` were controlled individually and hence this
+second analysis is inappropriate.
