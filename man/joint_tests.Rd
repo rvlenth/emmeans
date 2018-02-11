@@ -4,7 +4,7 @@
 \alias{joint_tests}
 \title{Compute joint tests of the terms in a model}
 \usage{
-joint_tests(object, by = NULL, ...)
+joint_tests(object, by = NULL, show0df = FALSE, ...)
 }
 \arguments{
 \item{object}{a fitted model or an \code{emmGrid}. If a fitted model, it is
@@ -12,6 +12,9 @@ replaced by \code{ref_grid(object, cov.reduce = range, ...)}}
 
 \item{by}{character names of \code{by} variables. Separate sets of tests are
 run for each combination of these.}
+
+\item{show0df}{logical value; if \code{TRUE}, results with zero numerator
+degrees of freedom are displayed, if \code{FALSE} they are skipped}
 
 \item{...}{additional arguments passed to \code{ref_grid} and \code{emmeans}}
 }

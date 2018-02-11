@@ -1,20 +1,19 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
-Version: 1.1.0999.3
-Date: 2018-02-08
+Version: 1.1.0999.4
+Date: 2018-02-11
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Jonathon", "Love", role = "ctb"),
     person("Maxime", "Herve", role = "ctb"))
 Depends: R (>= 3.2)
-Imports: estimability, ggplot2, graphics, methods, stats, utils, nlme,
+Imports: estimability (>= 1.3), ggplot2, graphics, methods, stats, utils, nlme,
          coda (>= 0.17), multcomp, plyr, mvtnorm, xtable (>= 1.8-2)
 Suggests: bayesplot, car, lattice, mediation, multcompView, ordinal, 
           pbkrtest (>= 0.4-1), lme4, lmerTest (>= 2.0.32), 
           MASS, rsm, 
-          knitr, rmarkdown,
-    testthat
+          knitr, rmarkdown, testthat
 Enhances: CARBayes, coxme, gee, geepack, glmmADMB, MCMCglmm, MCMCpack, 
           nnet, pscl, rstanarm, survival         
 Additional_repositories: http://glmmadmb.r-forge.r-project.org/repos

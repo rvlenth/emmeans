@@ -76,6 +76,10 @@ test.emmGrid = function(object, null = 0,
         estble.idx = which(!is.na(object@bhat))
         bhat = bhat[estble.idx]
         est.flag = !is.na(object@nbasis[1])
+        if(est.flag) {
+            est.tol = get_emm_option("estble.tol")
+            nbasis = zapsmall(object@nbasis)
+        }
 
         if (!missing(rows))
             by.rows = list(sel.rows = rows)
@@ -96,9 +100,10 @@ test.emmGrid = function(object, null = 0,
             rrflag = 0 + 2 * any(narows)  ## flag for estimability issue
             
             if(est.flag)  { 
-                
-                if (any(!estimability::is.estble(LL, object@nbasis)))
+                if (any(!estimability::is.estble(LL, nbasis, est.tol))) {
+                    LL = estimability::estble.subspace(zapsmall(LL), nbasis)
                     rrflag = bitwOr(rrflag, 2)
+                }
                 LL = LL[, estble.idx, drop = FALSE]
             }
             # Check rank
@@ -154,7 +159,7 @@ test.emmGrid = function(object, null = 0,
 
 # messages (also needed by joint_tests())
 .dep.msg = "d: df1 reduced due to linear dependence"
-.est.msg = "e: estimability issue may distort result"
+.est.msg = "e: df1 reduced due to non-estimability"
 
 # Do all joint tests of contrasts. by, ... passed to emmeans() calls
 
@@ -183,6 +188,8 @@ test.emmGrid = function(object, null = 0,
 #'    replaced by \code{ref_grid(object, cov.reduce = range, ...)}
 #' @param by character names of \code{by} variables. Separate sets of tests are
 #'    run for each combination of these.
+#' @param show0df logical value; if \code{TRUE}, results with zero numerator
+#'    degrees of freedom are displayed, if \code{FALSE} they are skipped
 #' @param ... additional arguments passed to \code{ref_grid} and \code{emmeans}
 #'
 #' @return a \code{summary_emm} object (same as is produced by 
@@ -227,7 +234,7 @@ test.emmGrid = function(object, null = 0,
 #' ## treat            1    252.0833333    252.0833333    208.62   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
-joint_tests = function(object, by = NULL, ...) {
+joint_tests = function(object, by = NULL, show0df = FALSE, ...) {
     if (!inherits(object, "emmGrid"))
         object = ref_grid(object, ...)
     facs = setdiff(names(object@levels), by)
@@ -249,7 +256,8 @@ joint_tests = function(object, by = NULL, ...) {
     }
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
     result = result[order(result[[1]]), -1, drop = FALSE]
-    result = result[result$df1 > 0, , drop = FALSE]
+    if(!show0df)
+        result = result[result$df1 > 0, , drop = FALSE]
     class(result) = c("summary_emm", "data.frame")
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
@@ -257,7 +265,7 @@ joint_tests = function(object, by = NULL, ...) {
         msg = character(0)
         if (any(result$note %in% c(" d", " d e")))  
             msg = .dep.msg
-        if (any(result$note %in% c("  e", " d e")))
+        if (any(result$note %in% c("   e", " d e")))
             msg = c(msg, .est.msg)
         attr(result, "mesg") = msg
     }

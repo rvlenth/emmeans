@@ -644,7 +644,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
                            sidak = 1 - (1 - unadj.p)^n.contr,
                            # NOTE: tukey, scheffe, dunnettx all assumed 2-sided!
                            tukey = ptukey(sqrt(2)*abst, fam.size, zapsmall(df), lower.tail=FALSE),
-                           scheffe = pf(t[rows]^2 / (n.contr + scheffe.adj), n.contr + scheffe.adj, 
+                           scheffe = pf(t[rows]^2 / (fam.size + scheffe.adj), fam.size + scheffe.adj, 
                                         df, lower.tail = FALSE),
                            dunnettx = 1 - .pdunnx(abst, n.contr, df),
                            mvt = 1 - .my.pmvt(t[rows], df, corrmat[rows,rows,drop=FALSE], -tail) # tricky - reverse the tail because we're subtracting from 1 
@@ -662,7 +662,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     else {
         nc = n.contr
         fs = fam.size
-        scheffe.dim = nc + scheffe.adj
+        scheffe.dim = fs + scheffe.adj
     }
     do.msg = (chk.adj > 1) && (nc > 1) && !((fs < 3) && (chk.adj < 10)) 
     if (do.msg) {
@@ -724,7 +724,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     else {
         nc = n.contr
         fs = fam.size
-        scheffe.dim = nc + scheffe.adj
+        scheffe.dim = fs + scheffe.adj
     }
     do.msg = (chk.adj > 1) && (nc > 1) && 
         !((fs < 3) && (chk.adj < 10)) 
@@ -753,7 +753,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
                sidak = -qt((1 - level^(1/n.contr))/adiv, df),
                bonferroni = -qt((1-level)/n.contr/adiv, df),
                tukey = qtukey(level, fam.size, df) / sqrt(2),
-               scheffe = sqrt(n.contr + scheffe.adj * qf(level, n.contr + scheffe.adj, df)),
+               scheffe = sqrt((fam.size + scheffe.adj) * qf(level, fam.size + scheffe.adj, df)),
                dunnettx = .qdunnx(level, n.contr, df),
                mvt = .my.qmvt(level, df, corrmat[rows,rows,drop=FALSE], tail)
         )
