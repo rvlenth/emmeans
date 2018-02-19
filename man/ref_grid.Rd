@@ -4,7 +4,7 @@
 \alias{ref_grid}
 \title{Create a reference grid from a fitted model}
 \usage{
-ref_grid(object, at, cov.reduce = mean, mult.name, mult.levs,
+ref_grid(object, at, cov.reduce = mean, mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type,
   transform = c("none", "response", "mu", "unlink", "log"), nesting, ...)
 }
@@ -20,11 +20,11 @@ these. Each covariate \emph{not} specified in \code{at} is reduced
 according to these specifications. See the section below on 
 \dQuote{Using \code{cov.reduce}}.}
 
-\item{mult.name}{Character value: the name to give to the pseudo-factor
+\item{mult.names}{Character value: the name(s) to give to the pseudo-factor(s)
 whose levels delineate the elements of a multivariate response. If this is
-provided, it overrides the default name, e.g., \code{"rep.meas"} for an
-\code{\link[=lm]{mlm}} object or \code{"cut"} for a
-\code{\link[MASS]{polr}} object.}
+provided, it overrides the default name(s) used for
+\code{class(object)} when it has a multivariate response
+(e.g., the default is \code{"rep.meas"} for \code{"mlm"} objects).}
 
 \item{mult.levs}{A named list of levels for the dimensions of a multivariate
 response. If there is more than one element, the combinations of levels are
@@ -202,7 +202,7 @@ ref_grid(fiber.lm, cov.reduce = diameter ~ machine)
 
 # Multivariate example
 MOats.lm = lm(yield ~ Block + Variety, data = MOats)
-ref_grid(MOats.lm, mult.name = "nitro")
+ref_grid(MOats.lm, mult.names = "nitro")
 # Silly illustration of how to use 'mult.levs' to make comb's of two factors
 ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 

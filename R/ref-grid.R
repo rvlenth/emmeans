@@ -54,11 +54,11 @@
 #'   these. Each covariate \emph{not} specified in \code{at} is reduced
 #'   according to these specifications. See the section below on 
 #'   \dQuote{Using \code{cov.reduce}}.
-#' @param mult.name Character value: the name to give to the pseudo-factor
+#' @param mult.names Character value: the name(s) to give to the pseudo-factor(s)
 #'   whose levels delineate the elements of a multivariate response. If this is
-#'   provided, it overrides the default name, e.g., \code{"rep.meas"} for an
-#'   \code{\link[=lm]{mlm}} object or \code{"cut"} for a
-#'   \code{\link[MASS]{polr}} object.
+#'   provided, it overrides the default name(s) used for
+#'   \code{class(object)} when it has a multivariate response
+#'   (e.g., the default is \code{"rep.meas"} for \code{"mlm"} objects).
 #' @param mult.levs A named list of levels for the dimensions of a multivariate
 #'   response. If there is more than one element, the combinations of levels are
 #'   used, in \code{\link{expand.grid}} order. The (total) number of levels must
@@ -210,11 +210,11 @@
 #' 
 #' # Multivariate example
 #' MOats.lm = lm(yield ~ Block + Variety, data = MOats)
-#' ref_grid(MOats.lm, mult.name = "nitro")
+#' ref_grid(MOats.lm, mult.names = "nitro")
 #' # Silly illustration of how to use 'mult.levs' to make comb's of two factors
 #' ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 #' 
-ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs, 
+ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
                      transform = c("none", "response", "mu", "unlink", "log"), 
                      nesting, ...) 
@@ -391,28 +391,30 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.name, mult.levs,
     multresp = character(0) ### ??? was list()
     ylevs = misc$ylevs
     if(!is.null(ylevs)) { # have a multivariate situation
-       if (missing(mult.levs)) {
-            if (missing(mult.name))
-                mult.name = names(ylevs)[1]
-            ref.levels[[mult.name]] = ylevs[[1]]
-            multresp = mult.name
-            MF = data.frame(ylevs)
-            names(MF) = mult.name
-        }
-        else {
+        if (missing(mult.levs)) {
+            mult.levs = ylevs
+            if(!missing(mult.names)) {
+                k = seq_len(min(length(ylevs), length(mult.names)))
+                names(mult.levs)[k] = mult.names[k]
+            } 
+            if (length(ylevs) > 1)
+                ylevs = list(seq_len(prod(sapply(mult.levs, length))))
+            
             k = prod(sapply(mult.levs, length))
             if (k != length(ylevs[[1]])) 
-                stop("supplied 'mult.levs' is of different length than that of multivariate response")
+                stop("supplied 'mult.levs' is of different length ",
+                     "than that of multivariate response")
             for (nm in names(mult.levs))
                 ref.levels[[nm]] = mult.levs[[nm]]
             multresp = names(mult.levs)
             MF = do.call("expand.grid", mult.levs)
+            grid = merge(grid, MF)
         }
-        ###grid = do.call("expand.grid", ref.levels)
-        grid = merge(grid, MF)
+            
         # add any matrices
         for (nm in names(matlevs))
-            grid[[nm]] = matrix(rep(matlevs[[nm]], each=nrow(grid)), nrow=nrow(grid))
+            grid[[nm]] = matrix(rep(matlevs[[nm]], 
+                                    each=nrow(grid)), nrow=nrow(grid))
     }
 
 # Here's a complication. If a numeric predictor was coerced to a factor, we had to
