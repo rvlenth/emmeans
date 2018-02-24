@@ -46,8 +46,8 @@
 #'   \item{\code{side}}{The side of the car where measurement was taken -- a
 #'     factor with levels \code{L} and \code{R}.}
 #'   }
-#' @source The dataset was obtained from
-#'   \url{http://my.ilstu.edu/~gjin/gjtpage/HSC445/Data/airpullutionfiltersdat.html} 
+#' @source The dataset was obtained from the Data and Story Library,
+#'   \url{http://lib.stat.cmu.edu/DASL/Datafiles/airpullutionfiltersdat.html} 
 #'   (sic). However, the factor levels were assigned meaningful names, and the
 #'   observations were sorted in random order as if this were the run order of
 #'   the experiment.

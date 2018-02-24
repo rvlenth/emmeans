@@ -1,4 +1,4 @@
-emmeans 1.1.0999.6
+emmeans 1.1.2
 ------------------
  
   * Changed the way `terms` is accessed with `lme` objects to make
