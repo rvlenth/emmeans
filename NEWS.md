@@ -1,4 +1,4 @@
-emmeans 1.1.0999.5
+emmeans 1.1.0999.6
 ------------------
  
   * Changed the way `terms` is accessed with `lme` objects to make
@@ -10,6 +10,7 @@ emmeans 1.1.0999.5
   * Made `ref_grid()` accept `ylevs` list of length > 1; 
     also slight argument change: `mult.name` -> `mult.names`
   * Various bug fixes, bullet-proofing
+  * Fixes to make Markdown files render better
 
 
 emmeans 1.1
@@ -62,10 +63,7 @@ emmeans 0.9.1
   * Added support for gam::gam objects
   * Fixes to `vcov()` calls to comply with recent R-devel changes
   
-### NOTE: **emmeans** is a continuation of the **lsmeans** package. 
-    New developments will take place in **emmeans**, and **lsmeans** 
-    will remain static and eventually will be archived.
-    
+
 emmeans 0.9
 -----------
 
@@ -112,5 +110,9 @@ to that package being retired.
     help with transition
   * Moved `Suggests` pkgs to `Enhances` when not needed for 
     building/testing
-  * NEWS file is now structured for Markdown
+
+### NOTE: **emmeans** is a continuation of the **lsmeans** package. 
+New developments will take place in **emmeans**, and **lsmeans** 
+will remain static and eventually will be archived.
+    
 
