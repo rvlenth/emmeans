@@ -1,3 +1,9 @@
+emmeans 1.1.2.9001
+------------------
+
+  * Formatting corrections in documentation
+  
+
 emmeans 1.1.2
 ------------------
  

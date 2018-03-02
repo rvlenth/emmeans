@@ -355,7 +355,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' \item{\code{estble.tol}}{Tolerance for determining estimability in
 #' rank-deficient cases. If absent, the value in \code{emm_defaults$estble.tol)}
 #' is used.}
-#' \item{code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
+#' \item{\code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
 #' latest reference grid created to be saved in \code{.Last.ref_grid}}
 #' \item{Options for \code{lme4::lmerMod} models}{Options \code{lmer.df},
 #' \code{disable.pbkrtest}, \code{pbkrtest.limit}, \code{disable.lmerTest},
