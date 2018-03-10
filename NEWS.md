@@ -1,7 +1,9 @@
-emmeans 1.1.2.9001
+emmeans 1.1.2.9002
 ------------------
 
   * Formatting corrections in documentation
+  * Fixed bug for survival models where `Surv()` was interpreted
+    as a response transformation.
   
 
 emmeans 1.1.2

@@ -337,6 +337,7 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
         misc = list(tran = "log", inv.lbl = "response")
     else 
         misc = list()
+    misc$postGridHook = .notran2   # removes "Surv()" as response transformation
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 
@@ -356,7 +357,13 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
     result$X = result$X - rep(object$means, each = nrow(result$X))
     result$misc$tran = "log"
     result$misc$inv.lbl = "hazard"
+    result$misc$postGridHook = .notran2   # removes "Surv()" as response transformation
     result
+}
+
+.notran2 = function(object) {
+    object@misc$tran2 = NULL
+    object
 }
 
 # Note: Very brief experimentation suggests coxph.penal also works.
@@ -382,6 +389,7 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     nbasis = estimability::all.estble
     dffun = function(k, dfargs) Inf
     misc = list(tran = "log", inv.lbl = "hazard")
+    misc$postGridHook = .notran2   # removes "Surv()" as response transformation
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
          dfargs = list(), misc = misc)
 }
