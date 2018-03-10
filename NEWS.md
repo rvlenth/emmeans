@@ -4,6 +4,7 @@ emmeans 1.1.2.9002
   * Formatting corrections in documentation
   * Fixed bug for survival models where `Surv()` was interpreted
     as a response transformation.
+  * Fixed bug (issue #19) in multinom support
   
 
 emmeans 1.1.2

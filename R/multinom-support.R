@@ -64,13 +64,12 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 
 # post-processing of ref_grid for "prob" mode
 .multinom.postGrid = function(object) {
-    # will replace portions of these as we go
-    bhat = object@bhat
     linfct = object@linfct
     misc = object@misc
     # grid will have multresp as slowest-varying factor...
     idx = matrix(seq_along(linfct[, 1]), 
                  ncol = length(object@levels[[object@roles$multresp]]))
+    bhat = as.numeric(idx) # right length, contents will be replaced
     for (i in 1:nrow(idx)) {
         rows = idx[i, ]
         exp.psi = exp(linfct[rows, , drop = FALSE] %*% object@bhat)
