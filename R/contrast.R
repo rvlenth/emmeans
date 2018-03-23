@@ -181,14 +181,14 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         tcm = NULL
         for (i in k:1) {
             nm = paste(vars[i], interaction[i], sep = "_")
-            object = contrast.emmGrid(object, interaction[i], by = vars[-i], name = nm)
+            object = contrast.emmGrid(object, interaction[i], by = vars[-i], name = nm, ...)
             if(is.null(tcm))
                 tcm = object@misc$con.coef
             else
                 tcm = object@misc$con.coef %*% tcm
             vars[i] = nm
         }
-        object = update(object, by = by, adjust = adjust, ...)
+        object = update(object, by = by, adjust = adjust, ..., silent = TRUE)
         object@misc$is.new.rg = NULL
         object@misc$orig.grid = orig.grid
         object@misc$con.coef = tcm

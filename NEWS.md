@@ -1,10 +1,12 @@
-emmeans 1.1.2.9002
+emmeans 1.1.2.9003
 ------------------
 
   * Formatting corrections in documentation
   * Fixed bug for survival models where `Surv()` was interpreted
     as a response transformation.
   * Fixed bug (issue #19) in multinom support
+  * Fixed bug (issue #22) in optional arguments with 
+    interaction contrasts
   
 
 emmeans 1.1.2
