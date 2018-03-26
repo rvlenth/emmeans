@@ -88,6 +88,10 @@ emmeans.list = function(object, specs, ...) {
 #' Compute estimated marginal means (EMMs) for specified factors
 #' or factor combinations in a linear model; and optionally, comparisons or
 #' contrasts among them. EMMs are also known as least-squares means.
+#' 
+#' Users should also consult the documentation for \code{\link{ref_grid}}, 
+#' because many important options for EMMs are implemented there, via the 
+#' \code{...} argument.
 #'
 #' @param object An object of class \code{emmGrid}; or a fitted model object
 #'   that is supported, such as the result of a call to \code{lm} or
@@ -96,7 +100,7 @@ emmeans.list = function(object, specs, ...) {
 #' @param specs A \code{character} vector specifying the names of the predictors
 #'   over which EMMs are desired. \code{specs} may also be a \code{formula}
 #'   or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
-#'   is described in the Details section below.
+#'   is described in the Overview section below.
 #' @param by A character vector specifying the names of predictors to condition on.
 #' @param fac.reduce A function that combines the rows of a matrix into a single
 #'   vector. This implements the ``marginal averaging'' aspect of EMMs. 
@@ -112,6 +116,10 @@ emmeans.list = function(object, specs, ...) {
 #'   to \code{\link{update.emmGrid}}, just after the object is constructed.
 #' @param weights Character value, numeric vector, or numeric matrix specifying
 #'   weights to use in averaging predictions. See \dQuote{Weights} section below.
+#' @param offset Numeric vector or scalar. If specified, this adds an offset to
+#'   the predictions, or overrides any offset in the model or its
+#'   reference grid. If a vector of length differing from the number of rows in 
+#'   the result, it is subsetted or cyclically recycled.
 #' @param trend This is now deprecated. Use \code{\link{emtrends}} instead.
 #' @param ... This is used only when \code{object} is not already a \code{"ess"}
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
@@ -134,7 +142,7 @@ emmeans.list = function(object, specs, ...) {
 #' side, the return value is an \code{\link{emm_list}} object, which is simply a
 #' \code{list} of \code{emmGrid} objects. 
 #' 
-#' @section Details:
+#' @section Overview:
 #' Estimated marginal means or EMMs (sometimes called least-squares means) are
 #' predictions from a linear model over a \emph{reference grid}; or marginal
 #' averages thereof. The \code{\link{ref_grid}} function identifies/creates the
@@ -193,6 +201,14 @@ emmeans.list = function(object, specs, ...) {
 #' data for the factors involved. Using \code{"flat"} is similar to
 #' \code{"cells"}, except nonempty cells are weighted equally and empty cells
 #' are ignored.
+#' 
+#' @section Offsets:
+#' Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values
+#' are supplied, they are cyclically recycled. For a vector of offsets, it is 
+#' important to understand that the ordering of results goes with the first 
+#' name in \code{specs} varying fastest. If there are any \code{by} factors,
+#' those vary slower than all the primary ones, but the first \code{by} variable
+#' varies the fastest within that hierarchy. See the examples.
 #'
 #' @export
 #' 
@@ -205,10 +221,19 @@ emmeans.list = function(object, specs, ...) {
 #' # or equivalently emmeans(warp.lm, "wool", by = "tension")
 #' 
 #' emmeans (warp.lm, poly ~ tension | wool)
+#' 
+#' \dontrun{
+#'   ### Offsets: Consider a silly example:
+#'   emmeans(warp.lm, ~ tension | wool, offset = c(17, 23, 47)) @ grid
+#'   # note that offsets are recycled so that each level of tension receives
+#'   # the same offset for each wool.
+#'   # But using the same offsets with ~ wool | tension will probably not
+#'   # be what you want because the ordering of combinations is different.
+#' }
 emmeans = function(object, specs, by = NULL, 
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 
                    contr, options = get_emm_option("emmeans"), 
-                   weights, trend, ...) {
+                   weights, offset, trend, ...) {
     
     if(!is(object, "emmGrid")) {
         object = ref_grid(object, ...)
@@ -339,6 +364,12 @@ emmeans = function(object, specs, by = NULL,
         }
         
         avgd.over = names(RG@levels[avgd.mars])
+        
+        # add/override .offset. column if requested
+        if(!missing(offset)) {
+            combs[[".offset."]] = rep(offset, nrow(combs))[seq_len(nrow(combs))]
+            
+        }
         
         # Update .wgt column of grid, if it exists
         if (!is.null(wgt)) {

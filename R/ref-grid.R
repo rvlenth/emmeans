@@ -34,6 +34,11 @@
 #' marginal means are defined. The resulting \code{ref_grid} object encapsulates
 #' all the information needed to calculate EMMs and make inferences on them.
 #' 
+#' To users, the \code{ref_grid} function itself is important because
+#' most of its arguments are in effect arguments of \code{\link{emmeans}}
+#' and related functions, in that those functions pass their \code{...} arguments
+#' to \code{ref_grid}.
+#' 
 #' The reference grid consists of combinations of independent variables over
 #' which predictions are made. Estimated marginal means are defined as these
 #' predictions, or marginal averages thereof. The grid is determined by first
@@ -82,6 +87,11 @@
 #'   here via a character vector or named \code{list} specifying the nesting
 #'   structure. Specifying \code{nesting} overrides any nesting structure that
 #'   is automatically detected. See Details.
+#' @param offset Numeric scalar value (if a vector, only the first element is
+#'   used). This may be used to add an offset, or override offsets based on the model.
+#'   A common usage would be to specify \code{offset = 0} for a Poisson
+#'   regression model, so that predictions from the reference grid become
+#'   rates relative to the offset that had been specified in the model.
 #' @param ... Optional arguments passed to \code{\link{emm_basis}}, such as
 #'   \code{vcov.} (see Details below) or options for certain models (see
 #'   \href{../doc/models.html}{vignette("models", "emmeans")}).
@@ -217,7 +227,7 @@
 ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
                      transform = c("none", "response", "mu", "unlink", "log"), 
-                     nesting, ...) 
+                     nesting, offset, ...) 
 {
     transform = match.arg(transform)
     if (!missing(df)) {
@@ -287,7 +297,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     }
     
     # initialize empty lists
-    ref.levels = matlevs = xlev = list()
+    ref.levels = matlevs = xlev = chrlev = list()
     
     for (nm in attr(data, "responses")) {
         y = data[[nm]]
@@ -313,7 +323,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         else if (is.factor(x) && !(nm %in% coerced$covariates))
             ref.levels[[nm]] = levels(factor(x))
         else if (is.character(x))
-            ref.levels[[nm]] = sort.unique(x)
+            ref.levels[[nm]] = chrlev[[nm]] = sort.unique(x)
         # matrices
         else if (is.matrix(x)) {
             # Matrices -- reduce columns thereof, but don't add to baselevs
@@ -447,7 +457,11 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     }
 
     # Any offsets??? (misc$offset.mult might specify removing or reversing the offset)
-    if(!is.null(attr(trms,"offset"))) {
+    if (!missing(offset)) {  # For safety, we always treat it as scalar
+        if (offset[1] != 0)
+            grid[[".offset."]] = offset[1]
+    }
+    else if(!is.null(attr(trms,"offset"))) {
         om = 1
         if (!is.null(misc$offset.mult))
             om = misc$offset.mult
@@ -458,7 +472,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     ### --- Determine weights for each grid point --- (added ver.2.11), updated ver.2.14 to include weights
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1
-    nms = union(names(xlev), coerced$factors) # only factors, no covariates or mult.resp
+    nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
     if (length(nms) == 0)
         wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
     else {

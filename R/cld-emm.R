@@ -114,8 +114,8 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
         for (nm in by) args[[nm]] = emmtbl[[nm]]
         args$.emmGrid. = emmtbl[[attr(emmtbl, "estName")]]
         ord = do.call("order", args)
-        emmtbl = emmtbl[ord, ]
-        object@grid = object@grid[ord, , drop=FALSE]
+        emmtbl = emmtbl[ord, , as.df = FALSE]
+        object@grid = object@grid[ord, , drop = FALSE]
         object@linfct = object@linfct[ord, , drop = FALSE]
     }
     attr(emmtbl, "by.vars") = by

@@ -6,7 +6,8 @@
 \usage{
 ref_grid(object, at, cov.reduce = mean, mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type,
-  transform = c("none", "response", "mu", "unlink", "log"), nesting, ...)
+  transform = c("none", "response", "mu", "unlink", "log"), nesting, offset,
+  ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -56,6 +57,12 @@ here via a character vector or named \code{list} specifying the nesting
 structure. Specifying \code{nesting} overrides any nesting structure that
 is automatically detected. See Details.}
 
+\item{offset}{Numeric scalar value (if a vector, only the first element is
+used). This may be used to add an offset, or override offsets based on the model.
+A common usage would be to specify \code{offset = 0} for a Poisson
+regression model, so that predictions from the reference grid become
+rates relative to the offset that had been specified in the model.}
+
 \item{...}{Optional arguments passed to \code{\link{emm_basis}}, such as
 \code{vcov.} (see Details below) or options for certain models (see
 \href{../doc/models.html}{vignette("models", "emmeans")}).}
@@ -72,6 +79,11 @@ marginal means are defined. The resulting \code{ref_grid} object encapsulates
 all the information needed to calculate EMMs and make inferences on them.
 }
 \details{
+To users, the \code{ref_grid} function itself is important because
+most of its arguments are in effect arguments of \code{\link{emmeans}}
+and related functions, in that those functions pass their \code{...} arguments
+to \code{ref_grid}.
+
 The reference grid consists of combinations of independent variables over
 which predictions are made. Estimated marginal means are defined as these
 predictions, or marginal averages thereof. The grid is determined by first

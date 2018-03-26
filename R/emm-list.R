@@ -104,6 +104,8 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 #' @export
 #' @method cld emm_list
 cld.emm_list = function(object, ..., which = seq_along(object)) {
+    if (length(which) > 1)
+        message("NOTE: 'cld()' groupings are determined separately for each list member.")
     lapply(object[which], cld, ...)
 }
 

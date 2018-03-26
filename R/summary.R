@@ -507,9 +507,16 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 
 #' @rdname summary.emmGrid
 #' @method [ summary_emm
+#' @param as.df Logical value. With \code{x[..., as.df = TRUE]}, the result is
+#'   object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
+#'   \code{\link{summary_emm}} object.
 #' @export
-"[.summary_emm" = function(x, ...)
-    as.data.frame(x)[...]
+"[.summary_emm" = function(x, ..., as.df = TRUE) {
+    if (as.df)
+        as.data.frame(x)[...]
+    else
+        base::`[.data.frame`(x, ...)
+}
 
 
 

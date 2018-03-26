@@ -5,7 +5,8 @@
 \title{Estimated marginal means (Least-squares means)}
 \usage{
 emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
-  2, mean), contr, options = get_emm_option("emmeans"), weights, trend, ...)
+  2, mean), contr, options = get_emm_option("emmeans"), weights, offset,
+  trend, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}; or a fitted model object
@@ -16,7 +17,7 @@ that is supported, such as the result of a call to \code{lm} or
 \item{specs}{A \code{character} vector specifying the names of the predictors
 over which EMMs are desired. \code{specs} may also be a \code{formula}
 or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
-is described in the Details section below.}
+is described in the Overview section below.}
 
 \item{by}{A character vector specifying the names of predictors to condition on.}
 
@@ -37,6 +38,11 @@ to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
 \item{weights}{Character value, numeric vector, or numeric matrix specifying
 weights to use in averaging predictions. See \dQuote{Weights} section below.}
+
+\item{offset}{Numeric vector or scalar. If specified, this adds an offset to
+the predictions, or overrides any offset in the model or its
+reference grid. If a vector of length differing from the number of rows in 
+the result, it is subsetted or cyclically recycled.}
 
 \item{trend}{This is now deprecated. Use \code{\link{emtrends}} instead.}
 
@@ -66,7 +72,12 @@ Compute estimated marginal means (EMMs) for specified factors
 or factor combinations in a linear model; and optionally, comparisons or
 contrasts among them. EMMs are also known as least-squares means.
 }
-\section{Details}{
+\details{
+Users should also consult the documentation for \code{\link{ref_grid}}, 
+because many important options for EMMs are implemented there, via the 
+\code{...} argument.
+}
+\section{Overview}{
 
 Estimated marginal means or EMMs (sometimes called least-squares means) are
 predictions from a linear model over a \emph{reference grid}; or marginal
@@ -130,12 +141,30 @@ data for the factors involved. Using \code{"flat"} is similar to
 are ignored.
 }
 
+\section{Offsets}{
+
+Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values
+are supplied, they are cyclically recycled. For a vector of offsets, it is 
+important to understand that the ordering of results goes with the first 
+name in \code{specs} varying fastest. If there are any \code{by} factors,
+those vary slower than all the primary ones, but the first \code{by} variable
+varies the fastest within that hierarchy. See the examples.
+}
+
 \examples{
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 emmeans (warp.lm,  ~ wool | tension)
 # or equivalently emmeans(warp.lm, "wool", by = "tension")
 
 emmeans (warp.lm, poly ~ tension | wool)
+\dontrun{
+  ### Offsets: Consider a silly example:
+  emmeans(warp.lm, ~ tension | wool, offset = c(17, 23, 47)) @ grid
+  # note that offsets are recycled so that each level of tension receives
+  # the same offset for each wool.
+  # But using the same offsets with ~ wool | tension will probably not
+  # be what you want because the ordering of combinations is different.
+}
 }
 \seealso{
 \code{\link{ref_grid}}, \code{\link{contrast}}, 

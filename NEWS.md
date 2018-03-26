@@ -1,4 +1,4 @@
-emmeans 1.1.2.9003
+emmeans 1.1.2.9004
 ------------------
 
   * Formatting corrections in documentation
@@ -7,6 +7,12 @@ emmeans 1.1.2.9003
   * Fixed bug (issue #19) in multinom support
   * Fixed bug (issue #22) in optional arguments with 
     interaction contrasts
+  * Fixed bug (issue #23) in weighting with character predictors
+  * Clarifying message when `cld()` is applied to an `emm_list` (issue #24)
+  * Added `offset` argument to `ref_grid()` (scalar offset only) and to
+    `emmeans()` (vector offset allowed) -- (issue #18)
+  * New optional argument for `[.summary_emm` to choose whether to 
+    retain its class or coerce to a `data.frame` (relates to issue #14)
   
 
 emmeans 1.1.2

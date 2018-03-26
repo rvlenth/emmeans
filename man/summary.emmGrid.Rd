@@ -17,7 +17,7 @@
 
 \method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE, ...)
 
-\method{[}{summary_emm}(x, ...)
+\method{[}{summary_emm}(x, ..., as.df = TRUE)
 
 \method{confint}{emmGrid}(object, parm, level = 0.95, ...)
 
@@ -90,6 +90,10 @@ more details.}
 \item{row.names}{passed to \code{\link{as.data.frame}}}
 
 \item{optional}{passed to \code{\link{as.data.frame}}}
+
+\item{as.df}{Logical value. With \code{x[..., as.df = TRUE]}, the result is
+object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
+\code{\link{summary_emm}} object.}
 
 \item{parm}{(Required argument for \code{confint} methods, but not used)}
 
