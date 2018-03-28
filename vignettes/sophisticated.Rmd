@@ -25,9 +25,10 @@ all supported models is provided in the ["models" vignette](models.html).
 
  1. [Linear mixed models (lmer)](#lmer)
     a. [System options for lmerMod models](#lmerOpts)
- 2. [Ordinal models](#ordinal)
- 3. [Models fitted using MCMC methods](#mcmc)
- 4. [Reference for supported models](models.html)
+ 2. [Models with offsets](#offsets)
+ 3. [Ordinal models](#ordinal)
+ 4. [Models fitted using MCMC methods](#mcmc)
+ 5. [Reference for supported models](models.html)
  
 [Vignette index](index.html) 
 
@@ -108,6 +109,60 @@ number of data rows does not exceed the given limit. The factory default is 3000
 for both limits.
 
 [Back to Contents](#contents)
+
+
+## Models with offsets {#offsets}
+If a model is fitted and its formula includes an `offset()` term, then by
+default, the offset is computed and included in the reference grid. To
+illustrate, consider a hypothetical dataset on insurance claims (used as an
+[example in SAS's
+documentation](https://support.sas.com/documentation/cdl/en/statug/63033/HTML/default/viewer.htm#statug_genmod_sect006.htm)).
+There are classes of cars of varying counts (`n`), sizes (`size`), and age
+(`age`), and we record the number of insurance claims (`claims`). We fit a
+Poisson model to `claims` as a function of `size` and `age`. An offset of
+`log(n)` is included so that `n` functions as an "exposure" variable.
+```{r}
+ins <- data.frame(
+    n = c(500, 1200, 100, 400, 500, 300),
+    size = factor(rep(1:3,2), labels = c("S","M","L")),
+    age = factor(rep(1:2, each = 3)),
+    claims = c(42, 37, 1, 101, 73, 14))
+ins.glm <- glm(claims ~ size + age + offset(log(n)), 
+               data = ins, family = "poisson")
+```
+First, let's look at the reference grid obtained by default:
+```{r}
+ref_grid(ins.glm)
+```
+Note that `n` is included in the reference grid and that its average value of
+500 is used for all predictions. Thus, if we obtain EMMs for, say, `age`, these
+are results are based on a pool of 500 cars:
+```{r}
+emmeans(ins.glm, "size", type = "response")
+```
+However, many users would like to ignore the offset for this kind of model,
+because then the estimates we obtain are rates per unit value of the (logged)
+offset. This may be accomplished by specifying an `offset` parameter in the
+call:
+```{r}
+emmeans(ins.glm, "size", type = "response", offset = 0)
+```
+You may verify that the above estimates are 1/500th of the previous ones.
+You may also verify that the above results are identical to those obtained
+by setting `n` equal to 1:
+```{r eval = FALSE}
+emmeans(ins.glm, "size", type = "response", at = list(n = 1))
+```
+However, those who use these types of models will be more comfortable directly
+setting the offset to zero.
+
+By the way, you may set some other reference value for the rates. For example, if you want estimates of claims per 100 cars, simply use (results not shown):
+```{r eval = FALSE}
+emmeans(ins.glm, "size", type = "response", offset = log(100))
+```
+
+[Back to Contents](#contents)
+
 
 
 ## Ordinal models {#ordinal}

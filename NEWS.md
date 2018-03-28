@@ -1,4 +1,4 @@
-emmeans 1.1.2.9004
+emmeans 1.1.2.9005
 ------------------
 
   * Formatting corrections in documentation

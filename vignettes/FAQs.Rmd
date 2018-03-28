@@ -25,10 +25,11 @@ This vignette contains answers to questions received from users or posted on dis
  4. [lsmeans/emmeans doesn't work unless you have factors](#numeric)
  5. [If I analyze subsets of the data separately, I get different results](#model)
  6. [My lsmeans/EMMs are way off from what I expected](#transformations)
+ 6. [Why do I get `Inf` for the degrees of freedom?](#asymp)
  7. [Some or all of the results shown say NA or NonEst](#NAs)
  8. [I get exactly the same comparisons for each "by" group](#additive)
  9. [My ANOVA *F* is significant, but nopairwise comparisons are](#anova)
- 9. [I get annoying messages about namespaces](#namespace)
+ 10. [I get annoying messages about namespaces](#namespace)
 
 [Vignettes index](index.html)
 
@@ -122,8 +123,22 @@ put the results of the scale you expect. But that is not always
 the best approach. The ["transformations" vignette](transformations.html)
 has examples and discussion.
 
-[Back to Contents](#contents)
 
+## Why do I get `Inf` for the degrees of freedom? {#asymp}
+This is simply the way that **emmeans** labels asymptotic results
+(that is, estimates that are tested against the standard normal distribution
+-- *z* tests -- rather than the *t* distribution). Note that obtaining quantiles 
+or probabilities from the *t* distribution with infinite degrees of freedom
+is the same as obtaining the corresponding values from the standard normal.
+For example:
+```{r}
+qt(c(.9, .95, .975), df = Inf)
+qnorm(c(.9, .95, .975))
+```
+so when you see infinite d.f., that just means its a *z* test or a *z* confidence
+interval.
+
+[Back to Contents](#contents)
 
 ## Some or all of the results shown say NA or NonEst {#NAs}
 Such a situation typically arises in observational data. What this
