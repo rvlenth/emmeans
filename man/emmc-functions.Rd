@@ -25,13 +25,13 @@ tukey.emmc(levs, reverse = FALSE)
 
 poly.emmc(levs, max.degree = min(6, k - 1))
 
-trt.vs.ctrl.emmc(levs, ref = 1)
+trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE)
 
-trt.vs.ctrl1.emmc(levs, ...)
+trt.vs.ctrl1.emmc(levs, ref = 1, ...)
 
-trt.vs.ctrlk.emmc(levs, ...)
+trt.vs.ctrlk.emmc(levs, ref = length(levs), ...)
 
-dunnett.emmc(levs, ref = 1)
+dunnett.emmc(levs, ref = 1, ...)
 
 eff.emmc(levs, ...)
 
@@ -44,15 +44,32 @@ mean_chg.emmc(levs, reverse = FALSE, ...)
 \arguments{
 \item{levs}{Vector of factor levels}
 
-\item{...}{Additional arguments (these are ignored, but needed to make these functions 
-  interchangeable)
-Each contrast family has a default multiple-testing adjustment as noted
-below. These adjustments are often only approximate; for a more exacting
-adjustment, use the interfaces provided to \code{\link[multcomp]{glht}}
-in the \pkg{multcomp} package.
+\item{...}{Additional arguments, passed to related methods as appropriate}
+
+\item{reverse}{Logical value to determine the direction of comparisons}
+
+\item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
+
+\item{ref}{Integer(s) specifying which level(s) to use as the reference}
+}
+\value{
+A data.frame, each column containing contrast coefficients for levs.
+  The "desc" attribute is used to label the results in emmeans, and the
+  "adjust" attribute gives the default adjustment method for multiplicity.
+}
+\description{
+Functions with an extension of \code{.emmc} provide for named contrast 
+families. One of the standard ones documented here may be used, or 
+the user may write such a function.
+}
+\details{
+Each standard contrast family has a default multiple-testing adjustment as
+noted below. These adjustments are often only approximate; for a more
+exacting adjustment, use the interfaces provided to
+\code{\link[multcomp]{glht}} in the \pkg{multcomp} package.
 
 \code{pairwise.emmc}, \code{revpairwise.emmc}, and \code{tukey.emmc} generate
-contrasts for all pairwise comparisons among least-squares means at the
+contrasts for all pairwise comparisons among estimated marginal means at the
 levels in levs. The distinction is in which direction they are subtracted.
 For factor levels A, B, C, D, \code{pairwise.emmc} generates the comparisons
 A-B, A-C, A-D, B-C, B-D, and C-D, whereas \code{revpairwise.emmc} generates
@@ -92,21 +109,7 @@ For a set of k EMMs, \code{del.eff.emmc} gives weight 1 to one EMM and weight
 -1/(k-1) to the others, while \code{eff.emmc} gives weights (k-1)/k and -1/k 
 respectively, as in subtracting the overall EMM from each EMM. The default 
 multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based 
-method and is slightly conservative; see \code{\link[stats]{p.adjust}}.}
-
-\item{reverse}{Logical value to determine the direction of comparisons}
-
-\item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
-
-\item{ref}{Integer(s) specifying which level(s) to use as the reference}
-}
-\value{
-A data.frame, each column containing contrast coefficients for levs.
-  The "desc" attribute is used to label the results in emmeans, and the
-  "adjust" attribute gives the default adjustment method for multiplicity.
-}
-\description{
-Contrast families
+method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
 }
 \examples{
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)

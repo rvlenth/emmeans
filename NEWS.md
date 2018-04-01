@@ -1,5 +1,5 @@
-emmeans 1.1.2.9005
-------------------
+emmeans 1.1.3
+-------------
 
   * Formatting corrections in documentation
   * Fixed bug for survival models where `Surv()` was interpreted
@@ -13,10 +13,11 @@ emmeans 1.1.2.9005
     `emmeans()` (vector offset allowed) -- (issue #18)
   * New optional argument for `[.summary_emm` to choose whether to 
     retain its class or coerce to a `data.frame` (relates to issue #14)
+  * Added `reverse` option for `trt.vs.ctrl` and relatives (#27)
   
 
 emmeans 1.1.2
-------------------
+-------------
  
   * Changed the way `terms` is accessed with `lme` objects to make
     it more robust

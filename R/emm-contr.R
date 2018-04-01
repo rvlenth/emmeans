@@ -26,22 +26,19 @@
 ###   "desc" is an expanded description of the family,
 ###   "adjust" is the default multiplicity adjustment (used if adjust="auto" in emmeans)
 
-# all pairwise trt[i] - trt[j], i < j
 #' Contrast families
-#'
-#' @rdname emmc-functions
-#' @aliases emmc-functions 
 #' 
-#' @param levs Vector of factor levels
-#' @param ... Additional arguments (these are ignored, but needed to make these functions 
-#'   interchangeable)
-#' Each contrast family has a default multiple-testing adjustment as noted
-#' below. These adjustments are often only approximate; for a more exacting
-#' adjustment, use the interfaces provided to \code{\link[multcomp]{glht}}
-#' in the \pkg{multcomp} package.
+#' Functions with an extension of \code{.emmc} provide for named contrast 
+#' families. One of the standard ones documented here may be used, or 
+#' the user may write such a function.
+#'
+#' Each standard contrast family has a default multiple-testing adjustment as
+#' noted below. These adjustments are often only approximate; for a more
+#' exacting adjustment, use the interfaces provided to
+#' \code{\link[multcomp]{glht}} in the \pkg{multcomp} package.
 #'
 #' \code{pairwise.emmc}, \code{revpairwise.emmc}, and \code{tukey.emmc} generate
-#' contrasts for all pairwise comparisons among least-squares means at the
+#' contrasts for all pairwise comparisons among estimated marginal means at the
 #' levels in levs. The distinction is in which direction they are subtracted.
 #' For factor levels A, B, C, D, \code{pairwise.emmc} generates the comparisons
 #' A-B, A-C, A-D, B-C, B-D, and C-D, whereas \code{revpairwise.emmc} generates
@@ -83,6 +80,11 @@
 #' multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based 
 #' method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
 #'
+#' @rdname emmc-functions
+#' @aliases emmc-functions 
+#' @param levs Vector of factor levels
+#' @param ... Additional arguments, passed to related methods as appropriate
+#' 
 #' @return A data.frame, each column containing contrast coefficients for levs.
 #'   The "desc" attribute is used to label the results in emmeans, and the
 #'   "adjust" attribute gives the default adjustment method for multiplicity.
@@ -187,7 +189,7 @@ poly.emmc = function(levs, max.degree = min(6, k-1)) {
 # New version -- allows more than one control group (ref is a vector)
 #' @rdname emmc-functions
 #' @param ref Integer(s) specifying which level(s) to use as the reference
-trt.vs.ctrl.emmc = function(levs, ref = 1) {
+trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE) {
     if ((min(ref) < 1) || (max(ref) > length(levs)))
         stop("Reference levels are out of range")
     k = length(levs)
@@ -201,11 +203,16 @@ trt.vs.ctrl.emmc = function(levs, ref = 1) {
         if (i %in% ref) next
         con = templ
         con[i] = 1
-        nm = paste(levs[i], cnm, sep = " - ")
+        if (reverse)
+            nm = paste(cnm, levs[i], sep = " - ")
+        else
+            nm = paste(levs[i], cnm, sep = " - ")
         M[[nm]] = con
     }
     row.names(M) = levs
     M = M[-1]
+    if (reverse)
+        M = -M
     attr(M, "desc") = "differences from control"
     attr(M, "adjust") = "dunnettx"
     M
@@ -213,21 +220,21 @@ trt.vs.ctrl.emmc = function(levs, ref = 1) {
 
 # control is 1st level
 #' @rdname emmc-functions
-trt.vs.ctrl1.emmc = function(levs, ...) {
-    trt.vs.ctrl.emmc(levs, ref = 1)
+trt.vs.ctrl1.emmc = function(levs, ref = 1, ...) {
+    trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
 
 # control is last level
 #' @rdname emmc-functions
 #' @inheritParams pairwise
-trt.vs.ctrlk.emmc = function(levs, ...) {
-    trt.vs.ctrl.emmc(levs, ref = length(levs))
+trt.vs.ctrlk.emmc = function(levs, ref = length(levs), ...) {
+    trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
 
 # pseudonym
 #' @rdname emmc-functions
-dunnett.emmc = function(levs, ref = 1) {
-    trt.vs.ctrl.emmc(levs, ref = ref)
+dunnett.emmc = function(levs, ref = 1, ...) {
+    trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
 
 # effects contrasts. Each mean versus the average of all

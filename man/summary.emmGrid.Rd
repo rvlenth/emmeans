@@ -93,7 +93,7 @@ more details.}
 
 \item{as.df}{Logical value. With \code{x[..., as.df = TRUE]}, the result is
 object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
-\code{\link{summary_emm}} object.}
+\code{summary_emm} object.}
 
 \item{parm}{(Required argument for \code{confint} methods, but not used)}
 

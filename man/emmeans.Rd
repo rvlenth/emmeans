@@ -157,6 +157,7 @@ emmeans (warp.lm,  ~ wool | tension)
 # or equivalently emmeans(warp.lm, "wool", by = "tension")
 
 emmeans (warp.lm, poly ~ tension | wool)
+
 \dontrun{
   ### Offsets: Consider a silly example:
   emmeans(warp.lm, ~ tension | wool, offset = c(17, 23, 47)) @ grid
