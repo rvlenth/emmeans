@@ -2,6 +2,7 @@ emmeans 1.1.3.0901
 -------------
 
   * Fixed df bug in regrid (#29)
+  * Fixed annotation bug for nested models (#30)
 
 
 emmeans 1.1.3

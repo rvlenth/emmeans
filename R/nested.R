@@ -159,6 +159,7 @@ add_grouping = function(object, newname, refname, newlevs) {
         grps = do.call(expand.grid, rgobj@levels[grpfacs])  # all combinations of group factors
         result = NULL
         rg = rgobj
+        actually.avgd.over = character(0) # keep track of this from emmeans calls
         for (i in seq_len(nrow(grps))) {
             sig = as.character(interaction(grps[i, ]))
             rows = which(grpids == sig)
@@ -176,6 +177,7 @@ add_grouping = function(object, newname, refname, newlevs) {
             for (j in seq_along(grpfacs))
                 rg@levels[[grpfacs[j]]] = grps[i, j]
             emmGrid = suppressMessages(emmeans(rg, gspecs, ...))
+            actually.avgd.over = union(actually.avgd.over, emmGrid@misc$avgd.over)
             if (is.null(result))
                 result = emmGrid
             else {
@@ -186,7 +188,7 @@ add_grouping = function(object, newname, refname, newlevs) {
         for (j in seq_along(grpfacs))
             result@levels[grpfacs[j]] = rgobj@levels[grpfacs[j]]
         
-        result@misc$avgd.over = setdiff(union(result@misc$avgd.over, avg.over), gspecs)
+        result@misc$avgd.over = setdiff(actually.avgd.over, gspecs)
         result@misc$display = NULL
         nkeep = intersect(names(nesting), names(result@levels))
         if (length(nkeep) > 0)
