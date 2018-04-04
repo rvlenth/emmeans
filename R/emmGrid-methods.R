@@ -537,16 +537,18 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
     
     # override the df function
     df = est$df
-    test.df = diff(range(df))
-    if (is.na(test.df) || test.df < .001) {
-        object@dfargs = list(df = mean(df))
+    edf = df[estble]
+    if (length(edf) == 0) edf = NA
+    # note both NA/NA and Inf/Inf test is.na() = TRUE
+    if (any(is.na(edf/edf)) || (diff(range(edf)) < .01)) { # use common value
+        object@dfargs = list(df = mean(edf, na.rm = TRUE))
         object@dffun = function(k, dfargs) dfargs$df
     }
     else { # use containment df
         object@dfargs = list(df = df)
         object@dffun = function(k, dfargs) {
             idx = which(zapsmall(k) != 0)
-            ifelse(length(idx) == 0, NA, min(dfargs$df[idx]))
+            ifelse(length(idx) == 0, NA, min(dfargs$df[idx], na.rm = TRUE))
         }
     }
     

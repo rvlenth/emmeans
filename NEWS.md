@@ -1,3 +1,9 @@
+emmeans 1.1.3.0901
+-------------
+
+  * Fixed df bug in regrid (#29)
+
+
 emmeans 1.1.3
 -------------
 
