@@ -222,7 +222,8 @@ emm_basis.lme = function(object, trms, xlev, grid, sigmaAdjust = TRUE, ...) {
     # Replaced by containment method##dffun = function(...) NA
     dfx = object$fixDF$X
     if (names(bhat[1]) == "(Intercept)")
-        dfx[1] = length(levels(object$groups[[1]])) - 1#min(dfx)   ### Correct apparent error in lme containment algorithm
+        dfx[1] = length(levels(object$groups[[1]])) - 1
+    ### Correct apparent error in lme containment algorithm
     dffun = function(x, dfargs) {
         idx = which(abs(x) > 1e-4)
         ifelse(length(idx) > 0, min(dfargs$dfx[idx]), NA)

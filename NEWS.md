@@ -1,8 +1,10 @@
-emmeans 1.1.3.0901
+emmeans 1.1.3.0902
 -------------
 
   * Fixed df bug in regrid (#29)
   * Fixed annotation bug for nested models (#30)
+  * Better documentation for `lme` models in "models" vignette
+  * Additional fixes for arguments passed to `.emmc` functions (#22)
 
 
 emmeans 1.1.3

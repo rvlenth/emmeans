@@ -152,18 +152,18 @@ revpairwise.emmc = function(levs, ...) {
 # pseudonym
 #' @rdname emmc-functions
 #' @param reverse Logical value to determine the direction of comparisons
-tukey.emmc = function(levs, reverse = FALSE) {
+tukey.emmc = function(levs, reverse = FALSE, ...) {
     if (reverse)
-        revpairwise.emmc(levs)
+        revpairwise.emmc(levs, ...)
     else
-        pairwise.emmc(levs)
+        pairwise.emmc(levs, ...)
 }
 
 # Poly contrasts - scaled w/ integer levels like most tables
 # ad hoc scaling works for up to 13 levels
 #' @rdname emmc-functions
 #' @param max.degree Integer specifying the maximum degree of polynomial contrasts
-poly.emmc = function(levs, max.degree = min(6, k-1)) {
+poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
     nm = c("linear", "quadratic", "cubic", "quartic", paste("degree",5:20))
     k = length(levs)
     M = as.data.frame(poly(seq_len(k), min(20,max.degree)))
@@ -189,7 +189,7 @@ poly.emmc = function(levs, max.degree = min(6, k-1)) {
 # New version -- allows more than one control group (ref is a vector)
 #' @rdname emmc-functions
 #' @param ref Integer(s) specifying which level(s) to use as the reference
-trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE) {
+trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, ...) {
     if ((min(ref) < 1) || (max(ref) > length(levs)))
         stop("Reference levels are out of range")
     k = length(levs)
