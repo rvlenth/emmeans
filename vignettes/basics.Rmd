@@ -13,6 +13,8 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
+<!-- @index Vignettes!Basics -->
+
 ## Contents {#contents}
 
   1. [Motivating example](#motivation)
@@ -26,10 +28,12 @@ knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
   3. [Summary](#summary)
   4. [Further reading](#more)
   
-[Vignette index](index.html)
+[Index of vignette topics](vignette-topics.html)
 
 
 ## Why we need EMMs {#motivation}
+<!-- @index Examples!`pigs`; Examples!Unbalanced data; 
+             Means!Cell; Means!Marginal -->
 Consider the `pigs` dataset provided with the package (`help("pigs")` provides
 details). These data come from an unbalanced experiment where pigs are given
 different percentages of protein (`percent`) from different sources (`source`)
@@ -80,7 +84,8 @@ The big discrepancy between the ordinary mean for `percent = 18` and the margina
 mean from `cell.means` is due to the fact that the lowest value receives 3 times
 the weight as the other two values.
 
-### The point
+### The point {#eqwts}
+<!-- @index Means!Weighted; Means!Marginal!of cell means@cell -->
 The point is that the marginal means of `cell.means` give *equal weight* to each
 cell. In many situations (especially with experimental data), that is a much
 fairer way to compute marginal means, in that they are not biased by imbalances
@@ -100,8 +105,10 @@ of what we can expect in the marketplace.
 [Back to Contents](#contents)
 
 ## What exactly are EMMs? {#EMMdef}
+<!-- @index Estimated marginal means; EMMs; Means!Marginal!Based on a model -->
 
 ### Model and reference grid {#ref_grid}
+<!-- @index Reference grids; `ref_grid()` -->
 Estimated marginal means are based on a *model* -- not directly on data. 
 The basis for them is what we call the *reference grid* for a given model.
 To obtain the reference grid, consider all the predictors in the model.
@@ -150,6 +157,7 @@ ref_grid(pigs.lm2) @ grid
 [Back to Contents](#contents)
 
 ### Estimated marginal means {#emmeans}
+<!-- @index Estimated marginal means!Defined; `emmeans()` -->
 Once the reference grid is established, we can consider using the model to
 estimate the mean at each point in the reference grid. (Curiously, the
 convention is to call this "prediction" rather than "estimation"). For
@@ -194,6 +202,8 @@ is performed separately in each nesting group. See the [section on nesting in th
 [Back to Contents](#contents)
 
 ### Altering the reference grid {#altering}
+<!-- @index Reference grid!Altering; `ref_grid()`!`cov.reduce`; 
+            `ref_grid()`!`at`; Examples!`mtcars` -->
 It is possible to alter the reference grid. We might, for example, want to 
 define a reference grid for `pigs.lm2` that is comparable to the one for 
 `pigs.lm1`.
@@ -230,6 +240,9 @@ handled by `cov.reduce` or the default methods.
 [Back to Contents](#contents)
 
 ### Graphical displays {#plots}
+<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style 
+            `emmip()`;  `plot.emmGrid()`; **ggplot2** package
+            Plots!of confidence intervals@conf -->
 The results of `ref_grid()` or `emmeans()` (these are objects of class `emmGrid`)
 may be plotted in two different 
 ways. One is an interaction-style plot, using `emmip()`. In the following, let's 
@@ -287,6 +300,7 @@ emmip(pigs.lm1, ~ percent | source, CIs = TRUE) +
 [Back to Contents](#contents)
 
 ### Using weights {#weights}
+<!-- @index Means!Weighted; `emmeans()`!`weights` -->
 It is possible to override the equal-weighting method for computing EMMs. Using
 `weights = "cells"` in the call will weight the predictions according to their
 cell frequencies (recall this information is retained in the reference grid).
@@ -311,6 +325,7 @@ variations due to the factors that are being averaged over.
 [Back to Contents](#contents)
 
 ### Multivariate responses {#multiv}
+<!-- @index Multivariate models; Examples!`MOats`; `ref_grid()`!`mult.name` -->
 The **emmeans** package supports various multivariate models. When there
 is a multivariate response, the dimensions of that response are treated as if
 they were levels of a factor. For example, the `MOats` dataset provided in the
@@ -365,4 +380,4 @@ also be accessed via `vignette("`*name*`", "emmeans")`
 
 [Back to Contents](#contents)
 
-[Vignette index](index.html)
+[Index of vignette topics](vignette-topics.html)

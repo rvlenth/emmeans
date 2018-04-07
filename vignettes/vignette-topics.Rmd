@@ -1,0 +1,119 @@
+---
+title: "Index of vignette topics"
+author: "Russ Lenth"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Index of vignette topics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+**Note:** Links take you to the beginnings of sections or subsections 
+where these topics occur.
+<!-- End of header. Do not delete this comment -->
+
+  * `adjust`: [1](comparisons.html#pairwise), [2](comparisons.html#linfcns), [3](confidence-intervals.html#adjust)
+  * Analysis of variance
+      * [Type III](confidence-intervals.html#joint)
+  * [Bonferroni adjustment](confidence-intervals.html#adjust)
+  * [`by` variables](confidence-intervals.html#byvars)
+  * [`cld()`](comparisons.html#pairwise)
+  * [`coef()`](comparisons.html#contrasts)
+  * Comparisons
+      * [Back-transforming](comparisons.html#logs)
+      * [Displaying as groups](comparisons.html#pairwise)
+      * [Graphical](comparisons.html#pairwise)
+      * [with logs](comparisons.html#logs)
+  * [Confidence intervals](confidence-intervals.html#summary)
+  * [`confint()`](confidence-intervals.html#summary)
+  * [`consec`](comparisons.html#contrasts)
+  * [`contrast()`](comparisons.html#contrasts)
+      * [`simple`](confidence-intervals.html#simple)
+  * Contrasts
+      * [Custom](comparisons.html#linfcns)
+      * [Formula](comparisons.html#formulas)
+      * [Pairwise](comparisons.html#pairwise)
+      * [Polynomial](comparisons.html#contrasts)
+      * Tests
+          * [with transformations](comparisons.html#logs)
+  * [Dunnett method](comparisons.html#contrasts)
+  * [`eff`](comparisons.html#contrasts)
+  * [`emm_list` object](comparisons.html#formulas)
+  * [`.emmc` functions](comparisons.html#linfcns)
+  * [`emmeans()`](basics.html#emmeans)
+      * [`weights`](basics.html#weights)
+  * [`emmGrid` object](confidence-intervals.html#emmobj)
+  * [`emmip()`](basics.html#plots)
+  * [EMMs](basics.html#EMMdef)
+  * [Estimated marginal means](basics.html#EMMdef)
+      * [Defined](basics.html#emmeans)
+  * Examples
+      * [`MOats`](basics.html#multiv)
+      * [`mtcars`](basics.html#altering)
+      * [`oranges`](comparisons.html#formulas)
+      * [`pigs`](basics.html#motivation)
+      * [Unbalanced data](basics.html#motivation)
+  * [**ggplot2** package](basics.html#plots)
+  * [Graphical displays](basics.html#plots)
+  * [Grouping into separate sets](confidence-intervals.html#byvars)
+  * `infer`: [1](comparisons.html#pairwise), [2](confidence-intervals.html#summary)
+  * [`joint`](confidence-intervals.html#joint)
+  * [`joint_tests()`](confidence-intervals.html#joint)
+  * [Linear functions](comparisons.html#linfcns)
+  * Means
+      * [Cell](basics.html#motivation)
+      * [Marginal](basics.html#motivation)
+          * [Based on a model](basics.html#EMMdef)
+          * [of cell means](basics.html#eqwts)
+      * Weighted: [1](basics.html#eqwts), [2](basics.html#weights)
+  * [Multiplicity adjustments](confidence-intervals.html#adjust)
+  * [Multivariate models](basics.html#multiv)
+  * [Multivariate *t* (`"mvt"`) adjustment](confidence-intervals.html#adjust)
+  * [**mvtnorm** package](confidence-intervals.html#adjust)
+  * [`pairs()`](comparisons.html#pairwise)
+  * [`pairwise`](comparisons.html#contrasts)
+  * [Pairwise comparisons](comparisons.html#pairwise)
+  * [`plot.emmGrid()`](basics.html#plots)
+  * Plots
+      * [of confidence intervals](basics.html#plots)
+      * [of EMMs](basics.html#plots)
+      * [Interaction-style](basics.html#plots)
+  * [`print.summary_emm()`](confidence-intervals.html#emmobj)
+  * [`ref_grid()`](basics.html#ref_grid)
+      * [`at`](basics.html#altering)
+      * [`cov.reduce`](basics.html#altering)
+      * [`mult.name`](basics.html#multiv)
+  * Reference grid
+      * [Altering](basics.html#altering)
+  * [Reference grids](basics.html#ref_grid)
+  * [Response scale](confidence-intervals.html#tran)
+  * [`revpairwise`](comparisons.html#contrasts)
+  * [Sidak adjustment](confidence-intervals.html#adjust)
+  * [`simple = "each"`](confidence-intervals.html#simple)
+  * [Simple comparisons](confidence-intervals.html#simple)
+  * `specs`
+      * [Formula](comparisons.html#formulas)
+  * [`str()`](confidence-intervals.html#emmobj)
+  * [`summary()`](confidence-intervals.html#summary)
+  * [`summary_emm` object](confidence-intervals.html#emmobj)
+  * [`test()`](confidence-intervals.html#summary)
+      * [`delta`](confidence-intervals.html#equiv)
+      * [`joint = TRUE`](confidence-intervals.html#joint)
+  * Tests
+      * [Equivalence](confidence-intervals.html#equiv)
+      * [Noninferiority](confidence-intervals.html#equiv)
+      * [Nonzero null](confidence-intervals.html#summary)
+      * [One- and two-sided](confidence-intervals.html#summary)
+  * Transformations
+      * [Back-transforming](confidence-intervals.html#tran)
+      * [Log](comparisons.html#logs)
+  * [`trt.vs.ctrl`](comparisons.html#contrasts)
+  * [Tukey adjustment](confidence-intervals.html#adjust)
+  * [`type`](confidence-intervals.html#tran)
+  * [Type III ANOVA](confidence-intervals.html#joint)
+  * [Type III tests](confidence-intervals.html#joint)
+  * [Unadjusted tests](confidence-intervals.html#adjust)
+  * Vignettes
+      * [Basics](basics.html)
+      * [Comparisons](comparisons.html)
+      * [Confidence intervals and tests](confidence-intervals.html)

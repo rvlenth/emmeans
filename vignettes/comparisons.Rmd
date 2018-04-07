@@ -13,6 +13,8 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
+<!-- @index Vignettes!Comparisons -->
+
 ## Contents
 This vignette covers techniques for comparing EMMs at levels of a factor
 predictor, and other related analyses.
@@ -24,9 +26,10 @@ predictor, and other related analyses.
   5. [Special behavior with log transformations](#logs)
   6. Interaction contrasts (see ["interactions" vignette](interactions.html))
   
-[Vignette index](index.html)
+[Index of vignette topics](vignette-topics.html)
 
 ## Pairwise comparisons {#pairwise}
+<!-- @index Pairwise comparisons; Contrasts!Pairwise; `pairs()` -->
 The most common follow-up analysis for models having factors as predictors is
 to compare the EMMs with one another. This may be done simply via the `pairs()`
 method for `emmGrid` objects. In the code below, we obtain the EMMs for `source` for
@@ -36,6 +39,7 @@ pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 pigs.emm.s <- emmeans(pigs.lm, "source")
 pairs(pigs.emm.s)
 ```
+<!-- @index `adjust`; `infer` -->
 In its out-of-the-box configuration, `pairs()` sets two defaults for 
 [`summary()`](confidence-intervals.html#summary): `adjust = "tukey"`
 (multiplicity adjustment), and `infer = c(FALSE, TRUE)` (test statistics, not
@@ -48,6 +52,7 @@ earlier levels; if you want the comparisons to go in the other direction, use
 you may specify `by` factor(s) to perform the comparisons separately at the 
 levels of those factors.
 
+<!-- @index Comparisons!Graphical -->
 Comparisons may be summarized graphically via the `comparisons` argument
 in `plot.emm()`:
 ```{r fig.height = 1.5}
@@ -60,6 +65,7 @@ another group, the difference is not significant, based on the `adjust` setting
 (which defaults to `"tukey"`). (Note: Don't ever use confidence intervals for
 EMMs to perform comparisons; they can be very misleading.)
 
+<!-- @index `cld()`; Comparisons!Displaying as groups -->
 Another way to depict comparisons is by compact-letter displays:
 ```{r}
 cld(pigs.emm.s)
@@ -72,6 +78,7 @@ between *P* values slightly less and slightly more than `alpha`.
 
 
 ## Other contrasts {#contrasts}
+<!-- @index `contrast()`; `coef()`; Contrasts!Polynomial -->
 Pairwise comparisons are an example of linear functions of EMMs.
 You may use `coef()` to see the coefficients of these linear functions:
 ```{r}
@@ -103,6 +110,8 @@ It is important to understand that the estimated linear contrast is *not* the
 slope of a line fitted to the data. It is simply a contrast having coefficients
 that increase linearly. It *does* test the linear trend, however.
 
+<!-- @index Dunnett method; `pairwise`; `revpairwise`; `trt.vs.ctrl`;
+            `eff`; `consec` -->
 There are a number of other named contrast methods, for example `"trt.vs.ctrl"`,
 `"eff"`, and `"consec"`. The `"pairwise"` and `"revpairwise"` methods in `contrast()` are the same as `Pairs()` and `pairs(..., reverse = TRUE)`. See
 [help("contrast-methods")](../html/emmc-functions.html) for details.
@@ -112,6 +121,8 @@ There are a number of other named contrast methods, for example `"trt.vs.ctrl"`,
 
 
 ## Formula interface {#formulas}
+<!-- @index `specs`!Formula; Contrasts!Formula; `emm_list` object
+             Examples!`oranges` -->
 If you already know what contrasts you will want before calling `emmeans()`, 
 a quick way to get them is to specify the method as the left-hand side of the formula in its second argument. For example, with the `oranges` dataset
 provided in the package,
@@ -138,6 +149,7 @@ EMMs, or to the contrasts? (See the documentation if interested; but the best pr
 [Back to Contents](#contents)
 
 ## Custom contrasts and linear functions {#linfcns}
+<!-- @index Contrasts!Custom; `.emmc` functions@emmc; `adjust` -->
 The user may write a custom contrast function for use in `contrast()`.
 What's needed is a function having the desired name with `".emmc"` appended,
 that generates the needed coefficients as a list or data frame. The
@@ -172,6 +184,7 @@ Now try it with the `oranges` example we had previously:
 contrast(org.emml[[1]], "skip_comp", skip = 2, reverse = TRUE)
 ```
 
+<!-- @index Linear functions -->
 The `contrast()` function may in fact be used to compute arbitrary linear
 functions of EMMs. Suppose for some reason we want to estimate the quantities
 $\lambda_1 = \mu_1+2\mu_2-7$ and $\lambda_2 = 3\mu_2-2\mu_3+1$, where the
@@ -188,6 +201,8 @@ confint(LF, adjust = "bonferroni")
 [Back to Contents](#contents)
 
 ## Special properties of log (and logit) transformations {#logs}
+<!-- @index Transformations!Log; Comparisons!with logs@logs;
+            Comparisons!Back-transforming -->
 Suppose we obtain EMMs for a model having a response transformation 
 or link function. In most cases, when we compute contrasts of those EMMs,
 there is no natural way to express those contrasts on anything other
@@ -207,6 +222,7 @@ pairs(pigs.emm.s, type = "lp")
 
 pairs(pigs.emm.s, type = "response")
 ```
+<!-- @index Contrasts!Tests!with transformations@trans -->
 As is true of EMM summaries with `type = "response"`, the tests and confidence
 intervals are done before back-transforming. The ratios estimated here are
 actually ratios of *geometric* means. In general, a model with a log response is
@@ -219,4 +235,4 @@ regression, because logits are logs of odds ratios.
 
 [Back to Contents](#contents)
 
-
+[Index of vignette topics](vignette-topics.html)
