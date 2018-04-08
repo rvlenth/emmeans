@@ -14,6 +14,8 @@ options(show.signif.stars = FALSE)
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
+<!-- @index Vignettes!Interactions; Interaction analysis -->
+
 Models in which predictors interact seem to create a lot of confusion
 concerning what kinds of *post hoc* methods should be used. It is hoped that
 this vignette will be helpful in shedding some light on how to use the 
@@ -27,10 +29,12 @@ this vignette will be helpful in shedding some light on how to use the
   3. [Interactions with covariates](#covariates)
   4. [Summary](#summary)
 
-[Vignette index](index.html)
+[Index of all vignette topics](vignette-topics.html)
 
 
 ## Interacting factors {#factors}
+<!-- @index Examples!`auto.noise`; Interactions!Possible nappropriateness of marginal means 
+  Interaction plots; `emmip()` -->
 As an example for this topic, consider the `auto.noise` dataset included with 
 the package. This is a balanced 3x2x2 experiment with three replications. The
 response -- noise level -- is evaluated with different sizes of cars, types of
@@ -83,12 +87,14 @@ Not too surprisingly, the statistical comparisons are all different for standard
 filters, but with Octel filters, there isn't much of a difference between small
 and medium size.
 
+<!-- @index `*` gazing@star -->
 For comparing the levels of other factors, similar judgments must be made. It
 may help to construct other interaction plots with the factors in different
 roles. In my opinion, almost all meaningful statistical analysis should be
 grounded in evaluating *both* the statistical and practical significance of the
 estimated effects. Those who put all their attention on *P* values and asterisks
-are ignoring the fact that these don't measure the sizes of the effects on a
+(I call these people "`*` gazers") are ignoring the fact that these don't measure 
+the sizes of the effects on a
 practical scale.[^2]
 An effect can be practically negligible but statistically
 significant, or vice versa, depending on sample size and error variance.
@@ -99,6 +105,7 @@ this vignette. I habitually opt out of star-gazing via
 `options(show.signif.stars = FALSE)`
 
 ### Simple contrasts {#simple}
+<!-- @index Simple contrasts; `contrast()`!`simple`; `contrast()`!`combine` -->
 An alternative way to specify conditional contrasts or comparisons is through
 the use of the `simple` argument to `contrast()` or `pairs()`, which amounts to
 specifying which factors are *not* used as `by` variables. For example, consider:
@@ -131,6 +138,8 @@ multiplicity-adjusted (a total of 16 different tables).
 [Back to Contents](#contents)
 
 ## Interaction contrasts {#contrasts}
+<!-- @index Interaction contrasts; `contrast()`!`interaction` 
+     Contrasts!of other contrasts@cont -->
 An interaction contrast is a contrast of contrasts. For instance, in the auto-noise
 example, we may want to obtain the linear and quadratic contrasts of `size` separately
 for each `type`, and compare them. Here are estimates of those contrasts:
@@ -172,6 +181,7 @@ the comparison of that comparison of the quadratic contrasts, not so much. Refer
 again to the plot, and this can be discerned as a comparison of the interaction
 in the left panel versus the interaction in the right panel.
 
+<!-- @index `joint_tests()` -->
 Finally, **emmeans** provides a `joint_tests()` function that obtains and tests
 the interaction contrasts for all effects in the model and compiles them in one
 Type-III-ANOVA-like table:
@@ -187,6 +197,7 @@ joint_tests(noise.lm, by = "side")
 [Back to Contents](#contents)
 
 ## Interactions with covariates {#covariates}
+<!-- @index Interactions!Covariate with factors; Examples!`oranges` -->
 Consider the `oranges` dataset included with the package. These data concern the
 sales of two varieties of oranges. The prices (`price1` and `price2`) were 
 experimentally varied in different stores and different days, and the responses 
@@ -228,6 +239,7 @@ interaction model. Strict .05-significance people would, I suppose,
 settle on the additive model. I like `org.int`, but what follows could be
 done with any of them.
 
+<!-- @index Trends!Estimating and comparing; `emtrends()` -->
 To summarize and test the results compactly, it makes sense to obtain estimates
 of a representative trend in each of the left and right panels, and perhaps to
 compare them. In turn, that can be done by obtaining the slope of the curve (or
@@ -268,3 +280,6 @@ and inclinations to try to produce simple bottom-line conclusions. Interactions
 require more work and more patience; they require presenting more cases -- more
 than are presented in the examples in this vignette -- in order to provide a
 complete picture.
+
+[Index of all vignette topics](vignette-topics.html)
+

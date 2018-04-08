@@ -28,7 +28,7 @@ This vignette describes various ways of summarizing `emmGrid` objects.
   7. [Testing equivalence, noninferiority, nonsuperiority](#equiv)
   8. Graphics (in ["basics" vignette](basics.html#plots))
   
-[Index of vignette topics](vignette-topics.html)
+[Index of all vignette topics](vignette-topics.html)
 
 ## Objects, structures, and methods {#emmobj}
 <!-- @index `emmGrid` object -->
@@ -275,4 +275,4 @@ when no multiplicity adjustment is used.
 Graphical displays of `emmGrid` objects are described in the 
 ["basics" vignette](basics.html#plots)
 
-[Index of vignette topics](vignette-topics.html)
+[Index of all vignette topics](vignette-topics.html)

@@ -28,7 +28,7 @@ knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
   3. [Summary](#summary)
   4. [Further reading](#more)
   
-[Index of vignette topics](vignette-topics.html)
+[Index of all vignette topics](vignette-topics.html)
 
 
 ## Why we need EMMs {#motivation}
@@ -380,4 +380,4 @@ also be accessed via `vignette("`*name*`", "emmeans")`
 
 [Back to Contents](#contents)
 
-[Index of vignette topics](vignette-topics.html)
+[Index of all vignette topics](vignette-topics.html)

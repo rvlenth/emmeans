@@ -14,12 +14,13 @@ knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 options(show.signif.starts = FALSE)
 ```
 
+<!-- @index Vignettes!FAQS; Frequently asked questions -->
 This vignette contains answers to questions received from users or posted on discussion boards like [Cross Validated](https://stats.stackexchange.com) and 
 [Stack Overflow](https://stackoverflow.com/)
 
 ## Contents {#contents}
 
- 1. [What are lsmeans/EMMs?](#what)
+ 1. [What are EMMs/lsmeans?](#what)
  2. [I have three (or two or four) factors that interact](#interactions)
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
  4. [lsmeans/emmeans doesn't work unless you have factors](#numeric)
@@ -31,14 +32,16 @@ This vignette contains answers to questions received from users or posted on dis
  9. [My ANOVA *F* is significant, but nopairwise comparisons are](#anova)
  10. [I get annoying messages about namespaces](#namespace)
 
-[Vignettes index](index.html)
+[Index of all vignette topics](vignette-topics.html)
 
-## What are lsmeans/EMMs? {#what}
+## What are EMMs/lsmeans? {#what}
+<!-- @index EMMs!What are they?; Least-squares means -->
 Estimated marginal means (EMMs), a.k.a. least-squares means, are
 predictions on a reference grid of predictor settings, or marginal
 averages thereof. See details in [the "basics" vignette](basics.html).
 
 ## I have three (or two or four) factors that interact {#interactions}
+<!-- @index Multi-factor studies; Simple comparisons -->
 Perhaps your question has to do with interacting factors, and you want to do
 some kind of *post hoc* analysis comparing levels of one (or more) of the 
 factors on the response. Some specific versions of this question...
@@ -59,6 +62,7 @@ can guide you in what post-hoc tests would make sense. See the
 [Back to Contents](#contents)
 
 ## I have covariate(s) that interact(s) with factor(s) {#trends}
+<!-- @index Covariates!Interacting with factors -->
 This is a situation where it may well be appropriate to compare the
 slopes of trend lines, rather than the EMMs. See the 
 [help page for `emtrends()`](../doc/emtrends.html) and the discussion of this
@@ -66,6 +70,7 @@ topic in [the "interactions" vignette](interactions.html#covariates)
 
 
 ## lsmeans/emmeans doesn't work unless you have factors {#numeric}
+<!-- @index Covariates!`emmeans` doesn't work -->
 Equivalently, users ask how to get *post hoc* comparisons when we have
 covariates rather than factors.
 Yes, it does work, but you have to tell it the appropriate reference grid.
@@ -104,6 +109,7 @@ for more discussion.
 
 
 ## If I analyze subsets of the data separately, I get different results {#model}
+<!-- @index Analysis of subsets of data; Subsets of data -->
 Estimated marginal means summarize the *model* that you fitted to the data
 -- not the data themselves. Many of the most common models rely on
 several simplifying assumptions -- that certain effects are linear, that the
@@ -114,6 +120,8 @@ different.
 
 
 ## My lsmeans/EMMs are way off from what I expected {#transformations}
+<!-- @index `emmeans`!Surprising results from; Poisson regression!Surprising results
+     Logistic regression!Surprising results -->
 First step: Carefully read the annotations below the output. Do they say
 something like "results are on the log scale, not the response scale"?
 If so, that explains it. A Poisson or logistic model involves a link function,
@@ -125,6 +133,8 @@ has examples and discussion.
 
 
 ## Why do I get `Inf` for the degrees of freedom? {#asymp}
+<!-- @index Infinite degrees of freedom; Degrees of freedom!Why are they `Inf`? 
+     *z* tests vs. *t* tests; *t* tests vs. *z* tests -->
 This is simply the way that **emmeans** labels asymptotic results
 (that is, estimates that are tested against the standard normal distribution
 -- *z* tests -- rather than the *t* distribution). Note that obtaining quantiles 
@@ -141,6 +151,7 @@ interval.
 [Back to Contents](#contents)
 
 ## Some or all of the results shown say NA or NonEst {#NAs}
+<!-- @index `NA` results; `NonEst` results; Estimability issues -->
 Such a situation typically arises in observational data. What this
 means is that the model is not capable of producing estimates for
 all points in the reference grid. For example, you have data on combinations
@@ -164,6 +175,7 @@ The ["messy-data" vignette](messy-data.html) has more examples and discussion.
 
 
 ## I get exactly the same comparisons for each "by" group {#additive}
+<!-- @index `by` groups!Identical comparisons -->
 As mentioned elsewhere, EMMs summarize a *model*, not the data.
 If your model does not include any interactions between the `by` variables
 and the factors for which you want EMMs, then by definition, the
@@ -174,6 +186,8 @@ should include interactions between the factors of interest and the
 `by` factors.
 
 ## My ANOVA *F* is significant, but no pairwise comparisons are {#anova}
+<!-- @index *F* test!vs. pairwise comparisons@pairwz
+        Analysis of variance!versus *pos hoc* comparisons@post -->
 This is a common misunderstanding of ANOVA. If *F* is significant,
 this implies only that *some contrast* among the means (or effects)
 is statistically significant (compared to a Scheffé critical value).
@@ -190,6 +204,7 @@ the unadjusted *P* value can be more than .15 when *F* is significant
 (remarkably, regardless of the significance level used for *F*!).
 
 ## I get annoying messages about namespaces {#namespace}
+<!-- @index Annoying messages; `convert_workspace()` -->
 This probably happens because somehow the **lsmeans** package or
 its namespace has been loaded -- possibly because some old objects from 
 that package are still in your workspace. Try this:
@@ -206,4 +221,5 @@ then re-run `emmeans:::convert_workspace()`.]
 
 [Back to Contents](#contents)
 
+[Index of all vignette topics](vignette-topics.html)
 

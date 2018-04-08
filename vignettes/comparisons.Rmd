@@ -26,7 +26,7 @@ predictor, and other related analyses.
   5. [Special behavior with log transformations](#logs)
   6. Interaction contrasts (see ["interactions" vignette](interactions.html))
   
-[Index of vignette topics](vignette-topics.html)
+[Index of all vignette topics](vignette-topics.html)
 
 ## Pairwise comparisons {#pairwise}
 <!-- @index Pairwise comparisons; Contrasts!Pairwise; `pairs()` -->
@@ -235,4 +235,4 @@ regression, because logits are logs of odds ratios.
 
 [Back to Contents](#contents)
 
-[Index of vignette topics](vignette-topics.html)
+[Index of all vignette topics](vignette-topics.html)

@@ -1,6 +1,6 @@
 ---
 title: "Index of vignette topics"
-author: "Russ Lenth"
+author: "emmeans package"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -13,9 +13,14 @@ where these topics occur.
 <!-- End of header. Do not delete this comment -->
 
   * `adjust`: [1](comparisons.html#pairwise), [2](comparisons.html#linfcns), [3](confidence-intervals.html#adjust)
+  * [Analysis of subsets of data](FAQs.html#model)
   * Analysis of variance
+      * [versus *pos hoc* comparisons](FAQs.html#anova)
       * [Type III](confidence-intervals.html#joint)
+  * [Annoying messages](FAQs.html#namespace)
   * [Bonferroni adjustment](confidence-intervals.html#adjust)
+  * `by` groups
+      * [Identical comparisons](FAQs.html#additive)
   * [`by` variables](confidence-intervals.html#byvars)
   * [`cld()`](comparisons.html#pairwise)
   * [`coef()`](comparisons.html#contrasts)
@@ -28,48 +33,79 @@ where these topics occur.
   * [`confint()`](confidence-intervals.html#summary)
   * [`consec`](comparisons.html#contrasts)
   * [`contrast()`](comparisons.html#contrasts)
-      * [`simple`](confidence-intervals.html#simple)
+      * [`combine`](interactions.html#simple)
+      * [`interaction`](interactions.html#contrasts)
+      * `simple`: [1](confidence-intervals.html#simple), [2](interactions.html#simple)
   * Contrasts
+      * [of other contrasts](interactions.html#contrasts)
       * [Custom](comparisons.html#linfcns)
       * [Formula](comparisons.html#formulas)
       * [Pairwise](comparisons.html#pairwise)
       * [Polynomial](comparisons.html#contrasts)
       * Tests
           * [with transformations](comparisons.html#logs)
+  * [`convert_workspace()`](FAQs.html#namespace)
+  * Covariates
+      * [`emmeans` doesn't work](FAQs.html#numeric)
+      * [Interacting with factors](FAQs.html#trends)
+  * Degrees of freedom
+      * [Why are they `Inf`?](FAQs.html#asymp)
   * [Dunnett method](comparisons.html#contrasts)
   * [`eff`](comparisons.html#contrasts)
   * [`emm_list` object](comparisons.html#formulas)
   * [`.emmc` functions](comparisons.html#linfcns)
+  * `emmeans`
+      * [Surprising results from](FAQs.html#transformations)
   * [`emmeans()`](basics.html#emmeans)
       * [`weights`](basics.html#weights)
   * [`emmGrid` object](confidence-intervals.html#emmobj)
-  * [`emmip()`](basics.html#plots)
+  * `emmip()`: [1](basics.html#plots), [2](interactions.html#factors)
   * [EMMs](basics.html#EMMdef)
+      * [What are they?](FAQs.html#what)
+  * [`emtrends()`](interactions.html#covariates)
+  * [Estimability issues](FAQs.html#NAs)
   * [Estimated marginal means](basics.html#EMMdef)
       * [Defined](basics.html#emmeans)
   * Examples
+      * [`auto.noise`](interactions.html#factors)
       * [`MOats`](basics.html#multiv)
       * [`mtcars`](basics.html#altering)
-      * [`oranges`](comparisons.html#formulas)
+      * `oranges`: [1](comparisons.html#formulas), [2](interactions.html#covariates)
       * [`pigs`](basics.html#motivation)
       * [Unbalanced data](basics.html#motivation)
+  * *F* test
+      * [vs. pairwise comparisons](FAQs.html#anova)
+  * [Frequently asked questions](FAQs.html)
   * [**ggplot2** package](basics.html#plots)
   * [Graphical displays](basics.html#plots)
   * [Grouping into separate sets](confidence-intervals.html#byvars)
   * `infer`: [1](comparisons.html#pairwise), [2](confidence-intervals.html#summary)
+  * [Infinite degrees of freedom](FAQs.html#asymp)
+  * [Interaction analysis](interactions.html)
+  * [Interaction contrasts](interactions.html#contrasts)
+  * [Interaction plots](interactions.html#factors)
+  * Interactions
+      * [Covariate with factors](interactions.html#covariates)
+      * [Possible nappropriateness of marginal means](interactions.html#factors)
   * [`joint`](confidence-intervals.html#joint)
-  * [`joint_tests()`](confidence-intervals.html#joint)
+  * `joint_tests()`: [1](confidence-intervals.html#joint), [2](interactions.html#contrasts)
+  * [Least-squares means](FAQs.html#what)
   * [Linear functions](comparisons.html#linfcns)
+  * Logistic regression
+      * [Surprising results](FAQs.html#transformations)
   * Means
       * [Cell](basics.html#motivation)
       * [Marginal](basics.html#motivation)
           * [Based on a model](basics.html#EMMdef)
           * [of cell means](basics.html#eqwts)
       * Weighted: [1](basics.html#eqwts), [2](basics.html#weights)
+  * [Multi-factor studies](FAQs.html#interactions)
   * [Multiplicity adjustments](confidence-intervals.html#adjust)
   * [Multivariate models](basics.html#multiv)
   * [Multivariate *t* (`"mvt"`) adjustment](confidence-intervals.html#adjust)
   * [**mvtnorm** package](confidence-intervals.html#adjust)
+  * [`NA` results](FAQs.html#NAs)
+  * [`NonEst` results](FAQs.html#NAs)
   * [`pairs()`](comparisons.html#pairwise)
   * [`pairwise`](comparisons.html#contrasts)
   * [Pairwise comparisons](comparisons.html#pairwise)
@@ -78,6 +114,8 @@ where these topics occur.
       * [of confidence intervals](basics.html#plots)
       * [of EMMs](basics.html#plots)
       * [Interaction-style](basics.html#plots)
+  * Poisson regression
+      * [Surprising results](FAQs.html#transformations)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
   * [`ref_grid()`](basics.html#ref_grid)
       * [`at`](basics.html#altering)
@@ -90,12 +128,16 @@ where these topics occur.
   * [`revpairwise`](comparisons.html#contrasts)
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * [`simple = "each"`](confidence-intervals.html#simple)
-  * [Simple comparisons](confidence-intervals.html#simple)
+  * Simple comparisons: [1](confidence-intervals.html#simple), [2](FAQs.html#interactions)
+  * [Simple contrasts](interactions.html#simple)
   * `specs`
       * [Formula](comparisons.html#formulas)
+  * [`*` gazing](interactions.html#factors)
   * [`str()`](confidence-intervals.html#emmobj)
+  * [Subsets of data](FAQs.html#model)
   * [`summary()`](confidence-intervals.html#summary)
   * [`summary_emm` object](confidence-intervals.html#emmobj)
+  * [*t* tests vs. *z* tests](FAQs.html#asymp)
   * [`test()`](confidence-intervals.html#summary)
       * [`delta`](confidence-intervals.html#equiv)
       * [`joint = TRUE`](confidence-intervals.html#joint)
@@ -107,6 +149,8 @@ where these topics occur.
   * Transformations
       * [Back-transforming](confidence-intervals.html#tran)
       * [Log](comparisons.html#logs)
+  * Trends
+      * [Estimating and comparing](interactions.html#covariates)
   * [`trt.vs.ctrl`](comparisons.html#contrasts)
   * [Tukey adjustment](confidence-intervals.html#adjust)
   * [`type`](confidence-intervals.html#tran)
@@ -117,3 +161,6 @@ where these topics occur.
       * [Basics](basics.html)
       * [Comparisons](comparisons.html)
       * [Confidence intervals and tests](confidence-intervals.html)
+      * [FAQS](FAQs.html)
+      * [Interactions](interactions.html)
+  * [*z* tests vs. *t* tests](FAQs.html#asymp)
