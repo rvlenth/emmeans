@@ -87,7 +87,7 @@ Not too surprisingly, the statistical comparisons are all different for standard
 filters, but with Octel filters, there isn't much of a difference between small
 and medium size.
 
-<!-- @index `*` gazing@star -->
+<!-- @index "*" gazing@star -->
 For comparing the levels of other factors, similar judgments must be made. It
 may help to construct other interaction plots with the factors in different
 roles. In my opinion, almost all meaningful statistical analysis should be
