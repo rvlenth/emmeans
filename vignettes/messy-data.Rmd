@@ -14,6 +14,7 @@ options(show.signif.stars = FALSE)
 knitr::opts_chunk$set(collapse = TRUE,
 fig.width = 4.5) 
 ```
+<!-- @index Vignettes!Messy data -->
 
 ## Contents {#contents}
 
@@ -23,9 +24,10 @@ fig.width = 4.5)
   4. [Nested fixed effects](#nesting)
      a. [Avoiding mis-identified nesting](#nest-trap)
 
-[Vignette index](index.html)
+[Index of all vignette topics](vignette-topics.html)
 
-## Issues with observational data {#issues} 
+## Issues with observational data {#issues}
+<!-- @index Observational data -->
 In experiments, we control the
 conditions under which observations are made. Ideally, this leads to balanced
 datasets and clear inferences about the effects of those experimental
@@ -38,6 +40,8 @@ inherent problems in messy, undesigned studies; but they do give us ways to
 compensate for imbalance in the data, and allow us to estimate meaningful
 effects after carefully considering the ways in which they can be confounded.
 
+####### {#nutrex}
+<!-- @index Examples!`nutrition` -->
 As an illustration, consider the `nutrition` dataset provided with the package. 
 These data are used as an example in Milliken and Johnson (1992), *Analysis of 
 Messy Data*, and contain the results of an observational study on nutrition 
@@ -56,7 +60,10 @@ those two factors:
 ```{r}
 emmeans(nutr.lm, ~ group * race)
 ```
- Hmmmm. The EMMs
+
+####### {#nonestex}
+<!-- @index Non-estimability; Estimability -->
+Hmmmm. The EMMs
 when `race` is "Hispanic" are not given; instead they are flagged as 
 non-estimable. What does that mean? Well, when using a model to make
 predictions, it is impossible to do that beyond the linear space of the data
@@ -84,6 +91,7 @@ conclusion for the Hispanic group -- for which we have very little data.
 [Back to Contents](#contents)
 
 ## Mediating covariates {#mediators} 
+<!-- @index Mediating covariates; Examples!`mediation::framing`; Covariates!Mediating -->
 The `framing` data in the **mediation**
 package has the results of an experiment conducted by Brader et al. (2008) where
 subjects were given the opportunity to send a message to Congress regarding
@@ -113,6 +121,8 @@ This plot gives the impression that the effect of `treat` is reversed between
 male and female subjects; and also that the effect of education is not monotone.
 Both of these are counter-intuitive.
 
+###### {#med.covred}
+<!-- @index `cov.reduce` -->
 However, note that the covariate `emo` is measured *post*-treatment. That 
 suggests that in fact `treat` (and perhaps other factors) could affect the value
 of `emo`; and if that is true (as is in fact established by mediation analysis 
@@ -131,6 +141,8 @@ account, male (but not female) subjects exposed to the negative news story are
 more likely to send the message than are females or those not seeing the 
 negative news story. Also, the effect of `educ` is now nearly monotone.
 
+###### {#adjcov}
+<!-- @index Covariates!Adjusted -->
 By the way, the results in this plot are the same is what you would obtain by
 refitting the model with an adjusted covariate
 ```{r eval = FALSE} 
@@ -151,7 +163,8 @@ emmeans(..., cov.reduce = list(x1 ~ trt, x2 ~ trt + x1, x3 ~ trt + x1 + x2))
 
 
 
-## Mediating factors and weights {#weights} 
+## Mediating factors and weights {#weights}
+<!-- @index Factors!Mediating; `weights`; `emmeans()`!`weights` -->
 A mediating covariate is one that is
 in the causal path; likewise, it is possible to have a mediating *factor*. For
 mediating factors, the moral equivalent of the `cov.reduce` technique described
@@ -208,6 +221,7 @@ because only one factor (`age`) is averaged over.
 [Back to Contents](#contents)
 
 ## Nested fixed effects {#nesting}
+<!-- @index Nesting -->
 A factor `A` is nested in another factor `B` if the levels of `A` have a
 different meaning in one level of `B` than in another. Often, nested factors are
 random effects---for example, subjects in an experiment may be randomly assigned
@@ -216,6 +230,8 @@ them as random effects, these random nested effects are not among the fixed
 effects and are not an issue to `emmeans`. But sometimes we have fixed nested
 factors.
 
+###### {#cows}
+<!-- @index Examples!`cows`; Examples!Nested fixed effects -->
 Here is an example of a fictional study of five fictional treatments for some
 disease in cows. Two of the treatments are administered by injection, and the
 other three are administered orally. There are varying numbers of observations
@@ -257,6 +273,7 @@ variable.
 
 
 ### Auto-identification of nested factors -- avoid being trapped! {#nest-trap}
+<!-- @index Nesting!Auto-detection; `ref_grid()`!`nesting` -->
 `ref_grid()` and `emmeans()` tries to discover
 and accommodate nested structures in the fixed effects. It does this in two
 ways: first, by identifying factors whose levels appear in combination with only
@@ -284,3 +301,5 @@ something akin to `nesting = "A %in% B, C %in% (A * B)"` or, equivalently,
 
 
 [Back to Contents](#contents)
+
+[Index of all vignette topics](vignette-topics.html)

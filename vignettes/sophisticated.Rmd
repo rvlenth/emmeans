@@ -15,6 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE,
 fig.width = 4.5) 
 ```
 
+<!-- @index Vignettes!Sophisticated models -->
 This vignette gives a few examples of the use of the **emmeans** package to
 analyze other than the basic types of models provided by the **stats**
 package. Emphasis here is placed on accessing the optional capabilities
@@ -30,10 +31,11 @@ all supported models is provided in the ["models" vignette](models.html).
  4. [Models fitted using MCMC methods](#mcmc)
  5. [Reference for supported models](models.html)
  
-[Vignette index](index.html) 
+[Index of all vignette topics](vignette-topics.html) 
 
 
 ## Linear mixed models (lmer) {#lmer}
+<!-- @index `lmerMod` models; Examples!`nlme::Oats`; Examples!Split-plot experiment -->
 Linear mixed models are really important in statistics. Emphasis here is placed
 on those fitted using `lme4::lmer()`, but **emmeans** also supports other
 mixed-model packages such as **nlme**.
@@ -63,6 +65,9 @@ a different degrees-of-freedom method via the optional argument `lmer.df`:
 ```{r}
 emmeans(Oats.lmer, "nitro", lmer.df = "satterthwaite")
 ```
+
+###### {#dfoptions}
+<!-- @index Degrees of freedom; *z* tests; Asymptotic tests -->
 This latest result uses the Satterthwaite method, which is implemented in the
 **lmerTest** package. Note that, with this method, not only are the degrees of
 freedom slightly different, but so are the standard errors. That is because the 
@@ -72,7 +77,7 @@ methods. A third possibility is `"asymptotic"`:
 ```{r}
 emmeans(Oats.lmer, "nitro", lmer.df = "asymptotic")
 ```
-This just sets all the degrees of freedom to `NA` -- that's **emmeans**'s way of
+This just sets all the degrees of freedom to `Inf` -- that's **emmeans**'s way of
 using *z* statistics rather than *t* statistics. The asymptotic methods tend to
 make confidence intervals a bit too narrow and P values a bit too low; but they
 involve much, much less computation. Note that the SEs are the same as obtained
@@ -93,6 +98,7 @@ emmeans(Oats.lmer, pairwise ~ Variety)
 ```
 
 ### System options for lmerMod models {#lmerOpts}
+<!-- @index `lmerMod` objects!System options for -->
 The computation required to compute the adjusted covariance matrix and degrees 
 of freedom may become cumbersome. Some user options (i.e., `emm_options()` 
 calls) make it possible to streamline these computations through default methods
@@ -112,6 +118,7 @@ for both limits.
 
 
 ## Models with offsets {#offsets}
+<!-- @index Offsets; Examples!Insurance claims (SAS); `ref_grid()`!`offset` -->
 If a model is fitted and its formula includes an `offset()` term, then by
 default, the offset is computed and included in the reference grid. To
 illustrate, consider a hypothetical dataset on insurance claims (used as an
@@ -166,6 +173,8 @@ emmeans(ins.glm, "size", type = "response", offset = log(100))
 
 
 ## Ordinal models {#ordinal}
+<!-- @index Ordinal models; Examples!`ordinal::wine`; Examples!Ordinal model
+  Ordinal models!Latent scale -->
 Ordinal-response models comprise an example where several options are 
 available for obtaining EMMs. To illustrate, consider the `wine` data
 in the **ordinal** package. The response is a rating of bitterness on
@@ -193,6 +202,8 @@ is that they are not uniquely defined: we could apply a linear transformation to
 them, and the same linear transformation to the cut points, and the results
 would be the same.
 
+###### {#ordlp}
+<!-- @index Ordinal models!Linear-predictor scale -->
 The `clm` function actually fits the model using an ordinary probit model
 but with different intercepts for each cut point. We can get detailed 
 information for this model by specifying `mode = "linear.predictor"`:
@@ -218,6 +229,8 @@ again in terms of the probability that the rating will be at least 4:
 emmeans(wine.clm, ~ temp, mode = "exc.prob", at = list(cut = "3|4"))
 ```
 
+###### {#ordprob}
+<!-- @index Ordinal models!`prob` and `mean.class` -->
 There are yet more modes! With `mode = "prob"`, we obtain estimates of the probability distribution of each rating. Its reference grid includes a factor
 with the same name as the model response -- in this case `rating`. We usually 
 want to use that as the primary factor, and the factors of interest as `by` variables:
@@ -244,6 +257,8 @@ actually, each estimate shown is a comparison with judge 1.
 
 
 ## Models fitted using MCMC methods {#mcmc}
+<!-- @index Bayesian models; Examples!Bayesian model; Examples!`lme4::cbpp`
+    `rstanarm` -->
 To illustrate **emmeans**'s support for models fitted using MCMC methods,
 consider the `example_model` available in the **rstanarm** package. 
 The example concerns CBPP, a serious disease of cattle in Ethiopia.
@@ -273,6 +288,8 @@ period.emm
 ```
 The summary shows a frequentist summary of the EMMs. Under the hood, though, is a posterior sample of 500 sets of EMMs -- each one being the EMMs computed from each set of parameter values in the posterior sample of regression coefficients. The summary we see is based on the sample means and covariances of that sample.
 
+###### {#bayesxtra}
+<!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; -->
 We can access these posterior results via the `as.mcmc` method for `emmGrid` objects.
 This gives us an object of class `mcmc` (defined in the **coda** package), which
 can be summarized and explored as we please.
@@ -301,3 +318,6 @@ The only interval that excludes zero is the one that compares periods 1 and 2.
 In summary, to do Bayesian analysis in the **emmeans** package, use the same tools that are available for other models, extract the MCMC samples using `as.mcmc()`, and summarize or plot from there.
 
 [Back to Contents](#contents)
+
+[Index of all vignette topics](vignette-topics.html)
+

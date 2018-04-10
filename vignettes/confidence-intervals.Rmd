@@ -73,7 +73,7 @@ annotations.
 [Back to Contents](#contents)
 
 ## `summary()` and its relatives {#summary}
-<!-- @index `summary()`; `infer`; `confint()`; `test()`; Confidence intervals;
+<!-- @index `summary()`; `summary`!`infer`; `confint()`; `test()`; Confidence intervals;
             Tests!One- and two-sided; Tests!Nonzero null -->
 As you may have gathered, the most important method for `emmGrid` objects is `summary()`.
 It has a lot of options, and the detailed documentation via 
@@ -153,16 +153,17 @@ confint(pigs.emm.s, adjust = "tukey")
 ```
 the adjustment is changed to the Sidak method because the Tukey adjustment is inappropriate unless you are doing pairwise comparisons.
 
+####### {#adjmore}
 <!-- @index **mvtnorm** package; Bonferroni adjustment
      Multivariate *t* (`"mvt"`) adjustment; Unadjusted tests -->
-The adjustment method that is *never* inappropriate is Bonferroni; however, it
-can be quite conservative. Using `adjust = "mvt"` is the closest to being the
-"exact" all-around method, as it uses the multivariate *t* distribution (and the
-**mvtnorm** package) with the same covariance structure as the estimates to
-determine the adjustment. However, this comes at high computational expense as
-the computations are done using simulation techniques. For a large set of tests
-(and especially confidence intervals), the computational lag becomes noticeable
-if not intolerable.
+An adjustment method that is usually appropriate is Bonferroni; however, it can
+be quite conservative. Using `adjust = "mvt"` is the closest to being the
+"exact" all-around method "single-step" method, as it uses the multivariate *t*
+distribution (and the **mvtnorm** package) with the same covariance structure as
+the estimates to determine the adjustment. However, this comes at high
+computational expense as the computations are done using simulation techniques.
+For a large set of tests (and especially confidence intervals), the
+computational lag becomes noticeable if not intolerable.
 
 For tests, `adjust` increases the *P* values over those otherwise obtained with
 `adjust = "none"`, making it harder to declare an individual test as
@@ -234,9 +235,10 @@ equal weights are used to obtain the EMMs). See more on these types of tests for
 higher-order effects in the ["interactions" vignette section on
 contrasts](interactions.html#contrasts).
 
+####### {#joint_tests}
+<!-- @index `joint_tests()`; Type III ANOVA; Analysis of variance!Type III -->
 For convenience, there is also a `joint_tests()` function that performs
 joint tests of contrasts among each term in a model or `emmGrid` object.
-<!-- @index `joint_tests()`; Type III ANOVA; Analysis of variance!Type III -->
 ```{r}
 joint_tests(pigsint.rg)
 ```

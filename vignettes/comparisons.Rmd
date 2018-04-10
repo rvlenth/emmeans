@@ -39,7 +39,7 @@ pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 pigs.emm.s <- emmeans(pigs.lm, "source")
 pairs(pigs.emm.s)
 ```
-<!-- @index `adjust`; `infer` -->
+<!-- @index `adjust`; `summary()`!`adjust`; `summary()`!`infer` -->
 In its out-of-the-box configuration, `pairs()` sets two defaults for 
 [`summary()`](confidence-intervals.html#summary): `adjust = "tukey"`
 (multiplicity adjustment), and `infer = c(FALSE, TRUE)` (test statistics, not
@@ -149,7 +149,7 @@ EMMs, or to the contrasts? (See the documentation if interested; but the best pr
 [Back to Contents](#contents)
 
 ## Custom contrasts and linear functions {#linfcns}
-<!-- @index Contrasts!Custom; `.emmc` functions@emmc; `adjust` -->
+<!-- @index Contrasts!Custom; `.emmc` functions@emmc; `contrast()`!`adjust` -->
 The user may write a custom contrast function for use in `contrast()`.
 What's needed is a function having the desired name with `".emmc"` appended,
 that generates the needed coefficients as a list or data frame. The
@@ -184,7 +184,8 @@ Now try it with the `oranges` example we had previously:
 contrast(org.emml[[1]], "skip_comp", skip = 2, reverse = TRUE)
 ```
 
-<!-- @index Linear functions -->
+####### {#linfct}
+<!-- @index Linear functions; `contrast()`!Linear functions -->
 The `contrast()` function may in fact be used to compute arbitrary linear
 functions of EMMs. Suppose for some reason we want to estimate the quantities
 $\lambda_1 = \mu_1+2\mu_2-7$ and $\lambda_2 = 3\mu_2-2\mu_3+1$, where the

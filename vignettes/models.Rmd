@@ -2,12 +2,15 @@
 title: "Models supported by emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_document:
+    theme: readable
 vignette: >
   %\VignetteIndexEntry{Models supported by emmeans}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+<!-- @index Vignettes!Models -->
 
 Here we document what model objects may be used with **emmeans**, and some
 special features of some of them that may be accessed by passing additional
@@ -27,6 +30,7 @@ and `emm_basis` methods. See the package documentation for
 [Vignette index](index.html)
 
 ## Quick reference for supported objects and options
+<!-- @index Models!Quick reference -->
 
 Here is an alphabetical list of model classes that are supported, and
 the arguments that apply. Detailed documentation follows, with objects
@@ -73,7 +77,7 @@ Scroll down or follow the links to those groups for more information.
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |
 |             |         |         |Always include response in specs for `emmeans()`             |
-|nauf         |         |[P](#P)  |Supported in **nauf** package                                |
+|nauf         |nauf.*xxx* |[P](#P)  |Supported in **nauf** package                                |
 |nlme         |nlme     |[A](#A)  |Supports fixed part. Requires `param`                        |
 |polr         |MASS     |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
 |             |         |         |`"exc.prob", "prob", "mean.class")`                          |
@@ -94,6 +98,7 @@ need special support; hence no extra arguments are needed.
 
 
 ## B -- Beta regression {#B}
+<!-- @index Beta regression; `betareg` models -->
 
 The additional `mode` argument for `betareg` objects has possible
 values of `"response"`, `"link"`, `"precision"`,
@@ -108,6 +113,7 @@ the reference grid, and its levels are the values supplied.
 
 
 ## Group C -- Count models {#C}
+<!-- @index Count regression; `hurdle` models; `zeroinfl` models -->
 
 Two optional arguments -- `mode` and `lin.pred` -- are provided.
 The `mode` argument has possible values `"response"` (the default),
@@ -140,6 +146,7 @@ correspondence with `mode` of `("mean", "count", "zero")`. If
 
 
 ## Group E -- GEE models {#E}
+<!-- @index GEE models --> 
 
 These models all have more than one covariance estimate available, and it may
 be selected by supplying a string as the `vcov.method` argument. It is
@@ -154,7 +161,7 @@ in the documentation for `ref_grid`.
 
 
 ## Group G -- Generalized linear models and relatives {#G}
-
+<!-- @index Generalized linear models; `glm`*xxx* models -->
 Models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `Inf`.
@@ -164,14 +171,14 @@ that sets the number of bootstrap replications used to estimate the
 variances and covariances of the smoothing portions of the model.
 
 ## Group H -- `gamlss` models {#H}
-
+<!-- @index `gamlss` models -->
 The `what` argument has possible values of `"mu"` (default), `"sigma"`, `"nu"`, 
 or `"tau"` depending on which part of the model you want results for.
 Currently, there is no support when the selected part of the model contains
 a smoothing method like `pb()`. 
 
 ## Group K -- `lme` models {#K}
-
+<!-- @index `lme` models; `gls` models -->
 The `sigmaAdjust` argument is a logical value that defaults to `TRUE`. It is
 comparable to the `adjustSigma` option in `nlme::summary.lme` (the name-mangling
 is to avoid conflicts with the often-used `adjust` argument), and determines
@@ -179,7 +186,7 @@ whether or not a degrees-of-freedom adjustment is performed with models fitted
 using the ML method.
 
 ## Group L -- `lmerMod` models {#L}
-
+<!-- @index `lmerMod` models; Kenward-Roger d.f.; Satterthwaite d.f. -->
 There is an optional `lmer.df` argument that defaults to 
 `get_EMM_option("lmer.df")` (which in turn defaults to 
 `"kenward-roger"`). The possible values are `"kenward-roger"`,
@@ -217,7 +224,7 @@ that case, the Satterthwaite method is used in place of Kenward-Roger.
 
 
 ## Group M -- Multivariate models {#M}
-
+<!-- @index Multivariate models -->
 When there is a multivariate response, the different responses are treated as
 if they were levels of a factor -- named `rep.meas` by default. The
 `mult.name` argument may be used to change this name. The
@@ -228,7 +235,7 @@ expressed as combinations of the named factor levels via the function
 
 
 ## N - Multinomial responses {#N}
-
+<!-- @index `mlm` models; Multinomial models -->
 The reference grid includes a pseudo-factor with the same name and levels as
 the multinomial response. There is an optional `mode` argument which
 should match `"prob"` or `"latent"`. With `mode = "prob"`, the
@@ -252,7 +259,7 @@ probability of 1/*k* for each `trt`.
 
 
 ## Group O - Ordinal responses {#O}
-
+<!-- @index Ordinal models; `clm` models; `polreg` models -->
 The reference grid for ordinal models will include all variables that appear in
 the main model
 as well as those in the `scale` or `nominal` models (if provided). 
@@ -316,7 +323,7 @@ package documentation for details on **emmeans** support.
 
 
 ## S -- Sampling (MCMC) methods {#S}
-
+<!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `as.mcmc` -->
 Models fitted using MCMC methods contain a sample from the posterior
 distribution of fixed-effect coefficients. In some cases (e.g., results of
 `MCMCpack::MCMCregress()` and `MCMCpack::MCMCpoisson()`), the object may include a
@@ -337,7 +344,7 @@ the model object.
 
 
 ## Group V -- `aovList` objects {#V}
-
+<!-- @index `aovList` objects -->
 Support for these objects is limited. To avoid strong biases in the
 predictions, the `contrasts` attribute of all factors should be of a
 type that sums to zero -- for example, `"contr.sum"`,

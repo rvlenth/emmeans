@@ -13,10 +13,11 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
+<!-- @index Vignettes!Transformations and link functions -->
 ## Contents {#contents}
 This vignette covers the intricacies of transformations and link functions in **emmeans**.
 
-  1. [Overview](#timing)
+  1. [Overview](#overview)
   2. [Re-gridding](#regrid)
   3. [Link functions](#links)
   4. [Both a response transformation and a link](#tranlink)
@@ -24,9 +25,10 @@ This vignette covers the intricacies of transformations and link functions in **
   6. [Specifying a transformation after the fact](#after)
   7. [Faking a log transformation](#logs)
   
-[Vignette index](index.html)
+[Index of all vignette topics](vignette-topics.html) 
 
-## Overview {#timing}
+## Overview {#overview}
+<!-- @index Transformations!Overview -->
 Consider the same example with the `pigs` dataset that is used in many of 
 these vignettes:
 ```{r}
@@ -48,7 +50,8 @@ can be done by adding `type = "response"` to the `summary()` call:
 summary(pigs.emm.s, infer = TRUE, null = log(35), type = "response")
 ```
 
-### Timing is everything
+### Timing is everything {#timing}
+<!-- @index Transformations!Timing issues -->
 Dealing with transformations in **emmeans** is somewhat complex, due to the 
 large number of possibilities. But the key is understanding what happens, when.
 These results come from a sequence of steps. Here is what happens (and doesn't
@@ -83,6 +86,8 @@ end by default.
 [Back to Contents](#contents)
 
 ## Re-gridding {#regrid}
+<!-- @index `regrid()`; Transformations!Re-gridding; `emmeans()`!With transformations -->
+
 As well-advised as it is, some users may not want the default timing of things.
 The tool for changing when back-transformation is performed is the `regrid()`
 function -- which, with default settings of its arguments, back-transforms an
@@ -115,6 +120,8 @@ These results all differ from either of the previous two summaries -- again,
 because the averaging is done on the `conc` scale rather than the `log(conc)` 
 scale.
 
+###### {#regrid}
+<!-- @index `regrid()`!`transform` vs. `type` -->
 Note: For those who want to routinely back-transform before averaging,
 the `transform` argument in `ref_grid()` simplifies this. The first two
 steps above could have been done more easily as follows:
@@ -137,8 +144,8 @@ Remember again: When it comes to transformations, timing is everything.
 [Back to Contents](#contents)
 
 
-#
 ## Link functions {#links}
+<!-- @index Link functions; Examples!`neuralgia`; Examples!Logistic regression -->
 Exactly the same ideas we have presented for response transformations apply to
 generalized linear models having non-identity link functions. As far as
 **emmeans** is concerned, there is no difference at all.
@@ -155,6 +162,9 @@ neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), data = n
 neuralgia.emm <- emmeans(neuralgia.glm, "Treatment", type = "response")
 neuralgia.emm
 ```
+
+###### {#oddsrats}
+<!-- @index Odds ratios; Logistic regression!Odds ratios -->
 (The note about the interaction is discussed shortly.) Note that the averaging 
 over `Sex` is done on the logit scale, *before* the results are back-transformed
 for the summary. We may use `pairs()` to compare these estimates; note that 
@@ -186,7 +196,10 @@ the marginal results that are reported earlier.
 
 [Back to Contents](#contents)
 
+
 ## Models having both a response transformation and a link function {#tranlink}
+<!-- @index Transformations!with link function@link; Examples!`warpbreaks`
+            Examples!Gamma regression; `summary()`!`type = "unlink"` -->
 It is possible to have a generalized linear model with a non-identity link *and* a response transformation. Here is an example, with the built-in `wapbreaks` dataset:
 ```{r}
 warp.glm <- glm(sqrt(breaks) ~ wool*tension, family = Gamma, data = warpbreaks)
@@ -213,6 +226,7 @@ One may also use `"unlink"` as a `transform` argument in `regrid()` or through
 
 
 ## Special transformations {#special}
+<!-- @index Transformations!Custom; `make.tran()` -->
 The `make.tran()` function provides several special transformations and sets
 things up so they can be handled in **emmeans** with relative ease. 
 (See [`help("make.tran", "emmeans")](../html/make.tran.html) for descriptions
@@ -240,6 +254,7 @@ using a Box-Cox transformation.
 [Back to Contents](#contents)
 
 ## Specifying a transformation after the fact {#after}
+<!-- @index Transformations!Adding after the fact; `uppdate()`!`tran` -->
 It is not at all uncommon to fit a model using statements like the following:
 ```{r eval = FALSE}
 mydata <- transform(mydata, logy.5 = log(yield + .5))
@@ -263,6 +278,7 @@ model.rg <- update(ref_grid(model), tran = "sqrt")
 [Back to Contents](#contents)
 
 ## Faking a log transformation {#logs}
+<!-- @index Transformations!Faking a log transformation; `regrid()`!`transform = "log"` -->
 The `regrid()` function makes it possible to fake a log transformation of the response. Why would you want to do this? So that you can make comparisons using
 ratios instead of differences.
 
@@ -280,3 +296,6 @@ actually used a log response.
 
 
 [Back to Contents](#contents)
+
+[Index of all vignette topics](vignette-topics.html) 
+

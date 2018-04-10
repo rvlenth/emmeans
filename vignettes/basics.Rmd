@@ -85,7 +85,8 @@ mean from `cell.means` is due to the fact that the lowest value receives 3 times
 the weight as the other two values.
 
 ### The point {#eqwts}
-<!-- @index Means!Weighted; Means!Marginal!of cell means@cell -->
+<!-- @index Means!Weighted; Means!Marginal!of cell means@cell
+    EMMs!Appropriateness of -->
 The point is that the marginal means of `cell.means` give *equal weight* to each
 cell. In many situations (especially with experimental data), that is a much
 fairer way to compute marginal means, in that they are not biased by imbalances
@@ -240,9 +241,7 @@ handled by `cov.reduce` or the default methods.
 [Back to Contents](#contents)
 
 ### Graphical displays {#plots}
-<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style 
-            `emmip()`;  `plot.emmGrid()`; **ggplot2** package
-            Plots!of confidence intervals@conf -->
+<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style; `emmip()`;   -->
 The results of `ref_grid()` or `emmeans()` (these are objects of class `emmGrid`)
 may be plotted in two different 
 ways. One is an interaction-style plot, using `emmip()`. In the following, let's 
@@ -260,6 +259,8 @@ Neither of these plots is an interaction plot of the *data*; they are
 interaction plots of model predictions; and since both models do not include
 an interaction, no interaction at all is evident in the plots.
 
+###### {#plot.emmGrid}
+<!-- @index Plots!of confidence intervals@conf; `plot.emmGrid()` -->
 The other graphics option offered is the `plot()` method for `emmGrid` objects. In
 the following, we display the estimates and 95% confidence intervals for
 `mtcars.rg` in separate panels for each `disp`.
@@ -287,6 +288,8 @@ number of cylinders:
 plot(mtcars.rg_d.c)
 ```
 
+###### {#ggplot}
+<!-- @index **ggplot2** package -->
 Wizards with the **ggplot2** package can further enhance these plots if 
 they like. For example, we can add the data to an interaction plot -- this
 time we opt to include confidence intervals and put the three sources 
@@ -325,7 +328,8 @@ variations due to the factors that are being averaged over.
 [Back to Contents](#contents)
 
 ### Multivariate responses {#multiv}
-<!-- @index Multivariate models; Examples!`MOats`; `ref_grid()`!`mult.name` -->
+<!-- @index Multivariate models; Examples!`MOats`
+     Examples!Multivariate; `ref_grid()`!`mult.name` -->
 The **emmeans** package supports various multivariate models. When there
 is a multivariate response, the dimensions of that response are treated as if
 they were levels of a factor. For example, the `MOats` dataset provided in the
