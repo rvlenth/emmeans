@@ -1,0 +1,20 @@
+body {
+  font-size: 11pt; 
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  margin: 30px 50px 30px 50px; 
+}
+h1,h2,h3,h4,h5,h6 { font-family: Arial,Helvetica,Sans-serif; }
+a:link {color:darkblue;} 
+a:visited {color:darkblue;} 
+a:hover {color:dodgerblue;}
+a:active {color:dodgerblue;} 
+code { color: darkred; 
+       font-family: "Lucida Console", Monaco, monospace; 
+       font-size: 90%;}
+.r {  /* class for <pre> */
+    color:#8B0000; 
+    font-family: "Lucida Console", Monaco, monospace; 
+    line-height: 1.2;
+}
+.rc { color: darkgreen; } /* class used by syntax highlighter */
+

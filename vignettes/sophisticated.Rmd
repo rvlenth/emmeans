@@ -2,7 +2,7 @@
 title: "Sophisticated models in emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Sophisticated models in emmeans}
   %\VignetteEngine{knitr::rmarkdown}

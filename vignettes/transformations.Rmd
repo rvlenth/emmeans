@@ -2,7 +2,7 @@
 title: "Transformations and link functions in emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Transformations and link functions}
   %\VignetteEngine{knitr::rmarkdown}

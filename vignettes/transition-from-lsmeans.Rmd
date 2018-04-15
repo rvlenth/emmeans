@@ -2,7 +2,7 @@
 title: "Transitioning to emmeans from lsmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Transitioning to emmeans from lsmeans}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,7 +13,21 @@ require("emmeans")
 knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 ```
 
-## Overview
+<!-- @index Vignettes!Transitioning from **lsmeans**; **lsmeans** package!Transitioning from -->
+
+## Contents {#contents}
+This vignette is here to help past users of the **lsmeans** package.
+
+  1. [Overview](#overview)
+  2. [User impact](#impact)
+  3. [Converting old scripts](#scripts)
+  4. [Converting old workspaces](#workspaces)
+  5. [Notes for package developers](#devel)
+
+[Index of all vignette topics](vignette-topics.html) 
+
+
+## Overview {#overview}
 **emmeans** is a continuation of the **lsmeans** package. The name is
 changed for two reasons:
 
@@ -32,7 +46,9 @@ changed for two reasons:
      Changing the name of the package at the same time as the object 
      classes are changed makes for a cleaner transition.
 
-## User impact
+[Back to Contents](#contents)
+
+## User impact {#impact}
 For the most part, all that most users need to do to transition from
 using the **lsmeans** package is to use `require(emmeans)` 
 or `library(emmeans)` to load the package. With that one change,
@@ -109,8 +125,11 @@ need to be aware of:
     are problematic; but I have decided to revert to the Kenward-Roger method 
     as the system default. The default may be changed via 
     `emm_options(lmer.df = ...)`. See [`vignette("models")`](models.html#L) for details.
-    
+
+[Back to Contents](#contents)
+
 ## Converting scripts {#scripts}
+<!-- @index `convert_scripts()`; **lsmeans** package!Converting scripts -->
 The user may run 
 ```
 emmeans:::convert_scripts()
@@ -137,7 +156,10 @@ The conversion routines will convert the following to their `emmeans` counterpar
   * `lsmeans(` and relatives to `emmeans(` and relatives, if opted for
   * `pmmeans(` and relatives to `emmeans(` and relatives, if opted for
 
+[Back to Contents](#contents)
+
 ## Converting workspaces {#workspaces}
+<!-- @index `convert_workspace()`; **lsmeans** package!Converting workspaces -->
 If you have any objects from the **lsmeans** package laying around, it is
 all too likely that the **lsmeans** package will be loaded, and perhaps
 even get added to the search path. This can create annoying messages, if not
@@ -154,7 +176,10 @@ the **lsmeans** package. Doing so will *not* prevent you from converting old
 workspaces or scripts. Watch your package updates carefully, though,
 as it may get re-installed if it is still imported by another package. 
 
-## Notes for package developers to transition to emmeans support
+[Back to Contents](#contents)
+
+## Notes for package developers to transition to emmeans support {#devel}
+<!-- @index **lsmeans** package!Information for package developers -->
 if you are the developer of a package that supports **lsmeans**, and you want to transition to supporting **emmeans**, I make the following suggestions:
 
  1. Currently, your package provides methods `recover.data.xyz()` and 
@@ -176,3 +201,8 @@ if you are the developer of a package that supports **lsmeans**, and you want to
         and *not* as S3 methods
      e. In lieu of (a)-(c) above, you could just export the functions
         `recover_data.xyz` and `emm_basis.xyz`. 
+
+[Back to Contents](#contents)
+
+[Index of all vignette topics](vignette-topics.html)
+

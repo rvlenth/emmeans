@@ -3,14 +3,14 @@ title: "Index of vignette topics"
 author: "emmeans package"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_document:
-    theme: readable
+  emmeans::.emm_vignette:
+    css: "vigindex.css"
 vignette: >
   %\VignetteIndexEntry{Index of vignette topics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-<style type="text/css"> ul {list-style-type: none;} </style>
+
 <!-- End of header. Do not delete this comment -->
 
 
@@ -23,6 +23,7 @@ vignette: >
 ### A {#a}
 
 
+  * [`add_grouping()`](utilities.html#groups)
   * `adjust`: [1](comparisons.html#pairwise), [2](confidence-intervals.html#adjust)
   * [Analysis of subsets of data](FAQs.html#model)
   * Analysis of variance
@@ -30,6 +31,7 @@ vignette: >
       * [Type III](confidence-intervals.html#joint_tests)
   * [Annoying messages](FAQs.html#namespace)
   * [`aovList` objects](models.html#V)
+  * `as.data.frame()`: [1](utilities.html#data), [2](utilities.html#data)
   * [`as.mcmc`](models.html#S)
   * [`as.mcmc()`](sophisticated.html#bayesxtra)
   * [Asymptotic tests](sophisticated.html#dfoptions)
@@ -45,6 +47,7 @@ vignette: >
   * [Beta regression](models.html#B)
   * [`betareg` models](models.html#B)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
+  * [`[ ]` and `[[ ]]` operators](utilities.html#brackets)
   * `by` groups
       * [Identical comparisons](FAQs.html#additive)
   * [`by` variables](confidence-intervals.html#byvars)
@@ -69,6 +72,7 @@ vignette: >
   * [`consec`](comparisons.html#contrasts)
   * [`contrast()`](comparisons.html#contrasts)
       * [`adjust`](comparisons.html#linfcns)
+      * [Changing defaults](utilities.html#defaults)
       * [`combine`](interactions.html#simple)
       * [`interaction`](interactions.html#contrasts)
       * [Linear functions](comparisons.html#linfct)
@@ -81,7 +85,8 @@ vignette: >
       * [Polynomial](comparisons.html#contrasts)
       * Tests
           * [with transformations](comparisons.html#logs)
-  * [`convert_workspace()`](FAQs.html#namespace)
+  * [`convert_scripts()`](transition-from-lsmeans.html#scripts)
+  * `convert_workspace()`: [1](FAQs.html#namespace), [2](transition-from-lsmeans.html#workspaces)
   * [Count regression](models.html#C)
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
@@ -108,13 +113,20 @@ vignette: >
 
   * [`eff`](comparisons.html#contrasts)
   * [`emm_list` object](comparisons.html#formulas)
+  * [`emm_options()`](utilities.html#defaults)
   * [`.emmc` functions](comparisons.html#linfcns)
   * `emmeans`
       * [Surprising results from](FAQs.html#transformations)
   * [`emmeans()`](basics.html#emmeans)
+      * [Changing defaults](utilities.html#defaults)
       * `weights`: [1](basics.html#weights), [2](messy-data.html#weights)
       * [With transformations](transformations.html#regrid)
   * [`emmGrid` object](confidence-intervals.html#emmobj)
+  * `emmGrid` objects
+      * [Accessing data](utilities.html#data)
+      * [Combining and subsetting](utilities.html#rbind)
+      * [Modifying](utilities.html#update)
+      * [Setting defaults for](utilities.html#defaults)
   * `emmip()`: [1](basics.html#plots), [2](interactions.html#factors)
   * [EMMs](basics.html#EMMdef)
       * [Appropriateness of](basics.html#eqwts)
@@ -169,10 +181,12 @@ vignette: >
   * [`gamlss` models](models.html#H)
   * [GEE models](models.html#E)
   * [Generalized linear models](models.html#G)
+  * [`get_emm_option()`](utilities.html#options)
   * [**ggplot2** package](basics.html#ggplot)
   * [`glm`*xxx* models](models.html#G)
   * [`gls` models](models.html#K)
   * [Graphical displays](basics.html#plots)
+  * [Grouping factors](utilities.html#groups)
   * [Grouping into separate sets](confidence-intervals.html#byvars)
 
 
@@ -230,6 +244,11 @@ vignette: >
   * Logistic regression
       * [Odds ratios](transformations.html#oddsrats)
       * [Surprising results](FAQs.html#transformations)
+  * **lsmeans** package
+      * [Converting scripts](transition-from-lsmeans.html#scripts)
+      * [Converting workspaces](transition-from-lsmeans.html#workspaces)
+      * [Information for package developers](transition-from-lsmeans.html#devel)
+      * [Transitioning from](transition-from-lsmeans.html)
 
 
 [Back to top](#topnav)
@@ -265,6 +284,8 @@ vignette: >
   * [`NA` results](FAQs.html#NAs)
   * [Nesting](messy-data.html#nesting)
       * [Auto-detection](messy-data.html#nest-trap)
+  * Nesting factors
+      * [Creating](utilities.html#groups)
   * [Non-estimability](messy-data.html#nonestex)
   * [`NonEst` results](FAQs.html#NAs)
 
@@ -277,6 +298,7 @@ vignette: >
   * [Observational data](messy-data.html#issues)
   * [Odds ratios](transformations.html#oddsrats)
   * [Offsets](sophisticated.html#offsets)
+  * [Options](utilities.html#options)
   * Ordinal models: [1](models.html#O), [2](sophisticated.html#ordinal)
       * [Latent scale](sophisticated.html#ordinal)
       * [Linear-predictor scale](sophisticated.html#ordlp)
@@ -296,6 +318,7 @@ vignette: >
       * [of confidence intervals](basics.html#plot.emmGrid)
       * [of EMMs](basics.html#plots)
       * [Interaction-style](basics.html#plots)
+  * [`+` operator](utilities.html#rbind)
   * Poisson regression
       * [Surprising results](FAQs.html#transformations)
   * [`polreg` models](models.html#O)
@@ -307,6 +330,7 @@ vignette: >
 ### R {#r}
 
 
+  * [`rbind()`](utilities.html#rbind)
   * [`ref_grid()`](basics.html#ref_grid)
       * [`at`](basics.html#altering)
       * [`cov.reduce`](basics.html#altering)
@@ -330,6 +354,7 @@ vignette: >
 
 
   * [Satterthwaite d.f.](models.html#L)
+  * [Selecting results](utilities.html#brackets)
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * [`simple = "each"`](confidence-intervals.html#simple)
   * Simple comparisons: [1](confidence-intervals.html#simple), [2](FAQs.html#interactions)
@@ -347,6 +372,7 @@ vignette: >
       * [`infer`](comparisons.html#pairwise)
       * [`type = "unlink"`](transformations.html#tranlink)
   * [`summary_emm` object](confidence-intervals.html#emmobj)
+      * [As a data frame](utilities.html#data)
 
 
 [Back to top](#topnav)
@@ -388,8 +414,10 @@ vignette: >
 
 
   * [Unadjusted tests](confidence-intervals.html#adjmore)
+  * [`update()`](utilities.html#update)
   * `uppdate()`
       * [`tran`](transformations.html#after)
+  * [Using results](utilities.html#data)
 
 
 [Back to top](#topnav)
@@ -407,6 +435,8 @@ vignette: >
       * [Models](models.html)
       * [Sophisticated models](sophisticated.html)
       * [Transformations and link functions](transformations.html)
+      * [Transitioning from **lsmeans**](transition-from-lsmeans.html)
+      * [Utilities and options](utilities.html)
 
 
 [Back to top](#topnav)

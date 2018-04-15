@@ -322,7 +322,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         # factors not in 'at'
         else if (is.factor(x) && !(nm %in% coerced$covariates))
             ref.levels[[nm]] = levels(factor(x))
-        else if (is.character(x))
+        else if (is.character(x) || is.logical(x))
             ref.levels[[nm]] = chrlev[[nm]] = sort.unique(x)
         # matrices
         else if (is.matrix(x)) {

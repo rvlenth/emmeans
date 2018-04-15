@@ -2,7 +2,7 @@
 title: "FAQs for emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{FAQs for emmeans}
   %\VignetteEngine{knitr::rmarkdown}

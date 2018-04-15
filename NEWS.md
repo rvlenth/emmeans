@@ -2,10 +2,12 @@ emmeans 1.1.3.0903
 -------------
 
   * Index of vignette topics added
+  * New, improved vignette formats
   * Fixed df bug in regrid (#29)
   * Fixed annotation bug for nested models (#30)
   * Better documentation for `lme` models in "models" vignette
   * Additional fixes for arguments passed to `.emmc` functions (#22)
+  * Support added for logical predictors (who knew? not me)
 
 
 emmeans 1.1.3

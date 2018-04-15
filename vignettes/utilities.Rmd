@@ -2,7 +2,7 @@
 title: "Utilities and options for emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Utilities and options}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,23 +14,27 @@ knitr::opts_chunk$set(collapse = TRUE,
 fig.width = 4.5) 
 ```
 
+<!-- @index Vignettes!Utilities and options -->
+
 ## Contents {#contents}
 
   1. [Updating an `emmGrid` object](#update)
   2. [Setting options and defaults](#options)
   3. [Combining and subsetting `emmGrid` objects](#rbind)
-  4. [Adding grouping factors](#groups)
+  4. [Accessing results to use elsewhere](#data)
+  5. [Adding grouping factors](#groups)
   
-[Vignette index](index.html)
+[Index of all vignette topics](vignette-topics.html)
 
 ## Updating an `emmGrid` object {#update}
+<!-- @index `update()`; `emmGrid` objects!Modifying -->
 Several internal settings are saved when functions like `ref_grid()`, `emmeans()`,
 `contrast()`, etc. are run. Those settings can be manipulated via the `update()`
 method for `emmGrid`s. To illustrate, consider the `pigs` dataset and model yet again:
 ```{r}
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
-pigs.emm.s <- emmeans(pigs.lm, "source")
-pigs.emm.s
+pigs.emm <- emmeans(pigs.lm, "source")
+pigs.emm
 ```
 We see confidence intervals but not tests, by default. This happens as a result
 of internal settings in `pigs.emm.s` that are passed to `summary()` when the
@@ -39,7 +43,7 @@ want to change its internal settings rather than having to rely on explicitly
 calling `summary()` with several arguments. If so, just update the internal
 settings to what is desired; for example:
 ```{r}
-pigs.emm.s <- update(pigs.emm.s, infer = c(TRUE, TRUE), null = log(35))
+pigs.emm.s <- update(pigs.emm, infer = c(TRUE, TRUE), null = log(35))
 pigs.emm.s
 ```
 See [`help("update.emmGrid")](../doc/update.emmGrid.html) for details on the keywords
@@ -59,6 +63,7 @@ emmeans(pigs.lm, "source", options = list(infer = c(TRUE, TRUE), null = log(35))
 [Back to contents](#contents)
 
 ## Setting options and defaults {#options}
+<!-- @index `get_emm_option()`; Options -->
 Speaking of the `options` argument, note that the default in `emmeans()` 
 is `options = get_emm_option("emmeans")`. Let's see what that is:
 ```{r}
@@ -79,6 +84,9 @@ In addition, the flag `is.new.rg` is set to `TRUE`, and that is why one
 sees a `str()` listing rather than a summary as the default when the object
 is simply shown by typing its name at the console.
 
+###### {#defaults}
+<!-- @index `emm_options()`; `emmGrid` objects!Setting defaults for
+     `emmeans()`!Changing defaults; `contrast()`!Changing defaults -->
 The user may have other preferences. She may want to see both intervals 
 and tests whenever contrasts are produced; and perhaps she also wants to
 always default to the response scale when transformations or links
@@ -116,6 +124,8 @@ options(emmeans = NULL)
 [Back to contents](#contents)
 
 ## Combining and subsetting `emmGrid` objects {#rbind}
+<!-- @index `emmGrid` objects!Combining and subsetting
+     `rbind()`; `+` operator@plus -->
 Two or more `emmGrid` objects may be combined using the `rbind()` or `+`
 methods. The most common reason (or perhaps the only good reason) to do this
 is to combine EMMs or contrasts into one family for purposes of applying
@@ -137,17 +147,38 @@ first object combined. So in the second output, where they are combined in
 reverse order, we get both confidence intervals and tests, and transformation to
 the response scale.
 
+###### {#brackets}
+<!-- @index Selecting results; `[ ]` and `[[ ]]` operators@brackets -->
 To subset an `emmGrid` object, just use the subscripting operator `[]`.
 For instance,
 ```{r}
-pigs.emm.s[2:3]
+pigs.emm[2:3]
 ```
+
+## Accessing results to use elsewhere {#data}
+<!-- @index `as.data.frame()`; `emmGrid` objects!Accessing data; Using results 
+     `summary_emm` object!As a data frame; `as.data.frame()` -->
+Sometimes, users want to use the results of an analysis (say, an `emmeans()` call)
+in other computations. The `summary()` method creates a `summary_emm` object
+that inherits from the `data.frame` class; so one may use the variables therein
+just as those in a data frame.
+
+Another way is to use the `as.data.frame()` method for `emmGrid` objects.
+This is provided to implement the standard way to coerce an object to a data frame.
+For illustration, let's compute the widths of the confidence intervals in our example.
+```{r}
+transform(pigs.emm, CI.width = upper.CL - lower.CL)
+```
+This implicitly converted `pigs.emm` to a data frame by passing it to the
+`as.data.frame()` method, then performed the required computation.
+But sometimes you have to explicitly call `as.data.frame()`.
 
 [Back to contents](#contents)
 
 
 
 ## Adding grouping factors {#groups}
+<!-- @index Grouping factors; `add_grouping()`; Nesting factors!Creating  -->
 Sometimes, users want to group levels of a factor into a smaller number of groups.
 Those groups may then be, say, averaged separately and compared, or used as a
 `by` factor. The `add_grouping()` function serves this purpose. The function
@@ -168,3 +199,4 @@ emmeans(pigs.emm.ss, pairwise ~ type)
 
 [Back to contents](#contents)
 
+[Index of all vignette topics](vignette-topics.html)

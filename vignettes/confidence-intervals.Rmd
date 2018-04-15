@@ -2,7 +2,7 @@
 title: "Confidence intervals and tests in emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Confidence intervals and tests}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(collapse = TRUE, fig.width = 4.5)
 This vignette describes various ways of summarizing `emmGrid` objects.
 
   1. [`emmGrid` objects, described](#emmobj)
-  2. [`summary(), `confint()`, and `test()`](#summary)
+  2. [`summary()`, `confint()`, and `test()`](#summary)
   3. [Back-transforming to response scale](#tran)
      (See also the ["transformations" vignette](transformations.html))
   4. [Multiplicity adjustments](#adjust)

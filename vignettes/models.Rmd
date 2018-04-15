@@ -2,9 +2,7 @@
 title: "Models supported by emmeans"
 author: "Russ Lenth"
 date: "`r Sys.Date()`"
-output: 
-  rmarkdown::html_document:
-    theme: readable
+output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Models supported by emmeans}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,9 +25,9 @@ Additional models can be supported by writing appropriate `recover_data`
 and `emm_basis` methods. See the package documentation for 
 `extending-emmeans` and `vignette("extending")` for details.
 
-[Vignette index](index.html)
+[Index of all vignette topics](vignette-topics.html)
 
-## Quick reference for supported objects and options
+## Quick reference for supported objects and options {#quickref}
 <!-- @index Models!Quick reference -->
 
 Here is an alphabetical list of model classes that are supported, and
@@ -111,6 +109,7 @@ specifies which quantile(s) to compute; the default is 0.5 (the median). Also
 in `"quantile"` mode, an additional variable `quantile` is added to
 the reference grid, and its levels are the values supplied.
 
+[Back to quick reference](#quickref)
 
 ## Group C -- Count models {#C}
 <!-- @index Count regression; `hurdle` models; `zeroinfl` models -->
@@ -144,6 +143,7 @@ it must yield a matrix of the same size as would be obtained using
 correspondence with `mode` of `("mean", "count", "zero")`. If
 `vcov.` is a function, it must support the `model` argument.
 
+[Back to quick reference](#quickref)
 
 ## Group E -- GEE models {#E}
 <!-- @index GEE models --> 
@@ -170,6 +170,8 @@ In the case of `gam::gam` objects, there is an optional `nboot` argument
 that sets the number of bootstrap replications used to estimate the 
 variances and covariances of the smoothing portions of the model.
 
+[Back to quick reference](#quickref)
+
 ## Group H -- `gamlss` models {#H}
 <!-- @index `gamlss` models -->
 The `what` argument has possible values of `"mu"` (default), `"sigma"`, `"nu"`, 
@@ -184,6 +186,8 @@ comparable to the `adjustSigma` option in `nlme::summary.lme` (the name-mangling
 is to avoid conflicts with the often-used `adjust` argument), and determines
 whether or not a degrees-of-freedom adjustment is performed with models fitted
 using the ML method.
+
+[Back to quick reference](#quickref)
 
 ## Group L -- `lmerMod` models {#L}
 <!-- @index `lmerMod` models; Kenward-Roger d.f.; Satterthwaite d.f. -->
@@ -222,6 +226,7 @@ Finally, note that a user-specified covariance matrix
 (via the `vcov.` argument) will also disable the Kenward-Roger method; in
 that case, the Satterthwaite method is used in place of Kenward-Roger.
 
+[Back to quick reference](#quickref)
 
 ## Group M -- Multivariate models {#M}
 <!-- @index Multivariate models -->
@@ -257,6 +262,7 @@ if `resp` is a response with *k* levels, `emmeans(model, ~ resp
 `trt`; but `emmeans(model, ~ trt)` will just yield the average
 probability of 1/*k* for each `trt`.
 
+[Back to quick reference](#quickref)
 
 ## Group O - Ordinal responses {#O}
 <!-- @index Ordinal models; `clm` models; `polreg` models -->
@@ -314,6 +320,7 @@ default for `rms::Predict()`. This is quite similar in
 concept to `mode = "latent"`, where all intercepts are averaged
 together.
 
+[Back to quick reference](#quickref)
 
 ## P -- Other packages {#P}
 
@@ -342,6 +349,7 @@ using the **coda** package. It provides a posterior sample of EMMs for the
 given reference grid, based on the posterior sample of the fixed effects from
 the model object.
 
+[Back to quick reference](#quickref)
 
 ## Group V -- `aovList` objects {#V}
 <!-- @index `aovList` objects -->
@@ -359,3 +367,6 @@ must yield a single covariance matrix for the unique fixed effects
 (not a set of them for each error stratum). In that case, the
 degrees of freedom are set to `NA`.
 
+[Back to quick reference](#quickref)
+
+[Index of all vignette topics](vignette-topics.html)

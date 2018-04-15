@@ -38,4 +38,21 @@
 hasName = function(x, name)
    match(name, names(x), nomatch = 0L) > 0L
 
+# NOTE: Excluded from documentation
+# Custom Vignette format
+# 
+# This is used to format HTML vignettes the way its developer wants them.
+#
+# @param ... Arguments passed to \code{rmarkdown::html_document}
+#
+# @return R Markdown format used by \code{rmarkdown::render}
+#' @export
+.emm_vignette = function(css = "clean-simple.css", highlight = NULL, 
+    includes = rmarkdown::includes(before_body = "b4body.txt"), ...) {
+    rmarkdown::html_document(theme = NULL, highlight = highlight,
+                             fig_width = 3, fig_height = 3, 
+                             css = css, includes = includes, ...)
+}
+
+
 
