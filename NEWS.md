@@ -1,4 +1,4 @@
-emmeans 1.1.3.0903
+emmeans 1.1.3.0904
 -------------
 
   * Index of vignette topics added
@@ -8,6 +8,7 @@ emmeans 1.1.3.0903
   * Better documentation for `lme` models in "models" vignette
   * Additional fixes for arguments passed to `.emmc` functions (#22)
   * Support added for logical predictors (who knew? not me)
+  * "Extending" vignette now Rmd/html not tex/pdf
 
 
 emmeans 1.1.3

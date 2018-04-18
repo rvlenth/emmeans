@@ -11,8 +11,7 @@ vignette: >
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
 require("emmeans") 
 options(show.signif.stars = FALSE) 
-knitr::opts_chunk$set(collapse = TRUE,
-fig.width = 4.5) 
+knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
 
 <!-- @index Vignettes!Sophisticated models -->
@@ -35,7 +34,7 @@ all supported models is provided in the ["models" vignette](models.html).
 
 
 ## Linear mixed models (lmer) {#lmer}
-<!-- @index `lmerMod` models; Examples!`nlme::Oats`; Examples!Split-plot experiment -->
+<!-- @index `lmerMod` models; Examples!`Oats`; Examples!Split-plot experiment -->
 Linear mixed models are really important in statistics. Emphasis here is placed
 on those fitted using `lme4::lmer()`, but **emmeans** also supports other
 mixed-model packages such as **nlme**.
@@ -173,7 +172,7 @@ emmeans(ins.glm, "size", type = "response", offset = log(100))
 
 
 ## Ordinal models {#ordinal}
-<!-- @index Ordinal models; Examples!`ordinal::wine`; Examples!Ordinal model
+<!-- @index Ordinal models; Examples!`wine`; Examples!Ordinal model
   Ordinal models!Latent scale -->
 Ordinal-response models comprise an example where several options are 
 available for obtaining EMMs. To illustrate, consider the `wine` data
@@ -257,7 +256,7 @@ actually, each estimate shown is a comparison with judge 1.
 
 
 ## Models fitted using MCMC methods {#mcmc}
-<!-- @index Bayesian models; Examples!Bayesian model; Examples!`lme4::cbpp`
+<!-- @index Bayesian models; Examples!Bayesian model; Examples!`cbpp`
     `rstanarm` -->
 To illustrate **emmeans**'s support for models fitted using MCMC methods,
 consider the `example_model` available in the **rstanarm** package. 

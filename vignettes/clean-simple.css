@@ -8,13 +8,17 @@ a:link {color:darkblue;}
 a:visited {color:darkblue;} 
 a:hover {color:dodgerblue;}
 a:active {color:dodgerblue;} 
-code { color: darkred; 
-       font-family: "Lucida Console", Monaco, monospace; 
-       font-size: 90%;}
-.r {  /* class for <pre> */
-    color:#8B0000; 
+code { 
+    font-family: "Lucida Console", Monaco, monospace; 
+    font-size: 90%;
+}
+.r {  /* class for R code */
+    color: #8B0000; 
     font-family: "Lucida Console", Monaco, monospace; 
     line-height: 1.2;
 }
-.rc { color: darkgreen; } /* class used by syntax highlighter */
+.ro { /* class for R output */
+      color: darkgreen; 
+      background-color: #eeeeee; 
+} 
 

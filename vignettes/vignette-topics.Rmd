@@ -32,8 +32,7 @@ vignette: >
   * [Annoying messages](FAQs.html#namespace)
   * [`aovList` objects](models.html#V)
   * `as.data.frame()`: [1](utilities.html#data), [2](utilities.html#data)
-  * [`as.mcmc`](models.html#S)
-  * [`as.mcmc()`](sophisticated.html#bayesxtra)
+  * `as.mcmc()`: [1](models.html#S), [2](sophisticated.html#bayesxtra)
   * [Asymptotic tests](sophisticated.html#dfoptions)
 
 
@@ -112,11 +111,19 @@ vignette: >
 
 
   * [`eff`](comparisons.html#contrasts)
+  * [`emm_basis()`](xtending.html#intro)
+      * [Arguments and returned value](xtending.html#ebreqs)
+      * [Hook functions](xtending.html#hooks)
+      * [for `lqs` objects](xtending.html#eblqs)
+      * [for `rsm` objects](xtending.html#ebrsm)
   * [`emm_list` object](comparisons.html#formulas)
   * [`emm_options()`](utilities.html#defaults)
   * [`.emmc` functions](comparisons.html#linfcns)
   * `emmeans`
       * [Surprising results from](FAQs.html#transformations)
+  * **emmeans** package
+      * [Exporting extensions to](xtending.html#exporting)
+      * [Exports for developers](xtending.html#exported)
   * [`emmeans()`](basics.html#emmeans)
       * [Changing defaults](utilities.html#defaults)
       * `weights`: [1](basics.html#weights), [2](messy-data.html#weights)
@@ -132,6 +139,7 @@ vignette: >
       * [Appropriateness of](basics.html#eqwts)
       * [What are they?](FAQs.html#what)
   * [`emtrends()`](interactions.html#covariates)
+  * [`estHook`](xtending.html#hooks)
   * [Estimability](messy-data.html#nonestex)
   * [Estimability issues](FAQs.html#NAs)
   * [Estimated marginal means](basics.html#EMMdef)
@@ -139,26 +147,29 @@ vignette: >
   * Examples
       * [`auto.noise`](interactions.html#factors)
       * [Bayesian model](sophisticated.html#mcmc)
+      * [`cbpp`](sophisticated.html#mcmc)
       * [`cows`](messy-data.html#cows)
       * [Gamma regression](transformations.html#tranlink)
       * [Insurance claims (SAS)](sophisticated.html#offsets)
-      * [`lme4::cbpp`](sophisticated.html#mcmc)
       * [Logistic regression](transformations.html#links)
+      * [`lqs` objects](xtending.html#lqs)
       * [`mediation::framing`](messy-data.html#mediators)
       * [`MOats`](basics.html#multiv)
       * [`mtcars`](basics.html#altering)
       * [Multivariate](basics.html#multiv)
       * [Nested fixed effects](messy-data.html#cows)
       * [`neuralgia`](transformations.html#links)
-      * [`nlme::Oats`](sophisticated.html#lmer)
       * [`nutrition`](messy-data.html#nutrex)
+      * [`Oats`](sophisticated.html#lmer)
       * `oranges`: [1](comparisons.html#formulas), [2](interactions.html#covariates)
       * [Ordinal model](sophisticated.html#ordinal)
-      * [`ordinal::wine`](sophisticated.html#ordinal)
       * [`pigs`](basics.html#motivation)
+      * [`rlm` objects](xtending.html#rlm)
+      * [Robust regression](xtending.html#rlm)
       * [Split-plot experiment](sophisticated.html#lmer)
       * [Unbalanced data](basics.html#motivation)
       * [`warpbreaks`](transformations.html#tranlink)
+      * [`wine`](sophisticated.html#ordinal)
 
 
 [Back to top](#topnav)
@@ -195,6 +206,7 @@ vignette: >
 ### H {#h}
 
 
+  * [Hook functions](xtending.html#hooks)
   * [`hurdle` models](models.html#C)
 
 
@@ -267,7 +279,7 @@ vignette: >
   * [Mediating covariates](messy-data.html#mediators)
   * [`mlm` models](models.html#N)
   * Models
-      * [Quick reference](models.html)
+      * [Quick reference](models.html#quickref)
   * [Multi-factor studies](FAQs.html#interactions)
   * [Multinomial models](models.html#N)
   * [Multiplicity adjustments](confidence-intervals.html#adjust)
@@ -322,6 +334,7 @@ vignette: >
   * Poisson regression
       * [Surprising results](FAQs.html#transformations)
   * [`polreg` models](models.html#O)
+  * [`postGridHook`](xtending.html#hooks)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
 
 
@@ -331,6 +344,11 @@ vignette: >
 
 
   * [`rbind()`](utilities.html#rbind)
+  * [`recover_data()`](xtending.html#intro)
+      * [`data` and `params` arguments](xtending.html#rdargs)
+      * [Error handling](xtending.html#rderrs)
+      * [for `lqs` objects](xtending.html#rd.lqs)
+      * [for `rsm` objects](xtending.html#rdrsm)
   * [`ref_grid()`](basics.html#ref_grid)
       * [`at`](basics.html#altering)
       * [`cov.reduce`](basics.html#altering)
@@ -345,6 +363,7 @@ vignette: >
       * [`transform` vs. `type`](transformations.html#regrid)
   * [Response scale](confidence-intervals.html#tran)
   * [`revpairwise`](comparisons.html#contrasts)
+  * [**rsm** package](xtending.html#rsm)
   * [`rstanarm`](sophisticated.html#mcmc)
 
 
@@ -425,10 +444,12 @@ vignette: >
 ### V {#v}
 
 
+  * [`vcovHook`](xtending.html#hooks)
   * Vignettes
       * [Basics](basics.html)
       * [Comparisons](comparisons.html)
       * [Confidence intervals and tests](confidence-intervals.html)
+      * [Extending **emmeans**](xtending.html)
       * [FAQS](FAQs.html)
       * [Interactions](interactions.html)
       * [Messy data](messy-data.html)

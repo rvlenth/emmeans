@@ -11,8 +11,7 @@ vignette: >
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
 require("emmeans") 
 options(show.signif.stars = FALSE) 
-knitr::opts_chunk$set(collapse = TRUE,
-fig.width = 4.5) 
+knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
 <!-- @index Vignettes!Messy data -->
 
@@ -193,8 +192,7 @@ latter weights are like the "expected" counts used in a chi-square test for
 independence. Put another way, outer weighting is the same as proportional
 weighting applied one factor at a time; the following two would yield the same
 results: 
-```
-{r eval = FALSE} 
+```{r eval = FALSE} 
 emmeans(model, "A", weights = "outer") 
 emmeans(emmeans(model, c("A", "B"), weights = "prop"),  weights = "prop") 
 ```

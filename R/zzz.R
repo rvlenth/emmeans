@@ -47,11 +47,10 @@ hasName = function(x, name)
 #
 # @return R Markdown format used by \code{rmarkdown::render}
 #' @export
-.emm_vignette = function(css = "clean-simple.css", highlight = NULL, 
-    includes = rmarkdown::includes(before_body = "b4body.txt"), ...) {
+.emm_vignette = function(css = "clean-simple.css", highlight = NULL, ...) {
     rmarkdown::html_document(theme = NULL, highlight = highlight,
                              fig_width = 3, fig_height = 3, 
-                             css = css, includes = includes, ...)
+                             css = css, ...)
 }
 
 

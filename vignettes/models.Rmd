@@ -330,7 +330,7 @@ package documentation for details on **emmeans** support.
 
 
 ## S -- Sampling (MCMC) methods {#S}
-<!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `as.mcmc` -->
+<!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `as.mcmc()` -->
 Models fitted using MCMC methods contain a sample from the posterior
 distribution of fixed-effect coefficients. In some cases (e.g., results of
 `MCMCpack::MCMCregress()` and `MCMCpack::MCMCpoisson()`), the object may include a

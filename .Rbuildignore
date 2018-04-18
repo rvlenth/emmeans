@@ -18,5 +18,6 @@ vignettes/*.idx
 vignettes/*.blg
 vignettes/*.ilg
 vignettes/*.ind
+vignettes/extending.rnw   # we substituted an Rmd vignette
 
 
