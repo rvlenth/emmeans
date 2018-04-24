@@ -14,7 +14,7 @@ options(show.signif.stars = FALSE)
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 ```
 
-<!-- @index Vignettes!Interactions; Interaction analysis -->
+<!-- @index Vignettes!Interactions; Interactions!Analysis -->
 
 Models in which predictors interact seem to create a lot of confusion
 concerning what kinds of *post hoc* methods should be used. It is hoped that
@@ -33,8 +33,8 @@ this vignette will be helpful in shedding some light on how to use the
 
 
 ## Interacting factors {#factors}
-<!-- @index Examples!`auto.noise`; Interactions!Possible nappropriateness of marginal means 
-  Interaction plots; `emmip()` -->
+<!-- @index Examples!`auto.noise`; Interactions!Possible inappropriateness of marginal means 
+  Interactions!Plotting; `emmip()` -->
 As an example for this topic, consider the `auto.noise` dataset included with 
 the package. This is a balanced 3x2x2 experiment with three replications. The
 response -- noise level -- is evaluated with different sizes of cars, types of
@@ -87,7 +87,7 @@ Not too surprisingly, the statistical comparisons are all different for standard
 filters, but with Octel filters, there isn't much of a difference between small
 and medium size.
 
-<!-- @index "*" gazing@star -->
+<!-- @index * gazing@star -->
 For comparing the levels of other factors, similar judgments must be made. It
 may help to construct other interaction plots with the factors in different
 roles. In my opinion, almost all meaningful statistical analysis should be
@@ -105,7 +105,7 @@ this vignette. I habitually opt out of star-gazing via
 `options(show.signif.stars = FALSE)`
 
 ### Simple contrasts {#simple}
-<!-- @index Simple contrasts; `contrast()`!`simple`; `contrast()`!`combine` -->
+<!-- @index Simple comparisons; `contrast()`!`simple`; `contrast()`!`combine` -->
 An alternative way to specify conditional contrasts or comparisons is through
 the use of the `simple` argument to `contrast()` or `pairs()`, which amounts to
 specifying which factors are *not* used as `by` variables. For example, consider:
@@ -138,7 +138,7 @@ multiplicity-adjusted (a total of 16 different tables).
 [Back to Contents](#contents)
 
 ## Interaction contrasts {#contrasts}
-<!-- @index Interaction contrasts; `contrast()`!`interaction` 
+<!-- @index Interactions!Contrasts; `contrast()`!`interaction` 
      Contrasts!of other contrasts@cont -->
 An interaction contrast is a contrast of contrasts. For instance, in the auto-noise
 example, we may want to obtain the linear and quadratic contrasts of `size` separately

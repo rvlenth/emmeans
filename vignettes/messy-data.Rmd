@@ -90,7 +90,7 @@ conclusion for the Hispanic group -- for which we have very little data.
 [Back to Contents](#contents)
 
 ## Mediating covariates {#mediators} 
-<!-- @index Mediating covariates; Examples!`mediation::framing`; Covariates!Mediating -->
+<!-- @index Mediating covariates; Examples!`framing`; Covariates!Mediating -->
 The `framing` data in the **mediation**
 package has the results of an experiment conducted by Brader et al. (2008) where
 subjects were given the opportunity to send a message to Congress regarding

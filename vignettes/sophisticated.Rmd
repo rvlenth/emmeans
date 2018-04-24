@@ -97,7 +97,7 @@ emmeans(Oats.lmer, pairwise ~ Variety)
 ```
 
 ### System options for lmerMod models {#lmerOpts}
-<!-- @index `lmerMod` objects!System options for -->
+<!-- @index `lmerMod` models!System options for -->
 The computation required to compute the adjusted covariance matrix and degrees 
 of freedom may become cumbersome. Some user options (i.e., `emm_options()` 
 calls) make it possible to streamline these computations through default methods

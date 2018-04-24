@@ -31,7 +31,7 @@ This vignette describes various ways of summarizing `emmGrid` objects.
 [Index of all vignette topics](vignette-topics.html)
 
 ## Objects, structures, and methods {#emmobj}
-<!-- @index `emmGrid` object -->
+<!-- @index `emmGrid` objects -->
 The `ref_grid()` and `emmeans()` functions are introduced in 
 [the "Basics" vignette](basics.html). These functions, and a few related ones,
 return an object of class `emmGrid`:
@@ -73,7 +73,7 @@ annotations.
 [Back to Contents](#contents)
 
 ## `summary()` and its relatives {#summary}
-<!-- @index `summary()`; `summary`!`infer`; `confint()`; `test()`; Confidence intervals;
+<!-- @index `summary()`; `summary()`!`infer`; `confint()`; `test()`; Confidence intervals;
             Tests!One- and two-sided; Tests!Nonzero null -->
 As you may have gathered, the most important method for `emmGrid` objects is `summary()`.
 It has a lot of options, and the detailed documentation via 
@@ -177,7 +177,7 @@ test(pigs.emm.s, null = log(40), side = ">", adjust = "bonferroni")
 
 
 ## "By" variables {#byvars}
-<!-- @index `by` variables; Grouping into separate sets -->
+<!-- @index `by` groups; Grouping into separate sets -->
 Sometimes you want to break a summary down into smaller pieces; for this
 purpose, the `by` argument in `summary()` is useful. For example,
 ```{r}
@@ -236,7 +236,7 @@ higher-order effects in the ["interactions" vignette section on
 contrasts](interactions.html#contrasts).
 
 ####### {#joint_tests}
-<!-- @index `joint_tests()`; Type III ANOVA; Analysis of variance!Type III -->
+<!-- @index `joint_tests()`; Type III tests; Analysis of variance!Type III -->
 For convenience, there is also a `joint_tests()` function that performs
 joint tests of contrasts among each term in a model or `emmGrid` object.
 ```{r}

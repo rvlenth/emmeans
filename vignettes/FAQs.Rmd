@@ -70,7 +70,7 @@ topic in [the "interactions" vignette](interactions.html#covariates)
 
 
 ## lsmeans/emmeans doesn't work unless you have factors {#numeric}
-<!-- @index Covariates!`emmeans` doesn't work -->
+<!-- @index Covariates!`emmeans()` doesn't work -->
 Equivalently, users ask how to get *post hoc* comparisons when we have
 covariates rather than factors.
 Yes, it does work, but you have to tell it the appropriate reference grid.
@@ -120,7 +120,7 @@ different.
 
 
 ## My lsmeans/EMMs are way off from what I expected {#transformations}
-<!-- @index `emmeans`!Surprising results from; Poisson regression!Surprising results
+<!-- @index `emmeans()`!Surprising results from; Poisson regression!Surprising results
      Logistic regression!Surprising results -->
 First step: Carefully read the annotations below the output. Do they say
 something like "results are on the log scale, not the response scale"?
@@ -133,8 +133,8 @@ has examples and discussion.
 
 
 ## Why do I get `Inf` for the degrees of freedom? {#asymp}
-<!-- @index Infinite degrees of freedom; Degrees of freedom!Why are they `Inf`? 
-     *z* tests vs. *t* tests; *t* tests vs. *z* tests -->
+<!-- @index Infinite degrees of freedom; Degrees of freedom!Infinite 
+     *z* tests!vs. *t* tests; *t* tests vs. *z* tests -->
 This is simply the way that **emmeans** labels asymptotic results
 (that is, estimates that are tested against the standard normal distribution
 -- *z* tests -- rather than the *t* distribution). Note that obtaining quantiles 
@@ -151,7 +151,7 @@ interval.
 [Back to Contents](#contents)
 
 ## Some or all of the results shown say NA or NonEst {#NAs}
-<!-- @index `NA` results; `NonEst` results; Estimability issues -->
+<!-- @index `NA` results; `NonEst` results; Estimability -->
 Such a situation typically arises in observational data. What this
 means is that the model is not capable of producing estimates for
 all points in the reference grid. For example, you have data on combinations

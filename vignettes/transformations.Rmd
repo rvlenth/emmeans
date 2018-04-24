@@ -52,7 +52,7 @@ summary(pigs.emm.s, infer = TRUE, null = log(35), type = "response")
 ```
 
 ### Timing is everything {#timing}
-<!-- @index Transformations!Timing issues -->
+<!-- @index Transformations!Timing is everything -->
 Dealing with transformations in **emmeans** is somewhat complex, due to the 
 large number of possibilities. But the key is understanding what happens, when.
 These results come from a sequence of steps. Here is what happens (and doesn't
@@ -255,7 +255,7 @@ using a Box-Cox transformation.
 [Back to Contents](#contents)
 
 ## Specifying a transformation after the fact {#after}
-<!-- @index Transformations!Adding after the fact; `uppdate()`!`tran` -->
+<!-- @index Transformations!Adding after the fact; `update()`!`tran` -->
 It is not at all uncommon to fit a model using statements like the following:
 ```{r eval = FALSE}
 mydata <- transform(mydata, logy.5 = log(yield + .5))

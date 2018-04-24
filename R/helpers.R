@@ -124,8 +124,25 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
                     "but be warned that this may result in large computation time and memory use.")
         }
         
-        if ((mode == "kenward-roger") && !disable.pbkrtest && requireNamespace("pbkrtest")) {
-            if (!disable.pbkrtest && !tooBig.k  && missing(vcov.)) {
+        # pick the lowest-hanging apples first
+        if (mode == "kenward-roger") {
+            if (disable.pbkrtest || tooBig.k || !requireNamespace("pbkrtest", quietly = TRUE))
+                mode = "satterthwaite"
+            if (!disable.pbkrtest && tooBig.k)
+                tooBigMsg("pbkrtest", get_emm_option("pbkrtest.limit"))
+        }
+        if (mode == "satterthwaite") {
+            if (disable.lmerTest || tooBig.s || !requireNamespace("lmerTest", quietly = TRUE))
+                mode = ifelse(!disable.pbkrtest && !tooBig.k && 
+                                  requireNamespace("pbkrtest", quietly = TRUE), 
+                              "kenward-roger", "asymptotic")
+            if (!disable.lmerTest && tooBig.s)
+                tooBigMsg("lmerTest", get_emm_option("lmerTest.limit"))
+        }
+        # if my logic isn't flawed, we are guaranteed that mode is both desired and possible
+        
+        if (mode == "kenward-roger") {
+            if (missing(vcov.)) {
                 dfargs = list(unadjV = V, 
                               adjV = pbkrtest::vcovAdj.lmerMod(object, 0))
                 V = as.matrix(dfargs$adjV)
@@ -134,32 +151,26 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
                     dffun = function(k, dfargs) pbkrtest::Lb_ddf (k, dfargs$unadjV, dfargs$adjV)
                 else {
                     mode = "asymptotic"
-                    warning("Failure in loading pbkrtest routines - reverted to \"asymptotic\"")
+                    warning("Failure in loading pbkrtest routines",
+                            " - reverted to \"asymptotic\"")
                 }
             }
-            else if(tooBig.k) {
-                tooBigMsg("pbkrtest", get_emm_option("pbkrtest.limit"))
-                mode = "asymptotic"
-            }
-            else if (!missing(vcov.)) {
+            else {
                 message("Kenward-Roger method can't be used with user-supplied covariances")
                 mode = "satterthwaite"
             }
         }
-        if (mode == "satterthwaite" && !disable.lmerTest && requireNamespace("lmerTest")) {
-            if (!tooBig.s) {
-                dfargs = list(object = object)
-                dffun = function(k, dfargs) 
-                    suppressMessages(lmerTest::calcSatterth(dfargs$object, k)$denom)
-            }
-            else {
-                tooBigMsg("lmerTest", get_emm_option("lmerTest.limit"))
-                mode = "asymptotic"
-            }
+        
+        if (mode == "satterthwaite") {
+            dfargs = list(object = object)
+            dffun = function(k, dfargs) 
+                suppressMessages(lmerTest::calcSatterth(dfargs$object, k)$denom)
         }
+        
         if (mode == "asymptotic") {
             dffun = function(k, dfargs) Inf
         }
+        
         misc$initMesg = paste("Degrees-of-freedom method:", mode)
     }
     else if (lme4::isGLMM(object)) {

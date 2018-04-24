@@ -110,8 +110,8 @@ It is important to understand that the estimated linear contrast is *not* the
 slope of a line fitted to the data. It is simply a contrast having coefficients
 that increase linearly. It *does* test the linear trend, however.
 
-<!-- @index Dunnett method; `pairwise`; `revpairwise`; `trt.vs.ctrl`;
-            `eff`; `consec` -->
+<!-- @index Dunnett method; `pairwise` contrasts; `revpairwise` contrasts; `trt.vs.ctrl` contrasts;
+            `eff` contrasts; `consec` contrasts -->
 There are a number of other named contrast methods, for example `"trt.vs.ctrl"`,
 `"eff"`, and `"consec"`. The `"pairwise"` and `"revpairwise"` methods in `contrast()` are the same as `Pairs()` and `pairs(..., reverse = TRUE)`. See
 [help("contrast-methods")](../html/emmc-functions.html) for details.
@@ -223,7 +223,7 @@ pairs(pigs.emm.s, type = "lp")
 
 pairs(pigs.emm.s, type = "response")
 ```
-<!-- @index Contrasts!Tests!with transformations@trans -->
+<!-- @index Contrasts!Tests of!with transformations@trans -->
 As is true of EMM summaries with `type = "response"`, the tests and confidence
 intervals are done before back-transforming. The ratios estimated here are
 actually ratios of *geometric* means. In general, a model with a log response is

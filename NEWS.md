@@ -1,14 +1,16 @@
-emmeans 1.1.3.0904
+emmeans 1.1.3.0905
 -------------
 
   * Index of vignette topics added
-  * New, improved vignette formats
+  * New, improved (to my taste) vignette formats
   * Fixed df bug in regrid (#29)
   * Fixed annotation bug for nested models (#30)
   * Better documentation for `lme` models in "models" vignette
   * Additional fixes for arguments passed to `.emmc` functions (#22)
-  * Support added for logical predictors (who knew? not me)
-  * "Extending" vignette now Rmd/html not tex/pdf
+  * Support added for logical predictors (who knew we could have those? not me)
+  * Replaced tex/pdf "Extending" vignette with Rmd/html
+  * Overhauled the faulty logic for df methods in emm_basis.merMod
+  * Added Henrik to contributors list (long-standing oversight)
 
 
 emmeans 1.1.3

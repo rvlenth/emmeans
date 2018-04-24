@@ -47,7 +47,8 @@ hasName = function(x, name)
 #
 # @return R Markdown format used by \code{rmarkdown::render}
 #' @export
-.emm_vignette = function(css = "clean-simple.css", highlight = NULL, ...) {
+.emm_vignette = function(css = system.file("doc", "clean-simple.css", package = "emmeans"), 
+                         highlight = NULL,  ...) {
     rmarkdown::html_document(theme = NULL, highlight = highlight,
                              fig_width = 3, fig_height = 3, 
                              css = css, ...)

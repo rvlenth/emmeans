@@ -203,7 +203,7 @@ is performed separately in each nesting group. See the [section on nesting in th
 [Back to Contents](#contents)
 
 ### Altering the reference grid {#altering}
-<!-- @index Reference grid!Altering; `ref_grid()`!`cov.reduce`; 
+<!-- @index Reference grids!Altering; `ref_grid()`!`cov.reduce`; 
             `ref_grid()`!`at`; Examples!`mtcars` -->
 It is possible to alter the reference grid. We might, for example, want to 
 define a reference grid for `pigs.lm2` that is comparable to the one for 
