@@ -63,6 +63,9 @@
 #' value of \code{length(levs)}. \code{dunnett.emmc} is the same as
 #' \code{trt.vs.ctrl}. The default multiplicity adjustment method is
 #' \code{"dunnettx"}, a close approximation to the Dunnett adjustment.
+#' \emph{Note} in all of these functions, it is illegal to have any overlap
+#' between the \code{ref} levels and the \code{exclude} levels. If any
+#' is found, an error is thrown.
 #'
 #' \code{consec.emmc} and \code{mean_chg.emmc} are useful for contrasting
 #' treatments that occur in sequence. For a factor with levels A, B, C, D, E,
@@ -83,6 +86,8 @@
 #' @rdname emmc-functions
 #' @aliases emmc-functions 
 #' @param levs Vector of factor levels
+#' @param exclude integer vector with indices of levels to exclude
+#'   from consideration. These levels will receive weight 0 in all contrasts.
 #' @param ... Additional arguments, passed to related methods as appropriate
 #' 
 #' @return A data.frame, each column containing contrast coefficients for levs.
@@ -93,6 +98,10 @@
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
 #' contrast(warp.emm, "poly")
+#' 
+#' # Compare only low and high tensions
+#' # Note pairs(emm, ...) calls contrast(emm, "pairwise", ...)
+#' pairs(warp.emm, exclude = 2)
 #' 
 #' ### Setting up a custom contrast function
 #' helmert.emmc <- function(levs, ...) {
@@ -107,11 +116,11 @@
 #' emmeans:::poly.emmc(1:6)
 #' }
 #' @name contrast-methods
-pairwise.emmc = function(levs, ...) {
+pairwise.emmc = function(levs, exclude = integer(0), ...) {
     k = length(levs)
     M = data.frame(levs=levs)
-    for (i in seq_len(k-1)) {
-        for (j in (i + seq_len(k-i))) { ###for (j in (i+1):k) {
+    for (i in setdiff(seq_len(k-1), exclude)) {
+        for (j in setdiff(i + seq_len(k-i), exclude)) { ###for (j in (i+1):k) {
             con = rep(0,k)
             con[i] = 1
             con[j] = -1
@@ -129,11 +138,11 @@ pairwise.emmc = function(levs, ...) {
 
 # all pairwise trt[j] - trt[i], j > i
 #' @rdname emmc-functions
-revpairwise.emmc = function(levs, ...) {
+revpairwise.emmc = function(levs, exclude = integer(0), ...) {
     k = length(levs)
     M = data.frame(levs=levs)
-    for (i in 2:k) {
-        for (j in seq_len(i-1)) {
+    for (i in setdiff(2:k, exclude)) {
+        for (j in setdiff(seq_len(i-1), exclude)) {
             con = rep(0,k)
             con[i] = 1
             con[j] = -1
@@ -168,7 +177,7 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
     k = length(levs)
     M = as.data.frame(poly(seq_len(k), min(20,max.degree)))
     for (j in seq_len(ncol(M))) {
-        con = M[ ,j]
+        con = M[, j]
         pos = which(con > .01)
         con = con / min(con[pos])
         z = max(abs(con - round(con)))
@@ -189,7 +198,8 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 # New version -- allows more than one control group (ref is a vector)
 #' @rdname emmc-functions
 #' @param ref Integer(s) specifying which level(s) to use as the reference
-trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, ...) {
+trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, 
+                            exclude = integer(0), ...) {
     if ((min(ref) < 1) || (max(ref) > length(levs)))
         stop("Reference levels are out of range")
     k = length(levs)
@@ -199,8 +209,11 @@ trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, ...) {
     templ = rep(0, length(levs))
     templ[ref] = -1 / length(ref)
     M = data.frame(levs=levs)
+    if (length(intersect(exclude, ref)) > 0)
+        stop("'exclude' set cannot overlap with 'ref'")
+    skip = c(ref, exclude)
     for (i in seq_len(k)) {
-        if (i %in% ref) next
+        if (i %in% skip) next
         con = templ
         con[i] = 1
         if (reverse)
@@ -231,7 +244,7 @@ trt.vs.ctrlk.emmc = function(levs, ref = length(levs), ...) {
     trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
 
-# pseudonym
+# pseudonym for trt.vs.ctrl
 #' @rdname emmc-functions
 dunnett.emmc = function(levs, ref = 1, ...) {
     trt.vs.ctrl.emmc(levs, ref = ref, ...)
@@ -239,12 +252,15 @@ dunnett.emmc = function(levs, ref = 1, ...) {
 
 # effects contrasts. Each mean versus the average of all
 #' @rdname emmc-functions
-eff.emmc = function(levs, ...) {
+eff.emmc = function(levs, exclude = integer(0), ...) {
     k = length(levs)
+    kk = k - length(exclude)
+    start = rep(-1/kk, k)
+    start[exclude] = 0
     M = data.frame(levs=levs)
-    for (i in seq_len(k)) {
-        con = rep(-1/k, k)
-        con[i] = (k-1)/k
+    for (i in setdiff(seq_len(k), exclude)) {
+        con = start
+        con[i] = (kk - 1)/kk
         nm = paste(levs[i], "effect")
         M[[nm]] = con
     }
@@ -258,9 +274,9 @@ eff.emmc = function(levs, ...) {
 # "deleted" effects contrasts. 
 # Each mean versus the average of all others
 #' @rdname emmc-functions
-del.eff.emmc = function(levs, ...) {
-    k = length(levs)
-    M = as.matrix(eff.emmc(levs,...)) * k / (k-1)
+del.eff.emmc = function(levs, exclude = integer(0), ...) {
+    k = length(levs) - length(exclude)
+    M = as.matrix(eff.emmc(levs, exclude = exclude, ...)) * k / (k-1)
     M = as.data.frame(M)
     attr(M, "desc") = "differences from mean of others"
     attr(M, "adjust") = "fdr"
@@ -270,18 +286,21 @@ del.eff.emmc = function(levs, ...) {
 # Contrasts to compare consecutive levels:
 # (-1,1,0,0,...), (0,-1,1,0,...), ..., (0,...0,-1,1)
 #' @rdname emmc-functions
-consec.emmc = function(levs, reverse = FALSE, ...) {
+consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
     sgn = ifelse(reverse, -1, 1)
-    k = length(levs)
+    tmp = rep(0, length(levs))
+    k = length(levs) - length(exclude)
     M = data.frame(levs=levs)
+    nms = levs[-exclude]
     for (i in seq_len(k-1)) {
         con = rep(0, k)
         con[i] = -sgn
         con[i+1] = sgn
+        tmp[-exclude] = con
         nm = ifelse(reverse,
-                    paste(levs[i], "-", levs[i+1]),
-                    paste(levs[i+1], "-", levs[i]))
-        M[[nm]] = con
+                    paste(nms[i], "-", nms[i+1]),
+                    paste(nms[i+1], "-", nms[i]))
+        M[[nm]] = tmp
     }
     row.names(M) = levs
     M = M[-1]
@@ -293,15 +312,18 @@ consec.emmc = function(levs, reverse = FALSE, ...) {
 # Mean after minus mean before
 # e.g., (-1, 1/3,1/3,1/3), (-1/2,-1/2, 1/2,1/2), (-1/3,-1/3,-1/3, 1)
 #' @rdname emmc-functions
-mean_chg.emmc = function(levs, reverse = FALSE, ...) {
+mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
     sgn = ifelse(reverse, -1, 1)
-    k = length(levs)
+    k = length(levs) - length(exclude)
+    tmp = rep(0, length(levs))
     M = data.frame(levs=levs)
+    nms = levs[-exclude]
     for (i in seq_len(k-1)) {
         kmi = k - i
         con = rep(c(-sgn/i, sgn/kmi), c(i, kmi)) 
-        nm = paste(levs[i], levs[i+1], sep="|")
-        M[[nm]] = con
+        nm = paste(nms[i], nms[i+1], sep="|")
+        tmp[-exclude] = con
+        M[[nm]] = tmp
     }
     row.names(M) = levs
     M = M[-1]

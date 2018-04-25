@@ -1,4 +1,4 @@
-emmeans 1.1.3.0905
+emmeans 1.1.3.0906
 -------------
 
   * Index of vignette topics added
@@ -11,6 +11,8 @@ emmeans 1.1.3.0905
   * Replaced tex/pdf "Extending" vignette with Rmd/html
   * Overhauled the faulty logic for df methods in emm_basis.merMod
   * Added Henrik to contributors list (long-standing oversight)
+  * Added `exclude` argument to most `.emmc` functions: allows
+    user to omit certain levels when computing contrasts
 
 
 emmeans 1.1.3
