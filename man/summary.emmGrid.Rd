@@ -11,7 +11,7 @@
 \title{Summaries, predictions, intervals, and tests for \code{emmGrid} objects}
 \usage{
 \method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, null,
-  delta, side, ...)
+  delta, side, frequentist, ...)
 
 \method{predict}{emmGrid}(object, type, ...)
 
@@ -79,6 +79,12 @@ left-tailed (\code{-1}, \code{"-"}, code{"<"}, \code{"left"}, or
 \code{2}, \code{"!="}, \code{"two-sided"}, \code{"both"},
 \code{"equivalence"}, or \code{"="}). See the special section below for
 more details.}
+
+\item{frequentist}{Ignored except if a Bayesian model was fitted. If missing
+of \code{FALSE}, the object is passed to \code{\link{hpd.summary}} and a 
+Bayesian summary is returned showing HPD intervals for
+each prediction in the grid. Otherwise, a logical value of \code{TRUE} will
+have it return a frequentist summary.}
 
 \item{...}{(Not used by \code{summary.emmGrid} or \code{predict.emmGrid}.) In
 \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, and 

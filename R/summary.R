@@ -86,6 +86,11 @@
 #'   \code{2}, \code{"!="}, \code{"two-sided"}, \code{"both"},
 #'   \code{"equivalence"}, or \code{"="}). See the special section below for
 #'   more details.
+#' @param frequentist Ignored except if a Bayesian model was fitted. If missing
+#'   of \code{FALSE}, the object is passed to \code{\link{hpd.summary}} and a 
+#'   Bayesian summary is returned showing HPD intervals for
+#'   each prediction in the grid. Otherwise, a logical value of \code{TRUE} will
+#'   have it return a frequentist summary.
 #' @param ... (Not used by \code{summary.emmGrid} or \code{predict.emmGrid}.) In
 #'   \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, and 
 #'   \code{test.emmGrid}, these arguments are passed to
@@ -248,8 +253,11 @@
 #' test(contrast(pigs.emm, "consec"), joint = TRUE)
 #'
 summary.emmGrid <- function(object, infer, level, adjust, by, type, df, 
-                        null, delta, side, ...) {
+                        null, delta, side, frequentist, ...) {
 
+    if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
+        return (hpd.summary(object, by = by, type = type, ...))
+    
     # Any "summary" options override built-in
     opt = get_emm_option("summary")
     if(!is.null(opt)) {
@@ -258,8 +266,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     }
     
     misc = object@misc
-    use.elts = if (is.null(misc$display))  rep(TRUE, nrow(object@grid)) 
-    else                        misc$display
+    use.elts = if (is.null(misc$display))  
+                   rep(TRUE, nrow(object@grid)) 
+               else 
+                   misc$display
     grid = object@grid[use.elts, , drop = FALSE]
     
     ### For missing arguments, get from misc, else default    
@@ -276,9 +286,6 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         type = .get.predict.type(misc)
     else
         type = .validate.type(type)
-    
-    if (!is.na(object@post.beta[1]))
-        message("This is a frequentist summary. See `?as.mcmc.emmGrid' for more on what you can do.")
     
     # if there are two transformations and we want response, then we need to undo both
     if ((type == "response") && (!is.null(misc$tran2)))
@@ -527,6 +534,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         sum(y[ii] * (X[ii, ii, drop = FALSE] %*% y[ii]))
     else 0
 }
+
+
 # Workhorse for getting estimates etc.
 .est.se.df = function(object, do.se=TRUE, tol = get_emm_option("estble.tol")) {
     if (nrow(object@grid) == 0) {
@@ -567,30 +576,34 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     result[1] = as.numeric(result[1]) # silly bit of code to avoid getting a data.frame of logicals if all are NA
     result = as.data.frame(result)
     names(result) = c(misc$estName, "SE", "df")
-
     if (!is.null(misc$tran) && (misc$tran != "none")) {
-        link = if(is.character(misc$tran))
-            .make.link(misc$tran)
-        else if (is.list(misc$tran))
-            misc$tran
-        else 
-            NULL
-        
-        if (is.list(link)) {  # See if multiple of link is requested
-            if (!is.null(misc$tran.mult))
-                link$mult = misc$tran.mult
-            if (!is.null(link$mult))
-                link = with(link, list(
-                    linkinv = function(eta) linkinv(eta / mult),
-                    mu.eta = function(eta) mu.eta(eta / mult) / mult,
-                    name = paste0(round(mult, 3), "*", name)))
-        }
-        
-        if (!is.null(link) && is.null(link$name))
-                link$name = "linear-predictor"
-        attr(result, "link") = link
+        attr(result, "link") = .get.link(misc)
     }
     result
+}
+
+# workhorse for nailing down the link function
+.get.link = function(misc) {
+    link = if(is.character(misc$tran))
+        .make.link(misc$tran)
+    else if (is.list(misc$tran))
+        misc$tran
+    else 
+        NULL
+    
+    if (is.list(link)) {  # See if multiple of link is requested
+        if (!is.null(misc$tran.mult))
+            link$mult = misc$tran.mult
+        if (!is.null(link$mult))
+            link = with(link, list(
+                linkinv = function(eta) linkinv(eta / mult),
+                mu.eta = function(eta) mu.eta(eta / mult) / mult,
+                name = paste0(round(mult, 3), "*", name)))
+    }
+    
+    if (!is.null(link) && is.null(link$name))
+        link$name = "linear-predictor"
+    link
 }
 
 # utility to compute an adjusted p value

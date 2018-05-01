@@ -32,8 +32,9 @@ whether we want to inverse-transform the predictions
 \code{"link"}, unless the \code{"predict.type"} option is in force; see
 \code{\link{emm_options}}.}
 
-\item{CIs}{Logical value. If \code{TRUE}, confidence intervals are added 
-to the plot (works only with \code{engine = "ggplot"})}
+\item{CIs}{Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
+for Bayesian models) are added to the plot 
+(works only with \code{engine = "ggplot"}).}
 
 \item{engine}{Character value matching \code{"ggplot"} (default) or 
 \code{"lattice"}. The graphics engine to be used to produce the plot.

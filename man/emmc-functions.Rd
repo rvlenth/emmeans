@@ -98,6 +98,9 @@ the reference level(s). \code{trt.vs.ctrl1.emmc} is the same as
 value of \code{length(levs)}. \code{dunnett.emmc} is the same as
 \code{trt.vs.ctrl}. The default multiplicity adjustment method is
 \code{"dunnettx"}, a close approximation to the Dunnett adjustment.
+\emph{Note} in all of these functions, it is illegal to have any overlap
+between the \code{ref} levels and the \code{exclude} levels. If any
+is found, an error is thrown.
 
 \code{consec.emmc} and \code{mean_chg.emmc} are useful for contrasting
 treatments that occur in sequence. For a factor with levels A, B, C, D, E,

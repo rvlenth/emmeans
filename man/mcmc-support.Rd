@@ -23,7 +23,7 @@ one variable involved, the elements of \code{names} are used cyclically.}
 MCMC chain available, an \code{\link[coda]{mcmc.list}} object is returned
 by \code{as.mcmc}, with separate EMMs posteriors in each chain.}
 
-\item{...}{(Required but ignored)}
+\item{...}{arguments passed to \code{\link[coda]{mcmc}}}
 }
 \value{
 An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.

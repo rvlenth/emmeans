@@ -269,31 +269,33 @@ example_model <- rstanarm::stan_glmer(
     cbind(incidence, size - incidence) ~ size + period + (1|herd),
     data = lme4::cbpp, family = binomial,
     chains = 2, cores = 1, seed = 12345, iter = 500)
-rst_ex.rg <- ref_grid(example_model)
+cbpp.rg <- ref_grid(example_model)
 ```
 <!--- here's the system file with the ref_grid --->
 ```{r echo = FALSE}
-load(system.file("extdata", "rstex.RData", package = "emmeans"))
-rst_ex.rg <- do.call(emmobj, rstex)
+load(system.file("extdata", "cbpp.RData", package = "emmeans"))
+cbpp.rg <- do.call(emmobj, cbpp.list)
 ```
 Here is the structure of the reference grid:
 ```{r}
-rst_ex.rg
+cbpp.rg
 ```
 And, again in the usual way, we can obtain EMMs:
 ```{r}
-period.emm <- emmeans(rst_ex.rg, "period")
+period.emm <- emmeans(cbpp.rg, "period")
 period.emm
 ```
-The summary shows a frequentist summary of the EMMs. Under the hood, though, is a posterior sample of 500 sets of EMMs -- each one being the EMMs computed from each set of parameter values in the posterior sample of regression coefficients. The summary we see is based on the sample means and covariances of that sample.
+The summary for EMMs of Bayesian models shows highest posterior density (HPD) intervals
+rather than confidence intervals. Under the hood, the posterior sample of parameter estimates is
+used to compute a corresponding sample of posterior EMMs, and it is those that are summarized.
+(Technical note: the summary is actually rerouted to the `hpd.summary()` function, and it loads the **coda** package if it is not already loaded.
 
 ###### {#bayesxtra}
 <!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; -->
-We can access these posterior results via the `as.mcmc` method for `emmGrid` objects.
+We can access the posterior EMMs via the `as.mcmc` method for `emmGrid` objects.
 This gives us an object of class `mcmc` (defined in the **coda** package), which
 can be summarized and explored as we please.
 ```{r}
-require("coda")  ### needed to access generic for as.mcmc()
 summary(as.mcmc(period.emm))
 ```
 Note that `as.mcmc` will actually produce an `mcmc.list` when there is more than

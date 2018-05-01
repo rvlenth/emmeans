@@ -46,8 +46,9 @@ emmip = function(object, formula, ...) {
 #'   (\code{type = "response"}) or not (any other choice). The default is
 #'   \code{"link"}, unless the \code{"predict.type"} option is in force; see
 #'   \code{\link{emm_options}}.
-#' @param CIs Logical value. If \code{TRUE}, confidence intervals are added 
-#'   to the plot (works only with \code{engine = "ggplot"})
+#' @param CIs Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
+#'   for Bayesian models) are added to the plot 
+#'   (works only with \code{engine = "ggplot"}).
 #' @param engine Character value matching \code{"ggplot"} (default) or 
 #'   \code{"lattice"}. The graphics engine to be used to produce the plot.
 #'   These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
@@ -148,8 +149,10 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     emms = summary(emmo, type = type, infer = c(CIs, F))
     # Ensure the estimate is named "yvar" and the conf limits are "LCL" and "UCL"
     nm = names(emms)
-    nm[nm == attr(emms, "estName")] = "yvar"
-    names(emms) = gsub("upper.", "U", gsub("lower.", "L", gsub("asymp.", "", nm)))
+    tgts = c(attr(emms, "estName"), attr(emms, "clNames"))
+    subs = c("yvar", "LCL", "UCL")
+    for (i in 1:3)
+        names(emms)[nm == tgts[i]] = subs[i] 
     attr(emms, "estName") = "yvar"
     
     

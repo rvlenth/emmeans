@@ -29,7 +29,7 @@
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE, 
-                    alpha = .05, adjust = "tukey", int.adjust = "none", ...) {
+                    alpha = .05, adjust = "tukey", int.adjust = "none", frequentist, ...) {
     if(!missing(type))
         object = update(x, predict.type = type, ..., silent = TRUE)
     else
@@ -40,7 +40,7 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
             int.adjust = "none"
     }
     
-    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust)
+    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, frequentist = frequentist)
     if (is.null(attr(summ, "pri.vars"))) { ## new ref_grid - use all factors w/ > 1 level
         pv = names(x@levels)
         len = sapply(x@levels, length)
@@ -51,7 +51,10 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
     
     estName = attr(summ, "estName")
     extra = NULL
+    bayes = 
     if(comparisons) {
+        if ((!is.na(object@post.beta[1])) && (missing(frequentist) || !frequentist))
+            stop("Comparison intervals are not implemented for Bayesian analyses")
         extra = object
         extra@misc$comp.alpha = alpha
         extra@misc$comp.adjust = adjust

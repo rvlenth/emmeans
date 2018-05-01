@@ -13,6 +13,9 @@ emmeans 1.1.3.0906
   * Added Henrik to contributors list (long-standing oversight)
   * Added `exclude` argument to most `.emmc` functions: allows
     user to omit certain levels when computing contrasts
+  * New `hpd.summary()` function for Bayesian models to show HPD intervals
+    rather than frequentist summary. Note: `summary()` automatically
+    reroutes to it. Also `plot()` and `emmip()` play along.
 
 
 emmeans 1.1.3

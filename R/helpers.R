@@ -217,7 +217,9 @@ recover_data.lme = function(object, data, ...) {
 }
 
 #' @export
-emm_basis.lme = function(object, trms, xlev, grid, sigmaAdjust = TRUE, ...) {
+emm_basis.lme = function(object, trms, xlev, grid, 
+        mode = c("containment", "satterthwaite"), sigmaAdjust = TRUE, ...) {
+    mode = match.arg(mode)
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
@@ -230,19 +232,60 @@ emm_basis.lme = function(object, trms, xlev, grid, sigmaAdjust = TRUE, ...) {
         misc = .std.link.labels(object$family, misc)
     }
     nbasis = estimability::all.estble
-    # Replaced by containment method##dffun = function(...) NA
-    dfx = object$fixDF$X
-    if (names(bhat[1]) == "(Intercept)")
-        dfx[1] = length(levels(object$groups[[1]])) - 1
-    ### Correct apparent error in lme containment algorithm
-    dffun = function(x, dfargs) {
-        idx = which(abs(x) > 1e-4)
-        ifelse(length(idx) > 0, min(dfargs$dfx[idx]), NA)
+    
+    if (mode == "satterthwaite") {
+        G = try(gradV.kludge(object), silent = TRUE)
+        if (inherits(G, "try-error"))
+            stop("Unable to estimate Satterthwaite parameters")
+        dfargs = list(V = V, A = object$apVar, G = G)
+        dffun = function(k, dfargs) {
+            est = tcrossprod(crossprod(k, dfargs$V), k)
+            g = sapply(dfargs$G, function(M) tcrossprod(crossprod(k, M), k))
+            varest = tcrossprod(crossprod(g, dfargs$A), g)
+            2 * est^2 / varest
+        }
     }
+    else { # containment df
+        dfx = object$fixDF$X
+        if (names(bhat[1]) == "(Intercept)")
+            dfx[1] = length(levels(object$groups[[1]])) - 1
+        ### Correct apparent error in lme containment algorithm
+        dffun = function(x, dfargs) {
+            idx = which(abs(x) > 1e-4)
+            ifelse(length(idx) > 0, min(dfargs$dfx[idx]), NA)
+        }
+        dfargs = list(dfx = dfx)
+    }
+    misc$initMesg = paste("Degrees-of-freedom method:", mode)
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
-         dffun = dffun, dfargs = list(dfx = dfx), misc = misc)
+         dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
+# Here is a total hack, but it works pretty well
+# We estimate the gradient of the V matrix by fitting the
+# model with a few random perturbations of y, then
+# regressing the changes in V against the changes in the 
+# covariance parameters
+gradV.kludge = function(object) {
+    A = object$apVar
+    theta = attr(A, "Pars")
+    V = object$varFix
+    sig = .01 * object$sigma
+    data = object$data
+    yname = all.vars(object$call$fixed)[1]
+    y = data[[yname]]
+    n = length(y)
+    dat = t(replicate(2 + length(theta), {
+        data[[yname]] = y + sig * rnorm(n)
+        mod = update(object, data = data)
+        c(attr(mod$apVar, "Pars") - theta, as.numeric(mod$varFix - V))
+    }))
+    dimnames(dat) = c(NULL, NULL)
+    xcols = seq_along(theta)
+    B = lm.fit(dat[, xcols], dat[,-xcols])$coefficients
+    grad = lapply(seq_len(nrow(B)), function(i) matrix(B[i, ], nrow=nrow(V)))
+    grad
+}
 
 
 #--------------------------------------------------------------

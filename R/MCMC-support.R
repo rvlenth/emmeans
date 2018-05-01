@@ -44,7 +44,7 @@
 #' @param sep.chains Logical value. If \code{TRUE}, and there is more than one
 #'   MCMC chain available, an \code{\link[coda]{mcmc.list}} object is returned
 #'   by \code{as.mcmc}, with separate EMMs posteriors in each chain.
-#' @param ... (Required but ignored)
+#' @param ... arguments passed to \code{\link[coda]{mcmc}}
 #'
 #' @return An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
 #' 
@@ -87,7 +87,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
         n = nrow(mat) / n.chains
         seqn = seq_len(n)
         chains = lapply(seq_len(n.chains), function(i) coda::mcmc(mat[n*(i - 1) + seqn, , drop = FALSE]))
-        coda::mcmc.list(chains)
+        coda::mcmc.list(chains, ...)
     }
 }
 
@@ -102,6 +102,111 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
         result = coda::mcmc.list(result)
     result
 }
+
+
+
+#' Summarize an emmGrid from a Bayesian model
+#' 
+#' This function computes point estimates and HPD intervals for each
+#' factor combination in \code{object@emmGrid}. While this function
+#' may be called independently, it is called utomatically by the S3 method
+#' \code{\link{summary.emmGrid}} when the object is based on a Bayesian model.
+#' (Note: the \code{level} argument, or its default, is passed as \code{prob}).
+#'
+#' @param object an \code{emmGrid} object having a non-missing \code{post.beta} slot
+#' @param prob numeric probability content for HPD intervals (note: when not specified,
+#'   the current \code{level} option is used; see \code{\link{emm_options}})
+#' @param by factors to use as \code{by} variables
+#' @param type prediction type as in \code{\link{summary.emmGrid}}
+#' @param point.est function to use to compute the point estimates from the 
+#'   posterior sample for each grid point
+#' @param ... required but not used
+#'
+#' @return an object of class \code{summary_emm}
+#' @export
+#'
+#' @examples
+#' load(system.file("extdata", "cbpp.RData", package = "emmeans"))
+#' cbpp.rg <- do.call(emmobj, cbpp.list)
+#' hpd.summary(emmeans(cbpp.rg, "period"))
+#'
+hpd.summary = function(object, prob, by, type,
+                       point.est = median, ...) {
+    if (!require("coda"))
+        stop("Bayesian summary requires the 'coda' package")
+    
+    # Steal some init code from summary.emmGrid:
+    opt = get_emm_option("summary")
+    if(!is.null(opt)) {
+        opt$object = object
+        object = do.call("update.emmGrid", opt)
+    }
+    
+    misc = object@misc
+    use.elts = if (is.null(misc$display))  
+                    rep(TRUE, nrow(object@grid)) 
+                else                        
+                    misc$display
+    grid = object@grid[use.elts, , drop = FALSE]
+    
+    if(missing(prob))
+        prob = misc$level
+    if(missing(by))
+        by = misc$by.vars
+    
+    if (missing(type))
+        type = .get.predict.type(misc)
+    else
+        type = .validate.type(type)
+    # if there are two transformations and we want response, then we need to undo both
+    if ((type == "response") && (!is.null(misc$tran2)))
+        object = regrid(object, transform = "mu")
+    if ((type %in% c("mu", "unlink")) && (!is.null(t2 <- misc$tran2))) {
+        if (!is.character(t2))
+            t2 = "tran"
+        object = update(object, inv.lbl = paste0(t2, "(resp)"))
+    }
+    
+    link = .get.link(misc)
+    inv = (type %in% c("response", "mu", "unlink")) # flag to inverse-transform
+    if (inv && is.null(link))
+        inv = FALSE
+    
+    
+    ### OK, finally, here is the real stuff
+    mesg = misc$initMesg
+    mcmc = as.mcmc(object, names = FALSE, sep.chains = FALSE)
+    mcmc = mcmc[, use.elts, drop = FALSE]
+    if (inv) {
+        for (j in seq_along(mcmc[1, ]))
+            mcmc[, j] = with(link, linkinv(mcmc[, j]))
+        mesg = c(mesg, paste("Results are back-transformed from the", link$name, "scale"))
+    }
+    else if(!is.null(link))
+        mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))
+    
+    mesg = c(mesg, paste("HPD interval probability:", prob))
+    pt.est = data.frame(apply(mcmc, 2, point.est))
+    names(pt.est) = object@misc$estName
+    summ = as.data.frame(HPDinterval(mcmc, prob = prob))[c("lower","upper")]
+    names(summ) = cnm = paste0(names(summ), ".HPD")
+    lblnms = setdiff(names(grid), 
+                     c(object@roles$responses, ".offset.", ".wgt."))
+    lbls = grid[lblnms]
+    
+    summ = cbind(lbls, pt.est, summ)
+    attr(summ, "estName") = misc$estName
+    attr(summ, "clNames") = cnm
+    if (is.null(misc$pri.vars) || length(misc$pri.vars) == 0)
+        misc$pri.vars = names(object@levels)
+    attr(summ, "pri.vars") = setdiff(union(misc$pri.vars, misc$by.vars), by)
+    attr(summ, "by.vars") = by
+    attr(summ, "mesg") = unique(mesg)
+    class(summ) = c("summary_emm", "data.frame")
+    summ
+}
+
+
 
 
 # Currently, data is required, as call is not stored

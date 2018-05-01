@@ -82,6 +82,7 @@ add_grouping = function(object, newname, refname, newlevs) {
     object@roles$predictors = c(object@roles$predictors, newname)
     
     wgt = object@grid$.wgt.
+    if (is.null(wgt)) wgt = rep(1, nrow(object@grid))
     offset = object@grid$.offset.
     ogrid = object@grid[setdiff(names(object@grid), c(".wgt.", ".offset."))]
     grid = data.frame()
