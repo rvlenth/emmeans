@@ -290,13 +290,14 @@ consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
     sgn = ifelse(reverse, -1, 1)
     tmp = rep(0, length(levs))
     k = length(levs) - length(exclude)
+    active.rows = setdiff(seq_along(levs), exclude)
     M = data.frame(levs=levs)
-    nms = levs[-exclude]
+    nms = levs[active.rows]
     for (i in seq_len(k-1)) {
         con = rep(0, k)
         con[i] = -sgn
         con[i+1] = sgn
-        tmp[-exclude] = con
+        tmp[active.rows] = con
         nm = ifelse(reverse,
                     paste(nms[i], "-", nms[i+1]),
                     paste(nms[i+1], "-", nms[i]))
@@ -317,12 +318,13 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
     k = length(levs) - length(exclude)
     tmp = rep(0, length(levs))
     M = data.frame(levs=levs)
-    nms = levs[-exclude]
+    active.rows = setdiff(seq_along(levs), exclude)
+    nms = levs[active.rows]
     for (i in seq_len(k-1)) {
         kmi = k - i
         con = rep(c(-sgn/i, sgn/kmi), c(i, kmi)) 
         nm = paste(nms[i], nms[i+1], sep="|")
-        tmp[-exclude] = con
+        tmp[active.rows] = con
         M[[nm]] = tmp
     }
     row.names(M) = levs

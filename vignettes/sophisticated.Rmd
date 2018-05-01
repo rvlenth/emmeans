@@ -257,7 +257,7 @@ actually, each estimate shown is a comparison with judge 1.
 
 ## Models fitted using MCMC methods {#mcmc}
 <!-- @index Bayesian models; Examples!Bayesian model; Examples!`cbpp`
-    `rstanarm` -->
+    `rstanarm` `hpd.summary()` -->
 To illustrate **emmeans**'s support for models fitted using MCMC methods,
 consider the `example_model` available in the **rstanarm** package. 
 The example concerns CBPP, a serious disease of cattle in Ethiopia.
@@ -285,10 +285,13 @@ And, again in the usual way, we can obtain EMMs:
 period.emm <- emmeans(cbpp.rg, "period")
 period.emm
 ```
-The summary for EMMs of Bayesian models shows highest posterior density (HPD) intervals
-rather than confidence intervals. Under the hood, the posterior sample of parameter estimates is
-used to compute a corresponding sample of posterior EMMs, and it is those that are summarized.
-(Technical note: the summary is actually rerouted to the `hpd.summary()` function, and it loads the **coda** package if it is not already loaded.
+The summary for EMMs of Bayesian models shows the median of the posterior
+distribution of each estimate, along with highest posterior density (HPD)
+intervals. Under the hood, the posterior sample of parameter estimates is used
+to compute a corresponding sample of posterior EMMs, and it is those that are
+summarized. (Technical note: the summary is actually rerouted to the
+`hpd.summary()` function, and it loads the **coda** package if it is not already
+loaded.
 
 ###### {#bayesxtra}
 <!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; -->
@@ -307,12 +310,9 @@ the posterior EMMs, back-transformed:
 bayesplot::mcmc_areas(as.mcmc(regrid(period.emm)))
 ```
 
-... and here are intervals for each period compared with its neighbor; we wrap 
-the important part of the call in an extra `as.mcmc(as.matrix(...))` so as to
-combine the two chains into one.
+... and here are intervals for each period compared with its neighbor:
 ```{r}
-HPDinterval(as.mcmc(as.matrix(
-    as.mcmc(contrast(period.emm, "consec", reverse = TRUE), names = FALSE))))
+contrast(period.emm, "consec", reverse = TRUE)
 ```
 The only interval that excludes zero is the one that compares periods 1 and 2.
 

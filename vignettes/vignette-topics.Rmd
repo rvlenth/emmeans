@@ -383,7 +383,7 @@ vignette: >
   * [Response scale](confidence-intervals.html#tran)
   * [`revpairwise` contrasts](comparisons.html#contrasts)
   * [**rsm** package](xtending.html#rsm)
-  * [`rstanarm`](sophisticated.html#mcmc)
+  * [`rstanarm` `hpd.summary()`](sophisticated.html#mcmc)
 
 
 [Back to top](#topnav)
@@ -402,7 +402,7 @@ vignette: >
   * `specs`
       * [Formula](comparisons.html#formulas)
   * [`stanreg` objects](models.html#S)
-  * ["*" gazing](interactions.html#factors)
+  * [* gazing](interactions.html#factors)
   * [`str()`](confidence-intervals.html#emmobj)
   * [Subsets of data](FAQs.html#model)
   * [`summary()`](confidence-intervals.html#summary)
