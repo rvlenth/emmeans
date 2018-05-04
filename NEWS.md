@@ -16,6 +16,8 @@ emmeans 1.1.3.0906
   * New `hpd.summary()` function for Bayesian models to show HPD intervals
     rather than frequentist summary. Note: `summary()` automatically
     reroutes to it. Also `plot()` and `emmip()` play along.
+  * Rudimentary support for **brms** package
+  * *Ad hoc* SAtterthwaite method for `nlme::lme` models
 
 
 emmeans 1.1.3

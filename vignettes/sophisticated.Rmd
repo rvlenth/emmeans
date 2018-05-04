@@ -257,7 +257,7 @@ actually, each estimate shown is a comparison with judge 1.
 
 ## Models fitted using MCMC methods {#mcmc}
 <!-- @index Bayesian models; Examples!Bayesian model; Examples!`cbpp`
-    `rstanarm` `hpd.summary()` -->
+    `rstanarm`; `hpd.summary()`; `summary()`!HPD intervals -->
 To illustrate **emmeans**'s support for models fitted using MCMC methods,
 consider the `example_model` available in the **rstanarm** package. 
 The example concerns CBPP, a serious disease of cattle in Ethiopia.

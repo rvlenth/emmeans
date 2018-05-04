@@ -42,6 +42,7 @@ vignette: >
 ### B {#b}
 
 
+  * [Back story of **emmeans**](basics.html#backstory)
   * Bayesian models
       * [in *models: S*](models.html#S)
       * [in *sophisticated: mcmc*](sophisticated.html#mcmc)
@@ -50,6 +51,7 @@ vignette: >
   * [`betareg` models](models.html#B)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
   * [`[ ]` and `[[ ]]` operators](utilities.html#brackets)
+  * [`brmsfit` objects](models.html#S)
   * [`by` groups](confidence-intervals.html#byvars)
       * [Identical comparisons](FAQs.html#additive)
 
@@ -218,6 +220,7 @@ vignette: >
 
 
   * [Hook functions](xtending.html#hooks)
+  * [`hpd.summary()`](sophisticated.html#mcmc)
   * [`hurdle` models](models.html#C)
 
 
@@ -270,6 +273,7 @@ vignette: >
   * Logistic regression
       * [Odds ratios](transformations.html#oddsrats)
       * [Surprising results](FAQs.html#transformations)
+  * [**lsmeans**](basics.html#backstory)
   * **lsmeans** package
       * [Converting scripts](transition-from-lsmeans.html#scripts)
       * [Converting workspaces](transition-from-lsmeans.html#workspaces)
@@ -383,7 +387,7 @@ vignette: >
   * [Response scale](confidence-intervals.html#tran)
   * [`revpairwise` contrasts](comparisons.html#contrasts)
   * [**rsm** package](xtending.html#rsm)
-  * [`rstanarm` `hpd.summary()`](sophisticated.html#mcmc)
+  * [`rstanarm`](sophisticated.html#mcmc)
 
 
 [Back to top](#topnav)
@@ -391,7 +395,9 @@ vignette: >
 ### S {#s}
 
 
-  * [Satterthwaite d.f.](models.html#L)
+  * Satterthwaite d.f.
+      * [in *models: K*](models.html#K)
+      * [in *models: L*](models.html#L)
   * [Selecting results](utilities.html#brackets)
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * [`simple = "each"`](confidence-intervals.html#simple)
@@ -407,6 +413,8 @@ vignette: >
   * [Subsets of data](FAQs.html#model)
   * [`summary()`](confidence-intervals.html#summary)
       * [`adjust`](comparisons.html#pairwise)
+      * [Bayesian models](models.html#S)
+      * [HPD intervals](sophisticated.html#mcmc)
       * `infer`
           * [in *comparisons: pairwise*](comparisons.html#pairwise)
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
@@ -455,6 +463,7 @@ vignette: >
 
 
   * [Unadjusted tests](confidence-intervals.html#adjmore)
+  * [University administration](basics.html#backstory)
   * [`update()`](utilities.html#update)
       * [`tran`](transformations.html#after)
   * [Using results](utilities.html#data)

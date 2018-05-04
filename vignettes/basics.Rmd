@@ -26,7 +26,8 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
       c. [Weighting](#weights)
       d. [Multivariate models](#multiv)
   3. [Summary](#summary)
-  4. [Further reading](#more)
+  4. [The back story of **emmeans**](#backstory)
+  5. [Further reading](#more)
   
 [Index of all vignette topics](vignette-topics.html)
 
@@ -362,6 +363,62 @@ have been named `rep.meas`.
   * Reference grids and `emmeans()` results may be plotted via `plot()`
     (for parallel confidence intervals) or `emmip()` (for an interaction-style
     plot).
+    
+[Back to Contents](#contents)
+
+
+## The back story of **emmeans** {#backstory}
+<!-- @index Back story of **emmeans**; University administration; **lsmeans** -->
+The **emmeans** package and its predecessor, **lsmeans**, were developed in part
+because I wanted it for teaching. This is hardly a surprise, as I am an
+academic. I had taught experimental design and analysis a number of times,
+usually requiring SAS to do the kind of *post hoc* comparisons that I like to
+encourage people to do. SAS is fine software (in spite of the opinions of some
+Rusers with attitude), but it is quite different from R, and more and more, I
+had students who were bewildered by it. Some colleagues of mine think it is
+absolutely essential that masters-level students learn to use SAS. I can see
+that point, but my job was to teach design, not SAS -- and there are a lot 
+of topics to cover.
+
+But here's what you wouldn't expect: the real impetus to develop the package
+came from doing some consulting work for the university administration. They
+wanted help in analyzing faculty salaries, especially with regard to gender and
+ethnicity differences. Accordingly, we fitted a pretty complicated regression
+model with effects for gender and ethnicity, as well as such things as college
+department, rank, tenure status, seniority, etc. It is a really messy model.
+I first came to the conclusion that to make sense of the model results
+in terms that the administration could understand, I could obtain predictions 
+from that model and average them together in meaningful ways to summarize the 
+primary factor effects. I figured out how to write R code to estimate those
+averages and test differences among them. Only after all that did I
+realize that really what I was computing was least-squares means (or EMMs);
+so the package was born.
+
+It grew from there, especially in terms of supporting more models, evolving from
+a spaghetti-code design to one incorporating essential building blocks with
+methods for different models. Meanwhile, I retired, so I had time on my hands to
+dink around with it (and to keep learning about new or unfamiliar models
+and data-analysis approaches). 
+
+One aspect of the package that I am especially proud of is the ability to
+express results in accessible ways when there is a transformed response or link
+function (see the ["transformations" vignette](transformations.html)). Again,
+this grew out of my needs for that administrative salary analysis. The model
+that fitted the best used a reciprocal transformation, but I wanted to express
+the predicted salaries in dollars. Moreover, I wanted to compare them using
+ratios. Those requirements led directly to the development of the `regrid()`
+function and the options to metamorphose any `emmGrid` object to the response or
+the log scale.
+
+The lesson is that it is possible that even university service duties can lead
+to technical developments in statistics. One never knows where new ideas and
+inspirations will arise. Speaking of this, I have learned and benefitted
+enormously from users' questions about the package, and basically all recent
+improvements to **emmeans** are a direct result of those communications. So
+don't be shy about asking questions or requesting features.
+
+[Back to Contents](#contents)
+
 
 ## Further reading {#more}
 The reader is referred to other vignettes for more details and advanced use.

@@ -41,6 +41,7 @@ Scroll down or follow the links to those groups for more information.
 |aovList      |stats    |[V](#V)  |Best with balanced designs, orthogonal coding                |
 |betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
 |             |         |         |`  "variance", "quantile")`                                  |
+|brmsfit      |brms     |[S](#S)  |Only simpler models                                          |
 |carbayes     |CARBayes |[S](#S)  |`data` is required                                           |
 |clm          |ordinal  |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
 |             |         |         |`  "exc.prob", "prob", "mean.class", "scale")`               |
@@ -62,7 +63,8 @@ Scroll down or follow the links to those groups for more information.
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
 |lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
-|lme          |nlme     |[K](#K)  |`sigmaAdjust = c(TRUE, FALSE)`                               |
+|lme          |nlme     |[K](#K)  |`sigmaAdjust = c(TRUE, FALSE),`                              |
+|             |         |         |`mode = c("containment", "satterthwaite")` (*ad hoc*)        |
 |lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
 |             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
 |             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
@@ -180,12 +182,21 @@ Currently, there is no support when the selected part of the model contains
 a smoothing method like `pb()`. 
 
 ## Group K -- `lme` models {#K}
-<!-- @index `lme` models; `gls` models -->
+<!-- @index `lme` models; `gls` models; Satterthwaite d.f. -->
 The `sigmaAdjust` argument is a logical value that defaults to `TRUE`. It is
 comparable to the `adjustSigma` option in `nlme::summary.lme` (the name-mangling
 is to avoid conflicts with the often-used `adjust` argument), and determines
 whether or not a degrees-of-freedom adjustment is performed with models fitted
 using the ML method.
+
+The optional `mode` argument affects the degrees of freedom. It defaults to
+`"containment"`, which determines the degrees of freedom for the coarsest
+grouping involved in the contrast or linear functuion involved. There is an
+experimental `mode = "satterthwaite"` option that determines degrees of freedom
+approximately: It estimates a needed gradient in the covariance matrix
+experimentally by randomly perturbing the response values. Thus, the degrees
+of freedom will vary slightly (or possibly even a lot) if the reference grid is
+re-calculated.
 
 [Back to quick reference](#quickref)
 
@@ -330,7 +341,8 @@ package documentation for details on **emmeans** support.
 
 
 ## S -- Sampling (MCMC) methods {#S}
-<!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `as.mcmc()` -->
+<!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `brmsfit` objects
+  `as.mcmc()`; `summary()`!Bayesian models -->
 Models fitted using MCMC methods contain a sample from the posterior
 distribution of fixed-effect coefficients. In some cases (e.g., results of
 `MCMCpack::MCMCregress()` and `MCMCpack::MCMCpoisson()`), the object may include a
@@ -341,13 +353,16 @@ addition, the `contrasts` specifications are not necessarily recoverable
 from the object, so the system default must match what was actually used in
 fitting the model.
 
-The `summary.emmGrid()`, `test.emmGrid()`,
-etc. methods provide frequentist analyses of the results based on the
-posterior means and covariances. However, an `as.mcmc()` method is
-provided that creates an `mcmc` object that can be summarized or plotted
-using the **coda** package. It provides a posterior sample of EMMs for the
-given reference grid, based on the posterior sample of the fixed effects from
-the model object.
+The `summary.emmGrid()` method provides credibility intervals (HPD intervals) of
+the results, and ignores the frequentist-oriented arguments (`infer`, `adjust`,
+etc.) An `as.mcmc()` method is provided that creates an `mcmc` object that can
+be summarized or plotted using the **coda** package (or others that support
+those objects). It provides a posterior sample of EMMs, or contrasts thereof,
+for the given reference grid, based on the posterior sample of the fixed effects
+from the model object.
+
+Support for the **brms** package is provided but it is quite rudimentary and 
+usable only for the primary fixed effects and the simpler models.
 
 [Back to quick reference](#quickref)
 
