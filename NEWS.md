@@ -1,5 +1,5 @@
-emmeans 1.1.3.0906
--------------
+emmeans 1.2
+-----------
 
   * Index of vignette topics added
   * New, improved (to my taste) vignette formats

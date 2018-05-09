@@ -1,15 +1,16 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
-Version: 1.1.3.0908
-Date: 2018-05-04
+Version: 1.2
+Date: 2018-05-07
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Henrik", "Singmann", role = "ctb"),
     person("Jonathon", "Love", role = "ctb"),
+    person("Paul", "Buerkner", role = "ctb"),
     person("Maxime", "Herve", role = "ctb"))
 Depends: R (>= 3.2)
-Imports: estimability (>= 1.3), ggplot2, graphics, methods, stats, utils, nlme,
+Imports: brms, estimability (>= 1.3), ggplot2, graphics, methods, stats, utils, nlme,
          coda (>= 0.17), multcomp, plyr, mvtnorm, xtable (>= 1.8-2)
 Suggests: bayesplot, car, lattice, mediation, multcompView, ordinal, 
           pbkrtest (>= 0.4-1), lme4, lmerTest (>= 2.0.32), 

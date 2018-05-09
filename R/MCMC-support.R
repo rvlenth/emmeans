@@ -124,6 +124,7 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #'
 #' @return an object of class \code{summary_emm}
 #' @export
+#' @importFrom coda HPDinterval
 #'
 #' @examples
 #' load(system.file("extdata", "cbpp.RData", package = "emmeans"))
@@ -132,8 +133,9 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #'
 hpd.summary = function(object, prob, by, type,
                        point.est = median, ...) {
-    if (!require("coda"))
+    if (!requireNamespace("coda"))
         stop("Bayesian summary requires the 'coda' package")
+    ### require("coda") ### Nope this is a CRAN no-no
     
     # Steal some init code from summary.emmGrid:
     opt = get_emm_option("summary")
@@ -181,6 +183,7 @@ hpd.summary = function(object, prob, by, type,
         for (j in seq_along(mcmc[1, ]))
             mcmc[, j] = with(link, linkinv(mcmc[, j]))
         mesg = c(mesg, paste("Results are back-transformed from the", link$name, "scale"))
+        
     }
     else if(!is.null(link))
         mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))
@@ -188,11 +191,23 @@ hpd.summary = function(object, prob, by, type,
     mesg = c(mesg, paste("HPD interval probability:", prob))
     pt.est = data.frame(apply(mcmc, 2, point.est))
     names(pt.est) = object@misc$estName
-    summ = as.data.frame(HPDinterval(mcmc, prob = prob))[c("lower","upper")]
+    summ = as.data.frame(coda::HPDinterval(mcmc, prob = prob))[c("lower","upper")]
     names(summ) = cnm = paste0(names(summ), ".HPD")
     lblnms = setdiff(names(grid), 
                      c(object@roles$responses, ".offset.", ".wgt."))
     lbls = grid[lblnms]
+    if (inv) {
+        if (!is.null(misc$inv.lbl)) {
+            names(pt.est) = misc$inv.lbl
+            if (!is.null(misc$log.contrast))  # contrast of logs - relabel as ratios
+                for (ell in seq_along(lbls)){
+                    lbls[[ell]] = factor(lbls[[ell]])
+                    levels(lbls[[ell]]) = gsub(" - ", " / ", levels(lbls[[ell]]))
+                }
+        }
+        else
+            names(pt.est) = "response"
+    }
     
     summ = cbind(lbls, pt.est, summ)
     attr(summ, "estName") = misc$estName

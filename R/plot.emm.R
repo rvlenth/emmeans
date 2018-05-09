@@ -92,6 +92,10 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
+#' @param frequentist Logical value. If there is a posterior MCMC sample and 
+#'   \code{frequentist} is non-missing and TRUE, a frequentist summary is used for
+#'   obtaining the plot data, rather than the posterior point estimate and HPD
+#'   intervals. This argument is ignored when it is not a Bayesian model.
 #' @param ... Additional arguments passed to \code{\link{update.emmGrid}} or
 #'   \code{\link[lattice:xyplot]{dotplot}}
 #'
