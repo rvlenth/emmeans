@@ -1,3 +1,9 @@
+emmeans 1.2.01.0999
+-------------------
+
+  * Moved **brms** to `Suggests` (dozens and dozens fewer dependencies)
+
+
 emmeans 1.2
 -----------
 

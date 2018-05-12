@@ -1,7 +1,7 @@
 ### Rudimentary support for brms. 
 ### Obviously this is way less than is needed, but it does support simpler models
 
-#' @importFrom brms parse_bf
+#xxxx' @importFrom brms parse_bf
 recover_data.brmsfit = function(object, data, ...) {
     bt = brms::parse_bf(formula(object))
     if (class(bt) != "brmsterms")
