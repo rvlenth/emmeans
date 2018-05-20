@@ -21,7 +21,7 @@ emm_basis.brmsfit = function(object, trms, xlev, grid, vcov., ...) {
     nbasis = estimability::all.estble
     dfargs = list()
     dffun = function(k, dfargs) Inf
-    misc = .std.link.labels(parse_bf(formula(object))$dpars$mu$family, list())
+    misc = .std.link.labels(brms::parse_bf(formula(object))$dpars$mu$family, list())
     post.beta = as.matrix(object, pars = paste0("b_", nm), exact = TRUE)
     bhat = apply(post.beta, 2, mean)
     
