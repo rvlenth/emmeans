@@ -1,5 +1,11 @@
-emmeans 1.2.1
+emmeans 1.2.1.19901
 -------------------
+
+  * Added a FAQ
+
+
+emmeans 1.2.1
+-------------
 
   * Moved **brms** to `Suggests` (dozens and dozens fewer dependencies)
 

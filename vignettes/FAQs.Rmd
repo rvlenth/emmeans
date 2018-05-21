@@ -23,14 +23,15 @@ This vignette contains answers to questions received from users or posted on dis
  1. [What are EMMs/lsmeans?](#what)
  2. [I have three (or two or four) factors that interact](#interactions)
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
- 4. [lsmeans/emmeans doesn't work unless you have factors](#numeric)
- 5. [If I analyze subsets of the data separately, I get different results](#model)
- 6. [My lsmeans/EMMs are way off from what I expected](#transformations)
- 6. [Why do I get `Inf` for the degrees of freedom?](#asymp)
- 7. [Some or all of the results shown say NA or NonEst](#NAs)
- 8. [I get exactly the same comparisons for each "by" group](#additive)
- 9. [My ANOVA *F* is significant, but nopairwise comparisons are](#anova)
- 10. [I get annoying messages about namespaces](#namespace)
+ 4. [All my pairwise comparisons have the same *P* value](#notfactor)
+ 5. [lsmeans/emmeans doesn't work unless you have factors](#numeric)
+ 6. [If I analyze subsets of the data separately, I get different results](#model)
+ 7. [My lsmeans/EMMs are way off from what I expected](#transformations)
+ 8. [Why do I get `Inf` for the degrees of freedom?](#asymp)
+ 9. [Some or all of the results shown say NA or NonEst](#NAs)
+ 10. [I get exactly the same comparisons for each "by" group](#additive)
+ 11. [My ANOVA *F* is significant, but no pairwise comparisons are](#anova)
+ 12. [I get annoying messages about namespaces](#namespace)
 
 [Index of all vignette topics](vignette-topics.html)
 
@@ -67,6 +68,16 @@ This is a situation where it may well be appropriate to compare the
 slopes of trend lines, rather than the EMMs. See the 
 [help page for `emtrends()`](../doc/emtrends.html) and the discussion of this
 topic in [the "interactions" vignette](interactions.html#covariates)
+
+
+## All my pairwise comparisons have the same *P* value {#notfactor}
+This will happen if you fitted a model where the treatments you want to 
+compare were put in as a numeric predictor; for example `dose`, with 
+values of 1, 2, and 3. If `dose` is modeled as numeric, you will be
+fitting a linear trend in those dose values, rather than a model
+that allows those doses to differ in arbitrary ways. Go back and fit
+a different model using `factor(dose)` instead; it will make all the
+difference. This is closely related to the next topic.
 
 
 ## lsmeans/emmeans doesn't work unless you have factors {#numeric}
