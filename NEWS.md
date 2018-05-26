@@ -1,6 +1,8 @@
-emmeans 1.2.1.19901
+emmeans 1.2.1.19902
 -------------------
 
+  * Removed dependence on ggplot2, multcomp, and coda -- thus vastly
+    reducing dependencies
   * Added a FAQ
 
 

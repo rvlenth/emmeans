@@ -34,7 +34,6 @@
 #'
 #' @rdname mcmc-support
 #' @aliases mcmc-support
-#' @method as.mcmc emmGrid
 #' @param x An object of class \code{emmGrid}
 #' @param names Logical scalar or vector specifying whether variable names are
 #'   appended to levels in the column labels for the \code{as.mcmc} or
@@ -59,9 +58,7 @@
 #' results. The \code{as.mcmc.list} method is guaranteed to return an
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
-#' @importFrom coda as.mcmc
-#' @method as.mcmc emmGrid
-#' @export
+#' @export as.mcmc.emmGrid
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     object = x
     if (is.na(x@post.beta[1]))
@@ -93,9 +90,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
 
 ### as.mcmc.list - guaranteed to return a list
 #' @rdname mcmc-support
-#' @importFrom coda as.mcmc.list
-#' @export
-#' @method as.mcmc.list emmGrid
+#' @export as.mcmc.list.emmGrid
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
     if(!inherits(result, "mcmc.list"))

@@ -54,9 +54,7 @@ emm <- function(...) {
 }
 
 # New S3 method for emmlf objects
-#' @importFrom multcomp glht
-#' @method glht emmlf
-#' @export
+#' @export glht.emmlf
 glht.emmlf <- function(model, linfct, ...) {
     # Pass the arguments we should pass to ref_grid:
     args = linfct
@@ -74,8 +72,7 @@ glht.emmlf <- function(model, linfct, ...) {
 
 # S3 method for an emmGrid object
 # Note: model is redundant, really, so can be omitted
-#' @method glht emmGrid
-#' @export
+#' @export glht.emmGrid
 glht.emmGrid <- function(model, linfct, by, ...) {
     if (!requireNamespace("multcomp"))
         stop(sQuote("glht")," requires ", dQuote("multcomp"), " to be installed")
@@ -143,7 +140,6 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #'   where that is not true, a message is displayed that shows what df is used.
 #'   The user may override this via the \code{df} argument.
 #' 
-#' @export
 #' @examples
 #' require(multcomp)
 #' 
@@ -184,9 +180,7 @@ as.glht.emm_list <- function(object, ..., which = 1)
 
 
 # S3 modelparm method for emmwrap (S3 wrapper for an emmGrid obj - see glht.emmGrid)
-#' @importFrom multcomp modelparm
-#' @method modelparm emmwrap
-#' @export
+#' @export modelparm.emmwrap
 modelparm.emmwrap <- function(model, coef., vcov., df, ...) {
     object = model$object
     if (is.null(object@misc$estHook)) {

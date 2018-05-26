@@ -32,7 +32,8 @@
 #' \code{specs} argument.
 #' 
 #' Methods for \code{emm_list} objects include \code{summary}, \code{cld},
-#' \code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{print}, and
+#' \code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{plot},
+#' \code{print}, and
 #' \code{test}. These are all the same as those methods for \code{emmGrid}
 #' objects, with an additional \code{which} argument (integer) to specify which 
 #' members of the list to use. The default is \code{which = seq_along(object)};
@@ -101,8 +102,7 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], confint, ...)
 }
 
-#' @export
-#' @method cld emm_list
+#' @export cld.emm_list
 cld.emm_list = function(object, ..., which = seq_along(object)) {
     if (length(which) > 1)
         message("NOTE: 'cld()' groupings are determined separately for each list member.")
@@ -115,4 +115,9 @@ coef.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], coef, ...)
 }
 
+#' @export
+#' @method plot emm_list
+plot.emm_list = function(object, ..., which = 1) {
+    lapply(object[[which[1]]], plot, ...)
+}
 

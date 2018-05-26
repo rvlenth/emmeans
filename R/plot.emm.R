@@ -22,10 +22,11 @@
 # S3 plot method for emmGrid objects
 # ... are arguments sent to update()
 
+# DELETED: #' @import ggplot2
+
 
 #' @rdname plot
 #' @importFrom graphics plot
-#' @import ggplot2
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE, 
@@ -140,9 +141,9 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
                      intervals = TRUE, extra = NULL, ...) {
     
     engine = match.arg(engine, c("ggplot", "lattice"))
-    if ((engine == "ggplot") && !requireNamespace("ggplot2"))
+    if ((engine == "ggplot") && !requireNamespace("ggplot2", quietly = TRUE))
         stop("The 'ggplot' engine requires the 'ggplot2' package be installed.")
-    if ((engine == "lattice") && !requireNamespace("lattice"))
+    if ((engine == "lattice") && !requireNamespace("lattice", quietly = TRUE))
         stop("The 'lattice' engine requires the 'lattice' package be installed.")
     
     summ = x # so I don't get confused
@@ -366,46 +367,46 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
                              data = summ, intervals = intervals, lcl=lcl, ucl=ucl, 
                              lcmpl=lcmpl, rcmpl=rcmpl, layout = layout, ...)
         }
-    } # --- lattice plot
+    } # --- end lattice plot
     else {  ## ggplot method
         summ$lcl = lcl
         summ$ucl = ucl
         if (horizontal) {
-            grobj = ggplot(summ, aes_(x = ~the.emmean, y = ~pri.fac)) + 
-                geom_point(size = 2)
+            grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) + 
+                ggplot2::geom_point(size = 2)
             if (intervals) 
-                grobj = grobj + geom_segment(aes_(x = ~lcl, xend = ~ucl, 
+                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcl, xend = ~ucl, 
                         y = ~pri.fac, yend = ~pri.fac), 
                     color = "blue", lwd = 4, alpha = .25)
             if (!is.null(extra))
-                grobj = grobj + geom_segment(aes_(x = ~lcmpl, xend = ~rcmpl, 
+                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcmpl, xend = ~rcmpl, 
                         y = ~pri.fac, yend = ~pri.fac), 
-                    arrow = arrow(length = unit(.07, "inches"), 
+                    arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
                         ends = "both", type = "closed"), color = "red")
             if (length(byv) > 0)
-                grobj = grobj + facet_grid(paste(paste(byv, collapse = "+"), " ~ ."), 
+                grobj = grobj + ggplot2::facet_grid(paste(paste(byv, collapse = "+"), " ~ ."), 
                                            labeller = "label_both")
             if (missing(xlab)) xlab = attr(summ, "estName")
             if (missing(ylab)) ylab = facName
         }
         else {
-            grobj = ggplot(summ, aes_(y = ~the.emmean, x = ~pri.fac)) + 
-                geom_point(size = 2)
+            grobj = ggplot2::ggplot(summ, ggplot2::aes_(y = ~the.emmean, x = ~pri.fac)) + 
+                ggplot2::geom_point(size = 2)
             if (intervals) 
-                grobj = grobj + geom_segment(aes_(y = ~lcl, yend = ~ucl, 
+                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lcl, yend = ~ucl, 
                         x = ~pri.fac, xend = ~pri.fac), 
                     color = "blue", lwd = 4, alpha = .25)
             if (!is.null(extra))
-                grobj = grobj + geom_segment(aes_(y = ~lcmpl, yend = ~rcmpl, 
+                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lcmpl, yend = ~rcmpl, 
                         x = ~pri.fac, xend = ~pri.fac), 
-                    arrow = arrow(length = unit(.07, "inches"), ends = "both", 
+                    arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), ends = "both", 
                         type = "closed"), color = "red")
             if (length(byv) > 0)
-                grobj = grobj + facet_grid(paste(". ~ ", paste(byv, collapse = "+")), 
+                grobj = grobj + ggplot2::facet_grid(paste(". ~ ", paste(byv, collapse = "+")), 
                                            labeller = "label_both")
             if (missing(ylab)) ylab = attr(summ, "estName")
             if (missing(xlab)) xlab = facName
         }
-        grobj + labs(x = xlab, y = ylab)
+        grobj + ggplot2::labs(x = xlab, y = ylab)
     }
 }

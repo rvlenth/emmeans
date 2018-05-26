@@ -11,7 +11,8 @@ for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 }
 \details{
 Methods for \code{emm_list} objects include \code{summary}, \code{cld},
-\code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{print}, and
+\code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{plot},
+\code{print}, and
 \code{test}. These are all the same as those methods for \code{emmGrid}
 objects, with an additional \code{which} argument (integer) to specify which 
 members of the list to use. The default is \code{which = seq_along(object)};

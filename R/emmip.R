@@ -103,7 +103,8 @@ emmip = function(object, formula, ...) {
 #' emmip(noise.lm, type ~ size | side)
 #'
 #' # One interaction plot, using combinations of size and side as the x factor
-#' emmip(noise.lm, type ~ side * size)
+#' # ... with added confidence intervals
+#' emmip(noise.lm, type ~ side * size, CIs = TRUE)
 #'
 #' # One interaction plot using combinations of type and side as the trace factor
 #' emmip(noise.lm, type * side ~ size)
@@ -218,32 +219,32 @@ emmip.default = function(object, formula, type, CIs = FALSE,
                          strip = my.strip, auto.key = my.key(tvars), type=c("p","l"))
         grobj = do.call(lattice::xyplot, c(plotspecs, xargs))
         lattice::trellis.par.set(TP.orig)
-    }
+    }  # --- end lattice method
     else {  # engine = "ggplot"
-        pos = position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
+        pos = ggplot2::position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
         if (!one.trace) {
-            grobj = ggplot(emms, aes_(x = ~xvar, y = ~yvar, color = ~tvar)) +
-                geom_point(position = pos) +
-                geom_line(aes_(group = ~tvar), position = pos) +
-                labs(x = xlab, y = ylab, color = tlab)
+            grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, color = ~tvar)) +
+                ggplot2::geom_point(position = pos) +
+                ggplot2::geom_line(ggplot2::aes_(group = ~tvar), position = pos) +
+                ggplot2::labs(x = xlab, y = ylab, color = tlab)
         }
         else { # just one trace per plot
-            grobj = ggplot(emms, aes_(x = ~xvar, y = ~yvar)) +
-                geom_point() +
-                geom_line(aes_(group = ~tvar)) +
-                labs(x = xlab, y = ylab)
+            grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar)) +
+                ggplot2::geom_point() +
+                ggplot2::geom_line(ggplot2::aes_(group = ~tvar)) +
+                ggplot2::labs(x = xlab, y = ylab)
             
         }
         if (CIs) # using linerange w/ extra width and semi-transparent
-            grobj = grobj + geom_linerange(aes_(ymin = ~LCL, ymax = ~UCL), 
+            grobj = grobj + ggplot2::geom_linerange(ggplot2::aes_(ymin = ~LCL, ymax = ~UCL), 
                         position = pos, lwd = 2, alpha = .5)
         if (length(byvars) > 0) {  # we have by variables 
             if (length(byvars) > 1) {
                 byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))
-                grobj = grobj + facet_grid(byform, labeller = "label_both")
+                grobj = grobj + ggplot2::facet_grid(byform, labeller = "label_both")
             }
             else
-                grobj = grobj + facet_wrap(byvars, labeller = "label_both")
+                grobj = grobj + ggplot2::facet_wrap(byvars, labeller = "label_both")
         }
     }
     
