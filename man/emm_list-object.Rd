@@ -2,6 +2,7 @@
 % Please edit documentation in R/emm-list.R
 \name{emm_list}
 \alias{emm_list}
+\alias{cld.emm_list}
 \title{The \code{emm_list} class}
 \description{
 An \code{emm_list} object is simply a list of

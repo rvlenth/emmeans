@@ -38,7 +38,7 @@
 #' arguments) provided as in a call to \code{\link{emmeans}}.
 #' 
 #' @rdname glht-support
-#' @aliases glht-support
+#' @aliases glht-support glht.emmGrid glht.emmlf modelparm.emmwrap
 #' @param ... In \code{emm}, the \code{specs}, \code{by}, and \code{contr}
 #'   arguments you would normally supply to \code{\link{emmeans}}. Only
 #'   \code{specs} is required. Otherwise, arguments that are passed to other
@@ -66,7 +66,7 @@ glht.emmlf <- function(model, linfct, ...) {
     if (is.list(emmo)) 
         emmo = emmo[[length(emmo)]]
     # Then call the method for emmo objject
-    glht(model, emmo, ...)
+    glht.emmGrid(model, emmo, ...)
 }
 
 
@@ -171,7 +171,7 @@ as.glht.default <- function(object, ...)
 #' @method as.glht emmGrid
 #' @export
 as.glht.emmGrid <- function(object, ...)
-    glht( , object, ...)   # 1st arg not necessary
+    glht.emmGrid( , object, ...)   # 1st arg not necessary
 
 #' @method as.glht emm_list
 #' @export

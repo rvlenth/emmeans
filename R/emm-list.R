@@ -38,6 +38,8 @@
 #' objects, with an additional \code{which} argument (integer) to specify which 
 #' members of the list to use. The default is \code{which = seq_along(object)};
 #' i.e., the method is applied to every member of the \code{emm_list} object.
+#' The exception is \code{plot}, where only the \code{which[1]}th element is 
+#' plotted.
 #' 
 #' As an example,
 #' to summarize a single member -- say the second one -- of an \code{emm_list}, 
@@ -46,6 +48,7 @@
 #'
 #' @rdname emm_list-object
 #' @name emm_list
+#' @aliases cld.emm_list
 NULL
 
 
@@ -115,9 +118,11 @@ coef.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], coef, ...)
 }
 
+# plot just plots one
+
 #' @export
 #' @method plot emm_list
-plot.emm_list = function(object, ..., which = 1) {
-    lapply(object[[which[1]]], plot, ...)
+plot.emm_list = function(x, ..., which = 1) {
+    plot.emmGrid(x[[which[1]]], ...)
 }
 

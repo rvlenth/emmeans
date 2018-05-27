@@ -3,6 +3,9 @@
 \name{emm}
 \alias{emm}
 \alias{glht-support}
+\alias{glht.emmGrid}
+\alias{glht.emmlf}
+\alias{modelparm.emmwrap}
 \alias{as.glht}
 \alias{as.glht.emmGrid}
 \title{Support for \code{multcomp::glht}}

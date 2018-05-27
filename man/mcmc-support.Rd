@@ -6,9 +6,9 @@
 \alias{as.mcmc.list.emmGrid}
 \title{Support for MCMC-based estimation}
 \usage{
-as.mcmc.emmGrid(x, names = TRUE, sep.chains = TRUE, ...)
+\method{as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE, ...)
 
-as.mcmc.list.emmGrid(x, names = TRUE, ...)
+\method{as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{emmGrid}}

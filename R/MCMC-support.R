@@ -59,6 +59,7 @@
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
 #' @export as.mcmc.emmGrid
+#' @method as.mcmc emmGrid
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     object = x
     if (is.na(x@post.beta[1]))
@@ -91,6 +92,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
 ### as.mcmc.list - guaranteed to return a list
 #' @rdname mcmc-support
 #' @export as.mcmc.list.emmGrid
+#' @method as.mcmc.list emmGrid
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
     if(!inherits(result, "mcmc.list"))
@@ -119,7 +121,6 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #'
 #' @return an object of class \code{summary_emm}
 #' @export
-#' @importFrom coda HPDinterval
 #'
 #' @examples
 #' load(system.file("extdata", "cbpp.RData", package = "emmeans"))
@@ -172,7 +173,7 @@ hpd.summary = function(object, prob, by, type,
     
     ### OK, finally, here is the real stuff
     mesg = misc$initMesg
-    mcmc = as.mcmc(object, names = FALSE, sep.chains = FALSE)
+    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE)
     mcmc = mcmc[, use.elts, drop = FALSE]
     if (inv) {
         for (j in seq_along(mcmc[1, ]))
@@ -345,7 +346,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     if(is.null(contr <- object$contrasts))
         contr = attr(model.matrix(object), "contrasts")
     X = model.matrix(trms, m, contrasts.arg = contr)
-    bhat = fixef(object)
+    bhat = rstanarm::fixef(object)
     V = vcov(object)
     misc = list()
     if (!is.null(object$family)) {
