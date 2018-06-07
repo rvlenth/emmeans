@@ -129,7 +129,7 @@ vignette: >
   * [`.emmc` functions](comparisons.html#linfcns)
   * **emmeans** package
       * [Exporting extensions to](xtending.html#exporting)
-      * [Exports for developers](xtending.html#exported)
+      * [Exports useful to developers](xtending.html#exported)
   * [`emmeans()`](basics.html#emmeans)
       * [Changing defaults](utilities.html#defaults)
       * [Surprising results from](FAQs.html#transformations)
@@ -183,6 +183,7 @@ vignette: >
       * [Unbalanced data](basics.html#motivation)
       * [`warpbreaks`](transformations.html#tranlink)
       * [`wine`](sophisticated.html#ordinal)
+  * [Exporting extensions to **emmeans**](xtending.html#exporting)
 
 
 [Back to top](#topnav)
@@ -381,6 +382,7 @@ vignette: >
       * [`offset`](sophisticated.html#offsets)
   * [Reference grids](basics.html#ref_grid)
       * [Altering](basics.html#altering)
+  * [Registering methods](xtending.html#exporting)
   * [`regrid()`](transformations.html#regrid)
       * [`transform = "log"`](transformations.html#logs)
       * [`transform` vs. `type`](transformations.html#regrid)

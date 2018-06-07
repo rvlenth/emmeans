@@ -629,6 +629,7 @@ emm_basis.glmmadmb = function (object, trms, xlev, grid, ...)
 
 # Call this to do the standard stuff with link labels
 # Returns a modified misc
+#' @export
 .std.link.labels = function(fam, misc) {
     if (is.null(fam) || !is.list(fam))
         return(misc)

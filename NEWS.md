@@ -1,9 +1,10 @@
-emmeans 1.2.1.19902
+emmeans 1.2.1.19903
 -------------------
 
   * Removed dependence on ggplot2, multcomp, and coda -- thus vastly
     reducing dependencies
   * Added a FAQ
+  * Modified advice in `xtending.Rmd` vignette on how to export methods
 
 
 emmeans 1.2.1

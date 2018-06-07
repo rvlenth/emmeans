@@ -18,6 +18,8 @@ Methods for \code{emm_list} objects include \code{summary}, \code{cld},
 objects, with an additional \code{which} argument (integer) to specify which 
 members of the list to use. The default is \code{which = seq_along(object)};
 i.e., the method is applied to every member of the \code{emm_list} object.
+The exception is \code{plot}, where only the \code{which[1]}th element is 
+plotted.
 
 As an example,
 to summarize a single member -- say the second one -- of an \code{emm_list}, 
