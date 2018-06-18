@@ -141,7 +141,7 @@ pairwise.emmc = function(levs, exclude = integer(0), ...) {
 revpairwise.emmc = function(levs, exclude = integer(0), ...) {
     k = length(levs)
     M = data.frame(levs=levs)
-    for (i in setdiff(2:k, exclude)) {
+    for (i in setdiff(1 + seq_len(k - 1), exclude)) {
         for (j in setdiff(seq_len(i-1), exclude)) {
             con = rep(0,k)
             con[i] = 1

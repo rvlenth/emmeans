@@ -412,7 +412,10 @@ emmeans = function(object, specs, by = NULL,
     if(!missing(contr)) { # return a list with emmeans and contrasts
         if (is.character(contr) && contr == "cld") {
         # TO DO: provide for passing dots to cld                
-            return(cld(result, by = by))
+            #xxxx return(cld(result, by = by))
+            stop("`cld` in formula specs has been deprecated.\n",
+                 "To obtain a compact letter display, first call `emmeans()`,\n",
+                 "then call `cld()` on the result.")
         }
         args = list(...)
         args$data = NULL   # ensure 'data' not passed

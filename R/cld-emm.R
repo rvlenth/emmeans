@@ -160,7 +160,7 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
         pb = p.boo[by.rows[[i]]]
         names(pb) = labs
         mcl = .mcletters(pb, Letters = Letters, reversed = reversed)$monospacedLetters
-        ltrs[by.out[[i]]] = paste(" ", mcl, sep="")
+        ltrs[by.out[[i]]] = paste0(" ", mcl[seq_along(by.out[[i]])])
     }
     # any missing estimates get blanks...
     ltrs[excl.rows] = ""

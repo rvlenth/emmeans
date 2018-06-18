@@ -364,7 +364,7 @@ the object class is `"foo"`, the `NAMESPACE` file should contain
 export("recover_data.foo", "emm_basis.foo")
 ```
 If you are using **devtools** (or **roxygen2**) to generate this file, give the function 
-name explicity (e.g., `@export recover_data.foo`). 
+name explicitly (e.g., `@export recover_data.foo`). 
 
 In addition, the package-checking procedure will insist that you document these
 functions. It is enough to simply include these functions as aliases in some
