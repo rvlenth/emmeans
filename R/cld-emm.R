@@ -94,7 +94,8 @@ cld = function (object, ...) {
 #' 
 #' @seealso \code{\link[multcomp]{cld}} in the \pkg{multcomp} package
 #' 
-#' @export cld.emmGrid
+#' @method cld emmGrid
+#' @export
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)

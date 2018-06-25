@@ -1,9 +1,9 @@
-emmeans 1.2.1.19904
+emmeans 1.2.2
 -------------------
 
-  * Removed dependence on ggplot2, multcomp, and coda -- thus vastly
+  * Removed ggplot2, multcomp, and coda to Suggests -- thus vastly
     reducing dependencies
-  * Added a FAQ to that vignette
+  * Added a FAQ to the FAQs vignette
   * Modified advice in `xtending.Rmd` vignette on how to export methods
   * Fixes to `revpairwise.emmc` and `cld` regarding comparing only 1 EMM
   * `cld.emm_list` now returns results only for `object[[ which[1] ]]`,
