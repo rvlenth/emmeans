@@ -1,3 +1,10 @@
+emmeans 1.2.2.99901
+-------------------
+
+  * Added vignette caution regarding interdependent covariates
+  * Improved **glmmADMB** support to recover contrasts correctly
+  
+
 emmeans 1.2.2
 -------------------
 

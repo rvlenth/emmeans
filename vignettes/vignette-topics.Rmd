@@ -12,7 +12,7 @@ vignette: >
 
 
 
-### Jump to:  [A](#a) [B](#b) [C](#c) [D](#d) [E](#e) [F](#f) [G](#g) [H](#h) [I](#i) [J](#j) [K](#k) [L](#l) [M](#m) [N](#n) [O](#o) [P](#p) [R](#r) [S](#s) [T](#t) [U](#u) [V](#v) [W](#w) [Z](#z)  {#topnav}
+### Jump to:  [A](#a) [B](#b) [C](#c) [D](#d) [E](#e) [F](#f) [G](#g) [H](#h) [I](#i) [J](#j) [K](#k) [L](#l) [M](#m) [N](#n) [O](#o) [P](#p) [Q](#q) [R](#r) [S](#s) [T](#t) [U](#u) [V](#v) [W](#w) [Z](#z)  {#topnav}
 
 
 
@@ -98,6 +98,7 @@ vignette: >
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
       * [Adjusted](messy-data.html#adjcov)
+      * [Derived](basics.html#depcovs)
       * [`emmeans()` doesn't work](FAQs.html#numeric)
       * [Interacting with factors](FAQs.html#trends)
       * [Mediating](messy-data.html#mediators)
@@ -359,8 +360,17 @@ vignette: >
   * Poisson regression
       * [Surprising results](FAQs.html#transformations)
   * [`polreg` models](models.html#O)
+  * [Polynomial regression](basics.html#depcovs)
   * [`postGridHook`](xtending.html#hooks)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
+
+
+[Back to top](#topnav)
+
+### Q {#q}
+
+
+  * [Quadratic terms](basics.html#depcovs)
 
 
 [Back to top](#topnav)

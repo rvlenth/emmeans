@@ -22,6 +22,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
       a. [Reference grids](#ref_grid)
       b. [Estimated marginal means](#emmeans)
       b. [Altering the reference grid](#altering)
+      b. [Derived covariates](#depcovs)
       b. [Graphical displays](#plots)
       c. [Weighting](#weights)
       d. [Multivariate models](#multiv)
@@ -221,7 +222,7 @@ ref_grid(pigs.lm2, cov.reduce = range)
 ```
 
 Perhaps more common is to use the `at` argument. Consider this model for the
-built-in `cars` dataset:
+built-in `mtcars` dataset:
 ```{r}
 mtcars.lm <- lm(mpg ~ disp * cyl, data = mtcars)
 ref_grid(mtcars.lm)
@@ -237,6 +238,46 @@ mtcars.rg <- ref_grid(mtcars.lm,
 Another use of `at` is to focus on only some of the levels of a factor. Note that
 `at` does not need to specify every predictor; those not mentioned in `at` are
 handled by `cov.reduce` or the default methods.
+
+[Back to Contents](#contents)
+
+
+### Derived covariates {#depcovs}
+<!-- @index Covariates!Derived; Quadratic terms; Polynomial regression -->
+You need to be careful when one covariate depends on the value of another. To
+illustrate in the `mtcars` example, suppose we want to use `cyl` as a factor and
+include a quadratic term for `disp`:
+```{r}
+mtcars.1 <- lm(mpg ~ factor(cyl) + disp + I(disp^2), data = mtcars)
+emmeans(mtcars.1, "cyl")
+```
+Some users may not like function calls in the model formula, so they instead do something like this:
+```{r}
+mtcars <- transform(mtcars, 
+                    Cyl = factor(cyl),
+                    dispsq = disp^2)
+mtcars.2 <- lm(mpg ~ Cyl + disp + dispsq, data = mtcars)
+emmeans(mtcars.2, "Cyl")
+```
+Wow! Those are really different results -- even though the models are
+equivalent. Why is this? To understand, look at the reference grids:
+```{r}
+ref_grid(mtcars.1)
+ref_grid(mtcars.2)
+```
+For both models, the reference grid uses the `disp` mean of 230.72. But for
+`mtcars.2`, we also set `dispsq` to its mean of 68113. This is not right,
+because `dispsq` should be the square of `disp` (about 53232, not 68113) in order to be
+consistent. If we use that value of `dispsq`, we get the same results as for
+`mtcars.1` (discrepancies due to rounding of `disp`):
+```{r}
+emmeans(mtcars.2, "Cyl", at = list(dispsq = 230.72^2))
+```
+
+In summary, for polynomial models and others where some covariates depend on
+others in nonlinear ways, include that dependence in the model formula (as in
+`mtcars.1`) using `I()` or `poly()` expressions, or alter the reference grid so
+that the dependency among covariates is correct.
 
 
 [Back to Contents](#contents)
