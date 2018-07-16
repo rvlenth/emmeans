@@ -19,17 +19,7 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-# Namespace hooks for emmeans
 
-# .onLoad = function(libname, pkgname) {
-#     # Function to check for existence of a variable
-#     # This will be in the base package of R > 3.3.0
-#     if (!exists("hasName", envir = getNamespace("utils"), inherits = FALSE)) {
-#         assign("hasName", function(x, name)
-#                 match(name, names(x), nomatch = 0L) > 0L,
-#             envir = getNamespace(pkgname))
-#     }
-# }
 
 # Just define the function for now. When we get to R version 3.6 or so
 # maybe we can we require R >= 3.4 (first that has hasName())
@@ -54,5 +44,41 @@ hasName = function(x, name)
                              css = css, ...)
 }
 
+
+### Dynamic registration of S3 methods
+# Code borrowed from zoo pkg. I omitted some type checks etc. because
+# this is only for internal use and I solemnly promise to behave myself.
+register_s3_method <- function(pkg, generic, class) {
+    fun = get(paste0(generic, ".", class), envir = parent.frame())
+    if (isNamespaceLoaded(pkg)) {
+        registerS3method(generic, class, fun, envir = asNamespace(pkg))
+    }
+    # Register hook in case package is later unloaded & reloaded
+    setHook(
+        packageEvent(pkg, "onLoad"),
+        function(...) {
+            registerS3method(generic, class, fun, envir = asNamespace(pkg))
+        }
+    )
+}
+
+.onLoad = function(libname, pkgname) {
+    if (requireNamespace("coda", quietly = TRUE)) {
+        register_s3_method("coda", "as.mcmc", "emmGrid")
+        register_s3_method("coda", "as.mcmc.list", "emmGrid")
+    }
+    if (requireNamespace("multcomp", quietly = TRUE)) {
+        register_s3_method("multcomp", "glht", "emmlf")
+        register_s3_method("multcomp", "glht", "emmGrid")
+        register_s3_method("multcomp", "cld", "emmGrid")
+        register_s3_method("multcomp", "modelparm", "emmwrap")
+        importIntoEnv(getNamespace("emmeans"), "cld", getNamespace("multcomp"), "cld")
+        #namespaceExport("multcomp", "cld") #(in NAMESPACE)
+    }
+    else {
+        #namespaceExport("emmeans", "cld") #(in NAMESPACE)
+        registerS3method("cld", "emmGrid", cld.emmGrid) # note using base fcn here
+    }
+}
 
 

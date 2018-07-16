@@ -38,21 +38,20 @@
     result
 }
 
-# Hack around providing a generic
+### NOTE: Importing, exporting, and S3 registration of all cld-related stuff
+###       is done dynamically in zzz.R
 
-#' @export cld
-#' @rdname cld.emmGrid
-cld = function (object, ...) {
-    if(requireNamespace("multcomp", quietly = TRUE))
-        multcomp::cld(object, ...)
-    else
-        UseMethod("cld")
-}
+# Generic for cld (exported only if multcomp not installed)
 
-# S3 method for emmGrid
+if (!requireNamespace("multcomp", quietly = TRUE))
+    cld = function (object, ...) UseMethod("cld")
+
+
+# S3 method for emmGrid 
 #' Extract and display information on all pairwise comparisons of least-squares means.
 #'
 #' @aliases cld
+#' @export cld
 #' 
 #' @param object An object of class \code{emmGrid}
 #' @param details Logical value determining whether detailed information on tests of 
@@ -92,10 +91,9 @@ cld = function (object, ...) {
 #'   of all pairwise comparisons, Journal of Computational and Graphical Statistics, 13(2), 
 #'   456-466.
 #' 
-#' @seealso \code{\link[multcomp]{cld}} in the \pkg{multcomp} package
+#' @seealso \code{cld} in the \pkg{multcomp} package
 #' 
 #' @method cld emmGrid
-#' @export
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)

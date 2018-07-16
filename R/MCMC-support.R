@@ -24,6 +24,9 @@
 # Method to create a coda 'mcmc' or 'mcmc.list' object from a ref.grid
 # (dots not supported, unfortunately)
 # If sep.chains is TRUE and there is more than one chain, an mcmc.list is returned
+
+# NOTE: S3 registration of as.mcmc and as.mcmc.list is done dynamically in zzz.R
+
 #' Support for MCMC-based estimation
 #' 
 #' When a model is fitted using Markov chain Monte Carlo (MCMC) methods, 
@@ -58,7 +61,6 @@
 #' results. The \code{as.mcmc.list} method is guaranteed to return an
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
-#' @export as.mcmc.emmGrid
 #' @method as.mcmc emmGrid
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     object = x
@@ -89,9 +91,9 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     }
 }
 
+
 ### as.mcmc.list - guaranteed to return a list
 #' @rdname mcmc-support
-#' @export as.mcmc.list.emmGrid
 #' @method as.mcmc.list emmGrid
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
@@ -123,10 +125,13 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #' @export
 #'
 #' @examples
+#' if(require("coda")) { # --- requires 'coda' to be installed 
+#' 
 #' load(system.file("extdata", "cbpp.RData", package = "emmeans"))
 #' cbpp.rg <- do.call(emmobj, cbpp.list)
 #' hpd.summary(emmeans(cbpp.rg, "period"))
 #'
+#' } # --- was tested only if coda is installed
 hpd.summary = function(object, prob, by, type,
                        point.est = median, ...) {
     if (!requireNamespace("coda"))

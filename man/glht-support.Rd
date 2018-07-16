@@ -26,7 +26,7 @@ methods.}
 }
 \value{
 \code{emm} returns an object of an intermediate class for which
-  there is a \code{\link[multcomp]{glht}} method.
+  there is a \code{multcomp::glht} method.
 
 \code{as.glht} returns an object of class \code{glht} or \code{glht_list}
   according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}. 
@@ -34,12 +34,12 @@ methods.}
 }
 \description{
 These functions and methods provide an interface between \pkg{emmeans} and
-the \code{\link[multcomp]{glht}} function for simultaneous inference provided
+the \code{multcomp::glht} function for simultaneous inference provided
 by the \pkg{multcomp} package.
 }
 \details{
 \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
-(\code{linfct}) argument. It works similarly to \code{\link[multcomp:glht]{mcp}},
+(\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
 except with \code{specs} (and optionally \code{by} and \code{contr}
 arguments) provided as in a call to \code{\link{emmeans}}.
 }
@@ -59,7 +59,7 @@ which simply apply the corresponding \code{glht} methods to each member.
 }
 
 \examples{
-require(multcomp)
+if(require(multcomp)) { # --- multcomp must be installed
 
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 
@@ -73,4 +73,5 @@ summary(as.glht(pairs(warp.emm)))
 # Same contrasts, but treat as one family
 summary(as.glht(pairs(warp.emm), by = NULL))
 
+} # --- was tested only if multcomp is installed
 }

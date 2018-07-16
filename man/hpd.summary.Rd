@@ -32,8 +32,11 @@ may be called independently, it is called utomatically by the S3 method
 (Note: the \code{level} argument, or its default, is passed as \code{prob}).
 }
 \examples{
+if(require("coda")) { # --- requires 'coda' to be installed 
+
 load(system.file("extdata", "cbpp.RData", package = "emmeans"))
 cbpp.rg <- do.call(emmobj, cbpp.list)
 hpd.summary(emmeans(cbpp.rg, "period"))
 
+} # --- was tested only if coda is installed
 }

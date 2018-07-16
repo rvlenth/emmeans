@@ -105,7 +105,7 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], confint, ...)
 }
 
-#' @export
+#--------- exported in specialty code for cld.emmList #' @export
 cld.emm_list = function(object, ..., which = seq_along(object)) {
     if (length(which) > 1)
         warning("`cld()` called with a list of ", length(which), " objects. ",

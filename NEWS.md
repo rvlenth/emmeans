@@ -1,6 +1,9 @@
 emmeans 1.2.2.99901
 -------------------
 
+  * S3 methods involving packages **multcomp** and **coda** are now
+    conditionally registered, not merely exported as functions.
+    This prevents failure of, e.g., Debian checks
   * Added vignette caution regarding interdependent covariates
   * Improved **glmmADMB** support to recover contrasts correctly
   

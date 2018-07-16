@@ -70,7 +70,7 @@ the user may write such a function.
 Each standard contrast family has a default multiple-testing adjustment as
 noted below. These adjustments are often only approximate; for a more
 exacting adjustment, use the interfaces provided to
-\code{\link[multcomp]{glht}} in the \pkg{multcomp} package.
+\code{glht} in the \pkg{multcomp} package.
 
 \code{pairwise.emmc}, \code{revpairwise.emmc}, and \code{tukey.emmc} generate
 contrasts for all pairwise comparisons among estimated marginal means at the

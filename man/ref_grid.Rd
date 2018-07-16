@@ -132,7 +132,7 @@ when a polynomial model was fitted using predictors \code{x}, \code{x2}
 grid will by by default set \code{x2} and \code{x3} to their means, which is
 inconsistent. The user should instead use the \code{at} argument to set these
 to the square and cube of \code{mean(x)}. Better yet, fit the model using
-a formula involving \code{poly(x, 3)} or \code{I(x^2) and \code{I(x^3)}}; then
+a formula involving \code{poly(x, 3)} or \code{I(x^2)} and \code{I(x^3)}; then
 there is only \code{x} appearing as a covariate; it will be set to its mean, 
 and the model matrix will have the correct corresponding quadratic and cubic
 terms.

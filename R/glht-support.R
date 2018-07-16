@@ -23,17 +23,19 @@
 ### Provides for using 'emm' in similar way to 'mcp'
 ### This is implemented via the class "emmlf" -- linear functions for emmeans
 
+## NOTE: Registration of S3 methods for glht is done dynamically in zzz.R
+
 # emm(specs) will be used as 'linfct' argument in glht
 # all we need to do is class it and save the arguments
 
 #' Support for \code{multcomp::glht}
 #' 
 #' These functions and methods provide an interface between \pkg{emmeans} and
-#' the \code{\link[multcomp]{glht}} function for simultaneous inference provided
+#' the \code{multcomp::glht} function for simultaneous inference provided
 #' by the \pkg{multcomp} package.
 #' 
 #' \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
-#' (\code{linfct}) argument. It works similarly to \code{\link[multcomp:glht]{mcp}},
+#' (\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
 #' except with \code{specs} (and optionally \code{by} and \code{contr}
 #' arguments) provided as in a call to \code{\link{emmeans}}.
 #' 
@@ -45,7 +47,7 @@
 #'   methods.
 #'
 #' @return \code{emm} returns an object of an intermediate class for which
-#'   there is a \code{\link[multcomp]{glht}} method.
+#'   there is a \code{multcomp::glht} method.
 #' @export
 emm <- function(...) {
     result <- list(...)
@@ -54,7 +56,6 @@ emm <- function(...) {
 }
 
 # New S3 method for emmlf objects
-#' @export glht.emmlf
 glht.emmlf <- function(model, linfct, ...) {
     # Pass the arguments we should pass to ref_grid:
     args = linfct
@@ -72,7 +73,7 @@ glht.emmlf <- function(model, linfct, ...) {
 
 # S3 method for an emmGrid object
 # Note: model is redundant, really, so can be omitted
-#' @export glht.emmGrid
+# See related roxygen stuff just before glht.emmlf
 glht.emmGrid <- function(model, linfct, by, ...) {
     if (!requireNamespace("multcomp"))
         stop(sQuote("glht")," requires ", dQuote("multcomp"), " to be installed")
@@ -141,7 +142,7 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #'   The user may override this via the \code{df} argument.
 #' 
 #' @examples
-#' require(multcomp)
+#' if(require(multcomp)) { # --- multcomp must be installed
 #' 
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 #' 
@@ -155,6 +156,7 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #' # Same contrasts, but treat as one family
 #' summary(as.glht(pairs(warp.emm), by = NULL))
 #' 
+#' } # --- was tested only if multcomp is installed
 #' @rdname glht-support
 #' @export
 as.glht <- function(object, ...) {
@@ -180,7 +182,7 @@ as.glht.emm_list <- function(object, ..., which = 1)
 
 
 # S3 modelparm method for emmwrap (S3 wrapper for an emmGrid obj - see glht.emmGrid)
-#' @export modelparm.emmwrap
+#--- dynamically registered in zzz.R --- #' @export
 modelparm.emmwrap <- function(model, coef., vcov., df, ...) {
     object = model$object
     if (is.null(object@misc$estHook)) {
