@@ -47,7 +47,7 @@ CLD = function (object, ...) UseMethod("CLD")
 # S3 method for emmGrid 
 #' Extract and display information on all pairwise comparisons of least-squares means.
 #'
-#' @aliases CLD, cld
+#' @aliases CLD
 #' 
 #' @param object An object of class \code{emmGrid}
 #' @param details Logical value determining whether detailed information on tests of 
@@ -183,4 +183,25 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
 cld.emmGrid = function(object, ...) {
     CLD.emmGrid(object, ...)
 }
+
+
+# Temporary hack while downstream dependencies have a chance to fix it:
+#' Temporary continued 'cld' support
+#' 
+#' This generic is temporarily provided to keep downstream packages from breaking.
+#' It will be removed in future versions to avoid masking issues with \code{multcomp::cld}.
+#' Please use \code{CLD} instead when working with \code{emmMeans} objects.
+#' 
+#' @param object an emmGrid object
+#' @param ... other arguments passed to \code{\link{CLD}}
+#' 
+#' @export cld
+#' @rdname old.cld
+cld = function (object, ...) {
+    if(requireNamespace("multcomp", quietly = TRUE))
+        multcomp::cld(object, ...)
+    else
+        UseMethod("cld")
+}
+
 

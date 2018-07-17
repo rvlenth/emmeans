@@ -61,9 +61,8 @@ vignette: >
 ### C {#c}
 
 
-  * `cld`
-      * [in **multcomp**](comparisons.html#pairwise)
   * [`CLD()`](comparisons.html#pairwise)
+      * [versus `multcomp::cld()`](comparisons.html#pairwise)
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)

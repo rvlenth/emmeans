@@ -62,6 +62,7 @@
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
 #' @method as.mcmc emmGrid
+#' @export as.mcmc.emmGrid
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     object = x
     if (is.na(x@post.beta[1]))

@@ -65,7 +65,7 @@ another group, the difference is not significant, based on the `adjust` setting
 (which defaults to `"tukey"`). (Note: Don't ever use confidence intervals for
 EMMs to perform comparisons; they can be very misleading.)
 
-<!-- @index `CLD()`; `cld`!in **multcomp**; Comparisons!Displaying as groups -->
+<!-- @index `CLD()`; `CLD()`!versus `multcomp::cld()`; Comparisons!Displaying as groups -->
 Another way to depict comparisons is by compact-letter displays:
 ```{r}
 CLD(pigs.emm.s)
