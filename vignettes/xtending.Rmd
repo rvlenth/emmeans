@@ -400,7 +400,7 @@ register_s3_method <- function(pkg, generic, class) {
 }
 
 ```
-This code is adapted and simplified from the **zoo** package. The original
+This code is adapted and simplified from the **hms** package. The original
 `register_s3_method` function is more general and includes type-checking
 of its arguments; but since this is just used internally, that checking
 seems unnecessary.
