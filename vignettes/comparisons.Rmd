@@ -65,14 +65,18 @@ another group, the difference is not significant, based on the `adjust` setting
 (which defaults to `"tukey"`). (Note: Don't ever use confidence intervals for
 EMMs to perform comparisons; they can be very misleading.)
 
-<!-- @index `cld()`; Comparisons!Displaying as groups -->
+<!-- @index `CLD()`; `cld`!in **multcomp**; Comparisons!Displaying as groups -->
 Another way to depict comparisons is by compact-letter displays:
 ```{r}
-cld(pigs.emm.s)
+CLD(pigs.emm.s)
 ```
 Two EMMs sharing one or more grouping symbols are not significantly different.
 I really don't recommend this method, though, as it imposes a stark difference
 between *P* values slightly less and slightly more than `alpha`.
+
+*Note:* The **multcomp** package provides a very similar function named `cld()`. A
+corresponding method is provided for `emmGrid` objects; thus, if `package:multcomp`
+is attached, you may call `cld()` and obtain the same results as with `CLD()`.
 
 [Back to Contents](#contents)
 

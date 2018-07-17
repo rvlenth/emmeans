@@ -72,13 +72,14 @@ register_s3_method <- function(pkg, generic, class) {
         register_s3_method("multcomp", "glht", "emmGrid")
         register_s3_method("multcomp", "cld", "emmGrid")
         register_s3_method("multcomp", "modelparm", "emmwrap")
-        importIntoEnv(getNamespace("emmeans"), "cld", getNamespace("multcomp"), "cld")
-        #namespaceExport("multcomp", "cld") #(in NAMESPACE)
-    }
-    else {
-        #namespaceExport("emmeans", "cld") #(in NAMESPACE)
-        registerS3method("cld", "emmGrid", cld.emmGrid) # note using base fcn here
-    }
+     }
 }
 
+.onAttach = function(libname, pkgname) {
+    packageStartupMessage (
+        "NOTE: As of emmeans version 1.2.3,\n",
+        "      The 'cld' function has been deprecated in favor of 'CLD'.\n",
+        "      You may use 'cld' only if you have package:multcomp attached."
+    )
+}
 

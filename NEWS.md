@@ -1,15 +1,19 @@
-emmeans 1.2.2.99901
--------------------
+emmeans 1.2.3
+-------------
 
   * S3 methods involving packages **multcomp** and **coda** are now
-    conditionally registered, not merely exported as functions.
-    This prevents failure of, e.g., Debian checks
+    dynamically registered, not merely exported as functions.
+    This passes checks when S3 methods are required to be registered.
+  * `cld()` has been deprecated in favor of `CLD()`. This had been a
+    headache. **multcomp** is the wrong place for the generic to be; 
+    it is too fancy a dance to export `cld` with or without having
+    **multcomp** installed.
   * Added vignette caution regarding interdependent covariates
   * Improved **glmmADMB** support to recover contrasts correctly
   
 
 emmeans 1.2.2
--------------------
+-------------
 
   * Removed ggplot2, multcomp, and coda to Suggests -- thus vastly
     reducing dependencies

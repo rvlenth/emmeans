@@ -72,8 +72,8 @@ available such as deviations from the mean, polynomial contrasts, and
 comparisons with one or more controls. Another \code{emmGrid} object is returned,
 which can be summarized or further analyzed. For convenience, a \code{pairs.emmGrid}
 method is provided for the case of pairwise comparisons. Related to this is
-the \code{\link{cld.emmGrid}} method, which provides a compact letter display for
-grouping pairs of means that are not significantly different. \code{cld}
+the \code{\link{CLD.emmGrid}} method, which provides a compact letter display for
+grouping pairs of means that are not significantly different. \code{CLD}
 requires the \pkg{multcompView} package.
 }
 \item{Graphs}{The \code{\link{plot.emmGrid}} method will display

@@ -91,7 +91,8 @@
 #'   All methods for these objects are S3 methods except for \code{show}. 
 #'   They include \code{\link{[.emmGrid}}, \code{\link{as.glht.emmGrid}},
 #'   \code{\link{as.mcmc.emmGrid}}, \code{\link{as.mcmc.list.emmGrid}},
-#'   \code{\link{cld.emmGrid}}, \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}}, 
+#'   \code{\link{cld.emmGrid}}, \code{\link{CLD.emmGrid}}, 
+#'   \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}}, 
 #'   \code{\link{contrast.emmGrid}}, \code{\link{pairs.emmGrid}},
 #'   \code{\link{plot.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{print.emmGrid}},
 #'   \code{\link{rbind.emmGrid}}, \code{show.emmGrid}, \code{\link{str.emmGrid}}, 

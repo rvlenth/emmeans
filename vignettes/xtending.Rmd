@@ -26,7 +26,7 @@ This vignette explains how developers may incorporate **emmeans** support in the
   5. [Hook functions](#hooks)
   6. [Exported methods from **emmeans**](#exported)
   7. [Existing support for `rsm` objects](#rsm)
-  8. [Exporting your methods](#exporting)
+  8. [Exporting and registering your methods](#exporting)
   9. [Conclusions](#concl)
   
 [Index of all vignette topics](vignette-topics.html)
@@ -351,35 +351,18 @@ emmeans(CR.rs2, ~ Time * Temp, mode = "decoded",
 Since the supplied settings are the same on the decoded scale as were used on the coded scale, the EMMs are identical to those in the previous output.
 
 
-## Exporting your methods {#exporting}
-<!-- @index **emmeans** package!Exporting extensions to -->
+## Exporting and registering your methods {#exporting}
+<!-- @index **emmeans** package!Exporting extensions to 
+     Registering `recover_data` and `emm_basis` methods -->
 To make the methods available to users of your package, the methods must be exported.
-There are two ways to do this, as described below.
+R and CRAN are evolving in a way that having S3 methods in the registry is
+increasingly important; so it is a good idea to provide for that.
+The problem is not all of your package users will have **emmeans** installed.
+Thus, registering the methods must be done conditionally.
 
-### Exporting as functions (recommended)
-<!-- @index Exporting extensions to **emmeans** -->
-I believe the best way to do this is to simply export the functions themselves; so if
-the object class is `"foo"`, the `NAMESPACE` file should contain
-```r
-export("recover_data.foo", "emm_basis.foo")
-```
-If you are using **devtools** (or **roxygen2**) to generate this file, give the function 
-name explicitly (e.g., `@export recover_data.foo`). 
-
-In addition, the package-checking procedure will insist that you document these
-functions. It is enough to simply include these functions as aliases in some
-`.Rd` file. You are not actually required to show the syntax of the call in an `.Rd`
-file; but if you do, it is permissible to use the construct
-`method{emm_basis}{foo}(...)` (or `@method emm_basis foo` in **roxygen2**), even
-though you are exporting it as a function.
-
-You should also include **emmeans** in the `Suggests` list in the `DESCRIPTION` file,
-and precede any calls to functions therein with `emmeans::`.
-
-### Registering as S3 methods
-<!-- @index Registering methods -->
-Instead of exporting the functions themselves, you do have the option of
-officially registering the methods. It is done like this in the `NAMESPACE` file:
+One solution is to list `emmeans` and `estimability` in the `Imports` field of your `DESCRIPTION` file.
+Then, in the package `NAMESPACE` file, insert something like the following,
+replacing "foo" with your object class name:
 ```r
 if (requireNamespace("emmeans", quietly = TRUE)) {
     importFrom("emmeans", "recover_data", "emm_basis")
@@ -388,19 +371,39 @@ if (requireNamespace("emmeans", quietly = TRUE)) {
     S3method(emm_basis, foo)
 }
 ```
-With the `requireNamespace()` construct, this only has an effect if the user has the **emmeans** package installed (in which case **estimability** is also imported by **emmeans**); otherwise the code is skipped. We import the prototypes for `recover_data` and `emm_basis`, and register our new methods.
-Also, packages **emmeans** and **estimability** must be included in the `Imports` section of the `DESCRIPTION` file.
+(You can get by without testing **estimability** since it is already required by **emmeans**.)
 
-The above approach seems like it *should* be the recommended way. But the reason I
-suggest not doing it this way is because it creates unneeded package
-dependencies. Recent updates to **emmeans** have included serious efforts to
-reduce the number of dependent packages, but still, the dependencies for
-**emmeans** will be added to the list of dependencies for your own package, and
-they can start to add up. When a package has a lot of dependencies, then there is
-a higher likelihood that changes in some other package will create problems,
-and it is best to avoid this kind of vulnerability. In my opinion, there needs to 
-be a better system for making generics available to other packages without
-requiring importing the whole namespace and creating exploding dependencies.
+The disadvantage of the above solution is that it adds several other packages as
+dependencies. An alternative method that avoids those extra dependencies is as follows:
+Put `emmeans` and
+`estimability` in `Suggests` rather than `Imports`, and add code to
+*dynamically* register the methods to one of your R source files (typically one
+named `zzz.R`, the last source file to be read). Put code like this there:
+```r
+register_s3_method <- function(pkg, generic, class) {
+    fun <- get(paste0(generic, ".", class), envir = parent.frame())
+    if (isNamespaceLoaded(pkg))
+        registerS3method(generic, class, fun, envir = asNamespace(pkg))
+    # Also ensure registration is done if pkg is loaded later:
+    setHook(
+        packageEvent(pkg, "onLoad"),
+        function(...)
+            registerS3method(generic, class, fun, envir = asNamespace(pkg))
+    )
+}
+
+.onLoad <- function(libname, pkgname) {
+    if (requireNamespace("emmeans", quietly = TRUE)) {
+        register_s3_method("emmeans", "recover_data", "foo")
+        register_s3_method("emmeans", "emm_basis", "foo")
+    }
+}
+
+```
+This code is adapted and simplified from the **zoo** package. The original
+`register_s3_method` function is more general and includes type-checking
+of its arguments; but since this is just used internally, that checking
+seems unnecessary.
 
 
 [Back to Contents](#contents)

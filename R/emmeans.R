@@ -136,7 +136,7 @@ emmeans.list = function(object, specs, ...) {
 #'   are provided for further analysis, including
 #'   \code{\link{summary.emmGrid}}, \code{\link{confint.emmGrid}},
 #'   \code{\link{test.emmGrid}}, \code{\link{contrast.emmGrid}},
-#'   \code{\link{pairs.emmGrid}}, and \code{\link{cld.emmGrid}}.
+#'   \code{\link{pairs.emmGrid}}, and \code{\link{CLD.emmGrid}}.
 
 #' When \code{specs} is a \code{list} or a \code{formula} having a left-hand
 #' side, the return value is an \code{\link{emm_list}} object, which is simply a
@@ -415,7 +415,7 @@ emmeans = function(object, specs, by = NULL,
             #xxxx return(cld(result, by = by))
             stop("`cld` in formula specs has been deprecated.\n",
                  "To obtain a compact letter display, first call `emmeans()`,\n",
-                 "then call `cld()` on the result.")
+                 "then call `CLD()` on the result.")
         }
         args = list(...)
         args$data = NULL   # ensure 'data' not passed

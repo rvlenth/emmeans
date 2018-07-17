@@ -86,7 +86,7 @@ variables that are not in \code{by.vars}. Thus, the combinations of their
 levels are used as columns in each table produced by \code{\link{summary.emmGrid}}.}
 
 \item{\code{alpha}}{(numeric) is the default significance level for tests, in
-\code{\link{summary.emmGrid}} as well as \code{\link{cld.emmGrid}} and \code{\link{plot.emmGrid}}
+\code{\link{summary.emmGrid}} as well as \code{\link{CLD.emmGrid}} and \code{\link{plot.emmGrid}}
 when \samp{intervals = TRUE}}
 
 \item{\code{adjust}}{(\code{character)}) is the default for the \code{adjust}
