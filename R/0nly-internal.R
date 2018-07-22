@@ -25,7 +25,7 @@
 ## Alternative to all.vars, but keeps vars like foo$x and foo[[1]] as-is
 ##   Passes ... to all.vars
 #' @export
-.all.vars = function(expr, retain = c("\\$", "\\[\\[", "\\]\\]"), ...) {
+.all.vars = function(expr, retain = c("\\$", "\\[\\[", "\\]\\]", "'", '"'), ...) {
     if (is.null(expr))
         return(character(0))
     if (!inherits(expr, "formula")) {
@@ -135,6 +135,7 @@
 
 ######################################################################
 ### Contributed by Jonathon Love, https://github.com/jonathon-love ###
+### and adapted by RVL to exclude terms like df$trt or df[["trt"]] ###
 ######################################################################
 # reformulate for us internally in emmeans
 # same as stats::reformulate, except it surrounds term labels with backsticks
@@ -147,17 +148,58 @@
 {
     if (!is.character(termlabels) || !length(termlabels))
         stop("'termlabels' must be a character vector of length at least one")
-    has.resp <- !is.null(response)
-    termtext <- paste(if (has.resp)
-        "response", "~", paste0("`", trimws(termlabels), "`", collapse = "+"), collapse = "")
+    has.resp = !is.null(response)
+    termlabels = sapply(trimws(termlabels), function(x) 
+        if (length(grep("\\$|\\[\\[", x)) > 0) x
+        else paste0("`", x, "`"))
+    termtext = paste(if (has.resp) "response", "~", 
+                     paste(termlabels, collapse = "+"), collapse = "")
+# prev version:                     paste0("`", trimws(termlabels), "`", collapse = "+"), collapse = "")
     if (!intercept)
-        termtext <- paste(termtext, "- 1")
-    rval <- eval(parse(text = termtext, keep.source = FALSE)[[1L]])
+        termtext = paste(termtext, "- 1")
+    rval = eval(parse(text = termtext, keep.source = FALSE)[[1L]])
     if (has.resp)
-        rval[[2L]] <- if (is.character(response))
+        rval[[2L]] = if (is.character(response))
             as.symbol(response)
     else response
-    environment(rval) <- parent.frame()
+    environment(rval) = parent.frame()
     rval
+}
+
+### Find variable names of the form df$x or df[["x"]]
+# Returns indexes. In addition, return value has attribute
+#   "details"  matrix with 1st row being dataset names, second row is variable names
+.find.comp.names = function(vars) {
+    comp = grep("\\$|\\[\\[", vars) # untick vars containing "$"
+    if (length(comp) > 0) {
+        attr(comp, "details") = gsub("\"", "",
+            sapply(strsplit(vars[comp], "\\$|\\[\\[|\\]\\]"), function(.) .[1:2]))
+    }
+    comp
+}
+
+# my own model.frame function. Intercepts compound names
+# and fixes up the data component accordingly. We do this
+# by creating data.frames within data having required variables of simple names 
+model.frame = function(formula, data, ...) {
+    if (is.null(data))
+        return (stats::model.frame(formula, ...))
+    idx = .find.comp.names(names(data))
+    if (length(idx) > 0) {
+        nm = names(data)[idx]
+        details =  attr(idx, "details")
+        num = suppressWarnings(as.numeric(details[2, ]))
+        if (any(!is.na(num)))
+            stop("emmeans does not support model terms with numerical indexes like ",
+                 nm[!is.na(num)][1], call. = FALSE)
+        data = as.list(data)
+        for (df in unique(details[1, ])) {
+            w = which(details[1, ] == df)
+            data[[df]] = as.data.frame(data[nm[w]])
+            names(data[[df]]) = details[2, w]
+        }
+        data[nm] = NULL # toss out stuff we don't need
+    }
+    stats::model.frame(formula, data = data, ...)
 }
 

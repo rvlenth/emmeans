@@ -1,3 +1,14 @@
+emmeans 1.2.3+
+-------------
+
+  * Support for model formulas such as df$y ~ df$treat + df[["cov"]]. This had
+    failed previously for two obscure reasons but now works correctly, at least
+    sometimes. But we do not support models with terms like df[[3]]. This support
+    involves an internal `model.frame` function, and it may fail with certain
+    models that implement unconventional methods for this. I recommend using plain
+    names and a `data` argument in your models.
+
+
 emmeans 1.2.3
 -------------
 
@@ -51,7 +62,7 @@ emmeans 1.2
     rather than frequentist summary. Note: `summary()` automatically
     reroutes to it. Also `plot()` and `emmip()` play along.
   * Rudimentary support for **brms** package
-  * *Ad hoc* SAtterthwaite method for `nlme::lme` models
+  * *Ad hoc* Satterthwaite method for `nlme::lme` models
 
 
 emmeans 1.1.3
