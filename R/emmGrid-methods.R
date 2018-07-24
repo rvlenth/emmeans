@@ -133,11 +133,12 @@ vcov.emmGrid = function(object, ...) {
 
 # Method to alter contents of misc slot
 
-#' Set or retrieve options for objects and summaries
+#' Update an \code{emmGrid} object
 #' 
-#' Objects of class \code{emmGrid} contain several settings that affect primarily 
-#' the defaults used by \code{\link{summary.emmGrid}}. This \code{update} method allows
-#' them to be changed more safely than by modifying this slot directly.
+#' Objects of class \code{emmGrid} contain several settings that affect such things as
+#' what arguments to pass to \code{\link{summary.emmGrid}}. 
+#' The \code{update} method allows safer management of these settings than
+#' by direct modification of its slots.
 #'
 #' @param object An \code{emmGrid} object
 #' @param ... Options to be set. These must match a list of known options (see
@@ -146,14 +147,13 @@ vcov.emmGrid = function(object, ...) {
 #'   displayed if any options are not matched. If \code{TRUE}, no messages are
 #'   shown.
 #'
-#' @return \code{update.emmGrid} returns an updated \code{emmGrid} object.
+#' @return an updated \code{emmGrid} object.
 #' 
-#' @seealso \code{link{emm_options}}
 #' @method update emmGrid
 #' @export
 #' 
-#' @section Details for \code{update.emmGrid}:
-#' In \code{update}, the names in \code{\dots} are partially matched against those that are valid, and if a match is found, it adds or replaces the current setting. The valid names are
+#' @section Details:
+#' The names in \code{\dots} are partially matched against those that are valid, and if a match is found, it adds or replaces the current setting. The valid names are
 #' 
 #' \describe{
 #' \item{\code{tran}, \code{tran2}}{(\code{list} or \code{character}) specifies
@@ -258,6 +258,7 @@ vcov.emmGrid = function(object, ...) {
 #' conform.}
 #' } %%%%%%% end \describe 
 #'
+#' @seealso \code{\link{emm_options}}
 #' @examples
 #' # Using an already-transformed response:
 #' mypigs <- transform(pigs, logconc = log(pigs$conc))
@@ -402,7 +403,7 @@ emm_options = function(...) {
 }
 
 # equivalent of getOption()
-#' @rdname update.emmGrid
+#' @rdname emm_options
 #' @param x Character value - the name of an option to be queried
 #' @param default Value to return if \code{x} is not found
 #' @return \code{get_emm_option} returns the currently stored option for \code{x}, 

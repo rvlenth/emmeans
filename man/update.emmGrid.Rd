@@ -2,12 +2,9 @@
 % Please edit documentation in R/emmGrid-methods.R
 \name{update.emmGrid}
 \alias{update.emmGrid}
-\alias{get_emm_option}
-\title{Set or retrieve options for objects and summaries}
+\title{Update an \code{emmGrid} object}
 \usage{
 \method{update}{emmGrid}(object, ..., silent = FALSE)
-
-get_emm_option(x, default = emm_defaults[[x]])
 }
 \arguments{
 \item{object}{An \code{emmGrid} object}
@@ -18,25 +15,19 @@ Details)}
 \item{silent}{Logical value. If \code{FALSE} (the default), a message is
 displayed if any options are not matched. If \code{TRUE}, no messages are
 shown.}
-
-\item{x}{Character value - the name of an option to be queried}
-
-\item{default}{Value to return if \code{x} is not found}
 }
 \value{
-\code{update.emmGrid} returns an updated \code{emmGrid} object.
-
-\code{get_emm_option} returns the currently stored option for \code{x}, 
-  or its default value if not found.
+an updated \code{emmGrid} object.
 }
 \description{
-Objects of class \code{emmGrid} contain several settings that affect primarily 
-the defaults used by \code{\link{summary.emmGrid}}. This \code{update} method allows
-them to be changed more safely than by modifying this slot directly.
+Objects of class \code{emmGrid} contain several settings that affect such things as
+what arguments to pass to \code{\link{summary.emmGrid}}. 
+The \code{update} method allows safer management of these settings than
+by direct modification of its slots.
 }
-\section{Details for \code{update.emmGrid}}{
+\section{Details}{
 
-In \code{update}, the names in \code{\dots} are partially matched against those that are valid, and if a match is found, it adds or replaces the current setting. The valid names are
+The names in \code{\dots} are partially matched against those that are valid, and if a match is found, it adds or replaces the current setting. The valid names are
 
 \describe{
 \item{\code{tran}, \code{tran2}}{(\code{list} or \code{character}) specifies
@@ -153,5 +144,5 @@ mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log",
 emmeans(mypigs.rg, "source")
 }
 \seealso{
-emm_options
+\code{\link{emm_options}}
 }

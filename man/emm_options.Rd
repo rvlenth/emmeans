@@ -3,17 +3,28 @@
 \docType{data}
 \name{emm_options}
 \alias{emm_options}
+\alias{get_emm_option}
 \alias{emm_defaults}
 \title{Set or change emmeans options}
 \format{An object of class \code{list} of length 14.}
 \usage{
 emm_options(...)
 
+get_emm_option(x, default = emm_defaults[[x]])
+
 emm_defaults
+}
+\arguments{
+\item{x}{Character value - the name of an option to be queried}
+
+\item{default}{Value to return if \code{x} is not found}
 }
 \value{
 \code{emm_options} returns the current options (same as the result 
   of \samp{getOption("emmeans")}) -- invisibly, unless called with no arguments.
+
+\code{get_emm_option} returns the currently stored option for \code{x}, 
+  or its default value if not found.
 }
 \description{
 Use \code{emm_options} to set or change various options that are used in
@@ -92,6 +103,6 @@ get_emm_option("estble.tol")
 
 }
 \seealso{
-update.emmGrid
+\code{\link{update.emmGrid}}
 }
 \keyword{datasets}
