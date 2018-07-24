@@ -176,6 +176,27 @@
 #' list(state = "country", city = c("state", "country")}, \code{nesting = "state
 #' \%in\% country, city \%in\% (state*country)"}, and \code{nesting = c("state
 #' \%in\% country)", "city \%in\% (state*country)")}.
+#' 
+#' @section Predictors with subscripts and data-set references:
+#' When the fitted model contains subscripts or explicit references to data
+#' sets, the reference grid may optionally be post-processed to simplify the
+#' variable names, depending on the \code{simplify.names} option (see
+#' \code{\link{emm_options}}), which by default is \code{TRUE}. For example, if
+#' the model formula is \code{data1$resp ~ data1$trt + data2[[3]] +
+#' data2[["cov"]]}, the simplified predictor names (for use, e.g., in the
+#' \code{specs} for \code{\link{emmeans}}) will be \code{trt},
+#' \code{data2[[3]]}, and \code{cov}. Numerical subscripts are not simplified; nor are
+#' variables having simplified names that coincide, such as if \code{data2$trt} were
+#' also in the model. 
+#' 
+#' Please note that this simplification is performed \emph{after} the
+#' reference grid is constructed. Thus, non-simplified names must be used in
+#' the \code{at} argument (e.g., \code{at = list(`data2["cov"]` = 2:4)}. 
+#' 
+#' If you don't want names simplified, use
+#' \code{emm_options(simplify.names = FALSE)}.
+#' 
+#' 
 #'
 #' @section Prediction types and transformations:
 #' There is a subtle difference between specifying \samp{type = "response"} and 
@@ -519,9 +540,25 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     if (is.null(post.beta))
         post.beta = matrix(NA)
     
+    predictors = attr(data, "predictors")
+    
+    simp.tbl = environment(trms)$.simplify.names.
+    if (! is.null(simp.tbl)) {
+        names(grid) = .simplify.names(names(grid), simp.tbl)
+        predictors = .simplify.names(predictors, simp.tbl)
+        names(ref.levels) = .simplify.names(names(ref.levels), simp.tbl)
+        if (!is.null(post.beta)) names(post.beta) = .simplify.names(names(post.beta), simp.tbl)
+        if (!is.null(model.info$nesting)) {
+            model.info$nesting = lapply(model.info$nesting, .simplify.names, simp.tbl)
+            names(model.info$nesting) = .simplify.names(names(model.info$nesting), simp.tbl)
+        }
+        
+        environment(trms)$.simplify.names. = NULL
+    }
+    
     result = new("emmGrid",
          model.info = model.info,
-         roles = list(predictors = attr(data, "predictors"), 
+         roles = list(predictors = predictors, 
                       responses = attr(data, "responses"), 
                       multresp = multresp),
          grid = grid, levels = ref.levels, matlevs = matlevs,

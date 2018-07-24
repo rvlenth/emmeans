@@ -2,11 +2,11 @@ emmeans 1.2.3+
 -------------
 
   * Support for model formulas such as df$y ~ df$treat + df[["cov"]]. This had
-    failed previously for two obscure reasons but now works correctly, at least
-    sometimes. But we do not support models with terms like df[[3]]. This support
-    involves an internal `model.frame` function, and it may fail with certain
-    models that implement unconventional methods for this. I recommend using plain
-    names and a `data` argument in your models.
+    failed previously for two obscure reasons, but now works correctly.
+  * New `simplify.names` option for above types of models
+  * `emm_options()` with no arguments now returns all options in force,
+    including the defaults. This makes it more consistent with `options()`
+  * Separated the help pages for `update.emmGrid()` and `emm_options()`
 
 
 emmeans 1.2.3

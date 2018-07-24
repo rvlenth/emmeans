@@ -187,19 +187,56 @@ model.frame = function(formula, data, ...) {
     idx = .find.comp.names(names(data))
     if (length(idx) > 0) {
         nm = names(data)[idx]
+        others = names(data[-idx])
         details =  attr(idx, "details")
         num = suppressWarnings(as.numeric(details[2, ]))
-        if (any(!is.na(num)))
-            stop("emmeans does not support model terms with numerical indexes like ",
-                 nm[!is.na(num)][1], call. = FALSE)
         data = as.list(data)
-        for (df in unique(details[1, ])) {
-            w = which(details[1, ] == df)
-            data[[df]] = as.data.frame(data[nm[w]])
-            names(data[[df]]) = details[2, w]
+        for (dfnm in unique(details[1, ])) {
+            w = which(details[1, ] == dfnm)
+            data[[dfnm]] = as.data.frame(data[nm[w]])
+            names(data[[dfnm]]) = details[2, w]
+            data[[dfnm]] = .reorder.cols(data[[dfnm]], num[w])
         }
         data[nm] = NULL # toss out stuff we don't need
+        # save subst table in environ
+        if (get_emm_option("simplify.names")) {
+            details[1, ] = nm # top row is now fancy names, bottom is plain names
+            all.nms = c(details[2, ], others)
+            dup.cnt = sapply(details[2, ], function(.) sum(. == all.nms))
+            dup.cnt[!is.na(num)] = 3 # don't simplify numeric ones
+            details = details[, dup.cnt == 1, drop = FALSE]
+            if (ncol(details) > 0)
+                environment(formula)$.simplify.names. = details
+        }
     }
     stats::model.frame(formula, data = data, ...)
 }
 
+# Utility to simplify names. each elt of top row of tbl is changed to bottom row
+.simplify.names = function(nms, tbl) {
+    for (j in seq_along(tbl[1,]))
+        nms[nms == tbl[1, j]] = tbl[2, j]
+    nms
+}
+
+# reorder columns of data frame to match numeric positions in num (if any)
+.reorder.cols = function(data, num) {
+    if (all(is.na(num)))
+        return(data)
+    m = max(num[!is.na(num)])
+    nm = names(data)
+    if (m > length(nm)) {
+        k = length(nm)
+        data = cbind(data, matrix(NA, nrow = nrow(data), ncol = m - k))
+        nm = names(data) = c(nm, paste0(".xtra.", seq_len(m - k), "."))
+    }
+    for (i in num[!is.na(num)]) {
+        j = which(nm == as.character(i))
+        if (i != j) {
+            tmp = nm[i]
+            nm[i] = nm[j]
+            nm[j] = tmp
+        }
+    }
+    data[, nm, drop = FALSE]
+}
