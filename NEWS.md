@@ -6,6 +6,7 @@ emmeans 1.2.3+
   * New `simplify.names` option for above types of models
   * `emm_options()` with no arguments now returns all options in force,
     including the defaults. This makes it more consistent with `options()`
+  * Bug fix for `emtrends()`; produced incorrect results in models with offsets. 
   * Separated the help pages for `update.emmGrid()` and `emm_options()`
 
 

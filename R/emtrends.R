@@ -157,7 +157,8 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
         else
             RG@misc$initMesg = paste("Trends are based on the", tran, "(transformed) scale")
     }
-   
+    
+    RG@grid$.offset. = NULL   # offset never applies after differencing
     RG@misc$tran = RG@misc$tran.mult = NULL
     RG@misc$estName = estName
     RG@misc$methDesc = "emtrends"
