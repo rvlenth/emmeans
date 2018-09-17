@@ -8,6 +8,9 @@ emmeans 1.2.3+
     including the defaults. This makes it more consistent with `options()`
   * Bug fix for `emtrends()`; produced incorrect results in models with offsets. 
   * Separated the help pages for `update.emmGrid()` and `emm_options()`
+  * New `qdrg()` function (quick and dirty reference grid) for help with
+    unsupported model objects
+    ---TO-DO--- Add vignette example(s) & index entries
 
 
 emmeans 1.2.3

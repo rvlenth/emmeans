@@ -53,6 +53,11 @@ The arguments must be conformable. This includes that the length of
  \code{linfct}. The \code{grid} slot of the returned object is generated 
  by \code{\link{expand.grid}} using \code{levels} as its arguments. So the
  rows of \code{linfct} should be in corresponding order.
+ 
+The functions \code{qdrg} and \code{\link{emmobj}} are close cousins, in that
+they both produce \code{emmGrid} objects. When starting with summary
+statistics for an existing grid, \code{emmobj} is more useful, while
+\code{qdrg} is more useful when starting from an unsupported fitted model.
 }
 \examples{
 # Given summary statistics for 4 cells in a 2 x 2 layout, obtain 
@@ -75,4 +80,8 @@ plot(expt.rg)
 ( dose.emm <- emmeans(expt.rg, "dose") )
 
 rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
+}
+\seealso{
+\code{\link{qdrg}}, an alternative that is useful when starting 
+  with a fitted model not supported in \pkg{emmeans}.
 }

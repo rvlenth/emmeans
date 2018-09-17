@@ -448,6 +448,12 @@ emmeans = function(object, specs, by = NULL,
 #'  \code{linfct}. The \code{grid} slot of the returned object is generated 
 #'  by \code{\link{expand.grid}} using \code{levels} as its arguments. So the
 #'  rows of \code{linfct} should be in corresponding order.
+#'  
+#' The functions \code{qdrg} and \code{\link{emmobj}} are close cousins, in that
+#' they both produce \code{emmGrid} objects. When starting with summary
+#' statistics for an existing grid, \code{emmobj} is more useful, while
+#' \code{qdrg} is more useful when starting from an unsupported fitted model.
+#'
 #'
 #' @param bhat Numeric. Vector of regression coefficients
 #' @param V Square matrix. Covariance matrix of \code{bhat}
@@ -469,6 +475,9 @@ emmeans = function(object, specs, by = NULL,
 #'   averages will be \code{bhat}). A 1 x 1 matrix of \code{NA} indicates that
 #'   such a sample is unavailable.
 #' @param ... Arguments passed to \code{\link{update.emmGrid}}
+#' 
+#' @seealso \code{\link{qdrg}}, an alternative that is useful when starting 
+#'   with a fitted model not supported in \pkg{emmeans}.
 #'
 #' @return An \code{emmGrid} object
 #' @export

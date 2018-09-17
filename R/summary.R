@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2018 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -100,10 +100,9 @@
 #'   \code{test.emmGrid} return an object of class \code{"summary_emm"}, which
 #'   is an extension of \code{\link{data.frame}} but with a special \code{print}
 #'   method that displays it with custom formatting. For models fitted using
-#'   MCMC methods, the result is typically a frequentist summary, based on the
-#'   empirical mean and covariance matrix of the \code{post.beta} slot. A
-#'   Bayesian summary may be obtained using \code{\link{as.mcmc.emmGrid}} and
-#'   summarizing that result using tools for Bayesian estimation.
+#'   MCMC methods, the call is diverted to \code{\link{hpd.summary}}; one may
+#'   alternatively use general MCMC summarization tools with the 
+#'   results of \code{\link{as.mcmc}}.
 #'   
 #' @section Defaults:
 #'   The \code{misc} slot in \code{object} contains default values for
