@@ -362,7 +362,9 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' produced by the \pkg{lme4} package). See that section of the "models" vignette
 #' for details.}
 #' } %%%%%% end \describe
-
+#'
+#' @param ... Option names and values (see Details)
+#' 
 #' @return \code{emm_options} returns the current options (same as the result 
 #'   of \samp{getOption("emmeans")}) -- invisibly, unless called with no arguments.
 #' @seealso \code{\link{update.emmGrid}}

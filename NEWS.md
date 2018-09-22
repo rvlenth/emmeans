@@ -1,4 +1,4 @@
-emmeans 1.2.3+
+emmeans 1.2.4
 -------------
 
   * Support for model formulas such as df$y ~ df$treat + df[["cov"]]. This had
@@ -10,7 +10,6 @@ emmeans 1.2.3+
   * Separated the help pages for `update.emmGrid()` and `emm_options()`
   * New `qdrg()` function (quick and dirty reference grid) for help with
     unsupported model objects
-    ---TO-DO--- Add vignette example(s) & index entries
 
 
 emmeans 1.2.3

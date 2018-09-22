@@ -15,6 +15,8 @@ get_emm_option(x, default = emm_defaults[[x]])
 emm_defaults
 }
 \arguments{
+\item{...}{Option names and values (see Details)}
+
 \item{x}{Character value - the name of an option to be queried}
 
 \item{default}{Value to return if \code{x} is not found}

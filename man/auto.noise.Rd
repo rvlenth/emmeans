@@ -15,11 +15,11 @@
     factor with levels \code{L} and \code{R}.}
   }}
 \source{
-The dataset was obtained from the Data and Story Library,
-  \url{http://lib.stat.cmu.edu/DASL/Datafiles/airpullutionfiltersdat.html} 
-  (sic). However, the factor levels were assigned meaningful names, and the
-  observations were sorted in random order as if this were the run order of
-  the experiment.
+The dataset was obtained from the Data and Story Library (DASL)
+  at Carnegie-Mellon University. Apparently it has since been removed. The
+  original dataset was altered by assigning meaningful names to the factors
+  and sorting the observations in random order as if this were the run order
+  of the experiment.
 }
 \usage{
 auto.noise

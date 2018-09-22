@@ -46,11 +46,11 @@
 #'   \item{\code{side}}{The side of the car where measurement was taken -- a
 #'     factor with levels \code{L} and \code{R}.}
 #'   }
-#' @source The dataset was obtained from the Data and Story Library,
-#'   \url{http://lib.stat.cmu.edu/DASL/Datafiles/airpullutionfiltersdat.html} 
-#'   (sic). However, the factor levels were assigned meaningful names, and the
-#'   observations were sorted in random order as if this were the run order of
-#'   the experiment.
+#' @source The dataset was obtained from the Data and Story Library (DASL)
+#'   at Carnegie-Mellon University. Apparently it has since been removed. The
+#'   original dataset was altered by assigning meaningful names to the factors
+#'   and sorting the observations in random order as if this were the run order
+#'   of the experiment.
 #' @examples
 #' noise.lm <- lm(noise ~ size * type * side, data = auto.noise)
 #' 
@@ -62,7 +62,8 @@
 #' 
 "auto.noise"
 
-
+# This is where it used to be...
+#  \url{http://lib.stat.cmu.edu/DASL/Datafiles/airpullutionfiltersdat.html}
 
 
 ### feedlot ###

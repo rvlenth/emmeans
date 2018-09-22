@@ -102,7 +102,7 @@
 #'   method that displays it with custom formatting. For models fitted using
 #'   MCMC methods, the call is diverted to \code{\link{hpd.summary}}; one may
 #'   alternatively use general MCMC summarization tools with the 
-#'   results of \code{\link{as.mcmc}}.
+#'   results of \code{as.mcmc}.
 #'   
 #' @section Defaults:
 #'   The \code{misc} slot in \code{object} contains default values for
