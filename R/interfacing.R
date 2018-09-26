@@ -249,6 +249,22 @@ emm_basis = function(object, trms, xlev, grid, ...) {
     UseMethod("emm_basis")
 }
 
+# Hidden courtesy function that provides access to all recover_data methods
+#' @rdname extending-emmeans
+#' @export
+.recover_data = function(object, ...)
+    recover_data(object, ...)
+
+# Hidden courtesy function that provides access to all emm_basis methods
+#' @rdname extending-emmeans
+#' @return \code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
+#'   \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
+#'   namespace, thus providing access to all existing methods.
+#' @export
+.emm_basis = function(object, trms, xlev, grid, ...)
+    emm_basis(object, trms, xlev, grid, ...)
+
+
 
 
 #--------------------------------------------------------------

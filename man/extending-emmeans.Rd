@@ -5,6 +5,8 @@
 \alias{recover_data}
 \alias{recover_data.call}
 \alias{emm_basis}
+\alias{.recover_data}
+\alias{.emm_basis}
 \title{Support functions for model extensions}
 \usage{
 recover_data(object, ...)
@@ -13,6 +15,10 @@ recover_data(object, ...)
   params = NULL, ...)
 
 emm_basis(object, trms, xlev, grid, ...)
+
+.recover_data(object, ...)
+
+.emm_basis(object, trms, xlev, grid, ...)
 }
 \arguments{
 \item{object}{An object of the same class as is supported by a new method.}
@@ -63,6 +69,10 @@ The \code{emm_basis} method should return a \code{list} with the
 \item{dfargs}{A \code{list} containing additional arguments needed for
   \code{dffun}}.
 } %%% end of describe
+
+\code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
+  \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
+  namespace, thus providing access to all existing methods.
 }
 \description{
 This documents the methods that \code{\link{ref_grid}} calls. A user

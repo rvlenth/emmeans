@@ -1,7 +1,14 @@
+emmeans 1.2.4.x
+-------------
+
+  * Courtesy exports `.recover_data()` and `.emm_basis()` to provide
+    access for extension developers to all available methods
+
+
 emmeans 1.2.4
 -------------
 
-  * Support for model formulas such as df$y ~ df$treat + df[["cov"]]. This had
+  * Support for model formulas such as `df$y ~ df$treat + df[["cov"]]`. This had
     failed previously for two obscure reasons, but now works correctly.
   * New `simplify.names` option for above types of models
   * `emm_options()` with no arguments now returns all options in force,

@@ -208,7 +208,14 @@ In addition, you may want to apply some form of special post-processing after th
 
 ## Exported methods from **emmeans** {#exported}
 <!-- @index **emmeans** package!Exports useful to developers -->
-For package developers' convenience, **emmeans** exports some of its S3 methods for `recover_data` and/or `emm_basis`---use `methods("recover_data")` and `methods("emm_basis")` to discover which ones. It may be that all you need is to invoke one of those methods and perhaps make some small changes---especially if your model-fitting algorithm makes heavy use of an existing model type supported by **emmeans**. Contact me if you need **emmeans** to export some additional methods for your use.
+For package developers' convenience, **emmeans** exports some of its S3 methods
+for `recover_data` and/or `emm_basis`---use `methods("recover_data")` and
+`methods("emm_basis")` to discover which ones. It may be that all you need is to
+invoke one of those methods and perhaps make some small changes---especially if
+your model-fitting algorithm makes heavy use of an existing model type supported
+by **emmeans**. For those methods that are not exported, use `recover_data()`
+and `.emm_basis()`, which run in **emmeans**'s namespace, thus providing access
+to all available methods..
 
 A few additional functions are exported because they may be useful to developers. They are as follows:
 
@@ -238,7 +245,7 @@ A few additional functions are exported because they may be useful to developers
     covariance matrix of the fixed-effects coefficients. This function supports
     that feature. Calling `.my.vcov` in place of the `vcov` method will
     substitute the user's `vcov.` when it is specified.
-  * `.std.link.labels(fam, misc)` This is useful in `emm_basis` methods for
+  * `emmeans::.std.link.labels(fam, misc)` This is useful in `emm_basis` methods for
     generalized linear models. Call it with `fam` equal to the `family` object for
     your model, and `misc` either an existing list, or just `list()` if none. It
     returns a new `misc` list containing the link function and, in some cases,
