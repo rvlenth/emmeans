@@ -273,8 +273,8 @@ cbpp.rg <- ref_grid(example_model)
 ```
 <!--- here's the system file with the ref_grid --->
 ```{r echo = FALSE}
-load(system.file("extdata", "cbpp.RData", package = "emmeans"))
-cbpp.rg <- do.call(emmobj, cbpp.list)
+cbpp.rg <- do.call(emmobj, 
+    readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
 ```
 Here is the structure of the reference grid:
 ```{r}

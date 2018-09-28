@@ -3,6 +3,7 @@ emmeans 1.2.4.x
 
   * Courtesy exports `.recover_data()` and `.emm_basis()` to provide
     access for extension developers to all available methods
+  * Streamlining of a stored example in `inst/extdata`
 
 
 emmeans 1.2.4

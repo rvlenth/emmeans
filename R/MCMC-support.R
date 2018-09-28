@@ -126,13 +126,13 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #' @export
 #'
 #' @examples
-#' if(require("coda")) { # --- requires 'coda' to be installed 
+#' if(require("coda")) {
+#'   # Create an emmGrid object from a system file
+#'   cbpp.rg <- do.call(emmobj, 
+#'       readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
+#'   hpd.summary(emmeans(cbpp.rg, "period"))
+#' }
 #' 
-#' load(system.file("extdata", "cbpp.RData", package = "emmeans"))
-#' cbpp.rg <- do.call(emmobj, cbpp.list)
-#' hpd.summary(emmeans(cbpp.rg, "period"))
-#'
-#' } # --- was tested only if coda is installed
 hpd.summary = function(object, prob, by, type,
                        point.est = median, ...) {
     if (!requireNamespace("coda"))
