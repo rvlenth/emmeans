@@ -44,7 +44,7 @@
 #' error.
 #'
 #' @param object An object of class \code{"emmGrid"} (see \link{emmGrid-class})
-#' @param infer A vector of one or two two logical values. The first determines
+#' @param infer A vector of one or two logical values. The first determines
 #'   whether confidence intervals are displayed, and the second determines
 #'   whether \emph{t} tests and \emph{P} values are displayed. If only one value
 #'   is provided, it is used for both.
