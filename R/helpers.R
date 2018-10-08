@@ -417,7 +417,8 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
 }
 
 .notran2 = function(object) {
-    object@misc$tran2 = NULL
+    for (nm in c("tran", "tran2"))
+        if(!is.null(object@misc[[nm]]) && object@misc[[nm]] == "Surv") object@misc[[nm]] = NULL
     object
 }
 

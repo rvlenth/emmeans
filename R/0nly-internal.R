@@ -34,7 +34,7 @@
             return(character(0))
         }
     }
-    repl = paste("_Av", seq_along(retain), "_", sep = "")
+    repl = paste(".Av", seq_along(retain), ".", sep = "")
     for (i in seq_along(retain))
         expr = gsub(retain[i], repl[i], expr)
     subs = switch(length(expr), 1, c(1,2), c(2,1,3))
