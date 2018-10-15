@@ -6,6 +6,8 @@ emmeans 1.2.4.x
   * Streamlining of a stored example in `inst/extdata`
   * Fix to `.all.vars()` that could cause errors when response variable
     has a function call with character constants.
+  * Relabeling of differences as ratios when appropriate in `regrid()`
+    (so results match `summary()` labeling with `type = "response"`).
 
 
 emmeans 1.2.4

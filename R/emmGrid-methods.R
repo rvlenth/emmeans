@@ -564,8 +564,12 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
         if (!is.na(PB[1]))
             PB = matrix(link$linkinv(PB), ncol = ncol(PB))
         inm = object@misc$inv.lbl
-        if (!is.null(inm))
+        if (!is.null(inm)) {
             object@misc$estName = inm
+            if (object@misc$log.contrast) # relabel ratios
+                for (v in setdiff(object@misc$pri.vars, object@misc$by.vars))
+                    object@grid[[v]] = gsub(" - ", "/", object@grid[[v]])
+        }
         if((transform %in% c("mu", "unlink")) && !is.null(object@misc$tran2)) {
             object@misc$tran = object@misc$tran2
             object@misc$tran2 = object@misc$tran.mult = object@misc$inv.lbl = NULL

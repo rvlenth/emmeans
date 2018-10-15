@@ -77,11 +77,11 @@ register_s3_method = function(pkg, generic, class) {
     register_s3_method("emmeans", "cld", "emmGrid")
 }
 
-.onAttach = function(libname, pkgname) {
-    packageStartupMessage (
-        "NOTE: As of emmeans versions > 1.2.3,\n",
-        "      The 'cld' function will be deprecated in favor of 'CLD'.\n",
-        "      You may use 'cld' only if you have package:multcomp attached."
-    )
-}
+# .onAttach = function(libname, pkgname) {
+#     packageStartupMessage (
+#         "NOTE: As of emmeans versions > 1.2.3,\n",
+#         "      The 'cld' function will be deprecated in favor of 'CLD'.\n",
+#         "      You may use 'cld' only if you have package:multcomp attached."
+#     )
+# }
 
