@@ -566,7 +566,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
         inm = object@misc$inv.lbl
         if (!is.null(inm)) {
             object@misc$estName = inm
-            if (object@misc$log.contrast) # relabel ratios
+            if (!is.null(object@misc$log.contrast) && object@misc$log.contrast) # relabel ratios
                 for (v in setdiff(object@misc$pri.vars, object@misc$by.vars))
                     object@grid[[v]] = gsub(" - ", "/", object@grid[[v]])
         }

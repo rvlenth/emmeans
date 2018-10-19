@@ -8,6 +8,8 @@ emmeans 1.2.4.x
     has a function call with character constants.
   * Relabeling of differences as ratios when appropriate in `regrid()`
     (so results match `summary()` labeling with `type = "response"`).
+  * `plot.emmGrid(..., comparisons = TRUE, type = "response")`
+    produced incorrect comparison arrows; now fixed
 
 
 emmeans 1.2.4
