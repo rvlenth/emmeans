@@ -85,3 +85,74 @@ register_s3_method = function(pkg, generic, class) {
 #     )
 # }
 
+
+## Here is a utility that we won't export, but can help clean out lsmeans
+## stuff from one's workspace, and unload unnecessary junk
+convert_workspace = function(envir = .GlobalEnv) {
+    if (exists(".Last.ref.grid", envir = envir)) {
+        cat("Deleted .Last.ref.grid\n")
+        remove(".Last.ref.grid", envir = envir)
+    }
+    for (nm in names(envir)) {
+        obj <- get(nm)
+        if (is(obj, "ref.grid")) {
+            cat(paste("Converted", nm, "to class 'emmGrid'\n"))
+            assign(nm, as.emmGrid(obj), envir = envir)
+        }
+    }
+    if ("package:lsmeans" %in% search())
+        detach("package:lsmeans")
+    if ("lsmeans" %in% loadedNamespaces())
+        unloadNamespace("lsmeans")
+    message("The environment has been converted and lsmeans's namespace is unloaded.\n",
+            "Now you probably should save it.")
+}
+
+
+## Here is a non-exported utility to convert .R and .Rmd files
+## It's entirely menu-driven.
+convert_scripts = function() {
+    infiles = utils::choose.files(
+        caption = "Select R script(s) or markdown file(s) to be converted",
+        multi = TRUE)
+    lsm.to.emmGrid = utils::menu(c("yes", "no"), graphics = TRUE, 
+                                 "lsmxxx() -> emmxxx()?") == 1
+    pmm.to.emmGrid = utils::menu(c("yes", "no"), graphics = TRUE, 
+                                 "pmmxxx() -> emmxxx()?") == 1
+    
+    for (infile in infiles) {
+        buffer = scan(infile, what = character(0), sep = "\n", 
+                      blank.lines.skip = FALSE)
+        
+        buffer = gsub("library *\\(\"*'*lsmeans\"*'*\\)", "library(\"emmeans\")", buffer)
+        buffer = gsub("require *\\(\"*'*lsmeans\"*'*\\)", "require(\"emmeans\")", buffer)
+        buffer = gsub("lsmeans::", "emmeans::", buffer)
+        buffer = gsub("ref\\.grid *\\(", "ref_grid(", buffer)
+        opt.idx = grep("lsm\\.option", buffer)
+        if (length(opt.idx) > 0) {
+            buffer[opt.idx] = gsub("ref\\.grid", "ref_grid", buffer[opt.idx])
+            buffer[opt.idx] = gsub("lsmeans", "emmeans", buffer[opt.idx])
+            buffer[opt.idx] = gsub("lsm\\.options *\\(", "emm_options(", buffer[opt.idx])
+            buffer[opt.idx] = gsub("get\\.lsm\\.option *\\(", "get_emm_option(", buffer[opt.idx])
+        }
+        buffer = gsub("\\.lsmc", ".emmc", buffer)
+        
+        if (lsm.to.emmGrid) {
+            buffer = gsub("lsmeans *\\(", "emmeans(", buffer)
+            buffer = gsub("lsmip *\\(", "emmip(", buffer)
+            buffer = gsub("lstrends *\\(", "emtrends(", buffer)
+            buffer = gsub("lsm *\\(", "emmGrid(", buffer)
+            buffer = gsub("lsmobj *\\(", "emmobj(", buffer)
+        }
+        if (pmm.to.emmGrid) {
+            buffer = gsub("pmmeans *\\(", "emmeans(", buffer)
+            buffer = gsub("pmmip *\\(", "emmip(", buffer)
+            buffer = gsub("pmtrends *\\(", "emtrends(", buffer)
+            buffer = gsub("pmm *\\(", "emmGrid(", buffer)
+            buffer = gsub("pmmobj *\\(", "emmobj(", buffer)
+        }
+        outfile = file.path(dirname(infile), sub("\\.", "-emm.", basename(infile)))
+        write(buffer, outfile)
+        cat(paste(infile, "\n\twas converted to\n", outfile, "\n"))
+    }
+}

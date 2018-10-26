@@ -10,6 +10,9 @@
 # This keeps showing up lately, but I don't want it
 ^Rplots.pdf
 
+# Deprecated code is excluded
+R/deprecated.R
+
 
 # Vignette intermediate files (also in svn ignore list)
 vignettes/*.pdf

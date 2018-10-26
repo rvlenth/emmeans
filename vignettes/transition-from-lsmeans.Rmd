@@ -66,23 +66,12 @@ need to be aware of:
     used to convert old scripts that used **lsmeans** to use **emmeans** instead.
     [See more below](#scripts)
   * Some functions are deprecated, e.g. `ref.grid()`, `lsm.options()`, etc.
-    They will work, but you will get a deprecated message advising you to
-    use `ref_grid()` and `emm_options()`, etc.[^1]
-    
-    [^1]: Many of the deprecated functions, like `ref.grid()`, are renamed to
-    avoid possible confusion in S3 method dispatch: how do we know that
-    `summary.ref.grid()` wasn't a `summary.ref()` method for class `grid`,
-    rather than a `summary()` method for class `ref.grid`?
-    
+    As of version 2.3.0, these functions are no longer available at all.
   * While the functions `lsmeans()`, `lsmip()`, etc. will continue to be
     provided, all the help-page and vignette descriptions refer to their
     new counterparts `emmeans()`, `emmip()`, etc. So you will need to
     get accustomed to new terminology like "EMMs", even if you don't
-    choose to use it in your own work.[^2]
-    
-    [^2]: By the way, the `pmmeans()`, `pmmip()`, etc. wrappers already
-    provided in **lsmeans** are also still available.
-    
+    choose to use it in your own work.
   * If you have any scripts that include calls prefixed by `lsmeans::`,
     or calls to `require(lsmeans)` or `library(lsmeans)`, obviously you
     need to change these to use `emmeans` instead.
@@ -90,10 +79,7 @@ need to be aware of:
     with an extension of `.emmc` instead of `lsmc`. See the example
     under `help("contrast-methods")`.
   * If you have saved results from previous runs in **lsmeans** (i.e.,
-    `ref.grid` or `lsmobj` objects), they should still work in **emmeans**. The
-    issue you may face, though, is that the **lsmeans** package could get loaded
-    simply because these objects are present, and put in the `search()` path. To
-    make sure you're using the new package, convert the objects to class `emmGrid`
+    `ref.grid` or `lsmobj` objects), convert the objects to class `emmGrid`
     -- e.g., `my_new_ref_grid <- as.emmGrid(my.old.ref.grid)`.
     Running the non-exported function `emmeans:::convert_workspace()` may
     be used to convert all the objects in an environment (the global
@@ -112,12 +98,6 @@ need to be aware of:
     smaller vignettes that cover specific topics. Start with 
     [`vignette("basics")`](basics.html) to obtain an overview.  The
     [vignette index](index.html) has links to all the vignettes.
-  * The options `lsmeans` and `ref.grid` have been 
-    remapped to `emmeans` and `ref_grid` respectively. For example, calling 
-    `lsm.options(lsmeans = ...)` remaps as `emm_options(emmeans = ...)`. 
-    See `help("emm_options", package = "emmeans")` and 
-    `help("lsm.options", package = "lsmeans")` for explanations of these 
-    options.
   * The degrees-of-freedom saga, continued... Initially, **lsmeans** used the
     **pbkrtest** package to compute degrees of freedom (via the Kenward-Roger 
     method) for `lme4::lmerMod` models. Later, the default was changed to the 
@@ -175,32 +155,6 @@ may effect a permanent solution (the "nuclear option?") by uninstalling
 the **lsmeans** package. Doing so will *not* prevent you from converting old
 workspaces or scripts. Watch your package updates carefully, though,
 as it may get re-installed if it is still imported by another package. 
-
-[Back to Contents](#contents)
-
-## Notes for package developers to transition to emmeans support {#devel}
-<!-- @index **lsmeans** package!Information for package developers -->
-if you are the developer of a package that supports **lsmeans**, and you want to transition to supporting **emmeans**, I make the following suggestions:
-
- 1. Currently, your package provides methods `recover.data.xyz()` and 
-    `lsm.basis.xyz()`, where `xyz` stands in for the class of your object. Rename
-    these functions `recover_data.xyz()` and `emm_basis.xyz()`.
- 2. Any calls to `lsmeans::` functions in the above methods should be changed
-    to the corresponding `emmeans::` functions.
- 3. For a period of time, you may want to continue support for **lsmeans** 
-    as well. So write new functions `recover.data.xyz()` and `lsm.basis.xyz()`
-    that just call their counterparts.
- 4. In your `DESCRIPTION` file, add `emmeans` to `Imports`, and make sure that
-    `lsmeans` is *not* in `Imports`.
- 5. In your `NAMESPACE` file,
-     a. add `importFrom(emmeans, recover_data, emm_basis)`
-     b. add `S3method(recover_data, xyz)`
-     c. add `S3method(emm_basis, xyz)`
-     d. add `export(recover.data.xyz, lsm.basis.xyz)`. 
-        That is, export them as *functions*,
-        and *not* as S3 methods
-     e. In lieu of (a)-(c) above, you could just export the functions
-        `recover_data.xyz` and `emm_basis.xyz`. 
 
 [Back to Contents](#contents)
 

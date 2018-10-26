@@ -35,10 +35,11 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
         object = update(x, predict.type = type, ..., silent = TRUE)
     else
         object = update(x, ..., silent = TRUE)
+    ptype = ifelse(is.null(object@misc$predict.type), "lp", object@misc$predict.type)
     # when we want comparisons, we have a transformation, and we want non-link scale, it's mandatory to regrid first:
     if(comparisons && !is.null(object@misc$tran) && 
-            !(object@misc$predict.type %in% c("link", "lp", "linear.predictor")))
-        object = regrid(object, transform = object@misc$predict.type)
+            !(ptype %in% c("link", "lp", "linear.predictor")))
+        object = regrid(object, transform = ptype)
     if (missing(int.adjust)) {
         int.adjust = object@misc$adjust
         if (is.null(int.adjust))

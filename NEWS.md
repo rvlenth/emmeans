@@ -1,6 +1,8 @@
-emmeans 1.2.4.x
+emmeans 1.3.0
 -------------
 
+  * Deprecated functions like `ref.grid()` put to final rest, and we no 
+    longer support packages that provide `recover.data` or `lsm.basis` methods
   * Courtesy exports `.recover_data()` and `.emm_basis()` to provide
     access for extension developers to all available methods
   * Streamlining of a stored example in `inst/extdata`

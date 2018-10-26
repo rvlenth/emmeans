@@ -270,12 +270,12 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     
     # recover the data
     if (missing(data)) {
-        data = try(.chk_recover_data (object, data = NULL, ...))
+        data = try(recover_data (object, data = NULL, ...))
         if (inherits(data, "try-error"))
             stop("Perhaps a 'data' or 'params' argument is needed")
     }
     else # attach needed attributes to given data
-        data = .chk_recover_data(object, data = as.data.frame(data), ...)
+        data = recover_data(object, data = as.data.frame(data), ...)
     
     if(is.character(data)) # 'data' is in fact an error message
         stop(data)
@@ -397,7 +397,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss
         attr(object, "data") = data
     
-    basis = .chk_emm_basis(object, trms, xlev, grid, ...)
+    basis = emm_basis(object, trms, xlev, grid, ...)
     
     misc = basis$misc
     

@@ -279,7 +279,6 @@ vignette: >
   * **lsmeans** package
       * [Converting scripts](transition-from-lsmeans.html#scripts)
       * [Converting workspaces](transition-from-lsmeans.html#workspaces)
-      * [Information for package developers](transition-from-lsmeans.html#devel)
       * [Transitioning from](transition-from-lsmeans.html)
 
 
