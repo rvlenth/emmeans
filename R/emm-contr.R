@@ -93,6 +93,15 @@
 #' @return A data.frame, each column containing contrast coefficients for levs.
 #'   The "desc" attribute is used to label the results in emmeans, and the
 #'   "adjust" attribute gives the default adjustment method for multiplicity.
+#'   
+#' @note Caution is needed in cases where the user alters the ordering of
+#'   results (e.g., using the the \code{"[...]"} operator), because the contrasts
+#'   generated depend on the order of the levels provided. For example, suppose
+#'   \code{trt.vs.ctrl1} contrasts are applied to two \code{by} groups with
+#'   levels ordered (Ctrl, T1, T2) and (T1, T2, Ctrl) respectively, then the
+#'   contrasts generated will be for (T1 - Ctrl, T2 - Ctrl) in the first group and
+#'   (T2 - T1, Ctrl - T1) in the second group, because the first level in each group
+#'   is used as the reference level.
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)

@@ -118,6 +118,16 @@ respectively, as in subtracting the overall EMM from each EMM. The default
 multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based 
 method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
 }
+\note{
+Caution is needed in cases where the user alters the ordering of
+  results (e.g., using the the \code{"[...]"} operator), because the contrasts
+  generated depend on the order of the levels provided. For example, suppose
+  \code{trt.vs.ctrl1} contrasts are applied to two \code{by} groups with
+  levels ordered (Ctrl, T1, T2) and (T1, T2, Ctrl) respectively, then the
+  contrasts generated will be for (T1 - Ctrl, T2 - Ctrl) in the first group and
+  (T2 - T1, Ctrl - T1) in the second group, because the first level in each group
+  is used as the reference level.
+}
 \examples{
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
