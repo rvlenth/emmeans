@@ -1,3 +1,9 @@
+emmeans 1.3.0.09999x
+-------------
+
+  * `"mvt"` adjustment ignored `by` grouping
+
+
 emmeans 1.3.0
 -------------
 

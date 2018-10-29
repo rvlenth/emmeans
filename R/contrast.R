@@ -254,7 +254,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     }
     
     # NOTE: The kronecker thing here depends on the grid being regular.
-    # Irregular grids are handled by .neted_contrast
+    # Irregular grids are handled by .nested_contrast
     else {
         tcmat = kronecker(.diag(rep(1,length(by.rows))), tcmat)
         linfct = tcmat %*% linfct[unlist(by.rows), , drop = FALSE]

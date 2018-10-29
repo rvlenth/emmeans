@@ -615,10 +615,6 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     n.contr = fam.info[2]
     et = as.numeric(fam.info[3])
 
-    ragged.by = (is.character(fam.size))   # flag that we need to do groups separately
-    if (!ragged.by)
-        by.rows = list(seq_along(t))       # not ragged, we can do all as one by group
-        
     if (n.contr == 1) # Force no adjustment when just one test
         adjust = "none"
     
@@ -632,6 +628,10 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         adjust = "sidak"
     if ((et != 3) && adjust == "tukey") # not pairwise
         adjust = "sidak"
+    
+    ragged.by = (is.character(fam.size) || adjust == "mvt")   # flag that we need to do groups separately
+    if (!ragged.by)
+        by.rows = list(seq_along(t))       # not ragged, we can do all as one by group
     
     # asymptotic results when df is NA
     DF[is.na(DF)] = Inf
@@ -710,9 +710,6 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     et = as.numeric(fam.info[3])
     
     ragged.by = (is.character(fam.size))   # flag that we need to do groups separately
-    if (!ragged.by)
-        by.rows = list(seq_along(DF))       # not ragged, we can do all as one by group
-    
     if (!ragged.by && n.contr == 1) # Force no adjustment when just one interval
         adjust = "none"
     
@@ -722,6 +719,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         k = which(adj.meths == "bonferroni") 
     adjust = adj.meths[k]
     
+    if (!ragged.by && adjust != "mvt")
+        by.rows = list(seq_along(DF))       # not ragged, we can do all as one by group
     
     if ((et != 3) && adjust == "tukey") # not pairwise
         adjust = "sidak"
