@@ -4,6 +4,8 @@ emmeans 1.3.0.09999x
   * `"mvt"` adjustment ignored `by` grouping
   * `contrast()` mis-labeled estimates when levels varied among `by` groups
     (most prominently this happened in `CLD(..., details = TRUE)`)
+  * Changed `aovlist` support so it re-fits the model when non-sum-to-zero
+    contrasts were used
 
 
 emmeans 1.3.0

@@ -206,6 +206,9 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     args[[".wgt."]] = NULL # ignore auxiliary stuff in labels, etc.
     if (!is.null(by)) {
         by.rows = .find.by.rows(args, by)
+        ulen = unique(sapply(by.rows, length))
+        if (length(ulen) > 1)
+            stop ("`by` groups are of irregular size;\n  currently not supported except with nested structures")
         bylevs = args[, by, drop=FALSE]
         all.args = args
         args = args[by.rows[[1]], , drop=FALSE]

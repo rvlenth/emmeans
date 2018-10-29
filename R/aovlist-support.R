@@ -39,13 +39,23 @@ recover_data.aovlist = function(object, ...) {
 emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     contr = attr(object, "contrasts")
+    non.orth = sapply(contr, function(x) {
+        !is.character(x) || !(x %in% c("contr.helmert", "contr.poly", "contr.sum"))
+    })
+    if (any(non.orth)) { # refit with sum-to-zero contrasts
+        contr[non.orth] = "contr.sum"
+        message("Note: re-fitting model with sum-to-zero contrasts")
+        cl = attr(object, "call")
+        cl$contrasts = contr
+        object = eval(cl)
+    }
     X = model.matrix(trms, m, contrasts.arg = contr)
     xnms = dimnames(X)[[2]]
     
     # Check for situations we can't handle...
     colsums = apply(X[, setdiff(xnms, "(Intercept)"), drop=FALSE], 2, sum)
     if (any(round(colsums,3) != 0))
-        warning("Some predictors are correlated with the intercept - results are biased.\n",
+        warning("Some predictors are still correlated with the intercept - results are biased.\n",
                 "May help to re-fit with different contrasts, e.g. 'contr.sum'")
     if (length(unlist(lapply(object, function(x) names(coef(x))))) > length(xnms))
         message("NOTE: Results are based on intra-block estimates.")
