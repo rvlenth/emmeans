@@ -49,7 +49,7 @@
 # lsmeans family
 #' Wrappers for alternative naming of EMMs
 #' 
-#' These are wrappers for \code{\link{emmeans}} and realated functions to provide
+#' These are wrappers for \code{\link{emmeans}} and related functions to provide
 #' backward compatibility, or for users who may prefer to
 #' use other terminology than \dQuote{estimated marginal means} -- namely 
 #' \dQuote{least-squares means} or \dQuote{predicted marginal means}.
@@ -64,6 +64,9 @@
 #' @return The result of the call to \code{em}\emph{xxxx}, suitably modified.
 #' @rdname wrappers
 #' @aliases wrappers
+#' @seealso \code{\link{emmeans}}, \code{\link{emtrends}}, \code{\link{emmip}},
+#'          \code{\link{emm}}, \code{\link{emmobj}}, \code{\link{emm_options}},
+#'          \code{\link{get_emm_option}}
 #' @export
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)

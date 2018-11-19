@@ -926,6 +926,9 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 #' @export
 print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     x.save = x
+    for (i in seq_along(names(x)))   # zapsmall the numeric columns
+        if (is.numeric(x[[i]]))  
+            x[[i]] = zapsmall(x[[i]])
     if (!is.null(x$df)) x$df = round(x$df, 2)
     if (!is.null(x$t.ratio)) x$t.ratio = round(x$t.ratio, 3)
     if (!is.null(x$z.ratio)) x$z.ratio = round(x$z.ratio, 3)

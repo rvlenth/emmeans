@@ -6,8 +6,8 @@
 \usage{
 ref_grid(object, at, cov.reduce = mean, mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type,
-  transform = c("none", "response", "mu", "unlink", "log"), nesting, offset,
-  ...)
+  transform = c("none", "response", "mu", "unlink", "log"), nesting,
+  offset, ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such

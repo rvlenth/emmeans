@@ -8,8 +8,8 @@
 emmip(object, formula, ...)
 
 \method{emmip}{default}(object, formula, type, CIs = FALSE,
-  engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9, 10,
-  15:20), lty = 1, col = NULL, plotit = TRUE, ...)
+  engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9,
+  10, 15:20), lty = 1, col = NULL, plotit = TRUE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}, or a fitted model of a class

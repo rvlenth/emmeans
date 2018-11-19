@@ -25,8 +25,8 @@ tukey.emmc(levs, reverse = FALSE, ...)
 
 poly.emmc(levs, max.degree = min(6, k - 1), ...)
 
-trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE, exclude = integer(0),
-  ...)
+trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE,
+  exclude = integer(0), ...)
 
 trt.vs.ctrl1.emmc(levs, ref = 1, ...)
 

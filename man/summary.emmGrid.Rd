@@ -15,7 +15,8 @@
 
 \method{predict}{emmGrid}(object, type, ...)
 
-\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE,
+  ...)
 
 \method{[}{summary_emm}(x, ..., as.df = TRUE)
 
@@ -23,8 +24,8 @@
 
 test(object, null, ...)
 
-\method{test}{emmGrid}(object, null = 0, joint = FALSE, verbose = FALSE,
-  rows, by, status = FALSE, ...)
+\method{test}{emmGrid}(object, null = 0, joint = FALSE,
+  verbose = FALSE, rows, by, status = FALSE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{"emmGrid"} (see \link{emmGrid-class})}

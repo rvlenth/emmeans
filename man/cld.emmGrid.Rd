@@ -3,7 +3,6 @@
 \name{CLD}
 \alias{CLD}
 \alias{CLD.emmGrid}
-\alias{CLD}
 \alias{cld.emmGrid}
 \title{Extract and display information on all pairwise comparisons of least-squares means.}
 \usage{

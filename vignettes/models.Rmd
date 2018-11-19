@@ -368,18 +368,20 @@ usable only for the primary fixed effects and the simpler models.
 
 ## Group V -- `aovList` objects {#V}
 <!-- @index `aovList` objects -->
-Support for these objects is limited. To avoid strong biases in the
-predictions, the `contrasts` attribute of all factors should be of a
-type that sums to zero -- for example, `"contr.sum"`,
-`"contr.poly"`, or `"contr.helmert"` but *not*
-`"contr.treatment"`.  Only intra-block estimates of covariances are
-used. That is, if a factor appears in more than one error stratum, only the
-covariance structure from its lowest stratum is used in estimating standard
-errors. Degrees of freedom are obtained using the Satterthwaite method. In
-general, `aovList` support is best with balanced designs, with due
-caution in the use of contrasts. If a `vcov.` argument is supplied, it
-must yield a single covariance matrix for the unique fixed effects
-(not a set of them for each error stratum). In that case, the
+Support for these objects is limited. To avoid strong biases in the predictions,
+it is strongly recommended that when fitting the model, the `contrasts`
+attribute of all factors should be of a type that sums to zero -- for example,
+`"contr.sum"`, `"contr.poly"`, or `"contr.helmert"` but *not*
+`"contr.treatment"`.  If that is found not to be the case, the model is
+re-fitted using sum-to-zero contrasts (thus requiring additional computation).
+
+Only intra-block estimates of covariances are used. That is, if a factor appears
+in more than one error stratum, only the covariance structure from its lowest
+stratum is used in estimating standard errors. Degrees of freedom are obtained
+using the Satterthwaite method. In general, `aovList` support is best with
+balanced designs, with due caution in the use of contrasts. If a `vcov.`
+argument is supplied, it must yield a single covariance matrix for the unique
+fixed effects (not a set of them for each error stratum). In that case, the
 degrees of freedom are set to `NA`.
 
 [Back to quick reference](#quickref)

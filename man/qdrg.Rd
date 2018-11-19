@@ -4,8 +4,8 @@
 \alias{qdrg}
 \title{Quick and dirty reference grid}
 \usage{
-qdrg(formula, data, coef, mcmc, vcov, object, df, subset, weights, contrasts,
-  link, qr, ...)
+qdrg(formula, data, coef, mcmc, vcov, object, df, subset, weights,
+  contrasts, link, qr, ...)
 }
 \arguments{
 \item{formula}{Formula for the fixed effects}

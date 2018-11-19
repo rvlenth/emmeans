@@ -1,8 +1,8 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
-Version: 1.3.0.099903
-Date: 2018-10-29
+Version: 1.3.0.099904
+Date: 2018-11-19
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Henrik", "Singmann", role = "ctb"),
@@ -31,5 +31,5 @@ Description: Obtain estimated marginal means (EMMs) for many linear, generalized
   in the linear model: An alternative to least squares means, The American 
   Statistician 34(4), 216-221 <doi:10.1080/00031305.1980.10483031>.
 License: GPL-2 | GPL-3
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

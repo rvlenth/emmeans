@@ -6,6 +6,7 @@ emmeans 1.3.0.09999x
     (most prominently this happened in `CLD(..., details = TRUE)`)
   * Changed `aovlist` support so it re-fits the model when non-sum-to-zero
     contrasts were used
+  * `print.summary_emm()` now cleans up numeric columns with `zapsmall()`
 
 
 emmeans 1.3.0

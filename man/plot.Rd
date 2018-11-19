@@ -5,10 +5,12 @@
 \alias{plot.summary_emm}
 \title{Plot an \code{emmGrid} or \code{summary_emm} object}
 \usage{
-\method{plot}{emmGrid}(x, y, type, intervals = TRUE, comparisons = FALSE,
-  alpha = 0.05, adjust = "tukey", int.adjust = "none", frequentist, ...)
+\method{plot}{emmGrid}(x, y, type, intervals = TRUE,
+  comparisons = FALSE, alpha = 0.05, adjust = "tukey",
+  int.adjust = "none", frequentist, ...)
 
-\method{plot}{summary_emm}(x, y, horizontal = TRUE, xlab, ylab, layout, ...)
+\method{plot}{summary_emm}(x, y, horizontal = TRUE, xlab, ylab, layout,
+  ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}
