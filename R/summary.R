@@ -265,10 +265,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     }
     
     misc = object@misc
-    use.elts = if (is.null(misc$display))  
-                   rep(TRUE, nrow(object@grid)) 
-               else 
-                   misc$display
+    use.elts = .reconcile.elts(object)
     grid = object@grid[use.elts, , drop = FALSE]
     
     ### For missing arguments, get from misc, else default    
@@ -543,8 +540,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         return(result[-1, ])
     }
     misc = object@misc
-    use.elts = if (is.null(misc$display))  rep(TRUE, nrow(object@grid)) 
-               else                        misc$display
+    use.elts = .reconcile.elts(object)
 
     if (!is.null(hook <- misc$estHook)) {
         if (is.character(hook)) hook = get(hook)
@@ -977,3 +973,13 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     invisible(x.save)
 }
 
+# Utility -- When misc$display present, reconcile which elements to use.
+# Needed if we messed with previous nesting
+.reconcile.elts = function(object) {
+    display = object@misc$display
+    nrows = nrow(object@grid)
+    use.elts = rep(TRUE, nrows)
+    if (!is.null(display) && (length(display) == nrows))  
+        use.elts = display
+    use.elts
+}

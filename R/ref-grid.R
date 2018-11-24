@@ -571,13 +571,19 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         options$predict.type = type
     }
     
-    if (!missing(nesting))
-        result@model.info$nesting = .parse_nest(nesting)
+    if (!missing(nesting)) {
+        result@model.info$nesting = lst = .parse_nest(nesting)
+        if(!is.null(lst)) {
+            nms = union(names(lst), unlist(lst))
+            if(!all(nms %in% names(object@grid)))
+                stop("Nonexistent variables specified in 'nesting'")
+        }
+    }
+        
     else if (!is.null(nst <- result@model.info$nesting))
         if (get_emm_option("msg.nesting"))
             message("NOTE: A nesting structure was detected in the ",
-                    "fitted model:\n    ", .fmt.nest(nst), 
-                "\nIf this is incorrect, re-run or update with `nesting` specified")
+                    "fitted model:\n    ", .fmt.nest(nst))
 
     if(!is.null(options)) {
         options$object = result

@@ -25,11 +25,11 @@ This vignette contains answers to questions received from users or posted on dis
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
  3. [I have covariate(s) and am fitting a polynomial model](#polys)
  4. [All my pairwise comparisons have the same *P* value](#notfactor)
- 5. [lsmeans/emmeans doesn't work unless you have factors](#numeric)
+ 5. [emmeans() doesn't work as expected](#numeric)
+ 6. [All or some of the results are NA](#NAs)
  6. [If I analyze subsets of the data separately, I get different results](#model)
  7. [My lsmeans/EMMs are way off from what I expected](#transformations)
  8. [Why do I get `Inf` for the degrees of freedom?](#asymp)
- 9. [Some or all of the results shown say NA or NonEst](#NAs)
  10. [I get exactly the same comparisons for each "by" group](#additive)
  11. [My ANOVA *F* is significant, but no pairwise comparisons are](#anova)
  12. [I get annoying messages about namespaces](#namespace)
@@ -88,7 +88,8 @@ a different model using `factor(dose)` instead; it will make all the
 difference. This is closely related to the next topic.
 
 
-## lsmeans/emmeans doesn't work unless you have factors {#numeric}
+
+## emmeans() doesn't work as expected {#numeric}
 <!-- @index Covariates!`emmeans()` doesn't work -->
 Equivalently, users ask how to get *post hoc* comparisons when we have
 covariates rather than factors.
@@ -126,6 +127,53 @@ for more discussion.
 
 [Back to Contents](#contents)
 
+
+## All or some of the results are NA {#NAs}
+<!-- @index `NA`s in the output; `NonEst` values; Estimability issues -->
+The **emmeans** package uses tookls in the **estimability** package to determine
+whether its results are uniquely estimable. For example, in a two-way model
+with interactions included, if there are no observations in a particular cell
+(factor combination), then we cannot estimate the mean of that cell.
+
+When *some* of the EMMs are estimable and others are not, that is information
+about missing information in the data. If it's possible to remove some terms
+from the model (particularly interactions), that may make more things estimable 
+if you re-fit with those terms excluded; 
+but don't delete terms that are really needed for the model to fit well.
+
+When *all* of the estimates are non-estimable, it could be symptomatic of
+something else. Some possibilities include:
+
+  * An overly ambitious model; for example, in a Latin square design, interaction
+    effects are confounded with main effects; so if any interactions are included
+    in the model, you will render main effects inestimable.
+  * Possibly you have a nested structure that needs to be included in the
+    model or specified via the `nesting` argument. Perhaps the levels that B
+    can have depend on which level of A is in force. Then B is nested in A and
+    the model should specify `A + A:B`, with no main effect for `B`.
+  * Modeling factors as numeric predictors (see also the [related section on
+    covariates](#numeric)). To illustrate, suppose you have data on particular
+    state legislatures, and the model includes the predictors `state_name` as well
+    as `dem_gov` which is coded 1 if the governor is a Democrat and 0 otherwise.
+    If the model was fitted with `state_name` as a factor or character variable,
+    but `dem_gov` as a numeric predictor, then, chances are, `emmeans()` will
+    return non-estimable results. If instead, you use `factor(dem_gov)` in the
+    model, then the fact that `state_name` is nested in `dem_gov` will be
+    detected, causing EMMs to be computed separately for each party's
+    states, thus making things estimable.
+  * Some other things may in fact be estimable. For illustration, it's easy
+    to construct an example where all the EMMs are non-estimable, but
+    pairwise comparisons are estimable:
+```{r}
+pg <- transform(pigs, x = rep(1:3, c(10, 10, 9)))
+pg.lm <- lm(log(conc) ~ x + source + factor(percent), data = pg)
+emmeans(pg.lm, consec ~ percent)
+```
+
+The ["messy-data" vignette](messy-data.html) has more examples and discussion.
+
+
+[Back to Contents](#contents)
 
 ## If I analyze subsets of the data separately, I get different results {#model}
 <!-- @index Analysis of subsets of data; Subsets of data -->
@@ -169,28 +217,6 @@ interval.
 
 [Back to Contents](#contents)
 
-## Some or all of the results shown say NA or NonEst {#NAs}
-<!-- @index `NA` results; `NonEst` results; Estimability -->
-Such a situation typically arises in observational data. What this
-means is that the model is not capable of producing estimates for
-all points in the reference grid. For example, you have data on combinations
-of factors A and B, but there are no data at certain combinations of 
-these two factors. If the model includes the `A:B` interaction, then it
-can't estimate those missing combinations. Here are a couple of possibilities:
-
-  * Try fitting a simpler model. In the example above, a model with `A + B`,
-    without `A:B`, may be able to estimate the needed combinations.
-  * Use `at` to focus (at least mostly) on factor settings where estimates
-    are possible
-  * Possibly you have a nested structure that needs to be included in the
-    model or specified via the `nesting` argument. Perhaps the levels that B
-    can have depend on which level of A is in force. Then B is nested in A and
-    the model should specify `A + A:B`, with no main effect for `B`.
-
-The ["messy-data" vignette](messy-data.html) has more examples and discussion.
-
-
-[Back to Contents](#contents)
 
 
 ## I get exactly the same comparisons for each "by" group {#additive}

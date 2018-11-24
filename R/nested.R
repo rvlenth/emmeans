@@ -147,6 +147,8 @@ add_grouping = function(object, newname, refname, newlevs) {
     # (2) If we average over any nested factors, we need to do it separately
     avg.over = setdiff(names(rgobj@levels), union(specs, by))
     afacs = intersect(names(nesting), avg.over) ### DUH!names(nesting)[names(nesting) %in% avg.over]
+    rgobj@misc$display = NULL  ## suppress warning messages from emmeans
+    
     if (length(afacs) == 0)  { # no nesting issues; just use emmeans
         result = emmeans(rgobj, specs, by = by, ...)
     }

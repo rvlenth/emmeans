@@ -152,9 +152,8 @@ vignette: >
       * [What are they?](FAQs.html#what)
   * [`emtrends()`](interactions.html#covariates)
   * [`estHook`](xtending.html#hooks)
-  * Estimability
-      * [in *FAQs: NAs*](FAQs.html#NAs)
-      * [in *messy-data: nonestex*](messy-data.html#nonestex)
+  * [Estimability](messy-data.html#nonestex)
+  * [Estimability issues](FAQs.html#NAs)
   * [Estimated marginal means](basics.html#EMMdef)
       * [Defined](basics.html#emmeans)
   * Examples
@@ -316,13 +315,13 @@ vignette: >
 ### N {#n}
 
 
-  * [`NA` results](FAQs.html#NAs)
+  * [`NA`s in the output](FAQs.html#NAs)
   * [Nesting](messy-data.html#nesting)
       * [Auto-detection](messy-data.html#nest-trap)
   * Nesting factors
       * [Creating](utilities.html#groups)
   * [Non-estimability](messy-data.html#nonestex)
-  * [`NonEst` results](FAQs.html#NAs)
+  * [`NonEst` values](FAQs.html#NAs)
 
 
 [Back to top](#topnav)

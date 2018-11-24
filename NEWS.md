@@ -7,6 +7,8 @@ emmeans 1.3.0.09999x
   * Changed `aovlist` support so it re-fits the model when non-sum-to-zero
     contrasts were used
   * `print.summary_emm()` now cleans up numeric columns with `zapsmall()`
+  * More robust handling of `nesting` in `ref_grid()` and `update()`
+  * Revision of some vignettes
 
 
 emmeans 1.3.0

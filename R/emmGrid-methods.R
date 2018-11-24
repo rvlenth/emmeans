@@ -297,8 +297,15 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                     allvars = union(misc$pri.vars, misc$by.vars)
                     misc$by.vars = setdiff(allvars, args[[nm]])
                 }
-                if (fullname == "nesting") # special case - I keep nesting in model.info
-                    object@model.info$nesting = args[[nm]]
+                # special case - I keep nesting in model.info. Plus add'kl checks
+                if (fullname == "nesting") {
+                    object@model.info$nesting = lst = .parse_nest(args[[nm]])
+                    if(!is.null(lst)) {
+                        nms = union(names(lst), unlist(lst))
+                        if(!all(nms %in% names(object@grid)))
+                            stop("Nonexistent variables specified in 'nesting'")
+                    }
+                }
                 else
                     misc[[fullname]] = args[[nm]]
             }

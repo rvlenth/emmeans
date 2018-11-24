@@ -265,6 +265,11 @@ emmeans = function(object, specs, by = NULL,
         if(nrow(RG@grid) != prod(sapply(RG@levels, length)))
             stop("Irregular reference grid: Marginal means cannot be determined")
         
+        if (!is.null(RG@misc$display)) {
+            RG@misc$display = NULL
+            warning("emmeans() results may be corrupted by removal of a nesting structure")
+        }
+        
         if ((length(facs) == 1) && (facs == "1")) {  ### just want grand mean
             RG@levels[["1"]] = "overall"
             RG@grid[ ,"1"] = 1
