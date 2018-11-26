@@ -120,6 +120,7 @@ add_grouping = function(object, newname, refname, newlevs) {
 }
 
 
+
 ### ----- Rest of this file is used only internally ---------
 
 # Internal function to deal with nested structures. 
@@ -270,7 +271,8 @@ add_grouping = function(object, newname, refname, newlevs) {
 
 # Internal function to find nonempty cells in nested structures in rgobj for xfacs
 # Returns logical vector, FALSE are rows of the grid we needn't display
-.find.nonempty.nests = function(rgobj, xfacs, nesting = rgobj@model.info$nesting) {
+.find.nonempty.nests = function(rgobj, xfacs = union(names(nesting), unlist(nesting)), 
+                                nesting = rgobj@model.info$nesting) {
     grid = rgobj@grid
     keep = rep(TRUE, nrow(grid))
     for (x in xfacs) {

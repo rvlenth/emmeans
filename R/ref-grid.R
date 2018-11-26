@@ -505,7 +505,9 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     ### --- Determine weights for each grid point --- (added ver.2.11), updated ver.2.14 to include weights
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1
-    nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
+#    nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
+    ### Changed 2018-Nov to all names for which there is > 1 level
+    nms = names(ref.levels)[sapply(ref.levels, length) > 1]
     if (length(nms) == 0)
         wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
     else {
@@ -575,15 +577,18 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         result@model.info$nesting = lst = .parse_nest(nesting)
         if(!is.null(lst)) {
             nms = union(names(lst), unlist(lst))
-            if(!all(nms %in% names(object@grid)))
+            if(!all(nms %in% names(result@grid)))
                 stop("Nonexistent variables specified in 'nesting'")
+            result@misc$display = .find.nonempty.nests(result, nms)
         }
     }
         
-    else if (!is.null(nst <- result@model.info$nesting))
+    else if (!is.null(nst <- result@model.info$nesting)) {
+        result@misc$display = .find.nonempty.nests(result)
         if (get_emm_option("msg.nesting"))
             message("NOTE: A nesting structure was detected in the ",
                     "fitted model:\n    ", .fmt.nest(nst))
+    }
 
     if(!is.null(options)) {
         options$object = result

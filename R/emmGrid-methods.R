@@ -304,6 +304,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                         nms = union(names(lst), unlist(lst))
                         if(!all(nms %in% names(object@grid)))
                             stop("Nonexistent variables specified in 'nesting'")
+                        object@misc$display = .find.nonempty.nests(object, nms)
                     }
                 }
                 else
