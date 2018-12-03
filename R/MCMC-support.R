@@ -200,7 +200,7 @@ hpd.summary = function(object, prob, by, type,
     lbls = grid[lblnms]
     if (inv) {
         if (!is.null(misc$inv.lbl)) {
-            names(pt.est) = misc$inv.lbl
+            names(pt.est) = misc$estName = misc$inv.lbl
             if (!is.null(misc$log.contrast))  # contrast of logs - relabel as ratios
                 for (ell in seq_along(lbls)){
                     lbls[[ell]] = factor(lbls[[ell]])

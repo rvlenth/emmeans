@@ -9,6 +9,7 @@ emmeans 1.3.0.09999x
   * `print.summary_emm()` now cleans up numeric columns with `zapsmall()`
   * More robust handling of `nesting` in `ref_grid()` and `update()`
   * Revision of some vignettes
+  * Fixed bug in `hpd.summary()` and handoff to it from `summary()`
 
 
 emmeans 1.3.0
