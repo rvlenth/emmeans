@@ -46,7 +46,7 @@ plot.emmGrid = function(x, y, type, intervals = TRUE, comparisons = FALSE,
             int.adjust = "none"
     }
     
-    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, frequentist = frequentist)
+    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, frequentist = frequentist, ...)
     if (is.null(attr(summ, "pri.vars"))) { ## new ref_grid - use all factors w/ > 1 level
         pv = names(x@levels)
         len = sapply(x@levels, length)
