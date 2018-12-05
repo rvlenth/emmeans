@@ -46,7 +46,7 @@ the result, it is subsetted or cyclically recycled.}
 
 \item{trend}{This is now deprecated. Use \code{\link{emtrends}} instead.}
 
-\item{...}{This is used only when \code{object} is not already a \code{"ess"}
+\item{...}{This is used only when \code{object} is not already a \code{"emmGrid"}
 object, these arguments are passed to \code{\link{ref_grid}}. Common
 examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
 \code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.

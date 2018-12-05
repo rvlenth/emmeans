@@ -177,6 +177,13 @@
 #' \%in\% country, city \%in\% (state*country)"}, and \code{nesting = c("state
 #' \%in\% country)", "city \%in\% (state*country)")}.
 #' 
+#' In certain unusual cases, a covariate (rather than a factor) may be nested.
+#' Support for such situations is limited to the extent that only covariate
+#' values that exactly match a value in the dataset is permitted. I recommend
+#' supplying a reference dataset in the \code{data} argument that contains the
+#' desired covariate values for the reference grid, and specify \code{cov.reduce
+#' = FALSE}; then the nesting will be handled correctly.
+#' 
 #' @section Predictors with subscripts and data-set references:
 #' When the fitted model contains subscripts or explicit references to data
 #' sets, the reference grid may optionally be post-processed to simplify the

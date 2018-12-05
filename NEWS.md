@@ -11,6 +11,7 @@ emmeans 1.3.0.09999x
   * Revision of some vignettes
   * Fixed bug in `hpd.summary()` and handoff to it from `summary()`
   * Fixed bug where `ref_grid()` ignored `mult.levs`
+  * Fixes in emmeans where it passes `...` where it shouldn't
 
 
 emmeans 1.3.0

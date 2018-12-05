@@ -56,9 +56,10 @@ Scroll down or follow the links to those groups for more information.
 |geese        |geepack  |[E](#E)  |Like `geeglm`                                                |
 |glm          |stats    |[G](#G)  |                                                             |
 |glm.nb       |MASS     |[G](#G)  |Requires `data` argument                                     |
-|glmmadmb     |glmmADMB |[G](#G)  |                                                             |
 |glmerMod     |lme4     |[G](#G)  |                                                             |
+|glmmadmb     |glmmADMB |[G](#G)  |                                                             |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
+|glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package (dev. version only?)        |
 |gls          |nlme     |[G](#G)  |                                                             |
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |

@@ -121,7 +121,7 @@ emmeans.list = function(object, specs, ...) {
 #'   reference grid. If a vector of length differing from the number of rows in 
 #'   the result, it is subsetted or cyclically recycled.
 #' @param trend This is now deprecated. Use \code{\link{emtrends}} instead.
-#' @param ... This is used only when \code{object} is not already a \code{"ess"}
+#' @param ... This is used only when \code{object} is not already a \code{"emmGrid"}
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
 #'   examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
 #'   \code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.
@@ -240,7 +240,7 @@ emmeans = function(object, specs, by = NULL,
     }
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
-                             contr = contr, weights = weights, ...))
+                             contr = contr, weights = weights))
     }
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)
@@ -410,7 +410,7 @@ emmeans = function(object, specs, by = NULL,
     else {  # handle a nested structure
         object@model.info$nesting = NULL
         result = .nested_emm(object, specs, by = by, fac.reduce = fac.reduce, 
-                       options = options, weights = weights, ..., nesting = nesting)
+                       options = options, weights = weights, offset = offset, nesting = nesting)
     }
     
 
@@ -422,8 +422,8 @@ emmeans = function(object, specs, by = NULL,
                  "To obtain a compact letter display, first call `emmeans()`,\n",
                  "then call `CLD()` on the result.")
         }
-        args = list(...)
-        args$data = NULL   # ensure 'data' not passed
+        args = list() ###list(...)
+        ### args$data = NULL   # ensure 'data' not passed
         args$object = result
         args$method = contr
         args$by = by
