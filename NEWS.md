@@ -10,6 +10,7 @@ emmeans 1.3.0.09999x
   * More robust handling of `nesting` in `ref_grid()` and `update()`
   * Revision of some vignettes
   * Fixed bug in `hpd.summary()` and handoff to it from `summary()`
+  * Fixed bug where `ref_grid()` ignored `mult.levs`
 
 
 emmeans 1.3.0

@@ -434,32 +434,32 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     multresp = character(0) ### ??? was list()
     ylevs = misc$ylevs
     if(!is.null(ylevs)) { # have a multivariate situation
-        if (missing(mult.levs)) {
+        if (missing(mult.levs))
             mult.levs = ylevs
-            if(!missing(mult.names)) {
-                k = seq_len(min(length(ylevs), length(mult.names)))
-                names(mult.levs)[k] = mult.names[k]
-            } 
-            if (length(ylevs) > 1)
-                ylevs = list(seq_len(prod(sapply(mult.levs, length))))
-            
-            k = prod(sapply(mult.levs, length))
-            if (k != length(ylevs[[1]])) 
-                stop("supplied 'mult.levs' is of different length ",
-                     "than that of multivariate response")
-            for (nm in names(mult.levs))
-                ref.levels[[nm]] = mult.levs[[nm]]
-            multresp = names(mult.levs)
-            MF = do.call("expand.grid", mult.levs)
-            grid = merge(grid, MF)
-        }
-            
-        # add any matrices
-        for (nm in names(matlevs))
-            grid[[nm]] = matrix(rep(matlevs[[nm]], 
-                                    each=nrow(grid)), nrow=nrow(grid))
+        if(!missing(mult.names)) {
+            k = seq_len(min(length(ylevs), length(mult.names)))
+            names(mult.levs)[k] = mult.names[k]
+        } 
+        if (length(ylevs) > 1)
+            ylevs = list(seq_len(prod(sapply(mult.levs, length))))
+        
+        k = prod(sapply(mult.levs, length))
+        if (k != length(ylevs[[1]])) 
+            stop("supplied 'mult.levs' is of different length ",
+                 "than that of multivariate response")
+        for (nm in names(mult.levs))
+            ref.levels[[nm]] = mult.levs[[nm]]
+        multresp = names(mult.levs)
+        MF = do.call("expand.grid", mult.levs)
+        grid = merge(grid, MF)
+        
     }
-
+            
+    # add any matrices
+    for (nm in names(matlevs))
+        grid[[nm]] = matrix(rep(matlevs[[nm]], 
+                                each=nrow(grid)), nrow=nrow(grid))
+    
 # Here's a complication. If a numeric predictor was coerced to a factor, we had to
 # include all its levels in the reference grid, even if altered in 'at'
 # Moreover, whatever levels are in 'at' must be a subset of the unique values
@@ -506,8 +506,8 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1
 #    nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
-    ### Changed 2018-Nov to all names for which there is > 1 level
-    nms = names(ref.levels)[sapply(ref.levels, length) > 1]
+    ### Changed 2018-Nov to all names (except multiv) for which there is > 1 level
+    nms = setdiff(names(ref.levels)[sapply(ref.levels, length) > 1], multresp)
     if (length(nms) == 0)
         wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
     else {
