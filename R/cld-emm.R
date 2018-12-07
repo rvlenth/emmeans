@@ -105,6 +105,10 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
                     by, alpha=.05, 
                     Letters = c("1234567890",LETTERS,letters), 
                     reversed=FALSE, ...) {
+    if (!is.na(object@post.beta)[1]) {
+        message("NOTE: Summary and groupings are based on frequentist results")
+        object@post.beta = matrix(NA)
+    }
     emmtbl = summary(object, ...)
     if(missing(by)) 
         by = object@misc$by.vars
