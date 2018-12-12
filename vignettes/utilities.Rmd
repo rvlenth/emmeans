@@ -120,6 +120,23 @@ everything to factory defaults (which we do presently), null-out all of the
 options(emmeans = NULL)
 ```
 
+### Optimal digits to display {#digits}
+<!-- @index Digits, optimizing; `opt.digits` option -->
+When an `emmGrid` object is summarized and displayed, the factory default
+is to display it in a consistent way with many other analyses in R --- i.e.,
+using the number of digits in `getOption("digits")`. This is often much more
+precision than is really justified. You may use the
+`"opt.digits"` option to change this. If it is set to `TRUE`, the number
+of digits is set to a more realistic value based on the estimates and their 
+confidence or HPD intervals. In the remainder of this vignette, we turn on 
+this option; observe that fewer digits are displayed than those that came before.
+```{r}
+emm_options(opt.digits = TRUE)
+```
+By the way, setting this option does *not* round the calculated values computed
+by `summary.emmGrid()` or saved in a `summary)emm` object; it simply controls
+the precision displayed by `print.summary_emm()`.
+
 [Back to contents](#contents)
 
 ## Combining and subsetting `emmGrid` objects {#rbind}
@@ -169,8 +186,11 @@ For illustration, let's compute the widths of the confidence intervals in our ex
 transform(pigs.emm, CI.width = upper.CL - lower.CL)
 ```
 This implicitly converted `pigs.emm` to a data frame by passing it to the
-`as.data.frame()` method, then performed the required computation.
-But sometimes you have to explicitly call `as.data.frame()`.
+`as.data.frame()` method, then performed the required computation. But sometimes
+you have to explicitly call `as.data.frame()`. [Note that the `opt.digits`
+option is ignored here, because this is a regular data frame, not the summary of
+an `emmGrid`.]
+
 
 [Back to contents](#contents)
 

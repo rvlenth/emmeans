@@ -934,6 +934,15 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     estn = attr(x, "estName")
     just = sapply(x.save, function(col) if(is.numeric(col)) "R" else "L")
     est = x[[estn]]
+    if (get_emm_option("opt.digits") && is.null(digits)) {
+        if (!is.null(x[["SE"]]))
+            tmp = est + x[["SE"]] * cbind(rep(-2, nrow(x)), 0, 2)
+        else if (!is.null(x[["lower.HPD"]]))
+            tmp = x[, c("lower.HPD", estn, "upper.HPD"), drop = FALSE]
+        else tmp = NULL
+        if (!is.null(tmp))
+            digits = max(apply(tmp, 1, .opt.dig), na.rm = TRUE)
+    }
     if (any(is.na(est))) {
         x[[estn]] = format(est, digits=digits)
         x[[estn]][is.na(est)] = "nonEst"
@@ -970,6 +979,13 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
         for (j in seq_len(length(msg))) cat(paste(msg[j], "\n"))
     
     invisible(x.save)
+}
+
+# determine optimum digits to display based on a conf or cred interval
+# (but always at least 3)
+.opt.dig = function(x) {
+    z = range(x) / max(abs(x))
+    max(round(1.51 - log(diff(z), 10)), 3)  # approx 1 - log(diff(z/3))
 }
 
 # Utility -- When misc$display present, reconcile which elements to use.

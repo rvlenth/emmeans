@@ -112,6 +112,7 @@ vignette: >
 
   * [Degrees of freedom](sophisticated.html#dfoptions)
       * [Infinite](FAQs.html#asymp)
+  * [Digits, optimizing](utilities.html#digits)
   * [Dunnett method](comparisons.html#contrasts)
 
 
@@ -332,6 +333,7 @@ vignette: >
   * [Observational data](messy-data.html#issues)
   * [Odds ratios](transformations.html#oddsrats)
   * [Offsets](sophisticated.html#offsets)
+  * [`opt.digits` option](utilities.html#digits)
   * [Options](utilities.html#options)
   * Ordinal models
       * [Latent scale](sophisticated.html#ordinal)

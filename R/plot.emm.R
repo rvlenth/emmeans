@@ -389,7 +389,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
                         ends = "both", type = "closed"), color = "red")
             if (length(byv) > 0)
-                grobj = grobj + ggplot2::facet_grid(paste(paste(byv, collapse = "+"), " ~ ."), 
+                grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
                                            labeller = "label_both")
             if (missing(xlab)) xlab = attr(summ, "estName")
             if (missing(ylab)) ylab = facName
@@ -407,7 +407,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), ends = "both", 
                         type = "closed"), color = "red")
             if (length(byv) > 0)
-                grobj = grobj + ggplot2::facet_grid(paste(". ~ ", paste(byv, collapse = "+")), 
+                grobj = grobj + ggplot2::facet_grid(as.formula(paste(". ~ ", paste(byv, collapse = "+"))), 
                                            labeller = "label_both")
             if (missing(ylab)) ylab = attr(summ, "estName")
             if (missing(xlab)) xlab = facName

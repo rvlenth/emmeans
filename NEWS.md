@@ -13,6 +13,7 @@ emmeans 1.3.0.09999x
   * Fixed bug where `ref_grid()` ignored `mult.levs`
   * Fixes in emmeans where it passes `...` where it shouldn't
   * `CLD()` now works for MCMC models (uses frequentist summary)
+  * Addition of `opt.digits` option
 
 
 emmeans 1.3.0

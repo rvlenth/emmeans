@@ -355,6 +355,11 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   simplify (when possible) names in the model formula that refer to datasets --
 #'   for example, should we simplify a predictor name like \dQuote{\code{data$trt}}
 #'   to just \dQuote{\code{trt}}? Defaults to \code{TRUE}.}
+#' \item{\code{opt.digits}}{A logical value controlling the precision with which
+#'   summaries are printed. If \code{FALSE} (the default), the system value
+#'   \code{getOption("digits")} is used. If \code{TRUE}, the number of digits
+#'   displayed is just enough to reasonably distinguish estimates from the ends
+#'   of their confidence intervals; but always at least 3 digits.}
 #' }%%% end describe{}
 #' Some other options have more specific purposes:
 #' \describe{
@@ -441,6 +446,7 @@ emm_defaults = list (
     msg.nesting = TRUE,       # message when nesting is detected
     estble.tol = 1e-8,        # tolerance for estimability checks
     simplify.names = TRUE,    # simplify names like data$x to just "x"
+    opt.digits = FALSE,       # optimize displayed digits?
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling K-R
