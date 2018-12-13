@@ -1,7 +1,6 @@
 ---
 title: "Index of vignette topics"
-author: "emmeans package"
-date: "`r Sys.Date()`"
+author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Index of vignette topics}
@@ -151,7 +150,9 @@ vignette: >
   * [EMMs](basics.html#EMMdef)
       * [Appropriateness of](basics.html#eqwts)
       * [What are they?](FAQs.html#what)
-  * [`emtrends()`](interactions.html#covariates)
+  * `emtrends()`
+      * [in *interactions: covariates*](interactions.html#covariates)
+      * [in *interactions: oranges*](interactions.html#oranges)
   * [`estHook`](xtending.html#hooks)
   * [Estimability](messy-data.html#nonestex)
   * [Estimability issues](FAQs.html#NAs)
@@ -162,6 +163,7 @@ vignette: >
       * [Bayesian model](sophisticated.html#mcmc)
       * [`cbpp`](sophisticated.html#mcmc)
       * [`cows`](messy-data.html#cows)
+      * [`fiber`](interactions.html#covariates)
       * [`framing`](messy-data.html#mediators)
       * [Gamma regression](transformations.html#tranlink)
       * [Insurance claims (SAS)](sophisticated.html#offsets)
@@ -176,7 +178,7 @@ vignette: >
       * [`Oats`](sophisticated.html#lmer)
       * `oranges`
           * [in *comparisons: formulas*](comparisons.html#formulas)
-          * [in *interactions: covariates*](interactions.html#covariates)
+          * [in *interactions: oranges*](interactions.html#oranges)
       * [Ordinal model](sophisticated.html#ordinal)
       * [`pigs`](basics.html#motivation)
       * [`rlm` objects](xtending.html#rlm)
@@ -236,6 +238,7 @@ vignette: >
       * [Analysis](interactions.html)
       * [Contrasts](interactions.html#contrasts)
       * [Covariate with factors](interactions.html#covariates)
+      * [Implied](interactions.html#oranges)
       * [Plotting](interactions.html#factors)
       * [Possible inappropriateness of marginal means](interactions.html#factors)
 
@@ -306,6 +309,7 @@ vignette: >
   * [Multiplicity adjustments](confidence-intervals.html#adjust)
   * Multivariate models
       * [in *basics: multiv*](basics.html#multiv)
+      * [in *interactions: oranges*](interactions.html#oranges)
       * [in *models: M*](models.html#M)
   * [Multivariate *t* (`"mvt"`) adjustment](confidence-intervals.html#adjmore)
   * [**mvtnorm** package](confidence-intervals.html#adjmore)
@@ -460,7 +464,7 @@ vignette: >
       * [Re-gridding](transformations.html#regrid)
       * [Timing is everything](transformations.html#timing)
   * Trends
-      * [Estimating and comparing](interactions.html#covariates)
+      * [Estimating and comparing](interactions.html#oranges)
   * [`trt.vs.ctrl` contrasts](comparisons.html#contrasts)
   * [Tukey adjustment](confidence-intervals.html#adjust)
   * [`type`](confidence-intervals.html#tran)

@@ -1,7 +1,6 @@
 ---
 title: "Transitioning to emmeans from lsmeans"
-author: "Russ Lenth"
-date: "`r Sys.Date()`"
+author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Transitioning to emmeans from lsmeans}

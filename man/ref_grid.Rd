@@ -7,7 +7,7 @@
 ref_grid(object, at, cov.reduce = mean, mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type,
   transform = c("none", "response", "mu", "unlink", "log"), nesting,
-  offset, ...)
+  covnest = FALSE, offset, ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -56,6 +56,11 @@ transformations.}
 here via a character vector or named \code{list} specifying the nesting
 structure. Specifying \code{nesting} overrides any nesting structure that
 is automatically detected. See Details.}
+
+\item{covnest}{Logical value. If \code{TRUE}, covariates having more than
+one value in the reference grid are included when auto-detecting nesting.
+Set this to \code{TRUE} only if you have covariate values that logically
+depend on some other factor's levels.}
 
 \item{offset}{Numeric scalar value (if a vector, only the first element is
 used). This may be used to add an offset, or override offsets based on the model.
@@ -185,8 +190,9 @@ In certain unusual cases, a covariate (rather than a factor) may be nested.
 Support for such situations is limited to the extent that only covariate
 values that exactly match a value in the dataset is permitted. I recommend
 supplying a reference dataset in the \code{data} argument that contains the
-desired covariate values for the reference grid, and specify \code{cov.reduce
-= FALSE}; then the nesting will be handled correctly.
+desired covariate values for the reference grid; then the nesting will be
+handled correctly if you specify \code{covnest = TRUE} and 
+\code{cov.reduce = FALSE}.
 }
 
 \section{Predictors with subscripts and data-set references}{

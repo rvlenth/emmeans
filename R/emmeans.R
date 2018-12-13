@@ -342,7 +342,7 @@ emmeans = function(object, specs, by = NULL,
                 stop(paste("No variable named", f, "in the reference grid"))
         }
         combs = do.call("expand.grid", levs)
-        if (!missing(weights) && (weights %in% c("fq", "fl")))
+        if (!missing(weights) && is.character(weights) && (weights %in% c("fq", "fl")))
             K = plyr::alply(row.idx, use.mars, function(idx) {
                 fq = RG@grid[[".wgt."]][idx]
                 if (weights == "fl")

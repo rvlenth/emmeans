@@ -1,7 +1,6 @@
 --- 
 title: "Working with messy data" 
-author: "Russ Lenth" 
-date: "`r Sys.Date()`"
+author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: > 
   %\VignetteIndexEntry{Working with messy data} 

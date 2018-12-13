@@ -87,6 +87,10 @@
 #'   here via a character vector or named \code{list} specifying the nesting
 #'   structure. Specifying \code{nesting} overrides any nesting structure that
 #'   is automatically detected. See Details.
+#' @param covnest Logical value. If \code{TRUE}, covariates having more than
+#'   one value in the reference grid are included when auto-detecting nesting.
+#'   Set this to \code{TRUE} only if you have covariate values that logically
+#'   depend on some other factor's levels.
 #' @param offset Numeric scalar value (if a vector, only the first element is
 #'   used). This may be used to add an offset, or override offsets based on the model.
 #'   A common usage would be to specify \code{offset = 0} for a Poisson
@@ -181,8 +185,9 @@
 #' Support for such situations is limited to the extent that only covariate
 #' values that exactly match a value in the dataset is permitted. I recommend
 #' supplying a reference dataset in the \code{data} argument that contains the
-#' desired covariate values for the reference grid, and specify \code{cov.reduce
-#' = FALSE}; then the nesting will be handled correctly.
+#' desired covariate values for the reference grid; then the nesting will be
+#' handled correctly if you specify \code{covnest = TRUE} and 
+#' \code{cov.reduce = FALSE}.
 #' 
 #' @section Predictors with subscripts and data-set references:
 #' When the fitted model contains subscripts or explicit references to data
@@ -267,7 +272,7 @@
 ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
                      transform = c("none", "response", "mu", "unlink", "log"), 
-                     nesting, offset, ...) 
+                     nesting, covnest = FALSE, offset, ...) 
 {
     transform = match.arg(transform)
     if (!missing(df)) {
@@ -512,9 +517,10 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     ### --- Determine weights for each grid point --- (added ver.2.11), updated ver.2.14 to include weights
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1
-#    nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
-    ### Changed 2018-Nov to all names (except multiv) for which there is > 1 level
-    nms = setdiff(names(ref.levels)[sapply(ref.levels, length) > 1], multresp)
+    if (!covnest)
+        nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
+    else
+        nms = setdiff(names(ref.levels)[sapply(ref.levels, length) > 1], multresp) # all names (except multiv) for which there is > 1 level
     if (length(nms) == 0)
         wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
     else {

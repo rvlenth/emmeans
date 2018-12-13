@@ -1,7 +1,6 @@
 ---
 title: "Utilities and options for emmeans"
-author: "Russ Lenth"
-date: "`r Sys.Date()`"
+author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
   %\VignetteIndexEntry{Utilities and options}
@@ -9,7 +8,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
-require("emmeans") 
+require("emmeans")
+emm_options(opt.digits = FALSE)
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
 
@@ -18,7 +18,10 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 ## Contents {#contents}
 
   1. [Updating an `emmGrid` object](#update)
-  2. [Setting options and defaults](#options)
+  2. [Setting options](#options)
+      a. [Setting and viewing defaults](#defaults)
+      b. [Optimal digits to display](#digits)
+      c. [Startup options](#startup)
   3. [Combining and subsetting `emmGrid` objects](#rbind)
   4. [Accessing results to use elsewhere](#data)
   5. [Adding grouping factors](#groups)
@@ -61,7 +64,7 @@ emmeans(pigs.lm, "source", options = list(infer = c(TRUE, TRUE), null = log(35))
 
 [Back to contents](#contents)
 
-## Setting options and defaults {#options}
+## Setting options {#options}
 <!-- @index `get_emm_option()`; Options -->
 Speaking of the `options` argument, note that the default in `emmeans()` 
 is `options = get_emm_option("emmeans")`. Let's see what that is:
@@ -83,7 +86,7 @@ In addition, the flag `is.new.rg` is set to `TRUE`, and that is why one
 sees a `str()` listing rather than a summary as the default when the object
 is simply shown by typing its name at the console.
 
-###### {#defaults}
+### Setting and viewing defaults {#defaults}
 <!-- @index `emm_options()`; `emmGrid` objects!Setting defaults for
      `emmeans()`!Changing defaults; `contrast()`!Changing defaults -->
 The user may have other preferences. She may want to see both intervals 
@@ -136,6 +139,18 @@ emm_options(opt.digits = TRUE)
 By the way, setting this option does *not* round the calculated values computed
 by `summary.emmGrid()` or saved in a `summary)emm` object; it simply controls
 the precision displayed by `print.summary_emm()`.
+
+### Startup options {#startup}
+The options accessed by `emm_options()` and `get_emm_option()` are stored in a
+list named `emmeans` within R's options environment. Therefore, if you desire
+options other than the defaults provided on a regular basis, this can be
+easily arranged by specifying them in your startup script for R. For example,
+if you usually want optimal precision and confidence intervals for contrasts,
+your `.Rprofile` file could contain the line
+```{r eval = FALSE}
+options(emmeans = list(opt.digits = TRUE, 
+                       contrast = list(infer = c(TRUE, FALSE))))
+```
 
 [Back to contents](#contents)
 
