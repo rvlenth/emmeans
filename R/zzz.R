@@ -28,6 +28,11 @@
 hasName = function(x, name)
    match(name, names(x), nomatch = 0L) > 0L
 
+
+
+### NOTE: Revised just after version 1.3.1 release to move CSS file to inst/css
+###       because devtools and relatives will delete inst/doc without notice!
+
 # NOTE: Excluded from documentation
 # Custom Vignette format
 # 
@@ -37,7 +42,7 @@ hasName = function(x, name)
 #
 # @return R Markdown format used by \code{rmarkdown::render}
 #' @export
-.emm_vignette = function(css = system.file("doc", "clean-simple.css", package = "emmeans"), 
+.emm_vignette = function(css = system.file("css", "clean-simple.css", package = "emmeans"), 
                          highlight = NULL,  ...) {
     rmarkdown::html_document(theme = NULL, highlight = highlight,
                              fig_width = 3, fig_height = 3, 
