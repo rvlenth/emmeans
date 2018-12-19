@@ -240,7 +240,7 @@ emmeans = function(object, specs, by = NULL,
     }
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
-                             contr = contr, weights = weights))
+                             contr = contr, weights = weights, ...))
     }
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)
@@ -422,8 +422,8 @@ emmeans = function(object, specs, by = NULL,
                  "To obtain a compact letter display, first call `emmeans()`,\n",
                  "then call `CLD()` on the result.")
         }
-        args = list() ###list(...)
-        ### args$data = NULL   # ensure 'data' not passed
+        args = list(...)
+        args$data = NULL   # ensure 'data' not passed
         args$object = result
         args$method = contr
         args$by = by
