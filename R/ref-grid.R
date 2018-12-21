@@ -179,7 +179,7 @@
 #' vector. For example, these specifications are equivalent: \code{nesting =
 #' list(state = "country", city = c("state", "country")}, \code{nesting = "state
 #' \%in\% country, city \%in\% (state*country)"}, and \code{nesting = c("state
-#' \%in\% country)", "city \%in\% (state*country)")}.
+#' \%in\% country", "city \%in\% (state*country)")}.
 #' 
 #' In certain unusual cases, a covariate (rather than a factor) may be nested.
 #' Support for such situations is limited to the extent that only covariate
