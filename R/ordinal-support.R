@@ -121,10 +121,10 @@ emm_basis.clm = function (object, trms, xlev, grid,
     ### ----- Get non-estimability basis ----- ###
     nbasis = snbasis = estimability::all.estble
     if (any(is.na(bhat))) {
-        #####mm = model.matrix(object)
-        # workaround to fact that model.matrix doesn't get the contrasts right...
-        mf = update(object, method = "model.frame")$mf
-        mm = list(X = model.matrix(object$terms, data=mf, contrasts.arg = object$contrasts))
+        mm = model.matrix(object)
+        # # [No longer needed] workaround to fact that model.matrix doesn't get the contrasts right...
+        # mf = update(object, method = "model.frame")$mf
+        # mm = list(X = model.matrix(object$terms, data=mf, contrasts.arg = object$contrasts))
         if (any(is.na(c(object$alpha, object$beta)))) {
             NOMX = mm$X
             if (is.null(mm$NOM))

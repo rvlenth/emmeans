@@ -1,5 +1,14 @@
 ## NEWS for the emmeans package
 
+
+emmeans 1.3.1.xxxxx
+-------------
+
+  * Fixed over-zealous choice to not pass `...` arguments in `emmeans()`
+    when two-sided formulas are present
+  * Fix to `clm` support when model is rank-deficient
+
+
 emmeans 1.3.1
 -------------
 

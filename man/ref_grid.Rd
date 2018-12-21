@@ -179,12 +179,13 @@ argument may be a character vector or a named \code{list}. If a \code{list},
 each name should be the name of a single factor in the grid, and its entry a
 character vector of the name(s) of its grouping factor(s). \code{nested} may
 also be a character value of the form \code{"factor1 \%in\%
-(factor2*factor3)"}. If there is more than one such specification, they may
+(factor2*factor3)"} (the parentheses are optional). If there is more than one
+such specification, they may
 be appended separated by commas, or as separate elements of a character
 vector. For example, these specifications are equivalent: \code{nesting =
 list(state = "country", city = c("state", "country")}, \code{nesting = "state
 \%in\% country, city \%in\% (state*country)"}, and \code{nesting = c("state
-\%in\% country)", "city \%in\% (state*country)")}.
+\%in\% country", "city \%in\% state*country")}.
 
 In certain unusual cases, a covariate (rather than a factor) may be nested.
 Support for such situations is limited to the extent that only covariate
