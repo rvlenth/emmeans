@@ -7,6 +7,8 @@ emmeans 1.3.1.xxxxx
   * Fixed over-zealous choice to not pass `...` arguments in `emmeans()`
     when two-sided formulas are present
   * Fix to `clm` support when model is rank-deficient
+  * Fix to `regrid(..., transform = "log")` error when there are
+    existing non-estimable cases (issue #65)
 
 
 emmeans 1.3.1

@@ -592,16 +592,18 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
             object@misc$tran = object@misc$tran.mult = object@misc$inv.lbl = NULL
     }
     if (transform == "log") { # from prev block, we now have stuff on response scale
+        Vee = vcov(object)
         incl = which(object@bhat > 0)
-        if (length(incl) < length(object@bhat)) {
+        nas = which(is.na(object@bhat)) # already NA
+        negs = which(object@bhat < 0)
+        if (length(negs) > 0) {
             message("Non-positive response predictions are flagged as non-estimable")
+            object@bhat[negs] = NA
             tmp = seq_along(object@bhat)
-            excl = tmp[-incl]
-            object@bhat[excl] = NA
-            object@nbasis = sapply(excl, function(ii) 0 + (tmp == ii))
+            object@nbasis = sapply(c(nas, negs), function(ii) 0 + (tmp == ii))
         }
         D = .diag(1/object@bhat[incl])
-        object@V = D %*% tcrossprod(object@V[incl, incl, drop = FALSE], D)
+        object@V = D %*% tcrossprod(Vee[incl, incl, drop = FALSE], D)
         object@bhat = log(object@bhat)
         if (!is.na(PB[1])) {
             PB[PB <= 0] = NA
