@@ -65,7 +65,7 @@ str.emmGrid <- function(object, ...) {
             if (nm %in% object@roles$responses)
                 cat("multivariate response with means: ")
             else
-                cat("matrix with column means: ")
+                cat("matrix with column reference values: ")
             cat("\n        ")
             showlevs(object@matlevs[[nm]])
         }
@@ -595,7 +595,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
         Vee = vcov(object)
         incl = which(object@bhat > 0)
         nas = which(is.na(object@bhat)) # already NA
-        negs = which(object@bhat < 0)
+        negs = which(object@bhat <= 0)
         if (length(negs) > 0) {
             message("Non-positive response predictions are flagged as non-estimable")
             object@bhat[negs] = NA

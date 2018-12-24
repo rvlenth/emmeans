@@ -921,6 +921,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 #' @export
 print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     x.save = x
+    for(i in which(sapply(x, is.matrix))) 
+        x[[i]] = NULL   # hide matrices
     for (i in seq_along(names(x)))   # zapsmall the numeric columns
         if (is.numeric(x[[i]]))  
             x[[i]] = zapsmall(x[[i]])
@@ -934,7 +936,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
         x$p.value[fp=="0.0000"] = "<.0001"
     }
     estn = attr(x, "estName")
-    just = sapply(x.save, function(col) if(is.numeric(col)) "R" else "L")
+    just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")
     est = x[[estn]]
     if (get_emm_option("opt.digits") && is.null(digits)) {
         if (!is.null(x[["SE"]]))

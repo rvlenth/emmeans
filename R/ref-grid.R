@@ -131,13 +131,23 @@
 #' Care must be taken when covariate values depend on one another. For example,
 #' when a polynomial model was fitted using predictors \code{x}, \code{x2}
 #' (equal to \code{x^2}), and \code{x3} (equal to \code{x^3}), the reference 
-#' grid will by by default set \code{x2} and \code{x3} to their means, which is
+#' grid will by default set \code{x2} and \code{x3} to their means, which is
 #' inconsistent. The user should instead use the \code{at} argument to set these
 #' to the square and cube of \code{mean(x)}. Better yet, fit the model using
 #' a formula involving \code{poly(x, 3)} or \code{I(x^2)} and \code{I(x^3)}; then
 #' there is only \code{x} appearing as a covariate; it will be set to its mean, 
 #' and the model matrix will have the correct corresponding quadratic and cubic
 #' terms.
+#' 
+#' @section Matrix covariates:
+#' Support for covariates that appear in the dataset as matrices is very limited.
+#' If the matrix has but one column, it is treated like an ordinary covariate.
+#' Otherwise, with more than one column, each column is reduced to a single
+#' reference value -- the result of applying \code{cov.reduce} to each column 
+#' (averaged together 
+#' if that produces more than one value); you may not specify values
+#' in \code{at}; and they are not treated as variables in the reference grid,
+#' except for purposes of obtaining predictions.
 #' 
 #' @section Recovering or overriding model information:
 #' Ability to support a particular class of \code{object} depends on the
@@ -355,6 +365,8 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     
     for (nm in attr(data, "predictors")) {
         x = data[[nm]]
+        if (is.matrix(x) && ncol(x) == 1)   # treat 1-column matrices as covariates
+            x = as.numeric(x)
         
         # Save the original levels of factors, no matter what
         if (is.factor(x) && !(nm %in% coerced$covariates))
@@ -395,8 +407,11 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     grid = do.call(expand.grid, ref.levels)
     
     # add any matrices
-    for (nm in names(matlevs))
-        grid[[nm]] = matrix(rep(matlevs[[nm]], each=nrow(grid)), nrow=nrow(grid))
+    for (nm in names(matlevs)) {
+        tmp = matrix(rep(matlevs[[nm]], each=nrow(grid)), nrow=nrow(grid))
+        dimnames(tmp) = list(NULL, names(matlevs[[nm]]))
+        grid[[nm]] = tmp
+    }
 
     # resolve any covariate formulas
     for (xnm in names(dep.x)) {
