@@ -86,8 +86,12 @@
 #' @rdname emmc-functions
 #' @aliases emmc-functions 
 #' @param levs Vector of factor levels
-#' @param exclude integer vector with indices of levels to exclude
+#' @param exclude integer vector of indices, or character vector of levels to exclude
 #'   from consideration. These levels will receive weight 0 in all contrasts.
+#'   Character levels must exactly match elements of \code{levs}.
+#' @param include integer or character vector of levels to include (the
+#'   complement of \code{exclude}). An error will result if the user specifies
+#'   both \code{exclude} and \code{include}.
 #' @param ... Additional arguments, passed to related methods as appropriate
 #' 
 #' @return A data.frame, each column containing contrast coefficients for levs.
@@ -125,7 +129,8 @@
 #' emmeans:::poly.emmc(1:6)
 #' }
 #' @name contrast-methods
-pairwise.emmc = function(levs, exclude = integer(0), ...) {
+pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
     k = length(levs)
     M = data.frame(levs=levs)
     for (i in setdiff(seq_len(k-1), exclude)) {
@@ -147,7 +152,8 @@ pairwise.emmc = function(levs, exclude = integer(0), ...) {
 
 # all pairwise trt[j] - trt[i], j > i
 #' @rdname emmc-functions
-revpairwise.emmc = function(levs, exclude = integer(0), ...) {
+revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
     k = length(levs)
     M = data.frame(levs=levs)
     for (i in setdiff(1 + seq_len(k - 1), exclude)) {
@@ -206,9 +212,12 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 # All comparisons with a control; ref = index of control group
 # New version -- allows more than one control group (ref is a vector)
 #' @rdname emmc-functions
-#' @param ref Integer(s) specifying which level(s) to use as the reference
+#' @param ref Integer(s) or character(s) specifying which level(s) to use 
+#'   as the reference. Character values must exactly match elements of \code{levs}.
 trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, 
-                            exclude = integer(0), ...) {
+                            exclude = integer(0), include, ...) {
+    ref = .num.key(levs, ref)
+    exclude = .get.excl(levs, exclude, include)
     if ((min(ref) < 1) || (max(ref) > length(levs)))
         stop("Reference levels are out of range")
     k = length(levs)
@@ -261,7 +270,8 @@ dunnett.emmc = function(levs, ref = 1, ...) {
 
 # effects contrasts. Each mean versus the average of all
 #' @rdname emmc-functions
-eff.emmc = function(levs, exclude = integer(0), ...) {
+eff.emmc = function(levs, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
     k = length(levs)
     kk = k - length(exclude)
     start = rep(-1/kk, k)
@@ -283,7 +293,8 @@ eff.emmc = function(levs, exclude = integer(0), ...) {
 # "deleted" effects contrasts. 
 # Each mean versus the average of all others
 #' @rdname emmc-functions
-del.eff.emmc = function(levs, exclude = integer(0), ...) {
+del.eff.emmc = function(levs, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
     k = length(levs) - length(exclude)
     M = as.matrix(eff.emmc(levs, exclude = exclude, ...)) * k / (k-1)
     M = as.data.frame(M)
@@ -295,7 +306,8 @@ del.eff.emmc = function(levs, exclude = integer(0), ...) {
 # Contrasts to compare consecutive levels:
 # (-1,1,0,0,...), (0,-1,1,0,...), ..., (0,...0,-1,1)
 #' @rdname emmc-functions
-consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
+consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
     sgn = ifelse(reverse, -1, 1)
     tmp = rep(0, length(levs))
     k = length(levs) - length(exclude)
@@ -322,7 +334,8 @@ consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
 # Mean after minus mean before
 # e.g., (-1, 1/3,1/3,1/3), (-1/2,-1/2, 1/2,1/2), (-1/3,-1/3,-1/3, 1)
 #' @rdname emmc-functions
-mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
+mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
     sgn = ifelse(reverse, -1, 1)
     k = length(levs) - length(exclude)
     tmp = rep(0, length(levs))
@@ -344,3 +357,30 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), ...) {
 }
 
 
+### utility to translate character keys to index keys
+#' @export
+.num.key = function(levs, key) {
+    orig.key = key
+    if (is.character(key))
+        key = match(key, levs)
+    if (any(is.na(key)))
+        stop("One or more of:\n\t", paste(orig.key, collapse = ","), "\nnot found in\n\t",
+             paste(levs, collapse = ","),
+             call. = FALSE)
+    if (any(key > length(levs)) || any(key < 1))
+        stop("Numeric index not in 1 : length(levs)")
+    key
+}
+
+### utility to find exclude levels from either exclude or include
+### Also returns numeric version
+#' @export
+.get.excl = function(levs, exc, inc) {
+    if (!missing(inc)) {
+        if(length(exc) > 0)
+            stop("Cannot specify both 'exclude' and 'include'", call. = FALSE)
+        inc = .num.key(levs, inc)
+        exc = setdiff(seq_along(levs), inc)
+    }
+    .num.key(levs, exc)
+}

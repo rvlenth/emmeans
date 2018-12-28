@@ -17,16 +17,16 @@
 \alias{mean_chg.emmc}
 \title{Contrast families}
 \usage{
-pairwise.emmc(levs, exclude = integer(0), ...)
+pairwise.emmc(levs, exclude = integer(0), include, ...)
 
-revpairwise.emmc(levs, exclude = integer(0), ...)
+revpairwise.emmc(levs, exclude = integer(0), include, ...)
 
 tukey.emmc(levs, reverse = FALSE, ...)
 
 poly.emmc(levs, max.degree = min(6, k - 1), ...)
 
 trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE,
-  exclude = integer(0), ...)
+  exclude = integer(0), include, ...)
 
 trt.vs.ctrl1.emmc(levs, ref = 1, ...)
 
@@ -34,19 +34,25 @@ trt.vs.ctrlk.emmc(levs, ref = length(levs), ...)
 
 dunnett.emmc(levs, ref = 1, ...)
 
-eff.emmc(levs, exclude = integer(0), ...)
+eff.emmc(levs, exclude = integer(0), include, ...)
 
-del.eff.emmc(levs, exclude = integer(0), ...)
+del.eff.emmc(levs, exclude = integer(0), include, ...)
 
-consec.emmc(levs, reverse = FALSE, exclude = integer(0), ...)
+consec.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
-mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), ...)
+mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), include,
+  ...)
 }
 \arguments{
 \item{levs}{Vector of factor levels}
 
-\item{exclude}{integer vector with indices of levels to exclude
-from consideration. These levels will receive weight 0 in all contrasts.}
+\item{exclude}{integer vector of indices, or character vector of levels to exclude
+from consideration. These levels will receive weight 0 in all contrasts.
+Character levels must exactly match elements of \code{levs}.}
+
+\item{include}{integer or character vector of levels to include (the
+complement of \code{exclude}). An error will result if the user specifies
+both \code{exclude} and \code{include}.}
 
 \item{...}{Additional arguments, passed to related methods as appropriate}
 
@@ -54,7 +60,8 @@ from consideration. These levels will receive weight 0 in all contrasts.}
 
 \item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
 
-\item{ref}{Integer(s) specifying which level(s) to use as the reference}
+\item{ref}{Integer(s) or character(s) specifying which level(s) to use 
+as the reference. Character values must exactly match elements of \code{levs}.}
 }
 \value{
 A data.frame, each column containing contrast coefficients for levs.

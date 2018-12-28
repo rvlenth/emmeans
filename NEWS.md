@@ -4,6 +4,9 @@
 emmeans 1.3.1.xxxxx
 -------------
 
+  * Added `include` argument to most `.emmc` functions (#67)
+  * Now allow character values for `ref`, `exclude`, and `include` in
+    `.emmc` functions (#68)
   * Fixed over-zealous choice to not pass `...` arguments in `emmeans()`
     when two-sided formulas are present
   * Fix to `clm` support when model is rank-deficient
