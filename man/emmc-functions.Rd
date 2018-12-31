@@ -139,10 +139,12 @@ Caution is needed in cases where the user alters the ordering of
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
 contrast(warp.emm, "poly")
+contrast(warp.emm, "trt.vs.ctrl", ref = "M")
 
 # Compare only low and high tensions
 # Note pairs(emm, ...) calls contrast(emm, "pairwise", ...)
 pairs(warp.emm, exclude = 2)
+# (same results using exclude = "M" or include = c("L","H") or include = c(1,3))
 
 ### Setting up a custom contrast function
 helmert.emmc <- function(levs, ...) {

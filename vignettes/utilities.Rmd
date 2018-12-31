@@ -9,7 +9,7 @@ vignette: >
 ---
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
 require("emmeans")
-emm_options(opt.digits = FALSE)
+emm_options(opt.digits = TRUE)
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
 
@@ -125,30 +125,36 @@ options(emmeans = NULL)
 
 ### Optimal digits to display {#digits}
 <!-- @index Digits, optimizing; `opt.digits` option -->
-When an `emmGrid` object is summarized and displayed, the factory default
-is to display it in a consistent way with many other analyses in R --- i.e.,
-using the number of digits in `getOption("digits")`. This is often much more
-precision than is really justified. You may use the
-`"opt.digits"` option to change this. If it is set to `TRUE`, the number
-of digits is set to a more realistic value based on the estimates and their 
-confidence or HPD intervals. In the remainder of this vignette, we turn on 
-this option; observe that fewer digits are displayed than those that came before.
-```{r}
-emm_options(opt.digits = TRUE)
-```
-By the way, setting this option does *not* round the calculated values computed
-by `summary.emmGrid()` or saved in a `summary)emm` object; it simply controls
-the precision displayed by `print.summary_emm()`.
+When an `emmGrid` object is summarized and displayed, the factory default is to
+display it with just enough digits as is justified by the standard errors or HPD
+intervals of the estimates displayed. You may use the `"opt.digits"` option to
+change this. If it is `TRUE` (the default), we display only enough digits as is
+justified (but at least 3). If it is set to `FALSE`, the number of digits is set
+using the R system's default, `getOption("digits")`; this is often much more
+precision than is justified. To illustrate, here is the summary of `pigs.emm`
+displayed without optimizing digits. Compare it with the first summary in this 
+vignette.
+```{r} 
+emm_options(opt.digits = FALSE)
+pigs.emm
+emm_options(opt.digits = TRUE)  # revert to optimal digits
+``` 
+By the way, setting this option does
+*not* round the calculated values computed by `summary.emmGrid()` or saved in a
+`summary)emm` object; it simply controls the precision displayed by
+`print.summary_emm()`.
 
 ### Startup options {#startup}
+<!-- @index Startup options; Options!Startup -->
 The options accessed by `emm_options()` and `get_emm_option()` are stored in a
 list named `emmeans` within R's options environment. Therefore, if you desire
 options other than the defaults provided on a regular basis, this can be
 easily arranged by specifying them in your startup script for R. For example,
-if you usually want optimal precision and confidence intervals for contrasts,
+if you want to default to Satterthwaite degrees of freedom for `lmer` models,
+and display confidence intervals rather than tests for contrasts,
 your `.Rprofile` file could contain the line
 ```{r eval = FALSE}
-options(emmeans = list(opt.digits = TRUE, 
+options(emmeans = list(lmer.df = "satterthwaite", 
                        contrast = list(infer = c(TRUE, FALSE))))
 ```
 

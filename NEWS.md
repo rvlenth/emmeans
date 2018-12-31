@@ -12,6 +12,11 @@ emmeans 1.3.1.xxxxx
   * Fix to `clm` support when model is rank-deficient
   * Fix to `regrid(..., transform = "log")` error when there are
     existing non-estimable cases (issue #65)
+  * I decided to enable "optimal digits" display by default. In summaries,
+    we try to show enough, but not too much, precision in estimates and
+    confidence intervals. If you don't like this and want to revert
+    to the old (exaggerated precision) behavior, do 
+    `emm_options(opt.digits = FALSE)`
 
 
 emmeans 1.3.1

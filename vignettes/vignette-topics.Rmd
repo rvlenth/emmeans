@@ -339,6 +339,7 @@ vignette: >
   * [Offsets](sophisticated.html#offsets)
   * [`opt.digits` option](utilities.html#digits)
   * [Options](utilities.html#options)
+      * [Startup](utilities.html#startup)
   * Ordinal models
       * [Latent scale](sophisticated.html#ordinal)
       * [Linear-predictor scale](sophisticated.html#ordlp)
@@ -425,6 +426,7 @@ vignette: >
       * [Formula](comparisons.html#formulas)
   * [`stanreg` objects](models.html#S)
   * [* gazing](interactions.html#factors)
+  * [Startup options](utilities.html#startup)
   * [`str()`](confidence-intervals.html#emmobj)
   * [Subsets of data](FAQs.html#model)
   * [`summary()`](confidence-intervals.html#summary)

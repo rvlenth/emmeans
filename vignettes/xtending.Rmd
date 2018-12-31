@@ -250,6 +250,16 @@ A few additional functions are exported because they may be useful to developers
     returns a new `misc` list containing the link function and, in some cases,
     extra features that are used for certain types of link functions (e.g., for a
     log link, the setups for returning ratio comparisons with `type = "response"`).
+  * `emmeans::.num.key(levs, key)` Returns integer indices of elements of 
+    `key` in `levs` when `key` is a character vector; or just returns integer values
+    if already integer. Also throws an error if levels are mismatched or indices exceed 
+    legal range. This is useful in custom contrast functions (`.emmc` functions).
+  * `emmeans::.get.excl(levs, exclude, include)` This is support for the `exclude` and 
+    `include` arguments of contrast functions. It checks legality and returns an integer 
+    vector of `exclude` indices in `levs`, given specified integer or character
+    arguments `exclude` and `include`. In your `.emmc` function, 
+    `exclude` should default to `integer(0)` and `include` should have no default.
+    
 
 [Back to Contents](#contents)
 
