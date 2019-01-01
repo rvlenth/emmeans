@@ -68,10 +68,10 @@ object.}
   for example, should we simplify a predictor name like \dQuote{\code{data$trt}}
   to just \dQuote{\code{trt}}? Defaults to \code{TRUE}.}
 \item{\code{opt.digits}}{A logical value controlling the precision with which
-  summaries are printed. If \code{FALSE} (the default), the system value
-  \code{getOption("digits")} is used. If \code{TRUE}, the number of digits
+  summaries are printed. If \code{TRUE} (default), the number of digits
   displayed is just enough to reasonably distinguish estimates from the ends
-  of their confidence intervals; but always at least 3 digits.}
+  of their confidence intervals; but always at least 3 digits. If
+  \code{FALSE}, the system value \code{getOption("digits")} is used.}
 }%%% end describe{}
 Some other options have more specific purposes:
 \describe{

@@ -6,9 +6,12 @@ recover_data.brmsfit = function(object, data, ...) {
     bt = brms::parse_bf(formula(object))
     if (class(bt) != "brmsterms")
         stop("This model is currently not supported.")
-    form = bt$dpars$mu$fe
-    # we don't have a call component so I'll just put in NULL
-    recover_data.call(NULL, terms(form), "na.omit", data = object$data, ...)
+    mt = attr(model.frame(bt$dpars$mu$fe, data = object$data), "terms")
+    # form = bt$dpars$mu$fe
+    # for (att in c("predvars", "dataClasses"))
+    #     attr(trms, att) = attr(mt, att)
+    ### we don't have a call component so I'll just put in NULL
+    recover_data.call(NULL, mt, "na.omit", data = object$data, ...)
 }
 
 emm_basis.brmsfit = function(object, trms, xlev, grid, vcov., ...) {
@@ -16,7 +19,8 @@ emm_basis.brmsfit = function(object, trms, xlev, grid, vcov., ...) {
     contr = lapply(object$data, function(.) attr(., "contrasts"))
     contr = contr[!sapply(contr, is.null)]
     X = model.matrix(trms, m, contrasts.arg = contr)
-    nm = gsub("(Intercept)", "Intercept", dimnames(X)[[2]], fixed = TRUE)
+    ###nm = gsub("(Intercept)", "Intercept", dimnames(X)[[2]], fixed = TRUE)
+    nm = eval(parse(text = "brms:::rename(colnames(X))"))
     V = vcov(object)[nm, nm, drop = FALSE]
     nbasis = estimability::all.estble
     dfargs = list()
