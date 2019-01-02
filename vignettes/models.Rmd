@@ -47,7 +47,8 @@ Scroll down or follow the links to those groups for more information.
 |clmm         |ordinal  |[O](#O)  |Like `clm` but no `"scale"` mode                             |
 |coxme        |coxme    |[G](#G)  |                                                             |
 |coxph        |survival |[G](#G)  |                                                             |
-|gam          |gam      |[G](#G)  |`nboot = 800`                                                |
+|gam          |mgcv     |[G](#G)  |`freq = FALSE`, `unconditional = FALSE`                      |
+|Gam          |gam      |[G](#G)  |`nboot = 800`                                                |
 |gamlss       |gamlss   |[H](#H)  |`what = c("mu", "sigma", "nu", "tau")`                       |
 |gee          |gee      |[E](#E)  |`vcov.method = c("naive", "robust")`                         |
 |geeglm       |geepack  |[E](#E)  |`vcov.method = c("vbeta", "vbeta.naiv", "vbeta.j1s",`        |
@@ -163,14 +164,24 @@ in the documentation for `ref_grid`.
 
 
 ## Group G -- Generalized linear models and relatives {#G}
-<!-- @index Generalized linear models; `glm`*xxx* models -->
+<!-- @index Generalized linear models; `glm`*xxx* models; 
+    Generalized additive models; `gam` models; -->
 Models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `Inf`.
 
-In the case of `gam::gam` objects, there is an optional `nboot` argument
+In the case of `mgcv::gam` objects, there are optional `freq` and
+`unconditional` arguments as is detailed in the documentation for
+`mgcv::vcov.gam()`. Both default to `FALSE`. The value of `unconditional` 
+matters only if `freq = FALSE` and `object$Vc` is non-null.
+
+With `gam::Gam` objects, standard errors are estimated using a bootstrap
+method when there are any smoothers involved. Accordingly, there is an 
+optional `nboot` argument
 that sets the number of bootstrap replications used to estimate the 
 variances and covariances of the smoothing portions of the model.
+Generally, it is better to use models fitted via `mgcv::gam()` rather
+than `gam::gam()`.
 
 [Back to quick reference](#quickref)
 

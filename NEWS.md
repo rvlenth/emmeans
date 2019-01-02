@@ -19,6 +19,8 @@ emmeans 1.3.1.xxxxx
     to the old (exaggerated precision) behavior, do 
     `emm_options(opt.digits = FALSE)`
   * Improvements to `brmsfit` support (#43)
+  * Added support for `mgcv::gam` objects
+  * `.my.vcov()` now passes `...` to clients
 
 
 emmeans 1.3.1

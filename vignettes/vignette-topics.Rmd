@@ -206,8 +206,10 @@ vignette: >
 ### G {#g}
 
 
+  * [`gam` models](models.html#G)
   * [`gamlss` models](models.html#H)
   * [GEE models](models.html#E)
+  * [Generalized additive models](models.html#G)
   * [Generalized linear models](models.html#G)
   * [`get_emm_option()`](utilities.html#options)
   * [**ggplot2** package](basics.html#ggplot)

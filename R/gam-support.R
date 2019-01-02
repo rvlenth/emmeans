@@ -25,14 +25,11 @@
 # still serves for these (I hope)
 
 
-# Right now I'm assuming gam package. Will add mgcv::gam later, maybe
+# gam::Gam objects...
 
 # We have two args:
 #   nboot   # of bootstrap reps to get variances of smooths
-emm_basis.gam = function(object, trms, xlev, grid, nboot = 800, ...) {
-    if (!is.null(object$gcv.ubre)) # From mgcv, not gam
-        return (emm_basis.gam_mgcv(object, trms, xlev, grid, ...))
-    
+emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
     result = emm_basis.lm(object, trms, xlev, grid, ...)
     old.smooth = object$smooth
     if (is.null(old.smooth))  # "just an ordinary glm" (My Fair Lady)
@@ -45,7 +42,7 @@ emm_basis.gam = function(object, trms, xlev, grid, nboot = 800, ...) {
     resid = object$residuals
     for (i in seq_along(labs)) {
         lab = labs[i]
-        sig = apply(smooth.frame[[i]], 1, paste, collapse = ":")
+        sig = apply(smooth.frame[, i, drop=FALSE], 1, paste, collapse = ":")
         usig = unique(sig)
         rows = lapply(usig, function(s) which(sig == s))
         xeval = smooth.frame[sapply(rows, "[", 1), lab]
@@ -75,8 +72,31 @@ emm_basis.gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 
 
 ### emm_basis method for mgcv::gam objects
-emm_basis.gam_mgcv = function(object, trms, xlev, grid, ...) {
-    stop("Can't handle mgcv::gam objects")
+### extra arg `unconditional` and `freq` as in `vcov.gam`
+emm_basis.gam = function(object, trms, xlev, grid, 
+                         freq = FALSE, unconditional = FALSE, ...) {
+    # coef() works right for lm but coef.aov tosses out NAs
+    bhat = object$coefficients
+#    m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
+#    X = model.matrix(trms, m, contrasts.arg = object$contrasts)
+    X = predict(object, newdata = grid, type = "lpmatrix", 
+                newdata.guaranteed = TRUE)
+    bhat = as.numeric(bhat) 
+    # stretches it out if multivariate - see mlm method
+    V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)
+    
+    # if (sum(is.na(bhat)) > 0)
+    #     nbasis = estimability::nonest.basis(object$qr)
+    # else
+        nbasis = estimability::all.estble
+        misc = .std.link.labels(object$family, list())
+        # dffun = function(k, dfargs) Inf
+        # dfargs = list()
+#    else {
+        dfargs = list(df = object$df.residual)
+        dffun = function(k, dfargs) dfargs$df
+#    }
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 
 

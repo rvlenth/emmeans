@@ -622,7 +622,7 @@ emm_basis.glmmadmb = function (object, trms, xlev, grid, ...)
 #' @export
 .my.vcov = function(object, vcov. = .statsvcov, ...) {
     if (is.function(vcov.))
-        vcov. = vcov.(object)
+        vcov. = vcov.(object, ...)
     else if (!is.matrix(vcov.))
         stop("vcov. must be a function or a square matrix")
     vcov.
