@@ -61,10 +61,14 @@ easily produce these results, as well as various graphs of them
     may be viewed.
 
   * **Github** To install the latest development version from Github, 
-    install the newest version of the **devtools** package; then run
+    install the newest version (definitely 2.0 or higher) of the **devtools** 
+    package; then run
+    
 ```
-devtools::install_github("rvlenth/emmeans", dependencies = TRUE,
-                        build_vignettes = TRUE)
+devtools::install_github("rvlenth/emmeans", dependencies = TRUE, build_opts = "")
+
+### To install without vignettes (faster):
+devtools::install_github("rvlenth/emmeans")
 ```
 *Note:* If you are a Windows user, you should also first download and
       install the latest version of

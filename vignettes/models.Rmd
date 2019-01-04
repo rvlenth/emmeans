@@ -48,6 +48,7 @@ Scroll down or follow the links to those groups for more information.
 |coxme        |coxme    |[G](#G)  |                                                             |
 |coxph        |survival |[G](#G)  |                                                             |
 |gam          |mgcv     |[G](#G)  |`freq = FALSE`, `unconditional = FALSE`                      |
+|gamm         |mgcv     |[G](#G)  |`code = object$gam$call`                                     |
 |Gam          |gam      |[G](#G)  |`nboot = 800`                                                |
 |gamlss       |gamlss   |[H](#H)  |`what = c("mu", "sigma", "nu", "tau")`                       |
 |gee          |gee      |[E](#E)  |`vcov.method = c("naive", "robust")`                         |
@@ -166,7 +167,7 @@ in the documentation for `ref_grid`.
 ## Group G -- Generalized linear models and relatives {#G}
 <!-- @index Generalized linear models; `glm`*xxx* models; 
     Generalized additive models; `gam` models; -->
-Models in this group receive only standard support as in [Group A](#A), but
+Most models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `Inf`.
 
@@ -174,6 +175,12 @@ In the case of `mgcv::gam` objects, there are optional `freq` and
 `unconditional` arguments as is detailed in the documentation for
 `mgcv::vcov.gam()`. Both default to `FALSE`. The value of `unconditional` 
 matters only if `freq = FALSE` and `object$Vc` is non-null.
+
+For `mgcv::gamm` objects, `emmeans()` results are based on the `object$gam`
+part. Unfortunately, that is missing its `call` component, so the user
+must supply it in the `call` argument (e.g., `call = quote(gamm(y ~ s(x), data = dat))`) 
+or give the dataset in the `data` argument. Alternatively (and recommended), 
+you may first set `object$gam$call` to the quoted call ahead of time.
 
 With `gam::Gam` objects, standard errors are estimated using a bootstrap
 method when there are any smoothers involved. Accordingly, there is an 

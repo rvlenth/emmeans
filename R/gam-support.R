@@ -100,6 +100,25 @@ emm_basis.gam = function(object, trms, xlev, grid,
 }
 
 
+### mgcv::gamm objects...
+recover_data.gamm = function(object, data = NULL, call = object$gam$call, ...) {
+    gam = object$gam
+    class(gam) = c("gam", "glm", "lm")
+    if (!is.null(data)) {
+        gam$call = quote(gamm())
+        return(recover_data(gam, data = data, ...))
+    }
+    else {
+        if (is.null(call))
+            return("Must supply either 'data' or 'call' with gamm objects")
+        gam$call = call
+        recover_data(gam, ...)
+    }
+}
+
+emm_basis.gamm = function(object, ...)
+    emm_basis(object$gam, ...)
+
 
 ###===================================================================
 # Support for gamlss objects

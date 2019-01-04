@@ -19,8 +19,10 @@ emmeans 1.3.1.xxxxx
     to the old (exaggerated precision) behavior, do 
     `emm_options(opt.digits = FALSE)`
   * Improvements to `brmsfit` support (#43)
-  * Added support for `mgcv::gam` objects
+  * Added support for `mgcv::gam` and `mgcv::gamm` models
   * `.my.vcov()` now passes `...` to clients
+  * Removed **glmmADMB** from `Imports`. The support is still provided,
+    just not involved in R's checking process.
 
 
 emmeans 1.3.1
