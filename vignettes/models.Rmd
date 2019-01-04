@@ -48,7 +48,7 @@ Scroll down or follow the links to those groups for more information.
 |coxme        |coxme    |[G](#G)  |                                                             |
 |coxph        |survival |[G](#G)  |                                                             |
 |gam          |mgcv     |[G](#G)  |`freq = FALSE`, `unconditional = FALSE`                      |
-|gamm         |mgcv     |[G](#G)  |`code = object$gam$call`                                     |
+|gamm         |mgcv     |[G](#G)  |`call = object$gam$call`                                     |
 |Gam          |gam      |[G](#G)  |`nboot = 800`                                                |
 |gamlss       |gamlss   |[H](#H)  |`what = c("mu", "sigma", "nu", "tau")`                       |
 |gee          |gee      |[E](#E)  |`vcov.method = c("naive", "robust")`                         |
