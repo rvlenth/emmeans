@@ -270,6 +270,11 @@ emmeans = function(object, specs, by = NULL,
             warning("emmeans() results may be corrupted by removal of a nesting structure")
         }
         
+        # Ensure object is in standard order
+        ord = do.call(order, RG@grid[rev(names(RG@levels))])
+        if(any(ord != seq_along(ord)))
+            RG = RG[ord]
+        
         if ((length(facs) == 1) && (facs == "1")) {  ### just want grand mean
             RG@levels[["1"]] = "overall"
             RG@grid[ ,"1"] = 1

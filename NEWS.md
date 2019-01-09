@@ -23,6 +23,7 @@ emmeans 1.3.1.xxxxx
   * `.my.vcov()` now passes `...` to clients
   * Removed **glmmADMB** from `Imports`. The support is still provided,
     just not involved in R's checking process.
+  * Fixed ordering bug for nested models (#71)
 
 
 emmeans 1.3.1
