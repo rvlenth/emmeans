@@ -24,6 +24,8 @@ emmeans 1.3.1.xxxxx
   * Removed **glmmADMB** from `Imports`. The support is still provided,
     just not involved in R's checking process.
   * Fixed ordering bug for nested models (#71)
+  * Support for `manova` object no longer requires `data` keyword (#72)
+  * Added support for multivariate response in `aovlist` models (#73)
 
 
 emmeans 1.3.1

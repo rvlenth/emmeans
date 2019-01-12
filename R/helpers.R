@@ -80,6 +80,14 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
     bas
 }
 
+#----------------------------------------------------------
+# manova objects
+recover_data.manova = function(object, ...) {
+    fcall = match.call(aov, object$call)   # need to borrow arg matching from aov()
+    recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
+}
+
+
 
 
 #--------------------------------------------------------------
