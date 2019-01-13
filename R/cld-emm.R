@@ -118,6 +118,12 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
         args$.emmGrid. = emmtbl[[attr(emmtbl, "estName")]]
         ord = do.call("order", args)
         emmtbl = emmtbl[ord, , as.df = FALSE]
+        if (!is.null(object@misc$display)) {
+            use = which(object@misc$display)
+            object@linfct = object@linfct[use, , drop = FALSE]
+            object@grid = object@grid[use, , drop = FALSE]
+            object@misc$display = NULL
+        }
         object@grid = object@grid[ord, , drop = FALSE]
         object@linfct = object@linfct[ord, , drop = FALSE]
     }

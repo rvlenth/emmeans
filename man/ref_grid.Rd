@@ -38,7 +38,8 @@ to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
 \item{data}{A \code{data.frame} to use to obtain information about the
 predictors (e.g. factor levels). If missing, then
-\code{\link{recover_data}} is used to attempt to reconstruct the data.}
+\code{\link{recover_data}} is used to attempt to reconstruct the data.
+See the note with \code{\link{recover_data}} for an important precaution.}
 
 \item{df}{Numeric value. This is equivalent to specifying
 \code{options(df = df)}. See \code{\link{update.emmGrid}}.}

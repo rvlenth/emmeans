@@ -80,6 +80,16 @@ or package developer may add \pkg{emmeans} support for a model
 class by writing \code{recover_data} and \code{emm_basis} methods
 for that class.
 }
+\note{
+Without an explicit \code{data} argument, \code{recover_data} returns
+   the \emph{current version} of the dataset. If the dataset has changed
+   since the model was fitted, then this will not be the data used to fit
+   the model. It is especially important to know this in simulation studies
+   where the data are randomly generated or permuted, and in cases where
+   several datasets are processed in one step (e.g., using \code{dplyr}).
+   In those cases, users should be careful to provide the actual data
+   used to fit the model in the \code{data} argument.
+}
 \section{Details}{
 
 To create a reference grid, the \code{ref_grid} function needs to reconstruct
@@ -92,7 +102,7 @@ is available via \href{../doc/extending.pdf}{vignette("extending", "emmeans")}
 To extend \pkg{emmeans}'s support to additional model types, one need only
 write S3 methods for these two functions. The existing methods serve as
 helpful guidance for writing new ones.  Most of the work for
-\code{recover.data} can be done by its method for class \code{"call"},
+\code{recover_data} can be done by its method for class \code{"call"},
 providing the \code{terms} component and \code{na.action} data as additional
 arguments. Writing an \code{emm_basis} method is more involved, but the
 existing methods (e.g., \code{emmeans:::emm_basis.lm}) can serve as models.
@@ -107,7 +117,7 @@ If the model has a multivariate response, \code{bhat} needs to be
 \dQuote{flattened} into a single vector, and \code{X} and \code{V} must be
 constructed consistently.
 
-In models where a non-full-rank result is possible (often you can tell by
+In models where a non-full-rank result is possible (often, you can tell by
 seeing if there is a \code{singular.ok} argument in the model-fitting
 function), \code{\link{summary.emmGrid}} and its relatives check the
 estimability of each

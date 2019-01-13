@@ -26,6 +26,7 @@ emmeans 1.3.1.xxxxx
   * Fixed ordering bug for nested models (#71)
   * Support for `manova` object no longer requires `data` keyword (#72)
   * Added support for multivariate response in `aovlist` models (#73)
+  * Fix to `CLD` fatal error when `sort = TRUE` (#77)
 
 
 emmeans 1.3.1
