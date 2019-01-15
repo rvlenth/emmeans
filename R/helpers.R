@@ -219,8 +219,16 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
 #' @export
 recover_data.lme = function(object, data, ...) {
     fcall = object$call
-    if (!is.null(fcall$weights))
-        fcall$weights = nlme::varWeights(object$modelStruct)
+    if (!is.null(fcall$weights)) {  # painful -- we only get weights for complete cases
+        if (!is.null(object$na.action)) {
+            w = nlme::varWeights(object$modelStruct)
+            wts = rep(0, length(w) + length(object$na.action))
+            wts[-object$na.action] = w
+            fcall$weights = wts
+        }
+        else
+            fcall$weights = nlme::varWeights(object$modelStruct)
+    }
     recover_data(fcall, delete.response(object$terms), object$na.action, data = data, ...)
 }
 

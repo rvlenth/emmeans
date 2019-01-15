@@ -28,6 +28,7 @@ emmeans 1.3.1.xxxxx
   * Added support for multivariate response in `aovlist` models (#73)
   * Documentation clarification (#76)
   * Fix to `CLD` fatal error when `sort = TRUE` (#77)
+  * Fix to issue with weights and incomplete cases with `lme` objects (#75)
 
 
 emmeans 1.3.1
