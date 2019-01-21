@@ -29,6 +29,8 @@ emmeans 1.3.1.xxxxx
   * Documentation clarification (#76)
   * Fix to `CLD` fatal error when `sort = TRUE` (#77)
   * Fix to issue with weights and incomplete cases with `lme` objects (#75)
+  * Nested fixed-effects yielded NonEsts when two factors are nested 
+    in the same factor(s) (#79)
 
 
 emmeans 1.3.1

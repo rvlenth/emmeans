@@ -157,7 +157,8 @@ add_grouping = function(object, newname, refname, newlevs) {
         sz = sapply(afacs, function(nm) length(nesting[[nm]]))
         # use highest-order one first: potentially, we end up calling this recursively
         afac = afacs[rev(order(sz))][1] 
-        grpfacs = nesting[[afac]]
+        otrs = setdiff(afacs, afac)   # other factors than afac
+        grpfacs = union(nesting[[afac]], otrs)
         gspecs = union(specs, union(by, grpfacs))
         grpids = as.character(interaction(rgobj@grid[, grpfacs]))
         grps = do.call(expand.grid, rgobj@levels[grpfacs])  # all combinations of group factors
