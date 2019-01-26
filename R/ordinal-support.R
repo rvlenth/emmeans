@@ -57,9 +57,10 @@ emm_basis.clm = function (object, trms, xlev, grid,
     if (mode == "scale")
         return (.emm_basis.clm.scale(object, trms, xlev, grid, ...))
     
-    if (is.null(object$contrasts))
-        warning("Contrasts used to fit the model are unknown.\n",
-                "Defaulting to system option, but results may be wrong.")
+    # if (is.null(object$contrasts))
+    #     warning("Contrasts used to fit the model are unknown.\n",
+    #             "Defaulting to system option, but results may be wrong.")
+    
     bhat = coef(object)
     V = .my.vcov(object, ...)
     tJac = object$tJac
@@ -122,29 +123,19 @@ emm_basis.clm = function (object, trms, xlev, grid,
     nbasis = snbasis = estimability::all.estble
     if (any(is.na(bhat))) {
         mm = model.matrix(object)
-        # # [No longer needed] workaround to fact that model.matrix doesn't get the contrasts right...
-        # mf = update(object, method = "model.frame")$mf
-        # mm = list(X = model.matrix(object$terms, data=mf, contrasts.arg = object$contrasts))
+        # note: mm has components X, NOM, and S
         if (any(is.na(c(object$alpha, object$beta)))) {
-            NOMX = mm$X
-            if (is.null(mm$NOM))
-                NOMX = mm$X
-            else {
-                ##NOMX = cbind(mm$NOM, mm$X[, -1, drop=false])
-                mmNOM = model.matrix(object$nom.terms, data = mf, contrasts.arg = object$nom.contrasts)
-                NOMX = cbind(mmNOM, mm$X[, -1])
-            }
+            NOMX = if (is.null(mm$NOM)) mm$X
+                   else                 cbind(mm$NOM, mm$X[, -1])
             nbasis = estimability::nonest.basis(NOMX)
             # replicate and reverse the sign of the NOM parts
             nomcols = seq_len(ncol(NOM))
             nbasis = apply(nbasis, 2, function(x)
-                c(rep(-x[nomcols], each = length(object$alpha)), x[-nomcols]))
+                c(rep(-x[nomcols], each = nrow(NOM)), x[-nomcols]))
         }
         if (!is.null(mm$S)) {
             if (any(is.na(object$zeta))) {
-                ####snbasis = nonest.basis(mm$S)
-                mmS = model.matrix(object$S.terms, data = mf, contrasts.arg = object$S.contrasts)
-                snbasis = estimability::nonest.basis(mmS)
+                snbasis = estimability::nonest.basis(mm$S)
                 # put intercept part at end
                 snbasis = rbind(snbasis[-1, , drop=FALSE], snbasis[1, ])
                 if (!is.null(attr(object$S.terms, "offset")))
@@ -253,6 +244,9 @@ emm_basis.clm = function (object, trms, xlev, grid,
     misc$pri.vars = misc$by.vars = misc$con.coef = misc$orig.grid = NULL
     newrg@misc = misc
     names(newrg@levels)[1] = names(newrg@grid)[1] = newname
+    levs = newrg@levels[[newname]]
+    newrg@grid[[newname]] = ordered(newrg@grid[[newname]], levels = levs)
+    newrg@levels[[newname]] = ordered(newrg@levels[[newname]], levels = levs)
     newrg@roles = object@roles
     newrg@roles$multresp = newname
     newrg
@@ -328,11 +322,8 @@ emm_basis.clm = function (object, trms, xlev, grid,
     X = model.matrix(trms, m, contrasts.arg = object$S.contrasts)
     bhat = c(`(intercept)` = 0, object$zeta)
     nbasis = estimability::all.estble
-    if (any(is.na(bhat))) {
-        mf = update(object, method = "model.frame")$mf
-        S = model.matrix(trms, mf, contrasts.arg = object$S.contrasts)
-        nbasis = estimability::nonest.basis(S)
-    }
+    if (any(is.na(bhat)))
+        nbasis = estimability::nonest.basis(model.matrix(object)$S)
     k = sum(!is.na(bhat)) - 1
     V = .my.vcov(object, ...)
     pick = nrow(V) - k + seq_len(k)

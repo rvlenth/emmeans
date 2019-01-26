@@ -58,7 +58,7 @@ Scroll down or follow the links to those groups for more information.
 |glm          |stats    |[G](#G)  |                                                             |
 |glm.nb       |MASS     |[G](#G)  |Requires `data` argument                                     |
 |glmerMod     |lme4     |[G](#G)  |                                                             |
-|glmmadmb     |glmmADMB |[G](#G)  |                                                             |
+|glmmadmb     |glmmADMB |         |No longer supported                                                      |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
 |glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package (dev. version only?)        |
 |gls          |nlme     |[G](#G)  |                                                             |

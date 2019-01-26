@@ -590,42 +590,30 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
 #--------------------------------------------------------------
 ### glmmADMB package
 
-recover_data.glmmadmb = recover_data.lm
-
-emm_basis.glmmadmb = function (object, trms, xlev, grid, ...) 
-{
-    contrasts = attr(model.matrix(object), "contrasts")
-    m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-    X = model.matrix(trms, m, contrasts.arg = contrasts)
-    bhat = glmmADMB::fixef(object)
-    V = .my.vcov(object, ...)
-    misc = list()
-    if (!is.null(object$family)) {
-        fam = object$family
-        misc$tran = object$link
-        misc$inv.lbl = "response"
-        if (!is.na(pmatch(fam,"binomial"))) 
-            misc$inv.lbl = "prob"
-        else if (!is.na(pmatch(fam,"poisson"))) 
-            misc$inv.lbl = "rate"
-    }
-    nbasis = estimability::all.estble
-    dffun = function(...) Inf
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
-         dfargs = list(), misc = misc)
-}
-
-
-# --------------------------------------------------------------
-### Explicit non-support for 'gam' objects (runs, but results are wrong)
-
-# emm_basis.gam = function(object, trms, xlev, grid, ...) {
-#     stop("Can't handle an object of class ", dQuote(class(object)[1]), "\n",
-#          .show_supported())
+# recover_data.glmmadmb = recover_data.lm
+# 
+# emm_basis.glmmadmb = function (object, trms, xlev, grid, ...) 
+# {
+#     contrasts = attr(model.matrix(object), "contrasts")
+#     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
+#     X = model.matrix(trms, m, contrasts.arg = contrasts)
+#     bhat = glmmADMB::fixef(object)
+#     V = .my.vcov(object, ...)
+#     misc = list()
+#     if (!is.null(object$family)) {
+#         fam = object$family
+#         misc$tran = object$link
+#         misc$inv.lbl = "response"
+#         if (!is.na(pmatch(fam,"binomial"))) 
+#             misc$inv.lbl = "prob"
+#         else if (!is.na(pmatch(fam,"poisson"))) 
+#             misc$inv.lbl = "rate"
+#     }
+#     nbasis = estimability::all.estble
+#     dffun = function(...) Inf
+#     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
+#          dfargs = list(), misc = misc)
 # }
-
-
-
 
 
 

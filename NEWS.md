@@ -1,9 +1,21 @@
 ## NEWS for the emmeans package
 
-
-emmeans 1.3.1.xxxxx
+emmeans 1.3.2.0999xx
 -------------
 
+  * Fix to unintended consequence of #71 that caused incorrect ordering 
+    of ordinal response levels in `prob` mode for ordinal models (#83)
+
+
+
+emmeans 1.3.2
+-------------
+
+  * I decided to enable "optimal digits" display by default. In summaries,
+    we try to show enough---but not too much---precision in estimates and
+    confidence intervals. If you don't like this and want to revert
+    to the old (exaggerated precision) behavior, do 
+    `emm_options(opt.digits = FALSE)`
   * Added `include` argument to most `.emmc` functions (#67)
   * Now allow character values for `ref`, `exclude`, and `include` in
     `.emmc` functions (#68)
@@ -13,16 +25,10 @@ emmeans 1.3.1.xxxxx
   * Fix to `clm` support when model is rank-deficient
   * Fix to `regrid(..., transform = "log")` error when there are
     existing non-estimable cases (issue #65)
-  * I decided to enable "optimal digits" display by default. In summaries,
-    we try to show enough---but not too much---precision in estimates and
-    confidence intervals. If you don't like this and want to revert
-    to the old (exaggerated precision) behavior, do 
-    `emm_options(opt.digits = FALSE)`
   * Improvements to `brmsfit` support (#43)
   * Added support for `mgcv::gam` and `mgcv::gamm` models
   * `.my.vcov()` now passes `...` to clients
-  * Removed **glmmADMB** from `Imports`. The support is still provided,
-    just not involved in R's checking process.
+  * Removed **glmmADMB** support. This package appears to be dormant
   * Fixed ordering bug for nested models (#71)
   * Support for `manova` object no longer requires `data` keyword (#72)
   * Added support for multivariate response in `aovlist` models (#73)
