@@ -244,9 +244,6 @@ emm_basis.clm = function (object, trms, xlev, grid,
     misc$pri.vars = misc$by.vars = misc$con.coef = misc$orig.grid = NULL
     newrg@misc = misc
     names(newrg@levels)[1] = names(newrg@grid)[1] = newname
-    levs = newrg@levels[[newname]]
-    newrg@grid[[newname]] = ordered(newrg@grid[[newname]], levels = levs)
-    newrg@levels[[newname]] = ordered(newrg@levels[[newname]], levels = levs)
     newrg@roles = object@roles
     newrg@roles$multresp = newname
     newrg

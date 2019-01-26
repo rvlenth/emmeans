@@ -4,7 +4,8 @@ emmeans 1.3.2.0999xx
 -------------
 
   * Fix to unintended consequence of #71 that caused incorrect ordering 
-    of ordinal response levels in `prob` mode for ordinal models (#83)
+    of `contrast()` results if they are later used by `emmeans()`.
+    This was first noticed with ordinal models in `prob` mode (#83).
 
 
 

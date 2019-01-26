@@ -275,7 +275,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                 tmp$con[seq_along(cm) + length(cm)*(i-1)] = names(cm)
             }
         }
-        grid = data.frame(.contrast. = tmp$con)
+        grid = data.frame(.contrast. = factor(tmp$con, levels = unique(tmp$con)))
         n.each = ncol(cmat)
         row.1st = sapply(by.rows, function(x) x[1])
         xlevs = list()
