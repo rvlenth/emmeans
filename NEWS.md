@@ -6,6 +6,9 @@ emmeans 1.3.2.0999xx
   * Fix to unintended consequence of #71 that caused incorrect ordering 
     of `contrast()` results if they are later used by `emmeans()`.
     This was first noticed with ordinal models in `prob` mode (#83).
+  * Improved checking of conformability of parameters -- for models
+    with rank deficiency not handled same way as lm()'s NA convention
+  * Added basic support for `sommer::mmer` and `MuMIn::averaging` objects
 
 
 

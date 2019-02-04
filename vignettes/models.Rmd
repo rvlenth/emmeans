@@ -38,6 +38,7 @@ Scroll down or follow the links to those groups for more information.
 |:------------|:--------|:-------:|:------------------------------------------------------------|
 |aov          |stats    |[A](#A)  |                                                             |
 |aovList      |stats    |[V](#V)  |Best with balanced designs, orthogonal coding                |
+|averaging    |MuMIn    |[G](#G)  |`data` required unless `$data` added to the object           |
 |betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
 |             |         |         |`  "variance", "quantile")`                                  |
 |brmsfit      |brms     |[S](#S)  |Only simpler models                                          |
@@ -58,7 +59,7 @@ Scroll down or follow the links to those groups for more information.
 |glm          |stats    |[G](#G)  |                                                             |
 |glm.nb       |MASS     |[G](#G)  |Requires `data` argument                                     |
 |glmerMod     |lme4     |[G](#G)  |                                                             |
-|glmmadmb     |glmmADMB |         |No longer supported                                                      |
+|glmmadmb     |glmmADMB |         |No longer supported                                          |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
 |glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package (dev. version only?)        |
 |gls          |nlme     |[G](#G)  |                                                             |
@@ -77,6 +78,7 @@ Scroll down or follow the links to those groups for more information.
 |             |         |         |`data` is required                                           |
 |mixed        |afex     |[P](#P)  |Supported in **afex** package                                |
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
+|mmer         |sommer   |[G](#G)  |                                                             |
 |multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |
 |             |         |         |Always include response in specs for `emmeans()`             |
 |nauf         |nauf.*xxx* |[P](#P)  |Supported in **nauf** package                                |
@@ -93,10 +95,11 @@ Scroll down or follow the links to those groups for more information.
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
 
 
-## Group A -- "Standard" models (typically linear and mixed) {#A}
+## Group A -- "Standard" or minimally supported models {#A}
 
 Models in this group, such as `lm`, do not have unusual features that
 need special support; hence no extra arguments are needed.
+Some may require `data` in the call.
 
 
 ## B -- Beta regression {#B}
@@ -170,6 +173,9 @@ in the documentation for `ref_grid`.
 Most models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `Inf`.
+
+Some objects in this group *require* that the original or reference dataset 
+be provided when calling `ref_grid()` or `emmeans()`.
 
 In the case of `mgcv::gam` objects, there are optional `freq` and
 `unconditional` arguments as is detailed in the documentation for
