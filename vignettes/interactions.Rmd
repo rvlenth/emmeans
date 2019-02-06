@@ -148,9 +148,10 @@ contrast(emm_s.t[[1]], "poly")   ## 'by = "type"' already in previous result
 The comparison of these contrasts may be done using the `interaction`
 argument in `contrast()` as follows:
 ```{r}
-IC_st <- contrast(emm_s.t[[1]], interaction = c("poly", "consec"))
+IC_st <- contrast(emm_s.t[[1]], interaction = c("poly", "consec"), by = NULL)
 IC_st
 ```
+(Using `by = NULL` restores `type` to a primary factor in these contrasts.) 
 The practical meaning of this is that there isn't a statistical difference in
 the linear trends, but the quadratic trend for Octel is greater than for
 standard filter types. (Both quadratic trends are negative, so in fact it is the

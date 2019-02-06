@@ -34,6 +34,7 @@ vignette: >
       * [in *models: S*](models.html#S)
       * [in *sophisticated: bayesxtra*](sophisticated.html#bayesxtra)
   * [Asymptotic tests](sophisticated.html#dfoptions)
+  * [`averaging` models](models.html#I)
 
 
 [Back to top](#topnav)
@@ -303,11 +304,15 @@ vignette: >
           * [in *basics: eqwts*](basics.html#eqwts)
           * [in *basics: weights*](basics.html#weights)
   * [Mediating covariates](messy-data.html#mediators)
+  * [`mira` models](models.html#I)
   * [`mlm` models](models.html#N)
+  * [`mmer` models](models.html#G)
+  * [Model averaging](models.html#I)
   * Models
       * [Quick reference](models.html#quickref)
   * [Multi-factor studies](FAQs.html#interactions)
   * [Multinomial models](models.html#N)
+  * [Multiple imputation](models.html#I)
   * [Multiplicity adjustments](confidence-intervals.html#adjust)
   * Multivariate models
       * [in *basics: multiv*](basics.html#multiv)

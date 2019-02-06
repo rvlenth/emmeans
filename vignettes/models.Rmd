@@ -38,7 +38,7 @@ Scroll down or follow the links to those groups for more information.
 |:------------|:--------|:-------:|:------------------------------------------------------------|
 |aov          |stats    |[A](#A)  |                                                             |
 |aovList      |stats    |[V](#V)  |Best with balanced designs, orthogonal coding                |
-|averaging    |MuMIn    |[G](#G)  |`data` required unless `$data` added to the object           |
+|averaging    |MuMIn    |[I](#I)  |`data` required unless `$data` added to the object           |
 |betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
 |             |         |         |`  "variance", "quantile")`                                  |
 |brmsfit      |brms     |[S](#S)  |Only simpler models                                          |
@@ -76,6 +76,7 @@ Scroll down or follow the links to those groups for more information.
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
 |MCMCglmm     |MCMCglmm |[M](#M),[S](#S) |`mult.name`, `mult.levs`                              |
 |             |         |         |`data` is required                                           |
+|mira         |mice     |[I](#I)  |Optional arguments per class of `$analyses` elements         |
 |mixed        |afex     |[P](#P)  |Supported in **afex** package                                |
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mmer         |sommer   |[G](#G)  |                                                             |
@@ -169,7 +170,7 @@ in the documentation for `ref_grid`.
 
 ## Group G -- Generalized linear models and relatives {#G}
 <!-- @index Generalized linear models; `glm`*xxx* models; 
-    Generalized additive models; `gam` models; -->
+    Generalized additive models; `gam` models; `mmer` models -->
 Most models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `Inf`.
@@ -204,6 +205,17 @@ The `what` argument has possible values of `"mu"` (default), `"sigma"`, `"nu"`,
 or `"tau"` depending on which part of the model you want results for.
 Currently, there is no support when the selected part of the model contains
 a smoothing method like `pb()`. 
+
+## Group I -- Multiple models (via imputation or averaging) {#I}
+<!-- @index Multiple imputation; Model averaging; `averaging` models; `mira` models -->
+These objects are the results of fitting several models with different predictor
+subsets or imputed values. The `bhat` and `V` slots are obtained via averaging
+and, in the case of multiple imputation, adding a multiple of the between-imputation 
+covariance per Rubin's rules. 
+
+Note that class of the models that are combined determines what optional arguments 
+may be available and whether `data` is required.
+
 
 ## Group K -- `lme` models {#K}
 <!-- @index `lme` models; `gls` models; Satterthwaite d.f. -->

@@ -21,7 +21,7 @@
 
 ### Support for objects involving several models (e.g., model averaging, multiple imputation)
 
-### MuMIn:: averaging
+### MuMIn::averaging
 ### This is just bare-bones. Need to provide data,
 ### and if applicable, df.
 ### Optional argument tran sets the tran property
@@ -53,51 +53,32 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
 
 
 
-### On second thought, I don't think following is very useful
-# # Average together the coefs (weights defauult to equal)
-# # Columns of bhatmat corresp to defferent solutions
-# # setNA0 determines whether we take NAs as solutions constrained to 0 or left as NA
-# #  so in return value, we get NA in these posituions:
-# #    setNA0 = TRUE:  those for which all ests are NA
-# #    setNA0 = FALSE: those for which any est is NA
-# .coef.avg = function(bhatmat, weights, setNA0 = TRUE) {
-#     k = ncol(bhatmat)
-#     if (missing(weights))
-#         weights = rep(1/k, k)
-#     nzw = which(weights > 0)
-#     bhatmat = bhatmat[ , nzw, drop = FALSE]
-#     weights = weights[nzw]
-#     if (setNA0) {
-#         nas = which(apply(bhatmat, 1, function(.) all(is.na(.))))
-#         bhatmat[is.na(bhatmat)] = 0
-#     }
-#     else
-#         nas = integer(0)
-#     wbhat = apply(bhatmat, 1, weighted.mean, weights)
-#     wbhat[nas] = NA
-#     wbhat
-# }
-# 
-# # Average list of vcovs: weighted average of Vi + (bi - wbi)(bi - wbi)'
-# # Caller is responsible for ensuring that all elements of vcovlist conform to bhatmat etc.
-# # Better to call with wbhat already defined (with same weights an bhatmat), but if missing, we compute it
-# .vcov.avg = function(vcovlist, bhatmat, wbhat, weights, setNA0 = TRUE) {
-#     k = ncol(bhatmat)
-#     if (missing(weights))
-#         weights = rep(1/k, k)
-#     nzw = which(weights > 0)
-#     bhatmat = bhatmat[ , nzw, drop = FALSE]
-#     vcovlist = vcovlist[nzw]
-#     weights = weights[nzw]
-#     if (missing(wbhat))
-#         wbhat = .avg.coef(wbhat, weights, setNA0 = setNA0)
-#     notna = wbhat[!is.na(wbhat)]
-#     xvmat = sapply(seq_along(vcovlist), function(i) {
-#         bdev = bhatmat[notna, i] - wbhat[notna]
-#         as.numeric(vcovmat[[i]][notna, notna, drop = FALSE] + outer(bdev, bdev))
-#     })
-#     vavg = matrix(apply(xvmat, 1, weighted.mean, weights), ncol = length(notna))
-#     nms = colnames(bhatmat)
-#     dimnames(vavg) = list(nms, nms)
-#     vavg
-# }
+### minc::mira support -----------------------------------------
+# Here we rely on the methods already in place for elements of $analyses
+
+recover_data.mira = function(object, ...) {
+    rdlist = lapply(object$analyses, recover_data, ...)
+    rd = rdlist[[1]]
+    # we'll average the numeric columns...
+    numcols = which(sapply(rd, is.numeric))
+    for (j in numcols)
+        rd[, j] = apply(sapply(rdlist, function(.) .[, j]), 1, mean)
+    rd
+}
+
+emm_basis.mira = function(object, trms, xlev, grid, ...) {
+    bas = emm_basis(object$analyses[[1]], trms, xlev, grid, ...)
+    k = length(object$analyses)
+    # we just average the V and bhat elements...
+    V = 1/k * bas$V
+    allb = cbind(bas$bhat, matrix(0, nrow = length(bas$bhat), ncol = k - 1))
+    for (i in 1 + seq_len(k - 1)) {
+        basi = emm_basis(object$analyses[[i]], trms, xlev, grid, ...)
+        V = V + 1/k * basi$V
+        allb[, i] = basi$bhat
+    }
+    bas$bhat = apply(allb, 1, mean)  # averaged coef
+    notna = which(!is.na(bas$bhat))
+    bas$V = V + (k + 1)/k * cov(t(allb[notna, , drop = FALSE]))   # pooled via Rubin's rules
+    bas
+}
