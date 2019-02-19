@@ -234,8 +234,12 @@ recover_data.lme = function(object, data, ...) {
 
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("containment", "satterthwaite"), sigmaAdjust = TRUE, ...) {
+        mode = c("auto", "containment", "satterthwaite"), sigmaAdjust = TRUE, ...) {
     mode = match.arg(mode)
+    if (mode == "auto")
+        mode = ifelse(is.null(object$apVar), "containment", "satterthwaite")
+    if (is.null(object$apVar))
+        mode = "containment"
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
@@ -260,6 +264,7 @@ emm_basis.lme = function(object, trms, xlev, grid,
             varest = tcrossprod(crossprod(g, dfargs$A), g)
             2 * est^2 / varest
         }
+        misc$initMesg = "d.f. method: satterthwaite (via simulation)"
     }
     else { # containment df
         dfx = object$fixDF$X
@@ -271,8 +276,8 @@ emm_basis.lme = function(object, trms, xlev, grid,
             ifelse(length(idx) > 0, min(dfargs$dfx[idx]), NA)
         }
         dfargs = list(dfx = dfx)
+        misc$initMesg = "d.f. method: containment"
     }
-    misc$initMesg = paste("Degrees-of-freedom method:", mode)
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
@@ -282,19 +287,19 @@ emm_basis.lme = function(object, trms, xlev, grid,
 # model with a few random perturbations of y, then
 # regressing the changes in V against the changes in the 
 # covariance parameters
-gradV.kludge = function(object) {
+gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data = object$data) {
     A = object$apVar
     theta = attr(A, "Pars")
-    V = object$varFix
+    V = object[[Vname]]
     sig = .01 * object$sigma
-    data = object$data
-    yname = all.vars(object$call$fixed)[1]
+    #data = object$data
+    yname = all.vars(call)[1]
     y = data[[yname]]
     n = length(y)
     dat = t(replicate(2 + length(theta), {
         data[[yname]] = y + sig * rnorm(n)
         mod = update(object, data = data)
-        c(attr(mod$apVar, "Pars") - theta, as.numeric(mod$varFix - V))
+        c(attr(mod$apVar, "Pars") - theta, as.numeric(mod[[Vname]] - V))
     }))
     dimnames(dat) = c(NULL, NULL)
     xcols = seq_along(theta)
@@ -314,16 +319,41 @@ recover_data.gls = function(object, ...) {
     recover_data(fcall, trms, object$na.action, ...)
 }
 
-emm_basis.gls = function(object, trms, xlev, grid, ...) {
+emm_basis.gls = function(object, trms, xlev, grid, 
+                         mode = c("auto", "df.error", "satterthwaite"), ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = coef(object)
     V = .my.vcov(object, ...)
     nbasis = estimability::all.estble
-    dfargs = list(df = object$dims$N - object$dims$p)
-    dffun = function(k, dfargs) dfargs$df
-    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=list())
+    misc = list()
+    mode = match.arg(mode)
+    if (mode == "auto")
+        mode = ifelse(is.null(object$apVar), "df.error", "satterthwaite")
+    if (is.null(object$apVar))
+        mode = "df.error"
+    if (mode == "satterthwaite") {
+        G = try(gradV.kludge(object, "varBeta", call = object$call, 
+                             data = eval(object$call$data)), 
+                silent = TRUE)
+        if (inherits(G, "try-error"))
+            stop("Unable to estimate Satterthwaite parameters")
+        dfargs = list(V = V, A = object$apVar, G = G)
+        dffun = function(k, dfargs) {
+            est = tcrossprod(crossprod(k, dfargs$V), k)
+            g = sapply(dfargs$G, function(M) tcrossprod(crossprod(k, M), k))
+            varest = tcrossprod(crossprod(g, dfargs$A), g)
+            2 * est^2 / varest
+        }
+        misc$initMesg = "d.f. method: satterthwaite (via simulation)"
+    }
+    else {  ### mode == "df.error"
+        dfargs = list(df = object$dims$N - object$dims$p - length(attr(object$apVar, "Pars")))
+        dffun = function(k, dfargs) dfargs$df
+        misc$initMesg = "d.f. method: df.error"
+    }
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 
 

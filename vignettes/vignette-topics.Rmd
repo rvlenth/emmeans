@@ -74,6 +74,7 @@ vignette: >
   * [Confidence intervals](confidence-intervals.html#summary)
   * [`confint()`](confidence-intervals.html#summary)
   * [`consec` contrasts](comparisons.html#contrasts)
+  * [Containment d.f.](models.html#K)
   * [`contrast()`](comparisons.html#contrasts)
       * [`adjust`](comparisons.html#linfcns)
       * [Changing defaults](utilities.html#defaults)

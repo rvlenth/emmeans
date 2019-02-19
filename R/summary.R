@@ -989,7 +989,8 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
 # (but always at least 3)
 .opt.dig = function(x) {
     z = range(x) / max(abs(x))
-    zz = round(1.51 - log(diff(z), 10))  # approx 1 - log(diff(z/3))
+    dz = zapsmall(c(diff(z), z), digits = 8)[1]
+    zz = round(1.51 - log(dz, 10))  # approx 1 - log(diff(z/3))
     zz[is.infinite(zz)] = 3   # we get z = Inf when SE is 0
     max(zz, 3, na.rm = TRUE)  
 }

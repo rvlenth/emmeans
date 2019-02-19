@@ -10,6 +10,8 @@ emmeans 1.3.2.0999xx
     with rank deficiency not handled same way as lm()'s NA convention
   * Added basic support for `sommer::mmer`, `MuMIn::averaging`, and
     `mice::mira` objects
+  * Fix in `nnet::multinom` support when there are 2 outcomes (#19)
+  * Added simulated Satterthwaite d.f. to `gls` objects
 
 
 

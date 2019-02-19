@@ -29,7 +29,12 @@
 # $data is NOT a standard member, but if it's there, we'll use it
 # Otherwise, we need to provide data or its name in the call
 recover_data.averaging = function(object, data, ...) {
-    trms = terms(object$formula)
+    ml = attr(object, "modelList")
+    if (is.null(ml))
+        return(paste0("emmeans support for 'averaging' models requires a 'modelList' attribute.\n",
+                      "Re-fit the model from a model list or with fit = TRUE"))
+
+        trms = terms(object$formula)
     if (is.null(data))
         data = eval(object$data)
     fcall = call("model.avg", formula = object$formula, data = data)

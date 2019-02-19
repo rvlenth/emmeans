@@ -41,7 +41,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     mode = match.arg(mode)
     bhat = t(coef(object))
     V = .my.vcov(object, ...)
-    k = ncol(bhat)
+    k = ifelse(is.matrix(coef(object)), ncol(bhat), 1)
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     # recenter for latent predictions
