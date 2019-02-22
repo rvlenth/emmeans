@@ -306,7 +306,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         misc$estType = ifelse(is.con, "contrast", "prediction")
     }
     misc$methDesc = attr(cmat, "desc")
-    misc$famSize = size = length(by.rows[[1]])
+    misc$famSize = ifelse(is.null(fs <- attr(cmat, "famSize")), length(by.rows[[1]]), fs)
     misc$pri.vars = setdiff(names(grid), c(".offset.",".wgt."))
     if (missing(adjust)) adjust = attr(cmat, "adjust")
     if (is.null(adjust)) adjust = "none"

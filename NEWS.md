@@ -12,6 +12,9 @@ emmeans 1.3.2.0999xx
     `mice::mira` objects
   * Fix in `nnet::multinom` support when there are 2 outcomes (#19)
   * Added simulated Satterthwaite d.f. to `gls` objects
+  * `famSize` now correct when `exclude` or `include` is used in 
+    a contrast function (see #68)
+  * Updates to FAQs vignette
 
 
 

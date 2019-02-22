@@ -31,7 +31,8 @@ This vignette contains answers to questions received from users or posted on dis
  8. [Why do I get `Inf` for the degrees of freedom?](#asymp)
  10. [I get exactly the same comparisons for each "by" group](#additive)
  11. [My ANOVA *F* is significant, but no pairwise comparisons are](#anova)
- 12. [I get annoying messages about namespaces](#namespace)
+ 12. [I asked for a Tukey adjustments, but that's not what I got](#notukey)
+ 13. [`emmeans()` gives me pooled *t* tests, but I expected Welch's *t*](#nowelch)
 
 [Index of all vignette topics](vignette-topics.html)
 
@@ -247,21 +248,65 @@ As is shown in
 the unadjusted *P* value can be more than .15 when *F* is significant
 (remarkably, regardless of the significance level used for *F*!).
 
-## I get annoying messages about namespaces {#namespace}
-<!-- @index Annoying messages; `convert_workspace()` -->
-This probably happens because somehow the **lsmeans** package or
-its namespace has been loaded -- possibly because some old objects from 
-that package are still in your workspace. Try this:
-```{r eval = FALSE}
-emmeans:::convert_workspace()
+## I asked for Tukey adjustments, but that's not what I got {#notukey}
+<!-- @index Tukey adjustment!Ignored or changed -->
+There are two reasons this could happen:
+
+  1. There are only two means (or only two in each `by` group). Thus there is
+     only one comparison. When there is only one thing to test, there is no 
+     multiplicity issue, and hence no multiplicity adjustment to the *P* values.
+  2. A Tukey adjustment is inappropriate. The Tukey adjustment is appropriate
+  for pairwise comparisons of means. When you have some other set of contrasts,
+  the Tukey method is deemed unsuitable and the Sidak method is used instead. A
+  suggestion is to use `"mvt"` adjustment (which is exact); we don't default to
+  this because it can require a lot of computing time for a large set of
+  contrasts or comparisons.
+
+[Back to Contents](#contents)
+
+
+## `emmeans()` gives me pooled *t* tests, but I expected Welch's *t* {#nowelch}
+<!-- @index Welch's *t* comparisons; Pooled *t*!Instead of Welch's *t*;
+            Model!Importance of getting it right; `emmeans()`!And the underlying model;
+            Get the model right first -->
+It is important to note that `emmeans()` and its relatives produce results based
+on the *model object* that you provide -- not the data. So if your sample SDs
+are wildly different, a model fitted using `lm()` or `aov()` is not a good model,
+because those R functions use a statistical model that presumes that the errors
+have constant variance. That is, the problem isn't in `emmeans()`, it's in
+handing it an inadequate model object.
+
+Here is a simple illustrative example. Consider a simple one-way experiment
+and the following model:
 ```
-This non-exported function removes `Last.ref.grid` if it exists, 
-converts every `ref.grid` or `lsmobj` object to class `emmGrid`, and
-unloads any vestige of the **lsmeans** package. [Note: You may get
-an error message if there are other packages loaded that depend on
-**lsmeans**. If so, `detach(package:`*pkg*`, unload = TRUE)` any 
-that are in `search()` and use `unloadNamespace("pkg")` for others;
-then re-run `emmeans:::convert_workspace()`.]
+mod1 <- aov(response ~ treat, data = mydata)
+emmeans(mod1, pairwise ~ treat)
+```
+This code will estimate means and comparisons among treatments. All standard errors,
+confidence intervals, and *t* statistics are based on the pooled residual SD
+with *N - k* degrees of freedom (assuming *N* observations and *k* treatments).
+These results are useful *only* if the underlying assumptions of `mod1` are correct -- 
+including the assumption that the error SD is the same for all treatments.
+
+Alternatively, you could fit the following model using generalized least-squares:
+```
+mod2 = nlme::gls(response ~ treat, data = mydata,
+                 weights = varIdent(form = ~1 | treat))
+emmeans(mod2, pairwise ~ treat)
+```
+This model specifies that the error variance depends on the levels of `treat`.
+This would be a much better model to use when you have wildly different
+sample SDs. The results of the `emmeans()` call will reflect this improvement
+in the modeling. The standard errors of the EMMs will depend on the individual
+sample variances, and the *t* tests of the comparisons will be in essence
+the Welch *t* statistics with Satterthwaite degrees of freedom.
+
+To obtain appropriate *post hoc* estimates, contrasts, and comparisons,
+one must first find a model that successfully explains the peculiarities in
+the data. This point cannot be emphasized enough. If you give `emmeans()` a
+good model, you will obtain correct results; if you give it a bad model, 
+you will obtain incorrect results. Get the model right *first*.
+
 
 [Back to Contents](#contents)
 

@@ -38,7 +38,7 @@ Scroll down or follow the links to those groups for more information.
 |:------------|:--------|:-------:|:------------------------------------------------------------|
 |aov          |stats    |[A](#A)  |                                                             |
 |aovList      |stats    |[V](#V)  |Best with balanced designs, orthogonal coding                |
-|averaging    |MuMIn    |[I](#I)  |`data` required unless `$data` added to the object           |
+|averaging    |MuMIn    |[I](#I)  |                                                             |
 |betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
 |             |         |         |`  "variance", "quantile")`                                  |
 |brmsfit      |brms     |[S](#S)  |Only simpler models                                          |
@@ -213,8 +213,14 @@ subsets or imputed values. The `bhat` and `V` slots are obtained via averaging
 and, in the case of multiple imputation, adding a multiple of the between-imputation 
 covariance per Rubin's rules. 
 
-Note that class of the models that are combined determines what optional arguments 
-may be available and whether `data` is required.
+Support for `MuMIn::averaging` objects may be somewhat dodgy, as it is not clear that
+all supported model classes will work. The object *must* have a `"modelList"` attribute
+(obtained by constructing the object explicitly from a model list or by including 
+`fit = TRUE` in the call). And each model should be fitted with `data` as a **named**
+argument in the call; or else provide a `data` argument in the call to `emmeans()` or
+`ref_grid()`. No estimability checking is done at present: if/when it is added,
+a linear function will be estimable only if it is estimable in *all* models included
+in the averaging.
 
 
 ## Group K -- `gls` and `lme` models {#K}

@@ -149,6 +149,8 @@ pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     attr(M, "desc") = "pairwise differences"
     attr(M, "adjust") = "tukey"
     attr(M, "type") = "pairs"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -172,6 +174,8 @@ revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     attr(M, "desc") = "pairwise differences"
     attr(M, "adjust") = "tukey"
     attr(M, "type") = "pairs"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -248,6 +252,8 @@ trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE,
         M = -M
     attr(M, "desc") = "differences from control"
     attr(M, "adjust") = "dunnettx"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -289,6 +295,8 @@ eff.emmc = function(levs, exclude = integer(0), include, ...) {
     M = M[-1]
     attr(M, "desc") = "differences from grand mean"
     attr(M, "adjust") = "fdr"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -302,6 +310,8 @@ del.eff.emmc = function(levs, exclude = integer(0), include, ...) {
     M = as.data.frame(M)
     attr(M, "desc") = "differences from mean of others"
     attr(M, "adjust") = "fdr"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -330,6 +340,8 @@ consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...
     M = M[-1]
     attr(M, "desc") = "changes between consecutive levels"
     attr(M, "adjust") = "mvt"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -355,6 +367,8 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, .
     M = M[-1]
     attr(M, "desc") = "mean after minus mean before"
     attr(M, "adjust") = "mvt"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 
@@ -365,13 +379,12 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, .
     orig.key = key
     if (is.character(key))
         key = match(key, levs)
-    if (any(is.na(key)))
-        stop("One or more of:\n\t", paste(orig.key, collapse = ","), "\nnot found in\n\t",
-             paste(levs, collapse = ","),
-             call. = FALSE)
-    if (any(key > length(levs)) || any(key < 1))
-        stop("Numeric index not in 1 : length(levs)")
-    key
+    # if (any(is.na(key)))
+    #     warning("One or more of: '", paste(orig.key, collapse = "','"), "' not found in '",
+    #          paste(levs, collapse = "','"), "'", call. = FALSE)
+    # if (any(key > length(levs)) || any(key < 1))
+    #     stop("Numeric index not in 1 : length(levs)")
+    key[key %in% seq_along(levs)] # I think I'll just silently remove unmatched levels
 }
 
 ### utility to find exclude levels from either exclude or include

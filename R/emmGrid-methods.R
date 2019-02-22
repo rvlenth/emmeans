@@ -202,8 +202,8 @@ vcov.emmGrid = function(object, ...) {
 #' along with \code{"adjust"} to determine appropriate adjustments to P values
 #' and confidence intervals.}
 #' 
-#' \item{\code{famSize}}{(integer) is the \code{nmeans} parameter for
-#' \code{\link{ptukey}} when \code{adjust="tukey"}. }
+#' \item{\code{famSize}}{(integer) is the number of means involved in a family of
+#' inferences; used in Tukey and Scheffe adjustments}
 #' 
 #' \item{\code{infer}}{(\code{logical} vector of length 2) is the default value
 #' of \code{infer} in \code{\link{summary.emmGrid}}.}

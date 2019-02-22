@@ -33,10 +33,14 @@ recover_data.averaging = function(object, data, ...) {
     if (is.null(ml))
         return(paste0("emmeans support for 'averaging' models requires a 'modelList' attribute.\n",
                       "Re-fit the model from a model list or with fit = TRUE"))
-
-        trms = terms(object$formula)
+    if (is.null(object$formula)) {
+        lhs = as.formula(paste(formula(ml[[1]])[[2]], "~."))
+        rhs = sapply(ml, function(m) {f = formula(m); f[[length(f)]]})
+        object$formula = update(as.formula(paste("~", paste(rhs, collapse = "+"))), lhs)
+    }
+    trms = terms(object$formula)
     if (is.null(data))
-        data = eval(object$data)
+        data = ml[[1]]$call$data
     fcall = call("model.avg", formula = object$formula, data = data)
     recover_data(fcall, delete.response(trms), na.action = NULL, ...)
 }
@@ -48,9 +52,18 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
 
     nbasis = estimability::all.estble
+    ml1 = attr(object, "modelList")[[1]]
     misc = list()
-    dffun = function(k, dfargs) Inf
-    dfargs = list()
+    if (!is.null(fam <- ml1$family))
+        misc = .std.link.labels(fam, misc)
+    if (!is.null(ml1$df.residual)) {
+        dffun = function(k, dfargs) dfargs$df
+        dfargs = list(df = min(sapply(ml, function(m) m$df.residual)))
+    }
+    else {
+        dffun = function(k, dfargs) Inf
+        dfargs = list()
+    }
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = dffun, dfargs = dfargs, misc = misc)
 }

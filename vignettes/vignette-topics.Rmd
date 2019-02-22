@@ -27,7 +27,6 @@ vignette: >
   * Analysis of variance
       * [versus *pos hoc* comparisons](FAQs.html#anova)
       * [Type III](confidence-intervals.html#joint_tests)
-  * [Annoying messages](FAQs.html#namespace)
   * [`aovList` objects](models.html#V)
   * [`as.data.frame()`](utilities.html#data)
   * `as.mcmc()`
@@ -93,9 +92,7 @@ vignette: >
       * Tests of
           * [with transformations](comparisons.html#logs)
   * [`convert_scripts()`](transition-from-lsmeans.html#scripts)
-  * `convert_workspace()`
-      * [in *FAQs: namespace*](FAQs.html#namespace)
-      * [in *transition-from-lsmeans: workspaces*](transition-from-lsmeans.html#workspaces)
+  * [`convert_workspace()`](transition-from-lsmeans.html#workspaces)
   * [Count regression](models.html#C)
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
@@ -135,6 +132,7 @@ vignette: >
       * [Exporting extensions to](xtending.html#exporting)
       * [Exports useful to developers](xtending.html#exported)
   * [`emmeans()`](basics.html#emmeans)
+      * [And the underlying model](FAQs.html#nowelch)
       * [Changing defaults](utilities.html#defaults)
       * [Surprising results from](FAQs.html#transformations)
       * `weights`
@@ -213,6 +211,7 @@ vignette: >
   * [GEE models](models.html#E)
   * [Generalized additive models](models.html#G)
   * [Generalized linear models](models.html#G)
+  * [Get the model right first](FAQs.html#nowelch)
   * [`get_emm_option()`](utilities.html#options)
   * [**ggplot2** package](basics.html#ggplot)
   * [`glm`*xxx* models](models.html#G)
@@ -308,6 +307,8 @@ vignette: >
   * [`mira` models](models.html#I)
   * [`mlm` models](models.html#N)
   * [`mmer` models](models.html#G)
+  * Model
+      * [Importance of getting it right](FAQs.html#nowelch)
   * [Model averaging](models.html#I)
   * Models
       * [Quick reference](models.html#quickref)
@@ -374,6 +375,8 @@ vignette: >
       * [Surprising results](FAQs.html#transformations)
   * [`polreg` models](models.html#O)
   * [Polynomial regression](basics.html#depcovs)
+  * Pooled *t*
+      * [Instead of Welch's *t*](FAQs.html#nowelch)
   * [`postGridHook`](xtending.html#hooks)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
 
@@ -477,6 +480,7 @@ vignette: >
       * [Estimating and comparing](interactions.html#oranges)
   * [`trt.vs.ctrl` contrasts](comparisons.html#contrasts)
   * [Tukey adjustment](confidence-intervals.html#adjust)
+      * [Ignored or changed](FAQs.html#notukey)
   * [`type`](confidence-intervals.html#tran)
   * Type III tests
       * [in *confidence-intervals: joint*](confidence-intervals.html#joint)
@@ -522,6 +526,7 @@ vignette: >
 
 
   * [`weights`](messy-data.html#weights)
+  * [Welch's *t* comparisons](FAQs.html#nowelch)
 
 
 [Back to top](#topnav)
