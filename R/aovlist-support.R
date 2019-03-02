@@ -55,10 +55,9 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     # Check for situations we can't handle...
     colsums = apply(X[, setdiff(xnms, "(Intercept)"), drop=FALSE], 2, sum)
     if (any(round(colsums,3) != 0))
-        warning("Some predictors are still correlated with the intercept - results are biased.\n",
-                "May help to re-fit with different contrasts, e.g. 'contr.sum'")
+        warning("Some predictors are correlated with the intercept - results may be very biased")
     if (length(unlist(lapply(object, function(x) names(coef(x))))) > length(xnms))
-        message("NOTE: Results are based on intra-block estimates.")
+        message("NOTE: Results are based on intra-block estimates and are biased.")
     
     # initialize arrays
     nonint = setdiff(names(object), "(Intercept)")
@@ -138,7 +137,6 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         x = object[[nonint[1]]] # 1st non-intercept stratum
         Vidx[[1]] = ii = sort(c(idx1, Vidx[[1]]))
         k = length(ii)
-### *** FIX THIS ***        
         vv = matrix(0, nrow = k, ncol = k)
         i2k = indx(2:(k / m), k / m)
         if (k > m) vv[i2k, i2k] = Vmats[[1]]
@@ -166,7 +164,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         }
     }
     nbasis = estimability::all.estble  # Consider this further?
-    misc = list()
+    misc = list(initMesg = "Warning: EMMs are biased unless design is perfectly balanced")
     if (m > 1) {
         misc$ylevs = list(rep.meas = ylevs)
         X = kronecker(diag(1, m), X)

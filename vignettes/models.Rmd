@@ -224,19 +224,24 @@ in the averaging.
 
 
 ## Group K -- `gls` and `lme` models {#K}
-<!-- @index `lme` models; `gls` models; Satterthwaite d.f.; Containment d.f.; -->
+<!-- @index `lme` models; `gls` models; Satterthwaite d.f.; Containment d.f.; 
+     `boot-satterthwaite` method -->
 The `sigmaAdjust` argument is a logical value that defaults to `TRUE`. It is
 comparable to the `adjustSigma` option in `nlme::summary.lme` (the name-mangling
 is to avoid conflicts with the often-used `adjust` argument), and determines
 whether or not a degrees-of-freedom adjustment is performed with models fitted
 using the ML method.
 
-The optional `mode` argument affects the degrees of freedom. There is an
-experimental `mode = "satterthwaite"` option that determines degrees of freedom
-approximately: It estimates a needed gradient in the covariance matrix
-experimentally by randomly perturbing the response values. Thus, the degrees of
-freedom will vary slightly (or possibly even a lot) if the reference grid is
-re-calculated. The alternative method is `"df.error"` (for `gls`) and
+The optional `mode` argument affects the degrees of freedom. The `mode =
+"satterthwaite"` option determines degrees of freedom via the Satterthwaite
+method: If `s^2` is the estimate of some variance, then its Satterthwaite d.f.
+is `2*s^4 / Var(s^2)`. In case our numerical methods for this fail, we also
+offer `mode = "boot-satterthwaite"` as a backup, by which quantities related to
+`Var(s^2)` are obtained by randomly perturbing the response values. Currently,
+only `"satterthwaite"` is unavailable for `lme` objects, and it is used
+if `"satterthwaite"` is requested.
+
+The alternative method is `"df.error"` (for `gls`) and
 `"containment"` (for `lme`). `df.error` is just the error degrees of freedom for
 the model, minus the number of extra random effects estimated; it generally
 over-estimates the degrees of freedom. `"containment"` determines the degrees of
@@ -413,14 +418,17 @@ usable only for the primary fixed effects and the simpler models.
 
 [Back to quick reference](#quickref)
 
-## Group V -- `aovList` objects {#V}
-<!-- @index `aovList` objects -->
+## Group V -- `aovList` objects (also used with `afex_aov` objects) {#V}
+<!-- @index `aovList` objects; `afex_aov` objects -->
 Support for these objects is limited. To avoid strong biases in the predictions,
 it is strongly recommended that when fitting the model, the `contrasts`
 attribute of all factors should be of a type that sums to zero -- for example,
 `"contr.sum"`, `"contr.poly"`, or `"contr.helmert"` but *not*
 `"contr.treatment"`.  If that is found not to be the case, the model is
 re-fitted using sum-to-zero contrasts (thus requiring additional computation).
+Doing so does *not* remove all bias in the EMMs unless the design is perfectly 
+balanced, and an annotation is added to warn of that. This bias cancels out 
+when doing comparisons and contrasts.
 
 Only intra-block estimates of covariances are used. That is, if a factor appears
 in more than one error stratum, only the covariance structure from its lowest

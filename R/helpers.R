@@ -234,10 +234,10 @@ recover_data.lme = function(object, data, ...) {
 
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("auto", "containment", "satterthwaite"), sigmaAdjust = TRUE, ...) {
+        mode = c("auto", "containment", "satterthwaite", "boot-satterthwaite"), sigmaAdjust = TRUE, ...) {
     mode = match.arg(mode)
     if (mode == "auto")
-        mode = ifelse(is.null(object$apVar), "containment", "satterthwaite")
+        mode = ifelse(is.null(object$apVar), "containment", "boot-satterthwaite")
     if (is.null(object$apVar))
         mode = "containment"
     contrasts = object$contrasts
@@ -253,8 +253,9 @@ emm_basis.lme = function(object, trms, xlev, grid,
     }
     nbasis = estimability::all.estble
     
-    if (mode == "satterthwaite") {
+    if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
         G = try(gradV.kludge(object), silent = TRUE)
+        ###! not yet, doesn't work G = try(lme_grad(object, object$call, object$data, V))
         if (inherits(G, "try-error"))
             stop("Unable to estimate Satterthwaite parameters")
         dfargs = list(V = V, A = object$apVar, G = G)
@@ -264,7 +265,6 @@ emm_basis.lme = function(object, trms, xlev, grid,
             varest = tcrossprod(crossprod(g, dfargs$A), g)
             2 * est^2 / varest
         }
-        misc$initMesg = "d.f. method: satterthwaite (via simulation)"
     }
     else { # containment df
         dfx = object$fixDF$X
@@ -276,8 +276,8 @@ emm_basis.lme = function(object, trms, xlev, grid,
             ifelse(length(idx) > 0, min(dfargs$dfx[idx]), NA)
         }
         dfargs = list(dfx = dfx)
-        misc$initMesg = "d.f. method: containment"
     }
+    misc$initMesg = paste("d.f. method:", mode)
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
@@ -308,8 +308,53 @@ gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data
     grad
 }
 
+# ### new way to get gradients for lme models
+# # (not ready for primetime...)
+# lme_grad = function(object, call, data, V) {
+#     obj = object$modelStruct
+#     conLin = object
+#     class(conLin) = class(obj)
+#     X = model.matrix(eval(call$fixed), data = data)
+#     y = data[[all.vars(call)[1]]]
+#     conLin$Xy = cbind(X, y)
+#     conLin$fixedSigma = FALSE
+#     grps = object$groups # May have to re-order these fancily?
+#     MEest = get("MEestimate", getNamespace("nlme")) ## workaround its not being exported
+#     func = function(x) {
+#         coef(obj) = x
+#         tmp = MEest(obj, grps, conLin)
+#         crossprod(tmp$sigma * tmp$varFix)
+#     }
+#     res = numDeriv::jacobian(func, coef(obj))
+#     G = lapply(seq_len(ncol(res)), function(j) matrix(res[, j], ncol = ncol(V)))
+#     G[[1 + length(G)]] = 2 * V  # gradient wrt log sigma
+#     G
+# }
+
+
 
 #--------------------------------------------------------------
+
+### new way to get gradients for gls models
+gls_grad = function(object, call, data, V) {
+    obj = object$modelStruct
+    conLin = object
+    class(conLin) = class(obj)
+    X = model.matrix(eval(call$model), data = data)
+    y = data[[all.vars(call)[1]]]
+    conLin$Xy = cbind(X, y)
+    conLin$fixedSigma = FALSE
+    func = function(x) {
+        obj = nlme::`coef<-`(obj, value = x)
+        tmp = nlme::glsEstimate(obj, conLin)
+        crossprod(tmp$sigma * tmp$varBeta)
+    }
+    res = numDeriv::jacobian(func, coef(obj))
+    G = lapply(seq_len(ncol(res)), function(j) matrix(res[, j], ncol = ncol(V)))
+    G[[1 + length(G)]] = 2 * V  # gradient wrt log sigma
+    G
+}
+
 ### gls objects (nlme package)
 recover_data.gls = function(object, ...) {
     fcall = object$call
@@ -320,7 +365,7 @@ recover_data.gls = function(object, ...) {
 }
 
 emm_basis.gls = function(object, trms, xlev, grid, 
-                         mode = c("auto", "df.error", "satterthwaite"), ...) {
+                         mode = c("auto", "df.error", "satterthwaite", "boot-satterthwaite"), ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
@@ -333,10 +378,14 @@ emm_basis.gls = function(object, trms, xlev, grid,
         mode = ifelse(is.null(object$apVar), "df.error", "satterthwaite")
     if (is.null(object$apVar))
         mode = "df.error"
-    if (mode == "satterthwaite") {
-        G = try(gradV.kludge(object, "varBeta", call = object$call, 
-                             data = eval(object$call$data)), 
-                silent = TRUE)
+    if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
+        if (mode == "boot-satterthwaite") {
+            G = try(gradV.kludge(object, "varBeta", call = object$call,
+                                 data = eval(object$call$data)),
+                    silent = TRUE)
+        }
+        else
+            G = try(gls_grad(object, object$call, eval(object$call$data), V))
         if (inherits(G, "try-error"))
             stop("Unable to estimate Satterthwaite parameters")
         dfargs = list(V = V, A = object$apVar, G = G)
@@ -346,13 +395,12 @@ emm_basis.gls = function(object, trms, xlev, grid,
             varest = tcrossprod(crossprod(g, dfargs$A), g)
             2 * est^2 / varest
         }
-        misc$initMesg = "d.f. method: satterthwaite (via simulation)"
     }
     else {  ### mode == "df.error"
         dfargs = list(df = object$dims$N - object$dims$p - length(attr(object$apVar, "Pars")))
         dffun = function(k, dfargs) dfargs$df
-        misc$initMesg = "d.f. method: df.error"
     }
+    misc$initMesg = paste("d.f. method:", mode)
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 

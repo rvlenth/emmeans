@@ -20,6 +20,7 @@ This vignette contains answers to questions received from users or posted on dis
 ## Contents {#contents}
 
  1. [What are EMMs/lsmeans?](#what)
+ 2. [What is the fastest way to obtain EMMs and pairwise comparisons?](#fastest)
  2. [I have three (or two or four) factors that interact](#interactions)
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
  3. [I have covariate(s) and am fitting a polynomial model](#polys)
@@ -41,6 +42,24 @@ This vignette contains answers to questions received from users or posted on dis
 Estimated marginal means (EMMs), a.k.a. least-squares means, are
 predictions on a reference grid of predictor settings, or marginal
 averages thereof. See details in [the "basics" vignette](basics.html).
+
+## What is the fastest way to obtain EMMs and pairwise comparisons? {#fastest}
+<!-- @index Model!Importance of; Quick start; -->
+There are two answers to this (i.e., be careful what you wish for):
+
+  1. Don't think; just fit the first model that comes to mind and run 
+    `emmeans(model, pairwise ~ treatment)`. This is the fastest way; however,
+    the results have a good chance of being invalid.
+  2. *Do* think: Make sure you fit a model that really explains the responses.
+     Do diagnostic residual plots, include appropriate interactions, account
+     for heteroscadestaicity if necessary, etc. This is the fastest way
+     to obtain *appropriate* estimates and comparisons.
+
+The point here is that `emmeans()` summarizes the *model*, not the data directly.
+If you use a bad model, you will get bad results. And if you use a good model,
+you will get appropriate results. It's up to you: it's your research---is it important?
+
+[Back to Contents](#contents)
 
 ## I have three (or two or four) factors that interact {#interactions}
 <!-- @index Multi-factor studies; Simple comparisons -->

@@ -52,7 +52,8 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
 
     nbasis = estimability::all.estble
-    ml1 = attr(object, "modelList")[[1]]
+    ml = attr(object, "modelList")
+    ml1 = ml[[1]]
     misc = list()
     if (!is.null(fam <- ml1$family))
         misc = .std.link.labels(fam, misc)

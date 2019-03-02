@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.3.2.0999xx
+emmeans 1.3.3
 -------------
 
   * Fix to unintended consequence of #71 that caused incorrect ordering 
@@ -11,9 +11,11 @@ emmeans 1.3.2.0999xx
   * Added basic support for `sommer::mmer`, `MuMIn::averaging`, and
     `mice::mira` objects
   * Fix in `nnet::multinom` support when there are 2 outcomes (#19)
-  * Added simulated Satterthwaite d.f. to `gls` objects
+  * Added Satterthwaite d.f. to `gls` objects
   * `famSize` now correct when `exclude` or `include` is used in 
     a contrast function (see #68)
+  * Stronger warnings of possible bias with `aovList` objects, in part
+    due to the popularity of `afex::aov_ez()` which uses these models.
   * Updates to FAQs vignette
 
 
