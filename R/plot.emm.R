@@ -223,7 +223,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
     } # ---------- end lattice-specific -----------
     
     priv = attr(summ, "pri.vars")
-    pf = do.call(paste, summ[priv])
+    pf = do.call(paste, unname(summ[priv]))
     summ$pri.fac = factor(pf, levels=unique(pf))
     chform = ifelse(horizontal,
                     paste("pri.fac ~", estName),
@@ -232,7 +232,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
     byv = attr(summ, "by.vars")
     if (!is.null(byv) && length(byv) > 0) {
         chform = paste(chform, "|", paste(byv, collapse="*"))
-        lbv = do.call("paste", summ[byv]) # strings for matching by variables
+        lbv = do.call("paste", unname(summ[byv])) # strings for matching by variables
         ubv = unique(lbv)
     }
     else {
@@ -264,7 +264,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         if(is.null(byv))
             pbv = rep(1, nrow(psumm))
         else
-            pbv = do.call("paste", psumm[byv])
+            pbv = do.call("paste", unname(psumm[byv]))
         neach = length(lbv) / length(ubv)
         # indexes for pairs results -- est[id1] - est[id2]
         id1 = rep(seq_len(neach-1), rev(seq_len(neach-1)))

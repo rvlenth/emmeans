@@ -966,7 +966,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     }
     else { # separate listing for each by variable
         m = .just.labs(m[, setdiff(names(x), by.vars), drop = FALSE], just)
-        pargs = as.list(x[,by.vars, drop=FALSE])
+        pargs = unname(as.list(x[,by.vars, drop=FALSE]))
         pargs$sep = ", "
         lbls = do.call(paste, pargs)
         for (lb in unique(lbls)) {

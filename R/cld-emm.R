@@ -116,7 +116,7 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
         args = list()
         for (nm in by) args[[nm]] = emmtbl[[nm]]
         args$.emmGrid. = emmtbl[[attr(emmtbl, "estName")]]
-        ord = do.call("order", args)
+        ord = do.call("order", unname(args))
         emmtbl = emmtbl[ord, , as.df = FALSE]
         if (!is.null(object@misc$display)) {
             use = which(object@misc$display)

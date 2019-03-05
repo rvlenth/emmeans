@@ -80,7 +80,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     }
     if(is.null(dimnames(mat)))
         dimnames(mat) = list(seq_len(nrow(mat)), seq_len(ncol(mat)))
-    dimnames(mat)[[2]] = do.call(paste, c(x@grid[, nm, drop = FALSE], sep=", "))
+    dimnames(mat)[[2]] = do.call(paste, c(unname(x@grid[, nm, drop = FALSE]), sep=", "))
     n.chains = attr(x@post.beta, "n.chains")
     if (!sep.chains || is.null(n.chains) || (n.chains == 1))
         coda::mcmc(mat, ...)

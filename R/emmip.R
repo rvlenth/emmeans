@@ -174,11 +174,11 @@ emmip.default = function(object, formula, type, CIs = FALSE,
                  lines=length(lty) > 1,
                  cex.title=1)
     }
-    tv = do.call(paste, emms[tvars])
+    tv = do.call(paste, unname(emms[tvars]))
     emms$tvar = factor(tv, levels=unique(tv))
     
     xvars = specs$rhs
-    xv = do.call(paste, emms[xvars])
+    xv = do.call(paste, unname(emms[xvars]))
     emms$xvar = factor(xv, levels = unique(xv))
     emms = emms[order(emms$xvar), ]
     plotform = yvar ~ xvar

@@ -271,9 +271,7 @@ emmeans = function(object, specs, by = NULL,
         }
         
         # Ensure object is in standard order
-        keys = as.list(RG@grid[rev(names(RG@levels))])
-        names(keys) = NULL   # workaound in case of name conflict with order()
-        ord = do.call(order, keys)
+        ord = do.call(order, unname(RG@grid[rev(names(RG@levels))]))
         if(any(ord != seq_along(ord)))
             RG = RG[ord]
         

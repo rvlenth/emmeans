@@ -216,8 +216,9 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             args[[nm]] = NULL
             all.args[[nm]] = NULL
         }
-        all.levs = do.call("paste", all.args)   # keep all levels in case we have permutations of them
+        all.levs = do.call("paste", unname(all.args))   # keep all levels in case we have permutations of them
     }
+    args = unname(args)
     args$sep = ","
     levs = do.call("paste", args)  # NOTE - these are levels for the first (or only) by-group
     if (length(levs) == 0)   # prevent error when there are no levels to contrast

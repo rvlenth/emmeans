@@ -114,7 +114,7 @@ glht.emmGrid <- function(model, linfct, by, ...) {
     bylevs = lapply(by, function(byv) unique(object@grid[[byv]]))
     names(bylevs) = by
     bygrid = do.call("expand.grid", bylevs)
-    levlbls = lapply(by, function(byv) paste(byv, "=", bygrid[[byv]]))
+    levlbls = unname(lapply(by, function(byv) paste(byv, "=", bygrid[[byv]])))
     levlbls$sep = ", "
     names(result) = do.call("paste", levlbls)
     class(result) = c("glht_list", "list")

@@ -3,7 +3,7 @@
 emmeans 1.3.3.0999xxxxx
 -------------
 
-  * Fix to name conflict with `order()` in `emmeans()` (#94)
+  * Un-naming a lot of arguments in `do.call(paste, ...)` and `do.call(order, ...)` (#94)
   
 
 emmeans 1.3.3

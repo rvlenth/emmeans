@@ -115,7 +115,7 @@
     if (any(is.na(match(by, names(tbl)))))
         stop("'by' variables are not all in the grid")    
     bylevs = tbl[ , by, drop = FALSE]
-    by.id = do.call("paste", bylevs)
+    by.id = do.call("paste", unname(bylevs))
     uids = unique(by.id)
     result = lapply(uids, function(id) which(by.id == id))
     names(result) = uids
