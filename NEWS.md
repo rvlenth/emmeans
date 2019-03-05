@@ -1,5 +1,11 @@
 ## NEWS for the emmeans package
 
+emmeans 1.3.3.0999xxxxx
+-------------
+
+  * Fix to name conflict with `order()` in `emmeans()` (#94)
+  
+
 emmeans 1.3.3
 -------------
 

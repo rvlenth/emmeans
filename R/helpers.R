@@ -234,7 +234,7 @@ recover_data.lme = function(object, data, ...) {
 
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("auto", "containment", "satterthwaite", "boot-satterthwaite"), sigmaAdjust = TRUE, ...) {
+        mode = c("containment", "satterthwaite", "boot-satterthwaite", "auto"), sigmaAdjust = TRUE, ...) {
     mode = match.arg(mode)
     if (mode == "auto")
         mode = ifelse(is.null(object$apVar), "containment", "boot-satterthwaite")
