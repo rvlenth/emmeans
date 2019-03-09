@@ -570,8 +570,10 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     result[1] = as.numeric(result[1]) # silly bit of code to avoid getting a data.frame of logicals if all are NA
     result = as.data.frame(result)
     names(result) = c(misc$estName, "SE", "df")
-    if (!is.null(misc$tran) && is.character(misc$tran) && (misc$tran != "none")) {
+    if (!is.null(misc$tran)) {
         attr(result, "link") = .get.link(misc)
+        if(is.character(misc$tran) && (misc$tran != "none"))
+            attr(result, "link") = NULL
     }
     result
 }

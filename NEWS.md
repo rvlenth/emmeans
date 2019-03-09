@@ -4,6 +4,8 @@ emmeans 1.3.3.0999xxxxx
 -------------
 
   * Un-naming a lot of arguments in `do.call(paste, ...)` and `do.call(order, ...)` (#94)
+  * Fix to a logic error in `summary.emmGrid()` whereby transformations of class
+    `list` were ignored.
   
 
 emmeans 1.3.3
