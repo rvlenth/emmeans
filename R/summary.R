@@ -572,7 +572,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     names(result) = c(misc$estName, "SE", "df")
     if (!is.null(misc$tran)) {
         attr(result, "link") = .get.link(misc)
-        if(is.character(misc$tran) && (misc$tran != "none"))
+        if(is.character(misc$tran) && (misc$tran == "none"))
             attr(result, "link") = NULL
     }
     result
