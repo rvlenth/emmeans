@@ -209,7 +209,8 @@ vcov.emmGrid = function(object, ...) {
 #' of \code{infer} in \code{\link{summary.emmGrid}}.}
 #' 
 #' \item{\code{level}}{(numeric) is the default confidence level, \code{level},
-#' in \code{\link{summary.emmGrid}}}
+#' in \code{\link{summary.emmGrid}}. \emph{Note:} You must specify all five letters 
+#' of \sQuote{level} to distinguish it from the slot name \sQuote{levels}.}
 #' 
 #' \item{\code{df}}{(numeric) overrides the default degrees of freedom with a
 #' specified single value.}
@@ -247,13 +248,22 @@ vcov.emmGrid = function(object, ...) {
 #' documentation for \code{\link{ref_grid}}. The current nesting structure is
 #' displayed by \code{\link{str.emmGrid}}.}
 #' 
-#' \item{(any slot name)}{If the name matches an element of
-#' \code{slotNames(object)}, that slot is replaced by the supplied value, if it
-#' is of the required class (otherwise an error occurs). Note that other options
-#' above are saved in the \code{misc} slot; hence, you probably
-#' don't want to replace that slot. The user must be very careful in
-#' replacing slots because they are interrelated; for example, the \code{levels}
-#' and \code{grid} slots must involve the same variable names, and the lengths
+#' \item{\code{levels}}{named \code{list} of new levels for the elements of the
+#' current \code{emmGrid}. The list name(s) are used as new variable names, and
+#' if needed, the list is expanded using \code{expand.grid}. These results replace
+#' current variable names and levels. This specification changes the \code{levels}, 
+#' \code{grid}, \code{roles}, and \code{misc} slots in the updated \code{emmGrid},
+#' and resets \code{pri.vars}, \code{by.vars}, \code{adjust}, \code{famSize},
+#' \code{avgd.over}, and \code{nesting}. 
+#' \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
+#' it from \code{level}.}
+#' 
+#' \item{(any other slot name)}{If the name matches an element of
+#' \code{slotNames(object)} other than \code{levels}, that slot is replaced by 
+#' the supplied value, if it is of the required class (otherwise an error occurs). 
+#' 
+#' The user must be very careful in
+#' replacing slots because they are interrelated; for example, the lengths
 #' and dimensions of \code{grid}, \code{linfct}, \code{bhat}, and \code{V} must
 #' conform.}
 #' } %%%%%%% end \describe 
@@ -286,7 +296,26 @@ update.emmGrid = function(object, ..., silent = FALSE) {
         }
         else {
             if (fullname == "type") fullname = "predict.type"
-            if (fullname %in% valid.slots)
+            if (fullname == "levels") {
+                lvls = args[[nm]]
+                if (!is.list(lvls))
+                    stop("'levels' must be a named list.")
+                nm = names(lvls)
+                if (is.null(nm) || any(nm == ""))
+                     stop("'levels' must be a named list.")
+                grd = do.call(expand.grid, lvls)
+                if (nrow(object@grid) != nrow(grd))
+                    stop("Length of replacement levels does not match the number of rows in the grid")
+                object@levels = lvls
+                for (nm in c(".wgt.", ".offset"))
+                        grd[[nm]] = object@grid[[nm]]
+                object@grid = grd
+                object@roles$predictors = misc$pri.vars = names(lvls)
+                misc$by.vars = misc$avgd.over = object@model.info$nesting = NULL
+                misc$adjust = "none"
+                misc$famSize = nrow(grd)
+            }
+            else if (fullname %in% valid.slots) # all slots but "levels"
                 slot(object, fullname) = args[[nm]]
             else {
                 if (fullname == "by.vars") {
@@ -297,7 +326,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                     allvars = union(misc$pri.vars, misc$by.vars)
                     misc$by.vars = setdiff(allvars, args[[nm]])
                 }
-                # special case - I keep nesting in model.info. Plus add'kl checks
+                # special case - I keep nesting in model.info. Plus add'l checks
                 if (fullname == "nesting") {
                     object@model.info$nesting = lst = .parse_nest(args[[nm]])
                     if(!is.null(lst)) {

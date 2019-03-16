@@ -83,7 +83,8 @@ inferences; used in Tukey and Scheffe adjustments}
 of \code{infer} in \code{\link{summary.emmGrid}}.}
 
 \item{\code{level}}{(numeric) is the default confidence level, \code{level},
-in \code{\link{summary.emmGrid}}}
+in \code{\link{summary.emmGrid}}. \emph{Note:} You must specify all five letters 
+of \sQuote{level} to distinguish it from the slot name \sQuote{levels}.}
 
 \item{\code{df}}{(numeric) overrides the default degrees of freedom with a
 specified single value.}
@@ -121,13 +122,20 @@ structure. See \dQuote{Recovering or overriding model information} in the
 documentation for \code{\link{ref_grid}}. The current nesting structure is
 displayed by \code{\link{str.emmGrid}}.}
 
-\item{(any slot name)}{If the name matches an element of
-\code{slotNames(object)}, that slot is replaced by the supplied value, if it
-is of the required class (otherwise an error occurs). Note that other options
-above are saved in the \code{misc} slot; hence, you probably
-don't want to replace that slot. The user must be very careful in
-replacing slots because they are interrelated; for example, the \code{levels}
-and \code{grid} slots must involve the same variable names, and the lengths
+\item{\code{levels}}{named \code{list} of new levels for the elements of the
+current \code{emmGrid}. The list name(s) are used as new variable names, and
+if needed, the list is expanded using \code{expand.grid}. These results replace
+current variable names and levels. This specification changes the \code{levels}, 
+\code{grid}, \code{roles}, and \code{misc}  slots in the updated \code{emmGrid}. 
+\emph{Note:} All six letters of \code{levels} is needed in order to distinguish
+it from \code{level}.}
+
+\item{(any other slot name)}{If the name matches an element of
+\code{slotNames(object)} other than \code{levels}, that slot is replaced by 
+the supplied value, if it is of the required class (otherwise an error occurs). 
+
+The user must be very careful in
+replacing slots because they are interrelated; for example, the lengths
 and dimensions of \code{grid}, \code{linfct}, \code{bhat}, and \code{V} must
 conform.}
 } %%%%%%% end \describe
@@ -141,7 +149,16 @@ mypigs.lm <- lm(logconc ~ source + factor(percent), data = mypigs)
 # Reference grid that knows about the transformation:
 mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log", 
                     predict.type = "response")
-emmeans(mypigs.rg, "source")
+( emms <- emmeans(mypigs.rg, "source") )
+
+# Obtain differences between the above means and the weighted grand mean
+gm <- emmeans(emms, ~ 1, weights = "prop")
+( tmp <- update(gm + emms, levels = list(case = c("GM", emms@levels$source)),
+                            predict.type = "lp") )
+contrast(tmp, "trt.vs.ctrl1", adjust = "fdr")
+
+# Compare with effects based on the equally-weighted mean:
+contrast(emms, "eff", type = "lp")
 }
 \seealso{
 \code{\link{emm_options}}

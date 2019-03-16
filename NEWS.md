@@ -6,6 +6,13 @@ emmeans 1.3.3.0999xxxxx
   * Un-naming a lot of arguments in `do.call(paste, ...)` and `do.call(order, ...)` (#94)
   * Fix to a logic error in `summary.emmGrid()` whereby transformations of class
     `list` were ignored.
+  * Enhancement to `update.emmGrid(..., levels = levs)` whereby we can easily
+    relabel the reference grid and ensure that the `grid` and `roles` slots
+    stay consistent. Added vignette example.
+  * Clarified ordering rules used by `emmeans()`. We now ensure that the
+    original order of the reference grid is preserved. Previously, the grid 
+    was re-ordered if any numeric or character levels occurred out of order, 
+    per `order()`
   
 
 emmeans 1.3.3

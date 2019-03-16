@@ -187,7 +187,10 @@ vignette: >
       * [Robust regression](xtending.html#rlm)
       * [Split-plot experiment](sophisticated.html#lmer)
       * [Unbalanced data](basics.html#motivation)
-      * [`warpbreaks`](transformations.html#tranlink)
+      * `warpbreaks`
+          * [in *transformations: tranlink*](transformations.html#tranlink)
+          * [in *utilities: relevel*](utilities.html#relevel)
+      * [Welch's *t* comparisons](utilities.html#relevel)
       * [`wine`](sophisticated.html#ordinal)
 
 
@@ -272,7 +275,11 @@ vignette: >
 ### L {#l}
 
 
+  * Labels
+      * [Changing](utilities.html#relevel)
   * [Least-squares means](FAQs.html#what)
+  * Levels
+      * [Changing](utilities.html#relevel)
   * [Linear functions](comparisons.html#linfct)
   * [Link functions](transformations.html#links)
   * [`lme` models](models.html#K)
@@ -399,6 +406,7 @@ vignette: >
 
 
   * [`rbind()`](utilities.html#rbind)
+  * [Re-labeling](utilities.html#relevel)
   * [`recover_data()`](xtending.html#intro)
       * [`data` and `params` arguments](xtending.html#rdargs)
       * [Error handling](xtending.html#rderrs)
@@ -531,6 +539,7 @@ vignette: >
 
   * [`weights`](messy-data.html#weights)
   * [Welch's *t* comparisons](FAQs.html#nowelch)
+      * [Example](utilities.html#relevel)
 
 
 [Back to top](#topnav)

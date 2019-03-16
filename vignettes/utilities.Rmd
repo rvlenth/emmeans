@@ -25,6 +25,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   3. [Combining and subsetting `emmGrid` objects](#rbind)
   4. [Accessing results to use elsewhere](#data)
   5. [Adding grouping factors](#groups)
+  6. [Re-labeling and re-leveling an `emmGrid`](#relevel)
   
 [Index of all vignette topics](vignette-topics.html)
 
@@ -238,5 +239,45 @@ emmeans(pigs.emm.ss, pairwise ~ type)
 ```
 
 [Back to contents](#contents)
+
+
+
+## Re-labeling or re-leveling an `emmGrid` {#relevel}
+<!-- @index Re-labeling; Levels!Changing; Labels!Changing; Examples!`warpbreaks`;
+    Examples!Welch's *t* comparisons; Welch's *t* comparisons!Example    -->
+Sometimes it is desirable to re-label the rows of an `emmGrid`, or cast it in terms of
+other factor(s). This can be done via the `levels` argument in `update()`. 
+
+As an example, sometimes a fitted model has a treatment factor that comprises combinations of other factors. In subsequent analysis, we may well want to break it down into the
+individual factors' contributions. Consider, for example, the `warpbreaks` data provided with R.
+We will define a single factor and fit a nonhomogeneous-variance model:
+```{r}
+warp <- transform(warpbreaks, treat = interaction(wool, tension))
+library(nlme)
+warp.gls <- gls(breaks ~ treat, weights = varIdent(form = ~ 1|treat), data = warp)
+( warp.emm <- emmeans(warp.gls, "treat") )
+```
+But now we want to re-cast this `emmGrid` into one that has separate factors for `wool` 
+and `tension`. We can do this as follows:
+```{r}
+warp.fac <- update(warp.emm, levels = list(
+                wool = c("A", "B"), tension = c("L", "M", "H")))
+str(warp.fac)
+```
+So now we can do various contrasts involving the separate factors:
+```{r}
+contrast(warp.fac, "consec", by = "wool")
+```
+
+Note: When re-leveling to more than one factor, you have to be careful to anticipate
+that the levels will be expanded using `expand.grid()`: the first factor in the list
+varies the fastest and the last varies the slowest. That was the case in our example, 
+but in others, it may not be. Had the levels of `treat` been
+ordered as `A.L, A.M, A.H, B.L, B.M, B.H`, then we would have had to specify the levels
+of `tension` first and the levels of `wool` second.
+
+
+[Back to contents](#contents)
+
 
 [Index of all vignette topics](vignette-topics.html)

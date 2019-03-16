@@ -271,7 +271,7 @@ emmeans = function(object, specs, by = NULL,
         }
         
         # Ensure object is in standard order
-        ord = do.call(order, unname(RG@grid[rev(names(RG@levels))]))
+        ord = .std.order(RG@grid, RG@levels) ###do.call(order, unname(RG@grid[rev(names(RG@levels))]))
         if(any(ord != seq_along(ord)))
             RG = RG[ord]
         
@@ -639,5 +639,14 @@ as.list.emmGrid = function(x, ...) {
     return(FALSE)
 }
 
-
+### Sort grid in standard order according to ordering of entries in levels. 
+### Thus .std.order(do.call(expand.grid, levels), levels) --> 1,2,...,nrow
+.std.order = function(grid, levels) {
+    tmp = lapply(rev(names(levels)), function(nm) {
+        x = grid[[nm]]
+        if (inherits(x, "factor")) as.integer(x)
+        else as.integer(factor(x, levels = levels[[nm]]))
+    })
+    do.call(order, tmp)
+}
 
