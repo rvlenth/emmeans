@@ -4,7 +4,7 @@
 \alias{CLD}
 \alias{CLD.emmGrid}
 \alias{cld.emmGrid}
-\title{Extract and display information on all pairwise comparisons of least-squares means.}
+\title{Extract and display information on all pairwise comparisons of estimated marginal means.}
 \usage{
 CLD(object, ...)
 
@@ -22,7 +22,7 @@ CLD(object, ...)
 
 This function uses the Piepho (2004) algorithm (as implemented in the 
 \pkg{multcompView} package) to generate a compact letter display of all
-pairwise comparisons of least-squares means. The function obtains (possibly
+pairwise comparisons of estimated marginal means. The function obtains (possibly
 adjusted) P values for all pairwise comparisons of means, using the
 \code{\link{contrast}} function with \code{method = "pairwise"}. When a P
 value exceeds \code{alpha}, then the two means have at least one letter in
@@ -58,19 +58,22 @@ When details == FALSE, an object of class \code{summary.ref_grid}
   its estimate, standard error, t ratio, and adjusted P value.
 }
 \description{
-Extract and display information on all pairwise comparisons of least-squares means.
+Extract and display information on all pairwise comparisons of estimated marginal means.
 }
-\examples{
-warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-warp.emm <- emmeans(warp.lm, ~ tension | wool)
-CLD(warp.emm)                  # implicitly uses by = "wool"
-CLD(warp.emm, by = "tension")  # overrides implicit 'by'
+\section{Deprecated}{
 
-# Mimic grouping bars and compare all 6 means
-CLD(warp.emm, by = NULL, Letters = "||||||||", alpha = .01)
+  The \code{CLD} function and methods are deprecated, and currently no
+  replacement is offered. Compact-letter displays (CLDs) encourage a misleading
+  interpretation of significance testing by visually grouping means whose comparisons
+  have \emph{P} > \code{alpha} as though they are equal. However, failing to
+  prove two means are different does not prove that they are the same. 
+  In addition, CLDs make
+  a hard distinction between \emph{P} values nearly equal to \code{alpha}
+  but on opposite sides.
 }
+
 \references{
-Hans-Peter Piepho (2004) An algorithm for a letter-based representation 
+Piepho, Hans-Peter (2004) An algorithm for a letter-based representation 
   of all pairwise comparisons, Journal of Computational and Graphical Statistics, 13(2), 
   456-466.
 }

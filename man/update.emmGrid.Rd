@@ -65,8 +65,10 @@ variables that are not in \code{by.vars}. Thus, the combinations of their
 levels are used as columns in each table produced by \code{\link{summary.emmGrid}}.}
 
 \item{\code{alpha}}{(numeric) is the default significance level for tests, in
-\code{\link{summary.emmGrid}} as well as \code{\link{CLD.emmGrid}} and \code{\link{plot.emmGrid}}
-when \samp{intervals = TRUE}}
+\code{\link{summary.emmGrid}} as well as \code{\link{plot.emmGrid}}
+when \samp{intervals = TRUE}. Be cautious that methods that depend on
+specifying \code{alpha} are prone to abuse. See the
+discussion in \href{../doc/basics.html#pvalues}{\code{vignette("basics", "emmeans")}}.}
 
 \item{\code{adjust}}{(\code{character)}) is the default for the \code{adjust}
 argument in \code{\link{summary.emmGrid}}.}
@@ -126,7 +128,9 @@ displayed by \code{\link{str.emmGrid}}.}
 current \code{emmGrid}. The list name(s) are used as new variable names, and
 if needed, the list is expanded using \code{expand.grid}. These results replace
 current variable names and levels. This specification changes the \code{levels}, 
-\code{grid}, \code{roles}, and \code{misc}  slots in the updated \code{emmGrid}. 
+\code{grid}, \code{roles}, and \code{misc} slots in the updated \code{emmGrid},
+and resets \code{pri.vars}, \code{by.vars}, \code{adjust}, \code{famSize},
+\code{avgd.over}, and \code{nesting}. 
 \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
 it from \code{level}.}
 
@@ -149,16 +153,7 @@ mypigs.lm <- lm(logconc ~ source + factor(percent), data = mypigs)
 # Reference grid that knows about the transformation:
 mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log", 
                     predict.type = "response")
-( emms <- emmeans(mypigs.rg, "source") )
-
-# Obtain differences between the above means and the weighted grand mean
-gm <- emmeans(emms, ~ 1, weights = "prop")
-( tmp <- update(gm + emms, levels = list(case = c("GM", emms@levels$source)),
-                            predict.type = "lp") )
-contrast(tmp, "trt.vs.ctrl1", adjust = "fdr")
-
-# Compare with effects based on the equally-weighted mean:
-contrast(emms, "eff", type = "lp")
+emmeans(mypigs.rg, "source")
 }
 \seealso{
 \code{\link{emm_options}}

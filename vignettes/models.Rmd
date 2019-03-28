@@ -281,7 +281,7 @@ Similarly to the above, the `disable.lmerTest` and `lmerTest.limit` options
 affect whether Satterthwaite methods can be implemented.
 
 The `df` argument may be used to specify some other degrees of freedom.
-Note that if `df` and `method = "satterthwaite"` are both
+Note that if `df` and `method = "kenward-roger"` are both
 specified, the covariance matrix is adjusted but the K-R degrees of freedom
 are not used. 
 

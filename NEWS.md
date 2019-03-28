@@ -3,7 +3,9 @@
 emmeans 1.3.3.0999xxxxx
 -------------
 
-  * Un-naming a lot of arguments in `do.call(paste, ...)` and `do.call(order, ...)` (#94)
+  * Un-naming a lot of arguments in `do.call(paste, ...)` and `do.call(order, ...)`,
+    to prevent problems with factor names like `method` that are argument names
+    for these functions (#94)
   * Fix to a logic error in `summary.emmGrid()` whereby transformations of class
     `list` were ignored.
   * Enhancement to `update.emmGrid(..., levels = levs)` whereby we can easily
@@ -13,6 +15,9 @@ emmeans 1.3.3.0999xxxxx
     original order of the reference grid is preserved. Previously, the grid 
     was re-ordered if any numeric or character levels occurred out of order, 
     per `order()`
+  * Curbing use of "statistical significance" language. This includes
+    additional vignette material and deprecating `CLD()` due to its 
+    misleading message about statistical tests.
   
 
 emmeans 1.3.3

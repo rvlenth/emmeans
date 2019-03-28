@@ -291,6 +291,16 @@ The default \code{show} method for \code{emmGrid} objects (with the
   \code{estble.tol} to the desired value.
 }
 
+\section{Warning about potential misuse of P values}{
+
+  A growing consensus in the statistical and scientific community is that
+  the term \dQuote{statistical significance} should be completely abandoned, and
+  that criteria such as \dQuote{p < 0.05} never be used to assess the
+  importance of an effect. These practices are just too misleading and prone to abuse.
+  See \href{../doc/basics.html#pvalues}{the \dQuote{basics} vignette} for more
+  discussion.
+}
+
 \examples{
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)

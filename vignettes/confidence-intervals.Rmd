@@ -139,8 +139,8 @@ how to change the confidence level.)
      Tukey adjustment; Sidak adjustment -->
 Both tests and confidence intervals may be adjusted for simultaneous inference. 
 Such adjustments ensure that the confidence coefficient for a whole set of 
-intervals is at least the specified level, or to control the overall
-significance level for a whole family of tests. This is done via the `adjust`
+intervals is at least the specified level, or to control for multiplicity
+in a whole family of tests. This is done via the `adjust`
 argument. For `ref_grid()` and `emmeans()` results, the default is `adjust =
 "none"`. For most `contrast()` results, `adjust` is often something else,
 depending on what type of contrasts are created. For example, pairwise
@@ -165,8 +165,7 @@ For a large set of tests (and especially confidence intervals), the
 computational lag becomes noticeable if not intolerable.
 
 For tests, `adjust` increases the *P* values over those otherwise obtained with
-`adjust = "none"`, making it harder to declare an individual test as
-"significant." Compare the following adjusted tests with the unadjusted ones
+`adjust = "none"`. Compare the following adjusted tests with the unadjusted ones
 previously computed.
 ```{r}
 test(pigs.emm.s, null = log(40), side = ">", adjust = "bonferroni")
@@ -258,16 +257,18 @@ variables to obtain separate tables of joint tests.
 The `delta` argument in `summary()` or `test()` allows the user to
 specify a threshold value to use in a test of equivalence, noninferiority, 
 or nonsuperiority. An equivalence test is kind of a backwards significance 
-test, where differences enough smaller than `delta` are the ones that can 
-be significant.  The help page for `summary.emmGrid` gives the details of 
+test, where *P* values *decrease* as differences decrease below a specified
+threshold value `delta`.
+The help page for `summary.emmGrid` gives the details of 
 these tests.
 Suppose in the present example, we consider two sources to be equivalent if they 
 are within 25% of each other. We can test this as follows:
 ```{r}
 test(pigs.prs.s, delta = log(1.25), adjust = "none")
 ```
-By our 25% standard, soy and skim are equivalent at the $\alpha = .05$ level,
-when no multiplicity adjustment is used.
+By our 25% standard, the *P* value is quite small for comparing soy and skim, 
+providing statistical evidence that their difference is enough smaller than the
+threshold to consider them equivalent.
 
 [Back to Contents](#contents)
 

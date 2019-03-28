@@ -26,14 +26,16 @@ vignette: >
   * [`afex_aov` objects](models.html#V)
   * [Analysis of subsets of data](FAQs.html#model)
   * Analysis of variance
-      * [versus *pos hoc* comparisons](FAQs.html#anova)
+      * [versus *post hoc* comparisons](FAQs.html#anova)
       * [Type III](confidence-intervals.html#joint_tests)
   * [`aovList` objects](models.html#V)
   * [`as.data.frame()`](utilities.html#data)
   * `as.mcmc()`
       * [in *models: S*](models.html#S)
       * [in *sophisticated: bayesxtra*](sophisticated.html#bayesxtra)
+  * [ASA Statement on *P* values](basics.html#pvalues)
   * [Asymptotic tests](sophisticated.html#dfoptions)
+  * [ATOM](basics.html#pvalues)
   * [`averaging` models](models.html#I)
 
 
@@ -62,11 +64,12 @@ vignette: >
 ### C {#c}
 
 
-  * [`CLD()`](comparisons.html#pairwise)
-      * [versus `multcomp::cld()`](comparisons.html#pairwise)
+  * `CLD()
+      * [and why it is deprecated`](comparisons.html#pairwise)
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)
+  * [Compact letter displays](comparisons.html#pairwise)
   * Comparisons
       * [Back-transforming](comparisons.html#logs)
       * [Displaying as groups](comparisons.html#pairwise)
@@ -372,6 +375,8 @@ vignette: >
 ### P {#p}
 
 
+  * *P* values
+      * [Interpreting](basics.html#pvalues)
   * [`pairs()`](comparisons.html#pairwise)
   * [Pairwise comparisons](comparisons.html#pairwise)
   * [`pairwise` contrasts](comparisons.html#contrasts)
@@ -440,6 +445,10 @@ vignette: >
       * [in *models: L*](models.html#L)
   * [Selecting results](utilities.html#brackets)
   * [Sidak adjustment](confidence-intervals.html#adjust)
+  * Significance
+      * [Assessing](basics.html#pvalues)
+  * "Significant"@significant
+      * [Why you shouldn't say this](basics.html#pvalues)
   * [`simple = "each"`](confidence-intervals.html#simple)
   * Simple comparisons
       * [in *confidence-intervals: simple*](confidence-intervals.html#simple)
@@ -448,7 +457,7 @@ vignette: >
   * `specs`
       * [Formula](comparisons.html#formulas)
   * [`stanreg` objects](models.html#S)
-  * [* gazing](interactions.html#factors)
+  * [* gazing (star gazing)](interactions.html#factors)
   * [Startup options](utilities.html#startup)
   * [`str()`](confidence-intervals.html#emmobj)
   * [Subsets of data](FAQs.html#model)

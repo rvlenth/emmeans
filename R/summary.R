@@ -212,6 +212,15 @@
 #'   \eqn{||Nx||^2 / ||x||^2} exceeds \code{tol}, which by default is
 #'   \code{1e-8}. You may change it via \code{\link{emm_options}} by setting
 #'   \code{estble.tol} to the desired value.
+#'   
+#' @section Warning about potential misuse of P values:
+#'   A growing consensus in the statistical and scientific community is that
+#'   the term \dQuote{statistical significance} should be completely abandoned, and
+#'   that criteria such as \dQuote{p < 0.05} never be used to assess the
+#'   importance of an effect. These practices are just too misleading and prone to abuse.
+#'   See \href{../doc/basics.html#pvalues}{the \dQuote{basics} vignette} for more
+#'   discussion.
+#'   
 #' 
 #' @note In doing testing and a transformation and/or link is in force, any
 #'   \code{null} and/or \code{delta} values specified must always be on the
@@ -226,6 +235,7 @@
 #'   Thus, with ordinary usage of \code{\link{emmeans}} and such, it is
 #'   unnecessary to call \code{summary} unless there is a need to
 #'   specify other than its default options.
+#'   
 #'   
 #' @method summary emmGrid  
 #' @export
@@ -934,7 +944,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     if (!is.null(x$z.ratio)) 
         x$z.ratio = format(round(x$z.ratio, 3), nsmall = 3, sci = FALSE)
     if (!is.null(x$p.value)) {
-        fp = x$p.value = format(round(x$p.value,4), nsmall=4, sci=FALSE)
+        fp = x$p.value = format(round(x$p.value, 4), nsmall = 4, sci = FALSE)
         x$p.value[fp=="0.0000"] = "<.0001"
     }
     estn = attr(x, "estName")

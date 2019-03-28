@@ -10,7 +10,7 @@ vignette: >
 ```{r, echo = FALSE, results = "hide", message = FALSE}
 require("emmeans")
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
-options(show.signif.starts = FALSE)
+options(show.signif.stars = FALSE)
 ```
 
 <!-- @index Vignettes!FAQS; Frequently asked questions -->
@@ -251,21 +251,29 @@ should include interactions between the factors of interest and the
 
 ## My ANOVA *F* is significant, but no pairwise comparisons are {#anova}
 <!-- @index *F* test!vs. pairwise comparisons@pairwz
-        Analysis of variance!versus *pos hoc* comparisons@post -->
-This is a common misunderstanding of ANOVA. If *F* is significant,
-this implies only that *some contrast* among the means (or effects)
-is statistically significant (compared to a Scheffé critical value).
-That contrast may be very much unlike a pairwise comparison, especially
-when there are several means being compared. Another factor is that
-by default, *P* values for pairwise comparisons are adjusted using 
-the Tukey method, and the adjusted *P* values can be quite a bit larger 
-than the unadjusted ones. (But I definitely do *not* advocate using 
+        Analysis of variance!versus *post hoc* comparisons@post -->
+First of all, you should not be making binary decisions of "significant" or
+"nonsignificant." This is a simplistic view of *P* values that assigns an 
+unmerited magical quality to the value 0.05. It is suggested
+that you just report the *P* values actually obtained, and let your readers
+decide how significant your findings are in the context of the scientific findings.
+
+
+But to answer the question: This is a common misunderstanding of ANOVA. If *F*
+has a particular *P* value, this implies only that *some contrast* among the
+means (or effects) has the same *P* value, after applying the Scheffe
+adjustment. That contrast may be very much unlike a pairwise comparison,
+especially when there are several means being compared. Having an *F* statistic
+with a *P* value of, say, 0.06, does *not* imply that any pairwise comparison
+will have a *P* value of 0.06 or smaller. Again referring to the paragraph above,
+just report the *P* value for each pairwise comparison, and don't try to
+relate them to the *F* statistic.
+
+Another consideration is that by default, *P* values for pairwise comparisons
+are adjusted using the Tukey method, and the adjusted *P* values can be quite a
+bit larger than the unadjusted ones. (But I definitely do *not* advocate using
 no adjustment to "repair" this problem.)
 
-As is shown in 
-[my answer in a *Cross Validated* discussion](https://stats.stackexchange.com/questions/83131/how-much-smaller-can-p-values-from-anovas-f-test-be-vs-those-from-multiple/109422#109422),
-the unadjusted *P* value can be more than .15 when *F* is significant
-(remarkably, regardless of the significance level used for *F*!).
 
 ## I asked for Tukey adjustments, but that's not what I got {#notukey}
 <!-- @index Tukey adjustment!Ignored or changed -->

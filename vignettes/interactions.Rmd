@@ -57,12 +57,12 @@ They would go straight to analyses like this:
 ```{r}
 emmeans(noise.lm, pairwise ~ size)
 ```
-The hasty analyst would thus conclude that the noise level is significantly
+The analyst-in-a-hurry would thus conclude that the noise level is
 higher for medium-sized cars than for small or large ones. 
 
 But as is seen in the message before the output, `emmeans()` valiantly tries
 to warn you that it may not be a good idea to average over factors that interact
-with the factor of interest. It isn't always a bad idea to do this, but
+with the factor of interest. It isn't *always* a bad idea to do this, but
 sometimes it definitely is.
 
 What about this time? 
@@ -86,22 +86,24 @@ Not too surprisingly, the statistical comparisons are all different for standard
 filters, but with Octel filters, there isn't much of a difference between small
 and medium size.
 
-<!-- @index * gazing@star -->
+<!-- @index * gazing (star gazing)@star -->
 For comparing the levels of other factors, similar judgments must be made. It
 may help to construct other interaction plots with the factors in different
 roles. In my opinion, almost all meaningful statistical analysis should be
-grounded in evaluating *both* the statistical and practical significance of the
-estimated effects. Those who put all their attention on *P* values and asterisks
+grounded in evaluating the practical impact of the
+estimated effects *first*, and seeing if the statistical evidence backs it up. 
+Those who put all their attention on how many asterisks
 (I call these people "`*` gazers") are ignoring the fact that these don't measure 
-the sizes of the effects on a
-practical scale.[^2]
-An effect can be practically negligible but statistically
-significant, or vice versa, depending on sample size and error variance.
-Failure to describe what is actually going on in the data is a failure to do an adequate analysis. Use lots of plots, and think.
+the sizes of the effects on a practical scale.[^2]
+An effect can be practically negligible and still have a very small *P* value -- 
+or practically important but have a large *P* value -- depending on sample size and error variance.
+Failure to describe what is actually going on in the data is a failure to do an adequate analysis. 
+Use lots of plots, and *think* about the results. For more on this, see the discussion
+of *P* values in the ["basics" vignette](#basics.html#pvalues).
 
 [^2]: You may have noticed that there are no asterisks in the ANOVA table in
-this vignette. I habitually opt out of star-gazing via 
-`options(show.signif.stars = FALSE)`
+this vignette. I habitually opt out of star-gazing by including
+`options(show.signif.stars = FALSE)` in my `.Rprofile` file.
 
 ### Simple contrasts {#simple}
 <!-- @index Simple comparisons; `contrast()`!`simple`; `contrast()`!`combine` -->
@@ -265,9 +267,9 @@ Which model should we use? They are nested models, so they can be compared by
 anova(org.quad, org.int, org.add)
 ```
 It seems like the full-quadratic model has little advantage over the 
-interaction model. Strict .05-significance people would, I suppose,
-settle on the additive model. I like `org.int`, but what follows could be
-done with any of them.
+interaction model. There truly is nothing magical about a *P* value of 0.05,
+and we have enough data that over-fitting is not a hazard; so I like `org.int`.
+However, what follows could be done with any of these models.
 
 <!-- @index Trends!Estimating and comparing; `emtrends()` -->
 To summarize and test the results compactly, it makes sense to obtain estimates
@@ -283,9 +285,9 @@ emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
 ```
 From this, we can say that, starting with `price1` and `price2` both at their
 average values, we expect `sales1` to decrease by about .75 per unit
-increase in `price1` (statistically significant since the confidence interval
-excludes zero); meanwhile, a slight increase (but not significant) of `sales2`
-may occur. Marginally, the first variety has a .89 disadvantage relative to
+increase in `price1`; meanwhile, there is a suggestion of a slight increase of `sales2`,
+but without much statistical evidence. 
+Marginally, the first variety has a 0.89 disadvantage relative to
 sales of the second variety.
 
 Other analyses (not shown) with `price2` set at a higher value will reduce these

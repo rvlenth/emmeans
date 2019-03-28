@@ -20,14 +20,15 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   2. [EMMs defined](#EMMdef)
       a. [Reference grids](#ref_grid)
       b. [Estimated marginal means](#emmeans)
-      b. [Altering the reference grid](#altering)
-      b. [Derived covariates](#depcovs)
-      b. [Graphical displays](#plots)
-      c. [Weighting](#weights)
-      d. [Multivariate models](#multiv)
-  3. [Summary](#summary)
-  4. [The back story of **emmeans**](#backstory)
-  5. [Further reading](#more)
+      c. [Altering the reference grid](#altering)
+      d. [Derived covariates](#depcovs)
+      e. [Graphical displays](#plots)
+      f. [Weighting](#weights)
+      g. [Multivariate models](#multiv)
+  3. [P values, "significance", and scientific integrity](#pvalues)
+  4. [Summary](#summary)
+  5. [The back story of **emmeans**](#backstory)
+  6. [Further reading](#more)
   
 [Index of all vignette topics](vignette-topics.html)
 
@@ -41,8 +42,11 @@ different percentages of protein (`percent`) from different sources (`source`)
 in their diet, and later we measure the concentration (`conc`) of leucine.
 Here's an interaction plot showing the mean `conc` at each combination of 
 the other factors.
-```{r}
+```{r, echo = FALSE}
 par(mar = .1 + c(4, 4, 1, 1))   # reduce head space
+
+```
+```{r}
 with(pigs, interaction.plot(percent, source, conc))
 ```
 
@@ -389,6 +393,84 @@ have been named `rep.meas`.
 
 [Back to Contents](#contents)
 
+
+## P values, "significance", and scientific integrity {#pvalues}
+<!-- @index Significance!Assessing; 
+    "Significant"@significant!Why you shouldn't say this;
+    *P* values!Interpreting; ATOM; 
+    ASA Statement on *P* values -->
+There is a growing consensus among statisticians and researchers that *P* values
+are widely misunderstood, and that the term "statistical significance" is
+downright misleading. If you have a small *P* value, it *only* means that the
+effect being tested is unlikely to be explained by chance variation alone, in
+the context of the current study and the current statistical model underlying
+the test. If you have a large *P* value, it *only* means that the observed
+effect could plausibly be due to chance alone: it is *wrong* to conclude that
+there is no effect.
+
+The American Statistical Association has for some time been advocating very
+cautious use of *P* values (Wasserman *et al.* 2014, 2019). The ASA now
+*advises against ever using the term "statistically significant"* 
+(or a related descriptor) because it is
+too often misinterpreted, and too often used carelessly. 
+
+Wasserman *et al.* (2019),
+and the 43 articles it accompanies in the same issue of *TAS*, recommend a number
+of alternatives. It is quite dizzying to try to digest them all at once, but
+the basic ideas are summarized with the help of the acronym **ATOM** for the
+four highlighted words below:
+
+  * **Acceptance** of uncertainty. If you
+    were to repeat your study, you would get somewhat different results and perhaps
+    different effects will stand out. Likewise, there are other reasonable
+    models that you might have chosen, and those would have yielded different
+    results. If the topic is worth studying, others will try to replicate it,
+    perhaps with different study designs and different ways of operationalizing
+    important concepts -- again, yielding different results.
+    
+  * **Thoughtfulness**. Design your study with clear objectives in mind, and
+    spend time considering the best way to address those objectives in your study
+    design. Pilot the study to ensure that the procedures actually work, how much
+    variability to expect, and ensure that the sample size is adequate. How do
+    your results fit in the big picture, scientifically? Think about the
+    importance of the effects you have observed in your model(s)/data
+    in the context of the science. Think carefully about how well your model 
+    fits the data and if there are other possibilities.
+    
+  * **Openness**. Be transparent in disclosing the methods used, and reporting 
+    comprehensively all the successes and failures, the small and large effects.
+    If hypothesis tests are used, report the actual *P* values found (e.g., "*P* = 0.075")
+    and don't suppress or withhold results just because they are "nonsignificant,"
+    because those results may still be useful to other researchers via meta-analysis.
+    Trust in the expert judgment of other researchers.
+    
+  * **Modesty**. Be clear in examining and expressing the limitations of your work.
+    Understand that other researchers with different subject-area strengths may choose
+    other models that may cast a different light on your work. Encourage others to try to
+    reproduce your work, and be a good scientific colleague to them. Do not
+    exaggerate the importance of your findings. Your study is not final or
+    definitive; recognize that it is just one part of a broader picture.
+    Ironically, the more important the research, the more related research will
+    be undertaken, making that picture bigger and your part of it smaller.
+  
+
+### References
+ Wasserman RL, Lazar NA (2016)
+   "The ASA's Statement on *p*-Values: Context, Process, and Purpose,"
+   *The American Statistician*, **70**, 129--133,
+   https://doi.org/10.1080/00031305.2016.1154108
+ 
+ Wasserman RL, Schirm AL, Lazar, NA (2019)
+   "Moving to a World Beyond 'p < 0.05',"
+   *The American Statistician*, **73**, 1--19,
+   https://doi.org/10.1080/00031305.2019.1583913
+
+
+
+
+[Back to Contents](#contents)
+
+
 ## Summary of main points {#summary}
   * EMMs are based on a *model*. A different model for the same data may lead
     to different EMMs.
@@ -403,6 +485,10 @@ have been named `rep.meas`.
   * Reference grids and `emmeans()` results may be plotted via `plot()`
     (for parallel confidence intervals) or `emmip()` (for an interaction-style
     plot).
+  * Avoid the terms "significant" and "nonsignificant", and avoid using hard
+    thresholds like *P* < 0.05 as a means of defining scientific meaning or
+    importance. The importance of a result is established by scientific context,
+    not by some *P* value. Remember ATOM.
     
 [Back to Contents](#contents)
 

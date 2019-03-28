@@ -87,15 +87,12 @@
 #' available such as deviations from the mean, polynomial contrasts, and
 #' comparisons with one or more controls. Another \code{emmGrid} object is returned,
 #' which can be summarized or further analyzed. For convenience, a \code{pairs.emmGrid}
-#' method is provided for the case of pairwise comparisons. Related to this is
-#' the \code{\link{CLD.emmGrid}} method, which provides a compact letter display for
-#' grouping pairs of means that are not significantly different. \code{CLD}
-#' requires the \pkg{multcompView} package.
+#' method is provided for the case of pairwise comparisons. 
 #' }
 #' \item{Graphs}{The \code{\link{plot.emmGrid}} method will display
 #' side-by-side confidence intervals for the estimates, and/or
-#' \dQuote{comparison arrows} whereby the significance of pairwise differences
-#' can be judged by how much they overlap. The \code{\link{emmip}} function
+#' \dQuote{comparison arrows} whereby the *P* values of pairwise differences
+#' can be observed by how much the arrows overlap. The \code{\link{emmip}} function
 #' displays estimates like an interaction plot, multi-paneled if there are by
 #' variables. These graphics capabilities require the \pkg{lattice} package be
 #' installed.}
