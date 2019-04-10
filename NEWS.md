@@ -20,6 +20,8 @@ emmeans 1.3.3.0999xxxxx
     misleading message about statistical tests.
   * Bug fix for `betareg` objects, where the wrong `terms` component was 
     sometimes used.
+  * Correction to logic error that affected multiplicity adjustments when
+    `by` variables are present (#98).
   
 
 emmeans 1.3.3

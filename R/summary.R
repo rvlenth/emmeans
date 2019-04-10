@@ -636,7 +636,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     if ((et != 3) && adjust == "tukey") # not pairwise
         adjust = "sidak"
     
-    ragged.by = (is.character(fam.size) || adjust == "mvt")   # flag that we need to do groups separately
+    ragged.by = (is.character(fam.size) || adjust %in% c("mvt", p.adjust.methods))   # flag that we need to do groups separately
     if (!ragged.by)
         by.rows = list(seq_along(t))       # not ragged, we can do all as one by group
     
@@ -651,7 +651,9 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     else
         p.unadj = pt(t, DF, lower.tail = (tail<0))
     
-    pvals = lapply(by.rows, function(rows) {
+#    pvals = lapply(by.rows, function(rows) {
+    pval = numeric(length(t))
+    for(rows in by.rows) {
         unadj.p = p.unadj[rows]
         abst = abs(t[rows])
         df = DF[rows]
@@ -661,12 +663,12 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         }
         if (adjust %in% p.adjust.methods) {
             if (n.contr == length(unadj.p))
-                pval = p.adjust(unadj.p, adjust, n = n.contr)
+                pval[rows] = p.adjust(unadj.p, adjust, n = n.contr)
             else # only will happen when by.rows is length 1
-                pval = as.numeric(apply(matrix(unadj.p, nrow=n.contr), 2, 
+                pval[rows] = as.numeric(apply(matrix(unadj.p, nrow=n.contr), 2, 
                                         function(pp) p.adjust(pp, adjust, n=sum(!is.na(pp)))))
         }
-        else pval = switch(adjust,
+        else pval[rows] = switch(adjust,
                            sidak = 1 - (1 - unadj.p)^n.contr,
                            # NOTE: tukey, scheffe, dunnettx all assumed 2-sided!
                            tukey = ptukey(sqrt(2)*abst, fam.size, zapsmall(df), lower.tail=FALSE),
@@ -675,9 +677,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
                            dunnettx = 1 - .pdunnx(abst, n.contr, df),
                            mvt = 1 - .my.pmvt(t[rows], df, corrmat[rows,rows,drop=FALSE], -tail) # tricky - reverse the tail because we're subtracting from 1 
         )
-    })
-    pval = unlist(pvals)
-    
+    }
+
     chk.adj = match(adjust, c("none", "tukey", "scheffe"), nomatch = 99)
     
     if (ragged.by) {
@@ -702,7 +703,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         mesg = paste("P value adjustment:", adjust, "method", xtra)
     }
     else mesg = NULL
-    list(pval=pval, mesg=mesg, adjust=adjust)
+    list(pval = pval, mesg = mesg, adjust = adjust)
 }
 
 # Code needed for an adjusted critical value
@@ -726,7 +727,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         k = which(adj.meths == "bonferroni") 
     adjust = adj.meths[k]
     
-    if (!ragged.by && adjust != "mvt")
+    if (!ragged.by && (adjust != "mvt") && (length(unique(DF)) == 1))
         by.rows = list(seq_along(DF))       # not ragged, we can do all as one by group
     
     if ((et != 3) && adjust == "tukey") # not pairwise
@@ -767,24 +768,26 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     
     adiv = ifelse(tail == 0, 2, 1) # divisor for alpha where needed
     
-    cvs = lapply(by.rows, function(rows) {
+    ###cvs = lapply(by.rows, function(rows) {
+    cv = numeric(sum(sapply(by.rows, length)))
+    for (rows in by.rows) {
         df = DF[rows]
         if (ragged.by) {
             n.contr = length(rows)
             fam.size = (1 + sqrt(1 + 8*n.contr)) / 2   # tukey family size - e.g., 6 pairs -> family of 4
         }
-        switch(adjust,
+        cv[rows] = switch(adjust,
                none = -qt((1-level)/adiv, df),
                sidak = -qt((1 - level^(1/n.contr))/adiv, df),
                bonferroni = -qt((1-level)/n.contr/adiv, df),
                tukey = qtukey(level, fam.size, df) / sqrt(2),
                scheffe = sqrt((fam.size + scheffe.adj) * qf(level, fam.size + scheffe.adj, df)),
                dunnettx = .qdunnx(level, n.contr, df),
-               mvt = .my.qmvt(level, df, corrmat[rows,rows,drop=FALSE], tail)
+               mvt = .my.qmvt(level, df, corrmat[rows, rows, drop = FALSE], tail)
         )
-    })
+    }
     
-    list(cv = unlist(cvs), mesg = mesg, adjust = adjust)
+    list(cv = cv, mesg = mesg, adjust = adjust)
 }
 
 
