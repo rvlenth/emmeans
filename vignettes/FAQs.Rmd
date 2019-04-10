@@ -24,6 +24,7 @@ This vignette contains answers to questions received from users or posted on dis
  2. [I have three (or two or four) factors that interact](#interactions)
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
  3. [I have covariate(s) and am fitting a polynomial model](#polys)
+ 3. [Some "significant" comparisons have overlapping confidence intervals](#CIerror)
  4. [All my pairwise comparisons have the same *P* value](#notfactor)
  5. [emmeans() doesn't work as expected](#numeric)
  6. [All or some of the results are NA](#NAs)
@@ -52,7 +53,7 @@ There are two answers to this (i.e., be careful what you wish for):
     the results have a good chance of being invalid.
   2. *Do* think: Make sure you fit a model that really explains the responses.
      Do diagnostic residual plots, include appropriate interactions, account
-     for heteroscadestaicity if necessary, etc. This is the fastest way
+     for heteroscadesticity if necessary, etc. This is the fastest way
      to obtain *appropriate* estimates and comparisons.
 
 The point here is that `emmeans()` summarizes the *model*, not the data directly.
@@ -96,6 +97,21 @@ the default reference grid uses the mean of each covariate -- and `mean(xsq)` is
 usually not the same as `mean(x)^2`. So you need to use `at` to ensure that the
 covariates are set consistently with respect to the model. See [this subsection
 of the "basics" vignette](basics.html#depcovs) for an example.
+
+## 3. Some "significant" comparisons have overlapping confidence intervals {#CIerror}
+<!-- @index Confidence intervals!Overlapping; Comparisons!with overlapping CIs@over -->
+That can happen because 
+*it is just plain wrong to use [non-]overlapping CIs for individual means to do comparisons*. 
+Look at the printed results from something like `emmeans(mymodel, pairwise ~
+treatment)`. In particular, note that the `SE` values are *not* the same*, and
+may even have different degrees of freedom. Means are one thing statistically,
+and differences of means are quite another thing. Don't ever mix them up, and
+don't ever use a CI display for comparing means.
+
+I'll add that making hard-line decisions about "significant" and
+"non-significant" is in itself a poor practice. 
+See [the discussion in the "basics" vignette](basics.html#pvalues) 
+
 
 ## All my pairwise comparisons have the same *P* value {#notfactor}
 This will happen if you fitted a model where the treatments you want to 

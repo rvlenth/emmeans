@@ -31,7 +31,7 @@ recover_data.betareg = function(object, mode = c("response", "link", "precision"
         mode = "mean"
     if (mode == "phi.link") 
         mode = "precision"
-    if(mode %in% c("response", "link", "precision"))
+    if(mode %in% c("mean", "precision"))
         trms = delete.response(terms(object, model = mode))
     else
         trms = delete.response(object$terms$full)

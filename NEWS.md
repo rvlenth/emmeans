@@ -18,6 +18,8 @@ emmeans 1.3.3.0999xxxxx
   * Curbing use of "statistical significance" language. This includes
     additional vignette material and deprecating `CLD()` due to its 
     misleading message about statistical tests.
+  * Bug fix for `betareg` objects, where the wrong `terms` component was 
+    sometimes used.
   
 
 emmeans 1.3.3

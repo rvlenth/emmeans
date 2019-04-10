@@ -65,17 +65,19 @@ vignette: >
 
 
   * `CLD()
-      * [and why it is deprecated`](comparisons.html#pairwise)
+      * [and why it is deprecated`](comparisons.html#CLD)
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)
-  * [Compact letter displays](comparisons.html#pairwise)
+  * [Compact letter displays](comparisons.html#CLD)
   * Comparisons
       * [Back-transforming](comparisons.html#logs)
-      * [Displaying as groups](comparisons.html#pairwise)
-      * [Graphical](comparisons.html#pairwise)
+      * [Displaying as groups](comparisons.html#CLD)
+      * [Graphical](comparisons.html#graphical)
       * [with logs](comparisons.html#logs)
+      * [and overlapping CIs](FAQs.html#CIerror)
   * [Confidence intervals](confidence-intervals.html#summary)
+      * [Overlapping](FAQs.html#CIerror)
   * [`confint()`](confidence-intervals.html#summary)
   * [`consec` contrasts](comparisons.html#contrasts)
   * [Containment d.f.](models.html#K)
