@@ -460,6 +460,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         misc$pri.vars = names(object@levels)
     attr(summ, "pri.vars") = setdiff(union(misc$pri.vars, misc$by.vars), by)
     attr(summ, "by.vars") = by
+    attr(summ, "adjust") = adjust
+    attr(summ, "side") = side
+    attr(summ, "delta") = delta
+    attr(summ, "type") = type
     attr(summ, "mesg") = unique(mesg)
     class(summ) = c("summary_emm", "data.frame")
     summ
@@ -611,6 +615,9 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         link$name = "linear-predictor"
     link
 }
+
+####!!!!! TODO: Re-think whether we are handling Scheffe adjustments correctly
+####!!!!!       if/when we shift around 'by' specs, etc.
 
 # utility to compute an adjusted p value
 # tail is -1, 0, 1 for left, two-sided, or right

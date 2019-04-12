@@ -62,14 +62,18 @@ Extract and display information on all pairwise comparisons of estimated margina
 }
 \section{Deprecated}{
 
-  The \code{CLD} function and methods are deprecated, and currently no
-  replacement is offered. Compact-letter displays (CLDs) encourage a misleading
+  The \code{CLD} function and methods are deprecated.
+  Compact-letter displays (CLDs) encourage a misleading
   interpretation of significance testing by visually grouping means whose comparisons
   have \emph{P} > \code{alpha} as though they are equal. However, failing to
   prove two means are different does not prove that they are the same. 
   In addition, CLDs make
   a hard distinction between \emph{P} values nearly equal to \code{alpha}
   but on opposite sides.
+  
+  Some users may find \code{\link{pwpp}} to be a useful alternative. It produces a
+  plot showing all P values for all pairwise comparisons (or other set of comparisons),
+  and can also show one-sided P values and tests of equivalence or noninferiority.
 }
 
 \references{
