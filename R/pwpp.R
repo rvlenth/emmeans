@@ -77,7 +77,7 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
     args$interaction = args$simple = args$offset = NULL
     con = do.call(contrast, args)
     
-    args = list(object = emm, infer = c(FALSE, FALSE), ...)
+    args = list(object = emm, infer = c(FALSE, FALSE), by = by, ...)
     emm.summ = do.call(summary.emmGrid, args)
     
     args = list(object = con, infer = c(FALSE, TRUE), ...)
@@ -121,6 +121,9 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
     
 ########## The rest should probably be done in a separate function ################
     
+    if (!requireNamespace("ggplot2"))
+        stop ("pwpp requires the 'ggplot2' package be installed.", call. = FALSE)
+    
     # granulate values in each group so they won't overlap
     # do this on the transformed (plotted) scale
     byr = .find.by.rows(con.summ, by)
@@ -140,8 +143,8 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
                 ggplot2::aes_(x = ~p.value, y = ~plus,
                               color = ~minus, group = ~minus)) +
         ggplot2::geom_point(size = 2) +
-        ggplot2::geom_segment(aes_(xend = ~p.value, yend = ~midpt))
-    if (length(byr) > 1) {
+        ggplot2::geom_segment(ggplot2::aes_(xend = ~p.value, yend = ~midpt))
+    if (!is.null(by)) {
         cols = setdiff(by, rows)
         if (length(cols) > 0)
             ncols = length(unique(do.call(paste, unname(con.summ[cols]))))
@@ -166,9 +169,9 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
         lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
         lpos = .pval.inv(tminp - lpad)   # pvalue at left end of label
         grobj = grobj + 
-            ggplot2::geom_label(data = emm.summ, aes_(x = pos, y = ~minus,
+            ggplot2::geom_label(data = emm.summ, ggplot2::aes_(x = pos, y = ~minus,
                 label = ~fmtval, hjust = "right"), size = 2.8) +
-        ggplot2::geom_point(aes_(x = lpos, y = 1), alpha = 0) # invisible point to stake out space
+        ggplot2::geom_point(ggplot2::aes_(x = lpos, y = 1), alpha = 0) # invisible point to stake out space
     }
     else
         lpad = 0

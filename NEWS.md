@@ -22,6 +22,7 @@ emmeans 1.3.3.0999xxxxx
     sometimes used.
   * Correction to logic error that affected multiplicity adjustments when
     `by` variables are present (#98).
+  * Addition of `pwpp()` function to plot *P* values of comparisons
   
 
 emmeans 1.3.3

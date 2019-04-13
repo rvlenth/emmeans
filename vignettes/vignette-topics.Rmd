@@ -73,9 +73,10 @@ vignette: >
   * Comparisons
       * [Back-transforming](comparisons.html#logs)
       * [Displaying as groups](comparisons.html#CLD)
+      * [Displaying *P* values](comparisons.html#pwpp)
       * [Graphical](comparisons.html#graphical)
       * [with logs](comparisons.html#logs)
-      * [and overlapping CIs](FAQs.html#CIerror)
+      * [with overlapping CIs](FAQs.html#CIerror)
   * [Confidence intervals](confidence-intervals.html#summary)
       * [Overlapping](FAQs.html#CIerror)
   * [`confint()`](confidence-intervals.html#summary)
@@ -382,6 +383,7 @@ vignette: >
   * [`pairs()`](comparisons.html#pairwise)
   * [Pairwise comparisons](comparisons.html#pairwise)
   * [`pairwise` contrasts](comparisons.html#contrasts)
+  * [Pairwise *P*-value plots](comparisons.html#pwpp)
   * [`plot.emmGrid()`](basics.html#plot.emmGrid)
   * Plots
       * [of confidence intervals](basics.html#plot.emmGrid)
@@ -396,6 +398,7 @@ vignette: >
       * [Instead of Welch's *t*](FAQs.html#nowelch)
   * [`postGridHook`](xtending.html#hooks)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
+  * [`pwpp()`](comparisons.html#pwpp)
 
 
 [Back to top](#topnav)
