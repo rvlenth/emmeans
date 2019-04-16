@@ -99,8 +99,6 @@ vignette: >
       * [Polynomial](comparisons.html#contrasts)
       * Tests of
           * [with transformations](comparisons.html#logs)
-  * [`convert_scripts()`](transition-from-lsmeans.html#scripts)
-  * [`convert_workspace()`](transition-from-lsmeans.html#workspaces)
   * [Count regression](models.html#C)
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
@@ -297,10 +295,6 @@ vignette: >
       * [Odds ratios](transformations.html#oddsrats)
       * [Surprising results](FAQs.html#transformations)
   * [**lsmeans**](basics.html#backstory)
-  * **lsmeans** package
-      * [Converting scripts](transition-from-lsmeans.html#scripts)
-      * [Converting workspaces](transition-from-lsmeans.html#workspaces)
-      * [Transitioning from](transition-from-lsmeans.html)
 
 
 [Back to top](#topnav)
@@ -542,7 +536,6 @@ vignette: >
       * [Models](models.html)
       * [Sophisticated models](sophisticated.html)
       * [Transformations and link functions](transformations.html)
-      * [Transitioning from **lsmeans**](transition-from-lsmeans.html)
       * [Utilities and options](utilities.html)
 
 

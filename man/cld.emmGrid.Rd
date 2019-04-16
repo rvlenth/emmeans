@@ -74,6 +74,8 @@ Extract and display information on all pairwise comparisons of estimated margina
   Some users may find \code{\link{pwpp}} to be a useful alternative. It produces a
   plot showing all P values for all pairwise comparisons (or other set of comparisons),
   and can also show one-sided P values and tests of equivalence or noninferiority.
+  Also, if you insist, \code{\link[multcomp]{cld}} is still available in the 
+  \pkg{multcomp} package, and \code{multcomp::cld(emm)} still works.
 }
 
 \references{

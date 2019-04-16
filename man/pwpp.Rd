@@ -4,8 +4,8 @@
 \alias{pwpp}
 \title{Pairwise P-value plot}
 \usage{
-pwpp(emm, method = "pairwise", by, values = TRUE, rows = ".", xlab,
-  ylab, xsub = "", ...)
+pwpp(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
+  rows = ".", xlab, ylab, xsub = "", add.space = 0, ...)
 }
 \arguments{
 \item{emm}{An \code{emmGrid} object}
@@ -21,6 +21,13 @@ one estimate minus another estimate.}
 create different panels, one for each level or level-combination.
 Grid factors not in \code{by} are the \emph{primary} factors: 
 whose levels or level combinations are compared pairwise.}
+
+\item{sort}{Logical value. If \code{TRUE}, levels of the factor combinations are
+ordered by their marginal means. If \code{FALSE}, they appear in
+order based on the existing ordering of the factor levels involved.
+Note that the levels are ordered the same way in all panels, and in
+many cases this implies that the means in any particular panel
+will \emph{not} be ordered even when \code{sort = TRUE}.}
 
 \item{values}{Logical value. If \code{TRUE}, the values of the EMMs are included
 in the plot. When there are several side-by-side panels due
@@ -39,6 +46,14 @@ is used, so all panels are stacked side-by-side.}
 
 \item{ylab}{Character label to use in place of the default for the primary-factor axis.}
 
+\item{xsub}{Character label used as caption at the lower right of the plot.}
+
+\item{add.space}{Numeric value to adjust amount of space used for value labels. Positioning
+of value labels is tricky, and depends on how many panels and the
+physical size of the plotting region. This parameter allows the user to
+adjust the position. Changing it by one unit should shift the position by
+about one character width (right if positive, left if negative).}
+
 \item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}}
 }
 \description{
@@ -54,6 +69,13 @@ and which levels are compared. In addition, factor levels are color-coded, and t
 and half-line segments appear in the color of the other level.
 The P-value scale is nonlinear, so as to stretch-out smaller P values and
 compress larger ones.
+
+If \code{xlab}, \code{ylab}, and \code{xsub} are not provided, reasonable labels
+are created. \code{xsub} is used to note special features; e.g., equivalence
+thresholds or one-sided tests.
+}
+\note{
+The \pkg{ggplot2} package must be installed in order for \code{pwpp} to work.
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)

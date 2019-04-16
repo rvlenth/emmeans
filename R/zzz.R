@@ -78,8 +78,6 @@ register_s3_method = function(pkg, generic, class) {
         register_s3_method("multcomp", "cld", "emmGrid")
         register_s3_method("multcomp", "modelparm", "emmwrap")
     }
-    # regardless...
-    register_s3_method("emmeans", "cld", "emmGrid")
 }
 
 # .onAttach = function(libname, pkgname) {

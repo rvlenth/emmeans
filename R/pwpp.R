@@ -33,13 +33,11 @@
 #' The P-value scale is nonlinear, so as to stretch-out smaller P values and
 #' compress larger ones.
 #' 
+#' If \code{xlab}, \code{ylab}, and \code{xsub} are not provided, reasonable labels
+#' are created. \code{xsub} is used to note special features; e.g., equivalence
+#' thresholds or one-sided tests.
+#' 
 #' @param emm An \code{emmGrid} object
-#' @param values Logical value. If \code{TRUE}, the values of the EMMs are included
-#'               in the plot. When there are several side-by-side panels due
-#'               to \code{by} variable(s), the labels showing values start
-#'               stealing a lot of space from the plotting area; in those cases,
-#'               it may be desirable to specify \code{FALSE} or use \code{rows}
-#'               so that some panels are vertically stacked.
 #' @param method Character or list. Passed to \code{\link{contrast}}, and defines 
 #'           the contrasts to be displayed. Any contrast method may be used,
 #'           provided that each contrast includes one coefficient of \code{1},
@@ -50,6 +48,18 @@
 #'           create different panels, one for each level or level-combination.
 #'           Grid factors not in \code{by} are the \emph{primary} factors: 
 #'           whose levels or level combinations are compared pairwise.
+#' @param sort Logical value. If \code{TRUE}, levels of the factor combinations are
+#'             ordered by their marginal means. If \code{FALSE}, they appear in
+#'             order based on the existing ordering of the factor levels involved.
+#'             Note that the levels are ordered the same way in all panels, and in
+#'             many cases this implies that the means in any particular panel
+#'             will \emph{not} be ordered even when \code{sort = TRUE}.
+#' @param values Logical value. If \code{TRUE}, the values of the EMMs are included
+#'               in the plot. When there are several side-by-side panels due
+#'               to \code{by} variable(s), the labels showing values start
+#'               stealing a lot of space from the plotting area; in those cases,
+#'               it may be desirable to specify \code{FALSE} or use \code{rows}
+#'               so that some panels are vertically stacked.
 #' @param rows Character vector of which \code{by} variable(s) are used to define
 #'           rows of the panel layout. Those variables in \code{by} not included in 
 #'           \code{rows} define columns in the array of panels.
@@ -57,7 +67,15 @@
 #'           is used, so all panels are stacked side-by-side.
 #' @param xlab Character label to use in place of the default for the P-value axis.
 #' @param ylab Character label to use in place of the default for the primary-factor axis.
+#' @param xsub Character label used as caption at the lower right of the plot.
+#' @param add.space Numeric value to adjust amount of space used for value labels. Positioning
+#'                  of value labels is tricky, and depends on how many panels and the
+#'                  physical size of the plotting region. This parameter allows the user to
+#'                  adjust the position. Changing it by one unit should shift the position by
+#'                  about one character width (right if positive, left if negative).
 #' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}
+#' 
+#' @note The \pkg{ggplot2} package must be installed in order for \code{pwpp} to work.
 #'
 #' @export
 #' @examples
@@ -65,8 +83,8 @@
 #' emm = emmeans(pigs.lm, ~ percent | source)
 #' pwpp(emm)
 #' pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
-pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
-                xlab, ylab, xsub = "", ...) {
+pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows = ".",
+                xlab, ylab, xsub = "", add.space = 0, ...) {
     if(missing(by)) 
         by = emm@misc$by.vars
     
@@ -96,7 +114,7 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
             xsub = paste(c("Nonsuperiority", "Equivalence", "Noninferiority")[side + 2],
                          "test with threshold", delta)
         else
-            xsub = c("Left-sided test", "", "Right-sided test")[side + 2]
+            xsub = c("Left-sided tests", "", "Right-sided tests")[side + 2]
     }
     if(missing(ylab))
         ylab = paste(attr(emm.summ, "pri.vars"), collapse = ":")
@@ -111,7 +129,11 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
     })
     primv = setdiff(attr(emm.summ, "pri.vars"), by)
     pf = do.call(paste, c(unname(emm.summ[primv]), sep = ":"))
-    pf = emm.summ$pri.fac = factor(pf, levels = unique(pf))
+    pemm = suppressMessages(emmeans(emm, primv))
+    levs = do.call(paste, c(unname(pemm@grid[primv]), sep = ":"))
+    if(sort) ord = order(predict(pemm))
+    else ord = seq_along(pf)
+    pf = emm.summ$pri.fac = factor(pf, levels = levs[ord])
     
     con.summ$plus = pf[idx[1, ]]
     con.summ$minus = pf[idx[2, ]]
@@ -121,67 +143,75 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
     
 ########## The rest should probably be done in a separate function ################
     
-    if (!requireNamespace("ggplot2"))
+    if (!requireNamespace("ggplot2", quietly = TRUE))
         stop ("pwpp requires the 'ggplot2' package be installed.", call. = FALSE)
     
-    # granulate values in each group so they won't overlap
-    # do this on the transformed (plotted) scale
-    byr = .find.by.rows(con.summ, by)
-    for (r in byr) {
-        pv = con.summ$p.value[r]
-        con.summ$p.value[r] = gran(pv)
-    }
-
-    # form the reverse half & get midpoints
-    tmp = con.summ
-    tmp$plus = con.summ$minus
-    tmp$minus = con.summ$plus
-    con.summ = transform(rbind(con.summ, tmp), 
-        midpt = (as.numeric(plus) + as.numeric(minus)) / 2)
-    
-    grobj = ggplot2::ggplot(data = con.summ, 
-                ggplot2::aes_(x = ~p.value, y = ~plus,
-                              color = ~minus, group = ~minus)) +
-        ggplot2::geom_point(size = 2) +
-        ggplot2::geom_segment(ggplot2::aes_(xend = ~p.value, yend = ~midpt))
-    if (!is.null(by)) {
-        cols = setdiff(by, rows)
-        if (length(cols) > 0)
-            ncols = length(unique(do.call(paste, unname(con.summ[cols]))))
-        else {
-            ncols = 1
-            cols = "."
+        # granulate values in each group so they won't overlap
+        # do this on the transformed (plotted) scale
+        byr = .find.by.rows(con.summ, by)
+        for (r in byr) {
+            pv = con.summ$p.value[r]
+            con.summ$p.value[r] = gran(pv)
         }
-        grobj = grobj + ggplot2::facet_grid(
-            as.formula(paste( paste(rows, collapse = "+"), "~", 
-                              paste(cols, collapse = "+"))), 
-            labeller = "label_both")
-    }
-    else
-        ncols = 1
-    if (values) {
-        emm.summ$minus = emm.summ$pri.fac # for consistency in grouping/labeling
-        dig = .opt.dig(emm.summ[, estName])
-        emm.summ$fmtval = format(emm.summ[[estName]], digits = dig)
-        tminp = .pval.tran(min(con.summ$p.value))
-        pos = .pval.inv(tminp - .025)
-        lpad = .012 * max(nchar(emm.summ$fmtval)) * ncols # how much space needed for labels rel to (0,1)
-        lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
-        lpos = .pval.inv(tminp - lpad)   # pvalue at left end of label
-        grobj = grobj + 
-            ggplot2::geom_label(data = emm.summ, ggplot2::aes_(x = pos, y = ~minus,
-                label = ~fmtval, hjust = "right"), size = 2.8) +
-        ggplot2::geom_point(ggplot2::aes_(x = lpos, y = 1), alpha = 0) # invisible point to stake out space
-    }
-    else
-        lpad = 0
-    grobj = grobj + ggplot2::scale_x_continuous(trans = .pvtrans, 
-                breaks = .pvmaj.brk, minor_breaks = .pvmin.brk) +
-                #### I plotted an extra point instead of expanding scale
-                #### expand = ggplot2::expand_scale(add = c(.025 + lpad, .025))) +
-        ggplot2::guides(color = "none")
-    
-    grobj + ggplot2::labs(x = xlab, y = ylab, caption = xsub)
+        
+        # form the reverse half & get midpoints
+        con.summ$midpt = (as.numeric(con.summ$plus) + as.numeric(con.summ$minus)) / 2
+        tmp = con.summ
+        tmp$plus = con.summ$minus
+        tmp$minus = con.summ$plus
+        con.summ = rbind(con.summ, tmp)
+        
+        grobj = ggplot2::ggplot(data = con.summ, 
+                                ggplot2::aes_(x = ~p.value, y = ~plus,
+                                              color = ~minus, group = ~minus)) +
+            ggplot2::geom_point(size = 2) +
+            ggplot2::geom_segment(ggplot2::aes_(xend = ~p.value, yend = ~midpt))
+        if (!is.null(by)) {
+            cols = setdiff(by, rows)
+            if (length(cols) > 0)
+                ncols = length(unique(do.call(paste, unname(con.summ[cols]))))
+            else {
+                ncols = 1
+                cols = "."
+            }
+            grobj = grobj + ggplot2::facet_grid(
+                as.formula(paste( paste(rows, collapse = "+"), "~", 
+                                  paste(cols, collapse = "+"))), 
+                labeller = "label_both")
+        }
+        else
+            ncols = 1
+        if (values) {
+            emm.summ$minus = emm.summ$pri.fac # for consistency in grouping/labeling
+            dig = .opt.dig(emm.summ[, estName])
+            emm.summ$fmtval = format(emm.summ[[estName]], digits = dig)
+            tminp = .pval.tran(min(con.summ$p.value))
+            pos = .pval.inv(tminp - .025)
+            lpad = .012 * (add.space + max(nchar(emm.summ$fmtval))) * ncols # how much space needed for labels rel to (0,1)
+            lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
+            lpos = .pval.inv(tminp - lpad)   # pvalue at left end of label
+            grobj = grobj + 
+                ggplot2::geom_label(data = emm.summ, ggplot2::aes_(x = pos, y = ~minus,
+                                                                   label = ~fmtval, hjust = "right"), size = 2.8) +
+                ggplot2::geom_point(ggplot2::aes_(x = lpos, y = 1), alpha = 0) # invisible point to stake out space
+        }
+        else
+            lpad = 0
+        
+        if (!requireNamespace("scales", quietly = TRUE))
+            stop ("pwpp requires the 'scales' package be installed.", call. = FALSE)
+        .pvtrans = scales::trans_new("Scaled P value", 
+                                     transform = function(x) .pval.tran(x), 
+                                     inverse = function(p) .pval.inv(p),
+                                     format = function(x) format(x, drop0trailing = TRUE, scientific = FALSE),
+                                     domain = c(0,1) )
+        grobj = grobj + ggplot2::scale_x_continuous(trans = .pvtrans, 
+                                                    breaks = .pvmaj.brk, minor_breaks = .pvmin.brk) +
+            #### I plotted an extra point instead of expanding scale
+            #### expand = ggplot2::expand_scale(add = c(.025 + lpad, .025))) +
+            ggplot2::guides(color = "none")
+        
+        grobj + ggplot2::labs(x = xlab, y = ylab, caption = xsub)
 }
     
 # capitalize
@@ -218,13 +248,12 @@ pwpp = function(emm, method = "pairwise", by, values = TRUE, rows = ".",
     rtn
 }
 
-# For scale_x_continuous():
-.pvtrans = scales::trans_new("Scaled P value", 
-                           transform = function(x) .pval.tran(x), 
-                           inverse = function(p) .pval.inv(p),
-                           format = function(x) format(x, drop0trailing = TRUE, scientific = FALSE),
-                           domain = c(0,1) )
-
+# For scale_x_continuous(): (moved to body of fcn so I can check w/ requyireNamespace)
+# .pvtrans = scales::trans_new("Scaled P value", 
+#                              transform = function(x) .pval.tran(x), 
+#                              inverse = function(p) .pval.inv(p),
+#                              format = function(x) format(x, drop0trailing = TRUE, scientific = FALSE),
+#                              domain = c(0,1) )
 
 ### quick & dirty algorithm to Stretch out P values so more distinguishable on transformed scale
 gran = function(x, min_incr = .01) {

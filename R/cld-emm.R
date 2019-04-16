@@ -41,7 +41,13 @@
 ###if (!requireNamespace("multcomp", quietly = TRUE))
 #' @rdname CLD.emmGrid
 #' @export
-CLD = function (object, ...) UseMethod("CLD")
+CLD = function (object, ...) {
+    ### Uncomment this in the May (or later) release of emmeans
+    # dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n", 
+    #          "See '? CLD' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
+    # .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
+    UseMethod("CLD")
+}
 
 
 # S3 method for emmGrid 
@@ -96,6 +102,8 @@ CLD = function (object, ...) UseMethod("CLD")
 #'   Some users may find \code{\link{pwpp}} to be a useful alternative. It produces a
 #'   plot showing all P values for all pairwise comparisons (or other set of comparisons),
 #'   and can also show one-sided P values and tests of equivalence or noninferiority.
+#'   Also, if you insist, \code{\link[multcomp]{cld}} is still available in the 
+#'   \pkg{multcomp} package, and \code{multcomp::cld(emm)} still works.
 #' 
 #' @references Piepho, Hans-Peter (2004) An algorithm for a letter-based representation 
 #'   of all pairwise comparisons, Journal of Computational and Graphical Statistics, 13(2), 
@@ -110,9 +118,6 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
                     by, alpha=.05, 
                     Letters = c("1234567890",LETTERS,letters), 
                     reversed=FALSE, ...) {
-    dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n", 
-              "See '? CLD' for an explanation. Consider 'pwpp' instead.")
-    .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
     if (!is.na(object@post.beta)[1]) {
         message("NOTE: Summary and groupings are based on frequentist results")
         object@post.beta = matrix(NA)
@@ -198,28 +203,18 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
 # Lingering support for multcomp::cld -- registered dynamically in zzz.R
 #' @rdname CLD.emmGrid
 #' @method cld emmGrid
+#' @export cld.emmGrid
 cld.emmGrid = function(object, ...) {
     CLD.emmGrid(object, ...)
 }
 
 
 # Temporary hack while downstream dependencies have a chance to fix it:
-#' Temporary continued 'cld' support
-#' 
-#' This generic is temporarily provided to keep downstream packages from breaking.
-#' It will be removed in future versions to avoid masking issues with \code{multcomp::cld}.
-#' Please use \code{CLD} instead when working with \code{emmMeans} objects.
-#' 
-#' @param object an emmGrid object
-#' @param ... other arguments passed to \code{\link{CLD}}
-#' 
-#' @export cld
-#' @rdname old.cld
-cld = function (object, ...) {
-    if(requireNamespace("multcomp", quietly = TRUE))
-        multcomp::cld(object, ...)
-    else
-        UseMethod("cld")
-}
-
+# cld = function (object, ...) {
+#     if(requireNamespace("multcomp", quietly = TRUE))
+#         multcomp::cld(object, ...)
+#     else
+#         UseMethod("cld")
+# }
+ 
 

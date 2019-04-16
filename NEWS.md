@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.3.3.0999xxxxx
+emmeans 1.3.4
 -------------
 
   * Un-naming a lot of arguments in `do.call(paste, ...)` and `do.call(order, ...)`,
@@ -16,13 +16,15 @@ emmeans 1.3.3.0999xxxxx
     was re-ordered if any numeric or character levels occurred out of order, 
     per `order()`
   * Curbing use of "statistical significance" language. This includes
-    additional vignette material and deprecating `CLD()` due to its 
-    misleading message about statistical tests.
+    additional vignette material and plans to deprecate `CLD()` due to its 
+    misleading display of pairwise-comparison tests.
   * Bug fix for `betareg` objects, where the wrong `terms` component was 
     sometimes used.
   * Correction to logic error that affected multiplicity adjustments when
     `by` variables are present (#98).
   * Addition of `pwpp()` function to plot *P* values of comparisons
+  * Removal of vignette on transitioning from **lsmeans** -- 
+    it's been a long enough time now.
   
 
 emmeans 1.3.3
