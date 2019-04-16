@@ -64,7 +64,7 @@ easily produce these results, as well as various graphs of them
     install the newest version (definitely 2.0 or higher) of the **devtools** 
     package; then run
     
-```
+```r
 devtools::install_github("rvlenth/emmeans", dependencies = TRUE, build_opts = "")
 
 ### To install without vignettes (faster):
