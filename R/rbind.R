@@ -39,7 +39,7 @@
 #'   are allowed to have different factors; a missing level \code{'.'}
 #'   is added to factors as needed.
 #'
-#' @return A revised object opf class \code{emmGrid}
+#' @return A revised object of class \code{emmGrid}
 #' @method rbind emmGrid
 #' @export
 rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {

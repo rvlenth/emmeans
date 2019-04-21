@@ -388,14 +388,19 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     cnm = NULL
     
     # get vcov matrix only if needed (adjust == "mvt")
-    corrmat = NULL
+    corrmat = sch.rank = NULL
     if (!is.na(pmatch(adjust, "mvt"))) {
         corrmat = cov2cor(vcov(object))
         attr(corrmat, "by.rows") = by.rows
     }
-    
+    else if (!is.na(pmatch(adjust, "scheffe"))) {
+        sch.rank = sapply(by.rows, function(.) qr(object@linfct[., , drop = FALSE])$rank)
+        if(length(unique(sch.rank)) > 1)
+            fam.info[1] = "uneven"   # This forces ragged.by = TRUE in .adj functions
+    }
+
     if(infer[1]) { # add CIs
-        acv = .adj.critval(level, result$df, adjust, fam.info, side, corrmat, by.rows)
+        acv = .adj.critval(level, result$df, adjust, fam.info, side, corrmat, by.rows, sch.rank)
         ###adjust = acv$adjust # in older versions, I forced same adj method for tests
         cv = acv$cv
         cv = switch(side + 2, cbind(-Inf, cv), cbind(-cv, cv), cbind(-cv, Inf))
@@ -430,7 +435,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         else {
             t.ratio = result[[tnm]] = (result[[1]] - null + side * delta) / result$SE            
         }
-        apv = .adj.p.value(t.ratio, result$df, adjust, fam.info, tail, corrmat, by.rows)
+        apv = .adj.p.value(t.ratio, result$df, adjust, fam.info, tail, corrmat, by.rows, sch.rank)
         adjust = apv$adjust   # in case it was abbreviated
         result$p.value = apv$pval
         mesg = c(mesg, apv$mesg)
@@ -622,9 +627,10 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 # utility to compute an adjusted p value
 # tail is -1, 0, 1 for left, two-sided, or right
 # Note fam.info is c(famsize, ncontr, estTypeIndex)
-# 2.14: added corrmat arg, dunnettx & mvt adjustments
+# lsmeans >= 2.14: added corrmat arg, dunnettx & mvt adjustments
+# emmeans > 1.3.4: we have sch.rank of same length as by.rows
 # NOTE: corrmat is NULL unless adjust == "mvt"
-.adj.p.value = function(t, DF, adjust, fam.info, tail, corrmat, by.rows) {
+.adj.p.value = function(t, DF, adjust, fam.info, tail, corrmat, by.rows, sch.rank) {
     fam.size = fam.info[1]
     n.contr = fam.info[2]
     et = as.numeric(fam.info[3])
@@ -652,7 +658,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     
     # if estType is "prediction", use #contrasts + 1 as family size
     # (produces right Scheffe CV; Tukey ones are a bit strange)
-    scheffe.adj = ifelse(et == 1, 0, - 1)
+    # deprecated - used to try to keep track of scheffe.adj = ifelse(et == 1, 0, - 1)
     if (tail == 0)
         p.unadj = 2*pt(abs(t), DF, lower.tail=FALSE)
     else
@@ -660,7 +666,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     
 #    pvals = lapply(by.rows, function(rows) {
     pval = numeric(length(t))
-    for(rows in by.rows) {
+    for(jj in seq_along(by.rows)) { ####(rows in by.rows) {
+        rows = by.rows[[jj]]
         unadj.p = p.unadj[rows]
         abst = abs(t[rows])
         df = DF[rows]
@@ -679,7 +686,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
                            sidak = 1 - (1 - unadj.p)^n.contr,
                            # NOTE: tukey, scheffe, dunnettx all assumed 2-sided!
                            tukey = ptukey(sqrt(2)*abst, fam.size, zapsmall(df), lower.tail=FALSE),
-                           scheffe = pf(t[rows]^2 / (fam.size + scheffe.adj), fam.size + scheffe.adj, 
+                           scheffe = pf(t[rows]^2 / (sch.rank[jj]), sch.rank[jj], 
                                         df, lower.tail = FALSE),
                            dunnettx = 1 - .pdunnx(abst, n.contr, df),
                            mvt = 1 - .my.pmvt(t[rows], df, corrmat[rows,rows,drop=FALSE], -tail) # tricky - reverse the tail because we're subtracting from 1 
@@ -696,7 +703,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     else {
         nc = n.contr
         fs = fam.size
-        scheffe.dim = fs + scheffe.adj
+        scheffe.dim = sch.rank[1]
     }
     do.msg = (chk.adj > 1) && (nc > 1) && !((fs < 3) && (chk.adj < 10)) 
     if (do.msg) {
@@ -715,9 +722,10 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 
 # Code needed for an adjusted critical value
 # returns a list similar to .adj.p.value
-# 2.14: Added tail & corrmat args, dunnettx & mvt adjustments
+# lsmeans >= 2.14: Added tail & corrmat args, dunnettx & mvt adjustments
+# emmeans > 1.3.4: Added sch.rank
 # NOTE: corrmat is NULL unless adjust == "mvt"
-.adj.critval = function(level, DF, adjust, fam.info, tail, corrmat, by.rows) {
+.adj.critval = function(level, DF, adjust, fam.info, tail, corrmat, by.rows, sch.rank) {
     mesg = NULL
     
     fam.size = fam.info[1]
@@ -746,7 +754,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     
     # asymptotic results when df is NA
     DF[is.na(DF)] = Inf
-    scheffe.adj = ifelse(et == 1, 0, - 1)
+    #### No longer used scheffe.adj = ifelse(et == 1, 0, - 1)
     
     chk.adj = match(adjust, c("none", "tukey", "scheffe"), nomatch = 99)
     if (ragged.by) {
@@ -757,7 +765,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     else {
         nc = n.contr
         fs = fam.size
-        scheffe.dim = fs + scheffe.adj
+        scheffe.dim = sch.rank[1]
     }
     do.msg = (chk.adj > 1) && (nc > 1) && 
         !((fs < 3) && (chk.adj < 10)) 
@@ -777,7 +785,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     
     ###cvs = lapply(by.rows, function(rows) {
     cv = numeric(sum(sapply(by.rows, length)))
-    for (rows in by.rows) {
+    for (jj in seq_along(by.rows)) { ####(rows in by.rows) {
+        rows = by.rows[[jj]]
         df = DF[rows]
         if (ragged.by) {
             n.contr = length(rows)
@@ -788,7 +797,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
                sidak = -qt((1 - level^(1/n.contr))/adiv, df),
                bonferroni = -qt((1-level)/n.contr/adiv, df),
                tukey = qtukey(level, fam.size, df) / sqrt(2),
-               scheffe = sqrt((fam.size + scheffe.adj) * qf(level, fam.size + scheffe.adj, df)),
+               scheffe = sqrt((sch.rank[jj]) * qf(level, sch.rank[jj], df)),
                dunnettx = .qdunnx(level, n.contr, df),
                mvt = .my.qmvt(level, df, corrmat[rows, rows, drop = FALSE], tail)
         )

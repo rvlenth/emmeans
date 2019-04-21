@@ -203,18 +203,20 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
 # Lingering support for multcomp::cld -- registered dynamically in zzz.R
 #' @rdname CLD.emmGrid
 #' @method cld emmGrid
-#' @export cld.emmGrid
+#' @export
 cld.emmGrid = function(object, ...) {
     CLD.emmGrid(object, ...)
 }
 
 
 # Temporary hack while downstream dependencies have a chance to fix it:
-# cld = function (object, ...) {
-#     if(requireNamespace("multcomp", quietly = TRUE))
-#         multcomp::cld(object, ...)
-#     else
-#         UseMethod("cld")
-# }
- 
+#' @rdname CLD.emmGrid
+#' @export
+cld = function (object, ...) {
+    if(requireNamespace("multcomp", quietly = TRUE))
+        multcomp::cld(object, ...)
+    else
+        UseMethod("cld")
+}
+
 

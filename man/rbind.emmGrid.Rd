@@ -32,7 +32,7 @@ In \code{"["}, it is ignored.}
 the returned object is updated to hold only the predictor levels that actually occur}
 }
 \value{
-A revised object opf class \code{emmGrid}
+A revised object of class \code{emmGrid}
 
 The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 }

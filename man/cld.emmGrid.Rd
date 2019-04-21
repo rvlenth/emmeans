@@ -4,6 +4,7 @@
 \alias{CLD}
 \alias{CLD.emmGrid}
 \alias{cld.emmGrid}
+\alias{cld}
 \title{Extract and display information on all pairwise comparisons of estimated marginal means.}
 \usage{
 CLD(object, ...)
@@ -13,6 +14,8 @@ CLD(object, ...)
   reversed = FALSE, ...)
 
 \method{cld}{emmGrid}(object, ...)
+
+cld(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}

@@ -23,6 +23,10 @@ emmeans 1.3.4
   * Correction to logic error that affected multiplicity adjustments when
     `by` variables are present (#98).
   * Addition of `pwpp()` function to plot *P* values of comparisons
+  * Improvement to `summary(..., adjust = "scheffe")`. We now actually
+    compute and use the rank of the matrix of linear functions to obtain
+    the *F* numerator d.f., rather than trying to guess the likely correct 
+    value.
   * Removal of vignette on transitioning from **lsmeans** -- 
     it's been a long enough time now.
   
