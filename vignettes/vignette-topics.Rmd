@@ -64,8 +64,8 @@ vignette: >
 ### C {#c}
 
 
-  * `CLD()
-      * [and why it is deprecated`](comparisons.html#CLD)
+  * `CLD()`
+      * [and why it is deprecated](comparisons.html#CLD)
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)

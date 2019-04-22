@@ -1,5 +1,11 @@
 ## NEWS for the emmeans package
 
+emmeans 1.3.4.0999xxx
+-------------
+
+  * Further steps to lower the profile of `cld()` and `CLD()`
+
+
 emmeans 1.3.4
 -------------
 

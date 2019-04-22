@@ -78,18 +78,9 @@ register_s3_method = function(pkg, generic, class) {
         register_s3_method("multcomp", "cld", "emmGrid")
         register_s3_method("multcomp", "modelparm", "emmwrap")
     }
-    else
-        register_s3_method("emmeans", "cld", "emmGrid")
+    # else
+    #     register_s3_method("emmeans", "cld", "emmGrid")
 }
-
-# .onAttach = function(libname, pkgname) {
-#     packageStartupMessage (
-#         "NOTE: As of emmeans versions > 1.2.3,\n",
-#         "      The 'cld' function will be deprecated in favor of 'CLD'.\n",
-#         "      You may use 'cld' only if you have package:multcomp attached."
-#     )
-# }
-
 
 ## Here is a utility that we won't export, but can help clean out lsmeans
 ## stuff from one's workspace, and unload unnecessary junk

@@ -42,10 +42,10 @@
 #' @rdname CLD.emmGrid
 #' @export
 CLD = function (object, ...) {
-    ### Uncomment this in the May (or later) release of emmeans
-    # dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n", 
-    #          "See '? CLD' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
-    # .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
+    ## Uncomment this in the May (or later) release of emmeans
+    dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
+             "See '? CLD' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
+    .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
     UseMethod("CLD")
 }
 
@@ -202,7 +202,6 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
 
 # Lingering support for multcomp::cld -- registered dynamically in zzz.R
 #' @rdname CLD.emmGrid
-#' @method cld emmGrid
 #' @export
 cld.emmGrid = function(object, ...) {
     CLD.emmGrid(object, ...)
@@ -210,13 +209,13 @@ cld.emmGrid = function(object, ...) {
 
 
 # Temporary hack while downstream dependencies have a chance to fix it:
-#' @rdname CLD.emmGrid
-#' @export
-cld = function (object, ...) {
-    if(requireNamespace("multcomp", quietly = TRUE))
-        multcomp::cld(object, ...)
-    else
-        UseMethod("cld")
-}
+# #' @ rdname CLD.emmGrid
+# #' @ export
+# cld = function (object, ...) {
+#     if(requireNamespace("multcomp", quietly = TRUE))
+#         multcomp::cld(object, ...)
+#     else
+#         UseMethod("cld")
+# }
 
 

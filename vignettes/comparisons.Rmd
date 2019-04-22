@@ -116,7 +116,7 @@ a smaller family of 4 means as depicted in the three-paneled plot.
 
 
 #### Compact letter displays {#CLD}
-<!-- @index `CLD()!and why it is deprecated`; Compact letter displays;
+<!-- @index `CLD()`!and why it is deprecated; Compact letter displays;
              Comparisons!Displaying as groups -->
 Another way to depict comparisons is by *compact letter displays*, whereby
 two EMMs sharing one or more grouping symbols are not "significantly" different.

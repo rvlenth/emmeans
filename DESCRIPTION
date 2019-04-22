@@ -1,7 +1,7 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
-Version: 1.3.4
+Version: 1.3.4.0999001
 Date: 2019-04-21
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
@@ -24,7 +24,7 @@ LazyData: yes
 ByteCompile: yes
 Description: Obtain estimated marginal means (EMMs) for many linear, generalized 
   linear, and mixed models. Compute contrasts or linear functions of EMMs,
-  trends, and comparisons of slopes. Plots and compact letter displays.
+  trends, and comparisons of slopes. Plots and other displays.
   Least-squares means are discussed, and the term "estimated marginal means"
   is suggested, in Searle, Speed, and Milliken (1980) Population marginal means 
   in the linear model: An alternative to least squares means, The American 
