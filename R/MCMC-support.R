@@ -208,7 +208,7 @@ hpd.summary = function(object, prob, by, type,
                 }
         }
         else
-            names(pt.est) = "response"
+            names(pt.est) = misc$estName = "response"
     }
     
     summ = cbind(lbls, pt.est, summ)
@@ -237,6 +237,12 @@ recover_data.MCMCglmm = function(object, data, ...) {
             data = rbind(data, dat)
         data$trait = factor(rep(yvars, each = nrow(dat)))
     }
+    else if(object$family[1] %in% c("multinomial1", "categorical")) {
+        # we'll create a fake "trait" variable with all but the 1st level
+        n = nrow(data)
+        data$trait = rep(levels(data[[yvars[1]]])[-1], n)[1:n] # way overkill, but easy coding
+        attr(yvars, "levels") = levels(data[[yvars]])
+    }
     attr(data, "call") = object$Fixed
     attr(data, "terms") = trms = delete.response(terms(object$Fixed$formula))
     attr(data, "predictors") = .all.vars(delete.response(trms))
@@ -244,7 +250,8 @@ recover_data.MCMCglmm = function(object, data, ...) {
     data
 }
 
-emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov., ...) {
+emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov., 
+                              mode = c("prob", "latent"), ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = NULL)
     Sol = as.matrix(object$Sol)[, seq_len(object$Fixed$nfl)] # toss out random effects if included
@@ -254,9 +261,48 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov., ...) {
     else
         V = .my.vcov(object, vcov.)
     misc = list()
+    mode = match.arg(mode)
+    if ((object$family[1] %in% c("multinomial1", "categorical")) && (mode == "prob")) {
+        misc$postGridHook = .multinom1.postGrid
+        
+    }
     list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
          dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = Sol)
+}
+
+.multinom1.postGrid = function(object) {
+    linfct = object@linfct
+    misc = object@misc
+    post.lp = object@post.beta %*% t(linfct)
+    sel = .find.by.rows(object@grid, "trait")
+    k = length(sel)
+    cols = unlist(sel)
+    scal = sqrt(1 + 2 * (16 * sqrt(3) / (15 * pi))^2 / (k + 1))  # scaling const for logistic
+    # I'm assuming here that diag(IJ) = 2 / (k + 1)
+    object@post.beta = post.p = t(apply(post.lp, 1, function(l) {
+        expX = exp(cbind(0, matrix(l[cols], ncol = k)) / scal)
+        as.numeric(apply(expX, 1, function(z) z / sum(z)))
+    })) # These results come out with response levels varying the fastest.
+    
+    object@bhat = apply(post.p, 2, mean)
+    object@V = cov(post.p)
+    preds = c(object@roles$responses, object@roles$predictors)
+    object@roles$predictors  = preds[preds != "trait"]
+    resp.lev = attr(object@roles$responses, "levels")
+    attr(object@roles$responses, "levels") = NULL
+    object@levels[["trait"]] = object@levels[[object@roles$responses[1]]] = NULL
+    object@levels = c(list(resp.lev), object@levels)
+    names(object@levels)[1] = object@roles$responses
+    object@grid = do.call(expand.grid, object@levels)
+    
+    misc$postGridHook = misc$tran = misc$inv.lbl = object@roles$responses = NULL
+    misc$display = object@model.info$nesting = NULL
+    misc$estName = "prob"
+    object@linfct = diag(1, ncol(post.p))
+    object@misc = misc
+    
+    object
 }
 
 

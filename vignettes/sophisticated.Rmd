@@ -289,8 +289,7 @@ distribution of each estimate, along with highest posterior density (HPD)
 intervals. Under the hood, the posterior sample of parameter estimates is used
 to compute a corresponding sample of posterior EMMs, and it is those that are
 summarized. (Technical note: the summary is actually rerouted to the
-`hpd.summary()` function, and it loads the **coda** package if it is not already
-loaded.
+`hpd.summary()` function.
 
 ###### {#bayesxtra}
 <!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; -->
