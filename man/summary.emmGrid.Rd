@@ -11,9 +11,11 @@
 \title{Summaries, predictions, intervals, and tests for \code{emmGrid} objects}
 \usage{
 \method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, null,
-  delta, side, frequentist, ...)
+  delta, side, frequentist,
+  bias.correct = get_emm_option("back.bias.corr"), sigma, ...)
 
-\method{predict}{emmGrid}(object, type, ...)
+\method{predict}{emmGrid}(object, type, interval = c("none",
+  "confidence", "prediction"), level = 0.95, sigma, ...)
 
 \method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE,
   ...)
@@ -85,10 +87,20 @@ more details.}
 or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise, 
 a logical value of \code{TRUE} will have it return a frequentist summary.}
 
-\item{...}{(Not used by \code{summary.emmGrid} or \code{predict.emmGrid}.) In
-\code{as.data.frame.emmGrid}, \code{confint.emmGrid}, and 
+\item{sigma}{Error SD assumed for bias correction (when 
+\code{type = "response"} and a transformation
+is in effect), or for constructing prediction intervals. If not specified,
+\code{object@misc$sigma} is used, and an error is thrown if it is not found.}
+
+\item{...}{(Not used by \code{summary.emmGrid}.) In
+\code{as.data.frame.emmGrid}, \code{confint.emmGrid}, \code{predict.emmGrid}, and 
 \code{test.emmGrid}, these arguments are passed to
 \code{summary.emmGrid}.}
+
+\item{interval}{Type of interval desired (partial matching is allowed): 
+\code{"none"} for no intervals,
+  otherwise confidence or prediction intervals with given arguments. Specifying
+  \code{"confidence"} re-routes the call to \code{\link{confint.emmGrid}}.}
 
 \item{x}{object of the given class}
 
@@ -121,6 +133,10 @@ ignored.}
 flags (for rank deficiencies and estimability issues) is displayed even 
 when empty. If \code{FALSE}, the column is included only if there are 
 such issues.}
+
+\item{back.bias.correct}{Logical value for whether to adjust for bias in
+back-transforming (\code{type = "response"}). This requires a value of 
+\code{sigma} to exist in the object or be specified.}
 }
 \value{
 \code{summary.emmGrid}, \code{confint.emmGrid}, and

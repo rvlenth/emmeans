@@ -6,7 +6,7 @@
 \alias{get_emm_option}
 \alias{emm_defaults}
 \title{Set or change emmeans options}
-\format{An object of class \code{list} of length 15.}
+\format{An object of class \code{list} of length 16.}
 \usage{
 emm_options(...)
 
@@ -72,6 +72,12 @@ object.}
   displayed is just enough to reasonably distinguish estimates from the ends
   of their confidence intervals; but always at least 3 digits. If
   \code{FALSE}, the system value \code{getOption("digits")} is used.}
+\item{\code{back.bias.corr}}{A logical value controlling whether we 
+  try to correct bias when back-transforming. If \code{FALSE}, we use naive
+  back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
+  second-order correction is applied to estimate the mean on the response
+  scale.}
+  
 }%%% end describe{}
 Some other options have more specific purposes:
 \describe{

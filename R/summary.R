@@ -89,8 +89,15 @@
 #' @param frequentist Ignored except if a Bayesian model was fitted. If missing
 #'   or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise, 
 #'   a logical value of \code{TRUE} will have it return a frequentist summary.
-#' @param ... (Not used by \code{summary.emmGrid} or \code{predict.emmGrid}.) In
-#'   \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, and 
+#' @param back.bias.correct Logical value for whether to adjust for bias in
+#'   back-transforming (\code{type = "response"}). This requires a value of 
+#'   \code{sigma} to exist in the object or be specified.
+#' @param sigma Error SD assumed for bias correction (when 
+#'   \code{type = "response"} and a transformation
+#'   is in effect), or for constructing prediction intervals. If not specified,
+#'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#' @param ... (Not used by \code{summary.emmGrid}.) In
+#'   \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, \code{predict.emmGrid}, and 
 #'   \code{test.emmGrid}, these arguments are passed to
 #'   \code{summary.emmGrid}.
 #'
@@ -261,7 +268,9 @@
 #' test(contrast(pigs.emm, "consec"), joint = TRUE)
 #'
 summary.emmGrid <- function(object, infer, level, adjust, by, type, df, 
-                        null, delta, side, frequentist, ...) {
+                        null, delta, side, frequentist, 
+                        bias.correct = get_emm_option("back.bias.corr"),
+                        sigma, ...) {
 
     if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
         return (hpd.summary(object, prob = level, by = by, type = type, ...))
@@ -478,9 +487,21 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
 
 #' @rdname summary.emmGrid
 #' @method predict emmGrid
+#' @param interval Type of interval desired (partial matching is allowed): 
+#' \code{"none"} for no intervals,
+#'   otherwise confidence or prediction intervals with given arguments. Specifying
+#'   \code{"confidence"} re-routes the call to \code{\link{confint.emmGrid}}.
+#'   
 #' @export
 #' @return \code{predict} returns a vector of predictions for each row of \code{object@grid}.
-predict.emmGrid <- function(object, type, ...) {
+predict.emmGrid <- function(object, type, 
+                            interval = c("none", "confidence", "prediction"),
+                            level = 0.95, sigma, ...) 
+{
+    interval = match.arg(interval)
+    if (interval == "confidence")
+        return(confint.emmGrid(object, type = type, level = level, sigma = sigma, ...))
+    
     # update with any "summary" options
     opt = get_emm_option("summary")
     if(!is.null(opt)) {

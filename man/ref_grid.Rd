@@ -7,7 +7,7 @@
 ref_grid(object, at, cov.reduce = mean, mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type,
   transform = c("none", "response", "mu", "unlink", "log"), nesting,
-  covnest = FALSE, offset, ...)
+  covnest = FALSE, offset, sigma, ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -68,6 +68,10 @@ used). This may be used to add an offset, or override offsets based on the model
 A common usage would be to specify \code{offset = 0} for a Poisson
 regression model, so that predictions from the reference grid become
 rates relative to the offset that had been specified in the model.}
+
+\item{sigma}{Numeric value to use for subsequent predictions
+or back-transformation bias adjustments. If not specified, we
+use \code{sigma(object)}, if available, and \code{NULL} otherwise.}
 
 \item{...}{Optional arguments passed to \code{\link{emm_basis}}, such as
 \code{vcov.} (see Details below) or options for certain models (see

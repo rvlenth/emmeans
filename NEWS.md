@@ -3,7 +3,18 @@
 emmeans 1.3.4.0999xxx
 -------------
 
+  * **TO DO:**
+     * Fix `summary.emmGrid` to handle `back.bias.correct` and `sigma`
+     * Fix `predict.emmGrid` to handle `interval = "prediction"`
+  * First steps to take prediction seriously. This includes
+     * Addition of a `sigma` argument to `ref_grid()` (defaults to
+       `sigma(object)` if available)
+     * Addition of an `interval` argument in `predict.emmGrid()`
+     * Crude provisions for bias adjustment when back-transforming. This
+       is not really prediction, but it is made possible by availability
+       of `sigma` in object
   * Further steps to lower the profile of `cld()` and `CLD()`
+  * Attempts to broaden `MCMCglmm` support
 
 
 emmeans 1.3.4

@@ -223,6 +223,9 @@ vcov.emmGrid = function(object, ...) {
 #' \item{\code{side}}{(numeric or character) \code{side} specification for for
 #' \code{summary} or \code{test} (taken to be zero if missing).}
 #' 
+#' \item{\code{sigma}}{(numeric) Error SD to use in predictions and for bias-corrected
+#' back-transformations}
+#' 
 #' \item{\code{delta}}{(numeric) \code{delta} specification for \code{summary}
 #' or \code{test} (taken to be zero if missing).}
 #' 
@@ -285,7 +288,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
     valid.misc = c("adjust","alpha","avgd.over","by.vars","delta","df",
                    "initMesg","estName","estType","famSize","infer","inv.lbl",
                    "level","methDesc","nesting","null","predict.type","pri.vars"
-                   ,"side","tran","tran.mult","tran2","type","is.new.rg")
+                   ,"side","sigma","tran","tran.mult","tran2","type","is.new.rg")
     valid.slots = slotNames(object)
     valid.choices = union(valid.misc, valid.slots)
     misc = object@misc
@@ -391,6 +394,12 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   displayed is just enough to reasonably distinguish estimates from the ends
 #'   of their confidence intervals; but always at least 3 digits. If
 #'   \code{FALSE}, the system value \code{getOption("digits")} is used.}
+#' \item{\code{back.bias.corr}}{A logical value controlling whether we 
+#'   try to correct bias when back-transforming. If \code{FALSE}, we use naive
+#'   back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
+#'   second-order correction is applied to estimate the mean on the response
+#'   scale.}
+#'   
 #' }%%% end describe{}
 #' Some other options have more specific purposes:
 #' \describe{
@@ -477,6 +486,7 @@ emm_defaults = list (
     msg.nesting = TRUE,       # message when nesting is detected
     estble.tol = 1e-8,        # tolerance for estimability checks
     simplify.names = TRUE,    # simplify names like data$x to just "x"
+    back.bias.corr = FALSE,   # Try to bias-correct back-transformations?
     opt.digits = TRUE,        # optimize displayed digits?
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
