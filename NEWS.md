@@ -14,6 +14,7 @@ emmeans 1.3.4.0999xxx
        is not really prediction, but it is made possible by availability
        of `sigma` in object
   * Further steps to lower the profile of `cld()` and `CLD()`
+  * Family size for Tukey adjustment was wrong when using `exclude` (#107)
   * Attempts to broaden `MCMCglmm` support
 
 

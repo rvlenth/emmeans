@@ -79,7 +79,7 @@ along with \code{"adjust"} to determine appropriate adjustments to P values
 and confidence intervals.}
 
 \item{\code{famSize}}{(integer) is the number of means involved in a family of
-inferences; used in Tukey and Scheffe adjustments}
+inferences; used in Tukey adjustment}
 
 \item{\code{infer}}{(\code{logical} vector of length 2) is the default value
 of \code{infer} in \code{\link{summary.emmGrid}}.}

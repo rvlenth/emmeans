@@ -15,7 +15,7 @@
   bias.correct = get_emm_option("back.bias.corr"), sigma, ...)
 
 \method{predict}{emmGrid}(object, type, interval = c("none",
-  "confidence", "prediction"), level = 0.95, sigma, ...)
+  "confidence", "prediction"), level = 0.95, ...)
 
 \method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE,
   ...)
@@ -99,8 +99,8 @@ is in effect), or for constructing prediction intervals. If not specified,
 
 \item{interval}{Type of interval desired (partial matching is allowed): 
 \code{"none"} for no intervals,
-  otherwise confidence or prediction intervals with given arguments. Specifying
-  \code{"confidence"} re-routes the call to \code{\link{confint.emmGrid}}.}
+  otherwise confidence or prediction intervals with given arguments, 
+  via \code{\link{confint.emmGrid}}.}
 
 \item{x}{object of the given class}
 

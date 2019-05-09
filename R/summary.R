@@ -282,6 +282,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         object = do.call("update.emmGrid", opt)
     }
     
+    if(!missing(sigma))
+        object = update(object, sigma = sigma)  # we'll keep sigma in misc
+    
     misc = object@misc
     use.elts = .reconcile.elts(object)
     grid = object@grid[use.elts, , drop = FALSE]
@@ -414,6 +417,14 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         cv = acv$cv
         cv = switch(side + 2, cbind(-Inf, cv), cbind(-cv, cv), cbind(-cv, Inf))
         cnm = if (zFlag) c("asymp.LCL", "asymp.UCL") else c("lower.CL","upper.CL")
+        if(!is.null(misc$.predFlag)) {
+            cnm = c("lower.PL", "upper.PL")
+            sigma = misc$sigma
+            mesg = c(mesg, paste0(
+                "Prediction intervals and SEs are based on an error SD of ", 
+                round(sigma, 4 - floor(log10(sigma)))))
+            estName = names(result)[1] = "prediction"
+        }
         result[[cnm[1]]] = result[[1]] + cv[, 1]*result$SE
         result[[cnm[2]]] = result[[1]] + cv[, 2]*result$SE
         mesg = c(mesg, paste("Confidence level used:", level), acv$mesg)
@@ -489,24 +500,27 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
 #' @method predict emmGrid
 #' @param interval Type of interval desired (partial matching is allowed): 
 #' \code{"none"} for no intervals,
-#'   otherwise confidence or prediction intervals with given arguments. Specifying
-#'   \code{"confidence"} re-routes the call to \code{\link{confint.emmGrid}}.
+#'   otherwise confidence or prediction intervals with given arguments, 
+#'   via \code{\link{confint.emmGrid}}.
 #'   
 #' @export
 #' @return \code{predict} returns a vector of predictions for each row of \code{object@grid}.
 predict.emmGrid <- function(object, type, 
                             interval = c("none", "confidence", "prediction"),
-                            level = 0.95, sigma, ...) 
+                            level = 0.95, ...) 
 {
-    interval = match.arg(interval)
-    if (interval == "confidence")
-        return(confint.emmGrid(object, type = type, level = level, sigma = sigma, ...))
-    
     # update with any "summary" options
     opt = get_emm_option("summary")
     if(!is.null(opt)) {
         opt$object = object
         object = do.call("update.emmGrid", opt)
+    }
+
+    interval = match.arg(interval)
+    if (interval %in% c( "confidence", "prediction")) {
+        if (interval == "prediction")
+            object@misc$.predFlag = TRUE
+        return(confint.emmGrid(object, type = type, level = level, ...))
     }
     
     if (missing(type))
@@ -518,7 +532,7 @@ predict.emmGrid <- function(object, type,
     if ((type == "response") && (!is.null(object@misc$tran2)))
         object = regrid(object, transform = "mu")
     
-    pred = .est.se.df(object, do.se=FALSE)
+    pred = .est.se.df(object, do.se = FALSE)
     result = pred[[1]]
     
     if (type %in% c("response", "mu", "unlink")) {
@@ -610,6 +624,12 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     result[1] = as.numeric(result[1]) # silly bit of code to avoid getting a data.frame of logicals if all are NA
     result = as.data.frame(result)
     names(result) = c(misc$estName, "SE", "df")
+    if (!is.null(misc$.predFlag)) {
+        if (is.null(misc$sigma))
+            stop("No 'sigma' is available for obtaining Prediction intervals.", 
+                 call. = FALSE)
+        result$SE = sqrt(result$SE^2 + misc$sigma^2)
+    }
     if (!is.null(misc$tran)) {
         attr(result, "link") = .get.link(misc)
         if(is.character(misc$tran) && (misc$tran == "none"))

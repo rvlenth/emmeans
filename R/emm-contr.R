@@ -149,6 +149,7 @@ pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     attr(M, "desc") = "pairwise differences"
     attr(M, "adjust") = "tukey"
     attr(M, "type") = "pairs"
+    attr(M, "famSize") = k - length(exclude)
     if(length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
