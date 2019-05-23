@@ -435,7 +435,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss
         attr(object, "data") = data
     
-    basis = emm_basis(object, trms, xlev, grid, ...)
+    basis = emm_basis(object, trms, xlev, grid, misc = attr(data, "misc"), ...)
     if(length(basis$bhat) != ncol(basis$X))
         stop("Non-conformable elements in reference grid.\n",
              " Probably due to rank deficiency not handled as expected.",
