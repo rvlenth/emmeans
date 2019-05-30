@@ -5,7 +5,8 @@
 \title{Reconstruct a reference grid with a new transformation}
 \usage{
 regrid(object, transform = c("response", "mu", "unlink", "log", "none"),
-  inv.log.lbl = "response", predict.type)
+  inv.log.lbl = "response", predict.type,
+  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -26,8 +27,10 @@ For compatibility with past versions, \code{transform} may also be logical;
 with \code{type = "response"}.}
 
 \item{predict.type}{Character value. If provided, the returned object is
-updated with the given type, e.g., \code{"response"}. 
-See \code{\link{update.emmGrid}}.}
+updated with the given type to use by default by \code{summary.emmGrid}
+(see \code{\link{update.emmGrid}}).  This may be useful if, for example,
+when one specifies \code{transform = "log"} but desires summaries to be
+produced by default on the response scale.}
 }
 \value{
 An \code{emmGrid} object with the requested changes

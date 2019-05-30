@@ -4,7 +4,8 @@
 \alias{hpd.summary}
 \title{Summarize an emmGrid from a Bayesian model}
 \usage{
-hpd.summary(object, prob, by, type, point.est = median, ...)
+hpd.summary(object, prob, by, type, point.est = median,
+  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 }
 \arguments{
 \item{object}{an \code{emmGrid} object having a non-missing \code{post.beta} slot}

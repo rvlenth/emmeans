@@ -296,7 +296,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     }
     
     if(missing(sigma)) { # Get 'sigma(object)' if available, else NULL
-        sigma = try(stats::sigma(object), silent = TRUE)
+        sigma = suppressWarnings(try(stats::sigma(object), silent = TRUE))
         if (inherits(sigma, "try-error"))
             sigma = NULL
     }
@@ -646,7 +646,7 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         result = hook(result)
     }
     if(transform != "none")
-        result = regrid(result, transform = transform)
+        result = regrid(result, transform = transform, sigma = sigma, ...)
     
     .save.ref_grid(result)
     result

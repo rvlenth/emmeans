@@ -72,10 +72,10 @@ object.}
   displayed is just enough to reasonably distinguish estimates from the ends
   of their confidence intervals; but always at least 3 digits. If
   \code{FALSE}, the system value \code{getOption("digits")} is used.}
-\item{\code{back.bias.corr}}{A logical value controlling whether we 
-  try to correct bias when back-transforming. If \code{FALSE}, we use naive
+\item{\code{back.bias.adj}}{A logical value controlling whether we 
+  try to adjust bias when back-transforming. If \code{FALSE}, we use naive
   back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
-  second-order correction is applied to estimate the mean on the response
+  second-order adjustment is applied to estimate the mean on the response
   scale.}
   
 }%%% end describe{}

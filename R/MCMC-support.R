@@ -46,7 +46,11 @@
 #' @param sep.chains Logical value. If \code{TRUE}, and there is more than one
 #'   MCMC chain available, an \code{\link[coda]{mcmc.list}} object is returned
 #'   by \code{as.mcmc}, with separate EMMs posteriors in each chain.
-#' @param ... arguments passed to \code{\link[coda]{mcmc}}
+#' @param likelihood Character value or function. If given, simulations are made from 
+#'   the corresponding posterior predictive distribution. If not given, we obtain
+#'   the posterior distribution of the parameters in \code{object}. See Prediction
+#'   section below.
+#' @param ... arguments passed to other methods
 #'
 #' @return An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
 #' 
@@ -61,9 +65,36 @@
 #' results. The \code{as.mcmc.list} method is guaranteed to return an
 #' \code{mcmc.list}, even if it comprises just one chain. 
 #' 
+#' @section Prediction:
+#' When \code{likelihood} is specified, it is used to simulate values from the
+#' posterior predictive distribution corresponding to the given likelihood and
+#' the posterior distribution of parameter values. Denote the the likelihood 
+#' function as\eqn{f(y|\theta,\phi)}, where \code{y} is a response, \eqn{\theta}
+#' is the parameter estimated in \code{object}, and \eqn{\phi} comprises zero or
+#' more additional parameters to be specified. If \code{likelihood} is a 
+#' function, that function should take as its first argument a vector of 
+#' \eqn{\theta} values (each corresponding to one row of \code{object@grid}).
+#' Any \eqn{\phi} valuyes should be specified as additional named function
+#' arguments, and passed to \code{likelihood} via \code{...}. This function should 
+#' simulate values of \eqn{y}.
+#' 
+#' A few standard likelihoods are available by specifying \code{likelihood} as
+#' a character value. They are:
+#' \describe{
+#'   \item{\code{"normal"}}{The normal distribution with mean \eqn{\theta} and
+#'   standard deviation specified by additional argument \code{sigma}}
+#'   \item{\code{"binomial"}}{The binomial distribution with success probability 
+#'     \eqn{theta}, and number of trials specified by \code{trials}}
+#'   \item{\code{"poisson"}}{The Poisson distribution with mean \eqn{theta} 
+#'     (no additional parameters)}
+#'   \item{\code{"gamma"}}{The gamma distribution with scale parameter \eqn{\theta}
+#'     and shape parameter specified by \code{shape}}
+#' }
+#' 
 #' @method as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
-as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
+as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, 
+                           likelihood, ...) {
     object = x
     if (is.na(x@post.beta[1]))
         stop("No posterior sample -- can't make an 'mcmc' object")
@@ -71,6 +102,21 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     if(!is.null(offset <- x@grid[[".offset."]])) {
         n = nrow(mat)
         mat = mat + matrix(rep(offset, each = n), nrow = n)
+    }
+    if (!missing(likelihood)) {
+        if (is.character(likelihood)) {
+            likelihood = switch(likelihood,
+                normal = function(theta, sigma, ...) 
+                    rnorm(length(theta), mean = theta, sd = sigma),
+                binomial = function(theta, trials, ...) 
+                    rbinom(length(theta), size = trials, prob = theta),
+                poisson = function(theta, ...)
+                    rpois(length(theta), lambda = theta),
+                gamma = function(theta, shape, ...)
+                    rgamma(length(theta), scale = theta, shape = shape),
+                stop("There is no predefined likelihood named '", likelihood, "'"))
+        }
+        mat = apply(mat, 2, likelihood, ...)
     }
     nm = setdiff(names(x@grid), c(".wgt.",".offset."))
     if (any(names)) {
@@ -83,12 +129,12 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, ...) {
     dimnames(mat)[[2]] = do.call(paste, c(unname(x@grid[, nm, drop = FALSE]), sep=", "))
     n.chains = attr(x@post.beta, "n.chains")
     if (!sep.chains || is.null(n.chains) || (n.chains == 1))
-        coda::mcmc(mat, ...)
+        coda::mcmc(mat)
     else {
         n = nrow(mat) / n.chains
         seqn = seq_len(n)
         chains = lapply(seq_len(n.chains), function(i) coda::mcmc(mat[n*(i - 1) + seqn, , drop = FALSE]))
-        coda::mcmc.list(chains, ...)
+        coda::mcmc.list(chains)
     }
 }
 
@@ -133,8 +179,13 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #'   hpd.summary(emmeans(cbpp.rg, "period"))
 #' }
 #' 
-hpd.summary = function(object, prob, by, type,
-                       point.est = median, ...) {
+hpd.summary = function(object, prob, by, type, point.est = median, 
+                       bias.adjust = get_emm_option("back.bias.adj"), sigma, 
+                       ...) {
+    if(!is.null(object@misc$.predFlag))
+        stop("Prediction intervals for MCMC models should be done using 'frequentist = TRUE'\n",
+             "or using 'as.mcmc(object, ..., likelihood = ...)'")
+    
     if (!requireNamespace("coda"))
         stop("Bayesian summary requires the 'coda' package")
     ### require("coda") ### Nope this is a CRAN no-no
@@ -179,13 +230,21 @@ hpd.summary = function(object, prob, by, type,
     
     ### OK, finally, here is the real stuff
     mesg = misc$initMesg
-    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE)
+    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE, ...)
     mcmc = mcmc[, use.elts, drop = FALSE]
     if (inv) {
+        if (bias.adjust) {
+            if (missing(sigma))
+                sigma = object@misc@sigma
+            link = .make.bias.adj.link(link, sigma)
+        }
+        
         for (j in seq_along(mcmc[1, ]))
             mcmc[, j] = with(link, linkinv(mcmc[, j]))
         mesg = c(mesg, paste("Results are back-transformed from the", link$name, "scale"))
-        
+        if(bias.adjust)
+            mesg = c(mesg, paste("Bias adjustment applied based on sigma =",
+                                 round(sigma, 4 - floor(log10(sigma)))))
     }
     else if(!is.null(link))
         mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))
@@ -227,31 +286,38 @@ hpd.summary = function(object, prob, by, type,
 
 
 # Currently, data is required, as call is not stored
-recover_data.MCMCglmm = function(object, data, ...) {    
+recover_data.MCMCglmm = function(object, data, trait, ...) {
+    if (is.null(data) && !is.null(object$data)) # allow for including data in object
+        data = eval(object$data)
     # if a multivariate response, stack the data with `trait` variable
     yvars = .all.vars(update(object$Fixed$formula, ". ~ 1"))
-    if(length(yvars) > 1) {
+    if ("trait" %in% names(data)) {
+        # don't do anything, just use what's provided
+    }
+    else if(length(yvars) > 1) {
 #        for (v in yvars) data[[v]] = NULL
         dat = data
         for (i in seq_len(length(yvars) - 1))
             data = rbind(data, dat)
         data$trait = factor(rep(yvars, each = nrow(dat)))
     }
-    else if(object$family[1] %in% c("multinomial1", "categorical")) {
-        # we'll create a fake "trait" variable with all but the 1st level
+    else if(!missing(trait)) {
+        # we'll create a fake "trait" variable with specified variable
         n = nrow(data)
-        data$trait = rep(levels(data[[yvars[1]]])[-1], n)[1:n] # way overkill, but easy coding
-        attr(yvars, "levels") = levels(data[[yvars]])
+        levs = levels(data[[trait]])
+        attr(data, "misc") = list(resp.levs = levs, trait = trait)
+        data$trait = rep(levs[-1], n)[1:n] # way overkill, but easy coding
     }
     attr(data, "call") = object$Fixed
     attr(data, "terms") = trms = delete.response(terms(object$Fixed$formula))
     attr(data, "predictors") = .all.vars(delete.response(trms))
-    attr(data, "responses") = yvars
     data
 }
 
+# misc may be NULL or a list generated by trait spec
 emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov., 
-                              mode = c("prob", "latent"), ...) {
+                              mode = c("default", "multinomial"), misc, ...) {
+    nobs.MCMCglmm = function(object, ...) 1   # prevents warning about nobs
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = NULL)
     Sol = as.matrix(object$Sol)[, seq_len(object$Fixed$nfl)] # toss out random effects if included
@@ -260,18 +326,20 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
         V = cov(Sol)
     else
         V = .my.vcov(object, vcov.)
-    misc = list()
+    if (is.null(misc))
+        misc = list()
     mode = match.arg(mode)
-    if ((object$family[1] %in% c("multinomial1", "categorical")) && (mode == "prob")) {
-        misc$postGridHook = .multinom1.postGrid
-        
+    if (mode == "multinomial") {
+        misc$postGridHook = .MCMCglmm.multinom.postGrid
     }
     list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
          dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = Sol)
 }
 
-.multinom1.postGrid = function(object) {
+
+
+.MCMCglmm.multinom.postGrid = function(object) {
     linfct = object@linfct
     misc = object@misc
     post.lp = object@post.beta %*% t(linfct)
@@ -287,16 +355,15 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
     
     object@bhat = apply(post.p, 2, mean)
     object@V = cov(post.p)
-    preds = c(object@roles$responses, object@roles$predictors)
+    preds = c(misc$trait, object@roles$predictors)
     object@roles$predictors  = preds[preds != "trait"]
-    resp.lev = attr(object@roles$responses, "levels")
-    attr(object@roles$responses, "levels") = NULL
-    object@levels[["trait"]] = object@levels[[object@roles$responses[1]]] = NULL
-    object@levels = c(list(resp.lev), object@levels)
-    names(object@levels)[1] = object@roles$responses
+    object@levels[["trait"]] = NULL
+    object@levels = c(list(misc$resp.levs), object@levels)
+    names(object@levels)[1] = misc$trait
     object@grid = do.call(expand.grid, object@levels)
     
-    misc$postGridHook = misc$tran = misc$inv.lbl = object@roles$responses = NULL
+    misc$postGridHook = misc$tran = misc$inv.lbl = 
+        misc$trait = misc$resp.levs = NULL
     misc$display = object@model.info$nesting = NULL
     misc$estName = "prob"
     object@linfct = diag(1, ncol(post.p))

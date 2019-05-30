@@ -198,7 +198,7 @@ Let's go through the listing of this method, line-by-line:
 
 
 ## Communication between methods {#communic}
-<!-- @index `emm_basis()`|Communicating with `recover_data()`;
+<!-- @index `emm_basis()`!Communicating with `recover_data()`;
    `recover_data()!Communicating with `emm_basis()`; `misc` attribute and argument -->
 If you need to pass information obtained in `recover_data()` to the `emm_basis()` method,
 simply incorporate it as `attr(data, "misc")` where `data` is the dataset returned by

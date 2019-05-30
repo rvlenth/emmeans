@@ -12,7 +12,7 @@
 \usage{
 \method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, null,
   delta, side, frequentist,
-  bias.correct = get_emm_option("back.bias.corr"), sigma, ...)
+  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
 \method{predict}{emmGrid}(object, type, interval = c("none",
   "confidence", "prediction"), level = 0.95, ...)
@@ -87,6 +87,10 @@ more details.}
 or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise, 
 a logical value of \code{TRUE} will have it return a frequentist summary.}
 
+\item{bias.adjust}{Logical value for whether to adjust for bias in
+back-transforming (\code{type = "response"}). This requires a value of 
+\code{sigma} to exist in the object or be specified.}
+
 \item{sigma}{Error SD assumed for bias correction (when 
 \code{type = "response"} and a transformation
 is in effect), or for constructing prediction intervals. If not specified,
@@ -133,10 +137,6 @@ ignored.}
 flags (for rank deficiencies and estimability issues) is displayed even 
 when empty. If \code{FALSE}, the column is included only if there are 
 such issues.}
-
-\item{back.bias.correct}{Logical value for whether to adjust for bias in
-back-transforming (\code{type = "response"}). This requires a value of 
-\code{sigma} to exist in the object or be specified.}
 }
 \value{
 \code{summary.emmGrid}, \code{confint.emmGrid}, and

@@ -3,13 +3,16 @@
 emmeans 1.3.4.0999xxx
 -------------
 
-  * **TO DO:**
-     * Fix `summary.emmGrid` to handle `back.bias.correct` and `sigma`
-     * Fix `predict.emmGrid` to handle `interval = "prediction"`
+  * TO DO:
+     * Add bias-adjustment topic to vignette on transformations
+     * New vignette on prediction
+     * Fix models.Rmd for MCMCglmm
   * First steps to take prediction seriously. This includes
      * Addition of a `sigma` argument to `ref_grid()` (defaults to
        `sigma(object)` if available)
      * Addition of an `interval` argument in `predict.emmGrid()`
+     * Addition of a `likelihood` argument in `as.mcmc` to allow
+       for simulating from the posterior predictive distribution
      * Crude provisions for bias adjustment when back-transforming. This
        is not really prediction, but it is made possible by availability
        of `sigma` in object

@@ -97,7 +97,7 @@ specified single value.}
 \item{\code{side}}{(numeric or character) \code{side} specification for for
 \code{summary} or \code{test} (taken to be zero if missing).}
 
-\item{\code{sigma}}{(numeric) Error SD to use in predictions and for bias-corrected
+\item{\code{sigma}}{(numeric) Error SD to use in predictions and for bias-adjusted
 back-transformations}
 
 \item{\code{delta}}{(numeric) \code{delta} specification for \code{summary}

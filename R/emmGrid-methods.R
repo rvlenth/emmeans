@@ -223,7 +223,7 @@ vcov.emmGrid = function(object, ...) {
 #' \item{\code{side}}{(numeric or character) \code{side} specification for for
 #' \code{summary} or \code{test} (taken to be zero if missing).}
 #' 
-#' \item{\code{sigma}}{(numeric) Error SD to use in predictions and for bias-corrected
+#' \item{\code{sigma}}{(numeric) Error SD to use in predictions and for bias-adjusted
 #' back-transformations}
 #' 
 #' \item{\code{delta}}{(numeric) \code{delta} specification for \code{summary}
@@ -394,10 +394,10 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   displayed is just enough to reasonably distinguish estimates from the ends
 #'   of their confidence intervals; but always at least 3 digits. If
 #'   \code{FALSE}, the system value \code{getOption("digits")} is used.}
-#' \item{\code{back.bias.corr}}{A logical value controlling whether we 
-#'   try to correct bias when back-transforming. If \code{FALSE}, we use naive
+#' \item{\code{back.bias.adj}}{A logical value controlling whether we 
+#'   try to adjust bias when back-transforming. If \code{FALSE}, we use naive
 #'   back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
-#'   second-order correction is applied to estimate the mean on the response
+#'   second-order adjustment is applied to estimate the mean on the response
 #'   scale.}
 #'   
 #' }%%% end describe{}
@@ -486,7 +486,7 @@ emm_defaults = list (
     msg.nesting = TRUE,       # message when nesting is detected
     estble.tol = 1e-8,        # tolerance for estimability checks
     simplify.names = TRUE,    # simplify names like data$x to just "x"
-    back.bias.corr = FALSE,   # Try to bias-correct back-transformations?
+    back.bias.adj = FALSE,    # Try to bias-adjust back-transformations?
     opt.digits = TRUE,        # optimize displayed digits?
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
@@ -542,8 +542,10 @@ emm_defaults = list (
 #'   "log"}, and is used to label the predictions if subsequently summarized
 #'   with \code{type = "response"}.
 #' @param predict.type Character value. If provided, the returned object is
-#'   updated with the given type, e.g., \code{"response"}. 
-#'   See \code{\link{update.emmGrid}}.
+#'   updated with the given type to use by default by \code{summary.emmGrid}
+#'   (see \code{\link{update.emmGrid}}).  This may be useful if, for example,
+#'   when one specifies \code{transform = "log"} but desires summaries to be
+#'   produced by default on the response scale.
 #'   
 #' @note Another way to use \code{regrid} is to supply a \code{transform} 
 #'   argument to \code{\link{ref_grid}} (either directly of indirectly via
@@ -566,7 +568,8 @@ emm_defaults = list (
 #' emmeans(pigs.lm, "source", transform = "response")
 #' # NOTE: pairs() of the above will be DIFFERENCES of these results
 regrid = function(object, transform = c("response", "mu", "unlink", "log", "none"), 
-                  inv.log.lbl = "response", predict.type) 
+                  inv.log.lbl = "response", predict.type, 
+                  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...) 
 {
     if (is.logical(transform))   # for backward-compatibility
         transform = ifelse(transform, "response", "none")
@@ -613,6 +616,11 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
     
     if(transform %in% c("response", "mu", "unlink", "log") && !is.null(object@misc$tran)) {
         link = attr(est, "link")
+        if (bias.adjust) {
+            if(missing(sigma))
+                sigma = object@misc$sigma
+            link = .make.bias.adj.link(link, sigma)
+        }
         D = .diag(link$mu.eta(object@bhat[estble]))
         object@bhat = link$linkinv(object@bhat)
         object@V = D %*% tcrossprod(object@V, D)
@@ -631,6 +639,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
         }
         else
             object@misc$tran = object@misc$tran.mult = object@misc$inv.lbl = NULL
+        sigma = object@misc$sigma = NULL
     }
     if (transform == "log") { # from prev block, we now have stuff on response scale
         Vee = vcov(object)

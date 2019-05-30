@@ -131,7 +131,7 @@ support for its object classes.
 
 \section{Communication between methods}{
 
-If \code{the recover_data} method generates information needed by \code{emm_basis},
+If the \code{recover_data} method generates information needed by \code{emm_basis},
 that information may be incorporated by creating a \code{"misc"} attribute in the
 returned recovered data. That information is then passed as the \code{misc} 
 argument when \code{ref_grid} calls \code{emm_basis}.

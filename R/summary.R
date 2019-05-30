@@ -89,7 +89,7 @@
 #' @param frequentist Ignored except if a Bayesian model was fitted. If missing
 #'   or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise, 
 #'   a logical value of \code{TRUE} will have it return a frequentist summary.
-#' @param back.bias.correct Logical value for whether to adjust for bias in
+#' @param bias.adjust Logical value for whether to adjust for bias in
 #'   back-transforming (\code{type = "response"}). This requires a value of 
 #'   \code{sigma} to exist in the object or be specified.
 #' @param sigma Error SD assumed for bias correction (when 
@@ -269,11 +269,13 @@
 #'
 summary.emmGrid <- function(object, infer, level, adjust, by, type, df, 
                         null, delta, side, frequentist, 
-                        bias.correct = get_emm_option("back.bias.corr"),
+                        bias.adjust = get_emm_option("back.bias.adj"),
                         sigma, ...) {
+    if(missing(sigma))
+        sigma = object@misc$sigma
 
     if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
-        return (hpd.summary(object, prob = level, by = by, type = type, ...))
+        return (hpd.summary(object, prob = level, by = by, type = type, sigma = sigma, ...))
     
     # Any "summary" options override built-in
     opt = get_emm_option("summary")
@@ -383,6 +385,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         inv = FALSE
         link = NULL
     }
+    if(inv && bias.adjust && !is.null(link)) 
+        link = .make.bias.adj.link(link, sigma)
     
     # et = 1 if a prediction, 2 if a contrast (or unmatched or NULL), 3 if pairs
     et = pmatch(c(misc$estType, "c"), c("prediction", "contrast", "pairs"), nomatch = 2)[1]
@@ -398,6 +402,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     }
     fam.info = c(misc$famSize, by.size, et)
     cnm = NULL
+    adjust = tolower(adjust)
     
     # get vcov matrix only if needed (adjust == "mvt")
     corrmat = sch.rank = NULL
@@ -436,6 +441,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
             result[[cnm[1]]] = clims[, idx[1]]
             result[[cnm[2]]] = clims[, idx[2]]
             mesg = c(mesg, paste("Intervals are back-transformed from the", link$name, "scale"))
+            if(bias.adjust)
+                mesg = c(mesg, paste("Bias adjustment applied based on sigma =", 
+                         round(sigma, 4 - floor(log10(sigma)))))
         }
     }
     if(infer[2]) { # add tests
@@ -662,6 +670,19 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     link
 }
 
+# patch-in alternative back-transform stuff for bias adjustment
+.make.bias.adj.link = function(link, sigma) {
+    if (is.null(sigma))
+        stop("Must specify 'sigma' to obtain bias-adjusted back transformations", call. = FALSE)
+    link$inv = link$linkinv
+    link$der = link$mu.eta
+    link$sigma22 = sigma^2 / 2
+    link$der2 = function(eta) with(link, 1000 * (der(eta + .0005) - der(eta - .0005)))
+    link$linkinv = function(eta) with(link, inv(eta) + sigma22 * der2(eta))
+    link$mu.eta = function(eta) with(link, der(eta) +
+                                         1000 * sigma22 * (der2(eta + .0005) - der2(eta - .0005)))
+    link
+}
 ####!!!!! TODO: Re-think whether we are handling Scheffe adjustments correctly
 ####!!!!!       if/when we shift around 'by' specs, etc.
 
