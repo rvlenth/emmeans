@@ -244,7 +244,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         mesg = c(mesg, paste("Results are back-transformed from the", link$name, "scale"))
         if(bias.adjust)
             mesg = c(mesg, paste("Bias adjustment applied based on sigma =",
-                                 round(sigma, 4 - floor(log10(sigma)))))
+                                 .fmt.sigma(sigma)))
     }
     else if(!is.null(link))
         mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))

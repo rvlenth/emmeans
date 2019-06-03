@@ -330,12 +330,15 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         by.cols[unlist(by.rows)] = by.cols # gives us inverse of by.rows order
     misc$orig.grid = orig.grid  # save original grid
     misc$con.coef = tcmat[ , by.cols, drop = FALSE] # save contrast coefs
+    true.con = all(zapsmall(apply(cmat, 2, sum)) == 0) # each set of coefs sums to 0
+    if(is.na(true.con)) # prevent error when there are no contrasts
+        true.con = FALSE
+    if(true.con)
+        misc$sigma = NULL   # sigma surely no longer makes sense
+
     # zap the transformation info except in special cases
     if (!is.null(misc$tran)) {
         misc$orig.tran = misc$tran
-        true.con = all(zapsmall(apply(cmat, 2, sum)) == 0) # each set of coefs sums to 0
-        if(is.na(true.con)) # prevent error when there are no contrasts
-            true.con = FALSE
         if (true.con && misc$tran %in% c("log", "genlog", "logit")) {
             misc$log.contrast = TRUE      # remember how we got here; used by summary
             misc$orig.inv.lbl = misc$inv.lbl

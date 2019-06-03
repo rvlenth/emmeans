@@ -74,8 +74,8 @@ Scroll down or follow the links to those groups for more information.
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
-|MCMCglmm     |MCMCglmm |[M](#M),[S](#S) |`mult.name`, `mult.levs`                              |
-|             |         |         |`data` is required                                           |
+|MCMCglmm     |MCMCglmm |[S](#S)  |(see also [M](#M#))  `mult.name`, `mult.levs`, `trait`,              |
+|             |         |         |`mode = c("default", "multinomial")`; `data` is required     |
 |mira         |mice     |[I](#I)  |Optional arguments per class of `$analyses` elements         |
 |mixed        |afex     |[P](#P)  |Supported in **afex** package                                |
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
@@ -412,6 +412,16 @@ be summarized or plotted using the **coda** package (or others that support
 those objects). It provides a posterior sample of EMMs, or contrasts thereof,
 for the given reference grid, based on the posterior sample of the fixed effects
 from the model object.
+
+In `MCMCglmm` objects, the `data` argument is required; however, if you
+save it as a member of the model object (e.g., `object$data = quote(mydata)`),
+that removes the necessity of specifying it in each call.
+The special keyword `trait` is used in some models. 
+When the response is multivariate and numeric, `trait` is generated automatically
+as a factor in the refernce grid, and the arguments `mult.levels` can be used to
+name its levels. In other models such as a multinomial model, use the
+`mode` argument to specify the type of model, and `trait = <factor name>` 
+to specify the name of the data column that contains the levels of the factor response.
 
 Support for the **brms** package is provided but it is quite rudimentary and 
 usable only for the primary fixed effects and the simpler models.

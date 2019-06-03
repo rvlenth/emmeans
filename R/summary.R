@@ -427,7 +427,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
             sigma = misc$sigma
             mesg = c(mesg, paste0(
                 "Prediction intervals and SEs are based on an error SD of ", 
-                round(sigma, 4 - floor(log10(sigma)))))
+                .fmt.sigma(sigma)))
             estName = names(result)[1] = "prediction"
         }
         result[[cnm[1]]] = result[[1]] + cv[, 1]*result$SE
@@ -441,9 +441,6 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
             result[[cnm[1]]] = clims[, idx[1]]
             result[[cnm[2]]] = clims[, idx[2]]
             mesg = c(mesg, paste("Intervals are back-transformed from the", link$name, "scale"))
-            if(bias.adjust)
-                mesg = c(mesg, paste("Bias adjustment applied based on sigma =", 
-                         round(sigma, 4 - floor(log10(sigma)))))
         }
     }
     if(infer[2]) { # add tests
@@ -478,6 +475,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     if (inv) {
         result[["SE"]] = with(link, abs(mu.eta(result[[1]]) * result[["SE"]]))
         result[[1]] = with(link, linkinv(result[[1]]))
+        if(bias.adjust)
+            mesg = c(mesg, paste("Bias adjustment applied based on sigma =", 
+                                 .fmt.sigma(sigma)))
     }
     
     if (length(misc$avgd.over) > 0) {
@@ -515,7 +515,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
 #' @return \code{predict} returns a vector of predictions for each row of \code{object@grid}.
 predict.emmGrid <- function(object, type, 
                             interval = c("none", "confidence", "prediction"),
-                            level = 0.95, ...) 
+                            level = 0.95,
+                            bias.adjust = get_emm_option("back.bias.adj"), sigma, 
+                            ...) 
 {
     # update with any "summary" options
     opt = get_emm_option("summary")
@@ -546,6 +548,11 @@ predict.emmGrid <- function(object, type,
     if (type %in% c("response", "mu", "unlink")) {
         link = attr(pred, "link")
         if (!is.null(link)) {
+            if (bias.adjust) {
+                if(missing(sigma))
+                    sigma = object@misc$sigma
+                link = .make.bias.adj.link(link, sigma)
+            }
             result = link$linkinv(result)
             if (is.logical(link$unknown) && link$unknown)
                 warning("Unknown transformation: \"", link$name, "\" -- no transformation applied.")

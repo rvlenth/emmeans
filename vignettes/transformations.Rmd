@@ -23,6 +23,7 @@ This vignette covers the intricacies of transformations and link functions in **
   5. [Special transformations](#special)
   6. [Specifying a transformation after the fact](#after)
   7. [Faking a log transformation](#logs)
+  8. [Bias adjustment](#bias-adj)
   
 [Index of all vignette topics](vignette-topics.html) 
 
@@ -293,6 +294,69 @@ These results are not identical, but very similar to the back-transformed
 confidence intervals [above](#timing) for the EMMs and the [pairwise ratios in
 the "comparisons" vignette](comparisons.html#logs), where the fitted model
 actually used a log response.
+
+
+[Back to Contents](#contents)
+
+
+## Bias adjustment {#bias-adj}
+<!-- @index Transformations!Bias adjustment; Bias adjustment when back-transforming;
+    Means!Generalized; Arithmetic means; Geometric means; -->
+So far, we have discussed ideas related to back-transforming results as a simple way
+of expressing results on the same scale as the response. In particular, means
+obtained in this way are known as *generalized means*. The best known of these
+is the geometric mean. For a set of positive measurements $y_1,y_2,\ldots,y_n$,
+the usual mean (called the arithmetic mean for emphasis) is $AM(\mathbf{y}) =
+\frac1n\sum_{i=1}^n y_i$, while the geometric mean is $GM(\mathbf{y}) =
+\left(\prod_{i=1}^n y_i \right)^{1/n}$. It is easy to show that $GM(\mathbf{y})
+= \exp(AM(\log \mathbf{y}))$; that is, if we apply a log transform, obtain the
+mean, then back-transform, we obtain the geometric mean. 
+
+It is also well-known (via *Jensen's inequality*) that when the $y_i$ are not
+all equal, $GM(\mathbf{y}) < AM(\mathbf{y})$. The message here is that if we are
+trying to estimate $\mu = E(Y)$, then we will under-estimate $\mu$ if we apply a
+log transform and then back-transform the result. The amount by which we under-estimate depends on the variability in $Y$. In fact, we have an explicit result: If $\log Y$ is normal with mean $\theta$ and variance $\sigma^2$, then $E(Y) = \exp\{\theta + \frac12\sigma^2\} = e^{\sigma^2/2}\cdot\mu$ where $\mu = e^\theta$.
+
+In general, when the goal is simply to
+make inferences about which means are less than which other means, and a
+response transformation is used, it is often acceptable to make such comparisons
+among generalized means. However, in some applications such as prediction, we
+really do want to work in terms of means of the original response variable. In
+such cases, we need to adjust for the fact that back-transformed means are
+biased. 
+
+### Feedlot example {#feedlot}
+<!-- @index Examples!`feedlot` -->
+A concrete example will help. Consider the `feedlot` dataset provided with the package.
+Here we have several herds of feeder cattle that are sent to feed lots and given one of three diets. The weights of the cattle are measured at time of entry (`ewt`) and at time of slaughter (`swt`). Different herds have possibly different entry weights, based on breed and ranching practices, so we will center each herd's `ewt` measurements, then use that as a covariate in a mixed model. First, consider the raw response:
+```{r, message = FALSE}
+feedlot = transform(feedlot, adj.ewt = ewt - predict(lm(ewt ~ herd)))
+require(lme4)
+feedlot.lmer <- lmer(swt ~ adj.ewt + diet + (1|herd), data = feedlot)
+emmeans(feedlot.lmer, "diet")
+```
+Now, suppose that for some reason, we had used a log transformation in our model:
+```{r}
+logfl.lmer <- lmer(log(swt) ~ adj.ewt + diet + (1|herd), data = feedlot)
+lemm <- emmeans(logfl.lmer, "diet")
+summary(lemm, type = "response")
+```
+These estimates are essentially geometric means, and you can see that they are somewhat less than the means from the first model. However, in the context of these data, it really can be important to think in terms of expected slaughter weight, because that has economic meaning, whereas the geometric means do not.
+
+To bias-adjust the estimates from `logfl.lmer`, we need a variance estimate. This model has two sources of random variation, however:
+```{r}
+VarCorr(logfl.lmer)
+```
+Since we the means we display apply to all herds, we need to combine these two 
+independent sources of variation:
+```{r}
+sd.total <- sqrt(0.077461^2 + 0.056521^2)
+```
+Then we display `geom.emm` with two extra arguments in `summary`:
+```{r}
+summary(lemm, type = "response", bias.adjust = TRUE, sigma = sd.total)
+```
+These bias-adjusted results are close to the ones we obtained with the raw responses.
 
 
 [Back to Contents](#contents)

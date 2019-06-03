@@ -15,7 +15,8 @@
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
 \method{predict}{emmGrid}(object, type, interval = c("none",
-  "confidence", "prediction"), level = 0.95, ...)
+  "confidence", "prediction"), level = 0.95,
+  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
 \method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE,
   ...)

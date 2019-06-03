@@ -29,6 +29,7 @@ vignette: >
       * [versus *post hoc* comparisons](FAQs.html#anova)
       * [Type III](confidence-intervals.html#joint_tests)
   * [`aovList` objects](models.html#V)
+  * [Arithmetic means](transformations.html#bias-adj)
   * [`as.data.frame()`](utilities.html#data)
   * `as.mcmc()`
       * [in *models: S*](models.html#S)
@@ -51,6 +52,7 @@ vignette: >
   * [**bayesplot** package](sophisticated.html#bayesxtra)
   * [Beta regression](models.html#B)
   * [`betareg` models](models.html#B)
+  * [Bias adjustment when back-transforming](transformations.html#bias-adj)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
   * [`boot-satterthwaite` method](models.html#K)
   * [`[ ]` and `[[ ]]` operators](utilities.html#brackets)
@@ -170,6 +172,7 @@ vignette: >
       * [Bayesian model](sophisticated.html#mcmc)
       * [`cbpp`](sophisticated.html#mcmc)
       * [`cows`](messy-data.html#cows)
+      * [`feedlot`](transformations.html#feedlot)
       * [`fiber`](interactions.html#covariates)
       * [`framing`](messy-data.html#mediators)
       * [Gamma regression](transformations.html#tranlink)
@@ -221,6 +224,7 @@ vignette: >
   * [GEE models](models.html#E)
   * [Generalized additive models](models.html#G)
   * [Generalized linear models](models.html#G)
+  * [Geometric means](transformations.html#bias-adj)
   * [Get the model right first](FAQs.html#nowelch)
   * [`get_emm_option()`](utilities.html#options)
   * [**ggplot2** package](basics.html#ggplot)
@@ -307,6 +311,7 @@ vignette: >
   * [`mcmc` objects](models.html#S)
   * Means
       * [Cell](basics.html#motivation)
+      * [Generalized](transformations.html#bias-adj)
       * [Marginal](basics.html#motivation)
           * [Based on a model](basics.html#EMMdef)
           * [of cell means](basics.html#eqwts)
@@ -492,6 +497,7 @@ vignette: >
   * Transformations
       * [Adding after the fact](transformations.html#after)
       * [Back-transforming](confidence-intervals.html#tran)
+      * [Bias adjustment](transformations.html#bias-adj)
       * [Custom](transformations.html#special)
       * [Faking a log transformation](transformations.html#logs)
       * [with link function](transformations.html#tranlink)

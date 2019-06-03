@@ -240,3 +240,11 @@ model.frame = function(formula, data, ...) {
     }
     data[, nm, drop = FALSE]
 }
+
+# format sigma for use in  messages
+.fmt.sigma = function(sigma) {
+    if (length(sigma) == 1)
+        round(sigma, 4 - floor(log10(sigma)))
+    else
+        "(various values)"
+}

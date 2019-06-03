@@ -6,7 +6,6 @@ emmeans 1.3.4.0999xxx
   * TO DO:
      * Add bias-adjustment topic to vignette on transformations
      * New vignette on prediction
-     * Fix models.Rmd for MCMCglmm
   * First steps to take prediction seriously. This includes
      * Addition of a `sigma` argument to `ref_grid()` (defaults to
        `sigma(object)` if available)
