@@ -300,64 +300,86 @@ actually used a log response.
 
 
 ## Bias adjustment {#bias-adj}
-<!-- @index Transformations!Bias adjustment; Bias adjustment when back-transforming;
-    Means!Generalized; Arithmetic means; Geometric means; -->
+<!-- @index Transformations!Bias adjustment; Bias adjustment!When back-transforming;
+    Means!Generalized; Geometric means; -->
 So far, we have discussed ideas related to back-transforming results as a simple way
 of expressing results on the same scale as the response. In particular, means
-obtained in this way are known as *generalized means*. The best known of these
-is the geometric mean. For a set of positive measurements $y_1,y_2,\ldots,y_n$,
-the usual mean (called the arithmetic mean for emphasis) is $AM(\mathbf{y}) =
-\frac1n\sum_{i=1}^n y_i$, while the geometric mean is $GM(\mathbf{y}) =
-\left(\prod_{i=1}^n y_i \right)^{1/n}$. It is easy to show that $GM(\mathbf{y})
-= \exp(AM(\log \mathbf{y}))$; that is, if we apply a log transform, obtain the
-mean, then back-transform, we obtain the geometric mean. 
+obtained in this way are known as *generalized means*; for example, a log
+transformation of the response is associated with geometric means. When the goal
+is simply to make inferences about which means are less than which other means,
+and a response transformation is used, it is often acceptable to present
+estimates and comparisons of these generalized means.
+However, sometimes it is important to report results that actually do reflect
+expected values of the untransformed response. An example is a financial study,
+where the response is in some monetary unit. It may be convenient to use a
+response transformation for modeling purposes, but ultimately we may want to
+make financial projections in those same units. 
 
-It is also well-known (via *Jensen's inequality*) that when the $y_i$ are not
-all equal, $GM(\mathbf{y}) < AM(\mathbf{y})$. The message here is that if we are
-trying to estimate $\mu = E(Y)$, then we will under-estimate $\mu$ if we apply a
-log transform and then back-transform the result. The amount by which we under-estimate depends on the variability in $Y$. In fact, we have an explicit result: If $\log Y$ is normal with mean $\theta$ and variance $\sigma^2$, then $E(Y) = \exp\{\theta + \frac12\sigma^2\} = e^{\sigma^2/2}\cdot\mu$ where $\mu = e^\theta$.
+In such settings, we need to
+make a bias adjustment when we back-transform, because any nonlinear
+transformation biases the expected values of statistical quantities. More
+specifically, suppose that we have a response $Y$ and the transformed
+response is $U$. To back-transform, we use $Y = h(U)$; and using a Tayor
+approximation, $Y \approx h(\eta) + h'(\eta)(U-\eta) +
+\frac12h''(\eta)(U-\eta)^2$, so that 
+$E(Y) \approx h(\eta) + \frac12h''(\eta)Var(U)$. 
+This shows that the amount of needed bias adjustment is approximately
+$\frac12h''(\eta)\sigma^2$ where $\sigma$ is the error SD in the model for $U$.
+It depends on $\sigma$, and the larger this is, the greater the bias adjustment
+is needed. This second-order bias adjustment is what is currently used
+in the **emmeans** package when bias-adjustment is requested. There are better or exact adjustments for certain cases, and future updates may incorporate some of those.
 
-In general, when the goal is simply to
-make inferences about which means are less than which other means, and a
-response transformation is used, it is often acceptable to make such comparisons
-among generalized means. However, in some applications such as prediction, we
-really do want to work in terms of means of the original response variable. In
-such cases, we need to adjust for the fact that back-transformed means are
-biased. 
+### Response transformations vs. link functions {#link-bias}
+<!-- @index Transformations!Response versus link functions;
+    Bias adjustment!For link functions vs. response transformations; Bias adjustment!In GLMMs and GEE models; -->
+At this point, it is important to point out that the above discussion focuses on
+response transformations, as opposed to link functions used in generalized linear
+models (GLMs). In an ordinary GLM, no bias adjustment is needed or appropriate
+because the link function is just used to define a nonlinear relationship
+between the actual response mean $\eta$ and the linear predictor. However, in a
+generalized linear *mixed* model, including generalized estimating equations and
+such, there are random components involved, and then bias adjustment becomes
+appropriate.
 
-### Feedlot example {#feedlot}
-<!-- @index Examples!`feedlot` -->
-A concrete example will help. Consider the `feedlot` dataset provided with the package.
-Here we have several herds of feeder cattle that are sent to feed lots and given one of three diets. The weights of the cattle are measured at time of entry (`ewt`) and at time of slaughter (`swt`). Different herds have possibly different entry weights, based on breed and ranching practices, so we will center each herd's `ewt` measurements, then use that as a covariate in a mixed model. First, consider the raw response:
+### CBPP example {#cbpp}
+<!-- @index Examples!`cbpp` -->
+Consider an example adapted from the help page for `lme4::cbpp`. 
+Contagious bovine pleuropneumonia (CBPP) is a disease in African cattle,
+and the dataset contains data on incidence of CBPP in several herds of cattle
+over four time periods. We will fit a mixed model that accounts for herd variations
+as well as overdispersion (variations larger than expected with a simple binomial model): 
+
 ```{r, message = FALSE}
-feedlot = transform(feedlot, adj.ewt = ewt - predict(lm(ewt ~ herd)))
 require(lme4)
-feedlot.lmer <- lmer(swt ~ adj.ewt + diet + (1|herd), data = feedlot)
-emmeans(feedlot.lmer, "diet")
-```
-Now, suppose that for some reason, we had used a log transformation in our model:
-```{r}
-logfl.lmer <- lmer(log(swt) ~ adj.ewt + diet + (1|herd), data = feedlot)
-lemm <- emmeans(logfl.lmer, "diet")
-summary(lemm, type = "response")
-```
-These estimates are essentially geometric means, and you can see that they are somewhat less than the means from the first model. However, in the context of these data, it really can be important to think in terms of expected slaughter weight, because that has economic meaning, whereas the geometric means do not.
+cbpp <- transform(cbpp, unit = 1:nrow(cbpp))
+cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd) +  (1|unit),
+                    family = binomial, data = cbpp)
 
-To bias-adjust the estimates from `logfl.lmer`, we need a variance estimate. This model has two sources of random variation, however:
-```{r}
-VarCorr(logfl.lmer)
+emm <- emmeans(cbpp.glmer, "period")
+summary(emm, type = "response")
 ```
-Since we the means we display apply to all herds, we need to combine these two 
-independent sources of variation:
+The above summary reflects the back-transformed estimates, with no bias adjustment. However, the model estimates two independent sources of random variation that probably should be taken into account:
 ```{r}
-sd.total <- sqrt(0.077461^2 + 0.056521^2)
+VarCorr(cbpp.glmer)
 ```
-Then we display `geom.emm` with two extra arguments in `summary`:
+Notably, the over-dispersion SD is considerably greater than the herd SD.
+Suppose we want to estimate the marginal probabilities of CBPP incidence,
+averaged over herds and over-dispersion variations. For this purpose, we need
+the combined effect of these variations; so we compute the overall SD
+via the Pythagorean theorem:
 ```{r}
-summary(lemm, type = "response", bias.adjust = TRUE, sigma = sd.total)
+total.SD = sqrt(0.89107^2 + 0.18396^2)
 ```
-These bias-adjusted results are close to the ones we obtained with the raw responses.
-
+Accordingly, here are the bias-adjusted estimates of the marginal probabilities:
+```{r}
+summary(emm, type = "response", bias.adjust = TRUE, sigma = total.SD)
+```
+These estimates are somewhat larger than the unadjusted estimates (actually, any estimates greater than 0.5 would have been adjusted downward). These adjusted estimates are more appropriate for describing the marginal incidence of CBPP for all herds. In fact, these estimates are fairly close to those obtained directly from the incidences in the data:
+```{r}
+cases <- with(cbpp, tapply(incidence, period, sum))
+trials <- with(cbpp, tapply(size, period, sum))
+cases / trials
+```
 
 [Back to Contents](#contents)
 

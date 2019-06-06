@@ -9,7 +9,7 @@ vignette: >
 ---
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
 require("emmeans") 
-options(show.signif.stars = FALSE) 
+options(show.signif.stars = FALSE, width = 100) 
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
 
@@ -27,7 +27,7 @@ all supported models is provided in the ["models" vignette](models.html).
  2. [Models with offsets](#offsets)
  3. [Ordinal models](#ordinal)
  4. [Models fitted using MCMC methods](#mcmc)
- 5. [Reference for supported models](models.html)
+
  
 [Index of all vignette topics](vignette-topics.html) 
 
@@ -261,19 +261,23 @@ To illustrate **emmeans**'s support for models fitted using MCMC methods,
 consider the `example_model` available in the **rstanarm** package. 
 The example concerns CBPP, a serious disease of cattle in Ethiopia.
 A generalized linear mixed model was fitted to the data using the
-code below. We subsequently obtain its reference grid in the usual way.
+code below. (This is a Bayesian equivalent of the frequentist model we
+considered in the ["Transformations" vignette](transformations.html#cbpp).)
+We subsequently obtain its reference grid in the usual way.
 <!--- I'm faking this; I actually saved the ref_grid in a system file --->
 ```{r eval = FALSE}
-example_model <- rstanarm::stan_glmer(
-    cbind(incidence, size - incidence) ~ size + period + (1|herd),
-    data = lme4::cbpp, family = binomial,
+cbpp <- transform(lme4::cbpp, unit = 1:56)
+cbpp.rstan <- rstanarm::stan_glmer(
+    cbind(incidence, size - incidence) ~ period + (1|herd) + (1|unit),
+    data = cbpp, family = binomial,
     chains = 2, cores = 1, seed = 12345, iter = 500)
-cbpp.rg <- ref_grid(example_model)
+cbpp.rg <- ref_grid(cbpp.rstan)
 ```
 <!--- here's the system file with the ref_grid --->
 ```{r echo = FALSE}
 cbpp.rg <- do.call(emmobj, 
-    readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
+    readRDS(system.file("extdata", "cbpprglist", package = "emmeans")))
+cbpp.sigma <- readRDS(system.file("extdata", "cbppsigma", package = "emmeans"))
 ```
 Here is the structure of the reference grid:
 ```{r}
@@ -303,19 +307,59 @@ summary(as.mcmc(period.emm))
 Note that `as.mcmc` will actually produce an `mcmc.list` when there is more than
 one chain present, as in this example.
 The 2.5th and 97.5th quantiles are similar, but not identical, to the
-95% confidence intervals in the frequentist summary. Here is a plot of
-the posterior EMMs, back-transformed:
+95% confidence intervals in the frequentist summary. 
+
+### Bias-adjusted incidence probabilities {#bias-adj-mcmc}
+<!-- @index Bias adjustment!in Bayesian models -->
+Next, let us consider the back-transformed results. As is discussed with the
+[frequentist model](transformations.html#cbpp), there are random effects present,
+and if wee want to think in terms of marginal probabilities across all herds and units,
+we should correct for bias; and to do that, we need the standard deviations of
+the random effects. The model object has MCMC results for the random effects of
+each herd and each unit, but after those, there are also summary results for the
+posterior SDs of the two random effects. (I used the `colnames` function to find
+that they are in the 78th and 79th columns.)
+<!-- We already read this in earlier, and here's the faked code -->
+```{r eval = FALSE}
+cbpp.sigma = as.matrix(cbpp.rstan$stanfit)[, 78:79]
+```
+Here are the first few:
 ```{r}
-bayesplot::mcmc_areas(as.mcmc(regrid(period.emm)))
+head(cbpp.sigma)
+```
+
+So to obtain bias-adjusted marginal probabilities, obtain the resultant SD
+and regrid with bias correction:
+```{r}
+totSD <- sqrt(apply(cbpp.sigma^2, 1, sum))
+cbpp.rgrd <- regrid(cbpp.rg, bias.adjust = TRUE, sigma = totSD)
+summary(cbpp.rgrd)
+```
+Here is a plot of
+the posterior incidence probabilities, back-transformed:
+```{r}
+bayesplot::mcmc_areas(as.mcmc(cbpp.rgrd))
 ```
 
 ... and here are intervals for each period compared with its neighbor:
 ```{r}
-contrast(period.emm, "consec", reverse = TRUE)
+contrast(cbpp.rgrd, "consec", reverse = TRUE)
 ```
 The only interval that excludes zero is the one that compares periods 1 and 2.
 
-In summary, to do Bayesian analysis in the **emmeans** package, use the same tools that are available for other models, extract the MCMC samples using `as.mcmc()`, and summarize or plot from there.
+### Bayesian prediction {#predict-mcmc}
+<!-- @index Prediction!Bayesian models; 
+            Prediction!Posterior predictive distribution -->
+To predict from an MCMC model, just specify the
+`likelihood` argument in `as.mcmc`. Doing so causes the function to
+simulate data from the posterior predictive distribution. 
+For example, if we want to predict the CBPP incidence in future herds of 
+25 cattle, we can do:
+```{r}
+set.seed(2019.0605)
+cbpp.preds <- as.mcmc(cbpp.rgrd, likelihood = "binomial", trials = 25)
+bayesplot::mcmc_hist(cbpp.preds, binwidth = 1)
+```
 
 [Back to Contents](#contents)
 

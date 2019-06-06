@@ -29,7 +29,6 @@ vignette: >
       * [versus *post hoc* comparisons](FAQs.html#anova)
       * [Type III](confidence-intervals.html#joint_tests)
   * [`aovList` objects](models.html#V)
-  * [Arithmetic means](transformations.html#bias-adj)
   * [`as.data.frame()`](utilities.html#data)
   * `as.mcmc()`
       * [in *models: S*](models.html#S)
@@ -52,7 +51,11 @@ vignette: >
   * [**bayesplot** package](sophisticated.html#bayesxtra)
   * [Beta regression](models.html#B)
   * [`betareg` models](models.html#B)
-  * [Bias adjustment when back-transforming](transformations.html#bias-adj)
+  * Bias adjustment
+      * [For link functions vs. response transformations](transformations.html#link-bias)
+      * [in Bayesian models](sophisticated.html#bias-adj-mcmc)
+      * [In GLMMs and GEE models](transformations.html#link-bias)
+      * [When back-transforming](transformations.html#bias-adj)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
   * [`boot-satterthwaite` method](models.html#K)
   * [`[ ]` and `[[ ]]` operators](utilities.html#brackets)
@@ -170,9 +173,11 @@ vignette: >
   * Examples
       * [`auto.noise`](interactions.html#factors)
       * [Bayesian model](sophisticated.html#mcmc)
-      * [`cbpp`](sophisticated.html#mcmc)
+      * `cbpp`
+          * [in *sophisticated: mcmc*](sophisticated.html#mcmc)
+          * [in *transformations: cbpp*](transformations.html#cbpp)
       * [`cows`](messy-data.html#cows)
-      * [`feedlot`](transformations.html#feedlot)
+      * [`feedlot`](predictions.html#feedlot)
       * [`fiber`](interactions.html#covariates)
       * [`framing`](messy-data.html#mediators)
       * [Gamma regression](transformations.html#tranlink)
@@ -398,6 +403,15 @@ vignette: >
   * Pooled *t*
       * [Instead of Welch's *t*](FAQs.html#nowelch)
   * [`postGridHook`](xtending.html#hooks)
+  * Prediction
+      * [Bayesian models](sophisticated.html#predict-mcmc)
+      * [Posterior predictive distribution](sophisticated.html#predict-mcmc)
+      * [Reference grid](predictions.html#ref-grid)
+  * Predictions
+      * [Bayesian models](predictions.html#bayes)
+      * [Error SD](predictions.html#sd-estimate)
+      * [on Particular strata](predictions.html#strata)
+      * [Total SD](predictions.html#feedlot)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
   * [`pwpp()`](comparisons.html#pwpp)
 
@@ -432,6 +446,7 @@ vignette: >
       * [`offset`](sophisticated.html#offsets)
   * [Reference grids](basics.html#ref_grid)
       * [Altering](basics.html#altering)
+      * [Prediction on](predictions.html#ref-grid)
   * [Registering `recover_data` and `emm_basis` methods](xtending.html#exporting)
   * [`regrid()`](transformations.html#regrid)
       * [`transform = "log"`](transformations.html#logs)
@@ -504,6 +519,7 @@ vignette: >
       * [Log](comparisons.html#logs)
       * [Overview](transformations.html#overview)
       * [Re-gridding](transformations.html#regrid)
+      * [Response versus link functions](transformations.html#link-bias)
       * [Timing is everything](transformations.html#timing)
   * Trends
       * [Estimating and comparing](interactions.html#oranges)
@@ -543,6 +559,7 @@ vignette: >
       * [Interactions](interactions.html)
       * [Messy data](messy-data.html)
       * [Models](models.html)
+      * [Predictions](predictions.html)
       * [Sophisticated models](sophisticated.html)
       * [Transformations and link functions](transformations.html)
       * [Utilities and options](utilities.html)

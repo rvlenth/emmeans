@@ -126,6 +126,13 @@
 #'   on the scale of the linear predictor, not the inverse-transformed one.
 #'   Similarly, confidence intervals are computed on the linear-predictor scale,
 #'   then inverse-transformed.
+#'   
+#'   When \code{bias.adjust} is \code{TRUE}, then back-transformed estimates
+#'   are adjusted by adding 
+#'   \eqn{0.5 h''(u)\sigma^2}, where \eqn{h} is the inverse transformation and
+#'   \eqn{u} is the linear predictor. This is based on a second-order Taylor
+#'   expansion. There are better or exact adjustments for certain specific
+#'   cases, and these may be incorporated in future updates.
 #' 
 #' @section P-value adjustments:
 #'   The \code{adjust} argument specifies a multiplicity adjustment for tests or
@@ -275,7 +282,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
         sigma = object@misc$sigma
 
     if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
-        return (hpd.summary(object, prob = level, by = by, type = type, sigma = sigma, ...))
+        return (hpd.summary(object, prob = level, by = by, type = type, 
+                            bias.adjust = bias.adjust, sigma = sigma, ...))
     
     # Any "summary" options override built-in
     opt = get_emm_option("summary")
@@ -530,7 +538,8 @@ predict.emmGrid <- function(object, type,
     if (interval %in% c( "confidence", "prediction")) {
         if (interval == "prediction")
             object@misc$.predFlag = TRUE
-        return(confint.emmGrid(object, type = type, level = level, ...))
+        return(confint.emmGrid(object, type = type, level = level, 
+                               bias.adjust = bias.adjust, sigma = sigma, ...))
     }
     
     if (missing(type))
@@ -678,6 +687,8 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 }
 
 # patch-in alternative back-transform stuff for bias adjustment
+# Currently, we just use a 2nd-order approx for everybody:
+#   E(h(nu + E))  ~=  h(nu) + 0.5*h"(nu)*var(E)
 .make.bias.adj.link = function(link, sigma) {
     if (is.null(sigma))
         stop("Must specify 'sigma' to obtain bias-adjusted back transformations", call. = FALSE)

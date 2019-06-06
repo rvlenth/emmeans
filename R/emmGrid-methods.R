@@ -615,14 +615,18 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
     }
     
     if(transform %in% c("response", "mu", "unlink", "log") && !is.null(object@misc$tran)) {
-        link = attr(est, "link")
+        flink = link = attr(est, "link")
         if (bias.adjust) {
             if(missing(sigma))
                 sigma = object@misc$sigma
             link = .make.bias.adj.link(link, sigma)
+            if (!is.na(PB[1])) # special frequentist version when sigma is MCMC sample
+                flink = .make.bias.adj.link(flink, mean(sigma))
+            else
+                flink = link
         }
-        D = .diag(link$mu.eta(object@bhat[estble]))
-        object@bhat = link$linkinv(object@bhat)
+        D = .diag(flink$mu.eta(object@bhat[estble]))
+        object@bhat = flink$linkinv(object@bhat)
         object@V = D %*% tcrossprod(object@V, D)
         if (!is.na(PB[1]))
             PB = matrix(link$linkinv(PB), ncol = ncol(PB))

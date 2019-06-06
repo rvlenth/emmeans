@@ -207,6 +207,13 @@ The default \code{show} method for \code{emmGrid} objects (with the
   on the scale of the linear predictor, not the inverse-transformed one.
   Similarly, confidence intervals are computed on the linear-predictor scale,
   then inverse-transformed.
+  
+  When \code{bias.adjust} is \code{TRUE}, then back-transformed estimates
+  are adjusted by adding 
+  \eqn{0.5 h''(u)\sigma^2}, where \eqn{h} is the inverse transformation and
+  \eqn{u} is the linear predictor. This is based on a second-order Taylor
+  expansion. There are better or exact adjustments for certain specific
+  cases, and these may be incorporated in future updates.
 }
 
 \section{P-value adjustments}{
