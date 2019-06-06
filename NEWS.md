@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.3.4.0999xxx
+emmeans 1.3.5
 -------------
 
    * First steps to take prediction seriously. This includes

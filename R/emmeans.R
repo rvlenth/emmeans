@@ -238,6 +238,7 @@ emmeans = function(object, specs, by = NULL,
     if(!is(object, "emmGrid")) {
         object = ref_grid(object, ...)
     }
+    options$type = list(...)$type  # note type if in ...
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
                              contr = contr, weights = weights, ...))

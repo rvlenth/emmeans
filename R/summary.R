@@ -96,6 +96,8 @@
 #'   \code{type = "response"} and a transformation
 #'   is in effect), or for constructing prediction intervals. If not specified,
 #'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the number of rows
+#'   of the reference grid.
 #' @param ... (Not used by \code{summary.emmGrid}.) In
 #'   \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, \code{predict.emmGrid}, and 
 #'   \code{test.emmGrid}, these arguments are passed to

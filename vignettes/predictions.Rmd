@@ -88,7 +88,7 @@ summary(feedlot.rg)  ## point predictions
 
 Now, as advised, let's look at the SDs involved in this model:
 ```{r}
-VarCorr(feedlot.lmer)  ## for the model
+lme4::VarCorr(feedlot.lmer)  ## for the model
 feedlot.rg@misc$sigma  ## default in the ref. grid
 ```
 So the residual SD will be assumed in our prediction intervals 

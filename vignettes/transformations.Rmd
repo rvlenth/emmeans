@@ -360,7 +360,7 @@ summary(emm, type = "response")
 ```
 The above summary reflects the back-transformed estimates, with no bias adjustment. However, the model estimates two independent sources of random variation that probably should be taken into account:
 ```{r}
-VarCorr(cbpp.glmer)
+lme4::VarCorr(cbpp.glmer)
 ```
 Notably, the over-dispersion SD is considerably greater than the herd SD.
 Suppose we want to estimate the marginal probabilities of CBPP incidence,

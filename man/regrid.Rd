@@ -31,6 +31,15 @@ updated with the given type to use by default by \code{summary.emmGrid}
 (see \code{\link{update.emmGrid}}).  This may be useful if, for example,
 when one specifies \code{transform = "log"} but desires summaries to be
 produced by default on the response scale.}
+
+\item{bias.adjust}{Logical value for whether to adjust for bias in
+back-transforming (\code{transform = "response"}). This requires a value of 
+\code{sigma} to exist in the object or be specified.}
+
+\item{sigma}{Error SD assumed for bias correction (when 
+\code{transform = "response"} and a transformation
+is in effect). If not specified,
+\code{object@misc$sigma} is used, and an error is thrown if it is not found.}
 }
 \value{
 An \code{emmGrid} object with the requested changes

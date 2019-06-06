@@ -546,6 +546,13 @@ emm_defaults = list (
 #'   (see \code{\link{update.emmGrid}}).  This may be useful if, for example,
 #'   when one specifies \code{transform = "log"} but desires summaries to be
 #'   produced by default on the response scale.
+#' @param bias.adjust Logical value for whether to adjust for bias in
+#'   back-transforming (\code{transform = "response"}). This requires a value of 
+#'   \code{sigma} to exist in the object or be specified.
+#' @param sigma Error SD assumed for bias correction (when 
+#'   \code{transform = "response"} and a transformation
+#'   is in effect). If not specified,
+#'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
 #'   
 #' @note Another way to use \code{regrid} is to supply a \code{transform} 
 #'   argument to \code{\link{ref_grid}} (either directly of indirectly via

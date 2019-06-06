@@ -166,9 +166,20 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #' @param type prediction type as in \code{\link{summary.emmGrid}}
 #' @param point.est function to use to compute the point estimates from the 
 #'   posterior sample for each grid point
+#' @param bias.adjust Logical value for whether to adjust for bias in
+#'   back-transforming (\code{type = "response"}). This requires a value of 
+#'   \code{sigma} to exist in the object or be specified.
+#' @param sigma Error SD assumed for bias correction (when 
+#'   \code{type = "response"}. If not specified,
+#'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the 
+#'   number of observations in the posterior sample.
 #' @param ... required but not used
 #'
 #' @return an object of class \code{summary_emm}
+#' 
+#' @seealso summary.emmGrid
+#' 
 #' @export
 #'
 #' @examples

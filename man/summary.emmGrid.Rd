@@ -95,7 +95,9 @@ back-transforming (\code{type = "response"}). This requires a value of
 \item{sigma}{Error SD assumed for bias correction (when 
 \code{type = "response"} and a transformation
 is in effect), or for constructing prediction intervals. If not specified,
-\code{object@misc$sigma} is used, and an error is thrown if it is not found.}
+\code{object@misc$sigma} is used, and an error is thrown if it is not found.
+\emph{Note:} `sigma` may be a vector, as long as it conforms to the number of rows
+of the reference grid.}
 
 \item{...}{(Not used by \code{summary.emmGrid}.) In
 \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, \code{predict.emmGrid}, and 
