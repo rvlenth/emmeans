@@ -96,7 +96,7 @@ back-transforming (\code{type = "response"}). This requires a value of
 \code{type = "response"} and a transformation
 is in effect), or for constructing prediction intervals. If not specified,
 \code{object@misc$sigma} is used, and an error is thrown if it is not found.
-\emph{Note:} `sigma` may be a vector, as long as it conforms to the number of rows
+\emph{Note:} \code{sigma} may be a vector, as long as it conforms to the number of rows
 of the reference grid.}
 
 \item{...}{(Not used by \code{summary.emmGrid}.) In

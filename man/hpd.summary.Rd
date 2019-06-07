@@ -46,7 +46,7 @@ may be called independently, it is called utomatically by the S3 method
 if(require("coda")) {
   # Create an emmGrid object from a system file
   cbpp.rg <- do.call(emmobj, 
-      readRDS(system.file("extdata", "cbpprglist", package = "emmeans")))
+      readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
   hpd.summary(emmeans(cbpp.rg, "period"))
 }
 

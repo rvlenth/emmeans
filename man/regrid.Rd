@@ -40,6 +40,8 @@ back-transforming (\code{transform = "response"}). This requires a value of
 \code{transform = "response"} and a transformation
 is in effect). If not specified,
 \code{object@misc$sigma} is used, and an error is thrown if it is not found.}
+
+\item{...}{Ignored.}
 }
 \value{
 An \code{emmGrid} object with the requested changes

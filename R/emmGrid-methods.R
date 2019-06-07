@@ -553,6 +553,7 @@ emm_defaults = list (
 #'   \code{transform = "response"} and a transformation
 #'   is in effect). If not specified,
 #'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#' @param ... Ignored.
 #'   
 #' @note Another way to use \code{regrid} is to supply a \code{transform} 
 #'   argument to \code{\link{ref_grid}} (either directly of indirectly via
