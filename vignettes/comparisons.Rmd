@@ -172,7 +172,7 @@ that increase linearly. It *does* test the linear trend, however.
             `eff` contrasts; `consec` contrasts -->
 There are a number of other named contrast methods, for example `"trt.vs.ctrl"`,
 `"eff"`, and `"consec"`. The `"pairwise"` and `"revpairwise"` methods in `contrast()` are the same as `Pairs()` and `pairs(..., reverse = TRUE)`. See
-[help("contrast-methods")](../html/emmc-functions.html) for details.
+`help("contrast-methods")` for details.
 
 [Back to Contents](#contents)
 

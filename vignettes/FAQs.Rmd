@@ -87,7 +87,7 @@ can guide you in what post-hoc tests would make sense. See the
 <!-- @index Covariates!Interacting with factors -->
 This is a situation where it may well be appropriate to compare the
 slopes of trend lines, rather than the EMMs. See the 
-[help page for `emtrends()`](../doc/emtrends.html) and the discussion of this
+`help("emtrends"()`")` and the discussion of this
 topic in [the "interactions" vignette](interactions.html#covariates)
 
 ## I have covariate(s) and am fitting a polynomial model {#polys}

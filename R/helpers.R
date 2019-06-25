@@ -376,7 +376,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
     mode = match.arg(mode)
     if (mode == "auto")
         mode = ifelse(is.null(object$apVar), "df.error", "satterthwaite")
-    if (is.null(object$apVar))
+    if (!is.matrix(object$apVar))
         mode = "df.error"
     if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
         if (mode == "boot-satterthwaite") {

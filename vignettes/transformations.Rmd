@@ -230,7 +230,7 @@ One may also use `"unlink"` as a `transform` argument in `regrid()` or through
 <!-- @index Transformations!Custom; `make.tran()` -->
 The `make.tran()` function provides several special transformations and sets
 things up so they can be handled in **emmeans** with relative ease. 
-(See [`help("make.tran", "emmeans")](../html/make.tran.html) for descriptions
+(See `help("make.tran", "emmeans")` for descriptions
 of what is available.) `make.tran()` works much like `stats::make.link()` in
 that it returns a list of functions `linkfun()`, `linkinv()`, etc. that serve
 in managing results on a transformed scale. The difference is that most 

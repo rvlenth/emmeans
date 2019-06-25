@@ -97,7 +97,7 @@ the data used in fitting the model, and then obtain a matrix of linear
 functions of the regression coefficients for a given grid of predictor
 values. These tasks are performed by calls to \code{recover_data} and
 \code{emm_basis} respectively. A vignette giving details and examples
-is available via \href{../doc/extending.pdf}{vignette("extending", "emmeans")}
+is available via \href{../doc/xtending.html}{vignette("xtending", "emmeans")}
 
 To extend \pkg{emmeans}'s support to additional model types, one need only
 write S3 methods for these two functions. The existing methods serve as
@@ -160,5 +160,5 @@ should return a suitably modified \code{emmGrid} object.
 }
 
 \seealso{
-\href{../doc/extending.pdf}{Vignette on extending emmeans}
+\href{../doc/xtending.html}{Vignette on extending emmeans}
 }

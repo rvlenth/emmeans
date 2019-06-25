@@ -1,5 +1,10 @@
 ## NEWS for the emmeans package
 
+emmeans 1.3.5.099xxxx
+-------------
+  * Bug fix for `gls` objects with non-matrix `apVar` member (#119)
+
+
 emmeans 1.3.5
 -------------
 

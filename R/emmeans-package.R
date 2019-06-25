@@ -34,8 +34,7 @@
 #' @section Overview:
 #' \describe{
 #' \item{Vignettes}{A number of vignettes are provided to help the user get
-#' acquainted with the \pkg{emmeans} package and see some examples. 
-#' See the \href{../doc/index.html}{vignette index}.}
+#' acquainted with the \pkg{emmeans} package and see some examples.}
 #' 
 #' \item{Concept}{Estimated marginal means (see Searle \emph{et al.} 1980 are
 #' popular for summarizing linear models that include factors. For balanced
@@ -116,7 +115,7 @@
 #' @import mvtnorm
 #' @import stats
 #' @importFrom graphics pairs plot
-#' @importFrom methods as is new slot slot<- slotNames
+#' @importFrom methods as is new slot slot<- slotNames 
 #' @importFrom utils installed.packages methods str
 #' @name emmeans-package
 NULL
