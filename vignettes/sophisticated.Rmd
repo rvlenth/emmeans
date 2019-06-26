@@ -348,8 +348,8 @@ contrast(cbpp.rgrd, "consec", reverse = TRUE)
 The only interval that excludes zero is the one that compares periods 1 and 2.
 
 ### Bayesian prediction {#predict-mcmc}
-<!-- @index Prediction!Bayesian models; 
-            Prediction!Posterior predictive distribution -->
+<!-- @index Predictions!Bayesian models; 
+            Predictions!Posterior predictive distribution -->
 To predict from an MCMC model, just specify the
 `likelihood` argument in `as.mcmc`. Doing so causes the function to
 simulate data from the posterior predictive distribution. 

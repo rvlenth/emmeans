@@ -27,7 +27,7 @@ In this vignette, we discuss **emmeans**'s rudimentary capabilities for construc
 [Index of all vignette topics](vignette-topics.html) 
 
 ##  Focus on reference grids {#ref-grid}
-<!-- @index Prediction!Reference grid; Reference grids!Prediction on -->
+<!-- @index Predictions!Reference grid; Reference grids!Prediction on -->
 Prediction is not the central purpose of the **emmeans** package. Even its name
 refers to the idea of obtaining marginal averages of fitted values; and it is a
 rare situation where one would want to make a prediction of the average of

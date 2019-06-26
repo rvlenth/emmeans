@@ -403,14 +403,14 @@ vignette: >
   * Pooled *t*
       * [Instead of Welch's *t*](FAQs.html#nowelch)
   * [`postGridHook`](xtending.html#hooks)
-  * Prediction
-      * [Bayesian models](sophisticated.html#predict-mcmc)
-      * [Posterior predictive distribution](sophisticated.html#predict-mcmc)
-      * [Reference grid](predictions.html#ref-grid)
   * Predictions
-      * [Bayesian models](predictions.html#bayes)
+      * Bayesian models
+          * [in *predictions: bayes*](predictions.html#bayes)
+          * [in *sophisticated: predict-mcmc*](sophisticated.html#predict-mcmc)
       * [Error SD](predictions.html#sd-estimate)
       * [on Particular strata](predictions.html#strata)
+      * [Posterior predictive distribution](sophisticated.html#predict-mcmc)
+      * [Reference grid](predictions.html#ref-grid)
       * [Total SD](predictions.html#feedlot)
   * [`print.summary_emm()`](confidence-intervals.html#emmobj)
   * [`pwpp()`](comparisons.html#pwpp)
