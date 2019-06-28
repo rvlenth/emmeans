@@ -387,52 +387,20 @@ To make the methods available to users of your package, the methods must be expo
 R and CRAN are evolving in a way that having S3 methods in the registry is
 increasingly important; so it is a good idea to provide for that.
 The problem is not all of your package users will have **emmeans** installed.
-Thus, registering the methods must be done conditionally.
 
-One solution is to list `emmeans` and `estimability` in the `Imports` field of your `DESCRIPTION` file.
-Then, in the package `NAMESPACE` file, insert something like the following,
-replacing "foo" with your object class name:
+Thus, registering the methods must be done conditionally. We provide a
+courtesy function `.emm_register()` to make this simple. 
+If the name of your model class is `foo`, add or modify the
+`.onLoad` function in your package (traditionally saved in the source file `zzz.R`):
 ```r
-if (requireNamespace("emmeans", quietly = TRUE)) {
-    importFrom("emmeans", "recover_data", "emm_basis")
-    importFrom("estimability", "all.estble", "nonest.basis")
-    S3method(recover_data, foo)
-    S3method(emm_basis, foo)
-}
-```
-(You can get by without testing **estimability** since it is already required by **emmeans**.)
-
-The disadvantage of the above solution is that it adds several other packages as
-dependencies. An alternative method that avoids those extra dependencies is as follows:
-Put `emmeans` and
-`estimability` in `Suggests` rather than `Imports`, and add code to
-*dynamically* register the methods to one of your R source files (typically one
-named `zzz.R`, the last source file to be read). Put code like this there:
-```r
-register_s3_method <- function(pkg, generic, class) {
-    fun <- get(paste0(generic, ".", class), envir = parent.frame())
-    if (isNamespaceLoaded(pkg))
-        registerS3method(generic, class, fun, envir = asNamespace(pkg))
-    # Also ensure registration is done if pkg is loaded later:
-    setHook(
-        packageEvent(pkg, "onLoad"),
-        function(...)
-            registerS3method(generic, class, fun, envir = asNamespace(pkg))
-    )
-}
-
 .onLoad <- function(libname, pkgname) {
-    if (requireNamespace("emmeans", quietly = TRUE)) {
-        register_s3_method("emmeans", "recover_data", "foo")
-        register_s3_method("emmeans", "emm_basis", "foo")
-    }
+    if (requireNamespace("emmeans", quietly = TRUE))
+        emmeans::.emm_register("foo", pkgname)
 }
 
 ```
-This code is adapted and simplified from the **hms** package. The original
-`register_s3_method` function is more general and includes type-checking
-of its arguments; but since this is just used internally, that checking
-seems unnecessary.
+You should also add `emmeans (> 1.3.5.1)` and `estimability` (which is required by **emmeans**)
+to the `Suggests` field of your `DESCRIPTION` file.
 
 
 [Back to Contents](#contents)

@@ -1,5 +1,13 @@
 ## NEWS for the emmeans package
 
+
+emmeans 1.3.5.1099xxx
+-------------
+
+  * Added a courtesy function `.emm_register()` to make it easier for other
+    packages to register their **emmeans** support methods
+    
+
 emmeans 1.3.5.1
 -------------
   * Bug fix for `gls` objects with non-matrix `apVar` member (#119)
