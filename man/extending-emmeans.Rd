@@ -21,7 +21,7 @@ emm_basis(object, trms, xlev, grid, ...)
 
 .emm_basis(object, trms, xlev, grid, ...)
 
-.emm_register(class, pkgname)
+.emm_register(classes, pkgname)
 }
 \arguments{
 \item{object}{An object of the same class as is supported by a new method.}
@@ -49,7 +49,9 @@ factors in the model formula)}
 \item{grid}{A \code{data.frame} (provided by \code{ref_grid}) containing 
 the predictor settings needed in the reference grid}
 
-\item{class}{Character name of the class to be registered}
+\item{classes}{Character names of one or more classes to be registered.
+The package must contain the functions \code{recover_data.foo} and
+\code{emm_basis.foo} for each class \code{foo} listed in \code{classes}.}
 
 \item{pkgname}{Character name of package providing the methods (usually
 should be the second argument of \code{.onLoad})}
@@ -179,11 +181,11 @@ installed. See the example.
 
 \examples{
 \dontrun{
-#--- If your package provides recover_data and emm_grid methods for class 'foo',
+#--- If your package provides recover_data and emm_grid methods for class 'mymod',
 #--- put something like this in your package code -- say in zzz.R:
   .onLoad = function(libname, pkgname) {
     if (requireNamespace("emmeans", quietly = TRUE))
-      emmeans::.emm_register("foo", pkgname)
+      emmeans::.emm_register("mymod", pkgname)
   }
 }
 }

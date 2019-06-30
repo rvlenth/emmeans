@@ -390,12 +390,15 @@ The problem is not all of your package users will have **emmeans** installed.
 
 Thus, registering the methods must be done conditionally. We provide a
 courtesy function `.emm_register()` to make this simple. 
-If the name of your model class is `foo`, add or modify the
+Suppose that your package offers two model classes `foo` and `bar`, and it
+includes the corresponding functions `recover_data.foo`, `recover_data.bar`,
+`emm_basis.foo`, and `emm_basis.bar`.
+Then to register these methods, add or modify the
 `.onLoad` function in your package (traditionally saved in the source file `zzz.R`):
 ```r
 .onLoad <- function(libname, pkgname) {
     if (requireNamespace("emmeans", quietly = TRUE))
-        emmeans::.emm_register("foo", pkgname)
+        emmeans::.emm_register(c("foo", "bar"), pkgname)
 }
 
 ```

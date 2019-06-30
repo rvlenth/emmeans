@@ -91,7 +91,9 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 #' \code{.onLoad} function and call \code{.emm_register} if \pkg{emmeans} is
 #' installed. See the example.
 #'
-#' @param class Character name of the class to be registered
+#' @param classes Character names of one or more classes to be registered.
+#'   The package must contain the functions \code{recover_data.foo} and
+#'   \code{emm_basis.foo} for each class \code{foo} listed in \code{classes}.
 #' @param pkgname Character name of package providing the methods (usually
 #'    should be the second argument of \code{.onLoad})
 #'
@@ -99,17 +101,19 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 #'
 #' @examples
 #' \dontrun{
-#' #--- If your package provides recover_data and emm_grid methods for class 'foo',
+#' #--- If your package provides recover_data and emm_grid methods for class 'mymod',
 #' #--- put something like this in your package code -- say in zzz.R:
 #'   .onLoad = function(libname, pkgname) {
 #'     if (requireNamespace("emmeans", quietly = TRUE))
-#'       emmeans::.emm_register("foo", pkgname)
+#'       emmeans::.emm_register("mymod", pkgname)
 #'   }
 #' }
-.emm_register = function(class, pkgname) {
+.emm_register = function(classes, pkgname) {
     envir = asNamespace(pkgname)
-    register_s3_method("emmeans", "recover_data", class, envir)
-    register_s3_method("emmeans", "emm_basis", class, envir)
+    for (class in classes) {
+        register_s3_method("emmeans", "recover_data", class, envir)
+        register_s3_method("emmeans", "emm_basis", class, envir)
+    }
 }
 
 ## Here is a utility that we won't export, but can help clean out lsmeans
