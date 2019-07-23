@@ -485,8 +485,11 @@ vignette: >
   * [Subsets of data](FAQs.html#model)
   * [`summary()`](confidence-intervals.html#summary)
       * [`adjust`](comparisons.html#pairwise)
-      * [Bayesian models](models.html#S)
+      * Bayesian models
+          * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
+          * [in *models: S*](models.html#S)
       * [HPD intervals](sophisticated.html#mcmc)
+      * [`hpd.summary()`](confidence-intervals.html#summary)
       * `infer`
           * [in *comparisons: pairwise*](comparisons.html#pairwise)
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)

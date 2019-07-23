@@ -73,7 +73,8 @@ annotations.
 
 ## `summary()` and its relatives {#summary}
 <!-- @index `summary()`; `summary()`!`infer`; `confint()`; `test()`; Confidence intervals;
-            Tests!One- and two-sided; Tests!Nonzero null -->
+            Tests!One- and two-sided; Tests!Nonzero null;
+            `summary()`!Bayesian models; `summary()`!`hpd.summary()` -->
 As you may have gathered, the most important method for `emmGrid` objects is `summary()`.
 It has a lot of options, and the detailed documentation via 
 `help("summary.emm")` is worth a look.
@@ -81,7 +82,10 @@ It has a lot of options, and the detailed documentation via
 Just `summary(<object>)` by itself will produce a summary that varies somewhat
 according to context. It does this by setting different defaults for the `infer`
 argument, which consists of two logical values, specifying confidence intervals 
-and tests, respectively. 
+and tests, respectively. [The exception is models fitted using MCMC methods,
+where `summary()` is diverted to the `hpd.summary()` function, a 
+preferable summary for many Bayesians.]
+
 The summary of a newly made reference grid will show just estimates and
 standard errors, but not confidence intervals or tests (that is, `infer =
 c(FALSE, FALSE)`). The summary of an `emmeans()` result, as we see above, will

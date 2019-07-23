@@ -8,8 +8,8 @@
 emmip(object, formula, ...)
 
 \method{emmip}{default}(object, formula, type, CIs = FALSE,
-  engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9,
-  10, 15:20), lty = 1, col = NULL, plotit = TRUE, ...)
+  PIs = FALSE, engine = get_emm_option("graphics.engine"), pch = c(1,
+  2, 6, 7, 9, 10, 15:20), lty = 1, col = NULL, plotit = TRUE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}, or a fitted model of a class
@@ -24,6 +24,7 @@ or a combination of factors using the \code{*} operator.}
 
 \item{...}{Additional arguments passed to \code{\link{emmeans}} (when
 \code{object} is not already an \code{emmGrid} object),
+\code{predict.emmGrid},
 \code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.}
 
 \item{type}{As in \code{\link{predict.emmGrid}}, this determines
@@ -35,6 +36,14 @@ whether we want to inverse-transform the predictions
 \item{CIs}{Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
 for Bayesian models) are added to the plot 
 (works only with \code{engine = "ggplot"}).}
+
+\item{PIs}{Logical value. If \code{TRUE}, prediction intervals are added to the plot 
+(works only with \code{engine = "ggplot"}). If both \code{CIs} and
+\code{CIs} are \code{TRUE}, the prediction intervals will be somewhat
+longer, lighter, and thinner than the confidence intervals. Additional
+parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed via
+\code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 
+a value for \code{sigma}.}
 
 \item{engine}{Character value matching \code{"ggplot"} (default) or 
 \code{"lattice"}. The graphics engine to be used to produce the plot.

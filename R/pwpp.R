@@ -143,8 +143,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
     
 ########## The rest should probably be done in a separate function ################
     
-    if (!requireNamespace("ggplot2", quietly = TRUE))
-        stop ("pwpp requires the 'ggplot2' package be installed.", call. = FALSE)
+    .requireNS("ggplot2", 
+               "pwpp requires the 'ggplot2' package be installed.", call. = FALSE)
     
         # granulate values in each group so they won't overlap
         # do this on the transformed (plotted) scale
@@ -198,8 +198,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         else
             lpad = 0
         
-        if (!requireNamespace("scales", quietly = TRUE))
-            stop ("pwpp requires the 'scales' package be installed.", call. = FALSE)
+        .requireNS("scales", 
+                   "pwpp requires the 'scales' package be installed.", call. = FALSE)
         .pvtrans = scales::trans_new("Scaled P value", 
                                      transform = function(x) .pval.tran(x), 
                                      inverse = function(p) .pval.inv(p),

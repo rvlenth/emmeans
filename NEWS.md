@@ -6,6 +6,12 @@ emmeans 1.3.5.1099xxx
 
   * Added a courtesy function `.emm_register()` to make it easier for other
     packages to register their **emmeans** support methods
+  * Clarified the "confidence intervals" vignette discussion of `infer`,
+    explaining that Bayesian models are handled differently (#128)
+  * Added `PIs` option to `plot.emmGrid()` and `emmip()` (#131). Also, in
+    `plot.emmGrid()`, the `intervals` argument has been changed to `CIs`
+    for sake of consistency and less confusion; `intervals` is still
+    supported for backaward compatibility.
     
 
 emmeans 1.3.5.1

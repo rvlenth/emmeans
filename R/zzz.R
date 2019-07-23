@@ -69,11 +69,11 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 }
 
 .onLoad = function(libname, pkgname) {
-    if (requireNamespace("coda", quietly = TRUE)) {
+    if (.requireNS("coda", fail = .nothing)) {
         register_s3_method("coda", "as.mcmc", "emmGrid")
         register_s3_method("coda", "as.mcmc.list", "emmGrid")
     }
-    if (requireNamespace("multcomp", quietly = TRUE)) {
+    if (.requireNS("multcomp", fail = .nothing)) {
         register_s3_method("multcomp", "glht", "emmlf")
         register_s3_method("multcomp", "glht", "emmGrid")
         register_s3_method("multcomp", "cld", "emmGrid")

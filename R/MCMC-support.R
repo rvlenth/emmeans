@@ -197,8 +197,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         stop("Prediction intervals for MCMC models should be done using 'frequentist = TRUE'\n",
              "or using 'as.mcmc(object, ..., likelihood = ...)'")
     
-    if (!requireNamespace("coda"))
-        stop("Bayesian summary requires the 'coda' package")
+    .requireNS("coda", "Bayesian summary requires the 'coda' package")
     ### require("coda") ### Nope this is a CRAN no-no
     
     # Steal some init code from summary.emmGrid:

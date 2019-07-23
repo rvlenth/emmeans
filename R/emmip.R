@@ -49,6 +49,13 @@ emmip = function(object, formula, ...) {
 #' @param CIs Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
 #'   for Bayesian models) are added to the plot 
 #'   (works only with \code{engine = "ggplot"}).
+#' @param PIs Logical value. If \code{TRUE}, prediction intervals are added to the plot 
+#'   (works only with \code{engine = "ggplot"}). If both \code{CIs} and
+#'   \code{CIs} are \code{TRUE}, the prediction intervals will be somewhat
+#'   longer, lighter, and thinner than the confidence intervals. Additional
+#'   parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed via
+#'   \code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 
+#'   a value for \code{sigma}.
 #' @param engine Character value matching \code{"ggplot"} (default) or 
 #'   \code{"lattice"}. The graphics engine to be used to produce the plot.
 #'   These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
@@ -63,6 +70,7 @@ emmip = function(object, formula, ...) {
 #'   object and print it, perhaps after additional manipulation.
 #' @param ... Additional arguments passed to \code{\link{emmeans}} (when
 #'   \code{object} is not already an \code{emmGrid} object),
+#'   \code{predict.emmGrid},
 #'   \code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.
 #'   
 #' @section Details:
@@ -112,15 +120,18 @@ emmip = function(object, formula, ...) {
 #' # Individual traces in panels
 #' emmip(noise.lm, ~ size | type * side)
 #'
-emmip.default = function(object, formula, type, CIs = FALSE, 
+emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
                          engine = get_emm_option("graphics.engine"),
                          pch = c(1,2,6,7,9,10,15:20), 
                          lty = 1, col = NULL, plotit = TRUE, ...) {
     engine = match.arg(engine, c("ggplot", "lattice"))
-    if ((engine == "ggplot") && !requireNamespace("ggplot2", quietly = TRUE))
-        stop("The 'ggplot' engine requires the 'ggplot2' package be installed.")
-    if ((engine == "lattice") && !requireNamespace("lattice", quietly = TRUE))
-        stop("The 'lattice' engine requires the 'lattice' package be installed.")
+    if (engine == "ggplot")
+        .requireNS("ggplot2",
+                   "The 'ggplot' engine requires the 'ggplot2' package be installed.")
+    if (engine == "lattice")
+        .requireNS("lattice", 
+                "The 'lattice' engine requires the 'lattice' package be installed.")
+    
     specs = .parse.by.formula(formula) # list of lhs, rhs, by
     
     # Glean the parts of ... to use in emmeans call
@@ -148,6 +159,11 @@ emmip.default = function(object, formula, type, CIs = FALSE,
     type = .validate.type(type)
     
     emms = summary(emmo, type = type, infer = c(CIs, F))
+    if(PIs) {
+        prd = predict(emmo, interval = "pred", ...)
+        emms$LPL = prd$lower.PL
+        emms$UPL = prd$upper.PL
+    }
     # Ensure the estimate is named "yvar" and the conf limits are "LCL" and "UCL"
     nm = names(emms)
     tgts = c(attr(emms, "estName"), attr(emms, "clNames"))
@@ -221,7 +237,7 @@ emmip.default = function(object, formula, type, CIs = FALSE,
         lattice::trellis.par.set(TP.orig)
     }  # --- end lattice method
     else {  # engine = "ggplot"
-        pos = ggplot2::position_dodge(width = ifelse(CIs, .1, 0)) # use dodging if CIs
+        pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, .1, 0)) # use dodging if CIs
         if (!one.trace) {
             grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, color = ~tvar)) +
                 ggplot2::geom_point(position = pos) +
@@ -235,9 +251,12 @@ emmip.default = function(object, formula, type, CIs = FALSE,
                 ggplot2::labs(x = xlab, y = ylab)
             
         }
+        if (PIs) # using linerange w/ extra width and semi-transparent
+            grobj = grobj + ggplot2::geom_linerange(ggplot2::aes_(ymin = ~LPL, ymax = ~UPL), 
+                                                    position = pos, lwd = 1.25, alpha = .33)
         if (CIs) # using linerange w/ extra width and semi-transparent
             grobj = grobj + ggplot2::geom_linerange(ggplot2::aes_(ymin = ~LCL, ymax = ~UCL), 
-                        position = pos, lwd = 2, alpha = .5)
+                                                    position = pos, lwd = 2, alpha = .5)
         if (length(byvars) > 0) {  # we have by variables 
             if (length(byvars) > 1) {
                 byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))

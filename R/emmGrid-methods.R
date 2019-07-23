@@ -192,7 +192,7 @@ vcov.emmGrid = function(object, ...) {
 #' 
 #' \item{\code{alpha}}{(numeric) is the default significance level for tests, in
 #' \code{\link{summary.emmGrid}} as well as \code{\link{plot.emmGrid}}
-#' when \samp{intervals = TRUE}. Be cautious that methods that depend on
+#' when \samp{CIs = TRUE}. Be cautious that methods that depend on
 #' specifying \code{alpha} are prone to abuse. See the
 #' discussion in \href{../doc/basics.html#pvalues}{\code{vignette("basics", "emmeans")}}.}
 #' 

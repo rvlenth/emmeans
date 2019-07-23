@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2019 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -248,3 +248,18 @@ model.frame = function(formula, data, ...) {
     else
         "(various values)"
 }
+
+# My own utility for requiring a namespace and handling case where it is not available
+#   pkg      package name
+#   ...      passed to fail
+#   fail     function to call if namespace not found
+#   quietly passed to requireNamespace()
+## I can't decide definitively if I want to suppress S3 masking messages or not...
+.requireNS = function(pkg, ..., fail = stop, quietly = TRUE) {
+    ### result = suppressMessages(requireNamespace(pkg, quietly = quietly))
+    result = requireNamespace(pkg, quietly = TRUE)
+    if (!result) fail(...)
+    result
+}
+# of possible use as fail in .requireNS
+.nothing = function(...) invisible()

@@ -134,15 +134,14 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
         
         # pick the lowest-hanging apples first
         if (mode == "kenward-roger") {
-            if (disable.pbkrtest || tooBig.k || !requireNamespace("pbkrtest", quietly = TRUE))
+            if (disable.pbkrtest || tooBig.k || !.requireNS("pbkrtest", fail = .nothing))
                 mode = "satterthwaite"
             if (!disable.pbkrtest && tooBig.k)
                 tooBigMsg("pbkrtest", get_emm_option("pbkrtest.limit"))
         }
         if (mode == "satterthwaite") {
-            if (disable.lmerTest || tooBig.s || !requireNamespace("lmerTest", quietly = TRUE))
-                mode = ifelse(!disable.pbkrtest && !tooBig.k && 
-                                  requireNamespace("pbkrtest", quietly = TRUE), 
+            if (disable.lmerTest || tooBig.s || !.requireNS("lmerTest", fail = .nothing))
+                mode = ifelse(!disable.pbkrtest && !tooBig.k && .requireNS("pbkrtest", fail = .nothing), 
                               "kenward-roger", "asymptotic")
             if (!disable.lmerTest && tooBig.s)
                 tooBigMsg("lmerTest", get_emm_option("lmerTest.limit"))

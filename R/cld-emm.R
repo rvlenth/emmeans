@@ -22,11 +22,9 @@
 # Runs the function multicompLetters from the multcompView package
 # returns an error if not installed
 .mcletters = function(..., Letters=c("1234567890",LETTERS,letters), reversed=FALSE) {
-    if(!requireNamespace("multcompView", quietly = TRUE)) {
-        stop("The 'multcompView' package must be installed to use CLD methods")
-        return (list(monospacedLetters = "?"))
-    }
-    
+    .requireNS("multcompView", 
+               "The 'multcompView' package must be installed to use CLD methods")
+
     # Expand strings to individual letters
     Letters = as.character(unlist(sapply(Letters, function(stg) {
         sapply(seq_len(nchar(stg)), function(i) substr(stg, i, i))
@@ -38,7 +36,6 @@
     result
 }
 
-###if (!requireNamespace("multcomp", quietly = TRUE))
 #' @rdname CLD.emmGrid
 #' @export
 CLD = function (object, ...) {
@@ -206,16 +203,5 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
 cld.emmGrid = function(object, ...) {
     CLD.emmGrid(object, ...)
 }
-
-
-# Temporary hack while downstream dependencies have a chance to fix it:
-# #' @ rdname CLD.emmGrid
-# #' @ export
-# cld = function (object, ...) {
-#     if(requireNamespace("multcomp", quietly = TRUE))
-#         multcomp::cld(object, ...)
-#     else
-#         UseMethod("cld")
-# }
 
 
