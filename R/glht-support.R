@@ -102,14 +102,14 @@ glht.emmGrid <- function(model, linfct, by, ...) {
     
     if (is.null(by)) {
         args$linfct = lf
-        return(do.call("glht", args))
+        return(do.call(multcomp::glht, args))
     }
     
     # (else...)
     by.rows = .find.by.rows(object@grid, by)
     result = lapply(by.rows, function(r) {
         args$linfct = lf[r, , drop=FALSE]
-        do.call("glht", args)
+        do.call(multcomp::glht, args)
     })
     bylevs = lapply(by, function(byv) unique(object@grid[[byv]]))
     names(bylevs) = by
