@@ -12,6 +12,10 @@ emmeans 1.3.5.1099xxx
     `plot.emmGrid()`, the `intervals` argument has been changed to `CIs`
     for sake of consistency and less confusion; `intervals` is still
     supported for backaward compatibility.
+  * `plot.emmGrid` gains a `colors` argument so we can customize colors used.
+  * Bug fix for `glht` support (#132 contributed by Balsz Banfai)
+  * `as.mcmc.emmGrid` gains a `sim` and `N.sim` arguments whereby we can generate a
+    fake posterior sample from a frequentist model.
     
 
 emmeans 1.3.5.1

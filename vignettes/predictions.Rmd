@@ -70,7 +70,7 @@ structure of the model object and/or its summary to ensure I am not going astray
 [Back to Contents](#contents)
 
 ## Feedlot example {#feedlot}
-<!-- @index Examples!`feedlot`; Predictions!Total SD; -->
+<!-- @index Examples!`feedlot`; Predictions!Total SD; Predictions!graphics -->
 To illustrate, consider the `feedlot` dataset provided with the package.
 Here we have several herds of feeder cattle that are sent to feed lots and given
 one of three diets. The weights of the cattle are measured at time of entry
@@ -108,6 +108,14 @@ We are now ready to form prediction intervals. To do so, simply call the
 ```{r}
 predict(feedlot.rg, interval = "prediction")
 ```
+These results may also be displayed graphically:
+```{r, fig.height = 2}
+plot(feedlot.rg, PIs = TRUE)
+```
+
+The inner intervals are confidence intervals, and the outer ones are the 
+prediction intervals.
+
 Note that the SEs for prediction are considerably greater than the SEs for
 estimation in the original summary of `feedlot.rg`. Also, as a sanity check,
 observe that these

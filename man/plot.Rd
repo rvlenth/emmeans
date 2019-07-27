@@ -6,8 +6,9 @@
 \title{Plot an \code{emmGrid} or \code{summary_emm} object}
 \usage{
 \method{plot}{emmGrid}(x, y, type, CIs = TRUE, PIs = FALSE,
-  comparisons = FALSE, alpha = 0.05, adjust = "tukey",
-  int.adjust = "none", intervals, frequentist, ...)
+  comparisons = FALSE, colors = c("black", "blue", "blue", "red"),
+  alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals,
+  frequentist, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, xlab, ylab, layout,
   ...)
@@ -25,14 +26,20 @@ See details under \code{\link{summary.emmGrid}}.}
 plotted for each estimate.}
 
 \item{PIs}{Logical value. If \code{TRUE}, prediction intervals are
-plotted for each estimate (if a Bayesian model,
-this requires \code{frequentist = TRUE}). Prediction intervals are not available
+plotted for each estimate. If \code{objecct} is a Bayesian model,
+this requires \code{frequentist = TRUE} and \code{sigma =} (some value). 
+Prediction intervals are not available
 with \code{engine = "lattice"}.}
 
 \item{comparisons}{Logical value. If \code{TRUE}, \dQuote{comparison arrows}
 are added to the plot, in such a way that the degree to which arrows
 overlap reflects as much as possible the significance of the comparison of
 the two estimates. (A warning is issued if this can't be done.)}
+
+\item{colors}{Character vector of color names to use for estimates, CIs, PIs, 
+and comparison arrows, respectively. CIs and PIs are rendered with some
+transparency, and colors are recycled if the length is less than four;
+so all plot elements are visible even if a single color is specified.}
 
 \item{alpha}{The significance level to use in constructing comparison arrows}
 
@@ -92,5 +99,5 @@ warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
 plot(warp.emm)
 plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
-     horizontal = FALSE)
+     horizontal = FALSE, colors = "darkgreen")
 }

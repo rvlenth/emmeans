@@ -30,6 +30,7 @@
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
+                    colors = c("black", "blue", "blue", "red"),
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, frequentist, ...) {
     if(!missing(intervals))
         CIs = intervals
@@ -72,7 +73,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
         extra@misc$comp.alpha = alpha
         extra@misc$comp.adjust = adjust
     }
-    .plot.srg(x = summ, CIs = CIs, PIs = PIs, extra = extra, ...)
+    .plot.srg(x = summ, CIs = CIs, PIs = PIs, colors = colors, extra = extra, ...)
 }
 
 # May use in place of plot.emmGrid but no control over level etc.
@@ -99,8 +100,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' @param CIs Logical value. If \code{TRUE}, confidence intervals are
 #'   plotted for each estimate.
 #' @param PIs Logical value. If \code{TRUE}, prediction intervals are
-#'   plotted for each estimate. These intervals are plotted in pink.
-#'   If \code{objecct} is a Bayesian model,
+#'   plotted for each estimate. If \code{objecct} is a Bayesian model,
 #'   this requires \code{frequentist = TRUE} and \code{sigma =} (some value). 
 #'   Prediction intervals are not available
 #'   with \code{engine = "lattice"}.
@@ -108,6 +108,10 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   are added to the plot, in such a way that the degree to which arrows
 #'   overlap reflects as much as possible the significance of the comparison of
 #'   the two estimates. (A warning is issued if this can't be done.)
+#' @param colors Character vector of color names to use for estimates, CIs, PIs, 
+#'   and comparison arrows, respectively. CIs and PIs are rendered with some
+#'   transparency, and colors are recycled if the length is less than four;
+#'   so all plot elements are visible even if a single color is specified. 
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
@@ -150,14 +154,14 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
 #' plot(warp.emm)
 #' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
-#'      horizontal = FALSE)
+#'      horizontal = FALSE, colors = "darkgreen")
 plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
     .plot.srg (x, y, horizontal, xlab, ylab, layout, ...)
 }
 
 # Workhorse for plot.summary_emm
 .plot.srg = function(x, y, 
-                     horizontal = TRUE, xlab, ylab, layout, 
+                     horizontal = TRUE, xlab, ylab, layout, colors,
                      engine = get_emm_option("graphics.engine"),
                      CIs = TRUE, PIs = FALSE, extra = NULL, ...) {
     
@@ -364,6 +368,13 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
     
     facName = paste(priv, collapse=":")
     
+    if(length(colors) < 4)
+        colors = rep(colors, 4)
+    dot.col = colors[1]
+    CI.col = colors[2]
+    PI.col = colors[3]
+    comp.col = colors[4]
+    
     if (engine == "lattice") {
         if (missing(layout)) {
             layout = c(1, length(ubv))
@@ -395,46 +406,46 @@ plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
         summ$lcl = lcl
         summ$ucl = ucl
         if (horizontal) {
-            grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) + 
-                ggplot2::geom_point(size = 2)
+            grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) 
             if (PIs) 
                 grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lpl, xend = ~upl, 
                                     y = ~pri.fac, yend = ~pri.fac), 
-                                    color = "magenta", lwd = 2.5, alpha = .15)
+                                    color = PI.col, lwd = 2.5, alpha = .15)
             if (CIs) 
                 grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcl, xend = ~ucl, 
                                     y = ~pri.fac, yend = ~pri.fac), 
-                                    color = "blue", lwd = 4, alpha = .25)
+                                    color = CI.col, lwd = 4, alpha = .25)
             if (!is.null(extra))
                 grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcmpl, xend = ~rcmpl, 
                         y = ~pri.fac, yend = ~pri.fac), 
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
-                        ends = "both", type = "closed"), color = "red")
+                        ends = "both", type = "closed"), color = comp.col)
             if (length(byv) > 0)
                 grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
                                            labeller = "label_both")
+            grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
             if (missing(xlab)) xlab = attr(summ, "estName")
             if (missing(ylab)) ylab = facName
         }
         else {
-            grobj = ggplot2::ggplot(summ, ggplot2::aes_(y = ~the.emmean, x = ~pri.fac)) + 
-                ggplot2::geom_point(size = 2)
+            grobj = ggplot2::ggplot(summ, ggplot2::aes_(y = ~the.emmean, x = ~pri.fac)) 
             if (PIs) 
                 grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lpl, yend = ~upl, 
                             x = ~pri.fac, xend = ~pri.fac), 
-                            color = "magenta", lwd = 2.5, alpha = .15)
+                            color = PI.col, lwd = 2.5, alpha = .15)
             if (CIs) 
                 grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lcl, yend = ~ucl, 
                             x = ~pri.fac, xend = ~pri.fac), 
-                            color = "blue", lwd = 4, alpha = .25)
+                            color = CI.col, lwd = 4, alpha = .25)
             if (!is.null(extra))
                 grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lcmpl, yend = ~rcmpl, 
                         x = ~pri.fac, xend = ~pri.fac), 
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), ends = "both", 
-                        type = "closed"), color = "red")
+                        type = "closed"), color = comp.col)
             if (length(byv) > 0)
-                grobj = grobj + ggplot2::facet_grid(as.formula(paste(". ~ ", paste(byv, collapse = "+"))), 
-                                           labeller = "label_both")
+                grobj = grobj + ggplot2::facet_grid(as.formula(paste(". ~ ", 
+                            paste(byv, collapse = "+"))), labeller = "label_both")
+            grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
             if (missing(ylab)) ylab = attr(summ, "estName")
             if (missing(xlab)) xlab = facName
         }

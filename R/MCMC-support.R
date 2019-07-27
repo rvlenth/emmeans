@@ -50,6 +50,13 @@
 #'   the corresponding posterior predictive distribution. If not given, we obtain
 #'   the posterior distribution of the parameters in \code{object}. See Prediction
 #'   section below.
+#' @param N.sim Integer value. If specified and \code{object} is based on a 
+#'   frequentist model (i.e., does not have a posterior sample), then a fake 
+#'   posterior sample is generated using the function \code{sim}
+#' @param sim A function of three arguments (no names are assumed).
+#'   If \code{N.sim} is supplied with a frequentist model, this function is called
+#'   with respective arguments \code{N.sim}, \code{x@bhat}, and \code{x@V}.
+#'   The default is the multivariate normal distribution.
 #' @param ... arguments passed to other methods
 #'
 #' @return An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
@@ -68,13 +75,13 @@
 #' @section Prediction:
 #' When \code{likelihood} is specified, it is used to simulate values from the
 #' posterior predictive distribution corresponding to the given likelihood and
-#' the posterior distribution of parameter values. Denote the the likelihood 
-#' function as\eqn{f(y|\theta,\phi)}, where \code{y} is a response, \eqn{\theta}
+#' the posterior distribution of parameter values. Denote the likelihood 
+#' function as \eqn{f(y|\theta,\phi)}, where \eqn{y} is a response, \eqn{\theta}
 #' is the parameter estimated in \code{object}, and \eqn{\phi} comprises zero or
 #' more additional parameters to be specified. If \code{likelihood} is a 
 #' function, that function should take as its first argument a vector of 
 #' \eqn{\theta} values (each corresponding to one row of \code{object@grid}).
-#' Any \eqn{\phi} valuyes should be specified as additional named function
+#' Any \eqn{\phi} values should be specified as additional named function
 #' arguments, and passed to \code{likelihood} via \code{...}. This function should 
 #' simulate values of \eqn{y}.
 #' 
@@ -93,11 +100,30 @@
 #' 
 #' @method as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
+#' @examples
+#' require("coda")
+#'
+#' ### A saved reference grid for a mixed logistic model (see lme4::cbpp)
+#' cbpp.rg <- do.call(emmobj, 
+#'     readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
+#' # Predictive distribution for herds of size 20
+#' pred.incidence <- as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
+#' 
+#' ### Simulating posterior results from a frequentist model
+#' fiber.lm <- lm(strength ~ diameter + machine, data = fiber)
+#' rg <- ref_grid(fiber.lm, at = list(diameter = 20))
+#' fake.post.EMMs <- as.mcmc(rg, N.sim = 200)
+#' fake.post.preds <- as.mcmc(rg, N.sim = 200, likelihood = "normal", 
+#'                            sigma = sigma(fiber.lm))
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, 
-                           likelihood, ...) {
-    object = x
-    if (is.na(x@post.beta[1]))
-        stop("No posterior sample -- can't make an 'mcmc' object")
+                           likelihood, N.sim, sim = mvtnorm::rmvnorm, ...) {
+    if (is.na(x@post.beta[1])) {
+        if(missing(N.sim))
+            stop("No posterior sample -- can't make an 'mcmc' object\n",
+                 "Specify a value for 'N.sim' if you want to fake one")
+        message("Generating a posterior sample of size ", N.sim)
+        x@post.beta = sim(N.sim, x@bhat, x@V)
+    }
     mat = x@post.beta %*% t(x@linfct)
     if(!is.null(offset <- x@grid[[".offset."]])) {
         n = nrow(mat)
