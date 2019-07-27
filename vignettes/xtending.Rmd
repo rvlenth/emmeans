@@ -402,7 +402,7 @@ Then to register these methods, add or modify the
 }
 
 ```
-You should also add `emmeans (> 1.3.5.1)` and `estimability` (which is required by **emmeans**)
+You should also add `emmeans (>= 1.4)` and `estimability` (which is required by **emmeans**)
 to the `Suggests` field of your `DESCRIPTION` file.
 
 

@@ -50,13 +50,6 @@
 #'   the corresponding posterior predictive distribution. If not given, we obtain
 #'   the posterior distribution of the parameters in \code{object}. See Prediction
 #'   section below.
-#' @param N.sim Integer value. If specified and \code{object} is based on a 
-#'   frequentist model (i.e., does not have a posterior sample), then a fake 
-#'   posterior sample is generated using the function \code{sim}
-#' @param sim A function of three arguments (no names are assumed).
-#'   If \code{N.sim} is supplied with a frequentist model, this function is called
-#'   with respective arguments \code{N.sim}, \code{x@bhat}, and \code{x@V}.
-#'   The default is the multivariate normal distribution.
 #' @param ... arguments passed to other methods
 #'
 #' @return An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
@@ -107,22 +100,12 @@
 #' cbpp.rg <- do.call(emmobj, 
 #'     readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
 #' # Predictive distribution for herds of size 20
+#' # (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
 #' pred.incidence <- as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
-#' 
-#' ### Simulating posterior results from a frequentist model
-#' fiber.lm <- lm(strength ~ diameter + machine, data = fiber)
-#' rg <- ref_grid(fiber.lm, at = list(diameter = 20))
-#' fake.post.EMMs <- as.mcmc(rg, N.sim = 200)
-#' fake.post.preds <- as.mcmc(rg, N.sim = 200, likelihood = "normal", 
-#'                            sigma = sigma(fiber.lm))
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, 
-                           likelihood, N.sim, sim = mvtnorm::rmvnorm, ...) {
+                           likelihood, ...) {
     if (is.na(x@post.beta[1])) {
-        if(missing(N.sim))
-            stop("No posterior sample -- can't make an 'mcmc' object\n",
-                 "Specify a value for 'N.sim' if you want to fake one")
-        message("Generating a posterior sample of size ", N.sim)
-        x@post.beta = sim(N.sim, x@bhat, x@V)
+        stop("No posterior sample -- can't make an 'mcmc' object")
     }
     mat = x@post.beta %*% t(x@linfct)
     if(!is.null(offset <- x@grid[[".offset."]])) {
@@ -131,6 +114,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     }
     if (!missing(likelihood)) {
         if (is.character(likelihood)) {
+            likelihood = match.arg(likelihood, c("normal", "binomial", "poisson", "gamma"))
             likelihood = switch(likelihood,
                 normal = function(theta, sigma, ...) 
                     rnorm(length(theta), mean = theta, sd = sigma),
@@ -139,10 +123,14 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
                 poisson = function(theta, ...)
                     rpois(length(theta), lambda = theta),
                 gamma = function(theta, shape, ...)
-                    rgamma(length(theta), scale = theta, shape = shape),
-                stop("There is no predefined likelihood named '", likelihood, "'"))
+                    rgamma(length(theta), scale = theta, shape = shape)
+                #, stop("There is no predefined likelihood named '", likelihood, "'")
+                )
         }
         mat = apply(mat, 2, likelihood, ...)
+##! TODO: Add "multinomial" support. This will require a flag to observe
+##! the 'by' variable(s), then we get parameter values from the columns
+##! corresponding to each 'by' group 
     }
     nm = setdiff(names(x@grid), c(".wgt.",".offset."))
     if (any(names)) {

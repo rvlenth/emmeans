@@ -408,6 +408,7 @@ vignette: >
           * [in *predictions: bayes*](predictions.html#bayes)
           * [in *sophisticated: predict-mcmc*](sophisticated.html#predict-mcmc)
       * [Error SD](predictions.html#sd-estimate)
+      * [graphics](predictions.html#feedlot)
       * [on Particular strata](predictions.html#strata)
       * [Posterior predictive distribution](sophisticated.html#predict-mcmc)
       * [Reference grid](predictions.html#ref-grid)

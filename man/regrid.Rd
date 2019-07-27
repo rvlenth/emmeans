@@ -2,11 +2,12 @@
 % Please edit documentation in R/emmGrid-methods.R
 \name{regrid}
 \alias{regrid}
-\title{Reconstruct a reference grid with a new transformation}
+\title{Reconstruct a reference grid with a new transformation or posterior sample}
 \usage{
-regrid(object, transform = c("response", "mu", "unlink", "log", "none"),
-  inv.log.lbl = "response", predict.type,
-  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
+regrid(object, transform = c("response", "mu", "unlink", "log", "none",
+  "pass"), inv.log.lbl = "response", predict.type,
+  bias.adjust = get_emm_option("back.bias.adj"), sigma, N.sim,
+  sim = mvtnorm::rmvnorm, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -18,6 +19,8 @@ grid (but if there is both a link function and a response transformation,
 results are formulated as if the response had been \code{log}-transformed;
 if \code{"none"}, predictions thereof are on the same scale as in 
 \code{object}, and any internal transformation information is preserved. 
+If \code{transform = "pass"}, the object is not re-gridded in any way (this
+may be useful in conjunction with \code{N.sim}).
 For compatibility with past versions, \code{transform} may also be logical;
 \code{TRUE} is taken as \code{"response"}, and \code{FALSE} as 
 \code{"none"}.}
@@ -40,6 +43,15 @@ back-transforming (\code{transform = "response"}). This requires a value of
 \code{transform = "response"} and a transformation
 is in effect). If not specified,
 \code{object@misc$sigma} is used, and an error is thrown if it is not found.}
+
+\item{N.sim}{Integer value. If specified and \code{object} is based on a 
+frequentist model (i.e., does not have a posterior sample), then a fake 
+posterior sample is generated using the function \code{sim}.}
+
+\item{sim}{A function of three arguments (no names are assumed).
+If \code{N.sim} is supplied with a frequentist model, this function is called
+with respective arguments \code{N.sim}, \code{object@bhat}, and \code{object@V}.
+The default is the multivariate normal distribution.}
 
 \item{...}{Ignored.}
 }
@@ -71,6 +83,13 @@ is substituted in the returned object whereby the calculated d.f. for a new
 linear function will be the minimum d.f. among those having nonzero
 coefficients. This is kind of an \emph{ad hoc} method, and it can
 over-estimate the degrees of freedom in some cases.
+
+This function may also be used to convert a reference grid for a 
+frequentist model to one for a Bayesian model. To do so, specify a value
+for \code{N.sim} and a posterior sample is simulated using the function \code{sim}.
+. The grid may be further processed in accordance with
+the other arguments; or if \code{transform = "pass"}, it is simply returned with the 
+only change being the addition of the posterior sample.
 }
 \note{
 Another way to use \code{regrid} is to supply a \code{transform} 
@@ -80,14 +99,20 @@ Another way to use \code{regrid} is to supply a \code{transform}
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+rg <- ref_grid(pigs.lm)
 
 # This will yield EMMs as GEOMETRIC means of concentrations:
-emmeans(pigs.lm, "source", type = "response")
-# NOTE: pairs() of the above will be RATIOS of these results
+(emm1 <- emmeans(rg, "source", type = "response"))
+pairs(emm1) ## We obtain RATIOS
 
 # This will yield EMMs as ARITHMETIC means of concentrations:
-emmeans(regrid(ref_grid(pigs.lm, transform = "response")), "source")
+(emm2 <- emmeans(regrid(rg, transform = "response"), "source"))
+pairs(emm2)  ## We obtain DIFFERENCES
 # Same thing, made simpler:
-emmeans(pigs.lm, "source", transform = "response")
-# NOTE: pairs() of the above will be DIFFERENCES of these results
+# emm2 <- emmeans(rg, "source", transform = "response")
+
+# Simulate a posterior sample
+set.seed(2.71828)
+rgb <- regrid(rg, N.sim = 200, transform = "pass")
+emmeans(rgb, "source", type = "response")  ## similar to emm1
 }

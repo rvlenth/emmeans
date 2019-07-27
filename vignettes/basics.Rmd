@@ -560,10 +560,12 @@ also be accessed via `vignette("`*name*`", "emmeans")`
     ["transformations"](transformations.html)
   * Multi-factor models with interactions: ["interactions"](interactions.html)
   * Working with messy data and nested effects: ["messy-data"](messy-data.html)
+  * Making predictions from your model: ["predictions"](predictions.html)
   * Examples of more sophisticated models (e.g., mixed, ordinal, MCMC)
     ["sophisticated"](sophisticated.html)
   * Utilities for working with `emmGrid` objects: ["utilities"](utilities.html)
   * Frequently asked questions: ["FAQs"](FAQs.html)
+  * Adding **emmeans** support to your package: ["xtending"](xtending.html)
 
 [Back to Contents](#contents)
 
