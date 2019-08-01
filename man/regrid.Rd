@@ -108,8 +108,8 @@ pairs(emm1) ## We obtain RATIOS
 # This will yield EMMs as ARITHMETIC means of concentrations:
 (emm2 <- emmeans(regrid(rg, transform = "response"), "source"))
 pairs(emm2)  ## We obtain DIFFERENCES
-# Same thing, made simpler:
-# emm2 <- emmeans(rg, "source", transform = "response")
+# Same result, useful if we hadn't already created 'rg'
+# emm2 <- emmeans(pigs.lm, "source", transform = "response")
 
 # Simulate a posterior sample
 set.seed(2.71828)

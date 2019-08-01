@@ -55,11 +55,11 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     ml = attr(object, "modelList")
     ml1 = ml[[1]]
     misc = list()
-    if (!is.null(fam <- ml1$family))
+    if (!is.null(fam <- family(ml1)))
         misc = .std.link.labels(fam, misc)
-    if (!is.null(ml1$df.residual)) {
+    if (!is.null(df.residual(ml1))) {
         dffun = function(k, dfargs) dfargs$df
-        dfargs = list(df = min(sapply(ml, function(m) m$df.residual)))
+        dfargs = list(df = min(sapply(ml, df.residual)))
     }
     else {
         dffun = function(k, dfargs) Inf
