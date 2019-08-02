@@ -50,6 +50,11 @@
 #'   the corresponding posterior predictive distribution. If not given, we obtain
 #'   the posterior distribution of the parameters in \code{object}. See Prediction
 #'   section below.
+#' @param NE.include Logical value. If \code{TRUE}, non-estimable columns are
+#'   kept but returned as columns of \code{NA} values (this may create errors or
+#'   warnings in subsequent analyses using, say, \pkg{coda}). If \code{FALSE},
+#'   non-estimable columns are dropped, and a warning is issued. (If all are
+#'   non-estimable, an error is thrown.)
 #' @param ... arguments passed to other methods
 #'
 #' @return An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
@@ -103,11 +108,30 @@
 #' # (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
 #' pred.incidence <- as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, 
-                           likelihood, ...) {
+                           likelihood, NE.include = FALSE, ...) {
     if (is.na(x@post.beta[1])) {
         stop("No posterior sample -- can't make an 'mcmc' object")
     }
-    mat = x@post.beta %*% t(x@linfct)
+# notes on estimabilityn issues:
+# 1. Use @bhat to determine which coefs to use
+# 2. @nabasis as in freq models
+# 3. @post.beta we will EXCLUDE cols corresp to NAs in @bhat
+# See stanreg support for hints/details
+    use = which(!is.na(x@bhat))
+    est = estimability::is.estble(x@linfct, x@nbasis)
+    if (!any(est))
+        stop("Aborted -- No estimates in the grid are estimable")
+    else if(!all(est) && !NE.include) {
+        rows = paste(which(!est), collapse = ", ")
+        warning("Cases  ", rows, "  were dropped due to non-estimability", call. = FALSE)
+    }
+    mat = x@post.beta %*% t(x@linfct[, use, drop = FALSE])
+    if (NE.include)
+        mat[, !est] = NA
+    else {
+        mat = mat[, est, drop = FALSE]
+        x@grid = x@grid[est, , drop = FALSE]
+    }
     if(!is.null(offset <- x@grid[[".offset."]])) {
         n = nrow(mat)
         mat = mat + matrix(rep(offset, each = n), nrow = n)
@@ -254,7 +278,8 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     
     ### OK, finally, here is the real stuff
     mesg = misc$initMesg
-    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE, ...)
+    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE, 
+                           NE.include = TRUE, ...)
     mcmc = mcmc[, use.elts, drop = FALSE]
     if (inv) {
         if (bias.adjust) {
@@ -273,6 +298,8 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     else if(!is.null(link))
         mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))
     
+    est = !is.na(mcmc[1, ])
+    mcmc[, !est] = 0 # temp so we don't get errors
     mesg = c(mesg, paste("HPD interval probability:", prob))
     pt.est = data.frame(apply(mcmc, 2, point.est))
     names(pt.est) = object@misc$estName
@@ -294,6 +321,8 @@ hpd.summary = function(object, prob, by, type, point.est = median,
             names(pt.est) = misc$estName = "response"
     }
     
+    summ[!est, ] = NA
+    pt.est[!est, ] = NA
     summ = cbind(lbls, pt.est, summ)
     attr(summ, "estName") = misc$estName
     attr(summ, "clNames") = cnm
@@ -535,7 +564,17 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     }
     samp = as.matrix(object$stanfit)[, names(bhat), drop = FALSE]
     attr(samp, "n.chains") = object$stanfit@sim$chains
-    list(X = X, bhat = bhat, nbasis = estimability::all.estble, V = V, 
+    # estimability...
+    nbasis = estimability::all.estble
+    all.nms = colnames(X)
+    if (length(names(bhat)) < (n <- length(all.nms))) {
+        coef = NA * X[1, ]
+        coef[names(bhat)] = bhat
+        bhat = coef
+        mmat = model.matrix(trms, object$data, contrasts.arg = contr)
+        nbasis = estimability::nonest.basis(mmat)
+    }
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = samp)
 }

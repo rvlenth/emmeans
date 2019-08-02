@@ -7,7 +7,7 @@
 \title{Support for MCMC-based estimation}
 \usage{
 \method{as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE,
-  likelihood, ...)
+  likelihood, NE.include = FALSE, ...)
 
 \method{as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
 }
@@ -28,6 +28,12 @@ by \code{as.mcmc}, with separate EMMs posteriors in each chain.}
 the corresponding posterior predictive distribution. If not given, we obtain
 the posterior distribution of the parameters in \code{object}. See Prediction
 section below.}
+
+\item{NE.include}{Logical value. If \code{TRUE}, non-estimable columns are
+kept but returned as columns of \code{NA} values (this may create errors or
+warnings in subsequent analyses using, say, \pkg{coda}). If \code{FALSE},
+non-estimable columns are dropped, and a warning is issued. (If all are
+non-estimable, an error is thrown.)}
 
 \item{...}{arguments passed to other methods}
 }
