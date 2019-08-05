@@ -4,8 +4,8 @@
 \alias{emtrends}
 \title{Estimated marginal means of linear trends}
 \usage{
-emtrends(model, specs, var, delta.var = 0.01 * rng, data,
-  transform = c("none", "response"), ...)
+emtrends(model, specs, var, delta.var = 0.001 * rng, data,
+  transform = c("none", "response"), max.order = 1, ...)
 }
 \arguments{
 \item{model}{A supported model object (\emph{not} a reference grid)}
@@ -25,7 +25,7 @@ See also the \dQuote{Generalizations} section below.}
 \item{delta.var}{The value of \emph{h} to use in forming the difference
 quotient \eqn{(f(x+h) - f(x))/h}. Changing it (especially changing its
 sign) may be necessary to avoid numerical problems such as logs of negative
-numbers. The default value is 1/100 of the range of \code{var} over the
+numbers. The default value is 1/1000 of the range of \code{var} over the
 dataset.}
 
 \item{data}{As in \code{\link{ref_grid}}, you may use this argument to supply
@@ -42,6 +42,11 @@ default), the trends are calculated on the scale of the linear predictor,
 without back-transforming it. This argument works similarly to the
 \code{transform} argument in \code{\link{ref_grid}}, in that the returned
 object is re-gridded to the new scale (see also \code{\link{regrid}}).}
+
+\item{max.order}{Integer value. The maximum order of trends to compute (this
+is capped at 5). If greater than 1, an additional factor \code{order} is
+added to the grid, with corresponding numerical derivatives of orders
+\code{1, 2, ..., max.order} as the estimates.}
 
 \item{...}{Additional arguments passed to other methods or to 
 \code{\link{ref_grid}}}

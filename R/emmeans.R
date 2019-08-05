@@ -246,8 +246,8 @@ emmeans = function(object, specs, by = NULL,
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)
         specs = spc$rhs
-        by = if (length(spc$by) == 0) NULL
-             else spc$by
+        if (length(spc$by) > 0) 
+            by = setdiff(union(spc$by, by), spc$rhs)
         if (length(spc$lhs) > 0) 
             contr = spc$lhs
     }

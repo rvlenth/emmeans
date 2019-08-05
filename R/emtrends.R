@@ -47,7 +47,7 @@
 #' @param delta.var The value of \emph{h} to use in forming the difference
 #'   quotient \eqn{(f(x+h) - f(x))/h}. Changing it (especially changing its
 #'   sign) may be necessary to avoid numerical problems such as logs of negative
-#'   numbers. The default value is 1/100 of the range of \code{var} over the
+#'   numbers. The default value is 1/1000 of the range of \code{var} over the
 #'   dataset.
 #' @param data As in \code{\link{ref_grid}}, you may use this argument to supply
 #'   the dataset used in fitting the model, for situations where it is not
@@ -62,6 +62,10 @@
 #'   without back-transforming it. This argument works similarly to the
 #'   \code{transform} argument in \code{\link{ref_grid}}, in that the returned
 #'   object is re-gridded to the new scale (see also \code{\link{regrid}}).
+#' @param max.order Integer value. The maximum order of trends to compute (this
+#'   is capped at 5). If greater than 1, an additional factor \code{order} is
+#'   added to the grid, with corresponding numerical derivatives of orders
+#'   \code{1, 2, ..., max.order} as the estimates.
 #' @param ... Additional arguments passed to other methods or to 
 #'   \code{\link{ref_grid}}
 #'
@@ -91,8 +95,8 @@
 #' emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
 #'          at = list(diameter = c(20, 30)))
 #'
-emtrends = function(model, specs, var, delta.var=.01*rng, data, 
-                    transform = c("none", "response"), ...) {
+emtrends = function(model, specs, var, delta.var=.001*rng, data, 
+                    transform = c("none", "response"), max.order = 1, ...) {
     estName = paste(var, "trend", sep=".") # Do now as I may replace var later
     
     if (missing(data)) {
@@ -112,7 +116,7 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
             stop("Can only support a function of one variable")
         else {
             x = data[[var]]
-            if (is.null(x)) stop("Variable '", var, "' is not in the dataset")            
+            if (is.null(x)) stop("Variable '", var, "' is not in the dataset")      
         }
     }
     rng = diff(range(x))
@@ -120,30 +124,54 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
     
     RG = orig.rg = ref_grid(model, data = data, ...)
     
-    grid = RG@grid
-    if (!is.null(mr <- RG@roles$multresp)) {
-        # use the grid value only for the 1st mult resp (no dupes)
-        if (length(mr) > 0)
-            grid = grid[grid[[mr]] == RG@levels[[mr]][1], ]
-    }
-    grid[[var]] = grid[[var]] + delta.var
-    
-    basis = emm_basis(model, attr(data, "terms"), RG@model.info$xlev, grid, ...)
-    if (is.null(fcn))
-        newlf = (basis$X - RG@linfct) / delta.var
-    else {
-        y0 = with(RG@grid, eval(parse(text = fcn)))
-        yh = with(grid, eval(parse(text = fcn)))
-        diffl = (yh - y0)
-        if (any(diffl == 0)) warning("Some differentials are zero")
-        newlf = (basis$X - RG@linfct) / diffl
-    }
-    
+    max.order = max(1, min(5, as.integer(max.order + .1)))
     transform = match.arg(transform)
+    if ((max.order > 1) && (transform == "response") && hasName(RG@misc, "tran")) {
+        max.order = 1
+        warning("Higher-order trends are not supported with 'transform = 'response'.\n",
+        "'max.order' changed to 1")
+    }
     
+    # create a vector of delta values, such that a middle one has value 0
+    delts = delta.var * (0:max.order)
+    idx.base = as.integer((2 + max.order)/2)
+    delts = delts - delts[idx.base]
+
+    # I'll get back to this later, maybe...
+    # if (!is.null(mr <- RG@roles$multresp)) {
+    #     # use the grid value only for the 1st mult resp (no dupes)
+    #     if (length(mr) > 0)
+    #         grid = grid[grid[[mr]] == RG@levels[[mr]][1], ]
+    # }
+    grid = lapply(delts, function(h) {
+        g = RG@grid
+        g[[var]] = g[[var]] + h
+        g})
+    linfct = lapply(grid, function(g) 
+        emm_basis(model, attr(data, "terms"), RG@model.info$xlev, g, ...)$X)
+    
+    if (!is.null(fcn)) { # need a different "h" when diff wrt a function
+        tmp = sapply(grid, function(g) 
+            eval(parse(text = fcn), envir = g))
+        delta.var = apply(tmp, 1, function(.) mean(diff(.)))
+    }
+    
+    newlf = numeric(0)
+    coef = h = 1
+    for (i in 1:max.order) {
+        coef = c(0, coef) - c(coef, 0)
+        h = h * delta.var * i
+        shift = as.integer((1 + max.order - i) / 2)
+        lf = 0
+        for (j in seq_along(coef))
+            lf = lf + coef[j] * linfct[[j + shift]] / h
+        newlf = rbind(newlf, lf)
+    }
+        
     # Now replace linfct w/ difference quotient
     RG@linfct = newlf
     RG@roles$trend = var
+    
     if(hasName(RG@misc, "tran")) {
         tran = RG@misc$tran
         if (is.list(tran)) tran = tran$name
@@ -158,6 +186,24 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
             RG@misc$initMesg = paste("Trends are based on the", tran, "(transformed) scale")
     }
     
+    # args for emmeans calls
+    args = list(object = NULL, specs = specs, ...)
+    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = NULL
+    
+    run_emm = TRUE
+    if (max.order > 1) {
+        ordnms = c("first", "second", "third", "fourth", "fifth", "sixth")
+        RG@grid$order = ordnms[1]
+        g = RG@grid
+        for (j in 2:max.order) {
+            g$order = ordnms[j]
+            RG@grid = rbind(RG@grid, g)
+        }
+        RG@roles$predictors = c(RG@roles$predictors, "order")
+        RG@levels$order = ordnms[1:max.order]
+        chk = union(all.vars(specs), args$by)
+        run_emm = ("order" %in% chk)
+    }
     RG@grid$.offset. = NULL   # offset never applies after differencing
     RG@misc$tran = RG@misc$tran.mult = NULL
     RG@misc$estName = estName
@@ -165,9 +211,14 @@ emtrends = function(model, specs, var, delta.var=.01*rng, data,
     
     .save.ref_grid(RG)  # save in .Last.ref_grid, if enabled
     
-    # args for emmeans calls
-    args = list(object = RG, specs = specs, ...)
-    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = NULL
-    do.call("emmeans", args)
+    if (run_emm) {
+        args$object = RG
+        do.call("emmeans", args)
+    }
+    else {
+        RG@misc$is.new.rg = NULL
+        RG@misc$infer = get_emm_option("emmeans")$infer
+        RG
+    }
 }
 
