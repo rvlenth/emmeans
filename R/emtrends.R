@@ -137,16 +137,17 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     idx.base = as.integer((2 + max.order)/2)
     delts = delts - delts[idx.base]
 
-    # I'll get back to this later, maybe...
-    # if (!is.null(mr <- RG@roles$multresp)) {
-    #     # use the grid value only for the 1st mult resp (no dupes)
-    #     if (length(mr) > 0)
-    #         grid = grid[grid[[mr]] == RG@levels[[mr]][1], ]
-    # }
     grid = lapply(delts, function(h) {
         g = RG@grid
         g[[var]] = g[[var]] + h
         g})
+    if (!is.null(mr <- RG@roles$multresp)) {
+        # RG@grid is expanded to mult levels, but we need to unexpand grid accordingly
+        if (length(mr) > 0) {
+            mri = which(grid[[1]][[mr]] == RG@levels[[mr]][1])
+            grid = lapply(grid, function(.) .[mri, , drop = FALSE])
+        }
+    }
     linfct = lapply(grid, function(g) 
         emm_basis(model, attr(data, "terms"), RG@model.info$xlev, g, ...)$X)
     
