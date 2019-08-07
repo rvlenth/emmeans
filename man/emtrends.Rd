@@ -5,7 +5,7 @@
 \title{Estimated marginal means of linear trends}
 \usage{
 emtrends(model, specs, var, delta.var = 0.001 * rng, data,
-  transform = c("none", "response"), max.order = 1, ...)
+  transform = c("none", "response"), max.degree = 1, ...)
 }
 \arguments{
 \item{model}{A supported model object (\emph{not} a reference grid)}
@@ -43,10 +43,10 @@ without back-transforming it. This argument works similarly to the
 \code{transform} argument in \code{\link{ref_grid}}, in that the returned
 object is re-gridded to the new scale (see also \code{\link{regrid}}).}
 
-\item{max.order}{Integer value. The maximum order of trends to compute (this
-is capped at 5). If greater than 1, an additional factor \code{order} is
+\item{max.degree}{Integer value. The maximum degree of trends to compute (this
+is capped at 5). If greater than 1, an additional factor \code{degree} is
 added to the grid, with corresponding numerical derivatives of orders
-\code{1, 2, ..., max.order} as the estimates.}
+\code{1, 2, ..., max.degree} as the estimates.}
 
 \item{...}{Additional arguments passed to other methods or to 
 \code{\link{ref_grid}}}

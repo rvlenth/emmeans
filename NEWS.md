@@ -4,7 +4,7 @@ emmeans 1.4.0.x  (next version should be 1.4.1)
 -------------
   * Added non-estimability infrastructure for Bayesian models, `stanreg`
     in particular (#114)
-  * Added `max.order` argument in `emtrends()` making it possible to
+  * Added `max.degree` argument in `emtrends()` making it possible to
     obtain higher-order trends (#133). Plus minor tuneups, e.g., smaller 
     default increment for difference quotients
   * Made `emmeans()` more forgiving with 'by` variables; e.g.,

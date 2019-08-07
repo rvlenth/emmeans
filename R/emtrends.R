@@ -62,10 +62,10 @@
 #'   without back-transforming it. This argument works similarly to the
 #'   \code{transform} argument in \code{\link{ref_grid}}, in that the returned
 #'   object is re-gridded to the new scale (see also \code{\link{regrid}}).
-#' @param max.order Integer value. The maximum order of trends to compute (this
-#'   is capped at 5). If greater than 1, an additional factor \code{order} is
+#' @param max.degree Integer value. The maximum degree of trends to compute (this
+#'   is capped at 5). If greater than 1, an additional factor \code{degree} is
 #'   added to the grid, with corresponding numerical derivatives of orders
-#'   \code{1, 2, ..., max.order} as the estimates.
+#'   \code{1, 2, ..., max.degree} as the estimates.
 #' @param ... Additional arguments passed to other methods or to 
 #'   \code{\link{ref_grid}}
 #'
@@ -96,7 +96,7 @@
 #'          at = list(diameter = c(20, 30)))
 #'
 emtrends = function(model, specs, var, delta.var=.001*rng, data, 
-                    transform = c("none", "response"), max.order = 1, ...) {
+                    transform = c("none", "response"), max.degree = 1, ...) {
     estName = paste(var, "trend", sep=".") # Do now as I may replace var later
     
     if (missing(data)) {
@@ -124,17 +124,17 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     
     RG = orig.rg = ref_grid(model, data = data, ...)
     
-    max.order = max(1, min(5, as.integer(max.order + .1)))
+    max.degree = max(1, min(5, as.integer(max.degree + .1)))
     transform = match.arg(transform)
-    if ((max.order > 1) && (transform == "response") && hasName(RG@misc, "tran")) {
-        max.order = 1
-        warning("Higher-order trends are not supported with 'transform = 'response'.\n",
-        "'max.order' changed to 1")
+    if ((max.degree > 1) && (transform == "response") && hasName(RG@misc, "tran")) {
+        max.degree = 1
+        warning("Higher-degree trends are not supported with 'transform = 'response'.\n",
+        "'max.degree' changed to 1")
     }
     
     # create a vector of delta values, such that a middle one has value 0
-    delts = delta.var * (0:max.order)
-    idx.base = as.integer((2 + max.order)/2)
+    delts = delta.var * (0:max.degree)
+    idx.base = as.integer((2 + max.degree)/2)
     delts = delts - delts[idx.base]
 
     grid = lapply(delts, function(h) {
@@ -158,17 +158,14 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     }
     
     newlf = numeric(0)
-    coef = h = 1
-    for (i in 1:max.order) {
-        coef = c(0, coef) - c(coef, 0)
+    h = 1
+    for (i in 1:max.degree) { # successively difference linfct
+        linfct = lapply(seq_along(linfct)[-1], function(j) linfct[[j]] - linfct[[j-1]])
         h = h * delta.var * i
-        shift = as.integer((1 + max.order - i) / 2)
-        lf = 0
-        for (j in seq_along(coef))
-            lf = lf + coef[j] * linfct[[j + shift]] / h
-        newlf = rbind(newlf, lf)
+        what = as.integer((length(linfct) + 1) / 2) # pick out one in the middle
+        newlf = rbind(newlf, linfct[[what]] / h)
     }
-        
+    
     # Now replace linfct w/ difference quotient
     RG@linfct = newlf
     RG@roles$trend = var
@@ -191,19 +188,20 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     args = list(object = NULL, specs = specs, ...)
     args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = NULL
     
-    run_emm = TRUE
-    if (max.order > 1) {
-        ordnms = c("first", "second", "third", "fourth", "fifth", "sixth")
-        RG@grid$order = ordnms[1]
+#    run_emm = TRUE
+    if (max.degree > 1) {
+        degnms = c("linear", "quadratic", "cubic", "quartic", "quintic")
+        RG@grid$degree = degnms[1]
         g = RG@grid
-        for (j in 2:max.order) {
-            g$order = ordnms[j]
+        for (j in 2:max.degree) {
+            g$degree = degnms[j]
             RG@grid = rbind(RG@grid, g)
         }
-        RG@roles$predictors = c(RG@roles$predictors, "order")
-        RG@levels$order = ordnms[1:max.order]
+        RG@roles$predictors = c(RG@roles$predictors, "degree")
+        RG@levels$degree = degnms[1:max.degree]
         chk = union(all.vars(specs), args$by)
-        run_emm = ("order" %in% chk)
+        if (!("degree" %in% chk))
+            args$by = c("degree", args$by)
     }
     RG@grid$.offset. = NULL   # offset never applies after differencing
     RG@misc$tran = RG@misc$tran.mult = NULL
@@ -212,14 +210,7 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     
     .save.ref_grid(RG)  # save in .Last.ref_grid, if enabled
     
-    if (run_emm) {
-        args$object = RG
-        do.call("emmeans", args)
-    }
-    else {
-        RG@misc$is.new.rg = NULL
-        RG@misc$infer = get_emm_option("emmeans")$infer
-        RG
-    }
+    args$object = RG
+    do.call("emmeans", args)
 }
 
