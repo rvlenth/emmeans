@@ -10,6 +10,10 @@ emmeans 1.4.0.x  (next version should be 1.4.1)
   * Made `emmeans()` more forgiving with 'by` variables; e.g.,
     `emmeans(model, ~ dose | treat, by = "route")` will find both `by`
     variables whereas previously `"route"` would be ignored.
+  * Temporary fix for glitch in gls support where Satterthwaite isn't
+    always right.
+  * Attempt to make annotations clearer and more consistent regarding
+    degrees-of-freedom methods.
     
 
 emmeans 1.4

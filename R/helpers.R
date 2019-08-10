@@ -178,7 +178,7 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
             dffun = function(k, dfargs) Inf
         }
         
-        misc$initMesg = paste("Degrees-of-freedom method:", mode)
+        attr(dffun, "mesg") = mode
     }
     else if (lme4::isGLMM(object)) {
         dffun = function(k, dfargs) Inf
@@ -276,7 +276,7 @@ emm_basis.lme = function(object, trms, xlev, grid,
         }
         dfargs = list(dfx = dfx)
     }
-    misc$initMesg = paste("d.f. method:", mode)
+    attr(dffun, "mesg") = mode
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
@@ -378,6 +378,11 @@ emm_basis.gls = function(object, trms, xlev, grid,
     if (!is.matrix(object$apVar))
         mode = "df.error"
     if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
+        chk = attr(object$apVar, "Pars")
+        if(max(abs(coef(object$modelStruct) - chk[-length(chk)])) > .001) {
+            message("Analytical Satterthwaite method not available; using boot-satterthwaite")
+            mode = "boot-satterthwaite"
+        }
         if (mode == "boot-satterthwaite") {
             G = try(gradV.kludge(object, "varBeta", call = object$call,
                                  data = eval(object$call$data)),
@@ -399,7 +404,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
         dfargs = list(df = object$dims$N - object$dims$p - length(attr(object$apVar, "Pars")))
         dffun = function(k, dfargs) dfargs$df
     }
-    misc$initMesg = paste("d.f. method:", mode)
+    attr(dffun, "mesg") = mode
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 

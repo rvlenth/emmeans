@@ -385,6 +385,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     
     mesg = misc$initMesg
     
+    # Look for "mesg" attribute in dffun
+    if (!is.null(dfm <- attr(object@dffun, "mesg")))
+        mesg = c(mesg, paste("Degrees-of-freedom method:", dfm))
+    
     ### Add an annotation when we show results on lp scale and
     ### there is a transformation
     if (!inv && !is.null(link)) {

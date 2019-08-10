@@ -298,7 +298,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     
     row.names(linfct) = NULL
     misc = object@misc
-    misc$initMesg = NULL # initial annotation likely will no longer apply
+    misc$initMesg = NULL
     misc$estName = "estimate"
     if (!is.null(et <- attr(cmat, "type")))
         misc$estType = et

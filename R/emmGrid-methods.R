@@ -519,14 +519,6 @@ emm_defaults = list (
 #' contrasts will be conducted on the new scale -- which is
 #' the reason this function exists. 
 #' 
-#' In cases where the
-#' degrees of freedom depended on the linear function being estimated, the d.f.
-#' from the reference grid are saved, and a kind of \dQuote{containment} method
-#' is substituted in the returned object whereby the calculated d.f. for a new
-#' linear function will be the minimum d.f. among those having nonzero
-#' coefficients. This is kind of an \emph{ad hoc} method, and it can
-#' over-estimate the degrees of freedom in some cases.
-#'
 #' This function may also be used to convert a reference grid for a 
 #' frequentist model to one for a Bayesian model. To do so, specify a value
 #' for \code{N.sim} and a posterior sample is simulated using the function \code{sim}.
@@ -570,7 +562,20 @@ emm_defaults = list (
 #'   with respective arguments \code{N.sim}, \code{object@bhat}, and \code{object@V}.
 #'   The default is the multivariate normal distribution.
 #' @param ... Ignored.
-#'   
+#' 
+#' @section Degrees of freedom:  
+#' In cases where the
+#' degrees of freedom depended on the linear function being estimated (e.g.,
+#' Satterthwaite method), the d.f.
+#' from the reference grid are saved, and a kind of \dQuote{containment} method
+#' is substituted in the returned object, whereby the calculated d.f. for a new
+#' linear function will be the minimum d.f. among those having nonzero
+#' coefficients. This is kind of an \emph{ad hoc} method, and it can
+#' over-estimate the degrees of freedom in some cases. An annotation is
+#' displayed below any subsequent summary results statisng that the 
+#' degrees-of-freedom method is inherited from the previous method at
+#' the time of re-gridding.
+#'
 #' @note Another way to use \code{regrid} is to supply a \code{transform} 
 #'   argument to \code{\link{ref_grid}} (either directly of indirectly via
 #'   \code{\link{emmeans}}). This is often a simpler approach if the reference
@@ -641,6 +646,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
     edf = df[estble]
     if (length(edf) == 0) edf = NA
     # note both NA/NA and Inf/Inf test is.na() = TRUE
+    prev.df.msg = attr(object@dffun, "mesg")
     if (any(is.na(edf/edf)) || (diff(range(edf)) < .01)) { # use common value
         object@dfargs = list(df = mean(edf, na.rm = TRUE))
         object@dffun = function(k, dfargs) dfargs$df
@@ -652,6 +658,11 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
             ifelse(length(idx) == 0, NA, min(dfargs$df[idx], na.rm = TRUE))
         }
     }
+    if(!is.null(prev.df.msg)) 
+        attr(object@dffun, "mesg") = ifelse(
+            startsWith(prev.df.msg, "inherited"), prev.df.msg,
+                paste("inherited from", prev.df.msg, "when re-gridding"))
+
     
     if(transform %in% c("response", "mu", "unlink", "log") && !is.null(object@misc$tran)) {
         flink = link = attr(est, "link")

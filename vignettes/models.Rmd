@@ -238,8 +238,8 @@ method: If `s^2` is the estimate of some variance, then its Satterthwaite d.f.
 is `2*s^4 / Var(s^2)`. In case our numerical methods for this fail, we also
 offer `mode = "boot-satterthwaite"` as a backup, by which quantities related to
 `Var(s^2)` are obtained by randomly perturbing the response values. Currently,
-only `"satterthwaite"` is unavailable for `lme` objects, and it is used
-if `"satterthwaite"` is requested.
+only `"boot-satterthwaite"` is available for `lme` objects, and it is used
+if `"satterthwaite"` is requested. 
 
 The alternative method is `"df.error"` (for `gls`) and
 `"containment"` (for `lme`). `df.error` is just the error degrees of freedom for
