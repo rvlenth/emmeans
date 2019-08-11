@@ -26,6 +26,7 @@ This vignette explains how developers may incorporate **emmeans** support in the
   5. [Hook functions](#hooks)
   6. [Exported methods from **emmeans**](#exported)
   7. [Existing support for `rsm` objects](#rsm)
+  7. [Dispatching and restrictions](#dispatch)
   8. [Exporting and registering your methods](#exporting)
   9. [Conclusions](#concl)
   
@@ -216,7 +217,7 @@ In addition, you may want to apply some form of special post-processing after th
 [Back to Contents](#contents)
 
 ## Exported methods from **emmeans** {#exported}
-<!-- @index **emmeans** package!Exports useful to developers -->
+<!-- @index Extending **emmeans**!Exports useful to developers -->
 For package developers' convenience, **emmeans** exports some of its S3 methods
 for `recover_data` and/or `emm_basis`---use `methods("recover_data")` and
 `methods("emm_basis")` to discover which ones. It may be that all you need is to
@@ -378,6 +379,27 @@ emmeans(CR.rs2, ~ Time * Temp, mode = "decoded",
         at = list(Time = c(80, 85, 90), Temp = c(165, 185)))
 ```
 Since the supplied settings are the same on the decoded scale as were used on the coded scale, the EMMs are identical to those in the previous output.
+
+
+## Dispatching and restrictions {#dispatch}
+<!-- @index Extending **emmeans**!Restrictions; 
+    `recover_data()`!Dispatching; `emm_basis()`!Dispatching -->
+The **emmeans** package has internal support for a number of model classes.
+When `recover_data()` and `emm_basis()` are dispatched, a search is made
+for external methods for a given class; and if found, those methods are
+used instead of the internal ones. However, certain restrictions apply
+when you aim to override an existing internal method:
+
+  1. The class name being extended must appear in the first or second
+     position in the results of `class(object)`. That is, you may have a
+     base class for which you provide `recover_data()` and `emm_basis()` 
+     methods, and those will also work for *direct* descendents thereof;
+     but any class in third place or later in the inheritance is ignored.
+  2. Certain classes vital to the correct operation of the package, e.g.,
+     `"lm"`, `"glm"`, etc., may not be overridden.
+     
+If there are no existing internal methods for the class(es) you provide
+methods for, there are no restrictions on them.
 
 
 ## Exporting and registering your methods {#exporting}

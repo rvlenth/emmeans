@@ -14,6 +14,9 @@ emmeans 1.4.0.x  (next version should be 1.4.1)
     always right.
   * Attempt to make annotations clearer and more consistent regarding
     degrees-of-freedom methods.
+  * Provisions whereby externally provided `emm_basis()` and `recover_data()`
+    methods are used in preference to internal ones - so package developers
+    can provide improvements over what I've cobbled together.
     
 
 emmeans 1.4

@@ -15,7 +15,7 @@ recover_data(object, ...)
 \method{recover_data}{call}(object, trms, na.action, data = NULL,
   params = NULL, ...)
 
-emm_basis(object, trms, xlev, grid, ...)
+emm_basis(object, ...)
 
 .recover_data(object, ...)
 

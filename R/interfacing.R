@@ -88,8 +88,28 @@
 #' 
 #' @export
 recover_data = function(object, ...) {
+    # look for outside methods first
+    for (cl in .chk.cls(object)) {
+        rd <- try(getS3method("recover_data", cl, envir = .GlobalEnv), silent = TRUE)
+        if(!inherits(rd, "try-error"))
+            return(rd(object, ...))
+    }
     UseMethod("recover_data")
 }
+
+# get classes that are OK for external code to modify
+# We don't allow overriding certain anchor classes, 
+# nor ones in 3rd place or later in inheritance
+.chk.cls = function(object) {
+    sacred = c("call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
+    setdiff(class(object)[1:2], sacred)
+}
+
+
+
+
+
+
 
 #--------------------------------------------------------------
 ### call' objects
@@ -261,6 +281,12 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
 #' \code{ref_grid}; it takes one argument, the constructed \code{object}, and
 #' should return a suitably modified \code{emmGrid} object.
 emm_basis = function(object, trms, xlev, grid, ...) {
+    # look for outside methods first
+    for (cl in .chk.cls(object)) {
+        emb <- try(getS3method("emm_basis", cl, envir = .GlobalEnv), silent = TRUE)
+        if(!inherits(emb, "try-error"))
+            return(emb(object, trms, xlev, grid, ...))
+    }
     UseMethod("emm_basis")
 }
 

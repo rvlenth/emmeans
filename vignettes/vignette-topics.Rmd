@@ -134,6 +134,7 @@ vignette: >
   * [`emm_basis()`](xtending.html#intro)
       * [Arguments and returned value](xtending.html#ebreqs)
       * [Communicating with `recover_data()`](xtending.html#communic)
+      * [Dispatching](xtending.html#dispatch)
       * [Hook functions](xtending.html#hooks)
       * [for `lqs` objects](xtending.html#eblqs)
       * [for `rsm` objects](xtending.html#ebrsm)
@@ -142,7 +143,6 @@ vignette: >
   * [`.emmc` functions](comparisons.html#linfcns)
   * **emmeans** package
       * [Exporting extensions to](xtending.html#exporting)
-      * [Exports useful to developers](xtending.html#exported)
   * [`emmeans()`](basics.html#emmeans)
       * [And the underlying model](FAQs.html#nowelch)
       * [Changing defaults](utilities.html#defaults)
@@ -205,6 +205,9 @@ vignette: >
           * [in *utilities: relevel*](utilities.html#relevel)
       * [Welch's *t* comparisons](utilities.html#relevel)
       * [`wine`](sophisticated.html#ordinal)
+  * Extending **emmeans**
+      * [Exports useful to developers](xtending.html#exported)
+      * [Restrictions](xtending.html#dispatch)
 
 
 [Back to top](#topnav)
@@ -436,6 +439,7 @@ vignette: >
   * [`recover_data()`](xtending.html#intro)
       * [Communicating with `emm_basis()`](xtending.html#communic)
       * [`data` and `params` arguments](xtending.html#rdargs)
+      * [Dispatching](xtending.html#dispatch)
       * [Error handling](xtending.html#rderrs)
       * [for `lqs` objects](xtending.html#rd.lqs)
       * [for `rsm` objects](xtending.html#rdrsm)
