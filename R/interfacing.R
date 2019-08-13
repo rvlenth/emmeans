@@ -129,12 +129,15 @@ recover_data = function(object, ...) {
 #'   predictors used in the model, and any factor levels must match those used
 #'   in fitting the model.
 #' @param params Character vector giving the names of any variables in the model
-#'   formula that are \emph{not} predictors. An example would be a variable
-#'   \code{knots} specifying the knots to use in a spline model.
+#'   formula that are \emph{not} predictors. For example, a spline model may involve
+#'   a local variable \code{knots} that is not a predictor, but its value is
+#'   needed to fit the model. Names of parameters not actually used are harmless,
+#'   and the default value \code{"pi"} (the only numeric constant in base R)
+#'   is provided in case the model involves it.
 #' 
 #' @method recover_data call
 #' @export
-recover_data.call = function(object, trms, na.action, data = NULL, params = NULL, ...) {
+recover_data.call = function(object, trms, na.action, data = NULL, params = "pi", ...) {
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
     tbl = data
@@ -177,7 +180,9 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
         env = environment(trms)
         if (is.null(env)) 
             env = parent.frame()
-        tbl = eval(fcall, env, parent.frame())
+        tbl = try(eval(fcall, env, parent.frame()), silent = TRUE)
+        if(inherits(tbl, "try-error"))
+            return(.rd.error(vars, fcall))
         if (possibly.random) {
             chk = eval(fcall, env, parent.frame())
             if (!all(chk == tbl))
@@ -204,7 +209,25 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = NULL
     tbl
 }
 
-
+# error message for recover_data.call
+.rd.error = function(vars, fcall) {
+    if ("pi" %in% vars) 
+        return("\nTry re-running with 'params = c\"pi\", ...)'")
+    if (is.list(fcall$data)) fcall$data = "(raw data structure)"
+    dataname = as.character(fcall$data)[1]
+    if ((!is.na(dataname)) && (nchar(dataname) > 50))
+        dataname = paste(substring(dataname, 1, 50), "...")
+    mesg = "We are unable to reconstruct the data.\n"
+    mesg = paste0(mesg, "The variables needed are:\n\t",
+           paste(vars, collapse = " "), "\n",
+           "Are any of these actually constants? (specify via 'params = ')\n")
+    if (is.na(dataname))
+        mesg = paste(mesg, "Try re-running with 'data = \"<name of dataset>\"'\n")
+    else 
+        mesg = paste0(mesg, "The dataset name is:\n\t", dataname, "\n",
+           "Does the data still exist? Or you can specify a dataset via 'data = '\n")
+    mesg
+}
 
 #----------------------------------------------------------
 ### emm_basis methods create a basis for the reference grid

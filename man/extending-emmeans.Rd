@@ -13,9 +13,9 @@
 recover_data(object, ...)
 
 \method{recover_data}{call}(object, trms, na.action, data = NULL,
-  params = NULL, ...)
+  params = "pi", ...)
 
-emm_basis(object, ...)
+emm_basis(object, trms, xlev, grid, ...)
 
 .recover_data(object, ...)
 
@@ -40,8 +40,11 @@ predictors used in the model, and any factor levels must match those used
 in fitting the model.}
 
 \item{params}{Character vector giving the names of any variables in the model
-formula that are \emph{not} predictors. An example would be a variable
-\code{knots} specifying the knots to use in a spline model.}
+formula that are \emph{not} predictors. For example, a spline model may involve
+a local variable \code{knots} that is not a predictor, but its value is
+needed to fit the model. Names of parameters not actually used are harmless,
+and the default value \code{"pi"} (the only numeric constant in base R)
+is provided in case the model involves it.}
 
 \item{xlev}{Named list of factor levels (\emph{excluding} ones coerced to 
 factors in the model formula)}

@@ -11,21 +11,21 @@ ref_grid(object, at, cov.reduce = mean, mult.names, mult.levs,
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
-as \code{lm}. Many models are supported. 
-See \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.}
+as \code{lm}. Many models are supported. See
+\href{../doc/models.html}{\code{vignette("models", "emmeans")}}.}
 
 \item{at}{Optional named list of levels for the corresponding variables}
 
 \item{cov.reduce}{A function, logical value, or formula; or a named list of
 these. Each covariate \emph{not} specified in \code{at} is reduced
-according to these specifications. See the section below on 
-\dQuote{Using \code{cov.reduce}}.}
+according to these specifications. See the section below on \dQuote{Using
+\code{cov.reduce}}.}
 
-\item{mult.names}{Character value: the name(s) to give to the pseudo-factor(s)
-whose levels delineate the elements of a multivariate response. If this is
-provided, it overrides the default name(s) used for
-\code{class(object)} when it has a multivariate response
-(e.g., the default is \code{"rep.meas"} for \code{"mlm"} objects).}
+\item{mult.names}{Character value: the name(s) to give to the
+pseudo-factor(s) whose levels delineate the elements of a multivariate
+response. If this is provided, it overrides the default name(s) used for
+\code{class(object)} when it has a multivariate response (e.g., the default
+is \code{"rep.meas"} for \code{"mlm"} objects).}
 
 \item{mult.levs}{A named list of levels for the dimensions of a multivariate
 response. If there is more than one element, the combinations of levels are
@@ -38,18 +38,18 @@ to \code{\link{update.emmGrid}}, just after the object is constructed.}
 
 \item{data}{A \code{data.frame} to use to obtain information about the
 predictors (e.g. factor levels). If missing, then
-\code{\link{recover_data}} is used to attempt to reconstruct the data.
-See the note with \code{\link{recover_data}} for an important precaution.}
+\code{\link{recover_data}} is used to attempt to reconstruct the data. See
+the note with \code{\link{recover_data}} for an important precaution.}
 
-\item{df}{Numeric value. This is equivalent to specifying
-\code{options(df = df)}. See \code{\link{update.emmGrid}}.}
+\item{df}{Numeric value. This is equivalent to specifying \code{options(df =
+df)}. See \code{\link{update.emmGrid}}.}
 
 \item{type}{Character value. If provided, this is saved as the
-\code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the section
-below on prediction types and transformations.}
+\code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the
+section below on prediction types and transformations.}
 
-\item{transform}{Character value. If other than \code{"none"}, the reference 
-grid is reconstructed via \code{\link{regrid}} with the given 
+\item{transform}{Character value. If other than \code{"none"}, the reference
+grid is reconstructed via \code{\link{regrid}} with the given
 \code{transform} argument. See the section below on prediction types and
 transformations.}
 
@@ -58,28 +58,30 @@ here via a character vector or named \code{list} specifying the nesting
 structure. Specifying \code{nesting} overrides any nesting structure that
 is automatically detected. See Details.}
 
-\item{covnest}{Logical value. If \code{TRUE}, covariates having more than
-one value in the reference grid are included when auto-detecting nesting.
-Set this to \code{TRUE} only if you have covariate values that logically
-depend on some other factor's levels.}
+\item{covnest}{Logical value. If \code{TRUE}, covariates having more than one
+value in the reference grid are included when auto-detecting nesting. Set
+this to \code{TRUE} only if you have covariate values that logically depend
+on some other factor's levels.}
 
 \item{offset}{Numeric scalar value (if a vector, only the first element is
-used). This may be used to add an offset, or override offsets based on the model.
-A common usage would be to specify \code{offset = 0} for a Poisson
-regression model, so that predictions from the reference grid become
-rates relative to the offset that had been specified in the model.}
+used). This may be used to add an offset, or override offsets based on the
+model. A common usage would be to specify \code{offset = 0} for a Poisson
+regression model, so that predictions from the reference grid become rates
+relative to the offset that had been specified in the model.}
 
-\item{sigma}{Numeric value to use for subsequent predictions
-or back-transformation bias adjustments. If not specified, we
-use \code{sigma(object)}, if available, and \code{NULL} otherwise.}
+\item{sigma}{Numeric value to use for subsequent predictions or
+back-transformation bias adjustments. If not specified, we use
+\code{sigma(object)}, if available, and \code{NULL} otherwise.}
 
-\item{...}{Optional arguments passed to \code{\link{emm_basis}}, such as
-\code{vcov.} (see Details below) or options for certain models (see
-\href{../doc/models.html}{vignette("models", "emmeans")}).}
+\item{...}{Optional arguments passed to \code{\link{emm_basis}}, and
+\code{\link{recover_data}}, such as \code{params}, \code{vcov.} (see
+\bold{Covariance matrix} below), or options such as \code{mode} for
+specific model types (see \href{../doc/models.html}{vignette("models",
+"emmeans")}).}
 }
 \value{
-An object of the S4 class \code{"emmGrid"} (see 
-  \code{\link{emmGrid-class}}). These objects encapsulate everything needed 
+An object of the S4 class \code{"emmGrid"} (see
+  \code{\link{emmGrid-class}}). These objects encapsulate everything needed
   to do calculations and inferences for estimated marginal means, and contain
   nothing that depends on the model-fitting procedure.
 }
@@ -89,176 +91,174 @@ marginal means are defined. The resulting \code{ref_grid} object encapsulates
 all the information needed to calculate EMMs and make inferences on them.
 }
 \details{
-To users, the \code{ref_grid} function itself is important because
-most of its arguments are in effect arguments of \code{\link{emmeans}}
-and related functions, in that those functions pass their \code{...} arguments
-to \code{ref_grid}.
+To users, the \code{ref_grid} function itself is important because most of
+its arguments are in effect arguments of \code{\link{emmeans}} and related
+functions, in that those functions pass their \code{...} arguments to
+\code{ref_grid}.
 
 The reference grid consists of combinations of independent variables over
 which predictions are made. Estimated marginal means are defined as these
 predictions, or marginal averages thereof. The grid is determined by first
 reconstructing the data used in fitting the model (see
 \code{\link{recover_data}}), or by using the \code{data.frame} provided in
-\code{data}. The default reference grid is determined by the observed
-levels of any factors, the ordered unique values of character-valued
-predictors, and the results of \code{cov.reduce} for numeric predictors.
-These may be overridden using \code{at}. See also the section below on
+\code{data}. The default reference grid is determined by the observed levels
+of any factors, the ordered unique values of character-valued predictors, and
+the results of \code{cov.reduce} for numeric predictors. These may be
+overridden using \code{at}. See also the section below on
 recovering/overriding model information.
 }
 \section{Using \code{cov.reduce}}{
+ \code{cov.reduce} may be a function,
+  logical value, formula, or a named list of these.
 
-\code{cov.reduce} may be a function, logical value, formula, or a named list of
-  these.
-  
-If a single function, it is applied to each covariate. 
+  If a single function, it is applied to each covariate.
 
-If logical and \code{TRUE}, \code{mean} is used. If logical and \code{FALSE},
-it is equivalent to specifying \samp{function(x) sort(unique(x))}, and these
-values are considered part of the reference grid; thus, it is a handy
-alternative to specifying these same values in \code{at}.
+  If logical and \code{TRUE}, \code{mean} is used. If logical and
+  \code{FALSE}, it is equivalent to specifying \samp{function(x)
+  sort(unique(x))}, and these values are considered part of the reference
+  grid; thus, it is a handy alternative to specifying these same values in
+  \code{at}.
 
-If a formula (which must be two-sided), then a model is fitted to that
-formula using \code{\link{lm}}; then in the reference grid, its response
-variable is set to the results of \code{\link{predict}} for that model, with
-the reference grid as \code{newdata}. (This is done \emph{after} the
-reference grid is determined.) A formula is appropriate here when you think
-experimental conditions affect the covariate as well as the response.
+  If a formula (which must be two-sided), then a model is fitted to that
+  formula using \code{\link{lm}}; then in the reference grid, its response
+  variable is set to the results of \code{\link{predict}} for that model,
+  with the reference grid as \code{newdata}. (This is done \emph{after} the
+  reference grid is determined.) A formula is appropriate here when you think
+  experimental conditions affect the covariate as well as the response.
 
-If \code{cov.reduce} is a named list, then the above criteria are used to
-determine what to do with covariates named in the list. (However, formula
-elements do not need to be named, as those names are determined from the
-formulas' left-hand sides.) Any unresolved covariates are reduced using
-\code{"mean"}.
+  If \code{cov.reduce} is a named list, then the above criteria are used to
+  determine what to do with covariates named in the list. (However, formula
+  elements do not need to be named, as those names are determined from the
+  formulas' left-hand sides.) Any unresolved covariates are reduced using
+  \code{"mean"}.
 
-Any \code{cov.reduce} specification for a covariate also named in \code{at}
-is ignored.
+  Any \code{cov.reduce} specification for a covariate also named in \code{at}
+  is ignored.
 }
 
 \section{Interdependent covariates}{
-
-Care must be taken when covariate values depend on one another. For example,
-when a polynomial model was fitted using predictors \code{x}, \code{x2}
-(equal to \code{x^2}), and \code{x3} (equal to \code{x^3}), the reference 
-grid will by default set \code{x2} and \code{x3} to their means, which is
-inconsistent. The user should instead use the \code{at} argument to set these
-to the square and cube of \code{mean(x)}. Better yet, fit the model using
-a formula involving \code{poly(x, 3)} or \code{I(x^2)} and \code{I(x^3)}; then
-there is only \code{x} appearing as a covariate; it will be set to its mean, 
-and the model matrix will have the correct corresponding quadratic and cubic
-terms.
+ Care must be taken when covariate values
+  depend on one another. For example, when a polynomial model was fitted
+  using predictors \code{x}, \code{x2} (equal to \code{x^2}), and \code{x3}
+  (equal to \code{x^3}), the reference grid will by default set \code{x2} and
+  \code{x3} to their means, which is inconsistent. The user should instead
+  use the \code{at} argument to set these to the square and cube of
+  \code{mean(x)}. Better yet, fit the model using a formula involving
+  \code{poly(x, 3)} or \code{I(x^2)} and \code{I(x^3)}; then there is only
+  \code{x} appearing as a covariate; it will be set to its mean, and the
+  model matrix will have the correct corresponding quadratic and cubic terms.
 }
 
 \section{Matrix covariates}{
-
-Support for covariates that appear in the dataset as matrices is very limited.
-If the matrix has but one column, it is treated like an ordinary covariate.
-Otherwise, with more than one column, each column is reduced to a single
-reference value -- the result of applying \code{cov.reduce} to each column 
-(averaged together 
-if that produces more than one value); you may not specify values
-in \code{at}; and they are not treated as variables in the reference grid,
-except for purposes of obtaining predictions.
+ Support for covariates that appear in the dataset
+  as matrices is very limited. If the matrix has but one column, it is
+  treated like an ordinary covariate. Otherwise, with more than one column,
+  each column is reduced to a single reference value -- the result of
+  applying \code{cov.reduce} to each column (averaged together if that
+  produces more than one value); you may not specify values in \code{at}; and
+  they are not treated as variables in the reference grid, except for
+  purposes of obtaining predictions.
 }
 
 \section{Recovering or overriding model information}{
+ Ability to support a
+  particular class of \code{object} depends on the existence of
+  \code{recover_data} and \code{emm_basis} methods -- see
+  \link{extending-emmeans} for details. The call
+  \code{methods("recover_data")} will help identify these.
 
-Ability to support a particular class of \code{object} depends on the
-existence of \code{recover_data} and \code{emm_basis} methods -- see
-\link{extending-emmeans} for details. The call \code{methods("recover_data")}
-will help identify these. 
+  \bold{Data.} In certain models, (e.g., results of
+  \code{\link[lme4]{glmer.nb}}), it is not possible to identify the original
+  dataset. In such cases, we can work around this by setting \code{data}
+  equal to the dataset used in fitting the model, or a suitable subset. Only
+  the complete cases in \code{data} are used, so it may be necessary to
+  exclude some unused variables. Using \code{data} can also help save
+  computing, especially when the dataset is large. In any case, \code{data}
+  must represent all factor levels used in fitting the model. It
+  \emph{cannot} be used as an alternative to \code{at}. (Note: If there is a
+  pattern of \code{NAs} that caused one or more factor levels to be excluded
+  when fitting the model, then \code{data} should also exclude those levels.)
 
-\bold{Data.} In certain models, (e.g., results of \code{\link[lme4]{glmer.nb}}), it is not
-possible to identify the original dataset. In such cases, we can work around
-this by setting \code{data} equal to the dataset used in fitting the model,
-or a suitable subset. Only the complete cases in \code{data} are used, so it
-may be necessary to exclude some unused variables. Using \code{data} can also
-help save computing, especially when the dataset is large. In any case,
-\code{data} must represent all factor levels used in fitting the model. It
-\emph{cannot} be used as an alternative to \code{at}. (Note: If there is a
-pattern of \code{NAs} that caused one or more factor levels to be excluded
-when fitting the model, then \code{data} should also exclude those levels.)
+  \bold{Covariance matrix.} By default, the variance-covariance matrix for
+  the fixed effects is obtained from \code{object}, usually via its
+  \code{\link{vcov}} method. However, the user may override this via a
+  \code{vcov.} argument, specifying a matrix or a function. If a matrix, it
+  must be square and of the same dimension and parameter order of the fixed
+  effects. If a function, must return a suitable matrix when it is called
+  with \code{object} as its only argument.
 
-\bold{Covariance matrix.} By default, the variance-covariance matrix for the 
-fixed effects is obtained from \code{object}, usually via its
-\code{\link{vcov}} method. However, the user may override this via a
-\code{vcov.} argument, specifying a matrix or a function. If a matrix, it
-must be square and of the same dimension and parameter order of the fixed
-effects. If a function, must return a suitable matrix when it is called with
-\code{object} as its only argument.
+  \bold{Nested factors.} Having a nesting structure affects marginal
+  averaging in \code{emmeans} in that it is done separately for each level
+  (or combination thereof) of the grouping factors. \code{ref_grid} tries to
+  discern which factors are nested in other factors, but it is not always
+  obvious, and if it misses some, the user must specify this structure via
+  \code{nesting}; or later using \code{\link{update.emmGrid}}. The
+  \code{nesting} argument may be a character vector or a named \code{list}.
+  If a \code{list}, each name should be the name of a single factor in the
+  grid, and its entry a character vector of the name(s) of its grouping
+  factor(s). \code{nested} may also be a character value of the form
+  \code{"factor1 \%in\% (factor2*factor3)"} (the parentheses are optional).
+  If there is more than one such specification, they may be appended
+  separated by commas, or as separate elements of a character vector. For
+  example, these specifications are equivalent: \code{nesting = list(state =
+  "country", city = c("state", "country")}, \code{nesting = "state \%in\%
+  country, city \%in\% (state*country)"}, and \code{nesting = c("state \%in\%
+  country", "city \%in\% state*country")}.
 
-\bold{Nested factors.} Having a nesting structure affects marginal averaging 
-in \code{emmeans} in that it is done separately for each level (or 
-combination thereof) of the grouping factors. \code{ref_grid} tries to 
-discern which factors are nested in other factors, but it is not always 
-obvious, and if it misses some, the user must specify this structure via 
-\code{nesting}; or later using \code{\link{update.emmGrid}}. The \code{nesting}
-argument may be a character vector or a named \code{list}. If a \code{list},
-each name should be the name of a single factor in the grid, and its entry a
-character vector of the name(s) of its grouping factor(s). \code{nested} may
-also be a character value of the form \code{"factor1 \%in\%
-(factor2*factor3)"} (the parentheses are optional). If there is more than one
-such specification, they may
-be appended separated by commas, or as separate elements of a character
-vector. For example, these specifications are equivalent: \code{nesting =
-list(state = "country", city = c("state", "country")}, \code{nesting = "state
-\%in\% country, city \%in\% (state*country)"}, and \code{nesting = c("state
-\%in\% country", "city \%in\% state*country")}.
-
-In certain unusual cases, a covariate (rather than a factor) may be nested.
-Support for such situations is limited to the extent that only covariate
-values that exactly match a value in the dataset is permitted. I recommend
-supplying a reference dataset in the \code{data} argument that contains the
-desired covariate values for the reference grid; then the nesting will be
-handled correctly if you specify \code{covnest = TRUE} and 
-\code{cov.reduce = FALSE}.
+  In certain unusual cases, a covariate (rather than a factor) may be nested.
+  Support for such situations is limited to the extent that only covariate
+  values that exactly match a value in the dataset is permitted. I recommend
+  supplying a reference dataset in the \code{data} argument that contains the
+  desired covariate values for the reference grid; then the nesting will be
+  handled correctly if you specify \code{covnest = TRUE} and \code{cov.reduce
+  = FALSE}.
 }
 
 \section{Predictors with subscripts and data-set references}{
+ When the fitted
+  model contains subscripts or explicit references to data sets, the
+  reference grid may optionally be post-processed to simplify the variable
+  names, depending on the \code{simplify.names} option (see
+  \code{\link{emm_options}}), which by default is \code{TRUE}. For example,
+  if the model formula is \code{data1$resp ~ data1$trt + data2[[3]] +
+  data2[["cov"]]}, the simplified predictor names (for use, e.g., in the
+  \code{specs} for \code{\link{emmeans}}) will be \code{trt},
+  \code{data2[[3]]}, and \code{cov}. Numerical subscripts are not simplified;
+  nor are variables having simplified names that coincide, such as if
+  \code{data2$trt} were also in the model.
 
-When the fitted model contains subscripts or explicit references to data
-sets, the reference grid may optionally be post-processed to simplify the
-variable names, depending on the \code{simplify.names} option (see
-\code{\link{emm_options}}), which by default is \code{TRUE}. For example, if
-the model formula is \code{data1$resp ~ data1$trt + data2[[3]] +
-data2[["cov"]]}, the simplified predictor names (for use, e.g., in the
-\code{specs} for \code{\link{emmeans}}) will be \code{trt},
-\code{data2[[3]]}, and \code{cov}. Numerical subscripts are not simplified; nor are
-variables having simplified names that coincide, such as if \code{data2$trt} were
-also in the model. 
+  Please note that this simplification is performed \emph{after} the
+  reference grid is constructed. Thus, non-simplified names must be used in
+  the \code{at} argument (e.g., \code{at = list(`data2["cov"]` = 2:4)}.
 
-Please note that this simplification is performed \emph{after} the
-reference grid is constructed. Thus, non-simplified names must be used in
-the \code{at} argument (e.g., \code{at = list(`data2["cov"]` = 2:4)}. 
-
-If you don't want names simplified, use
-\code{emm_options(simplify.names = FALSE)}.
+  If you don't want names simplified, use \code{emm_options(simplify.names =
+  FALSE)}.
 }
 
 \section{Prediction types and transformations}{
-
-There is a subtle difference between specifying \samp{type = "response"} and 
-\samp{transform = "response"}. While the summary statistics for the grid 
-itself are the same, subsequent use in \code{\link{emmeans}} will yield 
-different results if there is a response transformation or link function. 
-With \samp{type = "response"}, EMMs are computed by averaging together
-predictions on the \emph{linear-predictor} scale and then back-transforming
-to the response scale; while with \samp{transform = "response"}, the
-predictions are already on the response scale so that the EMMs will be
-the arithmetic means of those response-scale predictions. To add further to
-the possibilities, \emph{geometric} means of the response-scale predictions
-are obtainable via \samp{transform = "log", type = "response"}.
+ There is a subtle difference
+  between specifying \samp{type = "response"} and \samp{transform =
+  "response"}. While the summary statistics for the grid itself are the same,
+  subsequent use in \code{\link{emmeans}} will yield different results if
+  there is a response transformation or link function. With \samp{type =
+  "response"}, EMMs are computed by averaging together predictions on the
+  \emph{linear-predictor} scale and then back-transforming to the response
+  scale; while with \samp{transform = "response"}, the predictions are
+  already on the response scale so that the EMMs will be the arithmetic means
+  of those response-scale predictions. To add further to the possibilities,
+  \emph{geometric} means of the response-scale predictions are obtainable via
+  \samp{transform = "log", type = "response"}.
 }
 
 \section{Side effect}{
-
-The most recent result of \code{ref_grid}, whether called directly or
-indirectly via \code{\link{emmeans}}, \code{\link{emtrends}}, or some other
-function that calls one of these, is saved in the user's environment as
-\code{.Last.ref_grid}. This facilitates checking what reference grid was
-used, or reusing the same reference grid for further calculations. This
-automatic saving is enabled by default, but may be disabled via
-\samp{emm_options(save.ref_grid = FALSE)}, and re-enabled by specifying
-\code{TRUE}.
+ The most recent result of \code{ref_grid}, whether
+  called directly or indirectly via \code{\link{emmeans}},
+  \code{\link{emtrends}}, or some other function that calls one of these, is
+  saved in the user's environment as \code{.Last.ref_grid}. This facilitates
+  checking what reference grid was used, or reusing the same reference grid
+  for further calculations. This automatic saving is enabled by default, but
+  may be disabled via \samp{emm_options(save.ref_grid = FALSE)}, and
+  re-enabled by specifying \code{TRUE}.
 }
 
 \examples{
@@ -287,8 +287,8 @@ ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 }
 \seealso{
 Reference grids are of class \code{\link[=emmGrid-class]{emmGrid}},
-  and several
-  methods exist for them -- for example \code{\link{summary.emmGrid}}. Reference
-  grids are fundamental to \code{\link{emmeans}}. Supported models are
-  detailed in \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
+  and several methods exist for them -- for example
+  \code{\link{summary.emmGrid}}. Reference grids are fundamental to
+  \code{\link{emmeans}}. Supported models are detailed in
+  \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
 }
