@@ -330,7 +330,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         by.cols[unlist(by.rows)] = by.cols # gives us inverse of by.rows order
     misc$orig.grid = orig.grid  # save original grid
     misc$con.coef = tcmat[ , by.cols, drop = FALSE] # save contrast coefs
-    true.con = all(zapsmall(apply(cmat, 2, sum)) == 0) # each set of coefs sums to 0
+    # test that each set of coefs sums to 0
+    true.con = all(abs(apply(cmat, 2, function(.) sum(.) / (1.0e-6 + max(abs(.))))) < 1.0e-6) 
     if(is.na(true.con)) # prevent error when there are no contrasts
         true.con = FALSE
     if(true.con)
