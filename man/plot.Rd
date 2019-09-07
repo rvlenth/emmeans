@@ -10,7 +10,8 @@
   alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals,
   frequentist, ...)
 
-\method{plot}{summary_emm}(x, y, horizontal = TRUE, xlab, ylab, layout,
+\method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab,
+  ylab, layout, colors = c("black", "blue", "blue", "red"), intervals,
   ...)
 }
 \arguments{
@@ -27,8 +28,10 @@ plotted for each estimate.}
 
 \item{PIs}{Logical value. If \code{TRUE}, prediction intervals are
 plotted for each estimate. If \code{objecct} is a Bayesian model,
-this requires \code{frequentist = TRUE} and \code{sigma =} (some value). 
-Prediction intervals are not available
+this requires \code{frequentist = TRUE} and \code{sigma =} (some value).
+Note that the \code{PIs} option is \emph{not} available with
+\code{summary_emm} objects -- only for \code{emmGrid} objects.
+Also, prediction intervals are not available
 with \code{engine = "lattice"}.}
 
 \item{comparisons}{Logical value. If \code{TRUE}, \dQuote{comparison arrows}

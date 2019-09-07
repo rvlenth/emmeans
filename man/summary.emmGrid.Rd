@@ -158,7 +158,8 @@ The \code{as.data.frame} method returns a plain data frame,
 }
 \description{
 These are the primary methods for obtaining numerical or tabular results 
-from an \code{emmGrid} object.
+from an \code{emmGrid} object. Note that by default, summaries for Bayesian models are
+diverted to \code{\link{hpd.summary}}.
 }
 \details{
 \code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
@@ -347,4 +348,7 @@ test(contrast(pigs.emm, "consec"))
 
 test(contrast(pigs.emm, "consec"), joint = TRUE)
 
+}
+\seealso{
+\code{link{hpd.summary}}
 }

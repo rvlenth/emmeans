@@ -19,6 +19,7 @@ emmeans 1.4.0.x  (next version should be 1.4.1)
     can provide improvements over what I've cobbled together.
   * Tried to produce more informative message when `recover_data()` fails
   * Fixed bug in `contrast()` in identifying true contrasts (#134)
+  * Fixed a bug in `plot.summary_emm()` regarding `CIs` and `intervals` (#137)
     
 
 emmeans 1.4

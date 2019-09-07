@@ -101,8 +101,10 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   plotted for each estimate.
 #' @param PIs Logical value. If \code{TRUE}, prediction intervals are
 #'   plotted for each estimate. If \code{objecct} is a Bayesian model,
-#'   this requires \code{frequentist = TRUE} and \code{sigma =} (some value). 
-#'   Prediction intervals are not available
+#'   this requires \code{frequentist = TRUE} and \code{sigma =} (some value).
+#'   Note that the \code{PIs} option is \emph{not} available with
+#'   \code{summary_emm} objects -- only for \code{emmGrid} objects.
+#'   Also, prediction intervals are not available
 #'   with \code{engine = "lattice"}.
 #' @param comparisons Logical value. If \code{TRUE}, \dQuote{comparison arrows}
 #'   are added to the plot, in such a way that the degree to which arrows
@@ -155,8 +157,12 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' plot(warp.emm)
 #' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
 #'      horizontal = FALSE, colors = "darkgreen")
-plot.summary_emm = function(x, y, horizontal = TRUE, xlab, ylab, layout, ...) {
-    .plot.srg (x, y, horizontal, xlab, ylab, layout, ...)
+plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
+                            xlab, ylab, layout, 
+                            colors = c("black", "blue", "blue", "red"), intervals, ...) {
+    if(!missing(intervals))
+        CIs = intervals
+    .plot.srg (x, y, horizontal, xlab, ylab, layout, CIs = CIs, colors = colors, ...)
 }
 
 # Workhorse for plot.summary_emm

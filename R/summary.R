@@ -27,7 +27,8 @@
 #' Summaries, predictions, intervals, and tests for \code{emmGrid} objects
 #' 
 #' These are the primary methods for obtaining numerical or tabular results 
-#' from an \code{emmGrid} object.
+#' from an \code{emmGrid} object. Note that by default, summaries for Bayesian models are
+#' diverted to \code{\link{hpd.summary}}.
 #' 
 #' \code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
 #' \code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
@@ -252,7 +253,8 @@
 #'   unnecessary to call \code{summary} unless there is a need to
 #'   specify other than its default options.
 #'   
-#'   
+#' @seealso \code{link{hpd.summary}}
+#' 
 #' @method summary emmGrid  
 #' @export
 #'

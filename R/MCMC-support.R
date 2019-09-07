@@ -277,7 +277,10 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     
     
     ### OK, finally, here is the real stuff
-    mesg = misc$initMesg
+    pe.lbl = as.character(substitute(point.est))
+    if(length(pe.lbl) > 1) 
+        pe.lbl = "user-supplied function"
+    mesg = c(misc$initMesg, paste("Point estimate displayed:", pe.lbl))
     mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE, 
                            NE.include = TRUE, ...)
     mcmc = mcmc[, use.elts, drop = FALSE]
