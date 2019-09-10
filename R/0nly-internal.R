@@ -249,6 +249,19 @@ model.frame = function(formula, data, ...) {
         "(various values)"
 }
 
+# format a transformation for messages
+.fmt.tran = function(misc) {
+    tran = misc$tran
+    if (is.list(tran)) 
+        tran = ifelse(is.null(tran$name), "custom", tran$name)
+    if (!is.null(mul <- misc$tran.mult))
+        tran = paste0(mul, "*", tran)
+    if(!is.null(off <- misc$tran.offset))
+        tran = paste0(tran, "(mu + ", off, ")")
+    tran
+}
+
+
 # My own utility for requiring a namespace and handling case where it is not available
 #   pkg      package name
 #   ...      passed to fail

@@ -50,6 +50,10 @@ response transformation \samp{2*sqrt(y)} (or \samp{sqrt(y) + sqrt(y + 1)},
 for that matter), we should have \code{tran = "sqrt"} and \code{tran.mult =
 2}. If absent, a multiple of 1 is assumed.}
 
+\item{\code{tran.offset}}{Additive constant before a transformation is applied.
+For example, a response transformation of \code{log(y + pi)} has
+\code{tran.offset  = pi}. If no value is present, an offset of 0 is assumed.}
+
 \item{\code{estName}}{(\code{character}) is the column label used for
 displaying predictions or EMMs.}
 

@@ -62,6 +62,17 @@ contrast = function(object, ...)
 #'   \code{by}, or a list thereof. See the section below on simple contrasts.
 #' @param combine Logical value that determines what is returned when
 #'   \code{simple} is a list. See the section on simple contrasts.
+#' @param ratios Logical value determining how log and logit transforms are
+#'   handled. These transformations are exceptional cases in that there is a
+#'   valid way to back-transform contrasts: differences of logs are logs of
+#'   ratios, and differences of logits are odds ratios. If \code{ratios = TRUE}
+#'   and summarized with \code{type = "response"}, \code{contrast} results are
+#'   back-trajnsformed to ratios whenever we have true contrasts (coefficients
+#'   sum to zero). For other transformations, there is no natural way to
+#'   back-transform contrasts, so even when summarized with \code{type = "response"},
+#'   contrasts are computed and displayed on the transformed scale. Similarly, 
+#'   if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
+#'   any other transformation.
 #' @param ... Additional arguments passed to other methods
 #'
 #' @return \code{contrast} and \code{pairs} return an object of class
@@ -144,7 +155,7 @@ contrast = function(object, ...)
 contrast.emmGrid = function(object, method = "eff", interaction = FALSE, 
                         by, offset = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
-                        type, adjust, simple, combine = FALSE, ...) 
+                        type, adjust, simple, combine = FALSE, ratios = TRUE, ...) 
 {
     if(!missing(simple))
         return(.simcon(object, method = method, interaction = interaction,
@@ -339,21 +350,27 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
 
     # zap the transformation info except in special cases
     if (!is.null(misc$tran)) {
-        misc$orig.tran = misc$tran
-        if (true.con && misc$tran %in% c("log", "genlog", "logit")) {
+        misc$orig.tran = .fmt.tran(misc)
+        if (ratios && true.con && misc$tran %in% c("log", "genlog", "logit")) {
             misc$log.contrast = TRUE      # remember how we got here; used by summary
             misc$orig.inv.lbl = misc$inv.lbl
             if (misc$tran == "logit") {
                 misc$inv.lbl = "odds.ratio"
                 misc$tran = "log.o.r."
+                misc$tran.mult = misc$tran.offset = NULL
             }
             else {
                 misc$inv.lbl = "ratio"
                 misc$tran = "log"
+                misc$tran.mult = misc$tran.offset = NULL
             }
         }
-        else
-            misc$tran = misc$tran.mult = NULL
+        else {
+            misc$initMesg = c(misc$initMesg, 
+                              paste("Note: contrasts are still on the", misc$orig.tran, "scale"))
+            message("Use 'contrast(regrid(object), ...)' to obtain contrasts on the response scale")
+            misc$tran = misc$tran.mult = misc$tran.offset = NULL
+        }
     }
     
     # ensure we don't inherit inappropriate settings

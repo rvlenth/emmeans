@@ -105,6 +105,10 @@
 #' @return A \code{list} having at least the same elements as those returned by
 #'   \code{\link{make.link}}. The \code{linkfun} component is the transformation
 #'   itself.
+#' 
+#' @note The \code{genlog} transformation is technically unneeded, because
+#'   a response transformation of the form \code{log(y + c)} is now auto-detected 
+#'   by \code{\link{ref_grid}}.
 #' @note We modify certain \code{\link{make.link}} results in transformations
 #'   where there is a restriction on valid prediction values, so that reasonable
 #'   inverse predictions are obtained, no matter what. For example, if a
@@ -123,8 +127,8 @@
 #' emmeans(warp.bc, ~ tension | wool, type = "response")
 #' 
 #' \dontrun{
-#' # An existing model 'mod' was fitted with a log(y + 1) transformation...
-#' mod.rg <- update(ref_grid(mod), tran = make.tran("genlog", 1))
+#' # An existing model 'mod' was fitted with a y^(2/3) transformation...
+#' mod.rg <- update(ref_grid(mod), tran = make.tran("power", 2/3))
 #' emmeans(mod.rg, "treatment")
 #' }
 make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt"), param = 1) {

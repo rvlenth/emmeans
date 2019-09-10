@@ -22,6 +22,7 @@ This vignette covers the intricacies of transformations and link functions in **
   4. [Both a response transformation and a link](#tranlink)
   5. [Special transformations](#special)
   6. [Specifying a transformation after the fact](#after)
+  6. [Auto-detected transformations](#auto)
   7. [Faking a log transformation](#logs)
   8. [Bias adjustment](#bias-adj)
   
@@ -239,12 +240,12 @@ transformations with `make.tran()` require additional arguments.
 To use this capability in `emmeans()`, it is fortuitous to first obtain the 
 `make.tran()` result, and then to use it as the enclosing environment
 for fitting the model, with `linkfun` as the transformation. 
-For example, suppose we want to use the response
-transformation $\log(y + \frac12)$. Then proceed like this:
+For example, suppose the response variable is a percentage and we want to use the response
+transformation $\sin^{-1}\sqrt{y/100}$. Then proceed like this:
 ```{r eval = FALSE}
-tran <- make.tran("genlog", 1/2)
+tran <- make.tran("asin.sqrt", 100)
 my.model <- with(tran, 
-    lmer(linkfun(yield) ~ treatment + (1|Block), data = mydata))
+    lmer(linkfun(percent) ~ treatment + (1|Block), data = mydata))
 ```
 Subsequent calls to `ref_grid()`, `emmeans()`, `regrid()`, etc. will then 
 be able to access the transformation information correctly.
@@ -258,7 +259,7 @@ using a Box-Cox transformation.
 <!-- @index Transformations!Adding after the fact; `update()`!`tran` -->
 It is not at all uncommon to fit a model using statements like the following:
 ```{r eval = FALSE}
-mydata <- transform(mydata, logy.5 = log(yield + .5))
+mydata <- transform(mydata, logy.5 = log(yield + 0.5))
 my.model <- lmer(logy.5 ~ treatment + (1|Block), data = mydata)
 ```
 In this case, there is no way for `ref_grid()` to figure out that a response
@@ -275,6 +276,26 @@ of the transformation; e.g.,
 ```{r eval = FALSE}
 model.rg <- update(ref_grid(model), tran = "sqrt")
 ```
+
+## Auto-detected response transformations {#auto}
+<!-- @index Transformations!Auto-detected -->
+As can be seen in the initial `pigs.lm` example in this vignette,
+certain straightforward respionse transformations such as `log`, `sqrt`, etc. are
+automatically detected when `emmeans()` (really, `ref_grid()`) is called on the model
+object. In fact, scaling and shifting is supported too; so the preceding example with
+`my.model` could have been done more easily by specifying the transformation
+directly in the model formula:
+```r
+my.better.model <- lmer(log(yield + 0.5) ~ treatment + (1|Block), data = mydata)
+```
+The transformation would be auto-detected, saving you the trouble of adding it later.
+Similarly, a response transformation of `2 * sqrt(y + 1)` would be correctly 
+auto-detected. A model with a linearly transformed response, e.g. `4*(y - 1)`, 
+would *not* be auto-detected, but `4*I(y + -1)` would be interpreted as `4*identity(y + -1)`.
+Parsing is such that the response expression must be of the form `mult * fcn(resp + const)`;
+operators of `-` and `/` are not recognized.
+
+
 
 [Back to Contents](#contents)
 

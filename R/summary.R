@@ -329,8 +329,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     
     if(missing(df)) 
         df = misc$df
-    if(!is.null(df))
-        object@dffun = function(k, dfargs) df
+    if(!is.null(df)) {
+        object@dffun = function(k, dfargs) df[1]
+        attr(object@dffun, "mesg") = "user-specified"
+    }
     
     # for missing args that default to zero unless provided or in misc slot
     .nul.eq.zero = function(val) {
@@ -679,14 +681,20 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     else 
         NULL
     
-    if (is.list(link)) {  # See if multiple of link is requested
-        if (!is.null(misc$tran.mult))
-            link$mult = misc$tran.mult
-        if (!is.null(link$mult))
+    if (is.list(link)) {  # See if multiple of link is requested, or variable is offset
+        if (!is.null(misc$tran.mult) || !is.null(misc$tran.offset)) {
+            name = link$name
+            mult = link$mult = ifelse(is.null(misc$tran.mult), 1, misc$tran.mult)
+            off = link$offset = ifelse(is.null(misc$tran.offset), 0, misc$tran.offset)
             link = with(link, list(
-                linkinv = function(eta) linkinv(eta / mult),
-                mu.eta = function(eta) mu.eta(eta / mult) / mult,
-                name = paste0(round(mult, 3), "*", name)))
+                linkinv = function(eta) linkinv(eta / mult) - offset,
+                mu.eta = function(eta) mu.eta(eta / mult) / mult))
+            if(mult != 1)
+                name =  paste0(round(mult, 3), "*", name)        
+            if(off != 0)
+                name = paste0(name, "(mu + ", round(off, 3), ")")
+            link$name = name         
+        }
     }
     
     if (!is.null(link) && is.null(link$name))

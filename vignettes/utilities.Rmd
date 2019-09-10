@@ -251,7 +251,7 @@ other factor(s). This can be done via the `levels` argument in `update()`.
 As an example, sometimes a fitted model has a treatment factor that comprises combinations of other factors. In subsequent analysis, we may well want to break it down into the
 individual factors' contributions. Consider, for example, the `warpbreaks` data provided with R.
 We will define a single factor and fit a nonhomogeneous-variance model:
-```{r}
+```{r, message = FALSE}
 warp <- transform(warpbreaks, treat = interaction(wool, tension))
 library(nlme)
 warp.gls <- gls(breaks ~ treat, weights = varIdent(form = ~ 1|treat), data = warp)

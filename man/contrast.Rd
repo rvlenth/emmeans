@@ -12,7 +12,7 @@ contrast(object, ...)
 \method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE,
   by, offset = NULL, name = "contrast",
   options = get_emm_option("contrast"), type, adjust, simple,
-  combine = FALSE, ...)
+  combine = FALSE, ratios = TRUE, ...)
 
 \method{pairs}{emmGrid}(x, reverse = FALSE, ...)
 
@@ -60,6 +60,18 @@ added to \code{options}}
 
 \item{combine}{Logical value that determines what is returned when
 \code{simple} is a list. See the section on simple contrasts.}
+
+\item{ratios}{Logical value determining how log and logit transforms are
+handled. These transformations are exceptional cases in that there is a
+valid way to back-transform contrasts: differences of logs are logs of
+ratios, and differences of logits are odds ratios. If \code{ratios = TRUE}
+and summarized with \code{type = "response"}, \code{contrast} results are
+back-trajnsformed to ratios whenever we have true contrasts (coefficients
+sum to zero). For other transformations, there is no natural way to
+back-transform contrasts, so even when summarized with \code{type = "response"},
+contrasts are computed and displayed on the transformed scale. Similarly, 
+if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
+any other transformation.}
 
 \item{x}{An \code{emmGrid} object}
 

@@ -236,7 +236,18 @@ recovering/overriding model information.
 }
 
 \section{Prediction types and transformations}{
- There is a subtle difference
+
+  Transformations can exist because of a link function in a generalized linear model, 
+  or as a response transformation, or even both. In many cases, they are auto-detected,
+  for example a model formula of the form \code{sqrt(y) ~ ...}. Even transformations
+  containing multiplicative or additive constants, such as \code{2*sqrt(y + pi) ~ ...},
+  are auto-detected. A response transformation of \code{y + 1 ~ ...} is \emph{not}
+  auto-detected, but \code{I(y + 1) ~ ...} is interpreted as \code{identity(y + 1) ~ ...}.
+  A warning is issued if it gets too complicated.
+  Complex transformations like the Box-Cox transformation are not auto-detected; but see 
+  the help page for \code{\link{make.tran}} for information on some advanced methods.
+  
+  There is a subtle difference
   between specifying \samp{type = "response"} and \samp{transform =
   "response"}. While the summary statistics for the grid itself are the same,
   subsequent use in \code{\link{emmeans}} will yield different results if
@@ -247,7 +258,8 @@ recovering/overriding model information.
   already on the response scale so that the EMMs will be the arithmetic means
   of those response-scale predictions. To add further to the possibilities,
   \emph{geometric} means of the response-scale predictions are obtainable via
-  \samp{transform = "log", type = "response"}.
+  \samp{transform = "log", type = "response"}. See also the help page for 
+  \code{\link{regrid}}.
 }
 
 \section{Side effect}{

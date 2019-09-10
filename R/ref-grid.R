@@ -226,7 +226,18 @@
 #'
 #'
 #'
-#' @section Prediction types and transformations: There is a subtle difference
+#' @section Prediction types and transformations:
+#'   Transformations can exist because of a link function in a generalized linear model, 
+#'   or as a response transformation, or even both. In many cases, they are auto-detected,
+#'   for example a model formula of the form \code{sqrt(y) ~ ...}. Even transformations
+#'   containing multiplicative or additive constants, such as \code{2*sqrt(y + pi) ~ ...},
+#'   are auto-detected. A response transformation of \code{y + 1 ~ ...} is \emph{not}
+#'   auto-detected, but \code{I(y + 1) ~ ...} is interpreted as \code{identity(y + 1) ~ ...}.
+#'   A warning is issued if it gets too complicated.
+#'   Complex transformations like the Box-Cox transformation are not auto-detected; but see 
+#'   the help page for \code{\link{make.tran}} for information on some advanced methods.
+#'   
+#'   There is a subtle difference
 #'   between specifying \samp{type = "response"} and \samp{transform =
 #'   "response"}. While the summary statistics for the grid itself are the same,
 #'   subsequent use in \code{\link{emmeans}} will yield different results if
@@ -237,7 +248,8 @@
 #'   already on the response scale so that the EMMs will be the arithmetic means
 #'   of those response-scale predictions. To add further to the possibilities,
 #'   \emph{geometric} means of the response-scale predictions are obtainable via
-#'   \samp{transform = "log", type = "response"}.
+#'   \samp{transform = "log", type = "response"}. See also the help page for 
+#'   \code{\link{regrid}}.
 #'
 #' @section Side effect: The most recent result of \code{ref_grid}, whether
 #'   called directly or indirectly via \code{\link{emmeans}},
@@ -435,7 +447,8 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss
         attr(object, "data") = data
     
-    basis = emm_basis(object, trms, xlev, grid, misc = attr(data, "misc"), ...)
+    # we've added args `misc` and `options` so emm_basis methods can access and use these if they want
+    basis = emm_basis(object, trms, xlev, grid, misc = attr(data, "misc"), options = options, ...)
     if(length(basis$bhat) != ncol(basis$X))
         stop("Non-conformable elements in reference grid.\n",
              " Probably due to rank deficiency not handled as expected.",
@@ -451,20 +464,37 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     if (inherits(lhs, "formula")) { # response may be transformed
         tran = setdiff(.all.vars(lhs, functions = TRUE), c(.all.vars(lhs), "~", "cbind", "+", "-", "*", "/", "^", "%%", "%/%"))
         if(length(tran) > 0) {
-            tran = paste(tran, collapse = ".")  
-            # length > 1: Almost certainly unsupported, but facilitates a more informative error message
-            
-            # Look for a multiplier, e.g. 2*sqrt(y)
-            tst = strsplit(strsplit(as.character(lhs[2]), "\\(")[[1]][1], "\\*")[[1]]
-            if(length(tst) > 1) {
-                mul = suppressWarnings(as.numeric(tst[1]))
-                if(!is.na(mul))
-                    misc$tran.mult = mul
-                tran = gsub("\\*\\.", "", tran)
-            }
             if (tran == "linkfun")
                 tran = as.list(environment(trms))
-            if(is.null(misc$tran))
+            else {
+                if (tran == "I") 
+                    tran = "identity"
+                tran = paste(tran, collapse = ".")  
+                # length > 1: Almost certainly unsupported, but facilitates a more informative error message
+                const.warn = "There are unevaluated constants in the response formula\nAuto-detection of the response transformation may be incorrect"
+                # Look for a multiplier, e.g. 2*sqrt(y)
+                tst = strsplit(strsplit(as.character(lhs[2]), "\\(")[[1]][1], "\\*")[[1]]
+                if(length(tst) > 1) {
+                    mul = try(eval(parse(text = tst[1])), silent = TRUE)
+                    if(!inherits(mul, "try-error")) {
+                        misc$tran.mult = mul
+                        tran = gsub("\\*\\.", "", tran)
+                    }
+                    else
+                        warning(const.warn)
+                }
+                
+                # look for added constant, e.g. log(y + 1)
+                tst = strsplit(as.character(lhs)[2], "\\(|\\)|\\+")[[1]]
+                if (length(tst) > 2) {
+                    const = try(eval(parse(text = tst[3])), silent = TRUE)
+                    if (!inherits(const, "try-error") && (length(tst) == 3))
+                        misc$tran.offset = const
+                    else
+                        warning(const.warn)
+                }
+            }
+            if(is.null(misc[["tran"]]))
                 misc$tran = tran
             else
                 misc$tran2 = tran

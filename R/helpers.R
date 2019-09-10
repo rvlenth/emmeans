@@ -104,7 +104,7 @@ recover_data.merMod = function(object, ...) {
 #' @export
 emm_basis.merMod = function(object, trms, xlev, grid, vcov., 
                             mode = get_emm_option("lmer.df"), 
-                            lmer.df, ...) {
+                            lmer.df, options, ...) {
     if (missing(vcov.))
         V = as.matrix(vcov(object, correlation = FALSE))
     else
@@ -117,6 +117,9 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
             mode = lmer.df
 
         mode = match.arg(tolower(mode), c("satterthwaite", "kenward-roger", "asymptotic"))
+        if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
+            mode = "asymptotic"
+        
         
         # set flags
         objN = lme4::getME(object, "N")
@@ -233,8 +236,11 @@ recover_data.lme = function(object, data, ...) {
 
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("containment", "satterthwaite", "boot-satterthwaite", "auto"), sigmaAdjust = TRUE, ...) {
+        mode = c("containment", "satterthwaite", "boot-satterthwaite", "auto"), 
+        sigmaAdjust = TRUE, options, ...) {
     mode = match.arg(mode)
+    if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
+        mode = "fixed"
     if (mode == "auto")
         mode = ifelse(is.null(object$apVar), "containment", "boot-satterthwaite")
     if (is.null(object$apVar))
@@ -252,7 +258,11 @@ emm_basis.lme = function(object, trms, xlev, grid,
     }
     nbasis = estimability::all.estble
     
-    if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
+    if (mode == "fixed") { # hack to just put in df from options
+        dfargs = list(df = options$df)
+        dffun = function(k, dfargs) dfargs$df
+    }
+    else if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
         G = try(gradV.kludge(object), silent = TRUE)
         ###! not yet, doesn't work G = try(lme_grad(object, object$call, object$data, V))
         if (inherits(G, "try-error"))
@@ -364,7 +374,8 @@ recover_data.gls = function(object, ...) {
 }
 
 emm_basis.gls = function(object, trms, xlev, grid, 
-                         mode = c("auto", "df.error", "satterthwaite", "boot-satterthwaite"), ...) {
+                         mode = c("auto", "df.error", "satterthwaite", "boot-satterthwaite"), 
+                         options, ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
@@ -373,6 +384,8 @@ emm_basis.gls = function(object, trms, xlev, grid,
     nbasis = estimability::all.estble
     misc = list()
     mode = match.arg(mode)
+    if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
+        mode = "df.error"
     if (mode == "auto")
         mode = ifelse(is.null(object$apVar), "df.error", "satterthwaite")
     if (!is.matrix(object$apVar))
@@ -400,7 +413,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
             2 * est^2 / varest
         }
     }
-    else {  ### mode == "df.error"
+    else if (mode == "df.error") {  ### mode == "df.error"
         dfargs = list(df = object$dims$N - object$dims$p - length(attr(object$apVar, "Pars")))
         dffun = function(k, dfargs) dfargs$df
     }

@@ -20,6 +20,14 @@ emmeans 1.4.0.x  (next version should be 1.4.1)
   * Tried to produce more informative message when `recover_data()` fails
   * Fixed bug in `contrast()` in identifying true contrasts (#134)
   * Fixed a bug in `plot.summary_emm()` regarding `CIs` and `intervals` (#137)
+  * Improved support for response transformations. Models with formulas like
+    like `log(y + 1) ~ ...` and `2*sqrt(y + 0.5) ~ ...` are now auto-detected.
+    [This may cause discrepancies with examples in past usages, but if so, that
+    would be because the response transformation was previously incorrectly 
+    interpreted.]
+  * Added a `ratios` argument to `contrast()` to decide how to handle `log` and `logit`
+  * Added message/annotation when contrasts are summarized with `type = "response"`
+    but there is no way to back-transform them (or we opted out with `ratios = FALSE`)
     
 
 emmeans 1.4

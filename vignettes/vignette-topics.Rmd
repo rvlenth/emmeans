@@ -519,6 +519,7 @@ vignette: >
       * [One- and two-sided](confidence-intervals.html#summary)
   * Transformations
       * [Adding after the fact](transformations.html#after)
+      * [Auto-detected](transformations.html#auto)
       * [Back-transforming](confidence-intervals.html#tran)
       * [Bias adjustment](transformations.html#bias-adj)
       * [Custom](transformations.html#special)
