@@ -280,7 +280,7 @@ model.rg <- update(ref_grid(model), tran = "sqrt")
 ## Auto-detected response transformations {#auto}
 <!-- @index Transformations!Auto-detected -->
 As can be seen in the initial `pigs.lm` example in this vignette,
-certain straightforward respionse transformations such as `log`, `sqrt`, etc. are
+certain straightforward response transformations such as `log`, `sqrt`, etc. are
 automatically detected when `emmeans()` (really, `ref_grid()`) is called on the model
 object. In fact, scaling and shifting is supported too; so the preceding example with
 `my.model` could have been done more easily by specifying the transformation
@@ -340,7 +340,7 @@ In such settings, we need to
 make a bias adjustment when we back-transform, because any nonlinear
 transformation biases the expected values of statistical quantities. More
 specifically, suppose that we have a response $Y$ and the transformed
-response is $U$. To back-transform, we use $Y = h(U)$; and using a Tayor
+response is $U$. To back-transform, we use $Y = h(U)$; and using a Taylor
 approximation, $Y \approx h(\eta) + h'(\eta)(U-\eta) +
 \frac12h''(\eta)(U-\eta)^2$, so that 
 $E(Y) \approx h(\eta) + \frac12h''(\eta)Var(U)$. 

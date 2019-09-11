@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.0.x  (next version should be 1.4.1)
+emmeans 1.4.1
 -------------
   * Added non-estimability infrastructure for Bayesian models, `stanreg`
     in particular (#114)

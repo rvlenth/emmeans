@@ -22,7 +22,7 @@ constructors.
 
 Additional models can be supported by writing appropriate `recover_data`
 and `emm_basis` methods. See the package documentation for 
-`extending-emmeans` and `vignette("extending")` for details.
+`extending-emmeans` and `vignette("xtending")` for details.
 
 [Index of all vignette topics](vignette-topics.html)
 
@@ -418,7 +418,7 @@ save it as a member of the model object (e.g., `object$data = quote(mydata)`),
 that removes the necessity of specifying it in each call.
 The special keyword `trait` is used in some models. 
 When the response is multivariate and numeric, `trait` is generated automatically
-as a factor in the refernce grid, and the arguments `mult.levels` can be used to
+as a factor in the reference grid, and the arguments `mult.levels` can be used to
 name its levels. In other models such as a multinomial model, use the
 `mode` argument to specify the type of model, and `trait = <factor name>` 
 to specify the name of the data column that contains the levels of the factor response.

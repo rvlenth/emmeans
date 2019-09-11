@@ -212,8 +212,9 @@ using different weighting schemes:
 sapply(c("equal", "prop", "outer", "cells", "flat"), function(w)
     predict(emmeans(nutr.lm, ~ race, weights = w)))
 ```
-For `group * race` EMMs, the results for `"prop"` and `"flat"` are the same
-because only one factor (`age`) is averaged over.
+In the other hand, if we do `group * race` EMMs, only one factor (`age`) is
+averaged over; thus, the results for `"prop"` and `"outer"` weights will be
+identical in that case.
 
 [Back to Contents](#contents)
 

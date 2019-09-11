@@ -60,9 +60,9 @@ rg@misc$sigma
 
 Finally, `sigma` may be a vector, as long as it is conformable with the estimates
 in the reference grid. This would be appropriate, for example, with a model
-fitted by `nlme::gls()` with some kind of inhomogeneous error structure. It may take
+fitted by `nlme::gls()` with some kind of non-homogeneous error structure. It may take
 some effort, as well as a clear understanding of the model and its structure, to
-obtain suitable SD estimates. It was sugegsted to me that the function
+obtain suitable SD estimates. It was suggested to me that the function
 `insight::get_variance()` may be helpful -- especially when working with
 an unfamiliar model class. Personally, I prefer to make sure I understand the 
 structure of the model object and/or its summary to ensure I am not going astray.

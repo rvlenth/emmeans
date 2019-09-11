@@ -165,7 +165,7 @@ for more discussion.
 
 ## All or some of the results are NA {#NAs}
 <!-- @index `NA`s in the output; `NonEst` values; Estimability issues -->
-The **emmeans** package uses tookls in the **estimability** package to determine
+The **emmeans** package uses tools in the **estimability** package to determine
 whether its results are uniquely estimable. For example, in a two-way model
 with interactions included, if there are no observations in a particular cell
 (factor combination), then we cannot estimate the mean of that cell.

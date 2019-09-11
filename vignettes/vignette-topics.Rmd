@@ -151,7 +151,7 @@ vignette: >
           * [in *basics: weights*](basics.html#weights)
           * [in *messy-data: weights*](messy-data.html#weights)
       * [With transformations](transformations.html#regrid)
-  * [`emmGrid` objects](confidence-intervals.html#emmobj)
+  * [`emmGrid` objects](basics.html#emmobj)
       * [Accessing data](utilities.html#data)
       * [Combining and subsetting](utilities.html#rbind)
       * [Modifying](utilities.html#update)
@@ -195,7 +195,9 @@ vignette: >
           * [in *comparisons: formulas*](comparisons.html#formulas)
           * [in *interactions: oranges*](interactions.html#oranges)
       * [Ordinal model](sophisticated.html#ordinal)
-      * [`pigs`](basics.html#motivation)
+      * `pigs`
+          * [in *basics: motivation*](basics.html#motivation)
+          * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
       * [`rlm` objects](xtending.html#rlm)
       * [Robust regression](xtending.html#rlm)
       * [Split-plot experiment](sophisticated.html#lmer)
@@ -416,7 +418,7 @@ vignette: >
       * [Posterior predictive distribution](sophisticated.html#predict-mcmc)
       * [Reference grid](predictions.html#ref-grid)
       * [Total SD](predictions.html#feedlot)
-  * [`print.summary_emm()`](confidence-intervals.html#emmobj)
+  * [`print.summary_emm()`](basics.html#emmobj)
   * [`pwpp()`](comparisons.html#pwpp)
 
 
@@ -486,7 +488,7 @@ vignette: >
   * [`stanreg` objects](models.html#S)
   * [* gazing (star gazing)](interactions.html#factors)
   * [Startup options](utilities.html#startup)
-  * [`str()`](confidence-intervals.html#emmobj)
+  * [`str()`](basics.html#emmobj)
   * [Subsets of data](FAQs.html#model)
   * [`summary()`](confidence-intervals.html#summary)
       * [`adjust`](comparisons.html#pairwise)
@@ -499,7 +501,7 @@ vignette: >
           * [in *comparisons: pairwise*](comparisons.html#pairwise)
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
       * [`type = "unlink"`](transformations.html#tranlink)
-  * [`summary_emm` object](confidence-intervals.html#emmobj)
+  * [`summary_emm` object](basics.html#emmobj)
       * [As a data frame](utilities.html#data)
 
 

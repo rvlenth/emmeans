@@ -99,7 +99,7 @@ An effect can be practically negligible and still have a very small *P* value --
 or practically important but have a large *P* value -- depending on sample size and error variance.
 Failure to describe what is actually going on in the data is a failure to do an adequate analysis. 
 Use lots of plots, and *think* about the results. For more on this, see the discussion
-of *P* values in the ["basics" vignette](#basics.html#pvalues).
+of *P* values in the ["basics" vignette](basics.html#pvalues).
 
 [^2]: You may have noticed that there are no asterisks in the ANOVA table in
 this vignette. I habitually opt out of star-gazing by including

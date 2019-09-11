@@ -393,7 +393,7 @@ when you aim to override an existing internal method:
   1. The class name being extended must appear in the first or second
      position in the results of `class(object)`. That is, you may have a
      base class for which you provide `recover_data()` and `emm_basis()` 
-     methods, and those will also work for *direct* descendents thereof;
+     methods, and those will also work for *direct* descendants thereof;
      but any class in third place or later in the inheritance is ignored.
   2. Certain classes vital to the correct operation of the package, e.g.,
      `"lm"`, `"glm"`, etc., may not be overridden.
