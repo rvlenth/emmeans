@@ -17,14 +17,14 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 ## Contents {#contents}
 This vignette describes various ways of summarizing `emmGrid` objects.
 
-  2. [`summary()`, `confint()`, and `test()`](#summary)
-  3. [Back-transforming to response scale](#tran)
+  1. [`summary()`, `confint()`, and `test()`](#summary)
+  2. [Back-transforming to response scale](#tran)
      (See also the ["transformations" vignette](transformations.html))
-  4. [Multiplicity adjustments](#adjust)
-  5. [Using "by" variables](#byvars)
-  6. [Joint (omnibus) tests](#joint)
-  7. [Testing equivalence, noninferiority, nonsuperiority](#equiv)
-  8. Graphics (in ["basics" vignette](basics.html#plots))
+  3. [Multiplicity adjustments](#adjust)
+  4. [Using "by" variables](#byvars)
+  5. [Joint (omnibus) tests](#joint)
+  6. [Testing equivalence, noninferiority, nonsuperiority](#equiv)
+  7. Graphics (in ["basics" vignette](basics.html#plots))
   
 [Index of all vignette topics](vignette-topics.html)
 

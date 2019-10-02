@@ -627,8 +627,11 @@ regrid = function(object, transform = c("response", "mu", "unlink", "log", "none
     PB = object@post.beta
     NC = attr(PB, "n.chains")
     
-    if (!is.na(PB[1])) # fix up post.beta BEFORE we overwrite parameters
+    if (!is.na(PB[1])) { # fix up post.beta BEFORE we overwrite parameters
         PB = PB %*% t(object@linfct)
+        if (".offset." %in% names(object@grid))
+            PB = t(apply(PB, 1, function(.) . + object@grid[[".offset."]]))
+    }
     
     est = .est.se.df(object, do.se = TRUE) ###FALSE)
     estble = !(is.na(est[[1]]))

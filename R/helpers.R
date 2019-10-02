@@ -403,8 +403,11 @@ emm_basis.gls = function(object, trms, xlev, grid,
         }
         else
             G = try(gls_grad(object, object$call, eval(object$call$data), V))
-        if (inherits(G, "try-error"))
-            stop("Unable to estimate Satterthwaite parameters")
+        if (inherits(G, "try-error")) {
+            sugg = ifelse(mode == "satterthwaite", "boot-satterthwaite", "df.error")
+            stop("Can't estimate Satterthwaite parameters.\n",
+                 "  Try adding the argument 'mode = \"", sugg, "\"'", call. = FALSE)
+        }
         dfargs = list(V = V, A = object$apVar, G = G)
         dffun = function(k, dfargs) {
             est = tcrossprod(crossprod(k, dfargs$V), k)

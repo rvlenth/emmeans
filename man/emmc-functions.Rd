@@ -17,16 +17,16 @@
 \alias{mean_chg.emmc}
 \title{Contrast families}
 \usage{
-pairwise.emmc(levs, exclude = integer(0), include, ...)
+pairwise.emmc(levs, exclude = integer(0), include, divisor = 1, ...)
 
-revpairwise.emmc(levs, exclude = integer(0), include, ...)
+revpairwise.emmc(levs, exclude = integer(0), include, divisor = 1, ...)
 
 tukey.emmc(levs, reverse = FALSE, ...)
 
 poly.emmc(levs, max.degree = min(6, k - 1), ...)
 
 trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE,
-  exclude = integer(0), include, ...)
+  exclude = integer(0), include, divisor = 1, ...)
 
 trt.vs.ctrl1.emmc(levs, ref = 1, ...)
 
@@ -38,7 +38,8 @@ eff.emmc(levs, exclude = integer(0), include, ...)
 
 del.eff.emmc(levs, exclude = integer(0), include, ...)
 
-consec.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
+consec.emmc(levs, reverse = FALSE, exclude = integer(0), include,
+  divisor, ...)
 
 mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), include,
   ...)
@@ -53,6 +54,9 @@ Character levels must exactly match elements of \code{levs}.}
 \item{include}{integer or character vector of levels to include (the
 complement of \code{exclude}). An error will result if the user specifies
 both \code{exclude} and \code{include}.}
+
+\item{divisor}{numeric value that is divided into each set of conttrast coefficeints.
+This could be useful for converting differences to scaled effect sizes.}
 
 \item{...}{Additional arguments, passed to related methods as appropriate}
 

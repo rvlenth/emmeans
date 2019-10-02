@@ -1,5 +1,10 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.1.009xxx
+-------------
+  * Bug fix: `regrid` ignored offsets with Bayesian models
+  * Added `divisor` argument to some contrast functions
+
 emmeans 1.4.1
 -------------
   * Added non-estimability infrastructure for Bayesian models, `stanreg`

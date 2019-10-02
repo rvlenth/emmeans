@@ -92,6 +92,8 @@
 #' @param include integer or character vector of levels to include (the
 #'   complement of \code{exclude}). An error will result if the user specifies
 #'   both \code{exclude} and \code{include}.
+#' @param divisor numeric value that is divided into each set of conttrast coefficeints.
+#'    This could be useful for converting differences to scaled effect sizes.
 #' @param ... Additional arguments, passed to related methods as appropriate
 #' 
 #' @return A data.frame, each column containing contrast coefficients for levs.
@@ -118,6 +120,10 @@
 #' pairs(warp.emm, exclude = 2)
 #' # (same results using exclude = "M" or include = c("L","H") or include = c(1,3))
 #' 
+#' # Compute standardized effect sizes:
+#' update(pairs(warp.emm, divisor = sigma(warp.lm)), 
+#'        estName = "Cohen.d")
+#' 
 #' ### Setting up a custom contrast function
 #' helmert.emmc <- function(levs, ...) {
 #'     M <- as.data.frame(contr.helmert(levs))
@@ -131,7 +137,7 @@
 #' emmeans:::poly.emmc(1:6)
 #' }
 #' @name contrast-methods
-pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
+pairwise.emmc = function(levs, exclude = integer(0), include, divisor = 1, ...) {
     exclude = .get.excl(levs, exclude, include)
     k = length(levs)
     M = data.frame(levs=levs)
@@ -141,7 +147,7 @@ pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
             con[i] = 1
             con[j] = -1
             nm = paste(levs[i], levs[j], sep = " - ")
-            M[[nm]] = con
+            M[[nm]] = con / divisor
         }
     }
     row.names(M) = levs
@@ -157,7 +163,7 @@ pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
 
 # all pairwise trt[j] - trt[i], j > i
 #' @rdname emmc-functions
-revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
+revpairwise.emmc = function(levs, exclude = integer(0), include, divisor = 1, ...) {
     exclude = .get.excl(levs, exclude, include)
     k = length(levs)
     M = data.frame(levs=levs)
@@ -167,7 +173,7 @@ revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
             con[i] = 1
             con[j] = -1
             nm = paste(levs[i], levs[j], sep = " - ")
-            M[[nm]] = con
+            M[[nm]] = con / divisor
         }
     }
     row.names(M) = levs
@@ -222,7 +228,7 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 #' @param ref Integer(s) or character(s) specifying which level(s) to use 
 #'   as the reference. Character values must exactly match elements of \code{levs}.
 trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, 
-                            exclude = integer(0), include, ...) {
+                            exclude = integer(0), include, divisor = 1, ...) {
     ref = .num.key(levs, ref)
     exclude = .get.excl(levs, exclude, include)
     if ((min(ref) < 1) || (max(ref) > length(levs)))
@@ -245,7 +251,7 @@ trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE,
             nm = paste(cnm, levs[i], sep = " - ")
         else
             nm = paste(levs[i], cnm, sep = " - ")
-        M[[nm]] = con
+        M[[nm]] = con / divisor
     }
     row.names(M) = levs
     M = M[-1]
@@ -319,7 +325,7 @@ del.eff.emmc = function(levs, exclude = integer(0), include, ...) {
 # Contrasts to compare consecutive levels:
 # (-1,1,0,0,...), (0,-1,1,0,...), ..., (0,...0,-1,1)
 #' @rdname emmc-functions
-consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...) {
+consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, divisor, ...) {
     exclude = .get.excl(levs, exclude, include)
     sgn = ifelse(reverse, -1, 1)
     tmp = rep(0, length(levs))
@@ -335,7 +341,7 @@ consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...
         nm = ifelse(reverse,
                     paste(nms[i], "-", nms[i+1]),
                     paste(nms[i+1], "-", nms[i]))
-        M[[nm]] = tmp
+        M[[nm]] = tmp / divisor
     }
     row.names(M) = levs
     M = M[-1]
