@@ -150,6 +150,10 @@ contrast(warp.emm, "trt.vs.ctrl", ref = "M")
 pairs(warp.emm, exclude = 2)
 # (same results using exclude = "M" or include = c("L","H") or include = c(1,3))
 
+# Compute standardized effect sizes:
+update(pairs(warp.emm, divisor = sigma(warp.lm)), 
+       estName = "Cohen.d")
+
 ### Setting up a custom contrast function
 helmert.emmc <- function(levs, ...) {
     M <- as.data.frame(contr.helmert(levs))

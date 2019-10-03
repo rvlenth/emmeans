@@ -148,8 +148,10 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
             grid = lapply(grid, function(.) .[mri, , drop = FALSE])
         }
     }
+    options = list(...)
     linfct = lapply(grid, function(g) 
-        emm_basis(model, attr(data, "terms"), RG@model.info$xlev, g, ...)$X)
+        emm_basis(model, attr(data, "terms"), RG@model.info$xlev, g, 
+                  misc = attr(data, "misc"), options = options, ...)$X)
     
     if (!is.null(fcn)) { # need a different "h" when diff wrt a function
         tmp = sapply(grid, function(g) 

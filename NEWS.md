@@ -2,7 +2,8 @@
 
 emmeans 1.4.1.009xxx
 -------------
-  * Bug fix: `regrid` ignored offsets with Bayesian models
+  * Bug fixes: `regrid` ignored offsets with Bayesian models; `emtrends()` did
+    not supply `options` and `misc` arguments to `emm_basis()` (#143)
   * Added `divisor` argument to some contrast functions
 
 emmeans 1.4.1
