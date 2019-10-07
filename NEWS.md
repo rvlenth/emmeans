@@ -4,7 +4,9 @@ emmeans 1.4.1.009xxx
 -------------
   * Bug fixes: `regrid` ignored offsets with Bayesian models; `emtrends()` did
     not supply `options` and `misc` arguments to `emm_basis()` (#143)
-  * Added `divisor` argument to some contrast functions
+  * Added `scale` argument to `contrast()`
+  * Added new `"identity"` contrast method
+  * New `eff_size()` function for Cohen effect sizes
 
 emmeans 1.4.1
 -------------

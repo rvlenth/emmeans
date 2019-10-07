@@ -10,7 +10,7 @@
 contrast(object, ...)
 
 \method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE,
-  by, offset = NULL, name = "contrast",
+  by, offset = NULL, scale = NULL, name = "contrast",
   options = get_emm_option("contrast"), type, adjust, simple,
   combine = FALSE, ratios = TRUE, ...)
 
@@ -39,9 +39,10 @@ contrasts or joint tests will be evaluated separately for each combination
 of these variables. If \code{object} was created with by groups, those are
 used unless overridden. Use \code{by = NULL} to use no by groups at all.}
 
-\item{offset}{Numeric vector of the same length as each \code{by} group.
-These values are added to their respective linear estimates. (It is ignored
-when \code{interaction} is specified.)}
+\item{offset, scale}{Numeric vectors of the same length as each \code{by} group.
+The \code{scale} values, if supplied, multiply their respective linear estimates, and
+any \code{offset} values are added. Scalar values are also allowed. 
+(These arguments are ignored when \code{interaction} is specified.)}
 
 \item{name}{Character name to use to override the default label for contrasts
 used in table headings or subsequent contrasts of the returned object.}
@@ -166,4 +167,12 @@ contrast(warp.emm, simple = list("wool", "tension"))
 tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
 tw.emm          # see the estimates
 coef(tw.emm)    # see the contrast coefficients
+
+# Use of scale and offset
+#   an unusual use of the famous stack-loss data...
+mod <- lm(Water.Temp ~ poly(stack.loss, degree = 2), data = stackloss)
+(emm <- emmeans(mod, "stack.loss", at = list(stack.loss = 10 * (1:4))))
+# Convert results from Celsius to Fahrenheit:
+confint(contrast(emm, "identity", scale = 9/5, offset = 32))
+
 }
