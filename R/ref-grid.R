@@ -425,6 +425,10 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         }
     }
     
+    ## undocumented early exit for other fcns that need just reference levels
+    if (!is.null(options$just.ref.levels))
+        return(ref.levels)
+    
     # Now create the reference grid
     grid = do.call(expand.grid, ref.levels)
     

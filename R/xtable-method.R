@@ -129,6 +129,6 @@ print.xtable_emm = function(x, type = getOption("xtable.type", "latex"),
         html = function(x) paste0("<font size = -1>", x, "</font>"),
         latex = function(x) paste0("{\\footnotesize ", x, "}"),
         function(x) x )
-    invisible(xtable::print.xtableList(x, include.rownames = include.rownames, 
+    invisible(xtable::print.xtableList(x, type = type, include.rownames = include.rownames, 
         sanitize.message.function = sanitize.message.function, ...))
 }

@@ -33,7 +33,20 @@
 #' reference grid of these predicted trends, and then possibly average them over
 #' some of the predictors in the grid.
 #' 
-#' @param model A supported model object (\emph{not} a reference grid)
+#' The function works by constructing reference grids for \code{object} with 
+#' various values of \code{var}, and then calculating difference quotients of predictions
+#' from those reference grids. Finally, \code{\link{emmeans}} is called with
+#' the given \code{specs}, thus computing marginal averages as needed of
+#' the difference quotients. Any \code{...} arguments are passed to the
+#' \code{ref_grid} and \code{\link{emmeans}}; examples of such optional
+#' arguments include optional arguments (often \code{mode}) that apply to
+#' specific models; \code{ref_grid} options such as \code{at},
+#' \code{cov.reduce}, \code{mult.names}, \code{nesting}, or \code{transform};
+#' and \code{emmeans} options such as \code{weights} (but p[lease avoid
+#' \code{trend} or \code{offset}.
+#' 
+#' 
+#' @param object A supported model object (\emph{not} a reference grid)
 #' @param specs Specifications for what marginal trends are desired -- as in
 #'   \code{\link{emmeans}}
 #' @param var Character value giving the name of a variable with respect to 
@@ -52,27 +65,17 @@
 #' @param data As in \code{\link{ref_grid}}, you may use this argument to supply
 #'   the dataset used in fitting the model, for situations where it is not
 #'   possible to reconstruct the data. Otherwise, leave it missing.
-#' @param transform If \code{object} has a response
-#'   transformation or link function, then specifying 
-#'   \code{transform = "response"} will cause
-#'   \code{emtrends} to calculate the trends after back-transforming to the
-#'   response scale. This is done using the chain rule, and standard errors are
-#'   estimated via the delta method. With \code{transform = "none"} (the
-#'   default), the trends are calculated on the scale of the linear predictor,
-#'   without back-transforming it. This argument works similarly to the
-#'   \code{transform} argument in \code{\link{ref_grid}}, in that the returned
-#'   object is re-gridded to the new scale (see also \code{\link{regrid}}).
 #' @param max.degree Integer value. The maximum degree of trends to compute (this
 #'   is capped at 5). If greater than 1, an additional factor \code{degree} is
 #'   added to the grid, with corresponding numerical derivatives of orders
 #'   \code{1, 2, ..., max.degree} as the estimates.
-#' @param ... Additional arguments passed to other methods or to 
-#'   \code{\link{ref_grid}}
+#' @param ... Additional arguments passed to \code{\link{ref_grid}} or 
+#'   \code{\link{emmeans}} as appropriate. See Details.
 #'
 #' @section Generalizations:
 #' Instead of a single predictor, the user may specify some monotone function of
 #' one variable, e.g., \code{var = "log(dose)"}. If so, the chain rule is
-#' applied. Note that, in this example, if \code{model} contains
+#' applied. Note that, in this example, if \code{object} contains
 #' \code{log(dose)} as a predictor, we will be comparing the slopes estimated by
 #' that model, whereas specifying \code{var = "dose"} would perform a
 #' transformation of those slopes, making the predicted trends vary depending on
@@ -82,6 +85,14 @@
 #' See \code{\link{emmeans}} for more details on when a list is returned.
 #' 
 #' @seealso \code{link{emmeans}}, \code{\link{ref_grid}}
+#' 
+#' @note
+#' In earlier versions, the first argument was named \code{model} rather than \code{object}.
+#' (The name was changed because of potential mis-matching with a \code{mode} argument,
+#' which is an option for several types of models.) For backward compatibility, if a
+#' named argument of \code{model} occurs among \code{...}, it replaces \code{object};
+#' however, in that case, all other arguments should be named as well.
+#' 
 #' @export
 #'
 #' @examples
@@ -95,23 +106,28 @@
 #' emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
 #'          at = list(diameter = c(20, 30)))
 #'
-emtrends = function(model, specs, var, delta.var=.001*rng, data, 
-                    transform = c("none", "response"), max.degree = 1, ...) {
+emtrends = function(object, specs, var, delta.var=.001*rng, data, 
+                    max.degree = 1, ...) {
     estName = paste(var, "trend", sep=".") # Do now as I may replace var later
+    cl = match.call()
+    
+    # backward suport for former version with `model` instead of `object`
+    if (!is.null(cl$model))
+        object = cl$object = cl$model
     
     if (missing(data)) {
-        data = try(recover_data (model, data = NULL))
+        data = try(recover_data (object, data = NULL, ...))
         if (inherits(data, "try-error"))
             stop("Possible remedy: Supply the data used in the 'data' argument")
     }
     else # attach needed attributes to given data
-        data = recover_data(model, data = data)
+        data = recover_data(object, data = data, ...)
     
     x = data[[var]]
     fcn = NULL   # differential
     if (is.null(x)) {
         fcn = var
-        var = .all.vars(as.formula(paste("~",var)))
+        var = .all.vars(as.formula(paste("~", var)))
         if (length(var) > 1)
             stop("Can only support a function of one variable")
         else {
@@ -122,40 +138,38 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     rng = diff(range(x))
     if (delta.var == 0)  stop("Provide a nonzero value of 'delta.var'")
     
-    RG = orig.rg = ref_grid(model, data = data, ...)
+    ref.levels = ref_grid(object, data = data, options = list(just.ref.levels = TRUE), ...)
     
     max.degree = max(1, min(5, as.integer(max.degree + .1)))
-    transform = match.arg(transform)
-    if ((max.degree > 1) && (transform == "response") && hasName(RG@misc, "tran")) {
-        max.degree = 1
-        warning("Higher-degree trends are not supported with 'transform = 'response'.\n",
-        "'max.degree' changed to 1")
-    }
-    
-    # create a vector of delta values, such that a middle one has value 0
+
+        # create a vector of delta values, such that a middle one has value 0
     delts = delta.var * (0:max.degree)
     idx.base = as.integer((2 + max.degree)/2)
     delts = delts - delts[idx.base]
+    var.values = as.numeric(sapply(ref.levels[[var]], "+", delts))
+    
+    # Put together the needed call for ref_grid
+    cl[[1]] = quote(ref_grid)
+    cl$var = cl$specs = NULL
+    cl$data = quote(data)
+    if(is.null(cl$at)) 
+        cl$at = list()
+    cl$at[[var]] = var.values
+    
+    bigRG = eval(cl)
+    lvl = bigRG@levels
+    # create index variable for var values corresponding to elements of delts
+    lvl[[var]] = rep(seq_along(delts), length(ref.levels[[var]]))
+    var.idx = do.call(expand.grid, lvl)[[var]]
+    var.subs = lapply(seq_along(delts), function(i) which (var.idx == i))
+    
+    RG = orig.rg = bigRG[var.subs[[idx.base]]]  # the subset that corresponds to reference values
 
-    grid = lapply(delts, function(h) {
-        g = RG@grid
-        g[[var]] = g[[var]] + h
-        g})
-    if (!is.null(mr <- RG@roles$multresp)) {
-        # RG@grid is expanded to mult levels, but we need to unexpand grid accordingly
-        if (length(mr) > 0) {
-            mri = which(grid[[1]][[mr]] == RG@levels[[mr]][1])
-            grid = lapply(grid, function(.) .[mri, , drop = FALSE])
-        }
-    }
-    options = list(...)
-    linfct = lapply(grid, function(g) 
-        emm_basis(model, attr(data, "terms"), RG@model.info$xlev, g, 
-                  misc = attr(data, "misc"), options = options, ...)$X)
+    linfct = lapply(seq_along(delts), function(i) bigRG@linfct[var.subs[[i]], , drop = FALSE])
     
     if (!is.null(fcn)) { # need a different "h" when diff wrt a function
-        tmp = sapply(grid, function(g) 
-            eval(parse(text = fcn), envir = g))
+        tmp = sapply(seq_along(delts), function(i)
+            eval(parse(text = fcn), envir = bigRG@grid[var.subs[[i]], , drop = FALSE]))
         delta.var = apply(tmp, 1, function(.) mean(diff(.)))
     }
     
@@ -172,23 +186,9 @@ emtrends = function(model, specs, var, delta.var=.001*rng, data,
     RG@linfct = newlf
     RG@roles$trend = var
     
-    if(hasName(RG@misc, "tran")) {
-        tran = RG@misc$tran
-        if (is.list(tran)) tran = tran$name
-        if (transform == "response") {
-            prd = .est.se.df(orig.rg, do.se = FALSE)
-            lnk = attr(prd, "link")
-            deriv = lnk$mu.eta(prd[[1]])
-            RG@linfct = diag(deriv) %*% RG@linfct
-            RG@misc$initMesg = paste("Trends are obtained after back-transforming from the", tran, "scale")
-        }
-        else
-            RG@misc$initMesg = paste("Trends are based on the", tran, "(transformed) scale")
-    }
-    
     # args for emmeans calls
     args = list(object = NULL, specs = specs, ...)
-    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = NULL
+    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = args$transform = NULL
     
 #    run_emm = TRUE
     if (max.degree > 1) {

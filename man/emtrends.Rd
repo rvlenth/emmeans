@@ -4,11 +4,11 @@
 \alias{emtrends}
 \title{Estimated marginal means of linear trends}
 \usage{
-emtrends(model, specs, var, delta.var = 0.001 * rng, data,
-  transform = c("none", "response"), max.degree = 1, ...)
+emtrends(object, specs, var, delta.var = 0.001 * rng, data,
+  max.degree = 1, ...)
 }
 \arguments{
-\item{model}{A supported model object (\emph{not} a reference grid)}
+\item{object}{A supported model object (\emph{not} a reference grid)}
 
 \item{specs}{Specifications for what marginal trends are desired -- as in
 \code{\link{emmeans}}}
@@ -32,24 +32,13 @@ dataset.}
 the dataset used in fitting the model, for situations where it is not
 possible to reconstruct the data. Otherwise, leave it missing.}
 
-\item{transform}{If \code{object} has a response
-transformation or link function, then specifying 
-\code{transform = "response"} will cause
-\code{emtrends} to calculate the trends after back-transforming to the
-response scale. This is done using the chain rule, and standard errors are
-estimated via the delta method. With \code{transform = "none"} (the
-default), the trends are calculated on the scale of the linear predictor,
-without back-transforming it. This argument works similarly to the
-\code{transform} argument in \code{\link{ref_grid}}, in that the returned
-object is re-gridded to the new scale (see also \code{\link{regrid}}).}
-
 \item{max.degree}{Integer value. The maximum degree of trends to compute (this
 is capped at 5). If greater than 1, an additional factor \code{degree} is
 added to the grid, with corresponding numerical derivatives of orders
 \code{1, 2, ..., max.degree} as the estimates.}
 
-\item{...}{Additional arguments passed to other methods or to 
-\code{\link{ref_grid}}}
+\item{...}{Additional arguments passed to \code{\link{ref_grid}} or 
+\code{\link{emmeans}} as appropriate. See Details.}
 }
 \value{
 An \code{emmGrid} or \code{emm_list} object, according to \code{specs}.
@@ -64,11 +53,31 @@ those trends. Analogous to the \code{\link{emmeans}} setting, we construct a
 reference grid of these predicted trends, and then possibly average them over
 some of the predictors in the grid.
 }
+\details{
+The function works by constructing reference grids for \code{object} with 
+various values of \code{var}, and then calculating difference quotients of predictions
+from those reference grids. Finally, \code{\link{emmeans}} is called with
+the given \code{specs}, thus computing marginal averages as needed of
+the difference quotients. Any \code{...} arguments are passed to the
+\code{ref_grid} and \code{\link{emmeans}}; examples of such optional
+arguments include optional arguments (often \code{mode}) that apply to
+specific models; \code{ref_grid} options such as \code{at},
+\code{cov.reduce}, \code{mult.names}, \code{nesting}, or \code{transform};
+and \code{emmeans} options such as \code{weights} (but p[lease avoid
+\code{trend} or \code{offset}.
+}
+\note{
+In earlier versions, the first argument was named \code{model} rather than \code{object}.
+(The name was changed because of potential mis-matching with a \code{mode} argument,
+which is an option for several types of models.) For backward compatibility, if a
+named argument of \code{model} occurs among \code{...}, it replaces \code{object};
+however, in that case, all other arguments should be named as well.
+}
 \section{Generalizations}{
 
 Instead of a single predictor, the user may specify some monotone function of
 one variable, e.g., \code{var = "log(dose)"}. If so, the chain rule is
-applied. Note that, in this example, if \code{model} contains
+applied. Note that, in this example, if \code{object} contains
 \code{log(dose)} as a predictor, we will be comparing the slopes estimated by
 that model, whereas specifying \code{var = "dose"} would perform a
 transformation of those slopes, making the predicted trends vary depending on
