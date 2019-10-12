@@ -67,11 +67,26 @@ and \code{emmeans} options such as \code{weights} (but p[lease avoid
 \code{trend} or \code{offset}.
 }
 \note{
-In earlier versions, the first argument was named \code{model} rather than \code{object}.
-(The name was changed because of potential mis-matching with a \code{mode} argument,
-which is an option for several types of models.) For backward compatibility, if a
-named argument of \code{model} occurs among \code{...}, it replaces \code{object};
-however, in that case, all other arguments should be named as well.
+In earlier versions of \code{emtrends}, the first argument was named
+\code{model} rather than \code{object}. (The name was changed because of
+potential mis-matching with a \code{mode} argument, which is an option for
+several types of models.)
+
+It is important to understand that trends computed by \code{emtrends} are
+\emph{not} equivalent to polynomial contrasts in a parallel model where
+\code{var} is regarded as a factor. That is because the model \code{object}
+here is assumed to fit a smooth function of \code{var}, and the estimated
+trends reflect \emph{local} behavior at particular value(s) of \code{var};
+whereas when \code{var} is modeled as a factor and polynomial contrasts are
+computed, those contrasts represent the \emph{global} pattern of changes over
+\emph{all} levels of \code{var}. 
+
+See the \code{pigs.poly} and \code{pigs.fact} examples below for an
+illustration. The linear and quadratic trends depend on the value of 
+\code{percent}, but the cubic trend is constant (because that is true of
+a cubic polynomial, which is the underlying model). The cubic contrast
+in the factorial model has the same P value as for the cubic trend,
+again because the cubic trend is the same everywhere.
 }
 \section{Generalizations}{
 
@@ -95,6 +110,22 @@ pairs(fiber.emt)
 emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
          at = list(diameter = c(20, 30)))
 
+
+### Higher-degree trends ...
+
+pigs.poly <- lm(conc ~ poly(percent, degree = 3), data = pigs)
+emt <- emtrends(pigs.poly, ~ degree | percent, "percent", max.degree = 3,
+                at = list(percent = c(9, 13.5, 18)))
+       # note: 'degree' is an extra factor created by 'emtrends'
+       
+summary(emt, infer = c(TRUE, TRUE))
+
+# Compare above results with poly contrasts when 'percent' is modeled as a factor ...
+pigs.fact <- lm(conc ~ factor(percent), data = pigs)
+emm <- emmeans(pigs.fact, "percent")
+
+contrast(emm, "poly")
+# Some P values are comparable, some aren't! See Note in documentation
 }
 \seealso{
 \code{link{emmeans}}, \code{\link{ref_grid}}
