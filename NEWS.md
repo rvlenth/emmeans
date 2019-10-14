@@ -12,6 +12,7 @@ emmeans 1.4.1.009xxx
   * Added `scale` argument to `contrast()`
   * Added new `"identity"` contrast method
   * New `eff_size()` function for Cohen effect sizes
+  * Expanded capabilities for interaction contrasts (#146)
   * Bug fixes: `regrid` ignored offsets with Bayesian models; `emtrends()` did
     not supply `options` and `misc` arguments to `emm_basis()` (#143)
 

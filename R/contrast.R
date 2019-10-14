@@ -35,12 +35,12 @@ contrast = function(object, ...)
 #' @rdname contrast
 #' @param object An object of class \code{emmGrid}
 #' @param method Character value giving the root name of a contrast method (e.g.
-#'   \code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a named
-#'   \code{list} of coefficients (for a contrast or linear function) that must
-#'   each conform to the number of results in each \code{by} group. In a
-#'   multi-factor situation, the factor levels are combined and treated like a
-#'   single factor.
-#' @param interaction Character vector or logical value. If this is specified,
+#'   \code{"pairwise"} -- see \link{emmc-functions}). Alternatively, a function
+#'   of the same form, or a named \code{list} of coefficients (for a contrast or
+#'   linear function) that must each conform to the number of results in each
+#'   \code{by} group. In a multi-factor situation, the factor levels are
+#'   combined and treated like a single factor.
+#' @param interaction Character vector, logical value, or list. If this is specified,
 #'   \code{method} is ignored. See the \dQuote{Interaction contrasts} section
 #'   below for details.
 #' @param by Character names of variable(s) to be used for ``by'' groups. The
@@ -88,16 +88,21 @@ contrast = function(object, ...)
 #'   "revpairwise")}.
 #'
 #' @section Interaction contrasts: When \code{interaction} is specified,
-#'   interaction contrasts are computed: Contrasts are generated for each factor
-#'   separately, one at a time; and these contrasts are applied to the object
-#'   (the first time around) or to the previous result (subsequently). (Any
-#'   factors specified in \code{by} are skipped.) The final result comprises
-#'   contrasts of contrasts, or, equivalently, products of contrasts for the
-#'   factors involved. Processing is done in the order of appearance in
-#'   \code{object@levels}. With \code{interaction = TRUE}, \code{method} (if
-#'   specified as character) is used for each contrast. If \code{interaction} is
-#'   a character vector, the elements specify the respective contrast method(s);
-#'   they are recycled as needed.
+#'   interaction contrasts are computed. Specifically contrasts are generated
+#'   for each factor separately, one at a time; and these contrasts are applied
+#'   to the object (the first time around) or to the previous result
+#'   (subsequently). (Any factors specified in \code{by} are skipped.) The final
+#'   result comprises contrasts of contrasts, or, equivalently, products of
+#'   contrasts for the factors involved. If all or some of the elements of
+#'   \code{interaction} are named, processing is done in reverse order of
+#'   appearance in \code{interaction}; any unnamed entries go in the reverse
+#'   order of \code{object@levels}.
+#'   
+#'   \code{interaction} may be a character vector or list of valid contrast
+#'   methods (as documented for the \code{method} argument). If the vector or
+#'   list is shorter than the number needed, it is recycled. Alternatively, if
+#'   the user specifies \code{contrast = TRUE}, the contrast specified in
+#'   \code{method} is used for all factors involved.
 #'   
 #' @section Simple contrasts:
 #'   \code{simple} is essentially the complement of \code{by}: When
@@ -150,7 +155,8 @@ contrast = function(object, ...)
 #' }
 #'
 #' # An interaction contrast for tension:wool
-#' tw.emm <- contrast(warp.emm, interaction = c("poly", "consec"), by = NULL)
+#' tw.emm <- contrast(warp.emm, interaction = c(tension = "poly", wool = "consec"), 
+#'                    by = NULL)
 #' tw.emm          # see the estimates
 #' coef(tw.emm)    # see the contrast coefficients
 #' 
@@ -186,22 +192,34 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if (is.logical(interaction) && interaction)
         interaction = method
     if (!is.logical(interaction)) { # i.e., interaction is not FALSE
-        if (!is.character(interaction))
-            stop("interaction requires named contrast function(s)")
         if(missing(adjust))
             adjust = "none"
-        ### by = NULL why was this here before ???
         vars = names(object@levels)
         k = length(vars)
         if(!is.null(by)) {
             vars = c(setdiff(vars, by), by)
             k = k - length(by)
         }
-        interaction = rep(interaction, k)[1:k]
+        interaction = as.list(rep(interaction, k)[1:k])
+        if (is.null(names(interaction)))
+            names(interaction) = vars
+        else {
+            unnamed = which(!(names(interaction) %in% vars))
+            names(interaction)[unnamed] = setdiff(vars, names(interaction))
+            vars = names(interaction)
+        }
+        
+        
+        # if (!is.character(interaction))
+        #     stop("interaction requires named contrast function(s)")
+        ### by = NULL why was this here before ???
         tcm = NULL
         for (i in k:1) {
-            nm = paste(vars[i], interaction[i], sep = "_")
-            object = contrast.emmGrid(object, interaction[i], by = vars[-i], name = nm, ...)
+            if (is.character(interaction[[i]]))
+                nm = paste(vars[i], interaction[[i]], sep = "_")
+            else
+                nm = paste(vars[i], "custom", sep = "_")
+            object = contrast.emmGrid(object, interaction[[i]], by = vars[-i], name = nm, ...)
             if(is.null(tcm))
                 tcm = object@misc$con.coef
             else
@@ -260,7 +278,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     }
     # case like in old lsmeans, contr = list
     else if (!is.function(method))
-        stop("'method' must be a function or the basename of an '.emmc' function")
+        stop("'method' must be a list, function, or the basename of an '.emmc' function")
     
     # Get the contrasts; this should be a data.frame
     cmat = method(levs, ...)
