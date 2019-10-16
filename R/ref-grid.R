@@ -324,7 +324,11 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
     
     if(is.character(data)) # 'data' is in fact an error message
         stop(data)
-        
+
+    ## undocumented hook to use ref_grid as slave to get data
+    if (!is.null(options$just.data))
+        return(data)
+    
     
     trms = attr(data, "terms")
     
@@ -425,12 +429,17 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         }
     }
     
-    ## undocumented early exit for other fcns that need just reference levels
-    if (!is.null(options$just.ref.levels))
-        return(ref.levels)
-    
+
     # Now create the reference grid
     grid = do.call(expand.grid, ref.levels)
+    
+    # undocumented hook to expand grid by increments of 'var' (needed by emtrends)
+    if (!is.null(delts <- options$delts)) {
+        var = options$var
+        n.orig = nrow(grid) # remember how many rows we had
+        grid = grid[rep(seq_len(n.orig), length(delts)), , drop = FALSE]
+        options$var = options$delts = NULL
+    }
     
     # add any matrices
     for (nm in names(matlevs)) {
@@ -447,6 +456,10 @@ ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs,
         grid[[xnm]] = predict(xmod, newdata = grid)
         ref.levels[[xnm]] = NULL
     }
+    
+    # finish-up our hook for expanding the grid
+    if (!is.null(delts)) # add increments if any
+        grid[[var]] = grid[[var]] + rep(delts, each = n.orig)
     
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss
         attr(object, "data") = data

@@ -40,15 +40,17 @@
 #' the difference quotients. Any \code{...} arguments are passed to the
 #' \code{ref_grid} and \code{\link{emmeans}}; examples of such optional
 #' arguments include optional arguments (often \code{mode}) that apply to
-#' specific models; \code{ref_grid} options such as \code{at},
+#' specific models; \code{ref_grid} options such as \code{data}, \code{at},
 #' \code{cov.reduce}, \code{mult.names}, \code{nesting}, or \code{transform};
-#' and \code{emmeans} options such as \code{weights} (but p[lease avoid
+#' and \code{emmeans} options such as \code{weights} (but please avoid
 #' \code{trend} or \code{offset}.
 #' 
 #' 
 #' @param object A supported model object (\emph{not} a reference grid)
 #' @param specs Specifications for what marginal trends are desired -- as in
-#'   \code{\link{emmeans}}
+#'   \code{\link{emmeans}}. If \code{specs} is missing or \code{NULL},
+#'   \code{emmeans} is not run and the reference grid for specified trends
+#'   is returned.
 #' @param var Character value giving the name of a variable with respect to 
 #'   which a difference quotient of the linear predictors is computed. In order
 #'   for this to be useful, \code{var} should be a numeric predictor that
@@ -62,9 +64,6 @@
 #'   sign) may be necessary to avoid numerical problems such as logs of negative
 #'   numbers. The default value is 1/1000 of the range of \code{var} over the
 #'   dataset.
-#' @param data As in \code{\link{ref_grid}}, you may use this argument to supply
-#'   the dataset used in fitting the model, for situations where it is not
-#'   possible to reconstruct the data. Otherwise, leave it missing.
 #' @param max.degree Integer value. The maximum degree of trends to compute (this
 #'   is capped at 5). If greater than 1, an additional factor \code{degree} is
 #'   added to the grid, with corresponding numerical derivatives of orders
@@ -90,7 +89,8 @@
 #' In earlier versions of \code{emtrends}, the first argument was named
 #' \code{model} rather than \code{object}. (The name was changed because of
 #' potential mis-matching with a \code{mode} argument, which is an option for
-#' several types of models.)
+#' several types of models.) For backward compatibility, \code{model} still works
+#' \emph{provided all arguments are named}.
 #' 
 #' @note
 #' It is important to understand that trends computed by \code{emtrends} are
@@ -122,7 +122,16 @@
 #' emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
 #'          at = list(diameter = c(20, 30)))
 #'
-#'
+#' # Obtaining a reference grid
+#' mtcars.lm <- lm(mpg ~ poly(disp, degree = 2) * (factor(cyl) + factor(am)), data = mtcars)
+#' 
+#' Center trends at mean disp for each no. of cylinders
+#' mtcTrends.rg <- emtrends(mtcars.lm, var = "disp", 
+#'                           cov.reduce = disp ~ factor(cyl))
+#' summary(mtcTrends.rg)  # estimated trends at grid nodes
+#' emmeans(mtcTrends.rg, "am", weights = "prop")
+#' 
+#' 
 #' ### Higher-degree trends ...
 #' 
 #' pigs.poly <- lm(conc ~ poly(percent, degree = 3), data = pigs)
@@ -138,22 +147,25 @@
 #' 
 #' contrast(emm, "poly")
 #' # Some P values are comparable, some aren't! See Note in documentation
-emtrends = function(object, specs, var, delta.var=.001*rng, data, 
+emtrends = function(object, specs, var, delta.var=.001*rng,
                     max.degree = 1, ...) {
     estName = paste(var, "trend", sep=".") # Do now as I may replace var later
     cl = match.call()
+    cl[[1]] = quote(ref_grid)
+    cl$var = cl$specs = NULL
+    if (is.null(cl$options))
+        cl$options = list()
     
-    # backward suport for former version with `model` instead of `object`
-    if (!is.null(cl$model))
-        object = cl$object = cl$model
-    
-    if (missing(data)) {
-        data = try(recover_data (object, data = NULL, ...))
-        if (inherits(data, "try-error"))
-            stop("Possible remedy: Supply the data used in the 'data' argument")
+    # backward compatibility for when 1st argument was "model"
+    if(missing(object) && ("model" %in% names(cl))) {
+        names(cl)[names(cl) == "model"] = "object"
+        object = eval(cl$object)
     }
-    else # attach needed attributes to given data
-        data = recover_data(object, data = data, ...)
+    
+    # Get data via hook in ref_grid
+    cl$options$just.data = TRUE
+    data = eval(cl)
+    cl$options$just.data = NULL
     
     x = data[[var]]
     fcn = NULL   # differential
@@ -170,32 +182,22 @@ emtrends = function(object, specs, var, delta.var=.001*rng, data,
     rng = diff(range(x))
     if (delta.var == 0)  stop("Provide a nonzero value of 'delta.var'")
     
-    ref.levels = ref_grid(object, data = data, options = list(just.ref.levels = TRUE), ...)
-    
     max.degree = max(1, min(5, as.integer(max.degree + .1)))
 
         # create a vector of delta values, such that a middle one has value 0
     delts = delta.var * (0:max.degree)
     idx.base = as.integer((2 + max.degree)/2)
     delts = delts - delts[idx.base]
-    var.values = as.numeric(sapply(ref.levels[[var]], "+", delts))
     
-    # Put together the needed call for ref_grid
-    cl[[1]] = quote(ref_grid)
-    cl$var = cl$specs = NULL
+    # set up call for ref_grid
     cl$data = quote(data)
-    if(is.null(cl$at)) 
-        cl$at = list()
-    cl$at[[var]] = var.values
-    
+    cl$options$var = var
+    cl$options$delts = delts   # ref_grid hook -- expand grid by these increments
     bigRG = eval(cl)
-    lvl = bigRG@levels
-    # create index variable for var values corresponding to elements of delts
-    lvl[[var]] = rep(seq_along(delts), length(ref.levels[[var]]))
-    var.idx = do.call(expand.grid, lvl)[[var]]
-    var.subs = lapply(seq_along(delts), function(i) which (var.idx == i))
     
+    var.subs = as.list(as.data.frame(matrix(seq_len(nrow(bigRG@grid)), ncol = length(delts))))
     RG = orig.rg = bigRG[var.subs[[idx.base]]]  # the subset that corresponds to reference values
+    row.names(RG@grid) = seq_along(RG@grid[[1]])
 
     linfct = lapply(seq_along(delts), function(i) bigRG@linfct[var.subs[[i]], , drop = FALSE])
     
@@ -218,11 +220,10 @@ emtrends = function(object, specs, var, delta.var=.001*rng, data,
     RG@linfct = newlf
     RG@roles$trend = var
     
-    # args for emmeans calls
-    args = list(object = NULL, specs = specs, ...)
-    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = args$transform = NULL
+    # # args for emmeans calls
+    # args = list(object = NULL, specs = specs, ...)
+    # args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = args$transform = NULL
     
-#    run_emm = TRUE
     if (max.degree > 1) {
         degnms = c("linear", "quadratic", "cubic", "quartic", "quintic")
         RG@grid$degree = degnms[1]
@@ -233,9 +234,6 @@ emtrends = function(object, specs, var, delta.var=.001*rng, data,
         }
         RG@roles$predictors = c(RG@roles$predictors, "degree")
         RG@levels$degree = degnms[1:max.degree]
-        chk = union(all.vars(specs), args$by)
-        if (!("degree" %in% chk))
-            args$by = c("degree", args$by)
     }
     RG@grid$.offset. = NULL   # offset never applies after differencing
     RG@misc$tran = RG@misc$tran.mult = NULL
@@ -243,6 +241,19 @@ emtrends = function(object, specs, var, delta.var=.001*rng, data,
     RG@misc$methDesc = "emtrends"
     
     .save.ref_grid(RG)  # save in .Last.ref_grid, if enabled
+    
+    if (missing(specs) || is.null(specs))
+        return (RG)
+    
+    # args for emmeans calls
+    args = list(object = NULL, specs = specs, ...)
+    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = args$transform = NULL
+    if(max.degree > 1) {
+        chk = union(all.vars(specs), args$by)
+        if (!("degree" %in% chk))
+            args$by = c("degree", args$by)
+    }
+    
     
     args$object = RG
     do.call("emmeans", args)

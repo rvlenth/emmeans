@@ -93,10 +93,10 @@ contrast = function(object, ...)
 #'   to the object (the first time around) or to the previous result
 #'   (subsequently). (Any factors specified in \code{by} are skipped.) The final
 #'   result comprises contrasts of contrasts, or, equivalently, products of
-#'   contrasts for the factors involved. If all or some of the elements of
-#'   \code{interaction} are named, processing is done in reverse order of
-#'   appearance in \code{interaction}; any unnamed entries go in the reverse
-#'   order of \code{object@levels}.
+#'   contrasts for the factors involved. Any named elements of \code{interaction}
+#'   are assigned to contrast methods; others are assigned in order of
+#'   appearance in \code{object@levels}. The contrast factors in the resulting 
+#'   \code{emmGrid} object are ordered the same as in \code{interaction}.
 #'   
 #'   \code{interaction} may be a character vector or list of valid contrast
 #'   methods (as documented for the \code{method} argument). If the vector or

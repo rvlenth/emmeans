@@ -4,14 +4,16 @@
 \alias{emtrends}
 \title{Estimated marginal means of linear trends}
 \usage{
-emtrends(object, specs, var, delta.var = 0.001 * rng, data,
-  max.degree = 1, ...)
+emtrends(object, specs, var, delta.var = 0.001 * rng, max.degree = 1,
+  ...)
 }
 \arguments{
 \item{object}{A supported model object (\emph{not} a reference grid)}
 
 \item{specs}{Specifications for what marginal trends are desired -- as in
-\code{\link{emmeans}}}
+\code{\link{emmeans}}. If \code{specs} is missing or \code{NULL},
+\code{emmeans} is not run and the reference grid for specified trends
+is returned.}
 
 \item{var}{Character value giving the name of a variable with respect to 
 which a difference quotient of the linear predictors is computed. In order
@@ -27,10 +29,6 @@ quotient \eqn{(f(x+h) - f(x))/h}. Changing it (especially changing its
 sign) may be necessary to avoid numerical problems such as logs of negative
 numbers. The default value is 1/1000 of the range of \code{var} over the
 dataset.}
-
-\item{data}{As in \code{\link{ref_grid}}, you may use this argument to supply
-the dataset used in fitting the model, for situations where it is not
-possible to reconstruct the data. Otherwise, leave it missing.}
 
 \item{max.degree}{Integer value. The maximum degree of trends to compute (this
 is capped at 5). If greater than 1, an additional factor \code{degree} is
@@ -61,16 +59,17 @@ the given \code{specs}, thus computing marginal averages as needed of
 the difference quotients. Any \code{...} arguments are passed to the
 \code{ref_grid} and \code{\link{emmeans}}; examples of such optional
 arguments include optional arguments (often \code{mode}) that apply to
-specific models; \code{ref_grid} options such as \code{at},
+specific models; \code{ref_grid} options such as \code{data}, \code{at},
 \code{cov.reduce}, \code{mult.names}, \code{nesting}, or \code{transform};
-and \code{emmeans} options such as \code{weights} (but p[lease avoid
+and \code{emmeans} options such as \code{weights} (but please avoid
 \code{trend} or \code{offset}.
 }
 \note{
 In earlier versions of \code{emtrends}, the first argument was named
 \code{model} rather than \code{object}. (The name was changed because of
 potential mis-matching with a \code{mode} argument, which is an option for
-several types of models.)
+several types of models.) For backward compatibility, \code{model} still works
+\emph{provided all arguments are named}.
 
 It is important to understand that trends computed by \code{emtrends} are
 \emph{not} equivalent to polynomial contrasts in a parallel model where
@@ -109,6 +108,13 @@ pairs(fiber.emt)
 # Suppose we want trends relative to sqrt(diameter)...
 emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
          at = list(diameter = c(20, 30)))
+
+# Obtaining a reference grid
+mtcars.lm <- lm(mpg ~ disp*(factor(cyl) + factor(am)), data = mtcars)
+mtcTrends.rg <- emtrends(mtcars.lm, var = "disp", 
+                          cov.reduce = disp ~ factor(cyl))
+summary(mtcTrends.rg)  # estimated trends at grid nodes
+emmeans(mtcTrends.rg, "am", weights = "prop")
 
 
 ### Higher-degree trends ...
