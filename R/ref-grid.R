@@ -87,11 +87,13 @@
 #' @param nesting If the model has nested fixed effects, this may be specified
 #'   here via a character vector or named \code{list} specifying the nesting
 #'   structure. Specifying \code{nesting} overrides any nesting structure that
-#'   is automatically detected. See Details.
+#'   is automatically detected. See the section below on Recovering or Overriding 
+#'   Model Information.
 #' @param covnest Logical value. If \code{TRUE}, covariates having more than one
-#'   value in the reference grid are included when auto-detecting nesting. Set
-#'   this to \code{TRUE} only if you have covariate values that logically depend
-#'   on some other factor's levels.
+#'   value in the reference grid are included when determining weights and
+#'   in auto-detecting nesting. Older versions of \pkg{emmeans} did not do this,
+#'   and the main justification for setting \code{covnest = FALSE} is to
+#'   replicate past results.
 #' @param offset Numeric scalar value (if a vector, only the first element is
 #'   used). This may be used to add an offset, or override offsets based on the
 #'   model. A common usage would be to specify \code{offset = 0} for a Poisson
@@ -115,7 +117,10 @@
 #'   \code{FALSE}, it is equivalent to specifying \samp{function(x)
 #'   sort(unique(x))}, and these values are considered part of the reference
 #'   grid; thus, it is a handy alternative to specifying these same values in
-#'   \code{at}.
+#'   \code{at}. That said, a typical covariate has more than a handful
+#'   of unique values, and in that situation, \code{cov.reduce = FALSE}
+#'   will create a large, messy reference grid, and likely spurious nesting
+#'   as well.
 #'
 #'   If a formula (which must be two-sided), then a model is fitted to that
 #'   formula using \code{\link{lm}}; then in the reference grid, its response
@@ -185,7 +190,8 @@
 #'   discern which factors are nested in other factors, but it is not always
 #'   obvious, and if it misses some, the user must specify this structure via
 #'   \code{nesting}; or later using \code{\link{update.emmGrid}}. The
-#'   \code{nesting} argument may be a character vector or a named \code{list}.
+#'   \code{nesting} argument may be a character vector, a named \code{list}, 
+#'   or \code{NULL}.
 #'   If a \code{list}, each name should be the name of a single factor in the
 #'   grid, and its entry a character vector of the name(s) of its grouping
 #'   factor(s). \code{nested} may also be a character value of the form
@@ -202,8 +208,7 @@
 #'   values that exactly match a value in the dataset is permitted. I recommend
 #'   supplying a reference dataset in the \code{data} argument that contains the
 #'   desired covariate values for the reference grid; then the nesting will be
-#'   handled correctly if you specify \code{covnest = TRUE} and \code{cov.reduce
-#'   = FALSE}.
+#'   handled correctly provided \code{cov.reduce = FALSE} and \code{covnest = TRUE}.
 #'
 #' @section Predictors with subscripts and data-set references: When the fitted
 #'   model contains subscripts or explicit references to data sets, the
@@ -299,7 +304,7 @@
 ref_grid <- function(object, at, cov.reduce = mean, mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
                      transform = c("none", "response", "mu", "unlink", "log"), 
-                     nesting, covnest = FALSE, offset, sigma, ...) 
+                     nesting, covnest = TRUE, offset, sigma, ...) 
 {
     transform = match.arg(transform)
     if (!missing(df)) {
