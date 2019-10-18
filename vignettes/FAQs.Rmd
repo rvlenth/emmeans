@@ -125,7 +125,7 @@ difference. This is closely related to the next topic.
 
 
 ## emmeans() doesn't work as expected {#numeric}
-<!-- @index Covariates!`emmeans()` doesn't work -->
+<!-- @index Covariates!`emmeans()` doesn't work; Covariates!`cov.keep; Covariates!`cov.reduce;  -->
 Equivalently, users ask how to get *post hoc* comparisons when we have
 covariates rather than factors.
 Yes, it does work, but you have to tell it the appropriate reference grid.
@@ -144,18 +144,20 @@ is meaningful?*
     Acme and Ajax is exactly equal to the difference between Ajax and Al's,
     owing to the fact that a linear trend in `brand` has been fitted. 
     If you had instead coded 1 for Ajax, 2 for Al's, and 3 for Acme, the model
-    would produce different fitted values. You need to fit another model using 
+    would produce different fitted values. Ask yourself if it makes sense
+    to have `brand = 2.319`. If not, you need to fit another model using 
     `factor(brand)` in place of `brand`.
 
-Assuming that issue is settled, you can do something like
-`emmeans(model, "sex", at = list(sex = 1:2))`, to get get separate
-EMMs for each sex rather than one EMM for the average numeric value of `sex`.
-
-An alternative to the `at` list is to use `cov.reduce = FALSE`, which specifies
-that the unique values of covariates are to be used rather than reducing them
-to their means. However, the specification applies to *all* covariates, so
-if you have another one, say `age`, that has 43 different values in your data,
-you will have a mess on your hands.
+Assuming that the appropriateness of the model is settled, the current
+version of **emmeans** automatically casts two-value covariates as factors,
+but not covariates having higher numbers of unique values. Suppose your model has
+a covariate `dose` which was experimentally varied over four levels, but
+can sensibly be interpreted as a numerical predictor. If you want to include the
+separate values of `dose` rather than the mean `dose`, you can do that using
+something like `emmeans(model, "dose", at = list(dose = 1:4))`, or 
+`emmeans(model, "dose", cov.keep = "dose")`, or `emmeans(model, "dose", cov.keep = "4")`.
+There are small differences between these. The last one regards any covariate
+having 4 or fewer unique values as a factor.
 
 See "altering the reference grid" in the ["basics" vignette](basics.html#altering)
 for more discussion.

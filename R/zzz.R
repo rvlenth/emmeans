@@ -81,6 +81,14 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
     }
 }
 
+.onAttach <- function(libname, pkgname) {
+    packageStartupMessage("Welcome to emmeans.\n", 
+      "NOTE -- Important change from versions <= 1.41:\n",
+      "    Indicator predictors are now treated as 2-level factors by default.\n",
+      "    To revert to old behavior, use emm_options(cov.keep = character(0))")
+}
+    
+
 
 #' @rdname extending-emmeans
 #' @section Registering S3 methods for a model class:

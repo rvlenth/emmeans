@@ -370,6 +370,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{test.emmGrid}},
 #'   \code{\link{confint.emmGrid}}, and \code{\link{emmip}}. The only option that can
 #'   affect the latter four is \code{"predict.method"}.}
+#' \item{\code{cov.keep}}{The default value of \code{cov.keep} in \code{\link{ref_grid}}.
+#'   Defaults to \code{"2"}, i.e., two-level covariates are treated like factors.}
 #' \item{\code{graphics.engine}}{A character value matching 
 #'   \code{c("ggplot", "lattice")}, setting the default engine to use in
 #'   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
@@ -479,6 +481,7 @@ emm_defaults = list (
     emmeans = list(infer = c(TRUE, FALSE)),
     contrast = list(infer = c(FALSE, TRUE)),
     save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
+    cov.keep = "2",           # default for cov.keep arg in ref_grid
     graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
 ###    msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions

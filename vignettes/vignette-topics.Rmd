@@ -108,6 +108,8 @@ vignette: >
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
       * [Adjusted](messy-data.html#adjcov)
+      * [`cov.keep](FAQs.html#numeric)
+      * [`cov.reduce](FAQs.html#numeric)
       * [Derived](basics.html#depcovs)
       * [`emmeans()` doesn't work](FAQs.html#numeric)
       * [Interacting with factors](FAQs.html#trends)
@@ -447,6 +449,7 @@ vignette: >
       * [for `rsm` objects](xtending.html#rdrsm)
   * [`ref_grid()`](basics.html#ref_grid)
       * [`at`](basics.html#altering)
+      * [`cov.keep`](basics.html#altering)
       * [`cov.reduce`](basics.html#altering)
       * [`mult.name`](basics.html#multiv)
       * [`nesting`](messy-data.html#nest-trap)

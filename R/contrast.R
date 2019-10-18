@@ -200,13 +200,16 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             vars = c(setdiff(vars, by), by)
             k = k - length(by)
         }
+        nms = names(interaction)
         interaction = as.list(rep(interaction, k)[1:k])
+        names(interaction) = c(nms, rep("", k))[1:k]
+        nms = vars[1:k]
         if (is.null(names(interaction)))
-            names(interaction) = vars
+            names(interaction) = nms
         else {
-            unnamed = which(!(names(interaction) %in% vars))
-            names(interaction)[unnamed] = setdiff(vars, names(interaction))
-            vars = names(interaction)
+            unnamed = which(!(names(interaction) %in% nms))
+            names(interaction)[unnamed] = setdiff(nms, names(interaction))
+            nms = names(interaction)
         }
         
         
@@ -216,15 +219,16 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         tcm = NULL
         for (i in k:1) {
             if (is.character(interaction[[i]]))
-                nm = paste(vars[i], interaction[[i]], sep = "_")
+                nm = paste(nms[i], interaction[[i]], sep = "_")
             else
-                nm = paste(vars[i], "custom", sep = "_")
-            object = contrast.emmGrid(object, interaction[[i]], by = vars[-i], name = nm, ...)
+                nm = paste(nms[i], "custom", sep = "_")
+            pos = which(vars == nms[i])
+            object = contrast.emmGrid(object, interaction[[i]], by = vars[-pos], name = nm, ...)
             if(is.null(tcm))
                 tcm = object@misc$con.coef
             else
                 tcm = object@misc$con.coef %*% tcm
-            vars[i] = nm
+            vars[pos] = nm
         }
         object = update(object, by = by, adjust = adjust, ..., silent = TRUE)
         object@misc$is.new.rg = NULL

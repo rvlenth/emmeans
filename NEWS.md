@@ -13,10 +13,12 @@ emmeans 1.4.1.009xxx
   * Added new `"identity"` contrast method
   * New `eff_size()` function for Cohen effect sizes
   * Expanded capabilities for interaction contrasts (#146)
-  * Changed default to `covnest = TRUE` argument in `ref_grid()` (#148)
-    This could change the results obtained from some analyses with previous 
-    versions, as now covariates with multiple levels will by default figure
-    in to weights. Specify `covnest = FALSE` to replicate those old results.
+  * New `cov.keep` argument in `ref_grid()` for specifying covariates
+    to be treated just like factors (#148). A side effect is that the
+    system default for indicator variables as covariates is to treat
+    them like 2-level factors. *This could change the results obtained from 
+    some analyses using earlier versions*. To replicate old analyses,
+    set `emm_options(cov.keep = character(0))`.
   * Bug fixes: `regrid` ignored offsets with Bayesian models; `emtrends()` did
     not supply `options` and `misc` arguments to `emm_basis()` (#143)
 

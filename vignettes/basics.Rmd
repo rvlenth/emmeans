@@ -122,7 +122,7 @@ To obtain the reference grid, consider all the predictors in the model.
 Here are the default rules for constructing the reference grid
 
   * For each predictor that is a *factor*, use its levels (dropping unused ones)
-  * For each numeric predictor (covariate), use its average
+  * For each numeric predictor (covariate), use its average.[^1]
   
 The reference grid is then a regular grid of all combinations of these
 reference levels.
@@ -160,6 +160,10 @@ its average. Thus, the grid has only three elements:
 ```{r}
 ref_grid(pigs.lm2) @ grid
 ```
+
+[^1]:
+In newer versions of **emmeans**, however, covariates having only two distinct values are
+by default treated as two-level factors, though there is an option to reduce them to their mean.
 
 [Back to Contents](#contents)
 
@@ -209,23 +213,24 @@ is performed separately in each nesting group. See the [section on nesting in th
 [Back to Contents](#contents)
 
 ### Altering the reference grid {#altering}
-<!-- @index Reference grids!Altering; `ref_grid()`!`cov.reduce`; 
+<!-- @index Reference grids!Altering; `ref_grid()`!`cov.reduce`; `ref_grid()`!`cov.keep`; 
             `ref_grid()`!`at`; Examples!`mtcars` -->
 It is possible to alter the reference grid. We might, for example, want to 
 define a reference grid for `pigs.lm2` that is comparable to the one for 
 `pigs.lm1`.
 ```{r}
-ref_grid(pigs.lm2, cov.reduce = FALSE)
+ref_grid(pigs.lm2, cov.keep = "percent")
 ```
-Using `cov.reduce = FALSE` specifies that, instead of using the mean, the
-reference grid should use all the unique values of each covariate. Be careful
-with this: it can create quite a mess if there is a covariate that was measured
-rather than experimentally varied. Another option is to give a function; e.g.,
+Using `cov.keep = "percent"` specifies that, instead of using the mean, the
+reference grid should use all the unique values of `each covariate`"percent"`. 
+
+Another option is to specify a `cov.reduce` function that is used in place
+of the mean; e.g.,
 ```{r}
 ref_grid(pigs.lm2, cov.reduce = range)
 ```
 
-Perhaps more common is to use the `at` argument. Consider this model for the
+Another option is to use the `at` argument. Consider this model for the
 built-in `mtcars` dataset:
 ```{r}
 mtcars.lm <- lm(mpg ~ disp * cyl, data = mtcars)
@@ -235,13 +240,20 @@ Since both predictors are numeric, the default reference grid has only one
 point. For purposes of describing the fitted model, you might want to obtain
 predictions at a grid of points, like this:
 ```{r}
-mtcars.rg <- ref_grid(mtcars.lm, 
-    at = list(disp = c(100, 200, 300), cyl = c(4, 6, 8)))
+mtcars.rg <- ref_grid(mtcars.lm, cov.keep = 3,
+                      at = list(disp = c(100, 200, 300)))
+mtcars.rg
 ```
-... which will create a 3 x 3 grid. (We'll look at this model again shortly.)
+This illustrates two things: a new use of `cov.keep` and the `at` argument.
+`cov.keep = "3"` specifies that any covariates having 3 or fewer unique values
+is treated like a factor (the system default is `cov.keep = "2"`). 
+The `at` specification gives three values of `disp`,
+overriding the default behavior to use the mean of `disp`. 
 Another use of `at` is to focus on only some of the levels of a factor. Note that
 `at` does not need to specify every predictor; those not mentioned in `at` are
-handled by `cov.reduce` or the default methods.
+handled by `cov.reduce`, `cov.keep`, or the default methods. Also, covariate values
+in `at` need not be values that actually occur in the data, whereas `cov.keep`
+will use only values that are achieved.
 
 [Back to Contents](#contents)
 
