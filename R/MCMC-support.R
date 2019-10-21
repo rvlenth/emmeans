@@ -388,6 +388,18 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
     if (mode == "multinomial") {
         misc$postGridHook = .MCMCglmm.multinom.postGrid
     }
+    else { # try to figure out the link
+        fam = unique(object$family)
+        if (length(fam) > 1)
+            stop("There is more than one 'family' in this model - too complex for emmeans support")
+        link = switch(fam,
+                      poisson = "log",
+                      multinomial = "log",
+                      categorical = "logit",
+                      ordinal = "logit") # maybe more later?
+        if (!is.null(link))
+            misc = .std.link.labels(list(link = link), misc)
+    }
     list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
          dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = Sol)

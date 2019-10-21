@@ -49,7 +49,8 @@ object.}
   \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{test.emmGrid}},
   \code{\link{confint.emmGrid}}, and \code{\link{emmip}}. The only option that can
   affect the latter four is \code{"predict.method"}.}
-\item{\code{cov.keep}}{The default value of \code{cov.keep} in \code{\link{ref_grid}}.}
+\item{\code{cov.keep}}{The default value of \code{cov.keep} in \code{\link{ref_grid}}.
+  Defaults to \code{"2"}, i.e., two-level covariates are treated like factors.}
 \item{\code{graphics.engine}}{A character value matching 
   \code{c("ggplot", "lattice")}, setting the default engine to use in
   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
