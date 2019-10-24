@@ -19,6 +19,7 @@ emmeans 1.4.1.009xxx
     them like 2-level factors. *This could change the results obtained from 
     some analyses using earlier versions*. To replicate old analyses,
     set `emm_options(cov.keep = character(0))`.
+  * Added merMod-related options as convenience arguments (#150)
   * Bug fixes: `regrid` ignored offsets with Bayesian models; `emtrends()` did
     not supply `options` and `misc` arguments to `emm_basis()` (#143)
 

@@ -103,8 +103,12 @@ recover_data.merMod = function(object, ...) {
 
 #' @export
 emm_basis.merMod = function(object, trms, xlev, grid, vcov., 
-                            mode = get_emm_option("lmer.df"), 
-                            lmer.df, options, ...) {
+                            mode = get_emm_option("lmer.df"), lmer.df, 
+                            disable.pbkrtest = get_emm_option("disable.pbkrtest"), 
+                            pbkrtest.limit = get_emm_option("pbkrtest.limit"), 
+                            disable.lmerTest = get_emm_option("disable.lmerTest"), 
+                            lmerTest.limit = get_emm_option("lmerTest.limit"), 
+                            options, ...) {
     if (missing(vcov.))
         V = as.matrix(vcov(object, correlation = FALSE))
     else
@@ -117,21 +121,22 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
             mode = lmer.df
 
         mode = match.arg(tolower(mode), c("satterthwaite", "kenward-roger", "asymptotic"))
-        if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
+        # if we're gonna override the df anyway, keep it simple 
+        # OTOH, if K-R, documentation promises we'll adjust V
+        if (!is.null(options$df) && (mode != "kenward-roger")) 
             mode = "asymptotic"
         
         
         # set flags
         objN = lme4::getME(object, "N")
-        disable.pbkrtest = get_emm_option("disable.pbkrtest")
-        tooBig.k = (objN > get_emm_option("pbkrtest.limit"))
-        disable.lmerTest = get_emm_option("disable.lmerTest")
-        tooBig.s = (objN > get_emm_option("lmerTest.limit"))
+        tooBig.k = (objN > pbkrtest.limit)
+        tooBig.s = (objN > lmerTest.limit)
         
         tooBigMsg = function(pkg, limit) {  
             message("Note: D.f. calculations have been",
                     " disabled because the number of observations exceeds ", limit, ".\n",
-                    "To enable adjustments, set emm_options(", pkg, ".limit = ", objN, ") or larger,\n",
+                    "To enable adjustments, add the argument '", pkg, ".limit = ", objN, "' (or larger)\n",
+                    "[or, globally, 'set emm_options(", pkg, ".limit = ", objN, ")' or larger];\n",
                     "but be warned that this may result in large computation time and memory use.")
         }
         
@@ -140,14 +145,14 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
             if (disable.pbkrtest || tooBig.k || !.requireNS("pbkrtest", fail = .nothing))
                 mode = "satterthwaite"
             if (!disable.pbkrtest && tooBig.k)
-                tooBigMsg("pbkrtest", get_emm_option("pbkrtest.limit"))
+                tooBigMsg("pbkrtest", pbkrtest.limit)
         }
         if (mode == "satterthwaite") {
             if (disable.lmerTest || tooBig.s || !.requireNS("lmerTest", fail = .nothing))
                 mode = ifelse(!disable.pbkrtest && !tooBig.k && .requireNS("pbkrtest", fail = .nothing), 
                               "kenward-roger", "asymptotic")
             if (!disable.lmerTest && tooBig.s)
-                tooBigMsg("lmerTest", get_emm_option("lmerTest.limit"))
+                tooBigMsg("lmerTest", lmerTest.limit)
         }
         # if my logic isn't flawed, we are guaranteed that mode is both desired and possible
         

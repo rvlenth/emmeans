@@ -276,9 +276,11 @@ number of observations, *N*, in the design matrix (because a major part
 of the computation involves inverting an *N* x *N* matrix). Thus,
 **pbkrtest** is automatically disabled if *N* exceeds the value of 
 `get_emm_option("pbkrtest.limit")`, for which the factory default is 3000.
+(The user may also specify `pbkrtest.limit` or `disable.pbkrtest` as an
+argument in the call to `emmeans()` or `ref_grid()`)
 
 Similarly to the above, the `disable.lmerTest` and `lmerTest.limit` options
-affect whether Satterthwaite methods can be implemented.
+or arguments affect whether Satterthwaite methods can be implemented.
 
 The `df` argument may be used to specify some other degrees of freedom.
 Note that if `df` and `method = "kenward-roger"` are both
