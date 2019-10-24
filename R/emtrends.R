@@ -125,7 +125,7 @@
 #' # Obtaining a reference grid
 #' mtcars.lm <- lm(mpg ~ poly(disp, degree = 2) * (factor(cyl) + factor(am)), data = mtcars)
 #' 
-#' Center trends at mean disp for each no. of cylinders
+#' # Center trends at mean disp for each no. of cylinders
 #' mtcTrends.rg <- emtrends(mtcars.lm, var = "disp", 
 #'                           cov.reduce = disp ~ factor(cyl))
 #' summary(mtcTrends.rg)  # estimated trends at grid nodes

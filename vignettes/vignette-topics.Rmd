@@ -74,6 +74,7 @@ vignette: >
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)
+  * [Cohen's *d*](comparisons.html#pairwise)
   * [Compact letter displays](comparisons.html#CLD)
   * Comparisons
       * [Back-transforming](comparisons.html#logs)
@@ -133,6 +134,8 @@ vignette: >
 
 
   * [`eff` contrasts](comparisons.html#contrasts)
+  * [`eff_size()`](comparisons.html#pairwise)
+  * [Effect size](comparisons.html#pairwise)
   * [`emm_basis()`](xtending.html#intro)
       * [Arguments and returned value](xtending.html#ebreqs)
       * [Communicating with `recover_data()`](xtending.html#communic)

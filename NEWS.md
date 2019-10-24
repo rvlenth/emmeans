@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.1.009xxx
+emmeans 1.4.2
 -------------
 
   * First argument of `emtrends()` is now `object`, not `model`, to avoid

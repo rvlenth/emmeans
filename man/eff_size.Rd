@@ -22,6 +22,8 @@ to specify the degrees of freedom to use in \eqn{t} statistics and confidence in
 \item{method}{the contrast method to use to define the effects.
 This is passed to \code{\link{contrast}} after the elements of \code{object}
 are scaled.}
+
+\item{...}{Additional arguments passed to \code{contrast}}
 }
 \value{
 an \code{\link[=emmGrid-class]{emmGrid}} object containing the effect sizes

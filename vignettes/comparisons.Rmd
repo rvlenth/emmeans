@@ -51,6 +51,34 @@ earlier levels; if you want the comparisons to go in the other direction, use
 you may specify `by` factor(s) to perform the comparisons separately at the 
 levels of those factors.
 
+
+### Effect size
+<!-- @index Effect size; Cohen's *d*; `eff_size()` -->
+Some users desire standardized effect-size measures. Most popular is probably
+Cohen's *d*, which is defined as the observed difference, divided by the
+population SD; and obviously Cohen effect sizes are close cousins of pairwise
+differences. They are available via the `eff_size()` function, where the user
+must specify the `emmGrid` object with the means to be compared, the estimated
+population SD `sigma`, and its degrees of freedom `edf`. This is illustrated with the 
+current example:
+```{r}
+eff_size(pigs.emm.s, sigma = sigma(pigs.lm), edf = 23)
+```
+The confidence intervals shown take into account the error in estimating `sigma` as
+well as the error in the differences. Note that the intervals are narrower if we
+claim that we know `sigma` perfectly (i.e., infinite degrees of freedom):
+```{r}
+eff_size(pigs.emm.s, sigma = sigma(pigs.lm), edf = Inf)
+```
+Note that `eff_size()` expects the object with the means, not the differences.
+If you want to use the differences, use the `method` argument to specify that
+you don't want to compute pairwise differences again; e.g.,
+```{r, eval = FALSE}
+eff_size(pairs(pigs.emm.s), sigma = sigma(pigs.lm), edf = 23, method = "identity")
+```
+(results are identical to the first effect sizes shown).
+
+
 ### Graphical comparisons {#graphical}
 <!-- @index Comparisons!Graphical -->
 Comparisons may be summarized graphically via the `comparisons` argument

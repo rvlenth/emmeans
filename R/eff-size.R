@@ -42,6 +42,7 @@
 #' @param method the contrast method to use to define the effects.
 #'   This is passed to \code{\link{contrast}} after the elements of \code{object}
 #'   are scaled.
+#' @param ... Additional arguments passed to \code{contrast}
 #'
 #' @return an \code{\link[=emmGrid-class]{emmGrid}} object containing the effect sizes
 #' 
@@ -122,7 +123,7 @@ eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     object@bhat = emm
     
     # put on log scale and incorporate the SD estimate
-    logobj = regrid(object, tran = "log")
+    logobj = regrid(object, transform = "log")
     logobj@bhat = c(logobj@bhat, log(sigma))
     V = rbind(cbind(logobj@V, 0), 0)
     n = nrow(V)
@@ -134,7 +135,7 @@ eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     logobj@misc$by = NULL
     
     con = contrast(logobj, "trt.vs.ctrlk", by = NULL)
-    con = regrid(con, tran = "response")
+    con = regrid(con, transform = "response")
     object@bhat = con@bhat * sgn
     object@V = con@V
     update(contrast(object, method, adjust = "none", ...), 
