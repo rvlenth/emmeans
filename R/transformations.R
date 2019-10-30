@@ -83,6 +83,11 @@
 #' \item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
 #'   \eqn{sin^(-1)(y/p)^{1/2)}}. Typically, the parameter \eqn{p} is equal to 1 for
 #'   a fraction, or 100 for a percentage.}
+#' \item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
+#'   \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
+#'   transformation \eqn{(z^p - 1) / p} of the variable \eqn{z = y + (y^2+g^2)^(1/2)}. 
+#'   This requires \code{param} to have two elements:
+#'   the power \eqn{p} and the offset \eqn{g > 0}.}
 #' }
 #' The user may include a second element in \code{param} to specify an
 #' alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},
@@ -91,7 +96,8 @@
 #' In the \code{"genpower"} transformation, a second \code{param} element may be
 #' used to specify a base other than the default natural logarithm. For example,
 #' \samp{type = "genlog", param = c(.5, 10)} specifies the \eqn{log10(y + .5)}
-#' transformation.
+#' transformation. In the \code{"bcnPower"} transformation, the second element
+#' is required and must be positive.
 #' 
 #' For purposes of back-transformation, the \samp{sqrt(y) + sqrt(y+1)}
 #' transformation is treated exactly the same way as \samp{2*sqrt(y)}, because
@@ -131,7 +137,7 @@
 #' mod.rg <- update(ref_grid(mod), tran = make.tran("power", 2/3))
 #' emmeans(mod.rg, "treatment")
 #' }
-make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt"), param = 1) {
+make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt", "bcnPower"), param = 1) {
     type = match.arg(type)
     origin = 0
     mu.lbl = "mu"
@@ -208,6 +214,28 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqr
                     mu.eta = function(eta) param * sin(2*pmax(pmin(eta, pi/2), 0)),
                     valideta = function(eta) all(eta <= pi/2) && all(eta >= 0),
                     name = paste0("asin(sqrt(", mu.lbl, "))")
+               )
+           },
+           bcnPower = {
+               if(origin <= 0)
+                   stop ("The second parameter for 'bcnPower' must be strictly positive.")
+               list(
+                   linkfun = function(mu) {
+                       s = sqrt(mu^2 + origin^2)
+                       if (abs(param) < 1e-10) log(.5*(mu + s))
+                       else ((0.5 * (mu + s))^param - 1) / param  },
+                   linkinv = function(eta) {
+                       q = if (abs(param) < 1e-10) 2 * exp(eta)
+                           else 2 * (param * eta + 1) ^ (1/param)
+                       (q^2 - origin^2) / (2 * q) },
+                   mu.eta = function(eta) {
+                       if (abs(param) < 1e-10) { q = 2 * exp(eta); dq = q }
+                       else { q = 2 * (param * eta + 1) ^ (1/param)
+                           dq = 2 * (param * eta + 1)^(1/param - 1) }
+                       0.5 * (1 + (origin/q)^2) * dq },
+                   valideta = function(eta) all(eta > 0),
+                   param = c(param, origin),
+                   name = paste0("bcnPower(", signif(param,3), ", ", signif(origin,3), ")")
                )
            }
     )

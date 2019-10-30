@@ -1,5 +1,12 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.2.0009xxx
+-------------
+
+  * Added `"bcnPower"` option to `make.tran()` (per `car::bcnPower()`)
+  * Scoping correction for `emmtrends()` (#153)
+
+
 emmeans 1.4.2
 -------------
 

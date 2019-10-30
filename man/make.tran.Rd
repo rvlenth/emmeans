@@ -4,8 +4,8 @@
 \alias{make.tran}
 \title{Response-transformation extensions}
 \usage{
-make.tran(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt"),
-  param = 1)
+make.tran(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt",
+  "bcnPower"), param = 1)
 }
 \arguments{
 \item{type}{The name of the transformation. See Details.}
@@ -75,6 +75,11 @@ The \code{type} argument specifies the following transformations:
 \item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
   \eqn{sin^(-1)(y/p)^{1/2)}}. Typically, the parameter \eqn{p} is equal to 1 for
   a fraction, or 100 for a percentage.}
+\item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
+  \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
+  transformation \eqn{(z^p - 1) / p} of the variable \eqn{z = y + (y^2+g^2)^(1/2)}. 
+  This requires \code{param} to have two elements:
+  the power \eqn{p} and the offset \eqn{g > 0}.}
 }
 The user may include a second element in \code{param} to specify an
 alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},
@@ -83,7 +88,8 @@ param = c(1.5, 4)} specifies the transformation \eqn{(y - 4)^1.5}.
 In the \code{"genpower"} transformation, a second \code{param} element may be
 used to specify a base other than the default natural logarithm. For example,
 \samp{type = "genlog", param = c(.5, 10)} specifies the \eqn{log10(y + .5)}
-transformation.
+transformation. In the \code{"bcnPower"} transformation, the second element
+is required and must be positive.
 
 For purposes of back-transformation, the \samp{sqrt(y) + sqrt(y+1)}
 transformation is treated exactly the same way as \samp{2*sqrt(y)}, because

@@ -162,6 +162,8 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
         object = eval(cl$object)
     }
     
+    cl$object = quote(object)
+    
     # Get data via hook in ref_grid
     cl$options$just.data = TRUE
     data = eval(cl)
