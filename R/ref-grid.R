@@ -741,7 +741,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         if (is.character(hook))
             hook = get(hook)
         result@misc$postGridHook = NULL
-        result = hook(result)
+        result = hook(result, ...)
     }
     if(transform != "none")
         result = regrid(result, transform = transform, sigma = sigma, ...)

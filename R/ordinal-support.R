@@ -197,10 +197,10 @@ emm_basis.clm = function (object, trms, xlev, grid,
 # fuction called at end of ref_grid
 # I use this for polr as well
 # Also used for stanreg result of stan_polr & potentially other MCMC ordinal models
-.clm.postGrid = function(object) {
+.clm.postGrid = function(object, ...) {
     mode = object@misc$mode
     object@misc$postGridHook = object@misc$mode = NULL
-    object = regrid(object, TRUE)
+    object = regrid(object, transform = "response", ...)
     if(object@misc$estName == "exc.prob") { # back-transforming yields exceedance probs
         object@bhat = 1 - object@bhat
         if(!is.null(object@post.beta[1]))
@@ -208,10 +208,10 @@ emm_basis.clm = function (object, trms, xlev, grid,
         object@misc$estName = "cum.prob"
     }
     if (mode == "prob") {
-        object = .clm.prob.grid(object)
+        object = .clm.prob.grid(object, ...)
     }
     else if (mode == "mean.class") {
-        object = .clm.mean.class(object)
+        object = .clm.mean.class(object, ...)
     }
     else if (mode == "exc.prob") {
         object@bhat = 1 - object@bhat
@@ -227,9 +227,9 @@ emm_basis.clm = function (object, trms, xlev, grid,
 
 # Make the linear-predictor ref_grid into one for class probabilities
 # This assumes that object has already been re-gridded and back-transformed
-.clm.prob.grid = function(object, thresh = "cut", newname = object@misc$respName) {
+.clm.prob.grid = function(object, thresh = "cut", newname = object@misc$respName, ...) {
     byv = setdiff(names(object@levels), thresh)
-    newrg = contrast(object, ".diff_cum", by = byv)
+    newrg = contrast(object, ".diff_cum", by = byv, ...)
     if (!is.null(wgt <- object@grid[[".wgt."]])) {
         km1 = length(object@levels[[thresh]])
         wgt = wgt[seq_len(length(wgt) / km1)] # unique weights for byv combs
@@ -249,11 +249,11 @@ emm_basis.clm = function (object, trms, xlev, grid,
     newrg
 }
 
-.clm.mean.class = function(object) {
-    prg = .clm.prob.grid(object, newname = "class")
+.clm.mean.class = function(object, ...) {
+    prg = .clm.prob.grid(object, newname = "class", ...)
     byv = setdiff(names(prg@levels), "class")
     lf = as.numeric(prg@levels$class)
-    newrg = contrast(prg, list(mean = lf), by = byv)
+    newrg = contrast(prg, list(mean = lf), by = byv, ...)
     newrg = update(newrg, infer = c(FALSE, FALSE), 
         pri.vars = NULL, by.vars = NULL, estName = "mean.class")
     newrg@levels$contrast = newrg@grid$contrast = NULL
@@ -284,7 +284,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
 #### replacement estimation routines for cases with a scale param
 
 ## workhorse for estHook and vcovHook functions
-.clm.hook = function(object, tol = 1e-8) {
+.clm.hook = function(object, tol = 1e-8, ...) {
     scols = object@misc$scale.idx
     bhat = object@bhat
     active = !is.na(bhat)
@@ -304,13 +304,13 @@ emm_basis.clm = function (object, trms, xlev, grid,
 }
 
 .clm.estHook = function(object, do.se = TRUE, tol = 1e-8, ...) {
-    raw.matl = .clm.hook(object, tol)
+    raw.matl = .clm.hook(object, tol, ...)
     SE = if (do.se) sqrt(diag(raw.matl$V))  else NA
     cbind(est = raw.matl$est, SE = SE, df = Inf)
 }
 
 .clm.vcovHook = function(object, tol = 1e-8, ...) {
-    .clm.hook(object, tol)$V
+    .clm.hook(object, tol, ...)$V
 }
 
 ### Special emm_basis fcn for the scale model

@@ -354,7 +354,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     side = side.map[pmatch(side, side.opts, 2)[1]] - 2
     delta = abs(delta)
     
-    result = .est.se.df(object)
+    result = .est.se.df(object, ...)
     
     lblnms = setdiff(names(grid), 
                      c(object@roles$responses, ".offset.", ".wgt."))
@@ -561,7 +561,7 @@ predict.emmGrid <- function(object, type,
     if ((type == "response") && (!is.null(object@misc$tran2)))
         object = regrid(object, transform = "mu")
     
-    pred = .est.se.df(object, do.se = FALSE)
+    pred = .est.se.df(object, do.se = FALSE, ...)
     result = pred[[1]]
     
     if (type %in% c("response", "mu", "unlink")) {
@@ -620,7 +620,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 
 
 # Workhorse for getting estimates etc.
-.est.se.df = function(object, do.se=TRUE, tol = get_emm_option("estble.tol")) {
+.est.se.df = function(object, do.se=TRUE, tol = get_emm_option("estble.tol"), ...) {
     if (nrow(object@grid) == 0) {
         result = data.frame(NA, NA, NA)
         names(result) = c(object@misc$estName, "SE", "df")
@@ -631,7 +631,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 
     if (!is.null(hook <- misc$estHook)) {
         if (is.character(hook)) hook = get(hook)
-        result = hook(object, do.se=do.se, tol=tol)
+        result = hook(object, do.se=do.se, tol=tol, ...)
     }
     else {
         active = which(!is.na(object@bhat))
