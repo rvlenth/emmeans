@@ -4,8 +4,8 @@
 \alias{regrid}
 \title{Reconstruct a reference grid with a new transformation or posterior sample}
 \usage{
-regrid(object, transform = c("response", "mu", "unlink", "log", "none",
-  "pass"), inv.log.lbl = "response", predict.type,
+regrid(object, transform = c("response", "mu", "unlink", "none", "pass",
+  links), inv.link.lbl = "response", predict.type,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, N.sim,
   sim = mvtnorm::rmvnorm, ...)
 }
@@ -15,18 +15,21 @@ regrid(object, transform = c("response", "mu", "unlink", "log", "none",
 \item{transform}{Character or logical value. If \code{"response"} or
 \code{"mu"}, the inverse transformation is applied to the estimates in the
 grid (but if there is both a link function and a response transformation,
-\code{"mu"} back-transforms only the link part); if \code{"log"}, the
-results are formulated as if the response had been \code{log}-transformed;
+\code{"mu"} back-transforms only the link part); if in \code{links}, the
+results are formulated as if the response had been transformed with that 
+link function;
 if \code{"none"}, predictions thereof are on the same scale as in 
 \code{object}, and any internal transformation information is preserved. 
 If \code{transform = "pass"}, the object is not re-gridded in any way (this
 may be useful in conjunction with \code{N.sim}).
+\code{links} is the collection of valid arguments for \code{\link{make.link}},
+excepting \code{"identity"}.
 For compatibility with past versions, \code{transform} may also be logical;
 \code{TRUE} is taken as \code{"response"}, and \code{FALSE} as 
 \code{"none"}.}
 
-\item{inv.log.lbl}{Character value. This applies only when \code{transform =
-"log"}, and is used to label the predictions if subsequently summarized
+\item{inv.link.lbl}{Character value. This applies only when \code{transform} 
+is in \code{links}, and is used to label the predictions if subsequently summarized
 with \code{type = "response"}.}
 
 \item{predict.type}{Character value. If provided, the returned object is

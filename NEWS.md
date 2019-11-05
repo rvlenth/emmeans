@@ -6,6 +6,8 @@ emmeans 1.4.2.0009xxx
   * Added `"bcnPower"` option to `make.tran()` (per `car::bcnPower()`)
   * Scoping correction for `emmtrends()` (#153)
   * Allow passing `...` to hook functions (need exposed by #154)
+  * Addition to `regrid()` whereby we can fake any response transformation
+    in `make.link()` -- not just `"log"` (again inspired by #154)
 
 
 emmeans 1.4.2
