@@ -139,17 +139,22 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
                     "[or, globally, 'set emm_options(", pkg, ".limit = ", objN, ")' or larger];\n",
                     "but be warned that this may result in large computation time and memory use.")
         }
-        
+
         # pick the lowest-hanging apples first
         if (mode == "kenward-roger") {
-            if (disable.pbkrtest || tooBig.k || !.requireNS("pbkrtest", fail = .nothing))
+            if (disable.pbkrtest || tooBig.k || !.requireNS("pbkrtest", 
+                    "Cannot use mode = \"kenward-roger\" because *pbkrtest* package is not installed", 
+                    fail = message))
                 mode = "satterthwaite"
             if (!disable.pbkrtest && tooBig.k)
                 tooBigMsg("pbkrtest", pbkrtest.limit)
         }
         if (mode == "satterthwaite") {
-            if (disable.lmerTest || tooBig.s || !.requireNS("lmerTest", fail = .nothing))
-                mode = ifelse(!disable.pbkrtest && !tooBig.k && .requireNS("pbkrtest", fail = .nothing), 
+            if (disable.lmerTest || tooBig.s || !.requireNS("lmerTest", 
+                    "Cannot use mode = \"satterthwaite\" because *lmerTest* package is not installed", 
+                    fail = message))
+                mode = ifelse(!disable.pbkrtest && !tooBig.k && 
+                                  .requireNS("pbkrtest", fail = .nothing), 
                               "kenward-roger", "asymptotic")
             if (!disable.lmerTest && tooBig.s)
                 tooBigMsg("lmerTest", lmerTest.limit)

@@ -7,7 +7,10 @@ emmeans 1.4.2.0009xxx
   * Scoping correction for `emmtrends()` (#153)
   * Allow passing `...` to hook functions (need exposed by #154)
   * Addition to `regrid()` whereby we can fake any response transformation
-    in `make.link()` -- not just `"log"` (again inspired by #154)
+    -- not just `"log"` (again inspired by #154)
+  * Informative message when **pbkrtest** or **lmerTest** is not found
+    (affects `merMod` objects) (#157)
+  
 
 
 emmeans 1.4.2
