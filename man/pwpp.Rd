@@ -69,6 +69,8 @@ and which levels are compared. In addition, factor levels are color-coded, and t
 and half-line segments appear in the color of the other level.
 The P-value scale is nonlinear, so as to stretch-out smaller P values and
 compress larger ones.
+P values smaller than 0.0004 are altered and plotted in a way that makes 
+  them more distinguishable from one another.
 
 If \code{xlab}, \code{ylab}, and \code{xsub} are not provided, reasonable labels
 are created. \code{xsub} is used to note special features; e.g., equivalence

@@ -32,6 +32,8 @@
 #' and half-line segments appear in the color of the other level.
 #' The P-value scale is nonlinear, so as to stretch-out smaller P values and
 #' compress larger ones.
+#' P values smaller than 0.0004 are altered and plotted in a way that makes 
+#'   them more distinguishable from one another.
 #' 
 #' If \code{xlab}, \code{ylab}, and \code{xsub} are not provided, reasonable labels
 #' are created. \code{xsub} is used to note special features; e.g., equivalence
@@ -74,6 +76,7 @@
 #'                  adjust the position. Changing it by one unit should shift the position by
 #'                  about one character width (right if positive, left if negative).
 #' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}
+#' 
 #' 
 #' @note The \pkg{ggplot2} package must be installed in order for \code{pwpp} to work.
 #'
@@ -228,7 +231,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
 
 .pvmaj.brk = c(.001, .01, .05, .1, .5, 1)
 #.pvmin.brk = c(.0001, .0005, seq(.001, .009, by = .001), seq(.02 ,.09, by = .01), .2, .3, .4, .6, .7, .8, .9)
-.pvmin.brk = c(.0001, .0005, .001, .005, seq(.01 ,.1, by = .01), .2, .3, .4, .5, 1)
+.pvmin.brk = c(.0005, .001, .005, seq(.01 ,.1, by = .01), .2, .3, .4, .5, 1)
 
 # transforms x in (0, 1] to t in (0,1], while any x's < 0 or > 1 are preserved as is
 # This allows me to position marginal labels etc. where I want
@@ -265,7 +268,12 @@ gran = function(x, min_incr = .01) {
         xx
     }
     
-    x[x < .00009] = .00009   # forces granulation of extremely small P
+    ### x[x < .00009] = .00009   # forces granulation of extremely small P
+    # spread-out the p values less than .0004
+    rnk = rank(x)
+    sm = which(x < .0004)
+    if(length(sm) > 0)
+        x[sm] = .0004 - .0003 * rnk[sm] / length(sm)
     
     ord = order(x)
     tx = log(x[ord])

@@ -10,6 +10,7 @@ emmeans 1.4.2.0009xxx
     -- not just `"log"` (again inspired by #154)
   * Informative message when **pbkrtest** or **lmerTest** is not found
     (affects `merMod` objects) (#157)
+  * Change in `pwpp()` to make extremely small P values more distinguishable
   
 
 
