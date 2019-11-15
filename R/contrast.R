@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2019 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -68,10 +68,10 @@ contrast = function(object, ...)
 #'   valid way to back-transform contrasts: differences of logs are logs of
 #'   ratios, and differences of logits are odds ratios. If \code{ratios = TRUE}
 #'   and summarized with \code{type = "response"}, \code{contrast} results are
-#'   back-trajnsformed to ratios whenever we have true contrasts (coefficients
+#'   back-transformed to ratios whenever we have true contrasts (coefficients
 #'   sum to zero). For other transformations, there is no natural way to
 #'   back-transform contrasts, so even when summarized with \code{type = "response"},
-#'   contrasts are computed and displayed on the transformed scale. Similarly, 
+#'   contrasts are computed and displayed on the linear-predictor scale. Similarly, 
 #'   if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
 #'   any other transformation.
 #' @param ... Additional arguments passed to other methods
@@ -230,7 +230,9 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                 tcm = object@misc$con.coef %*% tcm
             vars[pos] = nm
         }
-        object = update(object, by = by, adjust = adjust, ..., silent = TRUE)
+        object = update(object, by = by, adjust = adjust, silent = TRUE) 
+          ### removed `...` here Nov 2019 because a `mode` arg gets matched with `model.info`
+          ### when passed via formula lhs in `emmeans()`
         object@misc$is.new.rg = NULL
         object@misc$orig.grid = orig.grid
         object@misc$con.coef = tcm

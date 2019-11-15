@@ -20,7 +20,7 @@
 \item{x}{An \code{emmGrid} object}
 }
 \value{
-The \code{vcov} method returns a ymmetric matrix of variances and
+The \code{vcov} method returns a symmetric matrix of variances and
   covariances for \code{predict.emmGrid(object, type = "lp")}
 }
 \description{

@@ -104,7 +104,7 @@ print.emmGrid = function(x,...)
 #' @param object An \code{emmGrid} object
 #' @param ... (required but not used)
 #' 
-#' @return The \code{vcov} method returns a ymmetric matrix of variances and
+#' @return The \code{vcov} method returns a symmetric matrix of variances and
 #'   covariances for \code{predict.emmGrid(object, type = "lp")}
 #'
 #' @method vcov emmGrid
@@ -578,7 +578,7 @@ emm_defaults = list (
 #' linear function will be the minimum d.f. among those having nonzero
 #' coefficients. This is kind of an \emph{ad hoc} method, and it can
 #' over-estimate the degrees of freedom in some cases. An annotation is
-#' displayed below any subsequent summary results statisng that the 
+#' displayed below any subsequent summary results stating that the 
 #' degrees-of-freedom method is inherited from the previous method at
 #' the time of re-gridding.
 #'

@@ -38,7 +38,7 @@ an object of class \code{summary_emm}
 \description{
 This function computes point estimates and HPD intervals for each
 factor combination in \code{object@emmGrid}. While this function
-may be called independently, it is called utomatically by the S3 method
+may be called independently, it is called automatically by the S3 method
 \code{\link{summary.emmGrid}} when the object is based on a Bayesian model.
 (Note: the \code{level} argument, or its default, is passed as \code{prob}).
 }

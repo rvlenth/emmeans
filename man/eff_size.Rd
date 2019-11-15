@@ -41,7 +41,7 @@ effects, unless overridden in the optional arguments.
 
 For models having a single random effect, such as those fitted using
 \code{\link{lm}}; in that case, the \code{stats::sigma} and
-\code{stats::df.residual} functions may be useful for spcifying \code{sigma}
+\code{stats::df.residual} functions may be useful for specifying \code{sigma}
 and \code{edf}. For models with more than one random effect, \code{sigma} may
 be based on some combination of the random-effect variances.
 

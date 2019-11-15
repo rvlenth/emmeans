@@ -67,10 +67,10 @@ handled. These transformations are exceptional cases in that there is a
 valid way to back-transform contrasts: differences of logs are logs of
 ratios, and differences of logits are odds ratios. If \code{ratios = TRUE}
 and summarized with \code{type = "response"}, \code{contrast} results are
-back-trajnsformed to ratios whenever we have true contrasts (coefficients
+back-transformed to ratios whenever we have true contrasts (coefficients
 sum to zero). For other transformations, there is no natural way to
 back-transform contrasts, so even when summarized with \code{type = "response"},
-contrasts are computed and displayed on the transformed scale. Similarly, 
+contrasts are computed and displayed on the linear-predictor scale. Similarly, 
 if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
 any other transformation.}
 

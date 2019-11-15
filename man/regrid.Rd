@@ -102,7 +102,7 @@ is substituted in the returned object, whereby the calculated d.f. for a new
 linear function will be the minimum d.f. among those having nonzero
 coefficients. This is kind of an \emph{ad hoc} method, and it can
 over-estimate the degrees of freedom in some cases. An annotation is
-displayed below any subsequent summary results statisng that the 
+displayed below any subsequent summary results stating that the 
 degrees-of-freedom method is inherited from the previous method at
 the time of re-gridding.
 }

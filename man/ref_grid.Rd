@@ -111,14 +111,14 @@ overridden using \code{at}. See also the section below on
 recovering/overriding model information.
 }
 \note{
-The system default for \code{cov.nest} causes models
+The system default for \code{cov.keep} causes models
   containing indicator variables to be handled differently than in
   \pkg{emmeans} version 1.4.1 or earlier. To replicate older
   analyses, change the default via 
-  \samp{emm_options(cov.nest = character(0))}.
+  \samp{emm_options(cov.keep = character(0))}.
 
 Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
-  This is now obsolete; if \code{cov.nest} is specified, it is harmlessly
+  This is now obsolete; if \code{covnest} is specified, it is harmlessly
   ignored. Cases where it was needed are now handled appropriately via the
   code associated with \code{cov.keep}.
 }
