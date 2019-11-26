@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.2.0009xxx
+emmeans 1.4.3
 -------------
 
   * Added `"bcnPower"` option to `make.tran()` (per `car::bcnPower()`)

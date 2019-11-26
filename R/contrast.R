@@ -273,7 +273,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         cmat = as.data.frame(method, optional = TRUE)
         # I have no clue why they named that argument 'optional',
         # but setting it to TRUE keeps it from messing up the names
-        method = function(levs) cmat
+        method = function(levs, ...) cmat
     }
     else if (is.character(method)) {
         fn = paste(method, "emmc", sep=".")
