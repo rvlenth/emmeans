@@ -407,7 +407,7 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
 
 
 
-.MCMCglmm.multinom.postGrid = function(object) {
+.MCMCglmm.multinom.postGrid = function(object, ...) {
     linfct = object@linfct
     misc = object@misc
     post.lp = object@post.beta %*% t(linfct)

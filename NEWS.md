@@ -1,5 +1,11 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.3.01
+----------------
+
+  * Fixed bug in post-grid support that affects, e.g., the **ggeffects** package (#161)
+  
+
 emmeans 1.4.3
 -------------
 

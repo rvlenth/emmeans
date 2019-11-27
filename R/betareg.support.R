@@ -105,7 +105,7 @@ emm_basis.betareg = function(object, trms, xlev, grid,
 }
 
 # Post-grid hook for simple back-transforming
-.betareg.pg = function(object) {
+.betareg.pg = function(object, ...) {
     object@misc$postGridHook = NULL
     regrid(object, transform = TRUE)
 }
