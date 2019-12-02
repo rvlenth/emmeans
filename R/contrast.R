@@ -483,7 +483,6 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
 #' @rdname contrast 
 #' @param x An \code{emmGrid} object
 #' @param reverse Logical value - determines whether to use \code{"pairwise"} (if \code{TRUE}) or \code{"revpairwise"} (if \code{FALSE}).
-#' @inheritParams contrast.emmGrid 
 #' @importFrom graphics pairs
 #' @export
 pairs.emmGrid = function(x, reverse = FALSE, ...) {

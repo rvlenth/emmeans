@@ -646,7 +646,8 @@ as.list.emmGrid = function(x, ...) {
     tmp = lapply(rev(names(levels)), function(nm) {
         x = grid[[nm]]
         if (inherits(x, "factor")) as.integer(x)
-        else as.integer(factor(x, levels = levels[[nm]]))
+        else as.integer(factor(x, levels = as.character(levels[[nm]])))
+        # Note: need as.character(levels) here so we handle such as Date vectors correctly
     })
     do.call(order, tmp)
 }

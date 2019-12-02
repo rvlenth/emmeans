@@ -43,7 +43,7 @@ For models having a single random effect, such as those fitted using
 \code{\link{lm}}; in that case, the \code{stats::sigma} and
 \code{stats::df.residual} functions may be useful for specifying \code{sigma}
 and \code{edf}. For models with more than one random effect, \code{sigma} may
-be based on some combination of the random-effect variances.
+be based on some combination of the random-effect variances. 
 
 Specifying \code{edf} can be rather unintuitive but is also relatively
 uncritical; but the smaller the value, the wider the confidence intervals for

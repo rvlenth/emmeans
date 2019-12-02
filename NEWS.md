@@ -1,5 +1,12 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.3.10999xxx
+---------------
+
+  * Fixed bug in `emmeans()` associated with non-factors such as `Date` (#162)
+  
+  
+
 emmeans 1.4.3.01
 ----------------
 

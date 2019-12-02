@@ -11,15 +11,14 @@
 \title{Summaries, predictions, intervals, and tests for \code{emmGrid} objects}
 \usage{
 \method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, null,
-  delta, side, frequentist,
+  delta, side, frequentist, bias.adjust = get_emm_option("back.bias.adj"),
+  sigma, ...)
+
+\method{predict}{emmGrid}(object, type, interval = c("none", "confidence",
+  "prediction"), level = 0.95,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
-\method{predict}{emmGrid}(object, type, interval = c("none",
-  "confidence", "prediction"), level = 0.95,
-  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
-
-\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE,
-  ...)
+\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE, ...)
 
 \method{[}{summary_emm}(x, ..., as.df = TRUE)
 
@@ -27,8 +26,8 @@
 
 test(object, null, ...)
 
-\method{test}{emmGrid}(object, null = 0, joint = FALSE,
-  verbose = FALSE, rows, by, status = FALSE, ...)
+\method{test}{emmGrid}(object, null = 0, joint = FALSE, verbose = FALSE,
+  rows, by, status = FALSE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{"emmGrid"} (see \link{emmGrid-class})}
@@ -165,7 +164,7 @@ diverted to \code{\link{hpd.summary}}.
 \code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
 \code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
 infer = c(TRUE, FALSE)}. When called with \code{joint = FALSE}, \code{test.emmGrid}
-is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}.
+is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 
 
 With \code{joint = TRUE}, \code{test.emmGrid} calculates the Wald test of the
 hypothesis \code{linfct \%*\% bhat = null}, where \code{linfct} and

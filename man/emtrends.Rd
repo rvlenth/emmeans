@@ -4,8 +4,7 @@
 \alias{emtrends}
 \title{Estimated marginal means of linear trends}
 \usage{
-emtrends(object, specs, var, delta.var = 0.001 * rng, max.degree = 1,
-  ...)
+emtrends(object, specs, var, delta.var = 0.001 * rng, max.degree = 1, ...)
 }
 \arguments{
 \item{object}{A supported model object (\emph{not} a reference grid)}

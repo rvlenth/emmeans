@@ -77,7 +77,7 @@ when \code{transform = "response"}, the result of \code{\link{summary.emmGrid}}
 after applying \code{regrid} is identical to the summary of the original
 object using \samp{type="response"}. But subsequent EMMs or
 contrasts will be conducted on the new scale -- which is
-the reason this function exists.
+the reason this function exists. 
 
 This function may also be used to convert a reference grid for a 
 frequentist model to one for a Bayesian model. To do so, specify a value

@@ -157,7 +157,6 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #' summary(as.glht(pairs(warp.emm), by = NULL))
 #' 
 #' } # --- was tested only if multcomp is installed
-#' @rdname glht-support
 #' @export
 as.glht <- function(object, ...) {
     UseMethod("as.glht")

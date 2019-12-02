@@ -4,9 +4,9 @@
 \alias{emmeans}
 \title{Estimated marginal means (Least-squares means)}
 \usage{
-emmeans(object, specs, by = NULL, fac.reduce = function(coefs)
-  apply(coefs, 2, mean), contr, options = get_emm_option("emmeans"),
-  weights, offset, trend, ...)
+emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
+  2, mean), contr, options = get_emm_option("emmeans"), weights, offset,
+  trend, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}; or a fitted model object

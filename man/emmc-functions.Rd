@@ -26,8 +26,8 @@ tukey.emmc(levs, reverse = FALSE, ...)
 
 poly.emmc(levs, max.degree = min(6, k - 1), ...)
 
-trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE,
-  exclude = integer(0), include, ...)
+trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE, exclude = integer(0),
+  include, ...)
 
 trt.vs.ctrl1.emmc(levs, ref = 1, ...)
 
@@ -41,8 +41,7 @@ del.eff.emmc(levs, exclude = integer(0), include, ...)
 
 consec.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
-mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), include,
-  ...)
+mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
 identity.emmc(levs, exclude = integer(0), include, ...)
 }

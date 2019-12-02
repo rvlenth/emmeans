@@ -9,8 +9,8 @@
 \usage{
 contrast(object, ...)
 
-\method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE,
-  by, offset = NULL, scale = NULL, name = "contrast",
+\method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE, by,
+  offset = NULL, scale = NULL, name = "contrast",
   options = get_emm_option("contrast"), type, adjust, simple,
   combine = FALSE, ratios = TRUE, ...)
 

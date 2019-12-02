@@ -270,7 +270,6 @@ trt.vs.ctrl1.emmc = function(levs, ref = 1, ...) {
 
 # control is last level
 #' @rdname emmc-functions
-#' @inheritParams pairwise
 trt.vs.ctrlk.emmc = function(levs, ref = length(levs), ...) {
     trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }

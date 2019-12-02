@@ -6,15 +6,14 @@
 \alias{print.xtable_emm}
 \title{Using \code{xtable} for EMMs}
 \usage{
-\method{xtable}{emmGrid}(x, caption = NULL, label = NULL,
-  align = NULL, digits = 4, display = NULL, auto = FALSE, ...)
+\method{xtable}{emmGrid}(x, caption = NULL, label = NULL, align = NULL,
+  digits = 4, display = NULL, auto = FALSE, ...)
 
 \method{xtable}{summary_emm}(x, caption = NULL, label = NULL,
   align = NULL, digits = 4, display = NULL, auto = FALSE, ...)
 
 \method{print}{xtable_emm}(x, type = getOption("xtable.type", "latex"),
-  include.rownames = FALSE, sanitize.message.function = footnotesize,
-  ...)
+  include.rownames = FALSE, sanitize.message.function = footnotesize, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid}}

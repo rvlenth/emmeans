@@ -10,9 +10,8 @@
   alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals,
   frequentist, ...)
 
-\method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab,
-  ylab, layout, colors = c("black", "blue", "blue", "red"), intervals,
-  ...)
+\method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
+  layout, colors = c("black", "blue", "blue", "red"), intervals, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}

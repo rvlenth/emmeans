@@ -12,8 +12,7 @@
 \usage{
 recover_data(object, ...)
 
-\method{recover_data}{call}(object, trms, na.action, data = NULL,
-  params = "pi", ...)
+\method{recover_data}{call}(object, trms, na.action, data = NULL, params = "pi", ...)
 
 emm_basis(object, trms, xlev, grid, ...)
 
