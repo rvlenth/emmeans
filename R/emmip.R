@@ -68,6 +68,10 @@ emmip = function(object, formula, ...) {
 #' @param plotit Logical value. If \code{TRUE}, the plot is displayed.
 #'   Otherwise, one may use the \code{"lattice"} attribute of the returned
 #'   object and print it, perhaps after additional manipulation.
+#' @param nesting.order Logical value. If \code{TRUE}, factors that are nested
+#'   are presented in order according to their nesting factors, even if those nesting
+#'   factors are not present in \code{formula}. If \code{FALSE}, only the
+#'   variables in \code{formula} are used to order the variables.
 #' @param ... Additional arguments passed to \code{\link{emmeans}} (when
 #'   \code{object} is not already an \code{emmGrid} object),
 #'   \code{predict.emmGrid},
@@ -99,7 +103,7 @@ emmip = function(object, formula, ...) {
 #'   \code{\link{interaction.plot}} where the summarization function is thought 
 #'   to return the EMMs.
 #' 
-#' @seealso \code{\link{emmeans}}, \code{\link{interaction.plot}}
+#' @seealso \code{\link{emmeans}}, \code{\link{interaction.plot}}.
 #' @export
 #' @method emmip default
 #'
@@ -119,11 +123,14 @@ emmip = function(object, formula, ...) {
 #'
 #' # Individual traces in panels
 #' emmip(noise.lm, ~ size | type * side)
-#'
+#' 
+#' # For an example using extra ggplot2 code, see 'vignette("messy-data")',
+#' in the section on nested models.
 emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
                          engine = get_emm_option("graphics.engine"),
                          pch = c(1,2,6,7,9,10,15:20), 
-                         lty = 1, col = NULL, plotit = TRUE, ...) {
+                         lty = 1, col = NULL, plotit = TRUE, 
+                         nesting.order = FALSE, ...) {
     engine = match.arg(engine, c("ggplot", "lattice"))
     if (engine == "ggplot")
         .requireNS("ggplot2",
@@ -172,6 +179,11 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         names(emms)[nm == tgts[i]] = subs[i] 
     attr(emms, "estName") = "yvar"
     
+    if(!nesting.order) { # re-order by factor levels actually in plot
+        snm = intersect(nm, unlist(specs))
+        ord = do.call(order, emms[rev(snm)])
+        emms = emms[ord, ]
+    }
     
     # Set up trace vars and key
     tvars = specs$lhs

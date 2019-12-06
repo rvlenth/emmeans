@@ -8,7 +8,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 --- 
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
-require("emmeans") 
+require("emmeans")
+require("ggplot2")
 options(show.signif.stars = FALSE) 
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
@@ -268,6 +269,28 @@ pairs(drug.emm, by = "route", reverse = TRUE)
 In the latter result, the contrast itself becomes a nested factor in the
 returned `emmGrid` object. That would not be the case if there had been no `by`
 variable.
+
+#### Graphs with nesting
+<!-- @index `emmip()`!nested factors; `plot()`!nested factors; **ggplot2** package -->
+It can be very helpful to take advantage of special features of **ggplot2** when
+graphing results with nested factors. For example, the default plot for the `cows` example
+is not ideal:
+```{r, fig.width = 5.5}
+emmip(cows.rg, ~ drug | route)
+```
+
+We can instead remove `route` from the call and instead handle it with **ggplot2**
+code to use separate *x* scales:
+```{r, fig.width = 5.5}
+require(ggplot2)
+emmip(cows.rg, ~ drug) + facet_wrap(~ route, scales = "free_x")
+```
+
+Similarly with `plot.emmGrid()`:
+```{r, fig.height = 2.5, fig.width = 5.5}
+plot(drug.emm, PIs = TRUE) + 
+    facet_wrap(~ route, nrow = 2, scales = "free_y")
+```
 
 
 ### Auto-identification of nested factors -- avoid being trapped! {#nest-trap}

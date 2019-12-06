@@ -164,6 +164,7 @@ vignette: >
   * `emmip()`
       * [in *basics: plots*](basics.html#plots)
       * [in *interactions: factors*](interactions.html#factors)
+      * [nested factors](messy-data.html#cows)
   * [EMMs](basics.html#EMMdef)
       * [Appropriateness of](basics.html#eqwts)
       * [What are they?](FAQs.html#what)
@@ -242,7 +243,9 @@ vignette: >
   * [Geometric means](transformations.html#bias-adj)
   * [Get the model right first](FAQs.html#nowelch)
   * [`get_emm_option()`](utilities.html#options)
-  * [**ggplot2** package](basics.html#ggplot)
+  * **ggplot2** package
+      * [in *basics: ggplot*](basics.html#ggplot)
+      * [in *messy-data: cows*](messy-data.html#cows)
   * [`glm`*xxx* models](models.html#G)
   * [`gls` models](models.html#K)
   * [Graphical displays](basics.html#plots)
@@ -400,6 +403,8 @@ vignette: >
   * [Pairwise comparisons](comparisons.html#pairwise)
   * [`pairwise` contrasts](comparisons.html#contrasts)
   * [Pairwise *P*-value plots](comparisons.html#pwpp)
+  * `plot()`
+      * [nested factors](messy-data.html#cows)
   * [`plot.emmGrid()`](basics.html#plot.emmGrid)
   * Plots
       * [of confidence intervals](basics.html#plot.emmGrid)

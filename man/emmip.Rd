@@ -9,7 +9,8 @@ emmip(object, formula, ...)
 
 \method{emmip}{default}(object, formula, type, CIs = FALSE, PIs = FALSE,
   engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9, 10,
-  15:20), lty = 1, col = NULL, plotit = TRUE, ...)
+  15:20), lty = 1, col = NULL, plotit = TRUE, nesting.order = FALSE,
+  ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}, or a fitted model of a class
@@ -61,6 +62,11 @@ specified, the default trellis colors are used.}
 \item{plotit}{Logical value. If \code{TRUE}, the plot is displayed.
 Otherwise, one may use the \code{"lattice"} attribute of the returned
 object and print it, perhaps after additional manipulation.}
+
+\item{nesting.order}{Logical value. If \code{TRUE}, factors that are nested
+are presented in order according to their nesting factors, even if those nesting
+factors are not present in \code{formula}. If \code{FALSE}, only the
+variables in \code{formula} are used to order the variables.}
 }
 \value{
 If \code{plotit = FALSE}, a \code{data.frame} (actually, a
@@ -113,7 +119,9 @@ emmip(noise.lm, type * side ~ size)
 # Individual traces in panels
 emmip(noise.lm, ~ size | type * side)
 
+# For an example using extra ggplot2 code, see 'vignette("messy-data")',
+in the section on nested models.
 }
 \seealso{
-\code{\link{emmeans}}, \code{\link{interaction.plot}}
+\code{\link{emmeans}}, \code{\link{interaction.plot}}.
 }
