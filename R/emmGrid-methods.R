@@ -714,7 +714,9 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
                else                     make.link(transform)
         bounds = range(link$linkinv(c(-1e6, -100, -1, 0, 1, 100, 1e6)))
         nas = which(is.na(object@bhat)) # already NA
-        incl = which((object@bhat > bounds[1]) & (object@bhat) < bounds[2])
+        incl = vincl = which((object@bhat > bounds[1]) & (object@bhat < bounds[2]))
+        if (length(nas) > 0) 
+            vincl = which((object@bhat[-nas] > bounds[1]) & (object@bhat[-nas] < bounds[2]))
         negs = setdiff(seq_along(object@bhat), incl)
         if (length(negs) > 0) {
             message("Invalid response predictions are flagged as non-estimable")
@@ -726,7 +728,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         Vee = object@V
         if(length(incl) > 0) {
             D = .diag(1/link$mu.eta(object@bhat[incl]))
-            object@V = D %*% tcrossprod(Vee[incl, incl, drop = FALSE], D)
+            object@V = D %*% tcrossprod(Vee[vincl, vincl, drop = FALSE], D)
         }
         if (!is.na(PB[1])) {
             PB[PB <= 0] = NA

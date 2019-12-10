@@ -5,6 +5,7 @@ emmeans 1.4.3.10999xxx
 
   * Fixed bug in `emmeans()` associated with non-factors such as `Date` (#162)
   * Added `nesting.order` option to `emmip()` (#163)
+  * Bug fix for `regrid()` for error when estimates exceed bounds
   
   
 
