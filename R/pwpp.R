@@ -164,11 +164,18 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         tmp$minus = con.summ$plus
         con.summ = rbind(con.summ, tmp)
         
+        # find ranges to ensure we get tick marks:
+        exmaj = c(0, .pvmaj.brk)
+        tick.min = max(exmaj[exmaj <= min(con.summ$p.value)])
+        tick.max = min(exmaj[exmaj >= max(con.summ$p.value)])
+        
         grobj = ggplot2::ggplot(data = con.summ, 
                                 ggplot2::aes_(x = ~p.value, y = ~plus,
                                               color = ~minus, group = ~minus)) +
             ggplot2::geom_point(size = 2) +
-            ggplot2::geom_segment(ggplot2::aes_(xend = ~p.value, yend = ~midpt))
+            ggplot2::geom_segment(ggplot2::aes_(xend = ~p.value, yend = ~midpt)) +
+            ggplot2::geom_point(ggplot2::aes(x = tick.min, y = 1), alpha = 0) +
+            ggplot2::geom_point(ggplot2::aes(x = tick.max, y = 1), alpha = 0)
         if (!is.null(by)) {
             cols = setdiff(by, rows)
             if (length(cols) > 0)
@@ -188,7 +195,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
             emm.summ$minus = emm.summ$pri.fac # for consistency in grouping/labeling
             dig = .opt.dig(emm.summ[, estName])
             emm.summ$fmtval = format(emm.summ[[estName]], digits = dig)
-            tminp = .pval.tran(min(con.summ$p.value))
+            tminp = .pval.tran(min(c(tick.min, con.summ$p.value)))
             pos = .pval.inv(tminp - .025)
             lpad = .012 * (add.space + max(nchar(emm.summ$fmtval))) * ncols # how much space needed for labels rel to (0,1)
             lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
@@ -229,7 +236,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
 .tran.sd = 3
 .tran.div = pnorm(0, .tran.ctr, .tran.sd)
 
-.pvmaj.brk = c(.001, .01, .05, .1, .5, 1)
+.pvmaj.brk = c(.001, .01, .05, .1, .2, .5, 1)
 #.pvmin.brk = c(.0001, .0005, seq(.001, .009, by = .001), seq(.02 ,.09, by = .01), .2, .3, .4, .6, .7, .8, .9)
 .pvmin.brk = c(.0005, .001, .005, seq(.01 ,.1, by = .01), .2, .3, .4, .5, 1)
 
