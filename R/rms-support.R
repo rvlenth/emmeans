@@ -84,7 +84,7 @@ emm_basis.rms = function(object, trms, xlev, grid,
         if (mode != "linear.predictor") {
             misc$mode = mode
             misc$postGridHook = .clm.postGrid
-            misc$respName = as.character(object$terms)[2]
+            misc$respName = as.character.default(object$terms)[2]
         }
     }
     

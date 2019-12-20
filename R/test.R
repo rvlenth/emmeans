@@ -275,17 +275,17 @@ joint_tests = function(object, by = NULL, show0df = FALSE, ...) {
 }
 
 # provide for displaying in standard 'anova' format (with astars etc.)
-# I'm not going there now. Maybe later, probably not
+# I'm not g
 
-#' #' @export
-#' as.anova = function(object, ...)
-#'     UseMethod("as.anova")
-#' 
-#' as.anova.summary_emm = function(object, ...) {
-#'     class(object) = c("anova", "data.frame")
-#'     row.names(object) = as.character(object[[1]])
-#'     names(object) = gsub("p.value", "Pr(>F)", names(object))
-#'     object[-1]
-#' }
+# #' @export
+# as.anova = function(object, ...)
+#     UseMethod("as.anova")
+# 
+# as.anova.summary_emm = function(object, ...) {
+#     class(object) = c("anova", "data.frame")
+#     row.names(object) = as.character(object[[1]])
+#     names(object) = gsub("p.value", "Pr(>F)", names(object))
+#     object[-1]
+# }
 
 

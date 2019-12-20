@@ -52,7 +52,7 @@
 .parse.by.formula = function(form) {
     allv = .all.vars(form)
     ridx = ifelse(length(form) == 2, 2, 3)
-    allrhs = as.character(form)[ridx]
+    allrhs = as.vector(form, "character")[ridx]
     allrhs = gsub("\\|", "+ .by. +", allrhs) # '|' --> '.by.'
     allrhs = .all.vars(stats::reformulate(allrhs))
     bidx = grep(".by.", allrhs, fixed = TRUE)

@@ -183,7 +183,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
         bigX = cbind(bigNom, kronecker(-J, X))
         if (mode != "linear.predictor") {
             misc$mode = mode
-            misc$respName = as.character(object$terms)[2]
+            misc$respName = as.character.default(object$terms)[2]
             misc$postGridHook = ".clm.postGrid"
         }
     }

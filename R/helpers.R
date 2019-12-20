@@ -474,7 +474,7 @@ emm_basis.polr = function(object, trms, xlev, grid,
             misc$postGridHook = ".clm.postGrid"
         }
     }
-    misc$respName = as.character(terms(object))[2]
+    misc$respName = as.character.default(terms(object))[2]
     nbasis = estimability::all.estble
     dffun = function(...) Inf
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=list(), misc=misc)

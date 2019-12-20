@@ -7,6 +7,8 @@ emmeans 1.4.3.10999xxx
   * Added `nesting.order` option to `emmip()` (#163)
   * Ensure `pwpp()` has tick marks on P-value axis (#167)
   * Bug fix for `regrid()` for error when estimates exceed bounds
+  * Fixes to formula operations needed because `formula.tools:::as.character.formula`
+    messes me up (thanks to Berwin Turloch, UWA, for alerting me)
   
   
 
