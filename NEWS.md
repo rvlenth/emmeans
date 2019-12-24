@@ -5,6 +5,7 @@ emmeans 1.4.3.10999xxx
 
   * Fixed bug in `emmeans()` associated with non-factors such as `Date` (#162)
   * Added `nesting.order` option to `emmip()` (#163)
+  * More robust detection of response transformations (#166)
   * Ensure `pwpp()` has tick marks on P-value axis (#167)
   * Bug fix for `regrid()` for error when estimates exceed bounds
   * Fixes to formula operations needed because `formula.tools:::as.character.formula`

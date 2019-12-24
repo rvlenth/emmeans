@@ -164,7 +164,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = "pi"
         }
         
         fcall$drop.unused.levels = TRUE
-        fcall[[1L]] = as.name("model.frame")
+        fcall[[1L]] = quote(stats::model.frame)
         fcall$xlev = NULL # we'll ignore xlev
         
         if(!is.numeric(na.action))   ### In case na.action is not a vector of indices
@@ -178,7 +178,7 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = "pi"
         form = .reformulate(vars)
         fcall$formula = update(trms, form)
         env = environment(trms)
-        if (is.null(env)) 
+        if (is.null(env))
             env = parent.frame()
         tbl = try(eval(fcall, env, parent.frame()), silent = TRUE)
         if(inherits(tbl, "try-error"))

@@ -525,14 +525,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # next stmt assumes that model formula is 1st argument (2nd element) in call.
     # if not, we probably get an error or something that isn't a formula
     # and it is silently ignored
-    lhs = try(eval(attr(data, "call")[[2]][-3]), silent = TRUE)
+    lhs = try(eval(as.formula(attr(data, "call")[[2]])[-3]), silent = TRUE)
     if (inherits(lhs, "formula")) { # response may be transformed
         tran = setdiff(.all.vars(lhs, functions = TRUE), c(.all.vars(lhs), "~", "cbind", "+", "-", "*", "/", "^", "%%", "%/%"))
         if(length(tran) > 0) {
-            if (tran == "linkfun")
+            if (tran[1] == "linkfun")
                 tran = as.list(environment(trms))
             else {
-                if (tran == "I") 
+                if (tran[1] == "I") 
                     tran = "identity"
                 tran = paste(tran, collapse = ".")  
                 # length > 1: Almost certainly unsupported, but facilitates a more informative error message
@@ -550,7 +550,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                 }
                 
                 # look for added constant, e.g. log(y + 1)
-                tst = strsplit(as.character(lhs)[2], "\\(|\\)|\\+")[[1]]
+                tst = strsplit(as.character(lhs[2]), "\\(|\\)|\\+")[[1]]
                 if (length(tst) > 2) {
                     const = try(eval(parse(text = tst[3])), silent = TRUE)
                     if (!inherits(const, "try-error") && (length(tst) == 3))
