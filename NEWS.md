@@ -10,6 +10,7 @@ emmeans 1.4.3.10999xxx
   * Bug fix for `regrid()` for error when estimates exceed bounds
   * Fixes to formula operations needed because `formula.tools:::as.character.formula`
     messes me up (thanks to Berwin Turloch, UWA, for alerting me)
+  * Making `dqrg()` more visible in the documentation (because it's often useful)
   
   
 

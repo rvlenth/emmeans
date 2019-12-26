@@ -47,7 +47,9 @@ covariates in the grid. }
 types of models are supported by the package. 
 See \href{../doc/models.html}{vignette("models", "emmeans")} for full details. 
 Some models may require other packages be
-installed in order to  access all of the available features.}
+installed in order to  access all of the available features.
+For models not explicitly supported, it may still be possible to do basic
+post hoc analyses of them via the \code{\link{qdrg}} function.}
 
 \item{Estimated marginal means}{
 The \code{\link{emmeans}} function computes EMMs given a fitted model (or a

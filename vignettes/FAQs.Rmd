@@ -21,6 +21,7 @@ This vignette contains answers to questions received from users or posted on dis
 
  1. [What are EMMs/lsmeans?](#what)
  2. [What is the fastest way to obtain EMMs and pairwise comparisons?](#fastest)
+ 2. [The model I fitted is not supported by **emmeans**](#qdrg)
  2. [I have three (or two or four) factors that interact](#interactions)
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
  3. [I have covariate(s) and am fitting a polynomial model](#polys)
@@ -61,6 +62,11 @@ If you use a bad model, you will get bad results. And if you use a good model,
 you will get appropriate results. It's up to you: it's your research---is it important?
 
 [Back to Contents](#contents)
+
+## The model I fitted is not supported by **emmeans** {#qdrg}
+<!-- @index Models!Unsupported; `qdrg()` -->
+You may still be able to get results using `qdrg()` (quick and dirty reference grid). 
+See `?qdrg` for details and examples.
 
 ## I have three (or two or four) factors that interact {#interactions}
 <!-- @index Multi-factor studies; Simple comparisons -->

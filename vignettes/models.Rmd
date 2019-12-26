@@ -20,7 +20,9 @@ construct `emmGrid` objects, including `ref_grid()`,
 object-by-object documentation, we are talking about arguments in these
 constructors.
 
-Additional models can be supported by writing appropriate `recover_data`
+If a model type is not included here, users may be able to obtain
+usable results via the `qdrg()` function; see its help page.
+Package developers may support their models by writing appropriate `recover_data`
 and `emm_basis` methods. See the package documentation for 
 `extending-emmeans` and `vignette("xtending")` for details.
 
