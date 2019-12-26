@@ -66,6 +66,13 @@ statistics for an existing grid, \code{emmobj} is more useful, while
 \code{qdrg} is more useful when starting from a fitted model.
 }
 \examples{
+if (require(biglm)) {
+  # Post hoc analysis of a "biglm" object -- not supported by emmeans
+  bigmod <- biglm(log(conc) ~ source + factor(percent), data = pigs)
+   
+  rg2 <- qdrg(object = bigmod, data = pigs)
+  summary(emmeans(rg2, "source"), type = "response")
+}
 if(require(coda) && require(lme4)) {
   # Use a stored example having a posterior sample
   # Model is based on the data in lme4::cbpp
@@ -73,12 +80,6 @@ if(require(coda) && require(lme4)) {
   post <- readRDS(system.file("extdata", "cbpplist", package = "emmeans"))$post.beta
   rg1 <- qdrg(~ size + period, data = lme4::cbpp, mcmc = post, link = "logit")
   summary(rg1, type = "response")
-}
-if (require(biglm)) {
-  bigmod <- biglm(log(conc) ~ source + factor(percent), data = pigs)
-   
-  rg2 <- qdrg(object = bigmod, data = pigs)
-  summary(emmeans(rg2, "source"), type = "response")
 }
 
 }

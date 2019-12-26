@@ -347,6 +347,7 @@ vignette: >
   * [Model averaging](models.html#I)
   * Models
       * [Quick reference](models.html#quickref)
+      * [Unsupported](FAQs.html#qdrg)
   * [Multi-factor studies](FAQs.html#interactions)
   * [Multinomial models](models.html#N)
   * [Multiple imputation](models.html#I)
@@ -437,6 +438,7 @@ vignette: >
 ### Q {#q}
 
 
+  * [`qdrg()`](FAQs.html#qdrg)
   * [Quadratic terms](basics.html#depcovs)
   * [Quick start](FAQs.html#fastest)
 

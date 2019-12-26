@@ -17,6 +17,8 @@ set.seed(271828)
 
 ## Contents {#contents}
 This vignette explains how developers may incorporate **emmeans** support in their packages.
+If you are a user looking for a quick way to obtain results for an unsupported model,
+you are probably better off trying to use the `qdrg()` function.
 
   1. [Introduction](#intro)
   2. [Data example](#dataex)

@@ -90,7 +90,8 @@ The \code{emm_basis} method should return a \code{list} with the
 This documents the methods that \code{\link{ref_grid}} calls. A user
 or package developer may add \pkg{emmeans} support for a model
 class by writing \code{recover_data} and \code{emm_basis} methods
-for that class.
+for that class. (Users in need for a quick way to obtain results for a model
+that is not supported may be better served by the \code{\link{qdrg}} function.)
 }
 \note{
 Without an explicit \code{data} argument, \code{recover_data} returns
