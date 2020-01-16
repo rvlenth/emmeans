@@ -265,3 +265,67 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 #!!! But SEs don't seem right. 
 #!!! They do seem right though if I omit the factor of mu in dp
 #!!! when link is log
+
+
+### Simulation-based approach for ZI and hurdle models
+### This returns a list of ther same form as an emm_basis() method
+##   X is model matrix for both models (X.count | X.zi)
+##   ncoef.c # cols in X.count
+##   bhat is all regression coefs -- OR a matrix w/ posterior samples
+##   V is combined vcov matrix (ignored if bhat is a matrix)
+##   links is vector (or list) of links for the 2 parts of the model
+##   fams is list of family names
+##   hurdle is a named list(famc, thetac, famz, thetaz) or empty if ZI
+##   N.sim is # simulations desired
+##   keep.sim set to TRUE to return sims in post.beta
+##   df is d.f. to return
+## NOTE if bhat is a matrix, keep.sim is set to TRUE and N.sim is ignored
+#' @export
+.zi.simulate = function(X, ncoef.c, bhat, V, links, hurdle = list(), 
+                        N.sim = 1000, keep.sim = FALSE,
+                        df = Inf, misc = list()) 
+{
+    if(is.matrix(bhat)) {
+        keep.sim = TRUE
+        B = bhat
+        bhat = NA
+    }
+    else {
+        if (length(bhat) != ncol(V))
+            stop("Non-estimable cases not yet supported for zero-inflation calculations")
+        B = mvtnorm::rmvnorm(N.sim, bhat, V)
+    }
+    back.tran = function(idx, link) {
+        W = B[, idx] %*% t(X[, idx])
+        if (is.character(link))
+            link = make.link(link)
+        link$linkinv(W)
+    }
+    if(!is.na(bhat[1]))
+        B = rbind(bhat, B) # put our pt est in 1st row
+    ic = seq_len(ncoef.c)
+    iz = setdiff(seq_len(ncol(B)), ic)
+    C = back.tran(ic, links[[1]])
+    Z = back.tran(iz, links[[2]])
+    if (length(hurdle) >= 4)
+        R = C * .prob.gt.0(hurdle$famz, Z, hurdle$thetaz) / 
+                .prob.gt.0(hurdle$famc, C, hurdle$thetac)
+    else
+        R = (1 - Z) * C
+    if(!is.na(bhat[1])){
+        bhat = R[1, ]
+        R = R[-1, ]
+    }
+    else
+        bhat = apply(R, 2, mean)
+    V = cov(R)
+    dffun = function(k, dfargs) dfargs$df
+    dfargs = list(df = df)
+    if(is.null(misc$est.name)) 
+        misc$estName = "emmean"
+    if(!keep.sim)
+        post.beta = matrix(NA)
+    list(X = diag(length(bhat)), bhat = bhat, nbasis = estimability::all.estble, V = V, 
+         dffun = dffun, dfargs = dfargs, misc = misc, post.beta = R)
+}
+    

@@ -133,6 +133,14 @@
     offset
 }
 
+# combine variables in several `terms` objects
+#' @export
+.combine.terms = function(...) {
+    trms = list(...)
+    vars = unlist(lapply(trms, .all.vars))
+    terms(.reformulate(vars, env = environment(trms[[1]])))
+}
+
 ######################################################################
 ### Contributed by Jonathon Love, https://github.com/jonathon-love ###
 ### and adapted by RVL to exclude terms like df$trt or df[["trt"]] ###
@@ -144,7 +152,7 @@
 #   For example I need reformulate() sometimes to strip off function calls
 #   and this .reformulate works quite differently.
 #
-.reformulate <- function (termlabels, response = NULL, intercept = TRUE)
+.reformulate <- function (termlabels, response = NULL, intercept = TRUE, env = parent.frame())
 {
     if (!is.character(termlabels) || !length(termlabels))
         stop("'termlabels' must be a character vector of length at least one")
@@ -162,7 +170,7 @@
         rval[[2L]] = if (is.character(response))
             as.symbol(response)
     else response
-    environment(rval) = parent.frame()
+    environment(rval) = env
     rval
 }
 

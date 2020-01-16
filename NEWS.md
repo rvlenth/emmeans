@@ -8,6 +8,7 @@ emmeans 1.4.3.10999xxx
   * More robust detection of response transformations (#166)
   * Ensure `pwpp()` has tick marks on P-value axis (#167)
   * Bug fix for `regrid()` for error when estimates exceed bounds
+  * Bug fix in auto-detecting nesting (#169) to make it less "enthusiastic"
   * Fixes to formula operations needed because `formula.tools:::as.character.formula`
     messes me up (thanks to Berwin Turloch, UWA, for alerting me)
   * Making `dqrg()` more visible in the documentation (because it's often useful)

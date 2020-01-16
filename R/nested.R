@@ -336,13 +336,25 @@ add_grouping = function(object, newname, refname, newlevs) {
                                           fixed = TRUE)
         }
         fac = fac[intersect(nms, row.names(fac)), , drop = FALSE]
-        for (j in seq_len(ncol(fac))) {
-            if (any(fac[, j] == 2)) {
-                nst = nms[fac[, j] == 1]
-                for (nm in nst)
-                    result[[nm]] = nms[fac[, j] == 2]
-            }
+        
+        ### new code
+        nms = row.names(fac)
+        cols = dimnames(fac)[[2]]
+        pert = setdiff(nms, intersect(nms, cols)) # pertinent - no main effect in model
+        for (nm in pert) {
+            pfac = fac[, fac[nm, ] == 1, drop = FALSE]  # cols where nm appears
+            nst = unique(as.character(apply(pfac, 2, function(col) nms[col == 2])))
+            if (length(nst) > 0)
+                result[[nm]] = nst
         }
+        ### old code -- included some specious results
+        # for (j in seq_len(ncol(fac))) {
+        #     if (any(fac[, j] == 2)) {
+        #         nst = nms[fac[, j] == 1]
+        #         for (nm in nst)
+        #             result[[nm]] = nms[fac[, j] == 2]
+        #     }
+        # }
     }
     
     result
