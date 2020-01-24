@@ -571,6 +571,9 @@ emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
 #'   argument is ignored in \code{as.list.emmGrid}
 #'   
 #' @return \code{as.emmGrid} returns an object of class \code{emmGrid}. 
+#'     However, in fact, both \code{as.emmGrid} and \code{as.emm_list} check for an
+#'     attribute in \code{object} to decide whether to return an \code{emmGrid} 
+#'     or \code{emm_list)} object.
 #' 
 #' @seealso \code{\link{emmobj}}
 #' @export
@@ -599,8 +602,12 @@ as.emmGrid = function(object, ...) {
             object$misc$is.new.rg = (cls == "ref.grid")
     }
     # above keeps us from having to define these classes in emmeans
-    if (is.list(object))
-        result = do.call(emmobj, object)
+    if (is.list(object)) {
+        if (!is.null(attr(object, "emm_list")))
+            return(as.emm_list(object))
+        else
+            result = do.call(emmobj, object)
+    }
     else {
         result = try(as(object, "emmGrid", strict = FALSE), silent = TRUE)
         if (inherits(result, "try-error"))
@@ -610,6 +617,7 @@ as.emmGrid = function(object, ...) {
 }
 
 #' @rdname as.emmGrid
+#' @order 2
 #' @param x An \code{emmGrid} object
 #' @return \code{as.list.emmGrid} returns an object of class \code{list}. 
 #' @method as.list emmGrid

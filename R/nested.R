@@ -343,9 +343,13 @@ add_grouping = function(object, newname, refname, newlevs) {
         pert = setdiff(nms, intersect(nms, cols)) # pertinent - no main effect in model
         for (nm in pert) {
             pfac = fac[, fac[nm, ] == 1, drop = FALSE]  # cols where nm appears
+            if (ncol(pfac) == 0) { # case where there is no 1 in a row
+                pfac = fac[, fac[nm, ] == 2, drop = FALSE]
+                pfac[nm, ] = 1 # make own entry 1 so it isn't nested in self
+            }
             nst = unique(as.character(apply(pfac, 2, function(col) nms[col == 2])))
             if (length(nst) > 0)
-                result[[nm]] = nst
+                result[[nm]] = union(result[[nm]], nst)
         }
         ### old code -- included some specious results
         # for (j in seq_len(ncol(fac))) {
@@ -356,6 +360,9 @@ add_grouping = function(object, newname, refname, newlevs) {
         #     }
         # }
     }
+    # include nesting factors that are themselves nested
+    for (nm in names(result))
+        result[[nm]] = union(unlist(result[result[[nm]]]), result[[nm]])
     
     result
 }

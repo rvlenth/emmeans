@@ -12,6 +12,8 @@ emmeans 1.4.3.10999xxx
   * Fixes to formula operations needed because `formula.tools:::as.character.formula`
     messes me up (thanks to Berwin Turloch, UWA, for alerting me)
   * Making `dqrg()` more visible in the documentation (because it's often useful)
+  * Added more methods for `emm_list` objects, e.g. `rbind()` and `as.data.frame()`,
+    `as.list()`, and `as.emm_list()`
   
   
 
