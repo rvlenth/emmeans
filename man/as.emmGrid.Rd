@@ -29,11 +29,11 @@ be converted.}
 \code{as.list.emmGrid} returns an object of class \code{list}.
 
 \code{as.emm_list} returns an object of class \code{emm_list}.
+
+\code{as.emmGrid} returns an object of class \code{emmGrid}. 
     However, in fact, both \code{as.emmGrid} and \code{as.emm_list} check for an
     attribute in \code{object} to decide whether to return an \code{emmGrid} 
     or \code{emm_list)} object.
-
-\code{as.emmGrid} returns an object of class \code{emmGrid}.
 }
 \description{
 These are useful utility functions for creating a compact version of an

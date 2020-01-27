@@ -14,6 +14,7 @@ emmeans 1.4.3.10999xxx
   * Making `dqrg()` more visible in the documentation (because it's often useful)
   * Added more methods for `emm_list` objects, e.g. `rbind()` and `as.data.frame()`,
     `as.list()`, and `as.emm_list()`
+  * New `style` argument for `emmip()` allows plotting on a numeric scale
   
   
 

@@ -8,8 +8,8 @@
 emmip(object, formula, ...)
 
 \method{emmip}{default}(object, formula, type, CIs = FALSE, PIs = FALSE,
-  engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9, 10,
-  15:20), lty = 1, col = NULL, plotit = TRUE, nesting.order = FALSE,
+  style, engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9,
+  10, 15:20), lty = 1, col = NULL, plotit = TRUE, nesting.order = FALSE,
   ...)
 }
 \arguments{
@@ -45,6 +45,15 @@ longer, lighter, and thinner than the confidence intervals. Additional
 parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed via
 \code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 
 a value for \code{sigma}.}
+
+\item{style}{Optional character value. If \code{"factor"}, the levels of the
+horizontal variable are converted to a factor, resulting in equally-spaced
+plotting positions. If \code{"numeric"}, the horizontal variable is taken
+as numeric. This makes sense only when it is in fact a single numeric variable;
+otherwise, the values will likely be confusing (e.g., it is a factor or a
+combination of variables). If not specified, it is auto-detected.
+\code{style} also affects the appearance of each curve; if \code{"factor"},
+points are added to lines, if \code{"numeric"}, we get lines but no points.}
 
 \item{engine}{Character value matching \code{"ggplot"} (default) or 
 \code{"lattice"}. The graphics engine to be used to produce the plot.
@@ -119,8 +128,14 @@ emmip(noise.lm, type * side ~ size)
 # Individual traces in panels
 emmip(noise.lm, ~ size | type * side)
 
+# Example for the 'style' argument
+ fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
+ fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+ emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
+ emmip(fib.rg, machine ~ diameter, style = "factor")  # lines
+
 # For an example using extra ggplot2 code, see 'vignette("messy-data")',
-in the section on nested models.
+# in the section on nested models.
 }
 \seealso{
 \code{\link{emmeans}}, \code{\link{interaction.plot}}.

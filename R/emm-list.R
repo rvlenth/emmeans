@@ -152,9 +152,6 @@ as.list.emm_list = function(x, ...) {
 
 #' @export
 #' @return \code{as.emm_list} returns an object of class \code{emm_list}.
-#'     However, in fact, both \code{as.emmGrid} and \code{as.emm_list} check for an
-#'     attribute in \code{object} to decide whether to return an \code{emmGrid} 
-#'     or \code{emm_list)} object.
 #' 
 #' @rdname as.emmGrid
 #' @order 3
