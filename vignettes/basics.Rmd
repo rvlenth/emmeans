@@ -355,7 +355,7 @@ in separate panels:
 ```{r}
 require("ggplot2")
 emmip(pigs.lm1, ~ percent | source, CIs = TRUE) +
-    geom_point(aes(x = factor(percent), y = log(conc)), data = pigs, pch = 2, color = "blue")
+    geom_point(aes(x = percent, y = log(conc)), data = pigs, pch = 2, color = "blue")
 ```
 
 [Back to Contents](#contents)

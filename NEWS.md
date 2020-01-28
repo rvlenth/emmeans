@@ -1,10 +1,11 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.3.10999xxx
+emmeans 1.4.4
 ---------------
 
   * Fixed bug in `emmeans()` associated with non-factors such as `Date` (#162)
   * Added `nesting.order` option to `emmip()` (#163)
+  * New `style` argument for `emmip()` allows plotting on a numeric scale
   * More robust detection of response transformations (#166)
   * Ensure `pwpp()` has tick marks on P-value axis (#167)
   * Bug fix for `regrid()` for error when estimates exceed bounds
@@ -14,7 +15,6 @@ emmeans 1.4.3.10999xxx
   * Making `dqrg()` more visible in the documentation (because it's often useful)
   * Added more methods for `emm_list` objects, e.g. `rbind()` and `as.data.frame()`,
     `as.list()`, and `as.emm_list()`
-  * New `style` argument for `emmip()` allows plotting on a numeric scale
   
   
 

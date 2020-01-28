@@ -46,14 +46,14 @@ parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed v
 \code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 
 a value for \code{sigma}.}
 
-\item{style}{Optional character value. If \code{"factor"}, the levels of the
-horizontal variable are converted to a factor, resulting in equally-spaced
-plotting positions. If \code{"numeric"}, the horizontal variable is taken
-as numeric. This makes sense only when it is in fact a single numeric variable;
-otherwise, the values will likely be confusing (e.g., it is a factor or a
-combination of variables). If not specified, it is auto-detected.
-\code{style} also affects the appearance of each curve; if \code{"factor"},
-points are added to lines, if \code{"numeric"}, we get lines but no points.}
+\item{style}{Optional character value. This has an effect only when the
+horizontal variable is a single numeric variable. If \code{style} is
+unspecified or \code{"numeric"}, the horizontal scale will be numeric and
+curves are plotted using lines (and no symbols). With \code{style =
+"factor"}, the horizontal variable is treated as the levels of a factor
+(equally spaced along the horizontal scale), and curves are plotted using
+lines and symbols. When the horizontal variable is character or factor, or
+a combination of more than one predictor, \code{"factor"} style is always used.}
 
 \item{engine}{Character value matching \code{"ggplot"} (default) or 
 \code{"lattice"}. The graphics engine to be used to produce the plot.
@@ -129,10 +129,10 @@ emmip(noise.lm, type * side ~ size)
 emmip(noise.lm, ~ size | type * side)
 
 # Example for the 'style' argument
- fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
- fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
- emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
- emmip(fib.rg, machine ~ diameter, style = "factor")  # lines
+fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
+fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
+emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 
 # For an example using extra ggplot2 code, see 'vignette("messy-data")',
 # in the section on nested models.

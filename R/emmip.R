@@ -56,14 +56,14 @@ emmip = function(object, formula, ...) {
 #'   parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed via
 #'   \code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 
 #'   a value for \code{sigma}.
-#' @param style Optional character value. If \code{"factor"}, the levels of the
-#'   horizontal variable are converted to a factor, resulting in equally-spaced
-#'   plotting positions. If \code{"numeric"}, the horizontal variable is taken
-#'   as numeric. This makes sense only when it is in fact a single numeric variable;
-#'   otherwise, the values will likely be confusing (e.g., it is a factor or a
-#'   combination of variables). If not specified, it is auto-detected.
-#'   \code{style} also affects the appearance of each curve; if \code{"factor"},
-#'   points are added to lines, if \code{"numeric"}, we get lines but no points.
+#' @param style Optional character value. This has an effect only when the
+#'   horizontal variable is a single numeric variable. If \code{style} is
+#'   unspecified or \code{"numeric"}, the horizontal scale will be numeric and
+#'   curves are plotted using lines (and no symbols). With \code{style =
+#'   "factor"}, the horizontal variable is treated as the levels of a factor
+#'   (equally spaced along the horizontal scale), and curves are plotted using
+#'   lines and symbols. When the horizontal variable is character or factor, or
+#'   a combination of more than one predictor, \code{"factor"} style is always used.
 #' @param engine Character value matching \code{"ggplot"} (default) or 
 #'   \code{"lattice"}. The graphics engine to be used to produce the plot.
 #'   These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
@@ -133,10 +133,10 @@ emmip = function(object, formula, ...) {
 #' emmip(noise.lm, ~ size | type * side)
 #' 
 #' # Example for the 'style' argument
-#'  fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
-#'  fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
-#'  emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
-#'  emmip(fib.rg, machine ~ diameter, style = "factor")  # lines
+#' fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
+#' fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+#' emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
+#' emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 #' 
 #' # For an example using extra ggplot2 code, see 'vignette("messy-data")',
 #' # in the section on nested models.
@@ -223,14 +223,14 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     xvars = specs$rhs
     xv = do.call(paste, unname(emms[xvars]))
     ltest = max(apply(table(xv,tv), 2, function(x) sum(x > 0))) # length of longest trace
-    if (missing(style))
-        style = ifelse(length(xvars) == 1 && 
+    if (!missing(style))
+        styl = match.arg(style, c("factor", "numeric"))
+    if (missing(style) || styl == "numeric")
+        styl = ifelse(length(xvars) == 1 && 
                            is.numeric(emms[[xvars]]) &&
                            ltest > 1,
                    "numeric", "factor")
-    else
-        style = match.arg(style, c("factor", "numeric"))
-    if (style == "factor") {
+    if (styl == "factor") {
         emms$xvar = factor(xv, levels = unique(xv))
         predicate = "Levels of "
         if (ltest <= 1)
@@ -275,7 +275,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         if (!is.null(col)) TP$superpose.symbol$col = TP$superpose.line$col = col
         lattice::trellis.par.set(TP)
         
-        plty = if(style=="factor") c("p","l")   else "l"
+        plty = if(styl=="factor") c("p","l")   else "l"
         plotspecs = list(x = plotform, data = emms, groups = ~ tvar, 
                          xlab = xlab, ylab = ylab,
                          strip = my.strip, auto.key = my.key(tvars), 
@@ -287,7 +287,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, .1, 0)) # use dodging if CIs
         if (!one.trace) {
             grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, color = ~tvar))
-            if (style == "factor")
+            if (styl == "factor")
                 grobj = grobj + ggplot2::geom_point(position = pos)
             grobj = grobj +
                 ggplot2::geom_line(ggplot2::aes_(group = ~tvar), position = pos) +
