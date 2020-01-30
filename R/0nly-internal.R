@@ -26,7 +26,7 @@
 ##   Passes ... to all.vars
 #' @export
 .all.vars = function(expr, retain = c("\\$", "\\[\\[", "\\]\\]", "'", '"'), ...) {
-    if (is.null(expr))
+    if (is.null(expr) || length(expr) == 0)
         return(character(0))
     if (!inherits(expr, "formula")) {
         expr = try(eval(expr), silent = TRUE)
