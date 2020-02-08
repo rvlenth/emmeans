@@ -186,6 +186,15 @@
     comp
 }
 
+### Find `arg` in `...`. If pmatched, return its value, else NULL
+.match.dots = function(arg, ...) {
+    lst = list(...)
+    m = pmatch(names(lst), arg)
+    idx = which(!is.na(m))
+    if(length(idx) == 1)  lst[[idx]]
+    else                  NULL
+}
+
 # my own model.frame function. Intercepts compound names
 # and fixes up the data component accordingly. We do this
 # by creating data.frames within data having required variables of simple names 

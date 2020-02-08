@@ -1,5 +1,16 @@
 ## NEWS for the emmeans package
 
+
+emmeans 1.4.409xxxx
+-------------------
+
+  * Change to `.all.vars()` that addresses #170
+  * Addition of hidden argument `scheffe.rank` in `summary.emmGrid()`
+    to manually specify the desired dimensionality of a Scheffe 
+    adjustment (#171)
+  
+  
+
 emmeans 1.4.4
 ---------------
 
