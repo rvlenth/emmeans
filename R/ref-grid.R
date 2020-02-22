@@ -102,7 +102,8 @@
 #' @param sigma Numeric value to use for subsequent predictions or
 #'   back-transformation bias adjustments. If not specified, we use
 #'   \code{sigma(object)}, if available, and \code{NULL} otherwise.
-#' @param ... Optional arguments passed to \code{\link{emm_basis}}, and
+#' @param ... Optional arguments passed to \code{\link{summary.emmGrid}},
+#'   \code{\link{emm_basis}}, and
 #'   \code{\link{recover_data}}, such as \code{params}, \code{vcov.} (see
 #'   \bold{Covariance matrix} below), or options such as \code{mode} for
 #'   specific model types (see \href{../doc/models.html}{vignette("models",
@@ -281,6 +282,8 @@
 #'   \code{\link{summary.emmGrid}}. Reference grids are fundamental to
 #'   \code{\link{emmeans}}. Supported models are detailed in
 #'   \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
+#'   See \code{\link{update.emmGrid}} for details of arguments that can be in 
+#'   \code{options} (or in \code{...}).
 #'   
 #' @note The system default for \code{cov.keep} causes models
 #'   containing indicator variables to be handled differently than in
@@ -732,10 +735,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                     "fitted model:\n    ", .fmt.nest(nst))
     }
 
-    if(!is.null(options)) {
-        options$object = result
-        result = do.call("update.emmGrid", options)
-    }
+    result = .update.options(result, options, ...)
 
     if(!is.null(hook <- misc$postGridHook)) {
         if (is.character(hook))

@@ -34,7 +34,8 @@ added. See \code{\link{contrast}}. NOTE: \code{contr} is ignored when
 \code{specs} is a formula.}
 
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
-to \code{\link{update.emmGrid}}, just after the object is constructed.}
+to \code{\link{update.emmGrid}}, just after the object is constructed.
+(Options may also be included in \code{...}.)}
 
 \item{weights}{Character value, numeric vector, or numeric matrix specifying
 weights to use in averaging predictions. See \dQuote{Weights} section below.}
@@ -46,7 +47,7 @@ the result, it is subsetted or cyclically recycled.}
 
 \item{trend}{This is now deprecated. Use \code{\link{emtrends}} instead.}
 
-\item{...}{This is used only when \code{object} is not already a \code{"emmGrid"}
+\item{...}{When \code{object} is not already a \code{"emmGrid"}
 object, these arguments are passed to \code{\link{ref_grid}}. Common
 examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
 \code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.
@@ -54,7 +55,19 @@ Model-type-specific options (see
 \href{../doc/models.html}{\code{vignette("models", "emmeans")}}), commonly
 \code{mode}, may be used here as well. In addition, if the model formula
 contains references to variables that are not predictors, you must provide
-a \code{params} argument with a list of their names.}
+a \code{params} argument with a list of their names.
+
+Arguments that could go in \code{options} may instead be included in \code{...},
+typically, arguments such as \code{type}, \code{infer}, etc. that in essence
+are passed to \code{\link{summary.emmGrid}}. Arguments in both places are 
+overridden by the ones in \code{...}.
+
+There is a danger that \code{...} arguments could partially match those used
+by both \code{ref_grid} and \code{update.emmGrid}, creating a conflict.
+If these occur, usually they can be resolved by providing complete (or at least 
+longer) argument names; or by isolating non-\code{ref_grid} arguments in
+\code{options}; or by calling \code{ref_grid} separately and passing the
+result as \code{object}. See a not-run example below.}
 }
 \value{
 When \code{specs} is a \code{character} vector or one-sided formula,
@@ -165,6 +178,18 @@ emmeans (warp.lm, poly ~ tension | wool)
   # the same offset for each wool.
   # But using the same offsets with ~ wool | tension will probably not
   # be what you want because the ordering of combinations is different.
+  
+  ### Conflicting arguments...
+  # This will error because 'tran' is passed to both ref_grid and update
+  emmeans(some.model, "treatment", tran = "log", type = "response")
+  
+  # Use this if the response was a variable that is the log of some other variable
+  # (Keep 'tran' from being passed to ref_grid)
+  emmeans(some.model, "treatment", options = list(tran = "log"), type = "response")
+  
+  # This will re-grid the result as if the response had been log-transformed
+  # ('transform' is passed only to ref_grid, not to update)
+  emmeans(some.model, "treatment", transform = "log", type = "response")
 }
 }
 \seealso{

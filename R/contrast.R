@@ -236,10 +236,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         object@misc$is.new.rg = NULL
         object@misc$orig.grid = orig.grid
         object@misc$con.coef = tcm
-        if(!is.null(options)) {
-            options$object = object
-            object = do.call(update.emmGrid, options)
-        }
+        object = .update.options(object, options, ...)
         return(object)
     }
     
@@ -431,11 +428,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     
     if (!missing(type))
         options = as.list(c(options, predict.type = type))
-    if(!is.null(options)) {
-        options$object = result
-        result = do.call("update.emmGrid", options)
-    }
-    result
+    
+    .update.options(result, options, ...)
 }
 
 

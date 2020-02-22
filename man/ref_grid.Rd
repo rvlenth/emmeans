@@ -76,7 +76,8 @@ relative to the offset that had been specified in the model.}
 back-transformation bias adjustments. If not specified, we use
 \code{sigma(object)}, if available, and \code{NULL} otherwise.}
 
-\item{...}{Optional arguments passed to \code{\link{emm_basis}}, and
+\item{...}{Optional arguments passed to \code{\link{summary.emmGrid}},
+\code{\link{emm_basis}}, and
 \code{\link{recover_data}}, such as \code{params}, \code{vcov.} (see
 \bold{Covariance matrix} below), or options such as \code{mode} for
 specific model types (see \href{../doc/models.html}{vignette("models",
@@ -336,4 +337,6 @@ Reference grids are of class \code{\link[=emmGrid-class]{emmGrid}},
   \code{\link{summary.emmGrid}}. Reference grids are fundamental to
   \code{\link{emmeans}}. Supported models are detailed in
   \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
+  See \code{\link{update.emmGrid}} for details of arguments that can be in 
+  \code{options} (or in \code{...}).
 }

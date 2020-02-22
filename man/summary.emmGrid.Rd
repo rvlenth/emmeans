@@ -98,6 +98,13 @@ is in effect), or for constructing prediction intervals. If not specified,
 \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the number of rows
 of the reference grid.}
 
+\item{...}{Optional arguments such as \code{scheffe.rank} 
+(see \dQuote{P-value adjustments}). 
+In \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, 
+\code{predict.emmGrid}, and 
+\code{test.emmGrid}, these arguments are passed to
+\code{summary.emmGrid}.}
+
 \item{interval}{Type of interval desired (partial matching is allowed): 
 \code{"none"} for no intervals,
   otherwise confidence or prediction intervals with given arguments, 
@@ -152,11 +159,15 @@ The \code{as.data.frame} method returns a plain data frame,
 }
 \description{
 These are the primary methods for obtaining numerical or tabular results 
-from an \code{emmGrid} object. Note that by default, summaries for Bayesian models are
+from an \code{emmGrid} object. 
+\code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
+It also serves as the print method for these objects; so for convenience,
+\code{summary()} arguments may be included in calls to functions such as 
+\code{\link{emmeans}} and \code{\link{contrast}} that construct \code{emmGrid} 
+objects. Note that by default, summaries for Bayesian models are
 diverted to \code{\link{hpd.summary}}.
 }
 \details{
-\code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
 \code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
 infer = c(TRUE, FALSE)}. When called with \code{joint = FALSE}, \code{test.emmGrid}
 is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 

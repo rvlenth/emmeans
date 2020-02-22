@@ -503,11 +503,13 @@ vignette: >
   * [Startup options](utilities.html#startup)
   * [`str()`](basics.html#emmobj)
   * [Subsets of data](FAQs.html#model)
-  * [`summary()`](confidence-intervals.html#summary)
+  * `summary()`
       * [`adjust`](comparisons.html#pairwise)
+      * [in *basics: emmobj*](basics.html#emmobj)
       * Bayesian models
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
           * [in *models: S*](models.html#S)
+      * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
       * [HPD intervals](sophisticated.html#mcmc)
       * [`hpd.summary()`](confidence-intervals.html#summary)
       * `infer`

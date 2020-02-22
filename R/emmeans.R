@@ -114,6 +114,7 @@ emmeans.list = function(object, specs, ...) {
 #'   \code{specs} is a formula.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
 #'   to \code{\link{update.emmGrid}}, just after the object is constructed.
+#'   (Options may also be included in \code{...}.)
 #' @param weights Character value, numeric vector, or numeric matrix specifying
 #'   weights to use in averaging predictions. See \dQuote{Weights} section below.
 #' @param offset Numeric vector or scalar. If specified, this adds an offset to
@@ -121,7 +122,7 @@ emmeans.list = function(object, specs, ...) {
 #'   reference grid. If a vector of length differing from the number of rows in 
 #'   the result, it is subsetted or cyclically recycled.
 #' @param trend This is now deprecated. Use \code{\link{emtrends}} instead.
-#' @param ... This is used only when \code{object} is not already a \code{"emmGrid"}
+#' @param ... When \code{object} is not already a \code{"emmGrid"}
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
 #'   examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
 #'   \code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.
@@ -130,6 +131,18 @@ emmeans.list = function(object, specs, ...) {
 #'   \code{mode}, may be used here as well. In addition, if the model formula
 #'   contains references to variables that are not predictors, you must provide
 #'   a \code{params} argument with a list of their names.
+#'   
+#'   Arguments that could go in \code{options} may instead be included in \code{...},
+#'   typically, arguments such as \code{type}, \code{infer}, etc. that in essence
+#'   are passed to \code{\link{summary.emmGrid}}. Arguments in both places are 
+#'   overridden by the ones in \code{...}.
+#'   
+#'   There is a danger that \code{...} arguments could partially match those used
+#'   by both \code{ref_grid} and \code{update.emmGrid}, creating a conflict.
+#'   If these occur, usually they can be resolved by providing complete (or at least 
+#'   longer) argument names; or by isolating non-\code{ref_grid} arguments in
+#'   \code{options}; or by calling \code{ref_grid} separately and passing the
+#'   result as \code{object}. See a not-run example below.
 #'   
 #' @return   When \code{specs} is a \code{character} vector or one-sided formula,
 #'   an object of class \code{"emmGrid"}. A number of methods
@@ -229,6 +242,18 @@ emmeans.list = function(object, specs, ...) {
 #'   # the same offset for each wool.
 #'   # But using the same offsets with ~ wool | tension will probably not
 #'   # be what you want because the ordering of combinations is different.
+#'   
+#'   ### Conflicting arguments...
+#'   # This will error because 'tran' is passed to both ref_grid and update
+#'   emmeans(some.model, "treatment", tran = "log", type = "response")
+#'   
+#'   # Use this if the response was a variable that is the log of some other variable
+#'   # (Keep 'tran' from being passed to ref_grid)
+#'   emmeans(some.model, "treatment", options = list(tran = "log"), type = "response")
+#'   
+#'   # This will re-grid the result as if the response had been log-transformed
+#'   # ('transform' is passed only to ref_grid, not to update)
+#'   emmeans(some.model, "treatment", transform = "log", type = "response")
 #' }
 emmeans = function(object, specs, by = NULL, 
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 
@@ -238,7 +263,7 @@ emmeans = function(object, specs, by = NULL,
     if(!is(object, "emmGrid")) {
         object = ref_grid(object, ...)
     }
-    options$type = list(...)$type  # note type if in ...
+###    options$type = list(...)$type  # note type if in ...
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
                              contr = contr, weights = weights, ...))
@@ -406,11 +431,7 @@ emmeans = function(object, specs, by = NULL,
         result@levels = levs
         result@grid = combs
         
-        
-        if(!is.null(options)) {
-            options$object = result
-            result = do.call("update.emmGrid", options)
-        }
+        result = .update.options(result, options, ...)
     }
     
     else {  # handle a nested structure

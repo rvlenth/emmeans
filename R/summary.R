@@ -27,10 +27,14 @@
 #' Summaries, predictions, intervals, and tests for \code{emmGrid} objects
 #' 
 #' These are the primary methods for obtaining numerical or tabular results 
-#' from an \code{emmGrid} object. Note that by default, summaries for Bayesian models are
+#' from an \code{emmGrid} object. 
+#' \code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
+#' It also serves as the print method for these objects; so for convenience,
+#' \code{summary()} arguments may be included in calls to functions such as 
+#' \code{\link{emmeans}} and \code{\link{contrast}} that construct \code{emmGrid} 
+#' objects. Note that by default, summaries for Bayesian models are
 #' diverted to \code{\link{hpd.summary}}.
 #' 
-#' \code{summary.emmGrid} is the general function for summarizing \code{emmGrid} objects. 
 #' \code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
 #' infer = c(TRUE, FALSE)}. When called with \code{joint = FALSE}, \code{test.emmGrid}
 #' is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 
@@ -100,7 +104,7 @@
 #'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the number of rows
 #'   of the reference grid.
 #' @param ... Optional arguments such as \code{scheffe.rank} 
-#'   (see \qQuote(P-value adjustments}). 
+#'   (see \dQuote{P-value adjustments}). 
 #'   In \code{as.data.frame.emmGrid}, \code{confint.emmGrid}, 
 #'   \code{predict.emmGrid}, and 
 #'   \code{test.emmGrid}, these arguments are passed to
@@ -299,7 +303,15 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
                         sigma, ...) {
     if(missing(sigma))
         sigma = object@misc$sigma
-
+    if(missing(frequentist) && !is.null(object@misc$frequentist))
+        frequentist = object@misc$frequentist
+    if(missing(bias.adjust)) {
+        if (!is.null(object@misc$bias.adjust)) 
+            bias.adjust = object@misc$bias.adjust
+        else
+            bias.adjust = get_emm_option("back.bias.adj")
+    }
+    
     if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
         return (hpd.summary(object, prob = level, by = by, type = type, 
                             bias.adjust = bias.adjust, sigma = sigma, ...))
@@ -445,7 +457,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     }
     else if (!is.na(pmatch(adjust, "scheffe"))) {
         if(is.null(sch.rank <- .match.dots("scheffe.rank", ...)))
-            sch.rank = sapply(by.rows, function(.) qr(object@linfct[., , drop = FALSE])$rank)
+            sch.rank = sapply(by.rows, function(.) qr(zapsmall(object@linfct[., , drop = FALSE]))$rank)
         if(length(unique(sch.rank)) > 1)
             fam.info[1] = "uneven"   # This forces ragged.by = TRUE in .adj functions
     }

@@ -434,9 +434,18 @@ what is there, do
 ```{r}
 str(pigs.emm.s)
 ```
-<!-- @index `str()`; `summary_emm` object; `print.summary_emm()` -->
+<!-- @index `str()`; `summary()`; `summary_emm` object; `print.summary_emm()` -->
 The most important method for `emmGrid` objects is `summary()`. It is used as the
-default for displaying an `emmeans()` result like `pigs.emm.s`. This `summary()`
+print method for displaying an `emmeans()` result. For this reason, arguments for 
+`summary()` may also be specified within most functions that produce `these kinds of
+results.`emmGrid` objects. For example:
+```{r}
+# equivalent to summary(emmeans(pigs.lm1, "percent"), level = 0.90, infer = TRUE))
+emmeans(pigs.lm1, "percent", level = 0.90, infer = TRUE)
+```
+
+
+This `summary()`
 method for `emmGrid` objects) actually produces a `data.frame`, but with extra bells 
 and whistles:
 ```{r}

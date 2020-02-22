@@ -8,6 +8,11 @@ emmeans 1.4.409xxxx
   * Addition of hidden argument `scheffe.rank` in `summary.emmGrid()`
     to manually specify the desired dimensionality of a Scheffe 
     adjustment (#171)
+  * Provided for `...` to be included in `options` in calls to
+    `emmeans()` and `contrast()`. This allows passing any `summary()`
+    argument more easily, e.g., 
+    `emmeans(..., type = "response", bias.adjust = TRUE, infer = c(TRUE, TRUE))`
+    (Before, we would have had to wrap this in `summary()`)
   
   
 

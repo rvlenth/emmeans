@@ -187,12 +187,38 @@
 }
 
 ### Find `arg` in `...`. If pmatched, return its value, else NULL
-.match.dots = function(arg, ...) {
-    lst = list(...)
+### If arg is a vector, runs .match.dots.list
+.match.dots = function(arg, ..., lst) {
+    if(missing(lst))
+        lst = list(...)
+    if (length(arg) > 1)
+        return (.match.dots.list(arg, lst = lst))
     m = pmatch(names(lst), arg)
     idx = which(!is.na(m))
     if(length(idx) == 1)  lst[[idx]]
     else                  NULL
+}
+
+# like .match.dots, but returns a list of all matched args
+.match.dots.list = function(args, ..., lst) {
+    if(missing(lst))
+        lst = list(...)
+    rtn = list()
+    for (a in args)
+        rtn[[a]] = .match.dots(a, lst = lst)
+    rtn
+}
+
+# return updated object with option list AND dot list
+.update.options = function(object, options, ...) {
+    if (!is.list(options))
+        options = as.list(options)
+    dot.opts = .match.dots.list(.valid.misc, ...)
+    # entries in both lists are overridden by those in ...
+    for (nm in names(dot.opts))
+        options[[nm]] = dot.opts[[nm]]
+    options[["object"]] = object
+    do.call(update.emmGrid, options)
 }
 
 # my own model.frame function. Intercepts compound names

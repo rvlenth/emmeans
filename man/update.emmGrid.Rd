@@ -77,11 +77,6 @@ discussion in \href{../doc/basics.html#pvalues}{\code{vignette("basics", "emmean
 \item{\code{adjust}}{(\code{character)}) is the default for the \code{adjust}
 argument in \code{\link{summary.emmGrid}}.}
 
-\item{\code{estType}}{(\code{character}) is the type of the estimate. It
-should match one of \samp{c("prediction", "contrast", "pairs")}. This is used
-along with \code{"adjust"} to determine appropriate adjustments to P values
-and confidence intervals.}
-
 \item{\code{famSize}}{(integer) is the number of means involved in a family of
 inferences; used in Tukey adjustment}
 
@@ -112,6 +107,16 @@ of displaying predictions in \code{\link{summary.emmGrid}},
 \code{\link{predict.emmGrid}}, and \code{\link{emmip}}. Valid values are
 \code{"link"} (with synonyms \code{"lp"} and \code{"linear"}), or
 \code{"response"}.}
+
+\item{\code{bias.adjust}, \code{frequentist}}{(character) These
+are used by \code{summary} if the value of these arguments are not specified.}
+
+\item{\code{estType}}{(\code{character}) is used internally to determine 
+what \code{adjust} methods are appropriate. It should match one of 
+\samp{c("prediction", "contrast", "pairs")}. As an example of why this is needed,
+the Tukey adjustment should only be used for pairwise comparisons 
+(\code{estType = "pairs"}); if \code{estType} is some other string, Tukey
+adjustments are not allowed.}
 
 \item{\code{avgd.over}}{(\code{character)} vector) are the names of the 
 variables whose levels are averaged over in obtaining marginal averages of 
