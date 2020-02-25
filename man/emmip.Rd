@@ -68,9 +68,9 @@ be installed.}
 \item{col}{The colors to use for each group, recycled as needed. If not
 specified, the default trellis colors are used.}
 
-\item{plotit}{Logical value. If \code{TRUE}, the plot is displayed.
-Otherwise, one may use the \code{"lattice"} attribute of the returned
-object and print it, perhaps after additional manipulation.}
+\item{plotit}{Logical value. If \code{TRUE}, a graphical object is returned;
+if \code{FALSE}, a data.frame is returned containing all the values
+used to construct the plot.}
 
 \item{nesting.order}{Logical value. If \code{TRUE}, factors that are nested
 are presented in order according to their nesting factors, even if those nesting

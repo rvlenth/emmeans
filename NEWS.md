@@ -13,6 +13,9 @@ emmeans 1.4.409xxxx
     argument more easily, e.g., 
     `emmeans(..., type = "response", bias.adjust = TRUE, infer = c(TRUE, TRUE))`
     (Before, we would have had to wrap this in `summary()`)
+  * Added a `plotit` argument to `plot.emmGrid()` that works similarly to
+    that in `emmip()`.
+  * Removed startup message for behavior change in 1.4.2; it's been long enough.
   
   
 

@@ -123,10 +123,24 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   \code{frequentist} is non-missing and TRUE, a frequentist summary is used for
 #'   obtaining the plot data, rather than the posterior point estimate and HPD
 #'   intervals. This argument is ignored when it is not a Bayesian model.
+#' @param plotit Logical value. If \code{TRUE}, a graphical object is returned;
+#'   if \code{FALSE}, a data.frame is returned containing all the values
+#'   used to construct the plot.
 #' @param ... Additional arguments passed to \code{\link{update.emmGrid}}, 
 #'   \code{\link{predict.emmGrid}}, or
 #'   \code{\link[lattice:xyplot]{dotplot}}
 #'
+#' @return If \code{plotit = TRUE}, a graphical object is returned.
+#' 
+#'   If \code{plotit = FALSE}, a \code{data.frame} with the table of
+#'   EMMs that would be plotted. In the latter case, the estimate being plotted
+#'   is named \code{the.emmean}, and any factors involved have the same names as
+#'   in the object. Confidence limits are named \code{lower.CL} and
+#'   \code{upper.CL}, prediction limits are named \code{lpl} and \code{upl}, and
+#'   comparison-arrow limits are named \code{lcmpl} and \code{ucmpl}.
+#'   There is also a variable named \code{pri.fac} which contains the factor 
+#'   combinations that are \emph{not} among the \code{by} variables.
+
 #' @section Details:
 #' If any \code{by} variables are in force, the plot is divided into separate
 #' panels. These functions use the \code{\link[lattice:xyplot]{dotplot}} function, and
@@ -159,17 +173,19 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'      horizontal = FALSE, colors = "darkgreen")
 plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                             xlab, ylab, layout, 
-                            colors = c("black", "blue", "blue", "red"), intervals, ...) {
+                            colors = c("black", "blue", "blue", "red"), intervals, 
+                            plotit = TRUE, ...) {
     if(!missing(intervals))
         CIs = intervals
-    .plot.srg (x, y, horizontal, xlab, ylab, layout, CIs = CIs, colors = colors, ...)
+    .plot.srg (x, y, horizontal, xlab, ylab, layout, CIs = CIs, colors = colors, plotit = plotit, ...)
 }
 
 # Workhorse for plot.summary_emm
 .plot.srg = function(x, y, 
                      horizontal = TRUE, xlab, ylab, layout, colors,
                      engine = get_emm_option("graphics.engine"),
-                     CIs = TRUE, PIs = FALSE, extra = NULL, ...) {
+                     CIs = TRUE, PIs = FALSE, extra = NULL, 
+                     plotit = TRUE, ...) {
     
     engine = match.arg(engine, c("ggplot", "lattice"))
     if (engine == "ggplot") 
@@ -366,10 +382,13 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                 invtran = tran$linkinv
         }
         
-        lcmpl = summ$lcmpl = invtran(est - llen)
-        rcmpl = summ$rcmpl = invtran(est + rlen)
+        lcmpl = summ$lcmpl = as.numeric(invtran(est - llen))
+        rcmpl = summ$rcmpl = as.numeric(invtran(est + rlen))
     }
     else lcmpl = rcmpl = NULL
+    
+    if(!plotit) 
+        return(as.data.frame(summ))
     
     
     facName = paste(priv, collapse=":")

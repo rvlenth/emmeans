@@ -11,7 +11,8 @@
   frequentist, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
-  layout, colors = c("black", "blue", "blue", "red"), intervals, ...)
+  layout, colors = c("black", "blue", "blue", "red"), intervals,
+  plotit = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}
@@ -69,6 +70,22 @@ plotted horizontally or vertically}
 \item{ylab}{Character label for vertical axis}
 
 \item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}}
+
+\item{plotit}{Logical value. If \code{TRUE}, a graphical object is returned;
+if \code{FALSE}, a data.frame is returned containing all the values
+used to construct the plot.}
+}
+\value{
+If \code{plotit = TRUE}, a graphical object is returned.
+
+  If \code{plotit = FALSE}, a \code{data.frame} with the table of
+  EMMs that would be plotted. In the latter case, the estimate being plotted
+  is named \code{the.emmean}, and any factors involved have the same names as
+  in the object. Confidence limits are named \code{lower.CL} and
+  \code{upper.CL}, prediction limits are named \code{lpl} and \code{upl}, and
+  comparison-arrow limits are named \code{lcmpl} and \code{ucmpl}.
+  There is also a variable named \code{pri.fac} which contains the factor 
+  combinations that are \emph{not} among the \code{by} variables.
 }
 \description{
 Methods are provided to plot EMMs as side-by-side CIs, and optionally to display 
