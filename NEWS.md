@@ -16,6 +16,7 @@ emmeans 1.4.409xxxx
   * Added a `plotit` argument to `plot.emmGrid()` that works similarly to
     that in `emmip()`.
   * Removed startup message for behavior change in 1.4.2; it's been long enough.
+  * Fixed bug with `character predictors in `at` (#175)
   
   
 

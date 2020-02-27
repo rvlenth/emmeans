@@ -443,6 +443,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         if (is.factor(x) && !(nm %in% coerced$covariates))
             xlev[[nm]] = levels(factor(x))
             # (applying factor drops any unused levels)
+        else if (is.character(x)) # just like a factor
+            xlev[[nm]] = sort(unique(x))
     
         # Now go thru and find reference levels...
         # mentioned in 'at' list but not coerced factor
