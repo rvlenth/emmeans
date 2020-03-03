@@ -1,8 +1,8 @@
 ## NEWS for the emmeans package
 
 
-emmeans 1.4.409xxxx
--------------------
+emmeans 1.4.5
+-------------
 
   * Change to `.all.vars()` that addresses #170
   * Addition of hidden argument `scheffe.rank` in `summary.emmGrid()`

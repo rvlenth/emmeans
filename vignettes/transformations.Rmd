@@ -29,7 +29,7 @@ This vignette covers the intricacies of transformations and link functions in **
 [Index of all vignette topics](vignette-topics.html) 
 
 ## Overview {#overview}
-<!-- @index Transformations!Overview -->
+<!-- @index Transformations!Overview; Examples!`pigs` -->
 Consider the same example with the `pigs` dataset that is used in many of 
 these vignettes:
 ```{r}
@@ -51,6 +51,9 @@ can be done by adding `type = "response"` to the `summary()` call:
 ```{r}
 summary(pigs.emm.s, infer = TRUE, null = log(35), type = "response")
 ```
+
+Note: Looking ahead, this output is compared later in this vignette with a 
+[bias-adjusted version](#pigs-biasadj).
 
 ### Timing is everything {#timing}
 <!-- @index Transformations!Timing is everything -->
@@ -350,20 +353,65 @@ It depends on $\sigma$, and the larger this is, the greater the bias adjustment
 is needed. This second-order bias adjustment is what is currently used
 in the **emmeans** package when bias-adjustment is requested. There are better or exact adjustments for certain cases, and future updates may incorporate some of those.
 
+### Pigs example revisited {#pigs-biasadj}
+<!-- @index Examples!`pigs` -->
+Let us compare the estimates in [the overview](#overview) after we apply a bias
+adjustment. First, note that an estimate of the residual SD is available via
+the `sigma()` function:
+```{r}
+sigma(pigs.lm)
+```
+This estimate is used by default. The bias-adjusted EMMs for the sources are:
+```{r}
+summary(pigs.emm.s, type = "response", bias.adj = TRUE)
+```
+These estimates (and also their SEs) are slightly larger than we had without
+bias adjustment. They are estimates of the *aritmetic* mean responses, rather
+than the *geometric* means shown in the overview. Had the value of `sigma` been
+larger, the adjustment would have been greater. You can experiment with this by
+adding a `sigma =` argument to the above call.
+
 ### Response transformations vs. link functions {#link-bias}
 <!-- @index Transformations!Response versus link functions;
-    Bias adjustment!For link functions vs. response transformations; Bias adjustment!In GLMMs and GEE models; -->
+    Bias adjustment!For link functions vs. response transformations; -->
 At this point, it is important to point out that the above discussion focuses on
-response transformations, as opposed to link functions used in generalized linear
-models (GLMs). In an ordinary GLM, no bias adjustment is needed or appropriate
+*response* transformations, as opposed to link functions used in generalized linear
+models (GLMs). In an ordinary GLM, no bias adjustment is needed, nor is it
+appropriate, 
 because the link function is just used to define a nonlinear relationship
-between the actual response mean $\eta$ and the linear predictor. However, in a
-generalized linear *mixed* model, including generalized estimating equations and
-such, there are random components involved, and then bias adjustment becomes
-appropriate.
+between the actual response mean $\eta$ and the linear predictor. That is, the 
+back-transformed parameter is already the mean. 
 
-### CBPP example {#cbpp}
-<!-- @index Examples!`cbpp` -->
+
+#### InsectSprays example {#insects}
+<!-- @index Examples!`InsectSprays`;  Bias adjustment!When *not* to use; -->
+To illustrate this, consider
+the `InsectSprays` data in the **datasets** package. The response variable
+is a count, and there is one treatment, the spray that is used. Let us
+model the count as a Poisson variable with (by defauylt) a square-root link; and
+obtain the EMMs, with and without a bias adjustment
+```{r}
+ismod <- glm(count ~ spray, data = InsectSprays, family = poisson())
+emmeans(ismod, "spray", type = "response", bias.adj = FALSE)
+emmeans(ismod, "spray", type = "response", bias.adj = TRUE)
+```
+These are substantially different! Which is right? Well, due to the simple structure of this dataset, the estimates should be well
+in line with the simple observed mean counts:
+```{r}
+with(InsectSprays, tapply(count, spray, mean))
+```
+This illustrates that it is the *non*-bias-adjusted results that are
+appropriate. Again, the point here is that a GLM does not have an additive error
+term, that the model is already formulated in terms of the mean, not some
+generalized mean. Users must be very careful with this! There is no way to
+automatically do the right thing.
+
+Note that, in a generalized linear *mixed* model, including generalized estimating
+equations and such, there *are* additive random components involved, and then bias
+adjustment becomes appropriate.
+
+#### CBPP example {#cbpp}
+<!-- @index Examples!`cbpp`; Bias adjustment!In GLMMs and GEE models; -->
 Consider an example adapted from the help page for `lme4::cbpp`. 
 Contagious bovine pleuropneumonia (CBPP) is a disease in African cattle,
 and the dataset contains data on incidence of CBPP in several herds of cattle
@@ -373,7 +421,8 @@ as well as overdispersion (variations larger than expected with a simple binomia
 ```{r, message = FALSE}
 require(lme4)
 cbpp <- transform(cbpp, unit = 1:nrow(cbpp))
-cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd) +  (1|unit),
+cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period + 
+                          (1 | herd) +  (1 | unit),
                     family = binomial, data = cbpp)
 
 emm <- emmeans(cbpp.glmer, "period")
@@ -401,6 +450,12 @@ cases <- with(cbpp, tapply(incidence, period, sum))
 trials <- with(cbpp, tapply(size, period, sum))
 cases / trials
 ```
+
+Left as an exercise: Revisit the `InsectSprays` example, but (using similar
+methods to the above) create a `unit` variable and fit an over-dispersion model.
+Compare the results with and without bias adjustment, and evaluate these results
+against the earlier results. This is simpler than the CBPP example because there
+is only one random effect.
 
 [Back to Contents](#contents)
 

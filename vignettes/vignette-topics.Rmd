@@ -54,8 +54,9 @@ vignette: >
   * Bias adjustment
       * [For link functions vs. response transformations](transformations.html#link-bias)
       * [in Bayesian models](sophisticated.html#bias-adj-mcmc)
-      * [In GLMMs and GEE models](transformations.html#link-bias)
+      * [In GLMMs and GEE models](transformations.html#cbpp)
       * [When back-transforming](transformations.html#bias-adj)
+      * [When *not* to use](transformations.html#insects)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
   * [`boot-satterthwaite` method](models.html#K)
   * [`[ ]` and `[[ ]]` operators](utilities.html#brackets)
@@ -187,6 +188,7 @@ vignette: >
       * [`fiber`](interactions.html#covariates)
       * [`framing`](messy-data.html#mediators)
       * [Gamma regression](transformations.html#tranlink)
+      * [`InsectSprays`](transformations.html#insects)
       * [Insurance claims (SAS)](sophisticated.html#offsets)
       * [Logistic regression](transformations.html#links)
       * [`lqs` objects](xtending.html#lqs)
@@ -204,6 +206,8 @@ vignette: >
       * `pigs`
           * [in *basics: motivation*](basics.html#motivation)
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
+          * [in *transformations: overview*](transformations.html#overview)
+          * [in *transformations: pigs-biasadj*](transformations.html#pigs-biasadj)
       * [`rlm` objects](xtending.html#rlm)
       * [Robust regression](xtending.html#rlm)
       * [Split-plot experiment](sophisticated.html#lmer)
