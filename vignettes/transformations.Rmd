@@ -388,7 +388,7 @@ back-transformed parameter is already the mean.
 To illustrate this, consider
 the `InsectSprays` data in the **datasets** package. The response variable
 is a count, and there is one treatment, the spray that is used. Let us
-model the count as a Poisson variable with (by defauylt) a square-root link; and
+model the count as a Poisson variable with (by default) a square-root link; and
 obtain the EMMs, with and without a bias adjustment
 ```{r}
 ismod <- glm(count ~ spray, data = InsectSprays, family = poisson())

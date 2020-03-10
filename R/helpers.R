@@ -488,9 +488,9 @@ emm_basis.polr = function(object, trms, xlev, grid,
 recover_data.survreg = function(object, ...) {
     fcall = object$call
     trms = delete.response(terms(object))
-    # I'm gonna delete any terms involving strata(), cluster(), or frailty()
+    # I'm gonna delete any terms involving cluster(), or frailty() -- keep strata()
     mod.elts = dimnames(attr(trms, "factor"))[[2]]
-    tmp = grep("strata\\(|cluster\\(|frailty\\(", mod.elts)
+    tmp = grep("cluster\\(|frailty\\(", mod.elts)
     if (length(tmp))
         trms = trms[-tmp]
     recover_data(fcall, trms, object$na.action, ...)
@@ -502,9 +502,11 @@ recover_data.survreg = function(object, ...) {
 emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     # Much of this code is adapted from predict.survreg
     bhat = object$coefficients
-    k = length(bhat)
+    k = length(bhat) - sum(is.na(bhat))
     V = .my.vcov(object, ...)[seq_len(k), seq_len(k), drop=FALSE]
     # ??? not used... is.fixeds = (k == ncol(object$var))
+    ### zap-out factors in xlev not needed by model.frame
+    xlev[setdiff(names(xlev), rownames(attr(trms, "factors")))] = NULL
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)    
     # X = model.matrix(object, m) # This is what predict.survreg does
     # But I have manipulated trms, so need to make sure things are consistent
@@ -531,12 +533,14 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
 {
     object$dist = "doesn't matter"
     result = emm_basis.survreg(object, trms, xlev, grid, ...)
-    result$dfargs$df = NA
-    result$X = result$X[, -1, drop = FALSE]
-    result$X = result$X - rep(object$means, each = nrow(result$X))
+    result$dfargs$df = Inf
+    nms = colnames(result$X)
+    # delete columns for intercept and main effects of strata
+    zaps = which(nms %in% setdiff(nms, names(result$bhat)))
+    result$X = result$X[, -zaps, drop = FALSE]
+    ### result$X = result$X - rep(object$means, each = nrow(result$X))
     result$misc$tran = "log"
     result$misc$inv.lbl = "hazard"
-    result$misc$postGridHook = .notran2   # removes "Surv()" as response transformation
     result
 }
 

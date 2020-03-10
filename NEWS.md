@@ -1,5 +1,10 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.5.009xxxxxxx
+------------------------
+
+  * Improvements to `coxph` support for models with strata
+  
 
 emmeans 1.4.5
 -------------
