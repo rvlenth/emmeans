@@ -70,6 +70,10 @@
 #' @param xlab Character label to use in place of the default for the P-value axis.
 #' @param ylab Character label to use in place of the default for the primary-factor axis.
 #' @param xsub Character label used as caption at the lower right of the plot.
+#' @param plim numeric vector of value(s) between 0 and 1. These are included
+#'   among the observed p values so that the range of tick marks includes at
+#'   least the range of \code{plim}. Choosing \code{plim = c(0,1)} will ensure
+#'   the widest possible range.
 #' @param add.space Numeric value to adjust amount of space used for value labels. Positioning
 #'                  of value labels is tricky, and depends on how many panels and the
 #'                  physical size of the plotting region. This parameter allows the user to
@@ -78,7 +82,8 @@
 #' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}
 #' 
 #' 
-#' @note The \pkg{ggplot2} package must be installed in order for \code{pwpp} to work.
+#' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
+#'   for \code{pwpp} to work.
 #'
 #' @export
 #' @examples
@@ -87,7 +92,7 @@
 #' pwpp(emm)
 #' pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
 pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows = ".",
-                xlab, ylab, xsub = "", add.space = 0, ...) {
+                xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, ...) {
     if(missing(by)) 
         by = emm@misc$by.vars
     
@@ -166,8 +171,9 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         
         # find ranges to ensure we get tick marks:
         exmaj = c(0, .pvmaj.brk)
-        tick.min = max(exmaj[exmaj <= min(con.summ$p.value)])
-        tick.max = min(exmaj[exmaj >= max(con.summ$p.value)])
+        pvtmp = c(plim, con.summ$p.value)
+        tick.min = max(exmaj[exmaj <= min(pvtmp)])
+        tick.max = min(exmaj[exmaj >= max(pvtmp)])
         
         grobj = ggplot2::ggplot(data = con.summ, 
                                 ggplot2::aes_(x = ~p.value, y = ~plus,

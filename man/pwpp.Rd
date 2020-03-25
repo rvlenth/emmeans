@@ -5,7 +5,8 @@
 \title{Pairwise P-value plot}
 \usage{
 pwpp(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
-  rows = ".", xlab, ylab, xsub = "", add.space = 0, ...)
+  rows = ".", xlab, ylab, xsub = "", plim = numeric(0), add.space = 0,
+  ...)
 }
 \arguments{
 \item{emm}{An \code{emmGrid} object}
@@ -48,6 +49,11 @@ is used, so all panels are stacked side-by-side.}
 
 \item{xsub}{Character label used as caption at the lower right of the plot.}
 
+\item{plim}{numeric vector of value(s) between 0 and 1. These are included
+among the observed p values so that the range of tick marks includes at
+least the range of \code{plim}. Choosing \code{plim = c(0,1)} will ensure
+the widest possible range.}
+
 \item{add.space}{Numeric value to adjust amount of space used for value labels. Positioning
 of value labels is tricky, and depends on how many panels and the
 physical size of the plotting region. This parameter allows the user to
@@ -77,7 +83,8 @@ are created. \code{xsub} is used to note special features; e.g., equivalence
 thresholds or one-sided tests.
 }
 \note{
-The \pkg{ggplot2} package must be installed in order for \code{pwpp} to work.
+The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
+  for \code{pwpp} to work.
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
