@@ -266,7 +266,8 @@ emmeans = function(object, specs, by = NULL,
 ###    options$type = list(...)$type  # note type if in ...
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
-                             contr = contr, weights = weights, ...))
+                             contr = contr, weights = weights, 
+                             offset = offset, trend = trend, ...))
     }
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)

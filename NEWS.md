@@ -4,7 +4,9 @@ emmeans 1.4.5.009xxxxxxx
 ------------------------
 
   * Improvements to `coxph` support for models with strata
-  
+  * `emmeans()` with `specs` of class `list` now passes any `offset` 
+    and `trend` arguments (#179)
+    
 
 emmeans 1.4.5
 -------------
