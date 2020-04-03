@@ -7,6 +7,8 @@ emmeans 1.4.5.009xxxxxxx
   * `emmeans()` with `specs` of class `list` now passes any `offset` 
     and `trend` arguments (#179)
   * Added `plim` argument to `pwpp()` to allow controlling the scale
+  * More documentation on using `params` (#180)
+  
 
 emmeans 1.4.5
 -------------

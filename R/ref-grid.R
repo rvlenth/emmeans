@@ -331,6 +331,12 @@
 #' # Silly illustration of how to use 'mult.levs' to make comb's of two factors
 #' ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 #' 
+#' # Using 'params'
+#' my.knots = c(2.5, 3, 3.5)
+#' mod = lm(Sepal.Length ~ Species * ns(Sepal.Width, knots = my.knots), data = iris)
+#' ## my.knots is not a predictor, so need to name it in 'params'
+#' ref_grid(mod, params = "my.knots") 
+#' 
 ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("cov.keep"),
                      mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 

@@ -43,7 +43,8 @@ formula that are \emph{not} predictors. For example, a spline model may involve
 a local variable \code{knots} that is not a predictor, but its value is
 needed to fit the model. Names of parameters not actually used are harmless,
 and the default value \code{"pi"} (the only numeric constant in base R)
-is provided in case the model involves it.}
+is provided in case the model involves it. An example involving splines
+may be found at \url{https://github.com/rvlenth/emmeans/issues/180}.}
 
 \item{xlev}{Named list of factor levels (\emph{excluding} ones coerced to 
 factors in the model formula)}

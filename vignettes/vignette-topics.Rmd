@@ -408,6 +408,7 @@ vignette: >
   * [Pairwise comparisons](comparisons.html#pairwise)
   * [`pairwise` contrasts](comparisons.html#contrasts)
   * [Pairwise *P*-value plots](comparisons.html#pwpp)
+  * [`params`](basics.html#params)
   * `plot()`
       * [nested factors](messy-data.html#cows)
   * [`plot.emmGrid()`](basics.html#plot.emmGrid)
@@ -579,6 +580,7 @@ vignette: >
 ### V {#v}
 
 
+  * [Variables that are not predictors](basics.html#params)
   * [`vcovHook`](xtending.html#hooks)
   * Vignettes
       * [Basics](basics.html)

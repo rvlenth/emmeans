@@ -22,6 +22,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
       b. [Estimated marginal means](#emmeans)
       c. [Altering the reference grid](#altering)
       d. [Derived covariates](#depcovs)
+      d. [Non-predictor variables](#params)
       e. [Graphical displays](#plots)
       f. [Weighting](#weights)
       g. [Multivariate models](#multiv)
@@ -294,6 +295,23 @@ In summary, for polynomial models and others where some covariates depend on
 others in nonlinear ways, include that dependence in the model formula (as in
 `mtcars.1`) using `I()` or `poly()` expressions, or alter the reference grid so
 that the dependency among covariates is correct.
+
+
+### Non-predictor variables {#params}
+<!-- @index `params`; Variables that are not predictors; -->
+Reference grids are derived using the variables in the right-hand side of the model
+formula. But sometimes, these variables are not actually predictors. For example:
+```{r, eval = FALSE}
+deg <- 2
+mod <- lm(y ~ treat * poly(x, degree = deg), data = mydata)
+```
+If we call `ref_grid()` or `emmeans()` with this model, it will try to construct
+a grid of values of `treat`, `x`, and `deg` -- causing an error because `deg` is
+not a predictor in this model. To get things to work correctly, you need to name
+`deg` in a `params` argument, e.g.,
+```{r, eval = FALSE}
+emmeans(mod, ~ treat | x, at = list(x = 1:3), params = "deg")
+```
 
 
 [Back to Contents](#contents)
