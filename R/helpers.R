@@ -377,10 +377,15 @@ gls_grad = function(object, call, data, V) {
 ### gls objects (nlme package)
 recover_data.gls = function(object, ...) {
     fcall = object$call
-    if (!is.null(fcall$weights))
-        fcall$weights = nlme::varWeights(object$modelStruct)
+    if (!is.null(wts <- fcall$weights)) {
+        wts = nlme::varWeights(object$modelStruct)
+        fcall$weights = NULL
+    }
     trms = delete.response(terms(nlme::getCovariateFormula(object)))
-    recover_data(fcall, trms, object$na.action, ...)
+    result = recover_data.call(fcall, trms, object$na.action, ...)
+    if (!is.null(wts))
+        result[["(weights)"]] = wts
+    result
 }
 
 emm_basis.gls = function(object, trms, xlev, grid, 

@@ -8,7 +8,7 @@ emmeans 1.4.5.009xxxxxxx
     and `trend` arguments (#179)
   * Added `plim` argument to `pwpp()` to allow controlling the scale
   * More documentation on using `params` (#180)
-  
+  * Robustified support for `gls` objects when data are incomplete (#181)
 
 emmeans 1.4.5
 -------------
