@@ -9,6 +9,10 @@ emmeans 1.4.5.009xxxxxxx
   * Added `plim` argument to `pwpp()` to allow controlling the scale
   * More documentation on using `params` (#180)
   * Robustified support for `gls` objects when data are incomplete (#181)
+  * Fixed bug in `joint_tests()` and `test(..., joint = TRUE)` that
+    can occur with nontrivial `@dffun()` slots (#184)
+  * Improved support for Satterthwaite-based methods in `gls` (#185)
+    and renamed `boot-satterthwaite` to `appx-satterthwaite` 
 
 emmeans 1.4.5
 -------------

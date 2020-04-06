@@ -246,13 +246,14 @@ recover_data.lme = function(object, data, ...) {
 
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("containment", "satterthwaite", "boot-satterthwaite", "auto"), 
+        mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite"), 
         sigmaAdjust = TRUE, options, ...) {
     mode = match.arg(mode)
+    if (mode == "boot-satterthwaite") mode = "appx-satterthwaite"  # backward compatibility
     if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
         mode = "fixed"
     if (mode == "auto")
-        mode = ifelse(is.null(object$apVar), "containment", "boot-satterthwaite")
+        mode = ifelse(is.null(object$apVar), "containment", "appx-satterthwaite")
     if (is.null(object$apVar))
         mode = "containment"
     contrasts = object$contrasts
@@ -272,7 +273,7 @@ emm_basis.lme = function(object, trms, xlev, grid,
         dfargs = list(df = options$df)
         dffun = function(k, dfargs) dfargs$df
     }
-    else if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
+    else if (mode %in% c("satterthwaite", "appx-satterthwaite")) {
         G = try(gradV.kludge(object), silent = TRUE)
         ###! not yet, doesn't work G = try(lme_grad(object, object$call, object$data, V))
         if (inherits(G, "try-error"))
@@ -375,51 +376,58 @@ gls_grad = function(object, call, data, V) {
 }
 
 ### gls objects (nlme package)
-recover_data.gls = function(object, ...) {
+recover_data.gls = function(object, data, ...) {
     fcall = object$call
     if (!is.null(wts <- fcall$weights)) {
         wts = nlme::varWeights(object$modelStruct)
         fcall$weights = NULL
     }
     trms = delete.response(terms(nlme::getCovariateFormula(object)))
-    result = recover_data.call(fcall, trms, object$na.action, ...)
+    result = recover_data.call(fcall, trms, object$na.action, data = data, ...)
     if (!is.null(wts))
         result[["(weights)"]] = wts
+    if (!missing(data))
+        attr(result, "misc") = list(data = data)
     result
 }
 
 emm_basis.gls = function(object, trms, xlev, grid, 
-                         mode = c("auto", "df.error", "satterthwaite", "boot-satterthwaite"), 
-                         options, ...) {
+                         mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite"), 
+                         options, misc, ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = coef(object)
     V = .my.vcov(object, ...)
     nbasis = estimability::all.estble
-    misc = list()
     mode = match.arg(mode)
+    if (mode == "boot-satterthwaite") mode = "appx-satterthwaite"  # backward compatibility
     if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
         mode = "df.error"
     if (mode == "auto")
         mode = ifelse(is.null(object$apVar), "df.error", "satterthwaite")
     if (!is.matrix(object$apVar))
         mode = "df.error"
-    if (mode %in% c("satterthwaite", "boot-satterthwaite")) {
+    if (mode %in% c("satterthwaite", "appx-satterthwaite")) {
+        data = if(is.null(misc$data))
+            eval(object$call$data, parent.frame(2))
+        else
+            misc$data
+        misc = list()
         chk = attr(object$apVar, "Pars")
         if(max(abs(coef(object$modelStruct) - chk[-length(chk)])) > .001) {
-            message("Analytical Satterthwaite method not available; using boot-satterthwaite")
-            mode = "boot-satterthwaite"
+            message("Analytical Satterthwaite method not available; using appx-satterthwaite")
+            mode = "appx-satterthwaite"
         }
-        if (mode == "boot-satterthwaite") {
+        if (mode == "appx-satterthwaite") {
             G = try(gradV.kludge(object, "varBeta", call = object$call,
-                                 data = eval(object$call$data)),
+                                 data = data),
                     silent = TRUE)
         }
         else
-            G = try(gls_grad(object, object$call, eval(object$call$data), V))
+            G = try(gls_grad(object, object$call, data, V))
         if (inherits(G, "try-error")) {
-            sugg = ifelse(mode == "satterthwaite", "boot-satterthwaite", "df.error")
+            sugg = ifelse(mode == "satterthwaite", "appx-satterthwaite", "df.error")
             stop("Can't estimate Satterthwaite parameters.\n",
                  "  Try adding the argument 'mode = \"", sugg, "\"'", call. = FALSE)
         }

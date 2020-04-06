@@ -126,7 +126,7 @@ test.emmGrid = function(object, null = 0,
             if (inherits(F, "try-error"))
                 c(df1 = r, df2 = NA,  F.ratio = NA, p.value = NA, note = 1)
             else {
-                df2 = object@dffun(tQ, object@dfargs)
+                df2 = min(apply(tQ, 1, function(.) object@dffun(., object@dfargs)))
                 if (is.na(df2))
                     p.value = pchisq(F*r, r, lower.tail = FALSE)
                 else
