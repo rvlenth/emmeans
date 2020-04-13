@@ -319,3 +319,22 @@ model.frame = function(formula, data, ...) {
 }
 # of possible use as fail in .requireNS
 .nothing = function(...) invisible()
+
+
+### Utilities for converting symm matrices to and from lower-triangle storage mode
+.get.lt = function(X) {
+    rtn = X[lower.tri(X, diag = TRUE)]
+    attr(rtn, "nrow") = nrow(X)
+    rtn
+}
+
+.lt2mat = function(lt) {
+    if (is.null(n <- attr(lt, "nrow")))
+        n = (sqrt(8 * length(lt) + 1) - 1) / 2
+    X = matrix(NA, nrow = n, ncol = n)
+    lti = which(lower.tri(X, diag = TRUE))
+    X[lti] = lt
+    X = t(X)
+    X[lti] = lt
+    X
+}

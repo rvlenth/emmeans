@@ -355,7 +355,7 @@ gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data
 
 #--------------------------------------------------------------
 
-### new way to get gradients for gls models
+### new way to get jacobians for gls models
 gls_grad = function(object, call, data, V) {
     obj = object$modelStruct
     conLin = object
@@ -367,10 +367,10 @@ gls_grad = function(object, call, data, V) {
     func = function(x) {
         obj = nlme::`coef<-`(obj, value = x)
         tmp = nlme::glsEstimate(obj, conLin)
-        crossprod(tmp$sigma * tmp$varBeta)
+        .get.lt(crossprod(tmp$sigma * tmp$varBeta))  # lower triangular form
     }
     res = numDeriv::jacobian(func, coef(obj))
-    G = lapply(seq_len(ncol(res)), function(j) matrix(res[, j], ncol = ncol(V)))
+    G = lapply(seq_len(ncol(res)), function(j) .lt2mat(res[, j]))
     G[[1 + length(G)]] = 2 * V  # gradient wrt log sigma
     G
 }

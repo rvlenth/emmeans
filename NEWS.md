@@ -12,7 +12,9 @@ emmeans 1.4.5.009xxxxxxx
   * Fixed bug in `joint_tests()` and `test(..., joint = TRUE)` that
     can occur with nontrivial `@dffun()` slots (#184)
   * Improved support for Satterthwaite-based methods in `gls` (#185)
-    and renamed `boot-satterthwaite` to `appx-satterthwaite` 
+    and renamed `boot-satterthwaite` to `appx-satterthwaite` (#176)
+  * Further repairs to nesting-related code (#186)
+  
 
 emmeans 1.4.5
 -------------

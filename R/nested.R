@@ -137,6 +137,7 @@ add_grouping = function(object, newname, refname, newlevs) {
     #     if(!is.na(pmatch(dots$weights, "show.levels")))
     #         stop('weights = "show.levels" is not supported for nested models.')
 
+    orig.by = by   # save original 'by' vars
     #### Two issues to worry about....
     # (1) specs contains nested factors. We need to include their grouping factors
     xspecs = intersect(union(specs, by), names(nesting))
@@ -211,6 +212,13 @@ add_grouping = function(object, newname, refname, newlevs) {
     # preserve any nesting that still exists
     nesting = nesting[names(nesting) %in% names(result@levels)]
     result@model.info$nesting =   if (length(nesting) > 0) nesting    else NULL
+    
+    # resolve 'by'
+    by = orig.by
+    if (length(xspecs <- intersect(by, names(nesting))))
+        by = union(unlist(nesting[xspecs]), by)
+    result@misc$by.vars = by
+    
     result
 }
 
@@ -225,10 +233,7 @@ add_grouping = function(object, newname, refname, newlevs) {
             by = union(by, nesting[[nm]])
             message("Note: Grouping factor(s) for '", nm, "' have been added to the 'by' list.")
         }
-    facs = setdiff(names(nesting), by)
-    if (length(facs) == 0)
-        stop("There are no factor levels left to contrast. Try taking nested factors out of 'by'.")
-    
+
     if(!is.character(method))
         stop ("Non-character contrast methods are not supported with nested objects")
     
@@ -239,6 +244,8 @@ add_grouping = function(object, newname, refname, newlevs) {
 
     wkrg = rgobj # working copy
     facs = setdiff(names(wkrg@levels), by)  # these are the factors we'll combine & contrast
+    if (length(facs) == 0)
+        stop("There are no factor levels left to contrast. Try taking nested factors out of 'by'.")
     if (!is.null(display <- wkrg@misc$display))
         wkrg = wkrg[which(display), drop.levels = TRUE]
     wkrg@model.info$nesting = wkrg@misc$display = NULL
@@ -347,24 +354,29 @@ add_grouping = function(object, newname, refname, newlevs) {
                 pfac = fac[, fac[nm, ] == 2, drop = FALSE]
                 pfac[nm, ] = 1 # make own entry 1 so it isn't nested in self
             }
-            nst = unique(as.character(apply(pfac, 2, function(col) nms[col == 2])))
+            nst = .strip.supersets(apply(pfac, 2, function(col) nms[col == 2]))
             if (length(nst) > 0)
                 result[[nm]] = union(result[[nm]], nst)
         }
-        ### old code -- included some specious results
-        # for (j in seq_len(ncol(fac))) {
-        #     if (any(fac[, j] == 2)) {
-        #         nst = nms[fac[, j] == 1]
-        #         for (nm in nst)
-        #             result[[nm]] = nms[fac[, j] == 2]
-        #     }
-        # }
     }
     # include nesting factors that are themselves nested
     for (nm in names(result))
         result[[nm]] = union(unlist(result[result[[nm]]]), result[[nm]])
     
     result
+}
+
+# strip supersets from a list and condense down to a character vector
+# e.g., lst = list("a", c("A", "B")) --> "A"
+.strip.supersets = function(lst) {
+    if (is.list(lst) && (length(lst) > 1)) {
+        lst = lst[order(sapply(lst, length))]  # order by length
+        for (i in length(lst):2) {
+            tst = sapply(lst[1:(i-1)], function(x) all(x %in% lst[[i]]))
+            if (any(tst)) lst[[i]] = NULL
+        }
+    }
+    unique(unlist(lst))
 }
 
 # internal function to format a list of nested levels
