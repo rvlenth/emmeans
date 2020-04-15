@@ -546,6 +546,7 @@ vignette: >
       * [Back-transforming](confidence-intervals.html#tran)
       * [Bias adjustment](transformations.html#bias-adj)
       * [Custom](transformations.html#special)
+      * [faking](transformations.html#faking)
       * [Faking a log transformation](transformations.html#logs)
       * [with link function](transformations.html#tranlink)
       * [Log](comparisons.html#logs)

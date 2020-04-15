@@ -14,7 +14,8 @@ emmeans 1.4.5.009xxxxxxx
   * Improved support for Satterthwaite-based methods in `gls` (#185)
     and renamed `boot-satterthwaite` to `appx-satterthwaite` (#176)
   * Further repairs to nesting-related code (#186)
-  
+  * Fix `transform` argument in `ref_grid()` so it is same as 
+    in `regrid()` (#188)
 
 emmeans 1.4.5
 -------------

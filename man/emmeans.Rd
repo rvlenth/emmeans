@@ -6,7 +6,7 @@
 \usage{
 emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
   2, mean), contr, options = get_emm_option("emmeans"), weights, offset,
-  trend, ...)
+  trend, ..., tran)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}; or a fitted model object
@@ -68,6 +68,9 @@ If these occur, usually they can be resolved by providing complete (or at least
 longer) argument names; or by isolating non-\code{ref_grid} arguments in
 \code{options}; or by calling \code{ref_grid} separately and passing the
 result as \code{object}. See a not-run example below.}
+
+\item{tran}{Placeholder to prevent it from being included in \code{...}.
+If non-missing, it is added to `options`}
 }
 \value{
 When \code{specs} is a \code{character} vector or one-sided formula,

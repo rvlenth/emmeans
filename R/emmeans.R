@@ -143,6 +143,8 @@ emmeans.list = function(object, specs, ...) {
 #'   longer) argument names; or by isolating non-\code{ref_grid} arguments in
 #'   \code{options}; or by calling \code{ref_grid} separately and passing the
 #'   result as \code{object}. See a not-run example below.
+#' @param tran Placeholder to prevent it from being included in \code{...}.
+#'   If non-missing, it is added to `options`
 #'   
 #' @return   When \code{specs} is a \code{character} vector or one-sided formula,
 #'   an object of class \code{"emmGrid"}. A number of methods
@@ -258,12 +260,11 @@ emmeans.list = function(object, specs, ...) {
 emmeans = function(object, specs, by = NULL, 
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 
                    contr, options = get_emm_option("emmeans"), 
-                   weights, offset, trend, ...) {
+                   weights, offset, trend, ..., tran) {
     
     if(!is(object, "emmGrid")) {
         object = ref_grid(object, ...)
     }
-###    options$type = list(...)$type  # note type if in ...
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
                              contr = contr, weights = weights, 
@@ -280,6 +281,9 @@ emmeans = function(object, specs, by = NULL,
     
     if (!missing(trend)) {
         stop("The 'trend' argument has been deprecated. Use 'emtrends()' instead.")
+    }
+    if (!missing(tran)) {
+        options $tran = tran
     }
     
     if(is.null(nesting <- object@model.info$nesting)) 

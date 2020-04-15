@@ -6,9 +6,8 @@
 \usage{
 ref_grid(object, at, cov.reduce = mean,
   cov.keep = get_emm_option("cov.keep"), mult.names, mult.levs,
-  options = get_emm_option("ref_grid"), data, df, type,
-  transform = c("none", "response", "mu", "unlink", "log"), nesting, offset,
-  sigma, ...)
+  options = get_emm_option("ref_grid"), data, df, type, transform, nesting,
+  offset, sigma, ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -55,7 +54,7 @@ df)}. See \code{\link{update.emmGrid}}.}
 \code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the
 section below on prediction types and transformations.}
 
-\item{transform}{Character value. If other than \code{"none"}, the reference
+\item{transform}{Character, logical, or list. If non-missing, the reference
 grid is reconstructed via \code{\link{regrid}} with the given
 \code{transform} argument. See the section below on prediction types and
 transformations.}

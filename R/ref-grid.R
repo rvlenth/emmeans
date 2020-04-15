@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2019 Russell V. Lenth                                #
+#    Copyright (c) 2012-2020 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -85,7 +85,7 @@
 #' @param type Character value. If provided, this is saved as the
 #'   \code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the
 #'   section below on prediction types and transformations.
-#' @param transform Character value. If other than \code{"none"}, the reference
+#' @param transform Character, logical, or list. If non-missing, the reference
 #'   grid is reconstructed via \code{\link{regrid}} with the given
 #'   \code{transform} argument. See the section below on prediction types and
 #'   transformations.
@@ -340,10 +340,9 @@
 ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("cov.keep"),
                      mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
-                     transform = c("none", "response", "mu", "unlink", "log"), 
-                     nesting, offset, sigma, ...) 
+                     transform, nesting, offset, sigma, ...) 
 {
-    transform = match.arg(transform)
+    ### transform = match.arg(transform)
     if (!missing(df)) {
         if(is.null(options)) options = list()
         options$df = df
@@ -751,7 +750,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         result@misc$postGridHook = NULL
         result = hook(result, ...)
     }
-    if(transform != "none")
+    if(!missing(transform))
         result = regrid(result, transform = transform, sigma = sigma, ...)
     
     .save.ref_grid(result)
