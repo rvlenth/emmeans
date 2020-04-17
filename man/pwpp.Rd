@@ -92,3 +92,7 @@ emm = emmeans(pigs.lm, ~ percent | source)
 pwpp(emm)
 pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
 }
+\seealso{
+A numerical display of essentially the same results is available
+  from \code{\link{pwpm}}
+}

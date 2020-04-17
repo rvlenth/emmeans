@@ -16,6 +16,9 @@ emmeans 1.4.5.009xxxxxxx
   * Further repairs to nesting-related code (#186)
   * Fix `transform` argument in `ref_grid()` so it is same as 
     in `regrid()` (#188)
+  * Added `pwpm()` function for displaying estimates, pairwise 
+    comparisons, and *P* values in matrix form
+    
 
 emmeans 1.4.5
 -------------

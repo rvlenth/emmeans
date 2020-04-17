@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2019 Russell V. Lenth                                #
+#    Copyright (c) 2012-2020 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -85,6 +85,8 @@
 #' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
 #'   for \code{pwpp} to work.
 #'
+#' @seealso A numerical display of essentially the same results is available
+#'   from \code{\link{pwpm}}
 #' @export
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
@@ -301,4 +303,193 @@ gran = function(x, min_incr = .01) {
     x[ord] = exp(tx)
     x
 }
+
+
+
+#' Pairwise P-value matrix (plus other statistics)
+#'
+#' This function presents results from \code{emmeans} and pairwise comparisons
+#' thereof in a compact way. It displays a matrix (or matrices) of estimates,
+#' pairwise differences, and P values. The user may opt to exclude any of these
+#' via arguments \code{means}, \code{diffs}, and \code{pvals}, respectively.
+#' To control the direction of the pairwise differences, use \code{reverse};
+#' and to control what appears in the upper and lower triangle(s), use \code{flip}.
+#' Optional arguments are passed to \code{contrast.emmGrid} and/or 
+#' \code{summary.emmGrid}, making it possible to control what estimates 
+#' and tests are displayed.
+#'
+#' @param emm An \code{emmGrid} object
+#' @param by Character vector of variable(s) in the grid to condition on. These
+#'   will create different matrices, one for each level or level-combination.
+#'   If missing, \code{by} is set to \code{emm@misc$by.vars}.
+#'   Grid factors not in \code{by} are the \emph{primary} factors:
+#'   whose levels or level combinations are compared pairwise.
+#' @param reverse Logical value passed to \code{\link{pairs.emmGrid}}.
+#'   Thus, \code{FALSE} specifies \code{"pairwise"} comparisons 
+#'   (earlier vs. later), and \code{TRUE} specifies \code{"revpairwise"}
+#'   comparisons (later vs. earlier).
+#' @param pvals Logical value. If \code{TRUE}, the pairwise differences 
+#'   of the EMMs are included in each matrix according to \code{flip}.
+#' @param means Logical value. If \code{TRUE}, the estimated marginal means
+#'   (EMMs) from \code{emm} are included in the matrix diagonal(s).
+#' @param diffs Logical value. If \code{TRUE}, the pairwise differences 
+#'   of the EMMs are included in each matrix according to \code{flip}.
+#' @param flip Logical value that determines where P values and differences 
+#'   are placed. \code{FALSE} places the P values in the upper triangle
+#'   and differences in the lower, and \code{TRUE} does just the opposite.
+#' @param digits Integer. Number of digits to display. If missing,
+#'   an optimal number of digits is determined.
+#' @param ... Additional arguments passed to \code{\link{contrast.emmGrid}} and 
+#'   \code{\link{summary.emmGrid}}. You should \emph{not} include \code{method}
+#'   here, because pairwise comparisons are always used. 
+#'
+#' @return A matrix or `list` of matrices, one for each `by` level.
+#' 
+#' @seealso A graphical display of essentially the same results is available
+#'   from \code{\link{pwpp}}
+#' @export
+#'
+#' @examples
+#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' 
+#' pwpm(warp.emm)
+#' 
+#' # use dot options to specify noninferiority tests
+#' pwpm(warp.emm, by = NULL, side = ">", delta = 5, adjust = "none")
+pwpm = function(emm, by, reverse = FALSE,
+                pvals = TRUE, means = TRUE, diffs = TRUE, 
+                flip = FALSE, digits, ...) {
+    if(missing(by)) 
+        by = emm@misc$by.vars
+    
+    emm = update(emm, by = by)
+    pri = paste(emm@misc$pri.vars, collapse = ":")
+    mns = confint(emm, ...)
+    mns$lbls = do.call(paste, mns[attr(mns, "pri.vars")])
+    estName = attr(mns, "estName")
+    prs = test(pairs(emm, reverse = reverse, ...), ...)
+    diffName = attr(prs, "estName")
+    null.hyp = "0"
+    if (!reverse) 
+        trifcn = upper.tri
+    else {
+        flip = !flip
+        trifcn = lower.tri
+    }
+    
+    if (!is.null(prs$null)) {
+        null.hyp = as.character(signif(unique(prs$null), digits = 5))
+        if (length(null.hyp) > 1)
+            null.hyp = "(various values)"
+    }
+    mby = .find.by.rows(mns, by)
+    pby = .find.by.rows(prs, by)
+
+    
+    if(opt.dig <- missing(digits)) {
+        tmp = mns[[estName]] + mns[["SE"]] * cbind(rep(-2, nrow(mns)), 0, 2)
+        digits = max(apply(tmp, 1, .opt.dig))
+        opt.dig = TRUE
+    }
+
+    result = lapply(seq_along(mby), function(i) {
+        if(opt.dig) {
+            pv = prs$p.value[pby[[i]]]
+            fpv = sprintf("%6.4f", pv) 
+            fpv[pv < 0.0001] = "<.0001"
+        }
+        else
+            fpv = format(prs$p.value[pby[[i]]], digits = digits)
+        fmn = format(mns[mby[[i]], estName], digits = digits)
+        fdiff = format(prs[pby[[i]], diffName], digits = digits) 
+        
+        lbls = mns$lbls[mby[[i]]]
+        n = length(lbls)
+        mat = matrix("", nrow = n, ncol = n, dimnames = list(lbls, lbls))
+        if(diffs) {
+            mat[trifcn(mat)] = fdiff
+            mat = t(mat)
+        }
+        if (pvals)
+            mat[trifcn(mat)] = fpv
+        if (means)
+            diag(mat) = fmn
+        else { # trim off empty row and col
+            idx = seq_len(n - 1)
+            if (pvals && !diffs)
+                mat = mat[idx, 1 + idx]
+            if (!pvals && diffs)
+                mat = mat[1 + idx, idx]
+        }
+        if (flip) t(mat)
+        else mat
+    })
+    if (reverse) 
+        flip = !flip
+    names(result) = paste(paste(by, collapse = ", "), "=", names(mby))
+    if (length(result) == 1)
+        result = result[[1]]
+    class(result) = c("pwpm", "list")
+    attr(result, "parms") = c(pvals = pvals, diffs = diffs, means = means, pri = pri,
+            estName = estName, diffName = diffName, reverse = reverse, flip = flip,
+            type = attr(mns, "type"), adjust = attr(prs, "adjust"),
+            side = attr(prs, "side"), delta = attr(prs, "delta"),
+            null = null.hyp)
+    result
+}
+
+#' @export
+print.pwpm = function(x, ...) {
+    parms = attr(x, "parms")
+    attr(x, "class") = attr(x, "parms") = NULL
+    if ((islist <- !is.matrix(x)))
+        entries = seq_along(x)
+    else {
+        entries = 1
+        m = x 
+    }
+
+    for (i in entries) {
+        if (islist) {
+            cat(paste0("\n", names(x)[i], "\n"))
+            m = x[[i]]
+        }
+        if (parms["means"])
+            diag(m) = paste0("[", diag(m), "]")
+        print(m, quote = FALSE, right = TRUE, na.print = "nonEst")
+    }
+    
+    # print a parm and its name if present unless it's in excl
+    # optional subst is NAMED vector where each possibilitty MUST be present
+    catparm = function(f, excl = "0", delim = "  ", quote = TRUE, subst) {
+        if(!is.na(pf <- parms[f]) && !(pf %in% excl)) {
+            if (!missing(subst)) pf = subst[pf]
+            if (quote) pf = dQuote(pf)
+            cat(paste0(delim, f, " = ", pf))
+        }
+    }
+    cat(paste0("\nRow and column labels: ", parms["pri"], "\n"))
+    if (parms["pvals"]) {
+        cat(paste0(ifelse(parms["flip"], "Lower", "Upper"), " triangle: P values "))
+        catparm("null", quote = FALSE)
+        catparm("side", subst = c("-1" = "<", "1" = ">"))
+        catparm("delta", quote = FALSE)
+        catparm("adjust", "none")
+        cat("\n")
+    }
+    if (parms["means"]) {
+        cat(paste0("Diagonal: [Estimates] (", parms["estName"], ") "))
+        catparm("type", "link")
+        cat("\n")
+    }
+    if (parms["diffs"]) {
+        cat(paste0(ifelse(parms["flip"], "Lower", "Upper"), " triangle: Comparisons (",
+                   parms["diffName"], ")   "))
+        if (parms["reverse"]) cat("later vs. earlier\n")
+        else cat("earlier vs. later\n")
+    }
+    invisible(x)
+}
+    
 
