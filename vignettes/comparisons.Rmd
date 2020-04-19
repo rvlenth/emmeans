@@ -51,6 +51,31 @@ earlier levels; if you want the comparisons to go in the other direction, use
 you may specify `by` factor(s) to perform the comparisons separately at the 
 levels of those factors.
 
+### Matrix displays {#pwpm}
+<!-- @index `pwpm()`; Pairwise comparisons!Matrix displays; -->
+The numerical main results associated with pairwise comparisons can be presented
+compactly in matrix form via the `pwpm()` function. We simply hand it the
+`emmGrid` object to use in making the comparisons:
+```{r}
+pwpm(pigs.emm.s)
+```
+This matrix shows the EMMs along the diagonal, $P$ values in the upper triangle,
+and the differences in the lower triangle. Options exist to switch off any one of these
+and to switch which triangle is used for the latter two. Also, optional
+arguments are passed. For instance, we can reverse the direction of the comparisons,
+suppress the display of EMMs, swap where the $P$ values go,
+and perform noninferiority tests with a threshold of 0.05 as follows:
+```{r}
+pwpm(pigs.emm.s, means = FALSE, flip = TRUE,     # args for pwpm()
+     reverse = TRUE,                             # args for pairs()
+     side = ">", delta = 0.05, adjust = "none")  # args for test()
+```
+With all three *P* values so small, we have fish, soy, and skim in increasing order of
+noninferiority based on the given threshold.
+
+When more than one factor is present, an existing or newly specified `by` variables()
+can split the results into l list of matrices.
+
 
 ### Effect size
 <!-- @index Effect size; Cohen's *d*; `eff_size()` -->

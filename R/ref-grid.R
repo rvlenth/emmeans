@@ -332,6 +332,7 @@
 #' ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 #' 
 #' # Using 'params'
+#' require("splines")
 #' my.knots = c(2.5, 3, 3.5)
 #' mod = lm(Sepal.Length ~ Species * ns(Sepal.Width, knots = my.knots), data = iris)
 #' ## my.knots is not a predictor, so need to name it in 'params'

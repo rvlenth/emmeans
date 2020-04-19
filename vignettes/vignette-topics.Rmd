@@ -76,7 +76,7 @@ vignette: >
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)
-  * [Cohen's *d*](comparisons.html#pairwise)
+  * [Cohen's *d*](comparisons.html#pwpm)
   * [Compact letter displays](comparisons.html#CLD)
   * Comparisons
       * [Back-transforming](comparisons.html#logs)
@@ -136,8 +136,8 @@ vignette: >
 
 
   * [`eff` contrasts](comparisons.html#contrasts)
-  * [`eff_size()`](comparisons.html#pairwise)
-  * [Effect size](comparisons.html#pairwise)
+  * [`eff_size()`](comparisons.html#pwpm)
+  * [Effect size](comparisons.html#pwpm)
   * [`emm_basis()`](xtending.html#intro)
       * [Arguments and returned value](xtending.html#ebreqs)
       * [Communicating with `recover_data()`](xtending.html#communic)
@@ -407,6 +407,7 @@ vignette: >
       * [Interpreting](basics.html#pvalues)
   * [`pairs()`](comparisons.html#pairwise)
   * [Pairwise comparisons](comparisons.html#pairwise)
+      * [Matrix displays](comparisons.html#pwpm)
   * [`pairwise` contrasts](comparisons.html#contrasts)
   * [Pairwise *P*-value plots](comparisons.html#pwpp)
   * [`params`](basics.html#params)
@@ -436,6 +437,7 @@ vignette: >
       * [Reference grid](predictions.html#ref-grid)
       * [Total SD](predictions.html#feedlot)
   * [`print.summary_emm()`](basics.html#emmobj)
+  * [`pwpm()`](comparisons.html#pwpm)
   * [`pwpp()`](comparisons.html#pwpp)
 
 

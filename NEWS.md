@@ -1,7 +1,7 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.5.009xxxxxxx
-------------------------
+emmeans 1.4.6
+-------------
 
   * Improvements to `coxph` support for models with strata
   * `emmeans()` with `specs` of class `list` now passes any `offset` 

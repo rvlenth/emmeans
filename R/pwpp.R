@@ -372,10 +372,10 @@ pwpm = function(emm, by, reverse = FALSE,
     diffName = attr(prs, "estName")
     null.hyp = "0"
     if (!reverse) 
-        trifcn = upper.tri
+        trifcn = lower.tri
     else {
         flip = !flip
-        trifcn = lower.tri
+        trifcn = upper.tri
     }
     
     if (!is.null(prs$null)) {
@@ -407,12 +407,12 @@ pwpm = function(emm, by, reverse = FALSE,
         lbls = mns$lbls[mby[[i]]]
         n = length(lbls)
         mat = matrix("", nrow = n, ncol = n, dimnames = list(lbls, lbls))
-        if(diffs) {
-            mat[trifcn(mat)] = fdiff
+        if(pvals) {
+            mat[trifcn(mat)] = fpv
             mat = t(mat)
         }
-        if (pvals)
-            mat[trifcn(mat)] = fpv
+        if (diffs)
+            mat[trifcn(mat)] = fdiff
         if (means)
             diag(mat) = fmn
         else { # trim off empty row and col
@@ -484,7 +484,7 @@ print.pwpm = function(x, ...) {
         cat("\n")
     }
     if (parms["diffs"]) {
-        cat(paste0(ifelse(parms["flip"], "Lower", "Upper"), " triangle: Comparisons (",
+        cat(paste0(ifelse(parms["flip"], "Upper", "Lower"), " triangle: Comparisons (",
                    parms["diffName"], ")   "))
         if (parms["reverse"]) cat("later vs. earlier\n")
         else cat("earlier vs. later\n")
