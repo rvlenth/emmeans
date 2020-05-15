@@ -106,7 +106,9 @@ approximate, and in some cases may fail to accurately reflect the pairwise
 comparisons of the estimates -- especially when estimates having large and
 small standard errors are intermingled in just the wrong way. Note that the
 maximum and minimum estimates have arrows only in one direction, since there
-is no need to compare them with anything higher or lower, respectively.
+is no need to compare them with anything higher or lower, respectively. See
+the \href{../doc/xplanations.html#arrows}{\code{vignette("xplanations",
+"emmeans")}} for details on how these are derived.
 
 If \code{adjust} or \code{int.adjust} are not supplied, they default to the 
 internal \code{adjust} setting saved in \code{pairs(x)} and \code{x} 

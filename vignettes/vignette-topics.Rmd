@@ -78,11 +78,14 @@ vignette: >
   * [`coef()`](comparisons.html#contrasts)
   * [Cohen's *d*](comparisons.html#pwpm)
   * [Compact letter displays](comparisons.html#CLD)
+  * Comparison arrows
+      * [Derivation](xplanations.html#arrows)
   * Comparisons
       * [Back-transforming](comparisons.html#logs)
       * [Displaying as groups](comparisons.html#CLD)
       * [Displaying *P* values](comparisons.html#pwpp)
       * [Graphical](comparisons.html#graphical)
+          * [How arrows are determined](xplanations.html#arrows)
       * [with logs](comparisons.html#logs)
       * [with overlapping CIs](FAQs.html#CIerror)
   * [Confidence intervals](confidence-intervals.html#summary)
@@ -590,6 +593,7 @@ vignette: >
       * [Basics](basics.html)
       * [Comparisons](comparisons.html)
       * [Confidence intervals and tests](confidence-intervals.html)
+      * [Explanations supplement](xplanations.html)
       * [Extending **emmeans**](xtending.html)
       * [FAQS](FAQs.html)
       * [Interactions](interactions.html)

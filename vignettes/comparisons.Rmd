@@ -116,6 +116,8 @@ The blue bars are confidence intervals for the EMMs, and the red arrows are for
 the comparisons among them. If an arrow from one mean overlaps an arrow from
 another group, the difference is not "significant," based on the `adjust` setting
 (which defaults to `"tukey"`) and the value of `alpha` (which defaults to 0.05). 
+See the ["xplanations" supplement](xplanations.html#arrows) for details on how 
+these are derived.
 
 *Note:* Don't *ever* use confidence intervals for EMMs to perform comparisons; they 
 can be very misleading. Use the comparison arrows instead; or better yet, use `pwpp()`.
