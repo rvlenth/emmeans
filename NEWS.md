@@ -4,6 +4,8 @@ emmeans 1.4.69xxxxxxxx
 -------------
 
   * Repairs to `pwpp()` so it plays nice with nonestimable cases
+  * Added `"xplanations"` vignette with additional documentation on
+    methods used. (comparison arrows, for starters)
   
 
 emmeans 1.4.6
