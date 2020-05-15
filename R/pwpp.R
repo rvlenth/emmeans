@@ -174,6 +174,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         # find ranges to ensure we get tick marks:
         exmaj = c(0, .pvmaj.brk)
         pvtmp = c(plim, con.summ$p.value)
+        pvtmp = pvtmp[!is.na(pvtmp)]
         tick.min = max(exmaj[exmaj <= min(pvtmp)])
         tick.max = min(exmaj[exmaj >= max(pvtmp)])
         
@@ -203,7 +204,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
             emm.summ$minus = emm.summ$pri.fac # for consistency in grouping/labeling
             dig = .opt.dig(emm.summ[, estName])
             emm.summ$fmtval = format(emm.summ[[estName]], digits = dig)
-            tminp = .pval.tran(min(c(tick.min, con.summ$p.value)))
+            tminp = .pval.tran(min(c(tick.min, con.summ$p.value), na.rm=TRUE))
             pos = .pval.inv(tminp - .025)
             lpad = .012 * (add.space + max(nchar(emm.summ$fmtval))) * ncols # how much space needed for labels rel to (0,1)
             lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
@@ -275,8 +276,10 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
 
 ### quick & dirty algorithm to Stretch out P values so more distinguishable on transformed scale
 gran = function(x, min_incr = .01) {
+    savex = x
+    x = x[!is.na(x)]
     if ((length(x) <= 3) || (diff(range(x)) == 0))
-        return(x)
+        return(savex)
     
     kink = function(xx) { # linear spline basis; call with knot subtracted
         xx[xx < 0] = 0
@@ -301,7 +304,8 @@ gran = function(x, min_incr = .01) {
         tx = ttx
     tx[tx > 0] = 0
     x[ord] = exp(tx)
-    x
+    savex[!is.na(savex)] = x
+    savex
 }
 
 

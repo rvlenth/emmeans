@@ -1,5 +1,11 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.69xxxxxxxx
+-------------
+
+  * Repairs to `pwpp()` so it plays nice with nonestimable cases
+  
+
 emmeans 1.4.6
 -------------
 

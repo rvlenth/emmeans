@@ -537,7 +537,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
     attr(summ, "clNames") = cnm  # will be NULL if infer[1] is FALSE
     if (is.null(misc$pri.vars) || length(misc$pri.vars) == 0)
         misc$pri.vars = names(object@levels)
-    attr(summ, "pri.vars") = setdiff(union(misc$pri.vars, misc$by.vars), by)
+    attr(summ, "pri.vars") = setdiff(union(misc$pri.vars, misc$by.vars), c(by, ".wgt.", ".offset."))
     attr(summ, "by.vars") = by
     attr(summ, "adjust") = adjust
     attr(summ, "side") = side
