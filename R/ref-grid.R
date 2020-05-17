@@ -527,7 +527,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     basis = emm_basis(object, trms, xlev, grid, misc = attr(data, "misc"), options = options, ...)
     if(length(basis$bhat) != ncol(basis$X))
         stop("Non-conformable elements in reference grid.\n",
-             " Probably due to rank deficiency not handled as expected.",
+             " Possibly due to rank deficiency not handled as expected.",
              call. = TRUE)
     
     misc = basis$misc

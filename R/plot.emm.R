@@ -352,25 +352,37 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             ll = llen[rows] = soln[seq_len(neach)]
             rl = rlen[rows] = soln[neach + seq_len(neach)]
             
-            # Perhaps put some kind of a check here?
+            # Abort if negative lengths
+            if (any(c(rl, ll) < 0)) {
+                stop("Aborted -- Some comparison arrows have negative length!", 
+                     call. = FALSE)
+            }
+            
+            # Overlap check
             for (i in seq_len(npairs)) {
                 v = 1 - v1[i]
                 obsv = 1 - abs(dif[i]) / ifelse(dif[i] > 0, 
                                                 ll[id1[i]] + rl[id2[i]], 
                                                 rl[id1[i]] + ll[id2[i]])
                 if (v*obsv < 0)
-                    message("Comparison discrepancy in group ", by, 
+                    warning("Comparison discrepancy in group ", by, 
                             ", ", psumm[i, 1], 
                             ":\n    Target overlap = ", round(v, 4),
-                            ", overlap on graph = ", round(obsv, 4))
+                            ", overlap on graph = ", round(obsv, 4),
+                            call. = FALSE)
             }
         }
         # shorten arrows that go past the data range
         rng = range(est)
+        diffr = diff(rng)
         ii = which(est - llen < rng[1])
-        llen[ii] = est[ii] - rng[1] + .05 * diff(rng)
+        llen[ii] = est[ii] - rng[1] + .02 * diffr
         ii = which(est + rlen > rng[2])
-        rlen[ii] = rng[2] - est[ii] + .05 * diff(rng)
+        rlen[ii] = rng[2] - est[ii] + .02 * diffr
+        
+        # remove arrows completely from extremes
+        llen[est < rng[1] + .0001 * diffr] = NA
+        rlen[est > rng[2] - .0001 * diffr] = NA
         
         invtran = I
         if (typeid == 1) {
@@ -432,50 +444,40 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     else {  ## ggplot method
         summ$lcl = lcl
         summ$ucl = ucl
-        if (horizontal) {
-            grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) 
-            if (PIs) 
-                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lpl, xend = ~upl, 
-                                    y = ~pri.fac, yend = ~pri.fac), 
-                                    color = PI.col, lwd = 2.5, alpha = .15)
-            if (CIs) 
-                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcl, xend = ~ucl, 
-                                    y = ~pri.fac, yend = ~pri.fac), 
-                                    color = CI.col, lwd = 4, alpha = .25)
-            if (!is.null(extra))
-                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcmpl, xend = ~rcmpl, 
-                        y = ~pri.fac, yend = ~pri.fac), 
+
+        # construct horizontal plot - flip coords later if necessary
+        grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) 
+        if (PIs) 
+            grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lpl, xend = ~upl, 
+                                y = ~pri.fac, yend = ~pri.fac), 
+                                color = PI.col, lwd = 2.5, alpha = .15)
+        if (CIs) 
+            grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcl, xend = ~ucl, 
+                                y = ~pri.fac, yend = ~pri.fac), 
+                                color = CI.col, lwd = 4, alpha = .25)
+        if (!is.null(extra)) {
+            grobj = grobj + 
+                ggplot2::geom_segment(ggplot2::aes_(x = ~the.emmean, 
+                        xend = ~lcmpl, y = ~pri.fac, yend = ~pri.fac), 
+                        arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
+                            type = "closed"), color = comp.col, 
+                        data = summ[!is.na(summ$lcmpl), ]) +
+                ggplot2::geom_segment(ggplot2::aes_(x = ~the.emmean, 
+                    xend = ~rcmpl, y = ~pri.fac, yend = ~pri.fac), 
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
-                        ends = "both", type = "closed"), color = comp.col)
-            if (length(byv) > 0)
-                grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
-                                           labeller = "label_both")
-            grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
-            if (missing(xlab)) xlab = attr(summ, "estName")
-            if (missing(ylab)) ylab = facName
+                            type = "closed"), color = comp.col,
+                    data = summ[!is.na(summ$rcmpl), ])
         }
-        else {
-            grobj = ggplot2::ggplot(summ, ggplot2::aes_(y = ~the.emmean, x = ~pri.fac)) 
-            if (PIs) 
-                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lpl, yend = ~upl, 
-                            x = ~pri.fac, xend = ~pri.fac), 
-                            color = PI.col, lwd = 2.5, alpha = .15)
-            if (CIs) 
-                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lcl, yend = ~ucl, 
-                            x = ~pri.fac, xend = ~pri.fac), 
-                            color = CI.col, lwd = 4, alpha = .25)
-            if (!is.null(extra))
-                grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(y = ~lcmpl, yend = ~rcmpl, 
-                        x = ~pri.fac, xend = ~pri.fac), 
-                    arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), ends = "both", 
-                        type = "closed"), color = comp.col)
-            if (length(byv) > 0)
-                grobj = grobj + ggplot2::facet_grid(as.formula(paste(". ~ ", 
-                            paste(byv, collapse = "+"))), labeller = "label_both")
-            grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
-            if (missing(ylab)) ylab = attr(summ, "estName")
-            if (missing(xlab)) xlab = facName
-        }
+        if (length(byv) > 0)
+            grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
+                                       labeller = "label_both")
+        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
+        if (missing(xlab)) xlab = attr(summ, "estName")
+        if (missing(ylab)) ylab = facName
+            
+        if(!horizontal)
+            grobj = grobj + ggplot2::coord_flip()
+        
         grobj + ggplot2::labs(x = xlab, y = ylab)
     }
 }

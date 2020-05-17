@@ -6,6 +6,8 @@ emmeans 1.4.69xxxxxxxx
   * Repairs to `pwpp()` so it plays nice with nonestimable cases
   * Added `"xplanations"` vignette with additional documentation on
     methods used. (comparison arrows, for starters)
+  * Touch-ups to `plot()`, especially regarding comparison arrows
+  * Bug fix for `stanreg` models (#196)
   
 
 emmeans 1.4.6

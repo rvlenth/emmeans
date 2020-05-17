@@ -533,8 +533,9 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     if(is.null(contr <- object$contrasts))
         contr = attr(model.matrix(object), "contrasts")
     X = model.matrix(trms, m, contrasts.arg = contr)
-    bhat = rstanarm::fixef(object)
-    V = vcov(object)
+    nms = colnames(X)
+    bhat = rstanarm::fixef(object)[nms]
+    V = vcov(object)[nms,nms]
     misc = list()
     if (!is.null(object$family)) {
         if (is.character(object$family)) # work around bug for stan_polr
@@ -549,7 +550,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
             mode = match.arg(mode, 
                              c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
         
-        xint = match("(Intercept)", colnames(X), nomatch = 0L)
+        xint = match("(Intercept)", nms, nomatch = 0L)
         if (xint > 0L) 
             X = X[, -xint, drop = FALSE]
         k = length(object$zeta)
@@ -577,7 +578,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
         
         misc$respName = as.character.default(terms(object))[2]
     }
-    samp = as.matrix(object$stanfit)[, names(bhat), drop = FALSE]
+    samp = as.matrix(object$stanfit)[, nms, drop = FALSE]
     attr(samp, "n.chains") = object$stanfit@sim$chains
     # estimability...
     nbasis = estimability::all.estble

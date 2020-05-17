@@ -7,9 +7,12 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 ```{r, echo = FALSE, results = "hide", message = FALSE}
 require("emmeans")
-knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
+knitr::opts_chunk$set(fig.width = 4.5, fig.height = 2.0, class.output = "ro",
+                      class.message = "re", class.error = "re", class.warning = "re")
+###knitr::opts_chunk$set(fig.width = 4.5, fig.height = 2.0)
 ```
 
 <!-- @index Vignettes!Explanations supplement -->
@@ -72,6 +75,60 @@ In summary, the algorithm does not always work (in fact it is possible to constr
 
 What is better yet is to simply avoid using comparison arrows altogether and use `pwpp()` or `pwpm()` to display the *P* values directly. 
 
+### Examples and tests
+Here is a constructed example with specified means and somewhat unequal SEs
+```{r, message = FALSE}
+m = c(6.1, 4.5, 5.4,    6.3, 5.5, 6.7)
+se2 = c(.3, .4, .37,  .41, .23, .48)^2
+lev = list(A = c("a1","a2","a3"), B = c("b1", "b2"))
+foo = emmobj(m, diag(se2), levels = lev, linfct = diag(6))
+plot(foo, CIs = FALSE, comparisons = TRUE)
+```
+
+This came out pretty well. But now let's keep the means and SEs the same but make them correlated. Such correlations happen, for example, in designs with subject effects.
+The function below is used to set a specified intra-sclass correlation, treating `A` as a within-subjects (or split-plot) factor and `B` as a between-subjects (whole-plot) factor.
+We'll start with a corelation of 0.3.
+```{r, message = FALSE}
+mkmat <- function(V, rho = 0, indexes = list(1:3, 4:6)) {
+    sd = sqrt(diag(V))
+    for (i in indexes)
+        V[i,i] = (1 - rho)*diag(sd[i]^2) + rho*outer(sd[i], sd[i])
+    V
+}
+# Intraclass correrlation = 0.3
+foo3 = foo
+foo3@V <- mkmat(foo3@V, 0.3)
+plot(foo3, CIs = FALSE, comparisons = TRUE)
+```
+
+Same with intraclass correlation of 0.6:
+```{r, message = FALSE}
+foo6 = foo
+foo6@V <- mkmat(foo6@V, 0.6)
+plot(foo6, CIs = FALSE, comparisons = TRUE)
+```
+
+Now we have a warning that some arrows don't overlap, but should.
+We can make it even worse by upping the correlation to 0.8:
+```{r, message = FALSE, error = TRUE}
+foo8 = foo
+foo8@V <- mkmat(foo8@V, 0.8)
+plot(foo8, CIs = FALSE, comparisons = TRUE)
+```
+
+Now the solution actually leads to negative arrow lengths.
+
+What is happening here is we are continually reducing the SE of within-B comparisons 
+while keeping the others the same. These all work out if we use `B` as a `by` variable:
+```{r, message = FALSE}
+plot(foo8, CIs = FALSE, comparisons = TRUE, by = "B")
+```
+
+Note that the lengths of the comparison arrows are relatively equal within the levels of `B`. Or, we can use `pwpp()` or `pwpm()` to show the *P* values for all comparisons among the six means:
+```{r}
+pwpp(foo6, sort = FALSE)
+pwpm(foo6)
+```
 
 [Back to Contents](#contents)
 

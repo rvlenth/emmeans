@@ -27,7 +27,11 @@ code {
     background-color: #eeeeee; 
 }
 
-.r code, a code, .ro code { color: inherit; }
+.re { /* class for errors and warnings */
+    color: red;
+}
+
+.r code, a code, .ro code, .re code { color: inherit; }
 
 .vigindex ul { list-style-type: none; }
 .vigindex ul li { list-style: none; }
