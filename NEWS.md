@@ -8,6 +8,7 @@ emmeans 1.4.69xxxxxxxx
     methods used. (comparison arrows, for starters)
   * Touch-ups to `plot()`, especially regarding comparison arrows
   * Bug fix for `stanreg` models (#196)
+  * Fixed error in `emmeans(obj, "1", by = "something")` (#197)
   
 
 emmeans 1.4.6

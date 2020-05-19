@@ -533,9 +533,10 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     if(is.null(contr <- object$contrasts))
         contr = attr(model.matrix(object), "contrasts")
     X = model.matrix(trms, m, contrasts.arg = contr)
-    nms = colnames(X)
-    bhat = rstanarm::fixef(object)[nms]
-    V = vcov(object)[nms,nms]
+    bhat = rstanarm::fixef(object)
+    nms = intersect(colnames(X), names(bhat))
+    bhat = bhat[nms]
+    V = vcov(object)[nms, nms]
     misc = list()
     if (!is.null(object$family)) {
         if (is.character(object$family)) # work around bug for stan_polr
@@ -583,7 +584,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     # estimability...
     nbasis = estimability::all.estble
     all.nms = colnames(X)
-    if (length(names(bhat)) < (n <- length(all.nms))) {
+    if (length(nms) < length(all.nms)) {
         coef = NA * X[1, ]
         coef[names(bhat)] = bhat
         bhat = coef

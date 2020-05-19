@@ -286,6 +286,9 @@ emmeans = function(object, specs, by = NULL,
         options $tran = tran
     }
     
+    if(length(specs) > 0 && specs == "1")
+        specs = character(0)
+    
     if(is.null(nesting <- object@model.info$nesting)) 
         {
         RG = object
