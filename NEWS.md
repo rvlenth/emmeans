@@ -9,6 +9,9 @@ emmeans 1.4.69xxxxxxxx
   * Touch-ups to `plot()`, especially regarding comparison arrows
   * Bug fix for `stanreg` models (#196)
   * Fixed error in `emmeans(obj, "1", by = "something")` (#197)
+  * `eff_size()` now supports `emm_list` objects with a `$contrasts`
+    component, using those contrasts. This helps those who
+    specify `pairwise ~ treatment`.
   
 
 emmeans 1.4.6

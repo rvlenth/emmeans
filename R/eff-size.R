@@ -30,8 +30,12 @@
 #' effect sizes -- unrealistically if in fact \code{sigma} is unknown.
 #' 
 #'
-#' @param object an \code{\link[=emmGrid-class]{emmGrid}} object, typically one defining the EMMs to 
-#' be contrasted.
+#' @param object an \code{\link[=emmGrid-class]{emmGrid}} object, 
+#' typically one defining the EMMs to 
+#' be contrasted. If instead, \code{class(object) == "emm_list"},
+#' such as is produced by \code{emmeans(model, pairwise ~ treatment)},
+#' a message is displayed; the contrasts already therein are used; and 
+#' \code{method} is replaced by \code{"identity"}.
 #' @param sigma numeric scalar, value of the population SD. 
 #' @param edf numeric scalar that specifies the equivalent degrees of freedom
 #'   for the \code{sigma}. This is a way of specifying the uncertainty in \code{sigma},
@@ -109,6 +113,11 @@
 #' # These results illustrate a sobering message that effect sizes are often
 #' # not nearly as accurate as you may think.
 eff_size = function(object, sigma, edf, method = "pairwise", ...) {
+    if (inherits(object, "emm_list") && ("contrasts" %in% names(object))) {
+        message("Since 'object' is a list, we are using the contrasts already present.")
+        object = object$contrasts
+        method = "identity"
+    }
     SE.logsigma = sqrt(1 / (2 * edf))
  
     object = update(object, tran = NULL)

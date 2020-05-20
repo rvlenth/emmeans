@@ -7,8 +7,12 @@
 eff_size(object, sigma, edf, method = "pairwise", ...)
 }
 \arguments{
-\item{object}{an \code{\link[=emmGrid-class]{emmGrid}} object, typically one defining the EMMs to 
-be contrasted.}
+\item{object}{an \code{\link[=emmGrid-class]{emmGrid}} object, 
+typically one defining the EMMs to 
+be contrasted. If instead, \code{class(object) == "emm_list"},
+such as is produced by \code{emmeans(model, pairwise ~ treatment)},
+a message is displayed; the contrasts already therein are used; and 
+\code{method} is replaced by \code{"identity"}.}
 
 \item{sigma}{numeric scalar, value of the population SD.}
 
