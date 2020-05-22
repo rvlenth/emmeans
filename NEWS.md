@@ -12,6 +12,8 @@ emmeans 1.4.69xxxxxxxx
   * `eff_size()` now supports `emm_list` objects with a `$contrasts`
     component, using those contrasts. This helps those who
     specify `pairwise ~ treatment`.
+  * Labels in `contrast()` for factor combinations with `by` groups 
+    were wacky (#199)
   
 
 emmeans 1.4.6
