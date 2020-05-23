@@ -75,6 +75,12 @@
 #' @param df Numeric. If non-missing, a constant number of degrees of freedom to
 #'   use in constructing confidence intervals and \emph{P} values (\code{NA}
 #'   specifies asymptotic results).
+#' @param calc Named list of character value(s) or formula(s).
+#'   The expressions in \code{char} are evaluated and appended to the
+#'   summary, just after the \code{df} column. The expression may include
+#'   any names up through \code{df} in the summary, any additional names in 
+#'   \code{object@grid} (such as \code{.wgt.} or \code{.offset.}), or any
+#'   earlier elements of \code{calc}.
 #' @param null Numeric. Null hypothesis value(s), on the linear-predictor scale,
 #'   against which estimates are tested. May be a single value used for all, or
 #'   a numeric vector of length equal to the number of tests in each family
@@ -120,9 +126,10 @@
 #'   results of \code{as.mcmc}.
 #'   
 #' @section Defaults:
-#'   The \code{misc} slot in \code{object} contains default values for
-#'   \code{by}, \code{infer}, \code{level}, \code{adjust}, \code{type},
-#'   \code{null}, \code{side}, and \code{delta}. These defaults vary depending
+#'   The \code{misc} slot in \code{object} may contain default values for
+#'   \code{by}, \code{calc}, \code{infer}, \code{level}, \code{adjust}, 
+#'   \code{type}, \code{null}, \code{side}, and \code{delta}. 
+#'   These defaults vary depending
 #'   on the code that created the object. The \code{\link{update}} method may be
 #'   used to change these defaults. In addition, any options set using 
 #'   \samp{emm_options(summary = ...)} will trump those stored in the object's 
@@ -281,6 +288,7 @@
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 #' pigs.emm <- emmeans(pigs.lm, "percent", type = "response")
 #' summary(pigs.emm)    # (inherits type = "response")
+#' summary(pigs.emm, calc = c(n = ".wgt."))  # Show sample size
 #' 
 #' # For which percents is EMM non-inferior to 35, based on a 10% threshold?
 #' # Note the test is done on the log scale even though we have type = "response"
@@ -297,7 +305,7 @@
 #' # Consider as some of many possible contrasts among the six cell means
 #' summary(con, infer = c(TRUE, TRUE), adjust = "scheffe", scheffe.rank = 5)
 #'
-summary.emmGrid <- function(object, infer, level, adjust, by, type, df, 
+summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
                         null, delta, side, frequentist, 
                         bias.adjust = get_emm_option("back.bias.adj"),
                         sigma, ...) {
@@ -460,6 +468,20 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df,
             sch.rank = sapply(by.rows, function(.) qr(zapsmall(object@linfct[., , drop = FALSE]))$rank)
         if(length(unique(sch.rank)) > 1)
             fam.info[1] = "uneven"   # This forces ragged.by = TRUE in .adj functions
+    }
+    
+    # Add calculated columns
+    if(!missing(calc) || !is.null(calc <- misc$calc)) {
+        env = c(result, grid[setdiff(names(grid), names(result))])
+        for (v in names(calc)) {
+            elt = rev(as.character(calc[[v]]))[1] # pick out rhs if a formula
+            val = try(eval(parse(text = elt), envir = env), silent = TRUE)
+            if(!inherits(val, "try-error"))
+                result[[v]] = env[[v]] = val
+            else
+                warning("The column '", v, "' could not be calculated, ",
+                " so it is omitted")
+        }
     }
 
     if(infer[1]) { # add CIs

@@ -25,6 +25,14 @@ what arguments to pass to \code{\link{summary.emmGrid}}.
 The \code{update} method allows safer management of these settings than
 by direct modification of its slots.
 }
+\note{
+When it makes sense, an option set by \code{update} will persist into 
+future results based on that object. But some options are disabled as well.
+For example, a \code{calc} option will be nulled-out if \code{contrast}
+is called, because it probably will not make sense to do the same 
+calculations on the contrast results, and in fact the variable(s) needed
+may not even still exist.
+}
 \section{Details}{
 
 The names in \code{\dots} are partially matched against those that are valid, and if a match is found, it adds or replaces the current setting. The valid names are
@@ -89,6 +97,8 @@ of \sQuote{level} to distinguish it from the slot name \sQuote{levels}.}
 
 \item{\code{df}}{(numeric) overrides the default degrees of freedom with a
 specified single value.}
+
+\item{\code{calc}}{(list) additional calculated columns. See \code{\link{summary.emmGrid}}.}
 
 \item{\code{null}}{(numeric) null hypothesis for \code{summary} or
 \code{test} (taken to be zero if missing).}
@@ -162,9 +172,11 @@ conform.}
 mypigs <- transform(pigs, logconc = log(pigs$conc))
 mypigs.lm <- lm(logconc ~ source + factor(percent), data = mypigs)
 
-# Reference grid that knows about the transformation:
+# Reference grid that knows about the transformation
+# and asks to include the sample size in any summaries:
 mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log", 
-                    predict.type = "response")
+                    predict.type = "response",
+                    calc = c(n = ~.wgt.))
 emmeans(mypigs.rg, "source")
 }
 \seealso{

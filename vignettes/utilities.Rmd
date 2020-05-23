@@ -46,9 +46,12 @@ want to change its internal settings rather than having to rely on explicitly
 calling `summary()` with several arguments. If so, just update the internal
 settings to what is desired; for example:
 ```{r}
-pigs.emm.s <- update(pigs.emm, infer = c(TRUE, TRUE), null = log(35))
+pigs.emm.s <- update(pigs.emm, infer = c(TRUE, TRUE), null = log(35),
+                     calc = c(n = ".wgt."))
 pigs.emm.s
 ```
+Note that by adding of `calc`, we have set a default to calculate and
+display the sample size when the object is summarized.
 See `help("update.emmGrid")` for details on the keywords
 that can be changed. Mostly, they are the same as the names of arguments
 in the functions that construct these objects.
@@ -56,11 +59,12 @@ in the functions that construct these objects.
 Of course, we can always get what we want via calls to `test()`, `confint()` or
 `summary()` with appropriate arguments. But the `update()` function is more
 useful in sophisticated manipulations of objects, or called implicitly via the
-`options` argument in `emmeans()` and other functions. Those options are passed
+`...` or `options` argument in `emmeans()` and other functions. Those options are passed
 to `update()` just before the object is returned. For example, we could have
-done the above update within the `emmeans()` call as follows:
+done the above update within the `emmeans()` call as follows (results are not shown because they are the same as before):
 ```{r eval = FALSE}
-emmeans(pigs.lm, "source", options = list(infer = c(TRUE, TRUE), null = log(35)))
+emmeans(pigs.lm, "source", infer = c(TRUE, TRUE), null = log(35),
+        calc = c(n = ".wgt."))
 ```
 
 [Back to contents](#contents)

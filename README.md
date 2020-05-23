@@ -65,10 +65,10 @@ easily produce these results, as well as various graphs of them
     package; then run
     
 ```r
-devtools::install_github("rvlenth/emmeans", dependencies = TRUE, build_opts = "")
+remotes::install_github("rvlenth/emmeans", dependencies = TRUE, build_opts = "")
 
 ### To install without vignettes (faster):
-devtools::install_github("rvlenth/emmeans")
+remotes::install_github("rvlenth/emmeans")
 ```
 *Note:* If you are a Windows user, you should also first download and
       install the latest version of

@@ -10,9 +10,9 @@
 \alias{test.emmGrid}
 \title{Summaries, predictions, intervals, and tests for \code{emmGrid} objects}
 \usage{
-\method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, null,
-  delta, side, frequentist, bias.adjust = get_emm_option("back.bias.adj"),
-  sigma, ...)
+\method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, calc,
+  null, delta, side, frequentist,
+  bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
 \method{predict}{emmGrid}(object, type, interval = c("none", "confidence",
   "prediction"), level = 0.95,
@@ -63,6 +63,13 @@ and also the section below on transformations and links.}
 \item{df}{Numeric. If non-missing, a constant number of degrees of freedom to
 use in constructing confidence intervals and \emph{P} values (\code{NA}
 specifies asymptotic results).}
+
+\item{calc}{Named list of character value(s) or formula(s).
+The expressions in \code{char} are evaluated and appended to the
+summary, just after the \code{df} column. The expression may include
+any names up through \code{df} in the summary, any additional names in 
+\code{object@grid} (such as \code{.wgt.} or \code{.offset.}), or any
+earlier elements of \code{calc}.}
 
 \item{null}{Numeric. Null hypothesis value(s), on the linear-predictor scale,
 against which estimates are tested. May be a single value used for all, or
@@ -198,9 +205,10 @@ The default \code{show} method for \code{emmGrid} objects (with the
 }
 \section{Defaults}{
 
-  The \code{misc} slot in \code{object} contains default values for
-  \code{by}, \code{infer}, \code{level}, \code{adjust}, \code{type},
-  \code{null}, \code{side}, and \code{delta}. These defaults vary depending
+  The \code{misc} slot in \code{object} may contain default values for
+  \code{by}, \code{calc}, \code{infer}, \code{level}, \code{adjust}, 
+  \code{type}, \code{null}, \code{side}, and \code{delta}. 
+  These defaults vary depending
   on the code that created the object. The \code{\link{update}} method may be
   used to change these defaults. In addition, any options set using 
   \samp{emm_options(summary = ...)} will trump those stored in the object's 
@@ -350,6 +358,7 @@ confint(warp.emm, by = NULL, level = .90)
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 pigs.emm <- emmeans(pigs.lm, "percent", type = "response")
 summary(pigs.emm)    # (inherits type = "response")
+summary(pigs.emm, calc = c(n = ".wgt."))  # Show sample size
 
 # For which percents is EMM non-inferior to 35, based on a 10\% threshold?
 # Note the test is done on the log scale even though we have type = "response"

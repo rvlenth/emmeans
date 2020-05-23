@@ -55,9 +55,9 @@ car::Anova(nutr.lm)
 ```
  There is definitely a
 `group` effect and a hint of and interaction with `race`. Here are the EMMs for
-those two factors:
+those two factors, along with their counts:
 ```{r}
-emmeans(nutr.lm, ~ group * race)
+emmeans(nutr.lm, ~ group * race, calc = c(n = ".wgt."))
 ```
 
 ####### {#nonestex}

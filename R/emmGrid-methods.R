@@ -211,6 +211,8 @@ vcov.emmGrid = function(object, ...) {
 #' \item{\code{df}}{(numeric) overrides the default degrees of freedom with a
 #' specified single value.}
 #' 
+#' \item{\code{calc}}{(list) additional calculated columns. See \code{\link{summary.emmGrid}}.}
+#' 
 #' \item{\code{null}}{(numeric) null hypothesis for \code{summary} or
 #' \code{test} (taken to be zero if missing).}
 #' 
@@ -276,6 +278,14 @@ vcov.emmGrid = function(object, ...) {
 #' and dimensions of \code{grid}, \code{linfct}, \code{bhat}, and \code{V} must
 #' conform.}
 #' } %%%%%%% end \describe 
+#' 
+#' @note
+#' When it makes sense, an option set by \code{update} will persist into 
+#' future results based on that object. But some options are disabled as well.
+#' For example, a \code{calc} option will be nulled-out if \code{contrast}
+#' is called, because it probably will not make sense to do the same 
+#' calculations on the contrast results, and in fact the variable(s) needed
+#' may not even still exist.
 #'
 #' @seealso \code{\link{emm_options}}
 #' @examples
@@ -283,9 +293,11 @@ vcov.emmGrid = function(object, ...) {
 #' mypigs <- transform(pigs, logconc = log(pigs$conc))
 #' mypigs.lm <- lm(logconc ~ source + factor(percent), data = mypigs)
 #' 
-#' # Reference grid that knows about the transformation:
+#' # Reference grid that knows about the transformation
+#' # and asks to include the sample size in any summaries:
 #' mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log", 
-#'                     predict.type = "response")
+#'                     predict.type = "response",
+#'                     calc = c(n = ~.wgt.))
 #' emmeans(mypigs.rg, "source")
 update.emmGrid = function(object, ..., silent = FALSE) {
     args = list(...)
@@ -352,7 +364,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 }
 
 ### List of valid strings to match in update() ###
-.valid.misc = c("adjust","alpha","avgd.over","bias.adjust","by.vars","delta","df",
+.valid.misc = c("adjust","alpha","avgd.over","bias.adjust","by.vars","calc","delta","df",
                "initMesg","estName","estType","famSize","frequentist","infer","inv.lbl",
                "level","methDesc","nesting","null","predict.type","pri.vars"
                ,"side","sigma","tran","tran.mult","tran.offset","tran2","type","is.new.rg")

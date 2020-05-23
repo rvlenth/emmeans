@@ -29,7 +29,9 @@ This vignette describes various ways of summarizing `emmGrid` objects.
 [Index of all vignette topics](vignette-topics.html)
 
 ## `summary()`, `confint()`, and `test()` {#summary}
-<!-- @index `summary()`; `summary()`!`infer`; `confint()`; `test()`; Confidence intervals;
+<!-- @index `summary()`; `summary()`!`infer`; `confint()`; `test()`; 
+    Confidence intervals; `summary()`!Calculated columns; 
+    `summary()`!Show sample size; Sample size, displaying;
             Tests!One- and two-sided; Tests!Nonzero null;
             `summary()`!Bayesian models; `summary()`!`hpd.summary()`;
             Examples!`pigs` -->
@@ -70,6 +72,16 @@ response is log-transformed in this model,
 ```{r}
 test(pigs.emm.s, null = log(40), side = ">")
 ```
+It is also possible to add calculated columns to the summary, via the `calc` 
+argument. The calculations can include any columns up through `df` in the summary,
+as well as any variable in the object's `grid` slot. Among the latter are 
+usually weights in a column named `.wgt.`, and we can use that to include
+sample size in the summary:
+```{r}
+confint(pigs.emm.s, calc = c(n = ~.wgt.))
+```
+
+
 [Back to Contents](#contents)
 
 

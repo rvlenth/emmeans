@@ -411,7 +411,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     }
     
     # ensure we don't inherit inappropriate settings
-    misc$null = misc$delta = misc$side = NULL
+    misc$null = misc$delta = misc$side = misc$calc = NULL
     
     object@roles$predictors = "contrast"
     levels = list()

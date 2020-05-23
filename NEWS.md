@@ -15,6 +15,9 @@ emmeans 1.4.69xxxxxxxx
   * Labels in `contrast()` for factor combinations with `by` groups 
     were wacky (#199)
   * `emtrends()` screwed up with multivariate models (#200)
+  * Added a new argument `calc` to `summary()`. For example,
+    `calc = c(n = ~.wgt.)` will add a column of sample sizes to
+    the summary.
   
 
 emmeans 1.4.6
