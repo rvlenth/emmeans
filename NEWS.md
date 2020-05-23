@@ -14,6 +14,7 @@ emmeans 1.4.69xxxxxxxx
     specify `pairwise ~ treatment`.
   * Labels in `contrast()` for factor combinations with `by` groups 
     were wacky (#199)
+  * `emtrends()` screwed up with multivariate models (#200)
   
 
 emmeans 1.4.6
