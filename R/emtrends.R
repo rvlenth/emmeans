@@ -197,19 +197,13 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     cl$options$delts = delts   # ref_grid hook -- expand grid by these increments
     bigRG = eval(cl)
     
-    ### Replace var.subs calculation. Old one depended on a pattern that
-    ### is broken when we have multivariate levels. So we have to find
-    ### row numbers in bigRG that correspond to each elt of delts ...
-    
-    # return indexes of x that are within eps of an element of tgt
-    which.equals.one = function(x, tgt, eps) {
-        d = sapply(tgt, function(t) abs(x - t))
-        m = apply(d, 1, min)
-        which(m < eps)
-    }
-    eps = (delts[2] - delts[1]) / 10
-    var.subs = lapply(delts, function(d) 
-        which.equals.one(bigRG@grid[[var]], bigRG@levels[[var]] + d, eps))
+    ### var.subs is list of indexes for each value of delts
+    gdim = nrow(bigRG@grid) / length(delts)
+    mdim = 1
+    for (v in bigRG@roles$multresp) 
+        mdim = mdim * length(bigRG@levels[[v]])
+    arr = array(seq_len(nrow(bigRG@grid)), c(gdim / mdim, length(delts), mdim))
+    var.subs = lapply(seq_along(delts), function(i) as.numeric(arr[,i,]))
     
     RG = orig.rg = bigRG[var.subs[[idx.base]]]  # the subset that corresponds to reference values
     row.names(RG@grid) = seq_along(RG@grid[[1]])

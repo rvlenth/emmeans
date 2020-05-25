@@ -3,7 +3,7 @@ title: "Explanations supplement"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
-  %\VignetteIndexEntry{Basics of EMMs}
+  %\VignetteIndexEntry{Explanations supplement}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

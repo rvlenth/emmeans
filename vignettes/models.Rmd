@@ -43,7 +43,7 @@ Scroll down or follow the links to those groups for more information.
 |averaging    |MuMIn    |[I](#I)  |                                                             |
 |betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
 |             |         |         |`  "variance", "quantile")`                                  |
-|brmsfit      |brms     |[S](#S)  |Only simpler models                                          |
+|brmsfit      |brms     |[P](#P)  |Supported in **brms** package                                          |
 |carbayes     |CARBayes |[S](#S)  |`data` is required                                           |
 |clm          |ordinal  |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
 |             |         |         |`  "exc.prob", "prob", "mean.class", "scale")`               |
@@ -430,8 +430,7 @@ name its levels. In other models such as a multinomial model, use the
 `mode` argument to specify the type of model, and `trait = <factor name>` 
 to specify the name of the data column that contains the levels of the factor response.
 
-Support for the **brms** package is provided but it is quite rudimentary and 
-usable only for the primary fixed effects and the simpler models.
+The **brms** package version 2.13 and later, has its own `emmeans` support. Refer to the documentation in that package.
 
 [Back to quick reference](#quickref)
 
