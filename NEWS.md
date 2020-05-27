@@ -1,6 +1,13 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.69xxxxxxxx
+emmeans 1.4.09xxxxxxxxxxxx
+-------------
+
+  * Bug fix and addition of `use_pp` option for `stanreg` objects (#202)
+  * Prettier labels (spaces, not commas) for multiple factors in `contrast`
+
+
+emmeans 1.4.7
 -------------
 
   * Repairs to `pwpp()` so it plays nice with nonestimable cases

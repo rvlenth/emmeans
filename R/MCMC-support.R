@@ -528,15 +528,8 @@ recover_data.stanreg = function(object, ...) {
 }
 
 # note: mode and rescale are ignored for some models
-emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
-    m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-    if(is.null(contr <- object$contrasts))
-        contr = attr(model.matrix(object), "contrasts")
-    X = model.matrix(trms, m, contrasts.arg = contr)
-    bhat = rstanarm::fixef(object)
-    nms = intersect(colnames(X), names(bhat))
-    bhat = bhat[nms]
-    V = vcov(object)[nms, nms]
+emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, 
+                             use_pp = inherits(object, "gamm4"), ...) {
     misc = list()
     if (!is.null(object$family)) {
         if (is.character(object$family)) # work around bug for stan_polr
@@ -544,53 +537,76 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
         else
             misc = .std.link.labels(object$family, misc)
     }
-    if(!is.null(object$zeta)) {   # Polytomous regression model
-        if (missing(mode))
-            mode = "latent"
-        else
-            mode = match.arg(mode, 
-                             c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
+    if (use_pp) { # Get results using posterior_predict()
+        samp = rstanarm::posterior_predict(object, newdata = grid)
+        class(samp) = "matrix"
+        attr(samp, "n.chains") = 1
+        bhat = apply(samp, 2, mean)
+        V = cov(samp)
+        X = diag(length(bhat))
+        nbasis = estimability::all.estble
+    }
+    else {
+        m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
+        if(is.null(contr <- object$contrasts))
+            contr = attr(model.matrix(object), "contrasts")
+        X = model.matrix(trms, m, contrasts.arg = contr)
+        bhat = rstanarm::fixef(object)
+        nms = intersect(colnames(X), names(bhat))
+        bhat = bhat[nms]
+        V = vcov(object)[nms, nms, drop = FALSE]
         
-        xint = match("(Intercept)", nms, nomatch = 0L)
-        if (xint > 0L) 
-            X = X[, -xint, drop = FALSE]
-        k = length(object$zeta)
-        if (mode == "latent") {
-            if (missing(rescale)) 
-                rescale = c(0,1)
-            X = rescale[2] * cbind(X, matrix(- 1/k, nrow = nrow(X), ncol = k))
-            bhat = c(bhat, object$zeta - rescale[1] / rescale[2])
-            misc = list(offset.mult = rescale[2])
-        }
-        else {
-            bhat = c(bhat, object$zeta)
-            j = matrix(1, nrow=k, ncol=1)
-            J = matrix(1, nrow=nrow(X), ncol=1)
-            X = cbind(kronecker(-j, X), kronecker(diag(1,k), J))
-            link = object$method
-            if (link == "logistic") link = "logit"
-            misc = list(ylevs = list(cut = names(object$zeta)), 
-                        tran = link, inv.lbl = "cumprob", offset.mult = -1)
-            if (mode != "linear.predictor") {
-                misc$mode = mode
-                misc$postGridHook = ".clm.postGrid" # we probably need to adapt this
+        if(!is.null(object$zeta)) {   # Polytomous regression model
+            if (missing(mode))
+                mode = "latent"
+            else
+                mode = match.arg(mode, 
+                                 c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
+            
+            xint = match("(Intercept)", nms, nomatch = 0L)
+            if (xint > 0L) 
+                X = X[, -xint, drop = FALSE]
+            k = length(object$zeta)
+            if (mode == "latent") {
+                if (missing(rescale)) 
+                    rescale = c(0,1)
+                X = rescale[2] * cbind(X, matrix(- 1/k, nrow = nrow(X), ncol = k))
+                bhat = c(bhat, object$zeta - rescale[1] / rescale[2])
+                misc = list(offset.mult = rescale[2])
             }
+            else {
+                bhat = c(bhat, object$zeta)
+                j = matrix(1, nrow=k, ncol=1)
+                J = matrix(1, nrow=nrow(X), ncol=1)
+                X = cbind(kronecker(-j, X), kronecker(diag(1,k), J))
+                link = object$method
+                if (link == "logistic") link = "logit"
+                misc = list(ylevs = list(cut = names(object$zeta)), 
+                            tran = link, inv.lbl = "cumprob", offset.mult = -1)
+                if (mode != "linear.predictor") {
+                    misc$mode = mode
+                    misc$postGridHook = ".clm.postGrid" # we probably need to adapt this
+                }
+            }
+            
+            misc$respName = as.character.default(terms(object))[2]
+        }
+        samp = as.matrix(object$stanfit)[, nms, drop = FALSE]
+        attr(samp, "n.chains") = object$stanfit@sim$chains
+        
+        # estimability...
+        nbasis = estimability::all.estble
+        all.nms = colnames(X)
+        if (length(nms) < length(all.nms)) {
+            coef = NA * X[1, ]
+            coef[names(bhat)] = bhat
+            bhat = coef
+            mmat = model.matrix(trms, object$data, contrasts.arg = contr)
+            nbasis = estimability::nonest.basis(mmat)
         }
         
-        misc$respName = as.character.default(terms(object))[2]
     }
-    samp = as.matrix(object$stanfit)[, nms, drop = FALSE]
-    attr(samp, "n.chains") = object$stanfit@sim$chains
-    # estimability...
-    nbasis = estimability::all.estble
-    all.nms = colnames(X)
-    if (length(nms) < length(all.nms)) {
-        coef = NA * X[1, ]
-        coef[names(bhat)] = bhat
-        bhat = coef
-        mmat = model.matrix(trms, object$data, contrasts.arg = contr)
-        nbasis = estimability::nonest.basis(mmat)
-    }
+
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = function(k, dfargs) Inf, dfargs = list(), 
          misc = misc, post.beta = samp)

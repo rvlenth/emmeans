@@ -93,6 +93,7 @@ Scroll down or follow the links to those groups for more information.
 |             |         |         |`"cum.prob", "exc.prob", "prob", "mean.class")`              |
 |rsm          |rsm      |[P](#P)  |Supported in **rsm** package                                 |
 |stanreg      |rstanarm |[S](#S)  |Args for `stanreg_`*xxx* similar to those for *xxx*          |
+|             |         |         |`use_pp = inherits(object, "gamm4")`                         |
 |survreg      |survival |[A](#A)  |                                                             |
 |zeroinfl     |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0")`,            |
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
@@ -430,7 +431,14 @@ name its levels. In other models such as a multinomial model, use the
 `mode` argument to specify the type of model, and `trait = <factor name>` 
 to specify the name of the data column that contains the levels of the factor response.
 
-The **brms** package version 2.13 and later, has its own `emmeans` support. Refer to the documentation in that package.
+The **brms** package version 2.13 and later, has its own `emmeans` support. 
+Refer to the documentation in that package.
+
+For **stanreg** objects, if the optional argument `use_pp` is set to `TRUE`, then
+`rstanarm::posterior_predict()` is used to simulate predictions on the reference grid.
+This choice is necessary if any smoothers are used; but may be preferable 
+in other cases as well. The default for `use_pp` is `TRUE` for models fitted 
+with `stan_gamm4`, and `FALSE` otherwise.
 
 [Back to quick reference](#quickref)
 
