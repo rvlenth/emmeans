@@ -3,8 +3,10 @@
 emmeans 1.4.09xxxxxxxxxxxx
 -------------
 
-  * Bug fix and addition of `use_pp` option for `stanreg` objects (#202)
+  * Bug fix and smoother support for `stanreg` objects (#202)
   * Prettier labels (spaces, not commas) for multiple factors in `contrast`
+  * Fix to `emmip()` to be consistent between one curve and several, 
+    in whether points are displayed (`style` option)
 
 
 emmeans 1.4.7

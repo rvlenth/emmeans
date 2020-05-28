@@ -294,8 +294,10 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
                 ggplot2::labs(x = xlab, y = ylab, color = tlab)
         }
         else { # just one trace per plot
-            grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar)) +
-                ggplot2::geom_point() +
+            grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar))
+            if (styl == "factor")
+                grobj = grobj + ggplot2::geom_point()
+            grobj = grobj +
                 ggplot2::geom_line(ggplot2::aes_(group = ~tvar)) +
                 ggplot2::labs(x = xlab, y = ylab)
             
