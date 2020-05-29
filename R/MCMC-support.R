@@ -541,13 +541,17 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     ### if(is.null(contr <- object$contrasts))
     ###     contr = attr(model.matrix(object), "contrasts")
     ### X = model.matrix(trms, m, contrasts.arg = contr)
-    # Instead, use internal routine in rstanarm to recover the data
+    ### bhat = rstanarm::fixef(object)
+    ### nms = intersect(colnames(X), names(bhat))
+    ### bhat = bhat[nms]
+    ### V = vcov(object)[nms, nms, drop = FALSE]
+
+    # Instead, use internal routine in rstanarm to get the model matrix
+    # Later, we'll get bhat and V from the posterior sample because
+    # the vcov(object) doesn't always jibe with fixef(object)
     pp_data = get("pp_data", envir = getNamespace("rstanarm"))
-    X = pp_data(object, newdata = grid, ...)[[1]]
-    bhat = rstanarm::fixef(object)
-    nms = intersect(colnames(X), names(bhat))
-    bhat = bhat[nms]
-    V = vcov(object)[nms, nms, drop = FALSE]
+    X = pp_data(object, newdata = grid, re.form = ~0, ...)[[1]]
+    nms = colnames(X)
     
     if(!is.null(object$zeta)) {   # Polytomous regression model
         if (missing(mode))
@@ -586,6 +590,9 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     }
     samp = as.matrix(object$stanfit)[, nms, drop = FALSE]
     attr(samp, "n.chains") = object$stanfit@sim$chains
+
+    bhat = apply(samp, 2, mean)
+    V = cov(samp)
     
     # estimability...
     nbasis = estimability::all.estble
