@@ -301,31 +301,6 @@ Parsing is such that the response expression must be of the form `mult * fcn(res
 operators of `-` and `/` are not recognized.
 
 
-## Standardized response {#stdize}
-<!-- @index Transformations!Standardizing; Transformations!`scale()`;
-    `scale()`; Standardized response -->
-In some disciplines, it is common to fit a model to a standardized response variable.
-R's base function `scale()` makes this easy to do; but it is important to notice that
-`scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires 
-all the values of `y` in order to determine the centering and scaling parameters.
-For that reason, it can't be auto-detected; we need to explicitly specify the 
-transformation using `make.tran()`. The methods are exactly as shown earlier in this
-vignette, so we show the code but not the results for a hypothetical example.
-
-One method is to fit the model and then add the transformation information later:
-```{r, eval = FALSE}
-mod <- lmer(scale(RT) ~ group + (1|subject), data = mydata)
-emmeans(mod, "group", type = "response",
-        tran = make.tran("scale", y = mydata$RT))
-```
-The other, equivalent, method is to create the transformation object first 
-and use it in fitting the model:
-```{r, eval = FALSE}
-mod <- with(make.tran("scale", y = mydata$RT),
-            lmer(linkfun(RT) ~ group + (1|subject), data = mydata))
-emmeans(mod, "group", type = "response")
-```
-
 
 [Back to Contents](#contents)
 
@@ -356,7 +331,55 @@ regrid(emm, transform = "probit")
 would re-grid the existing `emm` to the probit scale. Note that any estimates in `emm`
 outside of the interval $(0,1)$ will be flagged as non-estimable.
 
-You may even fake an exotic transformation, e.g., via `transform = make.tran("boxcox", 0.329)`.
+The section on standardized responses gives an example of reverse-engineering 
+a standardized response transformation in this way.
+
+
+## Standardized response {#stdize}
+<!-- @index Transformations!Standardizing; Transformations!`scale()`;
+    `scale()`; Standardized response; Examples!`fiber` -->
+In some disciplines, it is common to fit a model to a standardized response variable.
+R's base function `scale()` makes this easy to do; but it is important to notice that
+`scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires 
+all the values of `y` in order to determine the centering and scaling parameters.
+The `ref_grid()` function (called by `emmeans() and others) tries to detect
+the scaling parameters, but it can't always succeed. If it fails, 
+a message is displayed and the transformation is ignored. In cases where it doesn't work,
+we need to explicitly specify the transformation using `make.tran()`. The methods are exactly 
+as shown earlier in this vignette, so we show the code but not the results for 
+a hypothetical example.
+
+One method is to fit the model and then add the transformation information later.
+In this example, `some.fcn` is a model-fitting function which for some reason doesn't
+allow the scaling information to be detected.
+```{r, eval = FALSE}
+mod <- some.fcn(scale(RT) ~ group + (1|subject), data = mydata)
+emmeans(mod, "group", type = "response",
+        tran = make.tran("scale", y = mydata$RT))
+```
+The other, equivalent, method is to create the transformation object first 
+and use it in fitting the model:
+```{r, eval = FALSE}
+mod <- with(make.tran("scale", y = mydata$RT),
+            some.fcn(linkfun(RT) ~ group + (1|subject), data = mydata))
+emmeans(mod, "group", type = "response")
+```
+
+An interesting twist on all this is the reverse situation: Suppose we fitted the model 
+*without* the standardized response, but we want to kniow what the results would be if
+we had standardized. Here is such an example.
+```{r}
+fiber.lm <- lm(strength ~ machine + diameter, data = fiber)
+
+# On raw scale:
+emmeans(fiber.lm, "machine")
+
+# On standardized scale:
+tran <- make.tran("scale", y = fiber$strength)
+emmeans(fiber.lm, "machine", transform = tran)
+```
+In the latter call, the `transform` argument causes `regrid()` to
+be called after the reference grid is constructed.
 
 
 

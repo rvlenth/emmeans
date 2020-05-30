@@ -189,7 +189,9 @@ vignette: >
           * [in *transformations: cbpp*](transformations.html#cbpp)
       * [`cows`](messy-data.html#cows)
       * [`feedlot`](predictions.html#feedlot)
-      * [`fiber`](interactions.html#covariates)
+      * `fiber`
+          * [in *interactions: covariates*](interactions.html#covariates)
+          * [in *transformations: stdize*](transformations.html#stdize)
       * [`framing`](messy-data.html#mediators)
       * [Gamma regression](transformations.html#tranlink)
       * [`InsectSprays`](transformations.html#insects)

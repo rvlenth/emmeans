@@ -138,15 +138,18 @@
 #' # Obtain back-transformed LS means:    
 #' emmeans(warp.bc, ~ tension | wool, type = "response")
 #' 
-#' # Using a scaled response:
+#' ### Using a scaled response...
+#' # Case where it is auto-detected:
 #' fib.lm <- lm(scale(strength) ~ diameter + machine, data = fiber)
-#' fib.emm <- emmeans(fib.lm, "machine", 
-#'                    tran = make.tran("scale", y = fiber$strength))
-#' summary(fib.emm, type = "link")
-#' summary(fib.emm, type = "response")
+#' ref_grid(fib.lm) 
 #' 
-#' ## Or, could fit the model as shown above for bctran,
-#' ## and omit tran in the emmeans call
+#' # Case where scaling is not auto-detected -- and what to do about it:
+#' fib.aov <- aov(scale(strength) ~ diameter + Error(machine), data = fiber)
+#' fib.rg <- suppressWarnings(ref_grid(fib.aov, at = list(diameter = c(20, 30))))
+#' 
+#' # Scaling was not retrieved, so we can do:
+#' fib.rg = update(fib.rg, tran = make.tran("scale", y = fiber$strength))
+#' emmeans(fib.rg, "diameter")
 
 #' 
 #' \dontrun{
@@ -267,7 +270,7 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
            scale = list(
                linkfun = function(mu) (mu - origin) / param,
                linkinv = function(eta) param * eta + origin,
-               mu.eta = function(eta) param,
+               mu.eta = function(eta) rep(param, length(eta)),
                valideta = function(eta) TRUE,
                name = paste0("scale(", signif(origin, 3), ", ", signif(param, 3), ")"),
                param = c(param, origin)

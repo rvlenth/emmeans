@@ -8,6 +8,7 @@ emmeans 1.4.09xxxxxxxxxxxx
   * Fix to `emmip()` to be consistent between one curve and several, 
     in whether points are displayed (`style` option)
   * Added `"scale"` option to `make.tran()`
+  * Auto-detection of standardized response transformation
 
 emmeans 1.4.7
 -------------

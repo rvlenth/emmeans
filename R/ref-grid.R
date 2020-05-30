@@ -540,8 +540,23 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (inherits(lhs, "formula")) { # response may be transformed
         tran = setdiff(.all.vars(lhs, functions = TRUE), c(.all.vars(lhs), "~", "cbind", "+", "-", "*", "/", "^", "%%", "%/%"))
         if(length(tran) > 0) {
-            if (tran[1] == "linkfun")
-                tran = as.list(environment(trms))
+            if (tran[1] == "scale") { # we'll try to set it up based on terms component
+                pv = try(attr(terms(object), "predvars"), silent = TRUE)
+                if (!inherits(pv, "try-error")) {
+                    pv = c(lapply(pv, as.character), "foo") # make sure it isn't empty
+                    scal = which(sapply(pv, function(x) x[1] == "scale"))
+                    if(length(scal) > 0) {
+                        par = as.numeric(pv[[scal]][3:4]) 
+                        tran = make.tran("scale", y = 0, center = par[1], scale = par[2])
+                    }
+                    else {
+                        tran = NULL
+                        message("NOTE: Unable to recover scale() parameters. See '? make.tran'")
+                    }
+                }
+            }
+            else if (tran[1] == "linkfun")
+                tran = as.list(environment(trms))[c("linkfun","linkinv","mu.eta","valideta","name")]
             else {
                 if (tran[1] == "I") 
                     tran = "identity"
