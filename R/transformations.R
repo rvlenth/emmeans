@@ -88,6 +88,10 @@
 #'   transformation \eqn{(z^p - 1) / p} of the variable \eqn{z = y + (y^2+g^2)^(1/2)}. 
 #'   This requires \code{param} to have two elements:
 #'   the power \eqn{p} and the offset \eqn{g > 0}.}
+#' \item{\code{"scale"}}{This one is a little different than the others, in that
+#'   \code{param} is ignored; instead, \code{param} is determined by calling 
+#'   \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
+#'   model to be fitted to its scaled version.}
 #' }
 #' The user may include a second element in \code{param} to specify an
 #' alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},
@@ -107,6 +111,8 @@
 #' @param param Numeric parameter needed for the transformation. Optionally, it 
 #'   may be a vector of two numeric values; the second element specifies an
 #'   alternative base or origin for certain transformations. See Details.
+#' @param y,... Used only with \code{type = "scale"}. These parameters are
+#'   passed to \code{\link{scale}} to determine \code{param}.
 #'
 #' @return A \code{list} having at least the same elements as those returned by
 #'   \code{\link{make.link}}. The \code{linkfun} component is the transformation
@@ -132,12 +138,24 @@
 #' # Obtain back-transformed LS means:    
 #' emmeans(warp.bc, ~ tension | wool, type = "response")
 #' 
+#' # Using a scaled response:
+#' fib.lm <- lm(scale(strength) ~ diameter + machine, data = fiber)
+#' fib.emm <- emmeans(fib.lm, "machine", 
+#'                    tran = make.tran("scale", y = fiber$strength))
+#' summary(fib.emm, type = "link")
+#' summary(fib.emm, type = "response")
+#' 
+#' ## Or, could fit the model as shown above for bctran,
+#' ## and omit tran in the emmeans call
+
+#' 
 #' \dontrun{
-#' # An existing model 'mod' was fitted with a y^(2/3) transformation...
-#' mod.rg <- update(ref_grid(mod), tran = make.tran("power", 2/3))
-#' emmeans(mod.rg, "treatment")
+#' ### An existing model 'mod' was fitted with a y^(2/3) transformation...
+#'   ptran = make.tran("power", 2/3)
+#'   emmeans(mod, "treatment", tran = ptran)
 #' }
-make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt", "bcnPower"), param = 1) {
+make.tran = function(type = c("genlog", "power", "boxcox", "sympower", 
+                              "asin.sqrt", "bcnPower", "scale"), param = 1, y, ...) {
     type = match.arg(type)
     origin = 0
     mu.lbl = "mu"
@@ -145,6 +163,14 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqr
         origin = param[2]
         param = param[1]
         mu.lbl = paste0("(mu - ", round(origin, 3), ")")
+    }
+    if(type == "scale") {
+        sy = scale(y, ...)
+        if(is.null(origin <- attr(sy, "scaled:center")))
+            origin = 0
+        if(is.null(param <- attr(sy, "scaled:scale")))
+            param = 1
+        remove(list = c("y", "sy")) # remove baggage from env
     }
     switch(type,
            genlog = {
@@ -237,7 +263,15 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower", "asin.sqr
                    param = c(param, origin),
                    name = paste0("bcnPower(", signif(param,3), ", ", signif(origin,3), ")")
                )
-           }
+           },
+           scale = list(
+               linkfun = function(mu) (mu - origin) / param,
+               linkinv = function(eta) param * eta + origin,
+               mu.eta = function(eta) param,
+               valideta = function(eta) TRUE,
+               name = paste0("scale(", signif(origin, 3), ", ", signif(param, 3), ")"),
+               param = c(param, origin)
+           )
     )
 }
 

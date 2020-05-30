@@ -23,6 +23,7 @@ This vignette covers the intricacies of transformations and link functions in **
   5. [Special transformations](#special)
   6. [Specifying a transformation after the fact](#after)
   6. [Auto-detected transformations](#auto)
+  6. [Standardized response](#stdize)
   7. [Faking a log transformation](#logs)
      a. [Faking other transformations](#faking)
   8. [Bias adjustment](#bias-adj)
@@ -272,7 +273,7 @@ with the required information:
 ```{r eval = FALSE}
 my.rg <- update(ref_grid(my.model), tran = make.tran("genlog", .5))
 ```
-Subsequently, use `my.rg` in place of `my.mnodel` in any `emmeans()` analyses,
+Subsequently, use `my.rg` in place of `my.model` in any `emmeans()` analyses,
 and the transformation information will be there.
 
 For standard transformations (those in `stats::make.link()`), just give the name
@@ -299,6 +300,31 @@ would *not* be auto-detected, but `4*I(y + -1)` would be interpreted as `4*ident
 Parsing is such that the response expression must be of the form `mult * fcn(resp + const)`;
 operators of `-` and `/` are not recognized.
 
+
+## Standardized response {#stdize}
+<!-- @index Transformations!Standardizing; Transformations!`scale()`;
+    `scale()`; Standardized response -->
+In some disciplines, it is common to fit a model to a standardized response variable.
+R's base function `scale()` makes this easy to do; but it is important to notice that
+`scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires 
+all the values of `y` in order to determine the centering and scaling parameters.
+For that reason, it can't be auto-detected; we need to explicitly specify the 
+transformation using `make.tran()`. The methods are exactly as shown earlier in this
+vignette, so we show the code but not the results for a hypothetical example.
+
+One method is to fit the model and then add the transformation information later:
+```{r, eval = FALSE}
+mod <- lmer(scale(RT) ~ group + (1|subject), data = mydata)
+emmeans(mod, "group", type = "response",
+        tran = make.tran("scale", y = mydata$RT))
+```
+The other, equivalent, method is to create the transformation object first 
+and use it in fitting the model:
+```{r, eval = FALSE}
+mod <- with(make.tran("scale", y = mydata$RT),
+            lmer(linkfun(RT) ~ group + (1|subject), data = mydata))
+emmeans(mod, "group", type = "response")
+```
 
 
 [Back to Contents](#contents)

@@ -5,7 +5,7 @@
 \title{Response-transformation extensions}
 \usage{
 make.tran(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt",
-  "bcnPower"), param = 1)
+  "bcnPower", "scale"), param = 1, y, ...)
 }
 \arguments{
 \item{type}{The name of the transformation. See Details.}
@@ -13,6 +13,9 @@ make.tran(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt",
 \item{param}{Numeric parameter needed for the transformation. Optionally, it 
 may be a vector of two numeric values; the second element specifies an
 alternative base or origin for certain transformations. See Details.}
+
+\item{y, ...}{Used only with \code{type = "scale"}. These parameters are
+passed to \code{\link{scale}} to determine \code{param}.}
 }
 \value{
 A \code{list} having at least the same elements as those returned by
@@ -80,6 +83,10 @@ The \code{type} argument specifies the following transformations:
   transformation \eqn{(z^p - 1) / p} of the variable \eqn{z = y + (y^2+g^2)^(1/2)}. 
   This requires \code{param} to have two elements:
   the power \eqn{p} and the offset \eqn{g > 0}.}
+\item{\code{"scale"}}{This one is a little different than the others, in that
+  \code{param} is ignored; instead, \code{param} is determined by calling 
+  \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
+  model to be fitted to its scaled version.}
 }
 The user may include a second element in \code{param} to specify an
 alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},
@@ -116,9 +123,19 @@ warp.bc <- with(bctran,
 # Obtain back-transformed LS means:    
 emmeans(warp.bc, ~ tension | wool, type = "response")
 
+# Using a scaled response:
+fib.lm <- lm(scale(strength) ~ diameter + machine, data = fiber)
+fib.emm <- emmeans(fib.lm, "machine", 
+                   tran = make.tran("scale", y = fiber$strength))
+summary(fib.emm, type = "link")
+summary(fib.emm, type = "response")
+
+## Or, could fit the model as shown above for bctran,
+## and omit tran in the emmeans call
+
 \dontrun{
-# An existing model 'mod' was fitted with a y^(2/3) transformation...
-mod.rg <- update(ref_grid(mod), tran = make.tran("power", 2/3))
-emmeans(mod.rg, "treatment")
+### An existing model 'mod' was fitted with a y^(2/3) transformation...
+  ptran = make.tran("power", 2/3)
+  emmeans(mod, "treatment", tran = ptran)
 }
 }

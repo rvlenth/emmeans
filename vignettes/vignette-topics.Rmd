@@ -497,6 +497,7 @@ vignette: >
   * Satterthwaite d.f.
       * [in *models: K*](models.html#K)
       * [in *models: L*](models.html#L)
+  * [`scale()`](transformations.html#stdize)
   * [Selecting results](utilities.html#brackets)
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * Significance
@@ -510,6 +511,7 @@ vignette: >
       * [in *interactions: simple*](interactions.html#simple)
   * `specs`
       * [Formula](comparisons.html#formulas)
+  * [Standardized response](transformations.html#stdize)
   * [`stanreg` objects](models.html#S)
   * [* gazing (star gazing)](interactions.html#factors)
   * [Startup options](utilities.html#startup)
@@ -561,6 +563,8 @@ vignette: >
       * [Overview](transformations.html#overview)
       * [Re-gridding](transformations.html#regrid)
       * [Response versus link functions](transformations.html#link-bias)
+      * [`scale()`](transformations.html#stdize)
+      * [Standardizing](transformations.html#stdize)
       * [Timing is everything](transformations.html#timing)
   * Trends
       * [Estimating and comparing](interactions.html#oranges)

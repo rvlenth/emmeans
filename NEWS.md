@@ -7,7 +7,7 @@ emmeans 1.4.09xxxxxxxxxxxx
   * Prettier labels (spaces, not commas) for multiple factors in `contrast`
   * Fix to `emmip()` to be consistent between one curve and several, 
     in whether points are displayed (`style` option)
-
+  * Added `"scale"` option to `make.tran()`
 
 emmeans 1.4.7
 -------------
