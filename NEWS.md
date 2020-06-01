@@ -9,6 +9,8 @@ emmeans 1.4.09xxxxxxxxxxxx
     in whether points are displayed (`style` option)
   * Added `"scale"` option to `make.tran()`
   * Auto-detection of standardized response transformation
+  * Fix to a scoping issue in `emtrends()` (#201)
+  
 
 emmeans 1.4.7
 -------------

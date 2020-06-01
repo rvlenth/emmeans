@@ -150,24 +150,20 @@
 emtrends = function(object, specs, var, delta.var=.001*rng,
                     max.degree = 1, ...) {
     estName = paste(var, "trend", sep=".") # Do now as I may replace var later
-    cl = match.call()
-    cl[[1]] = quote(ref_grid)
-    cl$var = cl$specs = NULL
-    if (is.null(cl$options))
-        cl$options = list()
+    
+    # construct our first call to ref_grid() to get the data...
+    rgargs = list(object = object, ...)
+    if (is.null(rgargs$options))
+        rgargs$options = list()
     
     # backward compatibility for when 1st argument was "model"
-    if(missing(object) && ("model" %in% names(cl))) {
-        names(cl)[names(cl) == "model"] = "object"
-        object = eval(cl$object)
+    if (missing(object) && ("model" %in% names(rgargs))) {
+        names(rgargs)[names(rgargs) == "model"] = "object"
     }
     
-    cl$object = quote(object)
-    
-    # Get data via hook in ref_grid
-    cl$options$just.data = TRUE
-    data = eval(cl)
-    cl$options$just.data = NULL
+    rgargs$options$just.data = TRUE
+    data = do.call("ref_grid", c(rgargs))
+    rgargs$options$just.data = NULL
     
     x = data[[var]]
     fcn = NULL   # differential
@@ -192,10 +188,9 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     delts = delts - delts[idx.base]
     
     # set up call for ref_grid
-    cl$data = quote(data)
-    cl$options$var = var
-    cl$options$delts = delts   # ref_grid hook -- expand grid by these increments
-    bigRG = eval(cl)
+    # ref_grid hook -- expand grid by these increments of var
+    rgargs$options = c(rgargs$options, list(var = var, delts = delts))
+    bigRG = do.call("ref_grid", c(rgargs, data = quote(data)))
     
     ### var.subs is list of indexes for each value of delts
     gdim = nrow(bigRG@grid) / length(delts)
@@ -225,13 +220,9 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
         newlf = rbind(newlf, linfct[[what]] / h)
     }
     
-    # Now replace linfct w/ difference quotient
+    # Now replace linfct w/ difference quotient(s)
     RG@linfct = newlf
     RG@roles$trend = var
-    
-    # # args for emmeans calls
-    # args = list(object = NULL, specs = specs, ...)
-    # args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = args$transform = NULL
     
     if (max.degree > 1) {
         degnms = c("linear", "quadratic", "cubic", "quartic", "quintic")

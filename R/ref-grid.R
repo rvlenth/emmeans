@@ -549,10 +549,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                         par = as.numeric(pv[[scal]][3:4]) 
                         tran = make.tran("scale", y = 0, center = par[1], scale = par[2])
                     }
-                    else {
-                        tran = NULL
-                        message("NOTE: Unable to recover scale() parameters. See '? make.tran'")
-                    }
+                }
+                if (is.character(tran)) { # didn't manage to find params
+                    tran = NULL
+                    message("NOTE: Unable to recover scale() parameters. See '? make.tran'")
                 }
             }
             else if (tran[1] == "linkfun")

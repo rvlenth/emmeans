@@ -298,13 +298,22 @@ The default \code{show} method for \code{emmGrid} objects (with the
   non-conservative multi-step adjustments to tests.
 }
 
-\section{Testing nonsuperiority, noninferiority, or equivalence}{
+\section{Tests of significance, nonsuperiority, noninferiority, or equivalence}{
 
-  When \code{delta = 0}, test statistics are of the usual form 
-  \samp{(estimate - null)/SE}, or notationally, \eqn{t = (Q - \theta_0)/SE} 
-  where \eqn{Q} is our estimate of \eqn{\theta}; 
-  then left, right, or two-sided \eqn{p} values are produced.
-
+  When \code{delta = 0}, test statistics are the usual tests of significance.
+  They are of the form 
+  \samp{(estimate - null)/SE}. Notationally: 
+  \describe{
+    \item{Significance}{\eqn{H_0: \theta = \theta_0}  versus \cr
+       \eqn{H_1: \theta < \theta_0} (left-sided), or\cr
+      \eqn{H_1 \theta > \theta_0} (right-sided), or\cr
+      \eqn{H_1: \theta \ne \theta_0} (two-sided)\cr
+      The test statistic is\cr
+      \eqn{t = (Q - \theta_0)/SE}\cr 
+      where \eqn{Q} is our estimate of \eqn{\theta};
+      then left, right, or two-sided \eqn{p} values are produced, 
+      depending on \code{side}.}
+  }
   When \code{delta} is positive, the test statistic depends on \code{side} as
   follows.
   \describe{
@@ -319,7 +328,10 @@ The default \code{show} method for \code{emmGrid} objects (with the
   \item{Two-sided (equivalence)}{\eqn{H_0: |\theta - \theta_0| \ge \delta}
     versus \eqn{H_1: |\theta - \theta_0| < \delta}\cr
     \eqn{t = (|Q - \theta_0| - \delta)/SE}\cr
-    The \eqn{p} value is the \emph{lower}-tail probability.}
+    The \eqn{p} value is the \emph{lower}-tail probability.\cr
+    Note that \eqn{t} is the maximum of \eqn{t_{nonsup}} and \eqn{-t_{noninf}}. 
+    This is equivalent to choosing the less 
+    significant result in the two-one-sided-test (TOST) procedure.}
   } %%%%%%%%%%%% end \describe{}
 }
 
@@ -377,5 +389,5 @@ summary(con, infer = c(TRUE, TRUE), adjust = "scheffe", scheffe.rank = 5)
 
 }
 \seealso{
-\code{link{hpd.summary}}
+\code{\link{hpd.summary}}
 }
