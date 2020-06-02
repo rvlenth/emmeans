@@ -310,11 +310,12 @@ emmeans = function(object, specs, by = NULL,
         if(any(ord != seq_along(ord)))
             RG = RG[ord]
         
-        if ((length(facs) == 1) && (facs == "1")) {  ### just want grand mean
+        # xxx if ((length(facs) == 1) && (facs == "1")) {  ### just want grand mean
+        if("1" %in% facs) {
             RG@levels[["1"]] = "overall"
             RG@grid[ ,"1"] = 1
         }
-        
+
         
         # Figure out the structure of the grid
         wgt = RG@grid[[".wgt."]]

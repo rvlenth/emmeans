@@ -10,7 +10,9 @@ emmeans 1.4.09xxxxxxxxxxxx
   * Added `"scale"` option to `make.tran()`
   * Auto-detection of standardized response transformation
   * Fix to a scoping issue in `emtrends()` (#201)
-  * Reverted an incorrect change in ver.1.47 for `specs = ~1` (#206)
+  * Bug fix for #197 created a new issue #206. Both now fixed.
+  
+
 
 emmeans 1.4.7
 -------------
