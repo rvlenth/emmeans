@@ -286,8 +286,9 @@ emmeans = function(object, specs, by = NULL,
         options $tran = tran
     }
     
-    if((length(specs) == 1) && (specs == "1"))
-        specs = character(0)
+    # This was added in 1.47, but causes problems
+    # if((length(specs) == 1) && (specs == "1"))
+    #     specs = character(0)
     
     if(is.null(nesting <- object@model.info$nesting)) 
         {
