@@ -343,7 +343,39 @@ R's base function `scale()` makes this easy to do; but it is important to notice
 `scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires 
 all the values of `y` in order to determine the centering and scaling parameters.
 The `ref_grid()` function (called by `emmeans() and others) tries to detect
-the scaling parameters, but it can't always succeed. If it fails, 
+the scaling parameters. To illustrate:
+```{r, message = FALSE}
+fiber.lm <- lm(scale(strength) ~ machine * scale(diameter), data = fiber)
+emmeans(fiber.lm, "machine")   # on the standardized scale
+emmeans(fiber.lm, "machine", type = "response")   # strength scale
+```
+More interesting (and complex) is what happens with `emtrends()`.
+Without anything fancy added, we have
+```{r}
+emtrends(fiber.lm, "machine", var = "diameter")
+```
+These slopes are (change in `scale(strength)`) / (change in `diameter`); that is,
+we didn't do anything to undo the response transformation, but the trend is
+based on exactly the variable specified, `diameter`. To get (change in `strength`) / (change in `diameter`), we need to undo the response transformation, and that is done via `transform` (which invokes `regrid()` after the reference grid is constructed):
+```{r}
+emtrends(fiber.lm, "machine", var = "diameter", transform = "response")
+```
+What if we want slopes for (change in `scale(strength)`) / (change in `scale(diameter)`)?
+This can be done, but it is necessary to manually specify the scaling parameters for `diameter`.
+```{r}
+with(fiber, c(mean = mean(diameter), sd = sd(diameter)))
+emtrends(fiber.lm, "machine", var = "scale(diameter, 24.133, 4.324)")
+```
+This result is the one most directly related to the regression coefficients:
+```{r}
+coef(fiber.lm)[4:6]
+```
+There is a fourth possibility, (change in `strength`) / (change in `scale(diameter)`),
+that I leave to the reader.
+
+### What to do if auto-detection fails
+Auto-detection of standardized responses is a bit tricky, and doesn't always succeed. 
+If it fails, 
 a message is displayed and the transformation is ignored. In cases where it doesn't work,
 we need to explicitly specify the transformation using `make.tran()`. The methods are exactly 
 as shown earlier in this vignette, so we show the code but not the results for 
@@ -365,18 +397,19 @@ mod <- with(make.tran("scale", y = mydata$RT),
 emmeans(mod, "group", type = "response")
 ```
 
+### Reverse-engineering a standardized response
 An interesting twist on all this is the reverse situation: Suppose we fitted the model 
 *without* the standardized response, but we want to kniow what the results would be if
-we had standardized. Here is such an example.
-```{r}
-fiber.lm <- lm(strength ~ machine + diameter, data = fiber)
+we had standardized. Here we reverse-engineer the `fiber.lm` example above:
+```{r, message = FALSE}
+fib.lm <- lm(strength ~ machine * diameter, data = fiber)
 
 # On raw scale:
-emmeans(fiber.lm, "machine")
+emmeans(fib.lm, "machine")
 
 # On standardized scale:
 tran <- make.tran("scale", y = fiber$strength)
-emmeans(fiber.lm, "machine", transform = tran)
+emmeans(fib.lm, "machine", transform = tran)
 ```
 In the latter call, the `transform` argument causes `regrid()` to
 be called after the reference grid is constructed.
