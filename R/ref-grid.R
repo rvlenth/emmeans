@@ -546,7 +546,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                     pv = c(lapply(pv, as.character), "foo") # make sure it isn't empty
                     scal = which(sapply(pv, function(x) x[1] == "scale"))
                     if(length(scal) > 0) {
-                        par = as.numeric(pv[[scal]][3:4]) 
+                        par = as.numeric(pv[[scal[1]]][3:4]) 
                         tran = make.tran("scale", y = 0, center = par[1], scale = par[2])
                     }
                 }

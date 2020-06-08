@@ -11,6 +11,8 @@ emmeans 1.4.09xxxxxxxxxxxx
   * Auto-detection of standardized response transformation
   * Fix to a scoping issue in `emtrends()` (#201)
   * Bug fix for #197 created a new issue #206. Both now fixed.
+  * Non-existent reference levels in `trt.vs.ctrl.emmc()` now 
+    throws an error (#208)
   
 
 

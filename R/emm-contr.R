@@ -229,8 +229,8 @@ trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE,
                             exclude = integer(0), include, ...) {
     ref = .num.key(levs, ref)
     exclude = .get.excl(levs, exclude, include)
-    if ((min(ref) < 1) || (max(ref) > length(levs)))
-        stop("Reference levels are out of range")
+    if (length(ref) == 0 || (min(ref) < 1) || (max(ref) > length(levs)))
+        stop("In trt.vs.ctrl.emmc(), 'ref' levels are out of range", call. = FALSE)
     k = length(levs)
     cnm = ifelse(length(ref)==1, 
                  levs[ref], 
