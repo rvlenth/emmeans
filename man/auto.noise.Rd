@@ -4,7 +4,8 @@
 \name{auto.noise}
 \alias{auto.noise}
 \title{Auto Pollution Filter Noise}
-\format{A data frame with 36 observations on the following 4 variables.
+\format{
+A data frame with 36 observations on the following 4 variables.
   \describe{
   \item{\code{noise}}{Noise level in decibels - a numeric vector.}
   \item{\code{size}}{The size of the vehicle - an ordered factor with
@@ -13,7 +14,8 @@
     \code{Std} and \code{Octel}}
   \item{\code{side}}{The side of the car where measurement was taken -- a
     factor with levels \code{L} and \code{R}.}
-  }}
+  }
+}
 \source{
 The dataset was obtained from the Data and Story Library (DASL)
   at Carnegie-Mellon University. Apparently it has since been removed. The

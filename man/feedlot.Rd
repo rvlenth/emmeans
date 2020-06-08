@@ -4,7 +4,8 @@
 \name{feedlot}
 \alias{feedlot}
 \title{Feedlot data}
-\format{A data frame with 67 observations and 4 variables:
+\format{
+A data frame with 67 observations and 4 variables:
 \describe{
   \item{\code{herd}}{a factor with levels \code{9} \code{16} \code{3}
     \code{32} \code{24} \code{31} \code{19} \code{36} \code{34} \code{35}
@@ -13,7 +14,8 @@
     \code{High}: the energy level of the diet given the animal.}
   \item{\code{swt}}{a numeric vector: the weight of the animal at slaughter.}
   \item{\code{ewt}}{a numeric vector: the weight of the animal at entry to the feedlot.}
-}}
+}
+}
 \source{
 Urquhart NS (1982) Adjustment in covariates when one factor affects
   the covariate. \emph{Biometrics} 38, 651-660.

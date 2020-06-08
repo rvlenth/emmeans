@@ -4,7 +4,8 @@
 \name{neuralgia}
 \alias{neuralgia}
 \title{Neuralgia data}
-\format{A data frame with 60 observations and 5 variables:
+\format{
+A data frame with 60 observations and 5 variables:
 \describe{
   \item{\code{Treatment}}{Factor with 3 levels \code{A}, \code{B}, and \code{P}.
     The latter is placebo}
@@ -13,7 +14,8 @@
   \item{\code{Duration}}{Numeric covariate -- duration of the condition before
     beginning treatment}
   \item{\code{Pain}}{Binary response factor with levels \code{No} and \code{Yes}}
-}}
+}
+}
 \source{
 Cai, Weijie (2014) \emph{Making Comparisons Fair: How LS-Means Unify 
   the Analysis of Linear Models}, SAS Institute, Inc. Technical paper 142-2014,

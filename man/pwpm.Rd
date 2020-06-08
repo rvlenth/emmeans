@@ -4,8 +4,8 @@
 \alias{pwpm}
 \title{Pairwise P-value matrix (plus other statistics)}
 \usage{
-pwpm(emm, by, reverse = FALSE, pvals = TRUE, means = TRUE, diffs = TRUE,
-  flip = FALSE, digits, ...)
+pwpm(emm, by, reverse = FALSE, pvals = TRUE, means = TRUE,
+  diffs = TRUE, flip = FALSE, digits, ...)
 }
 \arguments{
 \item{emm}{An \code{emmGrid} object}

@@ -6,7 +6,9 @@
 \alias{get_emm_option}
 \alias{emm_defaults}
 \title{Set or change emmeans options}
-\format{An object of class \code{list} of length 17.}
+\format{
+An object of class \code{list} of length 17.
+}
 \usage{
 emm_options(...)
 

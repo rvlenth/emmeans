@@ -4,7 +4,8 @@
 \name{oranges}
 \alias{oranges}
 \title{Sales of oranges}
-\format{A data frame with 36 observations and 6 variables:
+\format{
+A data frame with 36 observations and 6 variables:
 \describe{
   \item{\code{store}}{a factor with levels \code{1} \code{2} \code{3}
     \code{4} \code{5} \code{6}. The store that was observed.}
@@ -15,7 +16,8 @@
   \item{\code{price2}}{a numeric vector. Price of variety 2.}
   \item{\code{sales1}}{a numeric vector. Sales (per customer) of variety 1.}
   \item{\code{sales2}}{a numeric vector. Sales (per customer) of variety 2.}
-}}
+}
+}
 \source{
 SAS sample dataset. Download from \url{http://ftp.sas.com/samples/A56655}.
 }

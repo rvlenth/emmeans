@@ -4,13 +4,15 @@
 \name{fiber}
 \alias{fiber}
 \title{Fiber data}
-\format{A data frame with 15 observations and 3 variables:
+\format{
+A data frame with 15 observations and 3 variables:
 \describe{
   \item{\code{machine}}{a factor with levels \code{A} \code{B} \code{C}. 
     This is the primary factor of interest.}
   \item{\code{strength}}{a numeric vector. The response variable.}
   \item{\code{diameter}}{a numeric vector. A covariate.}
-}}
+}
+}
 \source{
 Montgomery, D. C. (2013) \emph{Design and Analysis of Experiments}
   (8th ed.). John Wiley and Sons, ISBN 978-1-118-14692-7.

@@ -4,7 +4,8 @@
 \name{MOats}
 \alias{MOats}
 \title{Oats data in multivariate form}
-\format{A data frame with 18 observations and 3 variables
+\format{
+A data frame with 18 observations and 3 variables
 \describe{
   \item{\code{Variety}}{a factor with levels \code{Golden Rain},
     \code{Marvellous}, \code{Victory}}
@@ -12,7 +13,8 @@
     \code{III} < \code{IV} < \code{II} < \code{I}}
   \item{\code{yield}}{a matrix with 4 columns, giving the yields with
     nitrogen concentrations of 0, .2, .4, and .6.}
-}}
+}
+}
 \source{
 The dataset \code{\link[nlme]{Oats}} in the \pkg{nlme} package.
 }

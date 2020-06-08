@@ -4,7 +4,8 @@
 \name{nutrition}
 \alias{nutrition}
 \title{Nutrition data}
-\format{A data frame with 107 observations and 4 variables:
+\format{
+A data frame with 107 observations and 4 variables:
 \describe{
   \item{\code{age}}{a factor with levels \code{1}, \code{2}, \code{3},
     \code{4}. Mother's age group.}
@@ -14,7 +15,8 @@
     \code{White}. Mother's race.}
   \item{\code{gain}}{a numeric vector (the response variable). Gain score
     (posttest minus pretest) on knowledge of nutrition.}
-}}
+}
+}
 \source{
 Milliken, G. A. and Johnson, D. E. (1984)
 \emph{Analysis of Messy Data -- Volume I: Designed Experiments}. 
