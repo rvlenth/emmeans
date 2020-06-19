@@ -4,8 +4,8 @@
 ^\.gitignore$
 ^\.travis\.yml$
 
-# For now we're not including tests in the build
-^tests/*
+# For now we are including tests in the build
+## ^tests/*
 
 # This keeps showing up lately, but I don't want it
 ^Rplots.pdf

@@ -598,6 +598,8 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     nbasis = estimability::all.estble
     all.nms = colnames(X)
     if (length(nms) < length(all.nms)) {
+        if(is.null(contr <- object$contrasts))
+            contr = attr(model.matrix(object), "contrasts")
         coef = NA * X[1, ]
         coef[names(bhat)] = bhat
         bhat = coef
