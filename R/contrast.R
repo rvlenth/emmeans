@@ -74,6 +74,10 @@ contrast = function(object, ...)
 #'   contrasts are computed and displayed on the linear-predictor scale. Similarly, 
 #'   if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
 #'   any other transformation.
+#' @param paren.pat character or \code{NULL}. If a character value, the labels for levels
+#'   being contrasted are parenthesized if any of them match \code{paren.pat}
+#'   in a call to \code{\link{grep}}. By default, operators, but not spaces, are checked.
+#'   Specify \code{paren.pat = NULL} to disable all parenthesization.
 #' @param ... Additional arguments passed to other methods
 #'
 #' @return \code{contrast} and \code{pairs} return an object of class
@@ -170,13 +174,14 @@ contrast = function(object, ...)
 contrast.emmGrid = function(object, method = "eff", interaction = FALSE, 
                         by, offset = NULL, scale = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
-                        type, adjust, simple, combine = FALSE, ratios = TRUE, ...) 
+                        type, adjust, simple, combine = FALSE, ratios = TRUE, 
+                        paren.pat = "-|\\+|\\/|\\*", ...) 
 {
     if(!missing(simple))
         return(.simcon(object, method = method, interaction = interaction,
                       offset = offset, scale = scale, name = name, options = options,
                       type = type, simple = simple, combine = combine, 
-                      adjust = adjust, ...))
+                      adjust = adjust, paren.pat = paren.pat, ...))
     if(missing(by)) 
         by = object@misc$by.vars
     if(length(by) == 0) # character(0) --> NULL
@@ -184,7 +189,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     
     nesting = object@model.info$nesting
     if (!is.null(nesting) || !is.null(object@misc$display))
-        return (.nested_contrast(rgobj = object, method = method, by = by, adjust = adjust, ...))
+        return (.nested_contrast(rgobj = object, method = method, by = by, adjust = adjust, paren.pat = paren.pat, ...))
     
     orig.grid = object@grid[, , drop = FALSE]
     orig.grid[[".wgt."]] = orig.grid[[".offset."]] = NULL
@@ -264,7 +269,14 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     levs = do.call("paste", args)  # NOTE - these are levels for the first (or only) by-group
     if (length(levs) == 0)   # prevent error when there are no levels to contrast
         method = "eff"
+    if(is.null(by))
+        all.levs = levs
     
+    # parenthesize levels if they contain spaces or operators
+    if(is.character(paren.pat) && length(grep(paren.pat, all.levs)) > 0) {
+        levs = paste0("(", levs, ")")
+        all.levs = paste0("(", all.levs, ")")
+    }
     
     if (is.list(method)) {
         cmat = as.data.frame(method, optional = TRUE)

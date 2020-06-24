@@ -13,6 +13,11 @@ emmeans 1.4.09xxxxxxxxxxxx
   * Bug fix for #197 created a new issue #206. Both now fixed.
   * Non-existent reference levels in `trt.vs.ctrl.emmc()` now 
     throws an error (#208)
+  * Added `paren.pat` argument to `contrast()`. The levels being
+    contrasted are parenthesized if any match this pattern by `grep()`.
+    This clarifies contrasts of contrasts -- labels like `A - B - C - D`
+    are now `(A - B) - (C - D)`, by default. To reproduce old labeling,
+    specify `paren.pat = NULL`.
   
 
 
