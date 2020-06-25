@@ -391,6 +391,16 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{test.emmGrid}},
 #'   \code{\link{confint.emmGrid}}, and \code{\link{emmip}}. The only option that can
 #'   affect the latter four is \code{"predict.method"}.}
+#' \item{\code{sep}}{A character value to use as a separator in labeling factor combinations.
+#'   Such labels are potentially used in several places such as \code{\link{contrast}} and 
+#'   \code{\link{plot.emmGrid}} when combinations of factors are compared or plotted.
+#'   The default is \code{" "}.}
+#' \item{\code{parens}}{Character vector that determines which labels are parenthesized
+#'   when they are contrasted. The first element is a regular expression, and the second and
+#'   third elements are used as left and right parentheses. 
+#'   See details for the \code{parens} argument in \code{\link{contrast}}. The default
+#'   will parenthesize labels containing the four arithmetic operators, 
+#'   using round parentheses.}
 #' \item{\code{cov.keep}}{The default value of \code{cov.keep} in \code{\link{ref_grid}}.
 #'   Defaults to \code{"2"}, i.e., two-level covariates are treated like factors.}
 #' \item{\code{graphics.engine}}{A character value matching 
@@ -503,6 +513,8 @@ emm_defaults = list (
     contrast = list(infer = c(FALSE, TRUE)),
     save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
     cov.keep = "2",           # default for cov.keep arg in ref_grid
+    sep = " ",                # separator for combining factor levels
+    parens = c("-|\\+|\\/|\\*", "(", ")"), # patterns for what/how to parenthesize in contrast
     graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
 ###    msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions

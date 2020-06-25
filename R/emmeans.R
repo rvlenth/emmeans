@@ -545,7 +545,7 @@ emmeans = function(object, specs, by = NULL,
 #' ( dose.emm <- emmeans(expt.rg, "dose") )
 #' 
 #' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
-emmobj = function(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(), 
+emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(), 
                   post.beta = matrix(NA), ...) {
     if ((nrow(V) != ncol(V)) || (nrow(V) != ncol(linfct)) || (length(bhat) != ncol(linfct)))
         stop("bhat, V, and linfct are incompatible")

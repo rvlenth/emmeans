@@ -4,8 +4,8 @@
 \alias{emmobj}
 \title{Construct an \code{emmGrid} object from scratch}
 \usage{
-emmobj(bhat, V, levels, linfct, df = NA, dffun, dfargs = list(),
-  post.beta = matrix(NA), ...)
+emmobj(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun,
+  dfargs = list(), post.beta = matrix(NA), ...)
 }
 \arguments{
 \item{bhat}{Numeric. Vector of regression coefficients}

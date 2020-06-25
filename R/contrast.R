@@ -74,10 +74,13 @@ contrast = function(object, ...)
 #'   contrasts are computed and displayed on the linear-predictor scale. Similarly, 
 #'   if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
 #'   any other transformation.
-#' @param paren.pat character or \code{NULL}. If a character value, the labels for levels
-#'   being contrasted are parenthesized if any of them match \code{paren.pat}
-#'   in a call to \code{\link{grep}}. By default, operators, but not spaces, are checked.
-#'   Specify \code{paren.pat = NULL} to disable all parenthesization.
+#' @param parens character or \code{NULL}. If a character value, the labels for levels
+#'   being contrasted are parenthesized if they match the regular expression in 
+#'   \code{parens[1]} (via \code{\link{grep}}). The default is \code{emm_option("parens")}.
+#'   Optionally, \code{parens} may contain second and third elements specifying
+#'   what to use for left and right parentheses (default \code{"("} and \code{")"}).
+#'   Specify \code{parens = NULL} or \code{parens = "a^"} (which won't match anything)
+#'   to disable all parenthesization.
 #' @param ... Additional arguments passed to other methods
 #'
 #' @return \code{contrast} and \code{pairs} return an object of class
@@ -175,13 +178,13 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                         by, offset = NULL, scale = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
                         type, adjust, simple, combine = FALSE, ratios = TRUE, 
-                        paren.pat = "-|\\+|\\/|\\*", ...) 
+                        parens, ...) 
 {
     if(!missing(simple))
         return(.simcon(object, method = method, interaction = interaction,
                       offset = offset, scale = scale, name = name, options = options,
                       type = type, simple = simple, combine = combine, 
-                      adjust = adjust, paren.pat = paren.pat, ...))
+                      adjust = adjust, parens = parens, ...))
     if(missing(by)) 
         by = object@misc$by.vars
     if(length(by) == 0) # character(0) --> NULL
@@ -189,7 +192,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     
     nesting = object@model.info$nesting
     if (!is.null(nesting) || !is.null(object@misc$display))
-        return (.nested_contrast(rgobj = object, method = method, by = by, adjust = adjust, paren.pat = paren.pat, ...))
+        return (.nested_contrast(rgobj = object, method = method, by = by, adjust = adjust, parens = parens, ...))
     
     orig.grid = object@grid[, , drop = FALSE]
     orig.grid[[".wgt."]] = orig.grid[[".offset."]] = NULL
@@ -262,21 +265,27 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             args[[nm]] = NULL
             all.args[[nm]] = NULL
         }
-        all.levs = do.call("paste", c(unname(all.args), sep = " "))   # keep all levels in case we have permutations of them
+        all.levs = do.call("paste", c(unname(all.args), sep = get_emm_option("sep")))   # keep all levels in case we have permutations of them
     }
     args = unname(args)
-    args$sep = " "
+    args$sep = get_emm_option("sep")
     levs = do.call("paste", args)  # NOTE - these are levels for the first (or only) by-group
     if (length(levs) == 0)   # prevent error when there are no levels to contrast
         method = "eff"
     if(is.null(by))
         all.levs = levs
     
-    # parenthesize levels if they contain spaces or operators
-    if(is.character(paren.pat) && length(grep(paren.pat, all.levs)) > 0) {
-        levs = paste0("(", levs, ")")
-        all.levs = paste0("(", all.levs, ")")
-    }
+    # parensthesize levels if they contain spaces or operators
+    if(missing(parens))
+        parens = get_emm_option("parens")
+    if(is.character(parens) && length(idx <- grep(parens[1], all.levs)) > 0) {
+        if(length(parens) < 3)
+            parens = c(parens, "(", ")")
+        all.levs[idx] = paste0(parens[2], all.levs[idx], parens[3])
+        idx = grep(parens[1], levs)
+        if (length(idx) > 0)
+            levs[idx] = paste0(parens[2], levs[idx], parens[3])
+     }
     
     if (is.list(method)) {
         cmat = as.data.frame(method, optional = TRUE)

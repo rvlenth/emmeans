@@ -126,6 +126,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         else
             xsub = c("Left-sided tests", "", "Right-sided tests")[side + 2]
     }
+    
+    sep = get_emm_option("sep")
     if(missing(ylab))
         ylab = paste(attr(emm.summ, "pri.vars"), collapse = ":")
     
@@ -138,9 +140,9 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         c(which(x == 1), which(x == -1))
     })
     primv = setdiff(attr(emm.summ, "pri.vars"), by)
-    pf = do.call(paste, c(unname(emm.summ[primv]), sep = ":"))
+    pf = do.call(paste, c(unname(emm.summ[primv]), sep = sep))
     pemm = suppressMessages(emmeans(emm, primv))
-    levs = do.call(paste, c(unname(pemm@grid[primv]), sep = ":"))
+    levs = do.call(paste, c(unname(pemm@grid[primv]), sep = sep))
     if(sort) ord = order(predict(pemm))
     else ord = seq_along(pf)
     pf = emm.summ$pri.fac = factor(pf, levels = levs[ord])
@@ -370,7 +372,7 @@ pwpm = function(emm, by, reverse = FALSE,
     emm = update(emm, by = by)
     pri = paste(emm@misc$pri.vars, collapse = ":")
     mns = confint(emm, ...)
-    mns$lbls = do.call(paste, mns[attr(mns, "pri.vars")])
+    mns$lbls = do.call(paste, c(unname(mns[attr(mns, "pri.vars")]), sep = get_emm_option("sep")))
     estName = attr(mns, "estName")
     prs = test(pairs(emm, reverse = reverse, ...), ...)
     diffName = attr(prs, "estName")

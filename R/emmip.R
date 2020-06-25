@@ -200,6 +200,8 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         emms = emms[ord, ]
     }
     
+    sep = get_emm_option("sep")
+    
     # Set up trace vars and key
     tvars = specs$lhs
     if (one.trace <- (length(tvars) == 0)) {
@@ -209,19 +211,19 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         my.key = function(tvars) list()
     }
     else {
-        tlab = paste(tvars, collapse = ":")
+        tlab = paste(tvars, collapse = sep)
         my.key = function(tvars) 
             list(space="right", 
-                 title = paste(tvars, collapse=" * "), 
+                 title = paste(tvars, collapse = sep), 
                  points = TRUE, 
                  lines=length(lty) > 1,
                  cex.title=1)
     }
-    tv = do.call(paste, unname(emms[tvars]))
+    tv = do.call(paste, c(unname(emms[tvars]), sep = sep))
     emms$tvar = factor(tv, levels=unique(tv))
     
     xvars = specs$rhs
-    xv = do.call(paste, unname(emms[xvars]))
+    xv = do.call(paste, c(unname(emms[xvars]), sep = sep))
     ltest = max(apply(table(xv,tv), 2, function(x) sum(x > 0))) # length of longest trace
     if (!missing(style))
         styl = match.arg(style, c("factor", "numeric"))
@@ -249,7 +251,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
          plotform = as.formula(paste("yvar ~ xvar |", paste(byvars, collapse="*")))
     }
     xlab = ifelse(is.null(xargs$xlab),
-                  paste0(predicate, paste(xvars, collapse=" * ")), xargs$xlab)
+                  paste0(predicate, paste(xvars, collapse = sep)), xargs$xlab)
     rspLbl = paste("Predicted", 
                    ifelse(is.null(emmo@misc$inv.lbl), "response", emmo@misc$inv.lbl))
     ylab = ifelse(is.null(xargs$ylab),

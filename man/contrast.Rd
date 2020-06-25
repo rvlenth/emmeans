@@ -12,7 +12,7 @@ contrast(object, ...)
 \method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE, by,
   offset = NULL, scale = NULL, name = "contrast",
   options = get_emm_option("contrast"), type, adjust, simple,
-  combine = FALSE, ratios = TRUE, paren.pat = "-|\\\\+|\\\\/|\\\\*", ...)
+  combine = FALSE, ratios = TRUE, parens, ...)
 
 \method{pairs}{emmGrid}(x, reverse = FALSE, ...)
 
@@ -74,10 +74,13 @@ contrasts are computed and displayed on the linear-predictor scale. Similarly,
 if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
 any other transformation.}
 
-\item{paren.pat}{character or \code{NULL}. If a character value, the labels for levels
-being contrasted are parenthesized if any of them match \code{paren.pat}
-in a call to \code{\link{grep}}. By default, operators, but not spaces, are checked.
-Specify \code{paren.pat = NULL} to disable all parenthesization.}
+\item{parens}{character or \code{NULL}. If a character value, the labels for levels
+being contrasted are parenthesized if they match the regular expression in 
+\code{parens[1]} (via \code{\link{grep}}). The default is \code{emm_option("parens")}.
+Optionally, \code{parens} may contain second and third elements specifying
+what to use for left and right parentheses (default \code{"("} and \code{")"}).
+Specify \code{parens = NULL} or \code{parens = "a^"} (which won't match anything)
+to disable all parenthesization.}
 
 \item{x}{An \code{emmGrid} object}
 
