@@ -135,5 +135,5 @@ contrast(emm, "poly")
 # Some P values are comparable, some aren't! See Note in documentation
 }
 \seealso{
-\code{link{emmeans}}, \code{\link{ref_grid}}
+\code{\link{emmeans}}, \code{\link{ref_grid}}
 }

@@ -1,10 +1,9 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.09xxxxxxxxxxxx
+emmeans 1.4.8
 -------------
 
   * Bug fix and smoother support for `stanreg` objects (#202)
-  * Prettier labels (spaces, not commas) for multiple factors in `contrast`
   * Fix to `emmip()` to be consistent between one curve and several, 
     in whether points are displayed (`style` option)
   * Added `"scale"` option to `make.tran()`
@@ -13,6 +12,7 @@ emmeans 1.4.09xxxxxxxxxxxx
   * Bug fix for #197 created a new issue #206. Both now fixed.
   * Non-existent reference levels in `trt.vs.ctrl.emmc()` now 
     throws an error (#208)
+  * Added a default for `linfct` (the identity) to `emmobj` 
   * Provisions for more flexible and consistent labeling/naming of results.
     This includes added `emm_options` `"sep"` and `"parens"`,
     and a `parens` argument in `contrast()`. 

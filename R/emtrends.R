@@ -83,7 +83,7 @@
 #' @return An \code{emmGrid} or \code{emm_list} object, according to \code{specs}.
 #' See \code{\link{emmeans}} for more details on when a list is returned.
 #' 
-#' @seealso \code{link{emmeans}}, \code{\link{ref_grid}}
+#' @seealso \code{\link{emmeans}}, \code{\link{ref_grid}}
 #' 
 #' @note
 #' In earlier versions of \code{emtrends}, the first argument was named
