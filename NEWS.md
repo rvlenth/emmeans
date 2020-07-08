@@ -1,5 +1,14 @@
 ## NEWS for the emmeans package
 
+emmeans 1.4.809xxxxxxx
+-------------
+
+  * Changed help page for `joint_tests()` to reflect `cov.keep` (ver. 1.4.2)
+  * `emm_options()` gains a `disable` argument to use for setting aside
+    any existing options. Useful for reproducible bug reporting.
+  
+
+
 emmeans 1.4.8
 -------------
 

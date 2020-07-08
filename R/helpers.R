@@ -308,6 +308,14 @@ emm_basis.lme = function(object, trms, xlev, grid,
 # regressing the changes in V against the changes in the 
 # covariance parameters
 gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data = object$data) {
+    # check consistency of contrasts
+    cnm = names(object$contrasts)
+    cdiff = sapply(cnm, function(.) max(abs(contrasts(data[[.]]) - object$contrasts[[.]])))
+    if (max(cdiff) > 1e-6) {
+        message("Contrasts don't match those used when the model was fitted. Fix this and re-run")
+        stop()
+    }
+    
     A = object$apVar
     theta = attr(A, "Pars")
     V = object[[Vname]]

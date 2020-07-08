@@ -376,6 +376,12 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' the \pkg{emmeans} package. These options are set separately for different contexts in
 #' which \code{emmGrid} objects are created, in a named list of option lists.
 #' 
+#' \pkg{emmeans}'s options are stored as a list in the system option \code{"emmeans"}. 
+#' Thus, \code{emm_options(foo = bar)} is the same as 
+#' \code{options(emmeans = list(..., foo = bar))} where \code{...} represents any
+#' previously existing options. The list \code{emm_defaults} contains the default
+#' values in case the corresponding element of system option \code{emmeans} is \code{NULL}.
+#' 
 #' Currently, the following main list entries are supported:
 #' \describe{
 #' \item{\code{ref_grid}}{A named \code{list} of defaults for objects created by
@@ -449,9 +455,32 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' } %%%%%% end \describe
 #'
 #' @param ... Option names and values (see Details)
+#' @param disable If non-missing, this will reset all options to their defaults 
+#'   if \code{disable} tests \code{TRUE} (but first save them for possible later 
+#'   restoration). Otherwise, all previously saved options
+#'   are restored. This is important for bug reporting; please see the section below
+#'   on reproducible bugs. When \code{disable} is specified, the other arguments are ignored.
 #' 
 #' @return \code{emm_options} returns the current options (same as the result 
 #'   of \samp{getOption("emmeans")}) -- invisibly, unless called with no arguments.
+#' 
+#' @section Reproducible bugs:
+#' Most options set display attributes and such that are not likely to be associated
+#' with bugs in the code. However, some other options (e.g., \code{cov.keep})
+#' are essentially configuration settings that may affect how/whether the code
+#' runs, and the settings for these options may cause subtle effects that may be
+#' hard to reproduce. Therefore, when sending a bug report, please create a reproducible
+#' example and make sure the bug occurs with all options set at their defaults.
+#' This is done by preceding it with  \code{emm_options(disable = TRUE)}. 
+#' 
+#' By the way, \code{disable} works like a stack (LIFO buffer), in that \code{disable = TRUE}
+#' is equivalent to \code{emm_options(saved.opts = emm_options())} and 
+#' \code{emm_options(disable = FALSE)} is equivalent to 
+#' \code{options(emmeans = get_emm_option("saved.opts"))}. To completely erase
+#' all options, use \code{options(emmeans = NULL)}
+#' 
+#' 
+#' 
 #' @seealso \code{\link{update.emmGrid}}
 #' @export
 #' @examples
@@ -473,17 +502,35 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' 
 #' # See tolerance being used for determining estimability
 #' get_emm_option("estble.tol")
+#' 
+#' \dontrun{
+#' # Set all options to their defaults
+#' emm_options(disable = TRUE)
+#' # ... and perhaps follow with code for a minimal reproducible bug,
+#' #     which may include emm_options() clls if they are pertinent ...
+#' 
+#' # restore options that had existed previously
+#' emm_options(disable = FALSE)
+#' }
 #'
-emm_options = function(...) {
+emm_options = function(..., disable) {
     opts = getOption("emmeans", list())
-    #    if (is.null(opts)) opts = list()
     newopts = list(...)
+    display = TRUE  # flag to display all options if ... is empty
+    if (!missing(disable)) {
+        if (disable)
+            opts = list(saved.opts = opts)
+        else if (!is.null(saved <- opts$saved.opts))
+            opts = saved
+        newopts = list()
+        display = FALSE
+    }
     for (nm in names(newopts))
         opts[[nm]] = newopts[[nm]]
     options(emmeans = opts)
     if (length(newopts) > 0)
         invisible(opts)
-    else {
+    else if (display) {
         opts = c(opts, emm_defaults)
         opts[sort(names(opts))]
     }
@@ -514,7 +561,7 @@ emm_defaults = list (
     save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
     cov.keep = "2",           # default for cov.keep arg in ref_grid
     sep = " ",                # separator for combining factor levels
-    parens = c("-|\\+|\\/|\\*", "(", ")"), # patterns for what/how to parenthesize in contrast
+    parens = c(r"{-|\+|\/|\*}", "(", ")"), # patterns for what/how to parenthesize in contrast
     graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
 ###    msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions
