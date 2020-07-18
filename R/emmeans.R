@@ -452,15 +452,12 @@ emmeans = function(object, specs, by = NULL,
     
 
     if(!missing(contr)) { # return a list with emmeans and contrasts
-        if (is.character(contr) && contr == "cld") {
-        # TO DO: provide for passing dots to cld                
-            #xxxx return(cld(result, by = by))
-            stop("`cld` in formula specs has been deprecated.\n",
-                 "To obtain a compact letter display, first call `emmeans()`,\n",
-                 "then call `CLD()` on the result.")
-        }
         args = list(...)
-        args$data = NULL   # ensure 'data' not passed
+        # NULL-out a bunch of arguments to not pass. 
+        dontpass = c("data", "avgd.over", "by.vars", "df", "initMesg", "estName", "estType",
+                     "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars", 
+                     "tran", "tran.mult", "tran.offset", "tran2", "type", "is.new.rg")
+        args[!is.na(pmatch(names(args), dontpass))] = NULL
         args$object = result
         args$method = contr
         args$by = by

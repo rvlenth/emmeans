@@ -366,8 +366,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 ### List of valid strings to match in update() ###
 .valid.misc = c("adjust","alpha","avgd.over","bias.adjust","by.vars","calc","delta","df",
                "initMesg","estName","estType","famSize","frequentist","infer","inv.lbl",
-               "level","methDesc","nesting","null","predict.type","pri.vars"
-               ,"side","sigma","tran","tran.mult","tran.offset","tran2","type","is.new.rg")
+               "level","methDesc","nesting","null","predict.type","pri.vars",
+               "side","sigma","tran","tran.mult","tran.offset","tran2","type","is.new.rg")
 
 
 #' Set or change emmeans options

@@ -6,6 +6,9 @@ emmeans 1.4.809xxxxxxx
   * Changed help page for `joint_tests()` to reflect `cov.keep` (ver. 1.4.2)
   * `emm_options()` gains a `disable` argument to use for setting aside
     any existing options. Useful for reproducible bug reporting.
+  * In `emmeans()` with a `contr` argument or two-sided formula, we now suppress
+    several particular `...` arguments from being passed on to `contrast()`
+    when they should apply only to the construction of the EMMs (#214)
   
 
 
