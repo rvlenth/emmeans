@@ -73,8 +73,9 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 
 ### emm_basis method for mgcv::gam objects
 ### extra arg `unconditional` and `freq` as in `vcov.gam`
-emm_basis.gam = function(object, trms, xlev, grid, 
-                         freq = FALSE, unconditional = FALSE, ...) {
+emm_basis.gam = function(object, trms, xlev, grid,
+                         freq = FALSE, unconditional = FALSE,
+                         what = 1, ...) {
     # coef() works right for lm but coef.aov tosses out NAs
     bhat = object$coefficients
 #    m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
@@ -84,11 +85,28 @@ emm_basis.gam = function(object, trms, xlev, grid,
     bhat = as.numeric(bhat) 
     # stretches it out if multivariate - see mlm method
     V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)
-    
+
+    sel = attr(X, "lpi")[[what]]
+
+    if (!is.null(sel)) {
+        bhat = bhat[sel]
+        X = X[, sel]
+        V = V[sel, sel]
+    }
+
     # if (sum(is.na(bhat)) > 0)
     #     nbasis = estimability::nonest.basis(object$qr)
     # else
         nbasis = estimability::all.estble
+
+        if (!is.null(sel)) {
+            object$family$link = object$family$link[what]
+
+            if (object$family$link == "logb") {
+                object$family$link = "log"
+            }
+        }
+
         misc = .std.link.labels(object$family, list())
         # dffun = function(k, dfargs) Inf
         # dfargs = list()
