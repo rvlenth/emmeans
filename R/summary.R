@@ -289,6 +289,7 @@
 #' 
 #' @method summary emmGrid  
 #' @export
+#' @order 1
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
@@ -586,6 +587,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
 # S3 predict method
 
 #' @rdname summary.emmGrid
+#' @order 4
 #' @method predict emmGrid
 #' @param interval Type of interval desired (partial matching is allowed): 
 #' \code{"none"} for no intervals,
@@ -646,6 +648,7 @@ predict.emmGrid <- function(object, type,
 # as.data.frame method
 
 #' @rdname summary.emmGrid
+#' @order 5
 #' @param x object of the given class
 #' @param row.names passed to \code{\link{as.data.frame}}
 #' @param optional passed to \code{\link{as.data.frame}}
@@ -659,6 +662,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 
 
 #' @rdname summary.emmGrid
+#' @order 6
 #' @method [ summary_emm
 #' @param as.df Logical value. With \code{x[..., as.df = TRUE]}, the result is
 #'   object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 

@@ -96,17 +96,17 @@
 #'     and shape parameter specified by \code{shape}}
 #' }
 #' 
-#' @method as.mcmc emmGrid
+#' @method coda::as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
 #' @examples
-#' require("coda")
-#'
-#' ### A saved reference grid for a mixed logistic model (see lme4::cbpp)
-#' cbpp.rg <- do.call(emmobj, 
+#' if(requireNamespace("coda") {
+#'   ### A saved reference grid for a mixed logistic model (see lme4::cbpp)
+#'   cbpp.rg <- do.call(emmobj, 
 #'     readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
-#' # Predictive distribution for herds of size 20
-#' # (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
-#' pred.incidence <- as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
+#'   # Predictive distribution for herds of size 20
+#'   # (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
+#'   pred.incidence <- coda::as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
+#' }
 as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, 
                            likelihood, NE.include = FALSE, ...) {
     if (is.na(x@post.beta[1])) {
@@ -179,7 +179,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
 
 ### as.mcmc.list - guaranteed to return a list
 #' @rdname mcmc-support
-#' @method as.mcmc.list emmGrid
+#' @method coda::as.mcmc.list emmGrid
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
     if(!inherits(result, "mcmc.list"))

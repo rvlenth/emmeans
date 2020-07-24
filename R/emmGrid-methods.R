@@ -354,6 +354,24 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                         object@misc$display = .find.nonempty.nests(object, nms)
                     }
                 }
+                if (fullname == "submodel") {
+                    if(!is.null(A <- .alias.matrix(object, args[[nm]]))) {
+                        rcols = attr(A, "rcols")
+                        L = object@linfct
+                        k = ncol(L) / ncol(A)
+                        if(abs(k - (k<-as.integer(k))) > .01)
+                            stop("Incompatible columns in alias setup")
+                        ixmat = matrix(seq_along(L[1,]), ncol = k)
+                        for (j in seq_len(k)) {
+                            rc = ixmat[rcols, j]
+                            fc =ixmat[, j]
+                            object@linfct[, fc] = L[, rc, drop = FALSE] %*% A
+                        }
+                        object@model.info$model.matrix = "" # silent message
+                        misc$initMesg = c(misc$initMesg, paste("submodel: ~", attr(A, "submodstr")))
+                    }
+                }
+                    
                 else
                     misc[[fullname]] = args[[nm]]
             }
@@ -367,7 +385,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 .valid.misc = c("adjust","alpha","avgd.over","bias.adjust","by.vars","calc","delta","df",
                "initMesg","estName","estType","famSize","frequentist","infer","inv.lbl",
                "level","methDesc","nesting","null","predict.type","pri.vars",
-               "side","sigma","tran","tran.mult","tran.offset","tran2","type","is.new.rg")
+               "side","sigma","tran","tran.mult","tran.offset","tran2","type","is.new.rg",
+               "submodel")
 
 
 #' Set or change emmeans options
@@ -561,7 +580,7 @@ emm_defaults = list (
     save.ref_grid = TRUE,     # save new ref_grid in .Last.ref_grid
     cov.keep = "2",           # default for cov.keep arg in ref_grid
     sep = " ",                # separator for combining factor levels
-    parens = c(r"{-|\+|\/|\*}", "(", ")"), # patterns for what/how to parenthesize in contrast
+    parens = c("-|\\+|\\/|\\*", "(", ")"), # patterns for what/how to parenthesize in contrast
     graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
 ###    msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions
@@ -828,6 +847,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
     # Nix out things that are no longer needed or valid
     object@grid$.offset. = object@misc$offset.mult =
         object@misc$estHook = object@misc$vcovHook = NULL
+    object@model.info$model.matrix = "Submodels are not available with regridded objects"
     if(!missing(predict.type))
         object = update(object, predict.type = predict.type)
     object

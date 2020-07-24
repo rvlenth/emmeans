@@ -23,6 +23,7 @@
 
 # confint method
 #' @rdname summary.emmGrid
+#' @order 2
 #' @param parm (Required argument for \code{confint} methods, but not used)
 #' @method confint emmGrid
 #' @export
@@ -31,12 +32,14 @@ confint.emmGrid = function(object, parm, level = .95, ...) {
 }
 
 #' @rdname summary.emmGrid
+#' @order 3
 #' @export
 test = function(object, null, ...) {
     UseMethod("test")
 }
 
 #' @rdname summary.emmGrid
+#' @order 3
 #' @param joint Logical value. If \code{FALSE}, the arguments are passed to 
 #'   \code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
 #'   TRUE}, a joint test of the hypothesis L beta = null is performed, where L 
@@ -184,8 +187,9 @@ test.emmGrid = function(object, null = 0,
 #' reference grid, whereas type III tests are tests of model coefficients --
 #' which may or may not have anything to do with EMMs or contrasts.
 #' 
-#' @param object a fitted model or an \code{emmGrid}. If a fitted model, it is
-#'    replaced by \code{ref_grid(object, cov.reduce = range, ...)}
+#' @param object,cov.reduce \code{object} is a fitted model or an \code{emmGrid}. 
+#'    If a fitted model, it is
+#'    replaced by \code{ref_grid(object, cov.reduce = cov.reduce, ...)}
 #' @param by character names of \code{by} variables. Separate sets of tests are
 #'    run for each combination of these.
 #' @param show0df logical value; if \code{TRUE}, results with zero numerator
@@ -235,9 +239,11 @@ test.emmGrid = function(object, null = 0,
 #' ## treat            1    252.0833333    252.0833333    208.62   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
-joint_tests = function(object, by = NULL, show0df = FALSE, ...) {
-    if (!inherits(object, "emmGrid"))
-        object = ref_grid(object, ...)
+joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, ...) {
+    if (!inherits(object, "emmGrid")) {
+        args = .zap.args(object = object, cov.reduce = cov.reduce, ..., omit = "submodel")
+        object = do.call(ref_grid, args)
+    }
     facs = setdiff(names(object@levels), by)
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {

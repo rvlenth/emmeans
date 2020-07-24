@@ -4,11 +4,12 @@
 \alias{joint_tests}
 \title{Compute joint tests of the terms in a model}
 \usage{
-joint_tests(object, by = NULL, show0df = FALSE, ...)
+joint_tests(object, by = NULL, show0df = FALSE, cov.reduce = range, ...)
 }
 \arguments{
-\item{object}{a fitted model or an \code{emmGrid}. If a fitted model, it is
-replaced by \code{ref_grid(object, cov.reduce = range, ...)}}
+\item{object, cov.reduce}{\code{object} is a fitted model or an \code{emmGrid}. 
+If a fitted model, it is
+replaced by \code{ref_grid(object, cov.reduce = cov.reduce, ...)}}
 
 \item{by}{character names of \code{by} variables. Separate sets of tests are
 run for each combination of these.}

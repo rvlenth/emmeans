@@ -6,10 +6,10 @@
 \alias{as.mcmc.list.emmGrid}
 \title{Support for MCMC-based estimation}
 \usage{
-\method{as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE, likelihood,
-  NE.include = FALSE, ...)
+\method{coda::as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE,
+  likelihood, NE.include = FALSE, ...)
 
-\method{as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
+\method{coda::as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{emmGrid}}
@@ -89,12 +89,12 @@ a character value. They are:
 }
 
 \examples{
-require("coda")
-
-### A saved reference grid for a mixed logistic model (see lme4::cbpp)
-cbpp.rg <- do.call(emmobj, 
+if(requireNamespace("coda") {
+  ### A saved reference grid for a mixed logistic model (see lme4::cbpp)
+  cbpp.rg <- do.call(emmobj, 
     readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
-# Predictive distribution for herds of size 20
-# (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
-pred.incidence <- as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
+  # Predictive distribution for herds of size 20
+  # (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
+  pred.incidence <- coda::as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
+}
 }

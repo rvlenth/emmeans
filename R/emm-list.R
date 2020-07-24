@@ -31,7 +31,7 @@
 #' for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 #' \code{specs} argument.
 #' 
-#' Methods for \code{emm_list} objects include \code{summary}, \code{CLD},
+#' Methods for \code{emm_list} objects include \code{summary}, 
 #' \code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{plot},
 #' \code{print}, and
 #' \code{test}. These are all the same as those methods for \code{emmGrid}
@@ -48,7 +48,7 @@
 #'
 #' @rdname emm_list-object
 #' @name emm_list
-#' @aliases CLD.emm_list
+### deprecated#' @aliases CLD.emm_list
 NULL
 
 
@@ -105,14 +105,14 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], confint, ...)
 }
 
-#' @export
-#' @method CLD emm_list
-CLD.emm_list = function(object, ..., which = seq_along(object)) {
-    if (length(which) > 1)
-        warning("`CLD()` called with a list of ", length(which), " objects. ",
-             "Only the first one was used.")
-    CLD(object[[which[1]]], ...)
-}
+### #' @export
+### #' @method CLD emm_list
+# CLD.emm_list = function(object, ..., which = seq_along(object)) {
+#     if (length(which) > 1)
+#         warning("`CLD()` called with a list of ", length(which), " objects. ",
+#              "Only the first one was used.")
+#     CLD(object[[which[1]]], ...)
+# }
 
 #' @export
 #' @method coef emm_list

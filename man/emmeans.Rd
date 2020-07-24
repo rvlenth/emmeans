@@ -78,7 +78,7 @@ When \code{specs} is a \code{character} vector or one-sided formula,
   are provided for further analysis, including
   \code{\link{summary.emmGrid}}, \code{\link{confint.emmGrid}},
   \code{\link{test.emmGrid}}, \code{\link{contrast.emmGrid}},
-  \code{\link{pairs.emmGrid}}, and \code{\link{CLD.emmGrid}}.
+  and \code{\link{pairs.emmGrid}}.
 When \code{specs} is a \code{list} or a \code{formula} having a left-hand
 side, the return value is an \code{\link{emm_list}} object, which is simply a
 \code{list} of \code{emmGrid} objects.

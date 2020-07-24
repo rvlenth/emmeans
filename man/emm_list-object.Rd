@@ -2,7 +2,6 @@
 % Please edit documentation in R/emm-list.R
 \name{emm_list}
 \alias{emm_list}
-\alias{CLD.emm_list}
 \title{The \code{emm_list} class}
 \description{
 An \code{emm_list} object is simply a list of
@@ -11,7 +10,7 @@ for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 \code{specs} argument.
 }
 \details{
-Methods for \code{emm_list} objects include \code{summary}, \code{CLD},
+Methods for \code{emm_list} objects include \code{summary}, 
 \code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{plot},
 \code{print}, and
 \code{test}. These are all the same as those methods for \code{emmGrid}

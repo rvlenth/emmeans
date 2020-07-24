@@ -151,7 +151,7 @@ emmeans.list = function(object, specs, ...) {
 #'   are provided for further analysis, including
 #'   \code{\link{summary.emmGrid}}, \code{\link{confint.emmGrid}},
 #'   \code{\link{test.emmGrid}}, \code{\link{contrast.emmGrid}},
-#'   \code{\link{pairs.emmGrid}}, and \code{\link{CLD.emmGrid}}.
+#'   and \code{\link{pairs.emmGrid}}.
 
 #' When \code{specs} is a \code{list} or a \code{formula} having a left-hand
 #' side, the return value is an \code{\link{emm_list}} object, which is simply a
@@ -263,7 +263,8 @@ emmeans = function(object, specs, by = NULL,
                    weights, offset, trend, ..., tran) {
     
     if(!is(object, "emmGrid")) {
-        object = ref_grid(object, ...)
+        args = .zap.args(object = object, ..., omit = "submodel")
+        object = do.call(ref_grid, args)
     }
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
@@ -452,15 +453,11 @@ emmeans = function(object, specs, by = NULL,
     
 
     if(!missing(contr)) { # return a list with emmeans and contrasts
-        args = list(...)
         # NULL-out a bunch of arguments to not pass. 
         dontpass = c("data", "avgd.over", "by.vars", "df", "initMesg", "estName", "estType",
                      "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars", 
                      "tran", "tran.mult", "tran.offset", "tran2", "type", "is.new.rg")
-        args[!is.na(pmatch(names(args), dontpass))] = NULL
-        args$object = result
-        args$method = contr
-        args$by = by
+        args = .zap.args(object = result, method = contr, by = by, ..., omit = dontpass)
         ctrs = do.call(contrast, args)
         result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)
         if(!is.null(lbl <- object@misc$methDesc))
