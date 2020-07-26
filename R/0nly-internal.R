@@ -416,6 +416,7 @@ model.frame = function(formula, data, ...) {
         X[, i0] = 0
     }
     A = qr.coef(qr(X[, rcols, drop = FALSE]), X)  # alias matrix
+    A[is.na(A)] = 0  ## NA coefs are really ones constrained to zero
     attr(A, "rcols") = rcols   # cols in submodel
     attr(A, "submodstr") = paste(colnames(tbl)[incl], collapse = " + ")
     A

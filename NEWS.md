@@ -14,6 +14,7 @@ emmeans 1.4.809xxxxxxx
     Documentation for `multcomp::cld()`
     method added and moved to different help page.
   * Experimental `submodel` option
+  * New `ubds` dataset for testing with messy situations
   
 
 

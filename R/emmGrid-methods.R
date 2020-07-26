@@ -269,6 +269,32 @@ vcov.emmGrid = function(object, ...) {
 #' \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
 #' it from \code{level}.}
 #' 
+#' \item{\code{submodel}}{\code{formula} or \code{character} value specifying a 
+#' submodel (requires this feature being supported by underlying methods 
+#' for the model class). When specified, the \code{linfct} slot is replaced by 
+#' its aliases for the specified sub-model. Any factors in the sub-model that 
+#' do not appear in the model matrix are ignored, as are any interactions that 
+#' are not in the main model, and any factors associate with multivariate responses. 
+#' The estimates displayed are then computed as if 
+#' the sub-model had been fitted. (However, the standard errors will be based on the
+#' essror variance(s) of the full model.)
+#' 
+#' The character values allowed should partially 
+#' match \code{"minimal"} or \code{"type2"}. With \code{"minimal"}, the sub-model
+#' is taken to be the one only involving the surviving factors in \code{object}
+#' (the ones averaged over being omitted). Specifying \code{"type2"} is the same as
+#' \code{"minimal"} except only the highest-order term in the submodel is retained,
+#' and all effects not containing it are orthogonalized-out. Thus, in a purely linear
+#' situation such as an \code{lm} model, the joint test
+#' of the modified object is in essence a type-2 test as in \code{car::Anova}.
+#' 
+#' For some objects such as generalized linear models, specifying \code{submodel}
+#' will typically not produce the same estimates or type-2 tests as would be
+#' obtained by actually fitting a separate model with those specifications.
+#' The reason is that those models are fitted by iterative-reweighting methods,
+#' whereas the \code{submodel} calculations preserve the final weights used in
+#' fitting the full model.}
+#' 
 #' \item{(any other slot name)}{If the name matches an element of
 #' \code{slotNames(object)} other than \code{levels}, that slot is replaced by 
 #' the supplied value, if it is of the required class (otherwise an error occurs). 
@@ -286,12 +312,16 @@ vcov.emmGrid = function(object, ...) {
 #' is called, because it probably will not make sense to do the same 
 #' calculations on the contrast results, and in fact the variable(s) needed
 #' may not even still exist.
+#' 
+#' Currently, \code{submodel} does not work correctly with models where
+#' predictors are transformed within the model formula, e.g., 
+#' \code{factor(percent)}.
 #'
 #' @seealso \code{\link{emm_options}}
 #' @examples
 #' # Using an already-transformed response:
-#' mypigs <- transform(pigs, logconc = log(pigs$conc))
-#' mypigs.lm <- lm(logconc ~ source + factor(percent), data = mypigs)
+#' mypigs <- transform(pigs, logconc = log(pigs$conc), pctfac = factor(percent))
+#' mypigs.lm <- lm(logconc ~ source * pctfac, data = mypigs)
 #' 
 #' # Reference grid that knows about the transformation
 #' # and asks to include the sample size in any summaries:
@@ -299,6 +329,12 @@ vcov.emmGrid = function(object, ...) {
 #'                     predict.type = "response",
 #'                     calc = c(n = ~.wgt.))
 #' emmeans(mypigs.rg, "source")
+#' 
+#' # Obtain estimates for the additive model
+#' emmeans(mypigs.rg, "source", submodel = ~ source + pctfac)
+#' 
+#' # Type II ANOVA
+#' joint_tests(mypigs.rg, submodel = "type2")
 update.emmGrid = function(object, ..., silent = FALSE) {
     args = list(...)
     # see .valid.misc below this function for list of legal options
