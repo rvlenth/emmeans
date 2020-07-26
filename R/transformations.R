@@ -344,7 +344,19 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
              tmp$name = "log odds ratio"
              tmp
          },
-         
+         logb = {
+             b = attr(link, "b")
+
+             linkinv = paste0("function(eta) 1/(exp(eta) + ", b, ")")
+             mu.eta = paste0("function(eta) { ee <- exp(eta); -ee/(ee + ", b, ")^2 }")
+
+             list(
+                 linkinv = eval(parse(text = linkinv)),
+                 mu.eta = eval(parse(text = mu.eta)),
+                 name = "logb"
+             )
+         },
+
          { # default if not included, flags it as unknown
              tmp = stats::make.link("identity")
              tmp$unknown = TRUE

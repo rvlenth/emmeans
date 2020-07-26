@@ -75,7 +75,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 ### extra arg `unconditional` and `freq` as in `vcov.gam`
 emm_basis.gam = function(object, trms, xlev, grid,
                          freq = FALSE, unconditional = FALSE,
-                         what = 1, ...) {
+                         what = "location", ...) {
     # coef() works right for lm but coef.aov tosses out NAs
     bhat = object$coefficients
 #    m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
@@ -86,27 +86,41 @@ emm_basis.gam = function(object, trms, xlev, grid,
     # stretches it out if multivariate - see mlm method
     V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)
 
-    sel = attr(X, "lpi")[[what]]
+    fam_name = object$family$family
+    what_arg = what
 
-    if (!is.null(sel)) {
-        bhat = bhat[sel]
-        X = X[, sel]
-        V = V[sel, sel]
+    if (fam_name == "multinom" || fam_name == "mvn") {
+        if (!is.numeric(what_arg)) {
+            stop("Family '", fam_name, "' requires a numeric argument 'what'")
+        }
+    } else if (fam_name == "ziplss") {
+        what = switch(what_arg, location = 1, presence = 2)
+    } else {
+        what = switch(what_arg, location = 1, scale = 2, shape = 3)
     }
+
+    select = attr(X, "lpi")
+
+    if (is.null(select)) {
+        select = list(seq_along(bhat))
+    }
+
+    select = try(select[[what]], silent = TRUE)
+
+    if (inherits(select, "try-error")) {
+        stop("Model does not have a linear predictor 'what = ", what_arg, "'")
+    }
+
+    bhat = bhat[select]
+    X = X[, select, drop = FALSE]
+    V = V[select, select, drop = FALSE]
 
     # if (sum(is.na(bhat)) > 0)
     #     nbasis = estimability::nonest.basis(object$qr)
     # else
         nbasis = estimability::all.estble
-
-        if (!is.null(sel)) {
-            object$family$link = object$family$link[what]
-
-            if (object$family$link == "logb") {
-                object$family$link = "log"
-            }
-        }
-
+        object$family$link = object$family$link[what]
+        object$family$linfo = object$family$linfo[[what]]
         misc = .std.link.labels(object$family, list())
         # dffun = function(k, dfargs) Inf
         # dfargs = list()
