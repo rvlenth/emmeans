@@ -223,7 +223,11 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
     else
         nbasis=estimability::all.estble
     
-    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
+    mm = .cmpMM(object@pp$X, object@pp$Xwts,
+                attr(object@pp$X, "assign"))
+    
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc,
+         model.matrix = mm)
 }
 
 

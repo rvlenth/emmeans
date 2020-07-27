@@ -121,7 +121,15 @@ args(emmeans:::emm_basis.lm)
 ```
 These are, respectively, the model object, its `terms` component (at least for the right-hand side of the model), a `list` of levels of the factors, and the grid of predictor combinations that specify the reference grid. 
 
-The function must obtain six things and return them in a named `list`. They are the matrix `X` of linear functions for each point in the reference grid, the regression coefficients `bhat`; the variance-covariance matrix `V`; a matrix `nbasis` for non-estimable functions; a function `dffun(k,dfargs)` for computing degrees of freedom for the linear function `sum(k*bhat)`; and a list `dfargs` of arguments to pass to `dffun`.
+The function must obtain six things and return them in a named `list`. They are
+the matrix `X` of linear functions for each point in the reference grid, the
+regression coefficients `bhat`; the variance-covariance matrix `V`; a matrix
+`nbasis` for non-estimable functions; a function `dffun(k,dfargs)` for computing
+degrees of freedom for the linear function `sum(k*bhat)`; and a list `dfargs` of
+arguments to pass to `dffun`. Optionally, the returned list may include a
+`model.matrix` element (the model matrix for the data or a compact version
+thereof obtained via `.cmpMM()`), which, if included, enables the `submodel`
+option.
 
 To write your own `emm_basis` function, examining some of the existing methods can help; but the best resource is the `predict` method for the object in question, looking carefully to see what it does to predict values for a new set of predictors (e.g., `newdata` in `predict.lm`). Following this advice, let's take a look at it:
 ```{r}
@@ -272,7 +280,13 @@ A few additional functions are exported because they may be useful to developers
     vector of `exclude` indices in `levs`, given specified integer or character
     arguments `exclude` and `include`. In your `.emmc` function, 
     `exclude` should default to `integer(0)` and `include` should have no default.
-    
+  * `emmeans::.cmpMM(X, weights, assign)` creates a compact version of the
+    model matrix `X` (or, preferably, its QR decomposition). 
+    This is useful if we want an `emm_basis()` method to return a `model.matrix` element.
+    The returned result is
+    just the R portion of the QR decomposition of `diag(sqrt(weights)) %*% X`, with the 
+    `assign` attribute added. If `X` is a `qr` object, we assume the weights are
+    already incorporated, as is true of the `qr` slot of a `lm` object. 
 
 [Back to Contents](#contents)
 
