@@ -773,8 +773,6 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
         return(misc)
     if (fam$link == "identity")
         return(misc)
-    if (fam$link == "logb")
-        attr(fam$link, "b") = 1/fam$linfo$linkinv(-Inf)
     misc$tran = fam$link
     misc$inv.lbl = "response"
     if (length(grep("binomial", fam$family)) == 1)
