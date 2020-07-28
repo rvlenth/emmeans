@@ -50,7 +50,8 @@ Scroll down or follow the links to those groups for more information.
 |clmm         |ordinal  |[O](#O)  |Like `clm` but no `"scale"` mode                             |
 |coxme        |coxme    |[G](#G)  |                                                             |
 |coxph        |survival |[G](#G)  |                                                             |
-|gam          |mgcv     |[G](#G)  |`freq = FALSE`, `unconditional = FALSE`                      |
+|gam          |mgcv     |[G](#G)  |`freq = FALSE`, `unconditional = FALSE`,                     |
+|             |         |         |`what = c("location", "scale", "shape", "rate", "prob.gt.0")`|
 |gamm         |mgcv     |[G](#G)  |`call = object$gam$call`                                     |
 |Gam          |gam      |[G](#G)  |`nboot = 800`                                                |
 |gamlss       |gamlss   |[H](#H)  |`what = c("mu", "sigma", "nu", "tau")`                       |
@@ -190,6 +191,10 @@ part. Unfortunately, that is missing its `call` component, so the user
 must supply it in the `call` argument (e.g., `call = quote(gamm(y ~ s(x), data = dat))`) 
 or give the dataset in the `data` argument. Alternatively (and recommended), 
 you may first set `object$gam$call` to the quoted call ahead of time.
+The `what` arguments are used to select which model formula to use: 
+`"location", "scale"` apply to `gaulss` and `gevlss`
+families, `"shape"` applies only to `gevlss`, and `"rate", "prob.gt.0"` 
+apply to `ziplss`.
 
 With `gam::Gam` objects, standard errors are estimated using a bootstrap
 method when there are any smoothers involved. Accordingly, there is an 
