@@ -114,14 +114,20 @@ emm_basis.gam = function(object, trms, xlev, grid,
     V = V[select, select, drop = FALSE]
     
     nbasis = estimability::all.estble
-    object$family$link = object$family$link[what_num]
-    misc = .std.link.labels(object$family, list())
+    link = object$family$link[what_num]
+    if(link == "identity") # they may be lying
+        link = switch(fam_name,
+                      ocat = "logit",
+                      ziP = "log",
+                      cox.ph = "log", ## ???
+                      ziplss = c("log", "cloglog")[what_num],
+                      gevlss = c("identity", "log", "logit")[what_num],
+                      "identity")
+    misc = .std.link.labels(list(link = link), list())
     
-    if (!is.null(misc$tran) && misc$tran == "logb")
-        misc$tran = object$family$linfo[[what_num]]
-    # NOTE we need yet more work on getting the right link function, because several other
-    # claim to use an "identity" link when really it is something else 
-    
+    if (!is.null(misc$tran) && misc$tran == "logb")  # the way this is documented is truly bizarre but I think this is right
+        misc$tran = make.tran("genlog", -0.01)
+
     dfargs = list(df = object$df.residual)
     dffun = function(k, dfargs) dfargs$df
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)

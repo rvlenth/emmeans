@@ -30,7 +30,9 @@ recover_data.aovlist = function(object, ...) {
     err.idx = grep("^Error\\(", lbls)
     newf = as.formula(paste(c(".~.", lbls[err.idx]), collapse = "-"))
     trms = terms(update(trms, newf))
-    recover_data(fcall, delete.response(trms), na.action = attr(object, "na.action"), ...)
+    dat = recover_data(fcall, delete.response(trms), na.action = attr(object, "na.action"), ...)
+    attr(dat, "pass.it.on") = TRUE
+    dat
 }
 
 # This works great for balanced experiments, and goes horribly wrong
@@ -170,8 +172,12 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         X = kronecker(diag(1, m), X)
     }
     
+    # submodel support
+    mm = model.matrix(trms, attr(object, "data"), contrasts.arg = contr)
+    mm = .cmpMM(mm, assign = attr(mm, "assign"))
+    
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
-         dfargs = dfargs, misc = misc)
+         dfargs = dfargs, misc = misc, model.matrix = mm)
 }
 
 #' @export
