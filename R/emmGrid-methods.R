@@ -277,7 +277,10 @@ vcov.emmGrid = function(object, ...) {
 #' are not in the main model, and any factors associate with multivariate responses. 
 #' The estimates displayed are then computed as if 
 #' the sub-model had been fitted. (However, the standard errors will be based on the
-#' essror variance(s) of the full model.)
+#' error variance(s) of the full model.) 
+#' \emph{Note:} The formula should refer only to predictor names, \emph{excluding} any
+#' function calls (such as \code{factor} or \code{poly}) that appear in the 
+#' original model formula. See the example.
 #' 
 #' The character values allowed should partially 
 #' match \code{"minimal"} or \code{"type2"}. With \code{"minimal"}, the sub-model
@@ -312,29 +315,26 @@ vcov.emmGrid = function(object, ...) {
 #' is called, because it probably will not make sense to do the same 
 #' calculations on the contrast results, and in fact the variable(s) needed
 #' may not even still exist.
-#' 
-#' Currently, \code{submodel} does not work correctly with models where
-#' predictors are transformed within the model formula, e.g., 
 #' \code{factor(percent)}.
 #'
 #' @seealso \code{\link{emm_options}}
 #' @examples
 #' # Using an already-transformed response:
-#' mypigs <- transform(pigs, logconc = log(pigs$conc), pctfac = factor(percent))
-#' mypigs.lm <- lm(logconc ~ source * pctfac, data = mypigs)
+#' pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 #' 
 #' # Reference grid that knows about the transformation
 #' # and asks to include the sample size in any summaries:
-#' mypigs.rg <- update(ref_grid(mypigs.lm), tran = "log", 
+#' pigs.rg <- update(ref_grid(pigs.lm), tran = "log", 
 #'                     predict.type = "response",
 #'                     calc = c(n = ~.wgt.))
-#' emmeans(mypigs.rg, "source")
+#' emmeans(pigs.rg, "source")
 #' 
 #' # Obtain estimates for the additive model
-#' emmeans(mypigs.rg, "source", submodel = ~ source + pctfac)
+#' # [Note that the submodel refers to 'percent', note 'factor(percent)']
+#' emmeans(pigs.rg, "source", submodel = ~ source + percent)
 #' 
 #' # Type II ANOVA
-#' joint_tests(mypigs.rg, submodel = "type2")
+#' joint_tests(pigs.rg, submodel = "type2")
 update.emmGrid = function(object, ..., silent = FALSE) {
     args = list(...)
     # see .valid.misc below this function for list of legal options

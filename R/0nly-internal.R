@@ -367,6 +367,18 @@ model.frame = function(formula, data, ...) {
     R
 }
 
+# Get 'factors' table and simplify it (remove function calls from term labels)
+.smpFT = function(trms) {
+    tbl = attr(trms, "factors")
+    rn = rownames(tbl)
+    newrn = sapply(rn, function(x) all.vars(as.formula(paste("~", x)))[1])
+    if (any(newrn != rn)) {
+        rownames(tbl) = newrn
+        colnames(tbl) = apply(tbl, 2, function(x) paste(newrn[x > 0], collapse = ":"))
+    }
+    tbl
+}
+
 # Alias matrix. Goal here is to find indexes
 #    i1 = indices of columns of smaller model
 #    i2 = indices of all other terms
@@ -375,7 +387,7 @@ model.frame = function(formula, data, ...) {
 #    (where _F subscripts full model).
 # Moreover, L_R is just columns i1 of the linfct for the effect of interest.
 .alias.matrix = function(object, submodel) {
-    X = object@model.info$model.matrix
+    X = object@model.info$model.matrix  # assumed to have attributes "factors" and "assign"
     if (is.character(X)) {  # model.matrix is a message
         if (nchar(X) > 0) warning(X, call. = FALSE)
         return(NULL)
@@ -385,7 +397,7 @@ model.frame = function(formula, data, ...) {
         warning("submodel information is not available for this object", call. = FALSE)
         return(NULL)
     }
-    tbl = attr(object@model.info$terms, "factors")
+    tbl = attr(X, "factors")
     if (is.character(submodel)) {
         type2 = pmatch(submodel[1], "type2", nomatch = 0) # 1 if type2, 0 otherwise
         submodel = as.formula(paste("~", paste(names(object@levels), collapse="*")))

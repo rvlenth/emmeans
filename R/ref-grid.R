@@ -690,8 +690,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     grid[[".wgt."]] = wgt
     
     model.info = list(call = attr(data,"call"), terms = trms, xlev = xlev)
-    model.info$model.matrix = basis$model.matrix  # for submodel support
-    model.info$ylevs = basis$ylevs
+    if (!is.null(mm <- basis$model.matrix)) { # submodel support
+        attr(mm, "factors") = .smpFT(trms)
+        model.info$model.matrix = mm  
+    }
     # Detect any nesting structures
     nst = .find_nests(grid, trms, coerced$orig, ref.levels)
     if (length(nst) > 0)
