@@ -74,6 +74,7 @@ Scroll down or follow the links to those groups for more information.
 |lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
 |             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
 |             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
+|lqm,lqmm     |lqmm     |[A](#A)  |`tau = "0.5"` (must match an entry in `object$tau`)          |
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |

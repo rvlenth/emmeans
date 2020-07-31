@@ -16,6 +16,7 @@ emmeans 1.4.809xxxxxxx
   * Experimental `submodel` option
   * Enhancements to `mgcv::gam` support (#216)
   * New `ubds` dataset for testing with messy situations
+  * Added minimal support for `lqm` and `lqmm` models (#213)
   
 
 

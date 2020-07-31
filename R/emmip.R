@@ -196,7 +196,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     
     if(!nesting.order) { # re-order by factor levels actually in plot
         snm = intersect(nm, unlist(specs))
-        ord = do.call(order, emms[rev(snm)])
+        ord = do.call(order, unname(emms[rev(snm)]))
         emms = emms[ord, ]
     }
     
