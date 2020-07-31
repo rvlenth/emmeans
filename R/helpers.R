@@ -248,7 +248,9 @@ recover_data.lme = function(object, data, ...) {
         else
             fcall$weights = nlme::varWeights(object$modelStruct)
     }
-    recover_data(fcall, delete.response(object$terms), object$na.action, data = data, ...)
+    dat = recover_data(fcall, delete.response(object$terms), object$na.action, data = data, ...)
+    attr(dat, "pass.it.on") = TRUE
+    dat
 }
 
 #' @export
@@ -305,8 +307,15 @@ emm_basis.lme = function(object, trms, xlev, grid,
         dfargs = list(dfx = dfx)
     }
     attr(dffun, "mesg") = mode
+    
+    # submodel support (not great -- omits any weights)
+    m = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
+    mm = model.matrix(trms, m, contrasts.arg = contrasts)
+    mm = .cmpMM(mm, assign = attr(mm, "assign"))
+    
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
-         dffun = dffun, dfargs = dfargs, misc = misc)
+         dffun = dffun, dfargs = dfargs, misc = misc,
+         model.matrix = mm)
 }
 
 # Here is a total hack, but it works pretty well
@@ -403,6 +412,7 @@ recover_data.gls = function(object, data, ...) {
         result[["(weights)"]] = wts
     if (!missing(data))
         attr(result, "misc") = list(data = data)
+    attr(result, "pass.it.on") = TRUE
     result
 }
 
@@ -459,7 +469,14 @@ emm_basis.gls = function(object, trms, xlev, grid,
         dffun = function(k, dfargs) dfargs$df
     }
     attr(dffun, "mesg") = mode
-    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
+    
+    # submodel support (not great because I don't know how to retrieve the weights)
+    m = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
+    mm = model.matrix(trms, m, contrasts.arg = contrasts)
+    mm = .cmpMM(mm, assign = attr(mm, "assign"))
+    
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc,
+         model.matrix = mm)
 }
 
 
