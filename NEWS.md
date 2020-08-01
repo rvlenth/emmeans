@@ -14,6 +14,7 @@ emmeans 1.4.809xxxxxxx
     Documentation for `multcomp::cld()`
     method added and moved to different help page.
   * Experimental `submodel` option
+      * Bug fix therein (#217)
   * Enhancements to `mgcv::gam` support (#216)
   * New `ubds` dataset for testing with messy situations
   * Added minimal support for `lqm` and `lqmm` models (#213)

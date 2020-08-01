@@ -356,9 +356,13 @@ model.frame = function(formula, data, ...) {
 #' @export
 .cmpMM = function(X, weights = diag(nrow(X)), assign = attributes(X$qr, "assign")) {
     if(!is.qr(X)) {
+        if(any(is.na(X)))
+            return(NULL)
         if (!missing(weights))
-            X = diag(sqrt(weights)) %*% X
-        X = qr(X)
+            X = suppressWarnings(diag(sqrt(weights)) %*% X)
+        X = try(qr(X), silent = TRUE)
+        if (inherits(X, "try-error"))
+            return(NULL)
     }
     R = qr.R(X, complete = FALSE)
     R[, X$pivot] = R
