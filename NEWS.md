@@ -18,6 +18,7 @@ emmeans 1.4.809xxxxxxx
   * Enhancements to `mgcv::gam` support (#216)
   * New `ubds` dataset for testing with messy situations
   * Added minimal support for `lqm` and `lqmm` models (#213)
+  * Interim support for user-supplied contrasts for `stanreg` models (#212)
   
 
 

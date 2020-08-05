@@ -549,6 +549,8 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     # Instead, use internal routine in rstanarm to get the model matrix
     # Later, we'll get bhat and V from the posterior sample because
     # the vcov(object) doesn't always jibe with fixef(object)
+    if(is.null(object$contrasts)) # old version of rstanarm where contrasts may get lost.
+        object$contrasts = attr(model.matrix(object), "contrasts")
     pp_data = get("pp_data", envir = getNamespace("rstanarm"))
     X = pp_data(object, newdata = grid, re.form = ~0, ...)[[1]]
     nms = colnames(X)

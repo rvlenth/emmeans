@@ -25,8 +25,93 @@ implemented in the **emmeans** package.
 
 ## Contents {#contents}
 
-  1. [Comparison arrows](#arrows)
+  1. [Sub-models](#submodels)
+  2. [Comparison arrows](#arrows)
 
+
+
+## Sub-models {#submodels}
+<!-- @index `submodel`; Alias matrix; EMMs!Projecting to a submodel; -->
+Estimated marginal means (EMMs) and other statistics computed by the **emmeans** package 
+are *model-based*: they depend on the model that has been fitted to the data. 
+In this section we discuss a provision whereby a different underlying model may be considered:
+The `submodel` option in `update()` can project EMMs and other statistics to an alternative 
+universe where a simpler version of the model has been fitted to the data. 
+
+Before getting into more details, I want to make it clear that this works out exactly only for
+an ordinary fixed-effects regression model -- not a generalized linear model, mixed model, or other model 
+where, say, case weights are determined as part of the modeling. That is because `submodel` 
+uses information from the fixed-effects portion of the model, holding fixed all those fancier 
+components we have mentioned, such as random effects and iterative weights. 
+Also, not all model classes are supported for the `submodel` option. 
+
+Now some details. Suppose that we have a fixed-effects model matrix $X$, and let $X_1$ denote
+a sub-matrix of $X$ whose columns correspond to a specified sub-model. (Note: if there are weights, 
+use $X = W^{1/2}X^*$, where $X^*$ is the model matrix without the weights incorporated.) 
+The trick we use is what is called the *alias matrix*: 
+$A = (X_1'X_1)^-X_1'X$ where $Z^-$ denotes a generalized inverse of $Z$. 
+It can be shown that $(X_1'X_1)^-X_1' = A(X'X)^-X'$; thus, in an ordinary fixed-effects regression model,
+$b_1 = Ab$ where $b_1$ and $b$ denote the regression coefficients for 
+the sub-model and full model, respectively. Thus, given a matrix $L$ such that $Lb$ provides 
+estimates of interest for the full model, the corresponding estimates for the sub-model are $L_1b_1$,
+where $L_1$ is the sub-matrix of $L$ consisting of the columns corresponding to the columns of $X_1$.
+Moreover, $L_1b_1 = L_1(Ab) = (L_1A)b$; that is, we can replace $L$ by $L_1A$ to obtain
+estimates from the sub-model. That's all that `update(..., submodel = ...)` does.
+
+Again, notice that these derivations with the alias matrix rely upon linear formulations for a 
+fixed-effects regression model, and thos calculations are incorrect for a fancier model. However,
+even where they don't exactly apply, they do result in estimates that behave the same qualitatively.
+For instance, if the full model has interactions and the sub-model is additive, the sub-model 
+estimates will be additive even if they differ from those obtained by actually fitting 
+the additive sub-model. When it really matters to get the correct sub-model estimates,
+the user should actually fit that sub-model unless the full model is an ordinary linear regression.
+
+A technicality: Most writers define the alias matrix as $(X_1'X_1)^-X_1'X_2$, where $X_2$ 
+denotes that part of $X$ that excludes the columns of $X_1$. We are including all columns of $X$ here just because it makes the notation very simple; the $X_1$ portion of $X$ just reduces to 
+the identity (at least in the case where $X_1$ is full-rank).
+
+A word on computation: 
+Like many matrix expressions, we do not compute $A$ directly as shown. Instead, we use the 
+QR decomposition of $X_1$, obtainable via the R call `Z <- qr(X1)`. Then the alias matrix is computed via 
+`A <- qr.coef(Z, X)`. In fact, nothing changes if we use just the $R$ portion of $X = QR$, saving us
+both memory and computational effort. The exported function `.cmpMM()` extracts 
+this $R$ matrix, taking care of any pivoting that might have occurred.
+And in an `lm` object, the QR decomposition of $X$ is already
+saved as a slot. The `qr.coef()` function works just fine in both the full-rank and rank-deficient cases,
+but in the latter situation, some elements of `A` will be `NA`; those correspond to "excluded" predictors,
+but that is another way of saying that we are constraining their regression coefficients to be zero.
+Thus, we can easily clean that up via `A[is.na(A)] <- 0`.
+
+If we specify `submodel = "minimal"`, the software figures out the sub-model by extracting terms involving
+only factors that have not already been averaged over. If the user specifies `submodel = "type2"`, an
+additional step is performed: Let $X_0$ denote the columns of all except the last term in the minimal 
+sub-model, and $X_1^*$ correspond to that last term. We then replace $Z$ by the QR decomposition of 
+$[I - X_0(X_0'X_0)^-X_0']X_1^*$. This projects $X_1^*$ onto the null space of $X_0$. The net result is 
+that we obtain estimates of just the $X_1^*$ effects, after adjusting for all effects 
+contained in it (including the intercept if present). Such estimates have very limited use in data 
+description, but provide a kind of "Type II" analysis when used in conjunction with `joint_tests()`.
+The `"type2"` calculations parallel those [documented by SAS](https://documentation.sas.com/?docsetId=statug&docsetTarget=statug_introglmest_sect011.htm&docsetVersion=14.3&locale=en)  for obtaining type II estimable 
+with SAS `PROC GLM`. However, we (as well as `car::Anova()`) define "contained" effects differently
+from SAS, treating covariates no differently than factors.
+Again, this will not coincide with the results of `car::Anova(..., type = 2)` except in ordinary 
+linear fixed-effects models. 
+
+### A note on multivariate models {#mult.submodel}
+<!-- @index `submodel`!in a multivariate model; 
+            Multivariate models!with `submodel` -->
+Recall that **emmeans** generates a constructed factor for the levels of a multivariate
+response. That factor (or factors) is completely ignored in any sub-model calculations.
+The $X$ and $X_1$ matrices described above involve only the predictors in the right-hand 
+side of the model equation . The multivariate response "factor" implicitly interacts
+with everything in the right-hand-side model; and the same is true of any sub-model.
+So it is not possible to consider sub-models where terms are omitted from among those
+multivariate interactions (note that it is also impossible to fit a corresponding
+multivariate sub-model).
+The only way to remove consideration of multivariate effects is 
+to average over them via a call to `emmeans()`.
+
+
+[Back to Contents](#contents)
 
 <!-- This section is a rewrite of an answer I provided on Stack Overflow,
   https://stackoverflow.com/questions/61779348/how-does-emmeans-calculate-confidence-intervals-used-to-compare-means/61822331#61822331 -->

@@ -24,6 +24,7 @@ vignette: >
       * [in *comparisons: pairwise*](comparisons.html#pairwise)
       * [in *confidence-intervals: adjust*](confidence-intervals.html#adjust)
   * [`afex_aov` objects](models.html#V)
+  * [Alias matrix](xplanations.html#submodels)
   * [Analysis of subsets of data](FAQs.html#model)
   * Analysis of variance
       * [versus *post hoc* comparisons](FAQs.html#anova)
@@ -172,6 +173,7 @@ vignette: >
       * [nested factors](messy-data.html#cows)
   * [EMMs](basics.html#EMMdef)
       * [Appropriateness of](basics.html#eqwts)
+      * [Projecting to a submodel](xplanations.html#submodels)
       * [What are they?](FAQs.html#what)
   * `emtrends()`
       * [in *interactions: covariates*](interactions.html#covariates)
@@ -366,6 +368,7 @@ vignette: >
       * [in *basics: multiv*](basics.html#multiv)
       * [in *interactions: oranges*](interactions.html#oranges)
       * [in *models: M*](models.html#M)
+      * [with `submodel`](xplanations.html#mult.submodel)
   * [Multivariate *t* (`"mvt"`) adjustment](confidence-intervals.html#adjmore)
   * [**mvtnorm** package](confidence-intervals.html#adjmore)
 
@@ -518,6 +521,8 @@ vignette: >
   * [* gazing (star gazing)](interactions.html#factors)
   * [Startup options](utilities.html#startup)
   * [`str()`](basics.html#emmobj)
+  * [`submodel`](xplanations.html#submodels)
+      * [in a multivariate model](xplanations.html#mult.submodel)
   * [Subsets of data](FAQs.html#model)
   * `summary()`
       * [`adjust`](comparisons.html#pairwise)
