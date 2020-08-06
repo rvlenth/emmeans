@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.4.809xxxxxxx
+emmeans 1.5.0
 -------------
 
   * Changed help page for `joint_tests()` to reflect `cov.keep` (ver. 1.4.2)

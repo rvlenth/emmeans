@@ -118,6 +118,6 @@
 #' @import stats
 #' @importFrom graphics pairs plot
 #' @importFrom methods as is new slot slot<- slotNames 
-#' @importFrom utils getS3method installed.packages methods str
+#' @importFrom utils getS3method hasName installed.packages methods str
 #' @name emmeans-package
 NULL

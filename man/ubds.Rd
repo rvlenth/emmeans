@@ -13,12 +13,12 @@ A data frame with 100 observations, 5 variables,
   \item{C}{Factor with levels 1, 2, and 3}
   \item{x}{A numeric variable}
   \item{y}{A numeric variable}
-  \item{attr(, "cells")}{A named list of length 27 with the row numbers for
-      each combination of \code{A, B, C}. For example, 
-      \code{attr(ubds, "cells")[["213"]]} has the row numbers corresponding
-      to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
-      length, so the first entry is the cell with the lowest frequency.}
 }
+In addition, \code{attr(ubds, "cells")} consists of a named list of length 27 with the row numbers for
+each combination of \code{A, B, C}. For example, 
+\code{attr(ubds, "cells")[["213"]]} has the row numbers corresponding
+to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
+length, so the first entry is the cell with the lowest frequency.
 }
 \usage{
 ubds

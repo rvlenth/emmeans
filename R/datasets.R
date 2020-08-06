@@ -263,7 +263,7 @@
 #'   \item{\code{sales1}}{a numeric vector. Sales (per customer) of variety 1.}
 #'   \item{\code{sales2}}{a numeric vector. Sales (per customer) of variety 2.}
 #' }
-#' @source SAS sample dataset. Download from \url{http://ftp.sas.com/samples/A56655}.
+#' @source This is (or once was) available as a SAS sample dataset. 
 #' @references
 #' Littell, R., Stroup W., Freund, R. (2002) \emph{SAS For Linear Models} (4th
 #' edition). SAS Institute. ISBN 1-59047-023-0.
@@ -324,12 +324,12 @@
 #'   \item{C}{Factor with levels 1, 2, and 3}
 #'   \item{x}{A numeric variable}
 #'   \item{y}{A numeric variable}
-#'   \item{attr(, "cells")}{A named list of length 27 with the row numbers for
-#'       each combination of \code{A, B, C}. For example, 
-#'       \code{attr(ubds, "cells")[["213"]]} has the row numbers corresponding
-#'       to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
-#'       length, so the first entry is the cell with the lowest frequency.}
 #' }
+#' In addition, \code{attr(ubds, "cells")} consists of a named list of length 27 with the row numbers for
+#' each combination of \code{A, B, C}. For example, 
+#' \code{attr(ubds, "cells")[["213"]]} has the row numbers corresponding
+#' to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
+#' length, so the first entry is the cell with the lowest frequency.
 #' @examples
 #'  # Omit the three lowest-frequency cells
 #'  low3 <- unlist(attr(ubds, "cells")[1:3]) 

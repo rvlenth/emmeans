@@ -99,7 +99,7 @@
 #' @method coda::as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
 #' @examples
-#' if(requireNamespace("coda") {
+#' if(requireNamespace("coda")) {
 #'   ### A saved reference grid for a mixed logistic model (see lme4::cbpp)
 #'   cbpp.rg <- do.call(emmobj, 
 #'     readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
@@ -112,7 +112,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     if (is.na(x@post.beta[1])) {
         stop("No posterior sample -- can't make an 'mcmc' object")
     }
-# notes on estimabilityn issues:
+# notes on estimability issues:
 # 1. Use @bhat to determine which coefs to use
 # 2. @nabasis as in freq models
 # 3. @post.beta we will EXCLUDE cols corresp to NAs in @bhat

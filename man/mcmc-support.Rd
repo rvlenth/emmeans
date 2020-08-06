@@ -89,7 +89,7 @@ a character value. They are:
 }
 
 \examples{
-if(requireNamespace("coda") {
+if(requireNamespace("coda")) {
   ### A saved reference grid for a mixed logistic model (see lme4::cbpp)
   cbpp.rg <- do.call(emmobj, 
     readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
