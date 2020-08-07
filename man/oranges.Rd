@@ -19,7 +19,7 @@ A data frame with 36 observations and 6 variables:
 }
 }
 \source{
-SAS sample dataset. Download from \url{http://ftp.sas.com/samples/A56655}.
+This is (or once was) available as a SAS sample dataset.
 }
 \usage{
 oranges

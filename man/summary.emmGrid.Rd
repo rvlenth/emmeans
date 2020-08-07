@@ -30,7 +30,7 @@ test(object, null, ...)
 
 \method{[}{summary_emm}(x, ..., as.df = TRUE)
 
-\method{multcomp::cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
+\method{cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
   reversed = FALSE, ...)
 }

@@ -6,10 +6,10 @@
 \alias{as.mcmc.list.emmGrid}
 \title{Support for MCMC-based estimation}
 \usage{
-\method{coda::as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE,
-  likelihood, NE.include = FALSE, ...)
+\method{as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE, likelihood,
+  NE.include = FALSE, ...)
 
-\method{coda::as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
+\method{as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{emmGrid}}

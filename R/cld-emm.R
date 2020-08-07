@@ -47,76 +47,58 @@
 #     UseMethod("CLD")
 # }
 
-
-### S3 method for emmGrid 
-# #' Extract and display information on all pairwise comparisons of estimated marginal means.
-# #'
-# #' @aliases CLD
-# #' 
+### Lingering support for multcomp::cld -- registered dynamically in zzz.R
+#' @rdname summary.emmGrid
+#' @order 10
 # #' @param object An object of class \code{emmGrid}
-# #' @param details Logical value determining whether detailed information on tests of 
-# #'   pairwise comparisons is displayed
-# #' @param sort Logical value determining whether the EMMs are sorted before the comparisons 
-# #'   are produced. When \code{TRUE}, the results are displayed according to 
-# #'   \code{reversed}.
-# #' @param by Character value giving the name or names of variables by which separate 
-# #'   families of comparisons are tested. If NULL, all means are compared. 
+#' @param details Logical value determining whether detailed information on tests of
+#'   pairwise comparisons is displayed
+#' @param sort Logical value determining whether the EMMs are sorted before the comparisons
+#'   are produced. When \code{TRUE}, the results are displayed according to
+#'   \code{reversed}.
+# #' @param by Character value giving the name or names of variables by which separate
+# #'   families of comparisons are tested. If NULL, all means are compared.
 # #'   If missing, the object's \code{by.vars} setting, if any, is used.
-# #' @param alpha Numeric value giving the significance level for the comparisons
-# #' @param Letters Character vector of letters to use in the display. Any strings of 
-# #'   length greater than 1 are expanded into individual characters
-# #' @param reversed Logical value (passed to \code{multcompView::multcompLetters}.) 
-# #'   If \code{TRUE}, the order of use of the letters is reversed. 
-# #'   In addition, if both \code{sort} and \code{reversed} are TRUE, the sort 
-# #'   order of results is reversed.
-# #' @param ... Arguments passed to \code{\link{contrast}} (for example, 
+#' @param alpha Numeric value giving the significance level for the comparisons
+#' @param Letters Character vector of letters to use in the display. Any strings of
+#'   length greater than 1 are expanded into individual characters
+#' @param reversed Logical value (passed to \code{multcompView::multcompLetters}.)
+#'   If \code{TRUE}, the order of use of the letters is reversed.
+#'   In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
+#'   order of results is reversed.
+# #' @param ... Arguments passed to \code{\link{contrast}} (for example,
 # #'   an \code{adjust} method)
-# #'
-# #' This function uses the Piepho (2004) algorithm (as implemented in the 
-# #' \pkg{multcompView} package) to generate a compact letter display of all
-# #' pairwise comparisons of estimated marginal means. The function obtains (possibly
-# #' adjusted) P values for all pairwise comparisons of means, using the
-# #' \code{\link{contrast}} function with \code{method = "pairwise"}. When a P
-# #' value exceeds \code{alpha}, then the two means have at least one letter in
-# #' common.
-# #' 
-# #' @return When details == FALSE, an object of class \code{summary.ref_grid}
-# #'   (which inherits from \code{data.frame}) showing the summary of EMMs with 
-# #'   an added column named \code{.groups} containing the \code{CLD} information. 
-# #'   When \code{details == TRUE}, a \code{list} with the object just described, 
-# #'   as well as the summary of the contrast results showing each comparison, 
-# #'   its estimate, standard error, t ratio, and adjusted P value.
-# #'   
-# #' @section Deprecated:
-# #'   The \code{CLD} function and methods are deprecated.
-# #'   Compact-letter displays (CLDs) encourage a misleading
-# #'   interpretation of significance testing by visually grouping means whose comparisons
-# #'   have \emph{P} > \code{alpha} as though they are equal. However, failing to
-# #'   prove two means are different does not prove that they are the same. 
-# #'   In addition, CLDs make
-# #'   a hard distinction between \emph{P} values nearly equal to \code{alpha}
-# #'   but on opposite sides.
-# #'   
-# #'   Some users may find \code{\link{pwpp}} to be a useful alternative. It produces a
-# #'   plot showing all P values for all pairwise comparisons (or other set of comparisons),
-# #'   and can also show one-sided P values and tests of equivalence or noninferiority.
-# #'   Also, if you insist, \code{\link[multcomp]{cld}} is still available in the 
-# #'   \pkg{multcomp} package, and \code{multcomp::cld(emm)} still works.
-# #' 
-# #' @references Piepho, Hans-Peter (2004) An algorithm for a letter-based representation 
-# #'   of all pairwise comparisons, Journal of Computational and Graphical Statistics, 13(2), 
-# #'   456-466.
-# #' 
-# #' @seealso \code{cld} in the \pkg{multcomp} package, for which a courtesy
-# #'   method is provided for \code{emmGrid} objects.
-### Deprecated
-# #' 
-# #' @method CLD emmGrid
-# #' @export
-CLD.emmGrid = function(object, details=FALSE, sort=TRUE, 
-                    by, alpha=.05, 
-                    Letters = c("1234567890",LETTERS,letters), 
-                    reversed=FALSE, ...) {
+#' @section Compact letter displays:
+#' A method for \code{multicomp::cld()} is provided for users desiring to produce 
+#' compact-letter displays (CLDs). 
+#' This method uses the Piepho (2004) algorithm (as implemented in the
+#' \pkg{multcompView} package) to generate a compact letter display of all
+#' pairwise comparisons of estimated marginal means. The function obtains (possibly
+#' adjusted) P values for all pairwise comparisons of means, using the
+#' \code{\link{contrast}} function with \code{method = "pairwise"}. When a P
+#' value exceeds \code{alpha}, then the two means have at least one letter in
+#' common.
+#' 
+#' We warn that such displays encourage a poor
+#' practice in interpreting significance tests. CLDs are misleading because they
+#' visually group means with comparisons \emph{P} > \code{alpha} as though they 
+#' are equal, when in fact we have only failed to prove that they differ.
+#' As alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
+#' values) or \code{\link{pwpm}} (matrix display).
+
+#' @references Piepho, Hans-Peter (2004) An algorithm for a letter-based 
+#'   representation of all pairwise comparisons, 
+#'   Journal of Computational and Graphical Statistics, 
+#'   13(2), 456-466.
+#' @method cld emmGrid
+#' @examples
+#' if(requireNamespace("multcomp")) {
+#'   multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
+#' }
+cld.emmGrid = function(object, details=FALSE, sort=TRUE, 
+                       by, alpha=.05, 
+                       Letters = c("1234567890",LETTERS,letters), 
+                       reversed=FALSE, ...) {
     if (!is.na(object@post.beta)[1]) {
         message("NOTE: Summary and groupings are based on frequentist results")
         object@post.beta = matrix(NA)
@@ -192,70 +174,10 @@ CLD.emmGrid = function(object, details=FALSE, sort=TRUE,
     
     attr(emmtbl, "mesg") = c(attr(emmtbl,"mesg"), attr(pwtbl, "mesg"), 
                              paste("significance level used: alpha =", alpha))
-        
+    
     if (details)
         list(emmeans = emmtbl, comparisons = pwtbl)
     else
         emmtbl
 }
-
-### Lingering support for multcomp::cld -- registered dynamically in zzz.R
-#' @rdname summary.emmGrid
-#' @order 10
-# #' @param object An object of class \code{emmGrid}
-#' @param details Logical value determining whether detailed information on tests of
-#'   pairwise comparisons is displayed
-#' @param sort Logical value determining whether the EMMs are sorted before the comparisons
-#'   are produced. When \code{TRUE}, the results are displayed according to
-#'   \code{reversed}.
-# #' @param by Character value giving the name or names of variables by which separate
-# #'   families of comparisons are tested. If NULL, all means are compared.
-# #'   If missing, the object's \code{by.vars} setting, if any, is used.
-#' @param alpha Numeric value giving the significance level for the comparisons
-#' @param Letters Character vector of letters to use in the display. Any strings of
-#'   length greater than 1 are expanded into individual characters
-#' @param reversed Logical value (passed to \code{multcompView::multcompLetters}.)
-#'   If \code{TRUE}, the order of use of the letters is reversed.
-#'   In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
-#'   order of results is reversed.
-# #' @param ... Arguments passed to \code{\link{contrast}} (for example,
-# #'   an \code{adjust} method)
-#' @section Compact letter displays:
-#' A method for \code{multicomp::cld()} is provided for users desiring to produce 
-#' compact-letter displays (CLDs). 
-#' This method uses the Piepho (2004) algorithm (as implemented in the
-#' \pkg{multcompView} package) to generate a compact letter display of all
-#' pairwise comparisons of estimated marginal means. The function obtains (possibly
-#' adjusted) P values for all pairwise comparisons of means, using the
-#' \code{\link{contrast}} function with \code{method = "pairwise"}. When a P
-#' value exceeds \code{alpha}, then the two means have at least one letter in
-#' common.
-#' 
-#' We warn that such displays encourage a poor
-#' practice in interpreting significance tests. CLDs are misleading because they
-#' visually group means with comparisons \emph{P} > \code{alpha} as though they 
-#' are equal, when in fact we have only failed to prove that they differ.
-#' As alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
-#' values) or \code{\link{pwpm}} (matrix display).
-
-#' @references Piepho, Hans-Peter (2004) An algorithm for a letter-based 
-#'   representation of all pairwise comparisons, 
-#'   Journal of Computational and Graphical Statistics, 
-#'   13(2), 456-466.
-
-#' @method multcomp::cld emmGrid
-#' @examples
-#' if(requireNamespace("multcomp")) {
-#'   multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
-#' }
-cld.emmGrid = function(object, details=FALSE, sort=TRUE, 
-                       by, alpha=.05, 
-                       Letters = c("1234567890",LETTERS,letters), 
-                       reversed=FALSE, ...) {
-    CLD.emmGrid(object, details=details, sort=sort, 
-                by=by, alpha=alpha, 
-                Letters = Letters, 
-                reversed=reversed, ...)
-}
-
 

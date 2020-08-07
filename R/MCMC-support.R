@@ -96,7 +96,7 @@
 #'     and shape parameter specified by \code{shape}}
 #' }
 #' 
-#' @method coda::as.mcmc emmGrid
+#' @method as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
 #' @examples
 #' if(requireNamespace("coda")) {
@@ -179,7 +179,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
 
 ### as.mcmc.list - guaranteed to return a list
 #' @rdname mcmc-support
-#' @method coda::as.mcmc.list emmGrid
+#' @method as.mcmc.list emmGrid
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
     if(!inherits(result, "mcmc.list"))
