@@ -36,19 +36,36 @@
     result
 }
 
-# Deprecated as of version 1.4.9
-# #' @rdname CLD.emmGrid
-# #' @export
-# CLD = function (object, ...) {
-#     ## Uncomment this in the May (or later) release of emmeans
-#     dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
-#              "See '? CLD' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
-#     .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
-#     UseMethod("CLD")
-# }
+### Not yet Deprecated as of version 1.5.0 (sigh)
+#' @rdname CLD.emmGrid
+#' @export
+CLD = function (object, ...) {
+    ## Uncomment this in the May (or later) release of emmeans
+    dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
+             "See '? CLD' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
+    .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
+    UseMethod("CLD")
+}
+
+#' CLD function for emmGrid objects
+#' 
+#' The \code{CLD} generic function and methods are deprecated and will disappear 
+#' in \pkg{emmeans} versions > 1.5.0. You should use 
+#' \code{multcomp::cld} instead.
+#'
+#' @param object an \code{emmGrid} object
+#' @param ... Additional parameters passed to \code{multcomp::cld.emmGrid}
+#'
+#' @rdname CLD.emmGrid
+#' @return A \code{summary_emm} object with groupings added
+#' @export
+CLD.emmGrid = function(object, ...) {
+    cld.emmGrid(object, ...)
+}
 
 ### Lingering support for multcomp::cld -- registered dynamically in zzz.R
-#' @rdname summary.emmGrid
+### #' @rdname summary.emmGrid
+#' @rdname CLD.emmGrid
 #' @order 10
 # #' @param object An object of class \code{emmGrid}
 #' @param details Logical value determining whether detailed information on tests of

@@ -10,7 +10,9 @@ emmeans 1.5.0
     several particular `...` arguments from being passed on to `contrast()`
     when they should apply only to the construction of the EMMs (#214)
   * More control of what `...` arguments are passed to methods
-  * 'CLD()` was deprecated in version 1.3.4, now it's gone. 
+  * 'CLD()` was deprecated in version 1.3.4. THIS IS THE LAST VERSION where it
+    will continue to be available. Users should use `multcomp::cld()` instead,
+    for which an `emmGrid`  method will continue to exist.
     Documentation for `multcomp::cld()`
     method added and moved to different help page.
   * Experimental `submodel` option
