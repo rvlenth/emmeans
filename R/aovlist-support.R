@@ -173,9 +173,12 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     }
     
     # submodel support
-    m = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
-    mm = model.matrix(trms, m, contrasts.arg = contr)
-    mm = .cmpMM(mm, assign = attr(mm, "assign"))
+    mm = NULL
+    if(!is.null(dat <- attr(object, "data"))) {
+        m = model.frame(trms, dat, na.action = na.pass, xlev = xlev)
+        mm = model.matrix(trms, m, contrasts.arg = contr)
+        mm = .cmpMM(mm, assign = attr(mm, "assign"))
+    }
     
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
          dfargs = dfargs, misc = misc, model.matrix = mm)

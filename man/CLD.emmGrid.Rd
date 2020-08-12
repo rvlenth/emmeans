@@ -4,7 +4,7 @@
 \alias{cld.emmGrid}
 \alias{CLD}
 \alias{CLD.emmGrid}
-\title{CLD function for emmGrid objects}
+\title{Compact letter displays}
 \usage{
 \method{cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
@@ -15,7 +15,7 @@ CLD(object, ...)
 \method{CLD}{emmGrid}(object, ...)
 }
 \arguments{
-\item{object}{an \code{emmGrid} object}
+\item{object}{An object of class \code{emmGrid}}
 
 \item{details}{Logical value determining whether detailed information on tests of
 pairwise comparisons is displayed}
@@ -23,6 +23,10 @@ pairwise comparisons is displayed}
 \item{sort}{Logical value determining whether the EMMs are sorted before the comparisons
 are produced. When \code{TRUE}, the results are displayed according to
 \code{reversed}.}
+
+\item{by}{Character value giving the name or names of variables by which separate
+families of comparisons are tested. If NULL, all means are compared.
+If missing, the object's \code{by.vars} setting, if any, is used.}
 
 \item{alpha}{Numeric value giving the significance level for the comparisons}
 
@@ -34,18 +38,10 @@ If \code{TRUE}, the order of use of the letters is reversed.
 In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
 order of results is reversed.}
 
-\item{...}{Additional parameters passed to \code{multcomp::cld.emmGrid}}
-}
-\value{
-A \code{summary_emm} object with groupings added
+\item{...}{Arguments passed to \code{\link{contrast}} (for example,
+an \code{adjust} method)}
 }
 \description{
-The \code{CLD} generic function and methods are deprecated and will disappear 
-in \pkg{emmeans} versions > 1.5.0. You should use 
-\code{multcomp::cld} instead.
-}
-\section{Compact letter displays}{
-
 A method for \code{multicomp::cld()} is provided for users desiring to produce 
 compact-letter displays (CLDs). 
 This method uses the Piepho (2004) algorithm (as implemented in the
@@ -55,18 +51,24 @@ adjusted) P values for all pairwise comparisons of means, using the
 \code{\link{contrast}} function with \code{method = "pairwise"}. When a P
 value exceeds \code{alpha}, then the two means have at least one letter in
 common.
-
+}
+\note{
 We warn that such displays encourage a poor
 practice in interpreting significance tests. CLDs are misleading because they
 visually group means with comparisons \emph{P} > \code{alpha} as though they 
 are equal, when in fact we have only failed to prove that they differ.
 As alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
 values) or \code{\link{pwpm}} (matrix display).
-}
 
+The \code{CLD} generic function and methods are deprecated and will disappear 
+in \pkg{emmeans} versions > 1.5.0. You should use 
+\code{multcomp::cld} instead.
+}
 \examples{
 if(requireNamespace("multcomp")) {
-  multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
+    pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+    pigs.emm <- emmeans(pigs.lm, "percent", type = "response")
+    multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
 }
 }
 \references{

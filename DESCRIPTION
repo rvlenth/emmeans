@@ -2,7 +2,7 @@ Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
 Version: 1.5.0
-Date: 2020-08-11
+Date: 2020-08-12
 Authors@R: c(person("Russell", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Paul", "Buerkner", role = "ctb"),

@@ -36,56 +36,10 @@
     result
 }
 
-### Not yet Deprecated as of version 1.5.0 (sigh)
-#' @rdname CLD.emmGrid
-#' @export
-CLD = function (object, ...) {
-    ## Uncomment this in the May (or later) release of emmeans
-    dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
-             "See '? CLD' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
-    .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
-    UseMethod("CLD")
-}
-
-#' CLD function for emmGrid objects
-#' 
-#' The \code{CLD} generic function and methods are deprecated and will disappear 
-#' in \pkg{emmeans} versions > 1.5.0. You should use 
-#' \code{multcomp::cld} instead.
-#'
-#' @param object an \code{emmGrid} object
-#' @param ... Additional parameters passed to \code{multcomp::cld.emmGrid}
-#'
-#' @rdname CLD.emmGrid
-#' @return A \code{summary_emm} object with groupings added
-#' @export
-CLD.emmGrid = function(object, ...) {
-    cld.emmGrid(object, ...)
-}
 
 ### Lingering support for multcomp::cld -- registered dynamically in zzz.R
-### #' @rdname summary.emmGrid
-#' @rdname CLD.emmGrid
-#' @order 10
-# #' @param object An object of class \code{emmGrid}
-#' @param details Logical value determining whether detailed information on tests of
-#'   pairwise comparisons is displayed
-#' @param sort Logical value determining whether the EMMs are sorted before the comparisons
-#'   are produced. When \code{TRUE}, the results are displayed according to
-#'   \code{reversed}.
-# #' @param by Character value giving the name or names of variables by which separate
-# #'   families of comparisons are tested. If NULL, all means are compared.
-# #'   If missing, the object's \code{by.vars} setting, if any, is used.
-#' @param alpha Numeric value giving the significance level for the comparisons
-#' @param Letters Character vector of letters to use in the display. Any strings of
-#'   length greater than 1 are expanded into individual characters
-#' @param reversed Logical value (passed to \code{multcompView::multcompLetters}.)
-#'   If \code{TRUE}, the order of use of the letters is reversed.
-#'   In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
-#'   order of results is reversed.
-# #' @param ... Arguments passed to \code{\link{contrast}} (for example,
-# #'   an \code{adjust} method)
-#' @section Compact letter displays:
+#' Compact letter displays
+#' 
 #' A method for \code{multicomp::cld()} is provided for users desiring to produce 
 #' compact-letter displays (CLDs). 
 #' This method uses the Piepho (2004) algorithm (as implemented in the
@@ -96,21 +50,45 @@ CLD.emmGrid = function(object, ...) {
 #' value exceeds \code{alpha}, then the two means have at least one letter in
 #' common.
 #' 
+#' @rdname CLD.emmGrid
+#' @order 1
+#' @param object An object of class \code{emmGrid}
+#' @param details Logical value determining whether detailed information on tests of
+#'   pairwise comparisons is displayed
+#' @param sort Logical value determining whether the EMMs are sorted before the comparisons
+#'   are produced. When \code{TRUE}, the results are displayed according to
+#'   \code{reversed}.
+#' @param by Character value giving the name or names of variables by which separate
+#'   families of comparisons are tested. If NULL, all means are compared.
+#'   If missing, the object's \code{by.vars} setting, if any, is used.
+#' @param alpha Numeric value giving the significance level for the comparisons
+#' @param Letters Character vector of letters to use in the display. Any strings of
+#'   length greater than 1 are expanded into individual characters
+#' @param reversed Logical value (passed to \code{multcompView::multcompLetters}.)
+#'   If \code{TRUE}, the order of use of the letters is reversed.
+#'   In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
+#'   order of results is reversed.
+#' @param ... Arguments passed to \code{\link{contrast}} (for example,
+#'   an \code{adjust} method)
+#' @references Piepho, Hans-Peter (2004) An algorithm for a letter-based 
+#'   representation of all pairwise comparisons, 
+#'   Journal of Computational and Graphical Statistics, 
+#'   13(2), 456-466.
+#'   
+#' @note
 #' We warn that such displays encourage a poor
 #' practice in interpreting significance tests. CLDs are misleading because they
 #' visually group means with comparisons \emph{P} > \code{alpha} as though they 
 #' are equal, when in fact we have only failed to prove that they differ.
 #' As alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
 #' values) or \code{\link{pwpm}} (matrix display).
-
-#' @references Piepho, Hans-Peter (2004) An algorithm for a letter-based 
-#'   representation of all pairwise comparisons, 
-#'   Journal of Computational and Graphical Statistics, 
-#'   13(2), 456-466.
+#'
 #' @method cld emmGrid
 #' @examples
 #' if(requireNamespace("multcomp")) {
-#'   multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
+#'     pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+#'     pigs.emm <- emmeans(pigs.lm, "percent", type = "response")
+#'     multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
 #' }
 cld.emmGrid = function(object, details=FALSE, sort=TRUE, 
                        by, alpha=.05, 
@@ -198,3 +176,25 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
         emmtbl
 }
 
+
+### Not yet Deprecated as of version 1.5.0 (sigh)
+#' @rdname CLD.emmGrid
+#' @order 2
+#' @export
+CLD = function (object, ...) {
+    dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
+             "See '?cld.emmGrid' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
+    .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
+    UseMethod("CLD")
+}
+
+#' @rdname CLD.emmGrid
+#' @order 3
+#' @note
+#' The \code{CLD} generic function and methods are deprecated and will disappear 
+#' in \pkg{emmeans} versions > 1.5.0. You should use 
+#' \code{multcomp::cld} instead.
+#' @export
+CLD.emmGrid = function(object, ...) {
+    cld.emmGrid(object, ...)
+}
