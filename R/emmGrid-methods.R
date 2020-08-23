@@ -330,7 +330,7 @@ vcov.emmGrid = function(object, ...) {
 #' emmeans(pigs.rg, "source")
 #' 
 #' # Obtain estimates for the additive model
-#' # [Note that the submodel refers to 'percent', note 'factor(percent)']
+#' # [Note that the submodel refers to 'percent', not 'factor(percent)']
 #' emmeans(pigs.rg, "source", submodel = ~ source + percent)
 #' 
 #' # Type II ANOVA
@@ -492,6 +492,10 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
 #'   second-order adjustment is applied to estimate the mean on the response
 #'   scale.}
+#' \item{\code{enable.submodel}}{A logical value. If \code{TRUE}, enables support 
+#'   for selected model classes to implement the \code{submodel} option. If
+#'   \code{FALSE}, this support is disabled. Setting this option to \code{FALSE}
+#'   could save excess memory consumption.}
 #'   
 #' }%%% end describe{}
 #' Some other options have more specific purposes:
@@ -625,6 +629,7 @@ emm_defaults = list (
     simplify.names = TRUE,    # simplify names like data$x to just "x"
     back.bias.adj = FALSE,    # Try to bias-adjust back-transformations?
     opt.digits = TRUE,        # optimize displayed digits?
+    enable.submodel = TRUE,   # enable saving extra info for submodel
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling K-R

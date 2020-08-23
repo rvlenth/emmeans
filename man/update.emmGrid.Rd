@@ -209,7 +209,7 @@ pigs.rg <- update(ref_grid(pigs.lm), tran = "log",
 emmeans(pigs.rg, "source")
 
 # Obtain estimates for the additive model
-# [Note that the submodel refers to 'percent', note 'factor(percent)']
+# [Note that the submodel refers to 'percent', not 'factor(percent)']
 emmeans(pigs.rg, "source", submodel = ~ source + percent)
 
 # Type II ANOVA

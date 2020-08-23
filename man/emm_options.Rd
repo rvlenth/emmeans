@@ -7,7 +7,7 @@
 \alias{emm_defaults}
 \title{Set or change emmeans options}
 \format{
-An object of class \code{list} of length 19.
+An object of class \code{list} of length 20.
 }
 \usage{
 emm_options(..., disable)
@@ -103,6 +103,10 @@ object.}
   back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
   second-order adjustment is applied to estimate the mean on the response
   scale.}
+\item{\code{enable.submodel}}{A logical value. If \code{TRUE}, enables support 
+  for selected model classes to implement the \code{submodel} option. If
+  \code{FALSE}, this support is disabled. Setting this option to \code{FALSE}
+  could save excess memory consumption.}
   
 }%%% end describe{}
 Some other options have more specific purposes:
