@@ -7,6 +7,7 @@ emmeans 1.5.0-2
    (#218, #219)
  * A new option `enable.submodel` so user
    can switch off `submodel` support when unwanted or to save memory.
+ * `multinom` support for `N.sim` option 
 
 
 emmeans 1.5.0

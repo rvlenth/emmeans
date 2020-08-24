@@ -63,18 +63,29 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 }
 
 # post-processing of ref_grid for "prob" mode
-.multinom.postGrid = function(object, ...) {
+# also allows simulated outcomes
+.multinom.postGrid = function(object, N.sim, ...) {
     linfct = object@linfct
     misc = object@misc
     # grid will have multresp as slowest-varying factor...
     idx = matrix(seq_along(linfct[, 1]), 
                  ncol = length(object@levels[[object@roles$multresp]]))
     bhat = as.numeric(idx) # right length, contents will be replaced
+    if(sim <- !missing(N.sim)) {
+        message("Simulating a sample of size ", N.sim)
+        bsamp = mvtnorm::rmvnorm(N.sim, object@bhat, object@V)
+        postb = matrix(0, nrow = N.sim, ncol = length(bhat))
+    }
     for (i in 1:nrow(idx)) {
         rows = idx[i, ]
         exp.psi = exp(linfct[rows, , drop = FALSE] %*% object@bhat)
         p = as.numeric(exp.psi / sum(exp.psi))
         bhat[rows] = p
+        if (sim) {
+            ex = exp(linfct[rows, , drop = FALSE] %*% t(bsamp))  # p x N
+            px = t(apply(ex, 2, function(x) x / sum(x)))
+            postb[, rows] = px
+        }
         A = .diag(p) - outer(p, p)    # partial derivs
         linfct[rows, ] = A %*% linfct[rows, ]
     }
@@ -85,5 +96,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     object@V = linfct %*% tcrossprod(object@V, linfct)
     object@linfct = diag(1, length(bhat))
     object@misc = misc
+    if (sim)
+        object@post.beta = postb
     object
 }
