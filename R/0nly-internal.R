@@ -361,7 +361,7 @@ model.frame = function(formula, data, ...) {
         if(any(is.na(X)))
             return(NULL)
         X = try({
-            X = suppressWarnings(diag(sqrt(weights)) %*% X);
+            X = sweep(X, 1, sqrt(weights), "*") # scale rows by sqrt(weights)
             qr(X)
         }, silent = TRUE)
         if (inherits(X, "try-error"))

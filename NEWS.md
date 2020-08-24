@@ -1,10 +1,12 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.0-1
+emmeans 1.5.0-2
 -------------
  * Additional checking for potential errors (e.g. memory overload) connected
-   with `submodel` support. Also, a new option `enable.submodel` so user
-   can switch off this support when unwanted or to save memory.
+   with `submodel` support. Also, much more memory-efficient code therein 
+   (#218, #219)
+ * A new option `enable.submodel` so user
+   can switch off `submodel` support when unwanted or to save memory.
 
 
 emmeans 1.5.0
