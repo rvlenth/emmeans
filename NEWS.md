@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.0-2
+emmeans 1.5.0-xxxx
 -------------
  * Additional checking for potential errors (e.g. memory overload) connected
    with `submodel` support. Also, much more memory-efficient code therein 
@@ -8,6 +8,9 @@ emmeans 1.5.0-2
  * A new option `enable.submodel` so user
    can switch off `submodel` support when unwanted or to save memory.
  * `multinom` support for `N.sim` option 
+ * Modification to internal dispatching of `recover_data` and `emm_basis`
+   so that an external package's methods are always found and given priority
+   whether or not they are registered (#220)
 
 
 emmeans 1.5.0

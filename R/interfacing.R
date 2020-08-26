@@ -91,8 +91,8 @@
 recover_data = function(object, ...) {
     # look for outside methods first
     for (cl in .chk.cls(object)) {
-        rd <- try(getS3method("recover_data", cl, envir = .GlobalEnv), silent = TRUE)
-        if(!inherits(rd, "try-error"))
+        rd <- .get.outside.method("recover_data", cl)
+        if(!is.null(rd))
             return(rd(object, ...))
     }
     UseMethod("recover_data")
@@ -106,6 +106,17 @@ recover_data = function(object, ...) {
     setdiff(class(object)[1:2], sacred)
 }
 
+### My internal method dispatch -- we prefer outside methods
+.get.outside.method = function(generic, cls) {
+    mth = utils::getAnywhere(paste(generic, cls, sep = "."))
+    from = sapply(strsplit(mth[[3]], "[ :]"), function(x) rev(x)[1])
+    if (length(from) == 0)
+        return (NULL)
+    if(any(outside <- (from != "emmeans")))
+        mth[which(outside)[1]]
+    else
+        NULL
+}
 
 
 
@@ -308,11 +319,11 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = "pi"
 emm_basis = function(object, trms, xlev, grid, ...) {
     # look for outside methods first
     for (cl in .chk.cls(object)) {
-        emb <- try(getS3method("emm_basis", cl, envir = .GlobalEnv), silent = TRUE)
-        if(!inherits(emb, "try-error"))
+        emb <- .get.outside.method("emm_basis", cl)
+        if(!is.null(emb))
             return(emb(object, trms, xlev, grid, ...))
     }
-    UseMethod("emm_basis")
+    UseMethod("emm_basis") # lands here only if no outside method found
 }
 
 # Hidden courtesy function that provides access to all recover_data methods
