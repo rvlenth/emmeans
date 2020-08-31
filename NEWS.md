@@ -11,6 +11,8 @@ emmeans 1.5.0-xxxx
  * Modification to internal dispatching of `recover_data` and `emm_basis`
    so that an external package's methods are always found and given priority
    whether or not they are registered (#220)
+ * Patches to `gamlss` support. Smoothers are not supported but other aspects
+   are more reliable. See [CV posting](https://stats.stackexchange.com/questions/484886/post-hoc-analysis-for-gamlss-model-in-r)
 
 
 emmeans 1.5.0

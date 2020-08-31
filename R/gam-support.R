@@ -78,7 +78,7 @@ emm_basis.gam = function(object, trms, xlev, grid,
                          what = c("location", "scale", "shape", "rate", "prob.gt.0"), 
                          ...) {
     bhat = object$coefficients
-    X = predict(object, newdata = grid, type = "lpmatrix", 
+    X = mgcv::predict.gam(object, newdata = grid, type = "lpmatrix", 
                 newdata.guaranteed = TRUE)
     bhat = as.numeric(bhat) 
     V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)
@@ -186,6 +186,7 @@ emm_basis.gamlss = function(object, trms, xlev, grid,
     }
     if (!is.null(link <- object[[paste0(what, ".link")]]))
         object$family = list(link = link)
-    object$qr = object[[paste0(what, ".qr")]]
-    NextMethod("emm_basis", vcov. = vcov., ...)
+    ###object$qr = object[[paste0(what, ".qr")]]
+    ###NextMethod("emm_basis", vcov. = vcov., ...)
+    emm_basis.lm(object, trms, xlev, grid, vcov. = vcov., ...)
 }
