@@ -13,6 +13,7 @@ emmeans 1.5.0-xxxx
    whether or not they are registered (#220)
  * Patches to `gamlss` support. Smoothers are not supported but other aspects
    are more reliable. See [CV posting](https://stats.stackexchange.com/questions/484886/post-hoc-analysis-for-gamlss-model-in-r)
+ * Improvement to auto-detection of transformations (#223)
 
 
 emmeans 1.5.0

@@ -536,8 +536,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # next stmt assumes that model formula is 1st argument (2nd element) in call.
     # if not, we probably get an error or something that isn't a formula
     # and it is silently ignored
-    lhs = try(eval(as.formula(attr(data, "call")[[2]])[-3]), silent = TRUE)
-    if (inherits(lhs, "formula")) { # response may be transformed
+    frm = try(as.formula(eval(attr(data, "call")[[2]])), silent = TRUE)
+    if (inherits(frm, "formula")) { # response may be transformed
+        lhs = frm[-3]
         tran = setdiff(.all.vars(lhs, functions = TRUE), c(.all.vars(lhs), "~", "cbind", "+", "-", "*", "/", "^", "%%", "%/%"))
         if(length(tran) > 0) {
             if (tran[1] == "scale") { # we'll try to set it up based on terms component
