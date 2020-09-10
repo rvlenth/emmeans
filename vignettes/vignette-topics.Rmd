@@ -93,6 +93,7 @@ vignette: >
       * [Overlapping](FAQs.html#CIerror)
   * [`confint()`](confidence-intervals.html#summary)
   * [`consec` contrasts](comparisons.html#contrasts)
+  * [Constrained marginal means](xplanations.html#submodels)
   * [Containment d.f.](models.html#K)
   * [`contrast()`](comparisons.html#contrasts)
       * [`adjust`](comparisons.html#linfcns)
@@ -206,6 +207,8 @@ vignette: >
       * [Nested fixed effects](messy-data.html#cows)
       * [`neuralgia`](transformations.html#links)
       * [`nutrition`](messy-data.html#nutrex)
+          * [`submodel`](messy-data.html#submodels)
+          * [`weights`](messy-data.html#weights)
       * [`Oats`](sophisticated.html#lmer)
       * `oranges`
           * [in *comparisons: formulas*](comparisons.html#formulas)
@@ -299,6 +302,7 @@ vignette: >
   * `joint_tests()`
       * [in *confidence-intervals: joint_tests*](confidence-intervals.html#joint_tests)
       * [in *interactions: contrasts*](interactions.html#contrasts)
+      * [with `submodel = "type2"`](messy-data.html#type2submodel)
 
 
 [Back to top](#topnav)
@@ -358,6 +362,7 @@ vignette: >
       * [Importance of getting it right](FAQs.html#nowelch)
   * [Model averaging](models.html#I)
   * Models
+      * [Constrained](messy-data.html#submodels)
       * [Quick reference](models.html#quickref)
       * [Unsupported](FAQs.html#qdrg)
   * [Multi-factor studies](FAQs.html#interactions)
@@ -521,8 +526,11 @@ vignette: >
   * [* gazing (star gazing)](interactions.html#factors)
   * [Startup options](utilities.html#startup)
   * [`str()`](basics.html#emmobj)
-  * [`submodel`](xplanations.html#submodels)
+  * `submodel`
+      * [`"minimal"` and `"type2"`](messy-data.html#type2submodel)
       * [in a multivariate model](xplanations.html#mult.submodel)
+      * [in *messy-data: submodels*](messy-data.html#submodels)
+      * [in *xplanations: submodels*](xplanations.html#submodels)
   * [Subsets of data](FAQs.html#model)
   * `summary()`
       * [`adjust`](comparisons.html#pairwise)
@@ -579,6 +587,7 @@ vignette: >
   * [Tukey adjustment](confidence-intervals.html#adjust)
       * [Ignored or changed](FAQs.html#notukey)
   * [`type`](confidence-intervals.html#tran)
+  * [Type II analysis](messy-data.html#type2submodel)
   * Type III tests
       * [in *confidence-intervals: joint*](confidence-intervals.html#joint)
       * [in *confidence-intervals: joint_tests*](confidence-intervals.html#joint_tests)

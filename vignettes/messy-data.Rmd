@@ -19,8 +19,9 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 
   1. [Issues with observational data](#issues) 
   2. [Mediating covariates](#mediators) 
-  3. [Mediating factors and weights](#weights) 
-  4. [Nested fixed effects](#nesting)
+  3. [Mediating factors and weights](#weights)
+  4. [Sub-models](#submodels)
+  5. [Nested fixed effects](#nesting)
      a. [Avoiding mis-identified nesting](#nest-trap)
 
 [Index of all vignette topics](vignette-topics.html)
@@ -163,7 +164,8 @@ emmeans(..., cov.reduce = list(x1 ~ trt, x2 ~ trt + x1, x3 ~ trt + x1 + x2))
 
 
 ## Mediating factors and weights {#weights}
-<!-- @index Factors!Mediating; `weights`; `emmeans()`!`weights` -->
+<!-- @index Factors!Mediating; `weights`; `emmeans()`!`weights`
+            Examples!`nutrition`!`weights` -->
 A mediating covariate is one that is
 in the causal path; likewise, it is possible to have a mediating *factor*. For
 mediating factors, the moral equivalent of the `cov.reduce` technique described
@@ -218,6 +220,59 @@ averaged over; thus, the results for `"prop"` and `"outer"` weights will be
 identical in that case.
 
 [Back to Contents](#contents)
+
+
+## Sub-models {#submodels}
+<!-- @index `submodel`; Models!Constrained 
+             Examples!`nutrition`!`submodel` -->
+We have just seen that we can assign different weights to the levels of containing
+factors. Another option is to constrain the effects of those containing factors
+to zero. In essence, that means fitting a different model without those containing
+effects; however, for certain models (not all), an `emmGrid` may be updated
+with a `submodel` specification so as to impose such a constraint. For illustration,
+return again to the nutrition example, and consider the analysis of `group`
+and `race` as before, after removing interactions involving `age`:
+```{r}
+summary(emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race), 
+        by = NULL)
+```
+If you like, you may confirm that we would obtain exactly the same
+estimates if we had fitted that sub-model to the data, except we continue
+to use the residual variance from the full model in tests and confidence intervals.
+Without the interactions with `age`, all of the marginal means become estimable.
+The results are somewhat different from those obtained earlier where
+we narrowed the scope to just age 3. These new estimates include all ages,
+averaging over them equally, but with constraints that the interaction effects
+involving `age` are all zero.
+
+###### {#type2submodel}
+<!-- @index `submodel`!`"minimal"` and `"type2"`; Type II analysis
+     `joint_tests()`!with `submodel = "type2"`  -->
+There are two special character values that may be used with `submodel`.
+Specifying `"minimal"` creates a submodel with only the active factors:
+```{r}
+emmeans(nutr.lm, ~ group * race, submodel = "minimal")
+```
+This submodel constrains all effects involving `age` to be zero.
+Another interesting option is `"type2"`, whereby we in essence analyze the residuals
+of the model with all contained or overlapping effects, then constrain the
+containing effects to be zero. So what is left if only the interaction
+effects of the factors involved. This is most useful with `joint_tests()`:
+```{r}
+joint_tests(nutr.lm, submodel = "type2")
+```
+These results are identical to the type II anova obtained 
+[at the beginning of this example](#nutrex)
+```{r}
+car::Anova(nutr.lm)
+```
+More details on how `submodel` works may be found in 
+[`vignette("xplanations")`](xplanations.html#submodels)
+
+
+
+[Back to Contents](#contents)
+
 
 ## Nested fixed effects {#nesting}
 <!-- @index Nesting -->

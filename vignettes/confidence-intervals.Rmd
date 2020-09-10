@@ -234,6 +234,8 @@ One may use `by` variables with `joint_tests`. For example:
 ```{r}
 joint_tests(pigsint.rg, by = "source")
 ```
+In some models, it is possible to specify `submodel = "type2"`, thereby obtaining 
+something akin to a Type II analysis of variance. See the [messy-data vignette](messy-data.html#type2submodel) for an example.
 
 
 [Back to Contents](#contents)
