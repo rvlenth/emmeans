@@ -6,7 +6,7 @@
 \usage{
 pwpp(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
   rows = ".", xlab, ylab, xsub = "", plim = numeric(0), add.space = 0,
-  ...)
+  aes, ...)
 }
 \arguments{
 \item{emm}{An \code{emmGrid} object}
@@ -58,9 +58,17 @@ the widest possible range.}
 of value labels is tricky, and depends on how many panels and the
 physical size of the plotting region. This parameter allows the user to
 adjust the position. Changing it by one unit should shift the position by
-about one character width (right if positive, left if negative).}
+about one character width (right if positive, left if negative).
+Note that this interacts with \code{aes$label} below.}
 
-\item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}}
+\item{aes}{optional named list of lists. Entries considered are \code{point}, 
+\code{segment}, and \code{label}, and contents are passed to the respective
+\code{ggplot2::geom_xxx()} functions. These affect rendering of points, 
+line segments joining them, and value labels. 
+Defaults are \code{point = list(size = 2)},
+\code{segment = list()}, and \code{label = list(size = 2.5)}.}
+
+\item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}, as well as to \code{geom_segment} and \code{geom_label}}}
 }
 \description{
 Constructs a plot of P values associated with pairwise comparisons of 
@@ -85,12 +93,23 @@ thresholds or one-sided tests.
 \note{
 The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
   for \code{pwpp} to work.
+
+Additional plot aesthetics are available by adding them to the returned object;
+  see the examples
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 emm = emmeans(pigs.lm, ~ percent | source)
 pwpp(emm)
 pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
+
+# custom aesthetics:
+my.aes <- list(point = list(shape = "square"), 
+               segment = list(linetype = "dashed", color = "red"),
+               label = list(family = "serif", fontface = "italic"))
+my.pal <- c("darkgreen", "blue", "magenta", "orange")
+pwpp(emm, aes = my.aes) + scale_color_manual(values = my.pal)
+
 }
 \seealso{
 A numerical display of essentially the same results is available

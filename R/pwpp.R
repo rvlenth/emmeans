@@ -79,11 +79,20 @@
 #'                  physical size of the plotting region. This parameter allows the user to
 #'                  adjust the position. Changing it by one unit should shift the position by
 #'                  about one character width (right if positive, left if negative).
-#' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}
+#'                  Note that this interacts with \code{aes$label} below.
+#' @param aes optional named list of lists. Entries considered are \code{point}, 
+#'   \code{segment}, and \code{label}, and contents are passed to the respective
+#'   \code{ggplot2::geom_xxx()} functions. These affect rendering of points, 
+#'   line segments joining them, and value labels. 
+#'   Defaults are \code{point = list(size = 2)},
+#'   \code{segment = list()}, and \code{label = list(size = 2.5)}.
+#' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}, as well as to \code{geom_segment} and \code{geom_label}}
 #' 
 #' 
 #' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
 #'   for \code{pwpp} to work.
+#' @note Additional plot aesthetics are available by adding them to the returned object;
+#'   see the examples
 #'
 #' @seealso A numerical display of essentially the same results is available
 #'   from \code{\link{pwpm}}
@@ -93,10 +102,34 @@
 #' emm = emmeans(pigs.lm, ~ percent | source)
 #' pwpp(emm)
 #' pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
-pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows = ".",
-                xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, ...) {
+#'
+#' # custom aesthetics:
+#' my.aes <- list(point = list(shape = "square"), 
+#'                segment = list(linetype = "dashed", color = "red"),
+#'                label = list(family = "serif", fontface = "italic"))
+#' my.pal <- c("darkgreen", "blue", "magenta", "orange")
+#' pwpp(emm, aes = my.aes) + scale_color_manual(values = my.pal)
+#' 
+pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, 
+                rows = ".",
+                xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, 
+                aes, ...) {
     if(missing(by)) 
         by = emm@misc$by.vars
+    
+    ### set up aesthetics
+    if(missing(aes))
+        aes = list()
+    # defaults if other than system ones...
+    daes = list(point = list(size = 2), segment = list(), label = list(size = 2.5))
+    # fill aes w/ defaults if not present, at either level
+    for(a in names(daes)) { 
+        if(is.null(aes[[a]]))
+            aes[[a]] = daes[[a]]
+        else for (b in names(daes[[a]]))
+            if (is.null(aes[[a]][[b]]))
+                aes[[a]][[b]] = daes[[a]][[b]]
+    }
     
     if(rows != "." && !(rows %in% by))
         stop("'rows' must be a subset of the 'by' variables")
@@ -180,11 +213,15 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
         tick.min = max(exmaj[exmaj <= min(pvtmp)])
         tick.max = min(exmaj[exmaj >= max(pvtmp)])
         
+        # args for geom_segment
+        sarg = c(list(mapping = quote(ggplot2::aes_(xend = ~p.value, yend = ~midpt)),
+                    data = NULL, stat = "identity", position = "identity"), 
+                    aes$segment)
         grobj = ggplot2::ggplot(data = con.summ, 
                                 ggplot2::aes_(x = ~p.value, y = ~plus,
                                               color = ~minus, group = ~minus)) +
-            ggplot2::geom_point(size = 2) +
-            ggplot2::geom_segment(ggplot2::aes_(xend = ~p.value, yend = ~midpt)) +
+            do.call(ggplot2::geom_point, aes$point) +
+            do.call(ggplot2::geom_segment, sarg) +
             ggplot2::geom_point(ggplot2::aes(x = tick.min, y = 1), alpha = 0) +
             ggplot2::geom_point(ggplot2::aes(x = tick.max, y = 1), alpha = 0)
         if (!is.null(by)) {
@@ -211,9 +248,13 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, rows =
             lpad = .012 * (add.space + max(nchar(emm.summ$fmtval))) * ncols # how much space needed for labels rel to (0,1)
             lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
             lpos = .pval.inv(tminp - lpad)   # pvalue at left end of label
+            
+            larg = c(list(mapping = quote(ggplot2::aes_(x = pos, y = ~minus,
+                                            label = ~fmtval, hjust = "right")),
+                        data = emm.summ, stat = "identity", position = "identity"),  
+                        aes$label)
             grobj = grobj + 
-                ggplot2::geom_label(data = emm.summ, ggplot2::aes_(x = pos, y = ~minus,
-                                                                   label = ~fmtval, hjust = "right"), size = 2.8) +
+                do.call(ggplot2::geom_label, larg) +
                 ggplot2::geom_point(ggplot2::aes_(x = lpos, y = 1), alpha = 0) # invisible point to stake out space
         }
         else
