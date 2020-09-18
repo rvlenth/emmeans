@@ -68,7 +68,8 @@ line segments joining them, and value labels.
 Defaults are \code{point = list(size = 2)},
 \code{segment = list()}, and \code{label = list(size = 2.5)}.}
 
-\item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}, as well as to \code{geom_segment} and \code{geom_label}}}
+\item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}, 
+as well as to \code{geom_segment} and \code{geom_label}}
 }
 \description{
 Constructs a plot of P values associated with pairwise comparisons of 
@@ -108,7 +109,7 @@ my.aes <- list(point = list(shape = "square"),
                segment = list(linetype = "dashed", color = "red"),
                label = list(family = "serif", fontface = "italic"))
 my.pal <- c("darkgreen", "blue", "magenta", "orange")
-pwpp(emm, aes = my.aes) + scale_color_manual(values = my.pal)
+pwpp(emm, aes = my.aes) + ggplot2::scale_color_manual(values = my.pal)
 
 }
 \seealso{

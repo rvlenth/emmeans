@@ -449,7 +449,9 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         summ$ucl = ucl
 
         # construct horizontal plot - flip coords later if necessary
-        grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) 
+        grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) +
+            ggplot2::geom_point(color = CI.col, alpha = .0) 
+            # invisible points to get grouping order right
         if (PIs) 
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lpl, xend = ~upl, 
                                 y = ~pri.fac, yend = ~pri.fac), 
@@ -458,6 +460,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcl, xend = ~ucl, 
                                 y = ~pri.fac, yend = ~pri.fac), 
                                 color = CI.col, lwd = 4, alpha = .25)
+
         if (!is.null(extra)) {
             grobj = grobj + 
                 ggplot2::geom_segment(ggplot2::aes_(x = ~the.emmean, 

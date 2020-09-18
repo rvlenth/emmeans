@@ -86,7 +86,8 @@
 #'   line segments joining them, and value labels. 
 #'   Defaults are \code{point = list(size = 2)},
 #'   \code{segment = list()}, and \code{label = list(size = 2.5)}.
-#' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}, as well as to \code{geom_segment} and \code{geom_label}}
+#' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}, 
+#'   as well as to \code{geom_segment} and \code{geom_label}
 #' 
 #' 
 #' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
@@ -108,7 +109,7 @@
 #'                segment = list(linetype = "dashed", color = "red"),
 #'                label = list(family = "serif", fontface = "italic"))
 #' my.pal <- c("darkgreen", "blue", "magenta", "orange")
-#' pwpp(emm, aes = my.aes) + scale_color_manual(values = my.pal)
+#' pwpp(emm, aes = my.aes) + ggplot2::scale_color_manual(values = my.pal)
 #' 
 pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, 
                 rows = ".",

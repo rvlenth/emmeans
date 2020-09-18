@@ -15,6 +15,8 @@ emmeans 1.5.0-xxxx
    are more reliable. See [CV posting](https://stats.stackexchange.com/questions/484886/post-hoc-analysis-for-gamlss-model-in-r)
  * Improvement to auto-detection of transformations (#223)
  * Added `aes` argument in `pwpp()` for more control over rendering (#178)
+ * Fix to a situation in `plot.emmGrid()` where ordering of factor levels
+   could change depending on `CIs` and `PIs` (#225)
 
 
 emmeans 1.5.0
