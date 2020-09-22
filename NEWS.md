@@ -6,6 +6,8 @@ emmeans 1.5.1.xxxx
   * Change to `plot.emmGrid(... comparisons = TRUE)` where we determine arrow 
     bounds and unnecessary-arrow deletions *separately* in each `by` group. 
     See also [Stack Overflow posting](https://stackoverflow.com/questions/63713439/interpreting-results-from-emmeans-comparison/63734042#63734042)
+  * `emmeans()` with contrasts specified ignores `adjust` and passes to 
+    `contrast()` instead. Associated documentation improved (I hope)
   
 
 emmeans 1.5.1

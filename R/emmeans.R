@@ -114,7 +114,8 @@ emmeans.list = function(object, specs, ...) {
 #'   \code{specs} is a formula.
 #' @param options If non-\code{NULL}, a named \code{list} of arguments to pass
 #'   to \code{\link{update.emmGrid}}, just after the object is constructed.
-#'   (Options may also be included in \code{...}.)
+#'   (Options may also be included in \code{...}; see the \sQuote{options}
+#'   section below.)
 #' @param weights Character value, numeric vector, or numeric matrix specifying
 #'   weights to use in averaging predictions. See \dQuote{Weights} section below.
 #' @param offset Numeric vector or scalar. If specified, this adds an offset to
@@ -132,19 +133,11 @@ emmeans.list = function(object, specs, ...) {
 #'   contains references to variables that are not predictors, you must provide
 #'   a \code{params} argument with a list of their names.
 #'   
-#'   Arguments that could go in \code{options} may instead be included in \code{...},
-#'   typically, arguments such as \code{type}, \code{infer}, etc. that in essence
-#'   are passed to \code{\link{summary.emmGrid}}. Arguments in both places are 
-#'   overridden by the ones in \code{...}.
-#'   
-#'   There is a danger that \code{...} arguments could partially match those used
-#'   by both \code{ref_grid} and \code{update.emmGrid}, creating a conflict.
-#'   If these occur, usually they can be resolved by providing complete (or at least 
-#'   longer) argument names; or by isolating non-\code{ref_grid} arguments in
-#'   \code{options}; or by calling \code{ref_grid} separately and passing the
-#'   result as \code{object}. See a not-run example below.
+#'   These arguments may also be used in lieu of \code{options}. See the 
+#'   \sQuote{Options} section below.
 #' @param tran Placeholder to prevent it from being included in \code{...}.
-#'   If non-missing, it is added to `options`
+#'   If non-missing, it is added to `options`. See the \sQuote{Options}
+#'   section.
 #'   
 #' @return   When \code{specs} is a \code{character} vector or one-sided formula,
 #'   an object of class \code{"emmGrid"}. A number of methods
@@ -224,6 +217,30 @@ emmeans.list = function(object, specs, ...) {
 #' name in \code{specs} varying fastest. If there are any \code{by} factors,
 #' those vary slower than all the primary ones, but the first \code{by} variable
 #' varies the fastest within that hierarchy. See the examples.
+#' 
+#' @section Options and \code{...}:
+#'   Arguments that could go in \code{options} may instead be included in \code{...},
+#'   typically, arguments such as \code{type}, \code{infer}, etc. that in essence
+#'   are passed to \code{\link{summary.emmGrid}}. Arguments in both places are 
+#'   overridden by the ones in \code{...}.
+#'   
+#'   There is a danger that \code{...} arguments could partially match those used
+#'   by both \code{ref_grid} and \code{update.emmGrid}, creating a conflict.
+#'   If these occur, usually they can be resolved by providing complete (or at least 
+#'   longer) argument names; or by isolating non-\code{ref_grid} arguments in
+#'   \code{options}; or by calling \code{ref_grid} separately and passing the
+#'   result as \code{object}. See a not-run example below.
+#'   
+#'   Also, when \code{specs} is a two-sided formula, or \code{contr} is specified,
+#'   there is potential confusion concerning which \code{...} arguments
+#'   apply to the means, and which to the contrasts. When such confusion is possible,
+#'   we suggest doing things separately 
+#'   (a call to \code{emmeans} with no contrasts, followed by a call to 
+#'   \code{\link{contrast}}). We do treat
+#'   for \code{adjust} as a special case: it is applied to the \code{emmeans} results 
+#'   \emph{only} if there are
+#'   no contrasts specified, otherwise it is passed to \code{contrast}.
+
 #'
 #' @export
 #' 
@@ -235,7 +252,14 @@ emmeans.list = function(object, specs, ...) {
 #' emmeans (warp.lm,  ~ wool | tension)
 #' # or equivalently emmeans(warp.lm, "wool", by = "tension")
 #' 
-#' emmeans (warp.lm, poly ~ tension | wool)
+#' # 'adjust' argument ignored in emmeans, passed to contrast part...
+#' emmeans (warp.lm, poly ~ tension | wool, adjust = "sidak")
+#' 
+#' \dontrun{
+#' # 'adjust' argument NOT ignored ...
+#' emmeans (warp.lm, ~ tension | wool, adjust = "sidak")
+#' }
+#' 
 #' 
 #' \dontrun{
 #'   ### Offsets: Consider a silly example:
@@ -442,7 +466,10 @@ emmeans = function(object, specs, by = NULL,
         result@levels = levs
         result@grid = combs
         
-        result = .update.options(result, options, ...)
+        result = if (missing(contr))
+            .update.options(result, options, ...)
+        else
+            .update.options(result, options, ..., exclude = "adjust")
     }
     
     else {  # handle a nested structure

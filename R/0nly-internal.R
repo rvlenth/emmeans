@@ -217,10 +217,14 @@
 }
 
 # return updated object with option list AND dot list
-.update.options = function(object, options, ...) {
+# optionally may exclude any opts in 'exclude'
+.update.options = function(object, options, ..., exclude) {
     if (!is.list(options))
         options = as.list(options)
     dot.opts = .match.dots.list(.valid.misc, ...)
+    if (!missing(exclude))
+        for (nm in exclude)
+            dot.opts[[nm]] = NULL
     # entries in both lists are overridden by those in ...
     for (nm in names(dot.opts))
         options[[nm]] = dot.opts[[nm]]

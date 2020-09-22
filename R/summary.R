@@ -787,6 +787,13 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 ####!!!!! TODO: Re-think whether we are handling Scheffe adjustments correctly
 ####!!!!!       if/when we shift around 'by' specs, etc.
 
+### utility for changing adjustments
+.chg.adjust = function(old, new, reason) {
+    message("Note: adjust = \"", old, "\" was changed to \"", new, 
+            "\"\nbecause \"", old, "\" is ", reason)
+    new
+}
+
 # utility to compute an adjusted p value
 # tail is -1, 0, 1 for left, two-sided, or right
 # Note fam.info is c(famsize, ncontr, estTypeIndex)
@@ -808,9 +815,9 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         stop("Adjust method '", adjust, "' is not recognized or not valid")
     adjust = adj.meths[k]
     if ((tail != 0) && (adjust %in% c("tukey", "scheffe", "dunnettx"))) # meth not approp for 1-sided
-        adjust = "sidak"
+        adjust = .chg.adjust(adjust, "sidak", "not appropriate for one-sided inferences")
     if ((et != 3) && adjust == "tukey") # not pairwise
-        adjust = "sidak"
+        adjust = .chg.adjust(adjust, "sidak", "only appropriate for one set of pairwise comparisons")
     
     ragged.by = (is.character(fam.size) || adjust %in% c("mvt", p.adjust.methods))   # flag that we need to do groups separately
     if (!ragged.by)
@@ -908,12 +915,10 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     if (!ragged.by && (adjust != "mvt") && (length(unique(DF)) == 1))
         by.rows = list(seq_along(DF))       # not ragged, we can do all as one by group
     
-    if ((et != 3) && adjust == "tukey") # not pairwise
-        adjust = "sidak"
     if ((tail != 0) && (adjust %in% c("tukey", "scheffe", "dunnettx"))) # meth not approp for 1-sided
-        adjust = "sidak"
+        adjust = .chg.adjust(adjust, "sidak", "not appropriate for one-sided inferences")
     if ((et != 3) && adjust == "tukey") # not pairwise
-        adjust = "sidak"
+        adjust = .chg.adjust(adjust, "sidak", "only appropriate for one set of pairwise comparisons")
     
     # asymptotic results when df is NA
     DF[is.na(DF)] = Inf
