@@ -374,18 +374,20 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                             ", overlap on graph = ", round(obsv, 4),
                             call. = FALSE)
             }
+            
+            # shorten arrows that go past the data range
+            estby = est[rows]
+            rng = range(estby)
+            diffr = diff(rng)
+            ii = which(estby - ll < rng[1])
+            llen[rows][ii] = estby[ii] - rng[1] + .02 * diffr
+            ii = which(estby + rl > rng[2])
+            rlen[rows][ii] = rng[2] - estby[ii] + .02 * diffr
+            
+            # remove arrows completely from extremes
+            llen[rows][estby < rng[1] + .0001 * diffr] = NA
+            rlen[rows][estby > rng[2] - .0001 * diffr] = NA
         }
-        # shorten arrows that go past the data range
-        rng = range(est)
-        diffr = diff(rng)
-        ii = which(est - llen < rng[1])
-        llen[ii] = est[ii] - rng[1] + .02 * diffr
-        ii = which(est + rlen > rng[2])
-        rlen[ii] = rng[2] - est[ii] + .02 * diffr
-        
-        # remove arrows completely from extremes
-        llen[est < rng[1] + .0001 * diffr] = NA
-        rlen[est > rng[2] - .0001 * diffr] = NA
         
         invtran = I
         if (typeid == 1) {

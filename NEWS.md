@@ -1,22 +1,30 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.0-xxxx
+emmeans 1.5.1.xxxx
+------------------
+
+  * Change to `plot.emmGrid(... comparisons = TRUE)` where we determine arrow 
+    bounds and unnecessary-arrow deletions *separately* in each `by` group. 
+    See also [Stack Overflow posting](https://stackoverflow.com/questions/63713439/interpreting-results-from-emmeans-comparison/63734042#63734042)
+  
+
+emmeans 1.5.1
 -------------
- * Additional checking for potential errors (e.g. memory overload) connected
-   with `submodel` support. Also, much more memory-efficient code therein 
-   (#218, #219)
- * A new option `enable.submodel` so user
-   can switch off `submodel` support when unwanted or to save memory.
- * `multinom` support for `N.sim` option 
- * Modification to internal dispatching of `recover_data` and `emm_basis`
-   so that an external package's methods are always found and given priority
-   whether or not they are registered (#220)
- * Patches to `gamlss` support. Smoothers are not supported but other aspects
+  * Additional checking for potential errors (e.g. memory overload) connected
+    with `submodel` support. Also, much more memory-efficient code therein 
+    (#218, #219)
+  * A new option `enable.submodel` so user
+    can switch off `submodel` support when unwanted or to save memory.
+  * `multinom` support for `N.sim` option 
+  * Modification to internal dispatching of `recover_data` and `emm_basis`
+    so that an external package's methods are always found and given priority
+    whether or not they are registered (#220)
+  * Patches to `gamlss` support. Smoothers are not supported but other aspects
    are more reliable. See [CV posting](https://stats.stackexchange.com/questions/484886/post-hoc-analysis-for-gamlss-model-in-r)
- * Improvement to auto-detection of transformations (#223)
- * Added `aes` argument in `pwpp()` for more control over rendering (#178)
- * Fix to a situation in `plot.emmGrid()` where ordering of factor levels
-   could change depending on `CIs` and `PIs` (#225)
+  * Improvement to auto-detection of transformations (#223)
+  * Added `aes` argument in `pwpp()` for more control over rendering (#178)
+  * Fix to a situation in `plot.emmGrid()` where ordering of factor levels
+    could change depending on `CIs` and `PIs` (#225)
 
 
 emmeans 1.5.0
