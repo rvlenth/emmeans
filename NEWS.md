@@ -8,6 +8,7 @@ emmeans 1.5.1.xxxx
     See also [Stack Overflow posting](https://stackoverflow.com/questions/63713439/interpreting-results-from-emmeans-comparison/63734042#63734042)
   * `emmeans()` with contrasts specified ignores `adjust` and passes to 
     `contrast()` instead. Associated documentation improved (I hope)
+  * Bug-fix for missing cases in `plot(..., comparisons = TRUE)` (#228)
   
 
 emmeans 1.5.1

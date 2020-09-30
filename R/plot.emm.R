@@ -339,7 +339,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             y = numeric(npairs)
             v1 = 1 - overlap[pbv == by]
             dif = diff[pbv == by]
-            for (i in seq_len(npairs)) {
+            for (i in which(!is.na(v1))) {
                 #wgt = 6 * max(0, ifelse(v1[i] < 1, v1[i], 2-v1[i]))
                 wgt = 3 + 20 * max(0, .5 - (1 - v1[i])^2)
                 # really this is sqrt of weight
@@ -351,25 +351,28 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             }
             X = rbind(cbind(lmat, rmat),iden)
             y = c(y, rep(mind[rows], 2))
+            y[is.na(y)] = 0
             soln = qr.coef(qr(X), y)
+            soln[is.na(soln)] = 0
             ll = llen[rows] = soln[seq_len(neach)]
             rl = rlen[rows] = soln[neach + seq_len(neach)]
             
             # Abort if negative lengths
             if (any(c(rl, ll) < 0)) {
-                stop("Aborted -- Some comparison arrows have negative length!", 
+                stop("Aborted -- Some comparison arrows have negative length!\n",
+                     "(in group \"", by, "\")",
                      call. = FALSE)
             }
             
             # Overlap check
-            for (i in seq_len(npairs)) {
+            for (i in which(!is.na(v1))) {
                 v = 1 - v1[i]
                 obsv = 1 - abs(dif[i]) / ifelse(dif[i] > 0, 
                                                 ll[id1[i]] + rl[id2[i]], 
                                                 rl[id1[i]] + ll[id2[i]])
                 if (v*obsv < 0)
-                    warning("Comparison discrepancy in group ", by, 
-                            ", ", psumm[i, 1], 
+                    warning("Comparison discrepancy in group \"", by, 
+                            "\", ", psumm[i, 1], 
                             ":\n    Target overlap = ", round(v, 4),
                             ", overlap on graph = ", round(obsv, 4),
                             call. = FALSE)
