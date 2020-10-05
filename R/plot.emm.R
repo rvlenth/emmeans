@@ -40,16 +40,18 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
         object = update(x, ..., silent = TRUE)
     ptype = ifelse(is.null(object@misc$predict.type), "lp", object@misc$predict.type)
     # when we want comparisons, we have a transformation, and we want non-link scale, it's mandatory to regrid first:
-    if(comparisons && !is.null(object@misc$tran) && 
-            !(ptype %in% c("link", "lp", "linear.predictor")))
-        object = regrid(object, transform = ptype)
+    ### Nope, we are bypassing that as we will ALWAYS do things on the link scale
+    # if(comparisons && !is.null(object@misc$tran) && 
+    #         !(ptype %in% c("link", "lp", "linear.predictor")))
+    #     object = regrid(object, transform = ptype)
     if (missing(int.adjust)) {
         int.adjust = object@misc$adjust
         if (is.null(int.adjust))
             int.adjust = "none"
     }
     
-    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, frequentist = frequentist, ...)
+    # we will do everything on link scale and back-transform later in .plot.srg...
+    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, frequentist = frequentist, type = "lp", ...)
     if (is.null(attr(summ, "pri.vars"))) { ## new ref_grid - use all factors w/ > 1 level
         pv = names(x@levels)
         len = sapply(x@levels, length)
@@ -58,7 +60,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
         attr(summ, "pri.vars") = pv
     }
     if (PIs) {
-        prd = predict(object, interval = "pred", frequentist = frequentist, ...)
+        prd = predict(object, interval = "pred", frequentist = frequentist, type = "lp", ...)
         summ$lpl = prd$lower.PL
         summ$upl = prd$upper.PL
     }
@@ -73,7 +75,9 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
         extra@misc$comp.alpha = alpha
         extra@misc$comp.adjust = adjust
     }
-    .plot.srg(x = summ, CIs = CIs, PIs = PIs, colors = colors, extra = extra, ...)
+    .plot.srg(x = summ, CIs = CIs, PIs = PIs, colors = colors, extra = extra, 
+              backtran = !(ptype %in% c("link", "lp", "linear.predictor")), 
+              link = attr(.est.se.df(object), "link"), ...)
 }
 
 # May use in place of plot.emmGrid but no control over level etc.
@@ -94,6 +98,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' @param xlab Character label for horizontal axis
 #' @param ylab Character label for vertical axis
 #' @param layout Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
+#'   when \code{engine == "lattice"}.
 #' @param type Character value specifying the type of prediction desired
 #'   (matching \code{"linear.predictor"}, \code{"link"}, or \code{"response"}).
 #'   See details under \code{\link{summary.emmGrid}}.
@@ -110,6 +115,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   are added to the plot, in such a way that the degree to which arrows
 #'   overlap reflects as much as possible the significance of the comparison of
 #'   the two estimates. (A warning is issued if this can't be done.)
+#'   Note that comparison arrows are not available with `summary_emm` objects.
 #' @param colors Character vector of color names to use for estimates, CIs, PIs, 
 #'   and comparison arrows, respectively. CIs and PIs are rendered with some
 #'   transparency, and colors are recycled if the length is less than four;
@@ -118,7 +124,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
 #' @param intervals If specified, it is used to set \code{CIs}. This is the previous
-#'   name of \code{CIs} and is provided for backward compatibility.
+#'   argument name for \code{CIs} and is provided for backward compatibility.
 #' @param frequentist Logical value. If there is a posterior MCMC sample and 
 #'   \code{frequentist} is non-missing and TRUE, a frequentist summary is used for
 #'   obtaining the plot data, rather than the posterior point estimate and HPD
@@ -143,8 +149,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 
 #' @section Details:
 #' If any \code{by} variables are in force, the plot is divided into separate
-#' panels. These functions use the \code{\link[lattice:xyplot]{dotplot}} function, and
-#' thus require that the \pkg{lattice} package be installed. For
+#' panels. For
 #' \code{"summary_emm"} objects, the \code{\dots} arguments in \code{plot}
 #' are passed \emph{only} to \code{dotplot}, whereas for \code{"emmGrid"}
 #' objects, the object is updated using \code{\dots} before summarizing and
@@ -187,7 +192,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                      horizontal = TRUE, xlab, ylab, layout, colors,
                      engine = get_emm_option("graphics.engine"),
                      CIs = TRUE, PIs = FALSE, extra = NULL, 
-                     plotit = TRUE, ...) {
+                     plotit = TRUE, backtran = FALSE, link, ...) {
     
     engine = match.arg(engine, c("ggplot", "lattice"))
     if (engine == "ggplot") 
@@ -292,14 +297,15 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     
     # Obtain comparison limits
     if (!is.null(extra)) {
-        # we need to work on the linear predictor scale
-        # typeid = 1 -> response, 2 -> other
-        typeid = pmatch(extra@misc$predict.type, "response", nomatch = 2)
-        if(length(typeid) < 1) typeid = 2        
-        if (typeid == 1)
-            est = predict(extra, type = "lp")
-        else
-            est = summ[[estName]]
+        ### We will ALWAYS be working on LP scale now...
+        # # we need to work on the linear predictor scale
+        # # typeid = 1 -> response, 2 -> other
+        # typeid = pmatch(extra@misc$predict.type, "response", nomatch = 2)
+        # if(length(typeid) < 1) typeid = 2        
+        # if (typeid == 1)
+        #     est = predict(extra, type = "lp")
+        # else
+        est = summ[[estName]]
         
         alpha = extra@misc$comp.alpha
         adjust = extra@misc$comp.adjust
@@ -380,7 +386,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             
             # shorten arrows that go past the data range
             estby = est[rows]
-            rng = range(estby)
+            rng = suppressWarnings(range(estby, na.rm = TRUE))
             diffr = diff(rng)
             ii = which(estby - ll < rng[1])
             llen[rows][ii] = estby[ii] - rng[1] + .02 * diffr
@@ -392,22 +398,38 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             rlen[rows][estby > rng[2] - .0001 * diffr] = NA
         }
         
-        invtran = I
-        if (typeid == 1) {
-            tran = extra@misc$tran
-            if(is.character(tran)) {
-                link = try(make.link(tran), silent=TRUE)
-                if (!inherits(link, "try-error"))
-                    invtran = link$linkinv
-            }
-            else if (is.list(tran))
-                invtran = tran$linkinv
-        }
+        ### Unneeded now as we are always on LP scale
+        # invtran = I
+        # if (typeid == 1) {
+        #     tran = extra@misc$tran
+        #     if(is.character(tran)) {
+        #         link = try(make.link(tran), silent=TRUE)
+        #         if (!inherits(link, "try-error"))
+        #             invtran = link$linkinv
+        #     }
+        #     else if (is.list(tran))
+        #         invtran = tran$linkinv
+        # }
         
-        lcmpl = summ$lcmpl = as.numeric(invtran(est - llen))
-        rcmpl = summ$rcmpl = as.numeric(invtran(est + rlen))
+        lcmpl = summ$lcmpl = as.numeric(est - llen)
+        rcmpl = summ$rcmpl = as.numeric(est + rlen)
     }
     else lcmpl = rcmpl = NULL
+    
+    if(backtran) { ### we need to back-transform stuff... link must be non-missing
+        if(missing(link)) stop("Russ, you screwed up - link is missing")
+        summ$the.emmean = with(link, linkinv(summ$the.emmean))
+        summ[[clNames[1]]] = lcl = with(link, linkinv(lcl))
+        summ[[clNames[2]]] = ucl = with(link, linkinv(ucl))
+        if (PIs) {
+            summ$lpl = with(link, linkinv(summ$lpl))
+            summ$upl = with(link, linkinv(summ$upl))
+        }
+        if(!is.null(extra)) {
+            summ$lcmpl = lcmpl = with(link, linkinv(summ$lcmpl))
+            summ$rcmpl = rcmpl = with(link, linkinv(summ$rcmpl))
+        }
+    }
     
     if(!plotit) 
         return(as.data.frame(summ))

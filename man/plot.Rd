@@ -37,7 +37,8 @@ with \code{engine = "lattice"}.}
 \item{comparisons}{Logical value. If \code{TRUE}, \dQuote{comparison arrows}
 are added to the plot, in such a way that the degree to which arrows
 overlap reflects as much as possible the significance of the comparison of
-the two estimates. (A warning is issued if this can't be done.)}
+the two estimates. (A warning is issued if this can't be done.)
+Note that comparison arrows are not available with `summary_emm` objects.}
 
 \item{colors}{Character vector of color names to use for estimates, CIs, PIs, 
 and comparison arrows, respectively. CIs and PIs are rendered with some
@@ -51,7 +52,7 @@ so all plot elements are visible even if a single color is specified.}
 \item{int.adjust}{Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.}
 
 \item{intervals}{If specified, it is used to set \code{CIs}. This is the previous
-name of \code{CIs} and is provided for backward compatibility.}
+argument name for \code{CIs} and is provided for backward compatibility.}
 
 \item{frequentist}{Logical value. If there is a posterior MCMC sample and 
 \code{frequentist} is non-missing and TRUE, a frequentist summary is used for
@@ -69,7 +70,8 @@ plotted horizontally or vertically}
 
 \item{ylab}{Character label for vertical axis}
 
-\item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}}
+\item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
+when \code{engine == "lattice"}.}
 
 \item{plotit}{Logical value. If \code{TRUE}, a graphical object is returned;
 if \code{FALSE}, a data.frame is returned containing all the values
@@ -94,8 +96,7 @@ Methods are provided to plot EMMs as side-by-side CIs, and optionally to display
 \section{Details}{
 
 If any \code{by} variables are in force, the plot is divided into separate
-panels. These functions use the \code{\link[lattice:xyplot]{dotplot}} function, and
-thus require that the \pkg{lattice} package be installed. For
+panels. For
 \code{"summary_emm"} objects, the \code{\dots} arguments in \code{plot}
 are passed \emph{only} to \code{dotplot}, whereas for \code{"emmGrid"}
 objects, the object is updated using \code{\dots} before summarizing and
