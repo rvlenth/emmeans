@@ -12,6 +12,7 @@ emmeans 1.5.1.xxxx
   * Robustified `plot.emmGrid()` so that comparison arrows work correctly
     with back-transformations. (Previously we used `regrid()` in that case,
     causing different CIs and PIs depending on `comparisons`) (#230)
+  * Bug fixes in support for `stan_polr` models.
   
 
 emmeans 1.5.1

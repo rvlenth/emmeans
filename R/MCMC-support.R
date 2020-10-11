@@ -567,14 +567,14 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
             X = X[, -xint, drop = FALSE]
         k = length(object$zeta)
         if (mode == "latent") {
-            if (missing(rescale)) 
+            ### if (missing(rescale))  #------ (Disabl rescale)
                 rescale = c(0,1)
             X = rescale[2] * cbind(X, matrix(- 1/k, nrow = nrow(X), ncol = k))
-            bhat = c(bhat, object$zeta - rescale[1] / rescale[2])
+            ### bhat = c(bhat, object$zeta - rescale[1] / rescale[2])
             misc = list(offset.mult = rescale[2])
         }
         else {
-            bhat = c(bhat, object$zeta)
+            ### bhat = c(bhat, object$zeta)
             j = matrix(1, nrow=k, ncol=1)
             J = matrix(1, nrow=nrow(X), ncol=1)
             X = cbind(kronecker(-j, X), kronecker(diag(1,k), J))
@@ -587,6 +587,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
                 misc$postGridHook = ".clm.postGrid" # we probably need to adapt this
             }
         }
+        nms = colnames(X) = c(nms, names(object$zeta))
         
         misc$respName = as.character.default(terms(object))[2]
     }
