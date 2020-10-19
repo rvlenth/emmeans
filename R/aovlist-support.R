@@ -164,6 +164,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         dffun = function(k, dfargs) {
             emmeans::.aovlist.dffun(k, dfargs)
         }
+        environment(dffun) = asNamespace("emmeans")
     }
     nbasis = estimability::all.estble  # Consider this further?
     misc = list(initMesg = "Warning: EMMs are biased unless design is perfectly balanced")

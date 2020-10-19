@@ -13,6 +13,8 @@ emmeans 1.5.1.xxxx
     with back-transformations. (Previously we used `regrid()` in that case,
     causing different CIs and PIs depending on `comparisons`) (#230)
   * Bug fixes in support for `stan_polr` models.
+  * Bug fix for incorrect (and relatively harmless) warning in several models (#234)
+  * Lower object size with `aovlist` models (#232)
   
 
 emmeans 1.5.1
