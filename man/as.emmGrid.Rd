@@ -6,7 +6,7 @@
 \alias{as.emmGrid}
 \title{Convert to and from \code{emmGrid} objects}
 \usage{
-\method{as.list}{emmGrid}(x, ...)
+\method{as.list}{emmGrid}(x, model.info.slot = FALSE, ...)
 
 as.emm_list(object, ...)
 
@@ -14,6 +14,11 @@ as.emmGrid(object, ...)
 }
 \arguments{
 \item{x}{An \code{emmGrid} object}
+
+\item{model.info.slot}{Logical value: Include the \code{model.info} slot?
+Set this to \code{TRUE} if you want to preserve the original call and 
+information needed by the \code{submodel} option.
+If \code{FALSE}, only the nesting information (if any) is saved}
 
 \item{...}{In \code{as.emmGrid}, additional arguments passed to 
 \code{\link{update.emmGrid}} before returning the object. This
@@ -55,17 +60,6 @@ pigs.sav <- as.list(ref_grid(pigs.lm))
 
 pigs.anew <- as.emmGrid(pigs.sav)
 emmeans(pigs.anew, "source")
-
-\dontrun{
-## Convert an entire workspace saved from an old **lsmeans** session
-a.problem <- lsmeans::lsmeans(pigs.lm, "source")
-#- Now global env contains at least two ref.grid and lsmobj objects,
-#- and the "lsmeans" namespace is loaded
-emmeans:::convert_workspace()
-class(a.problem)
-"lsmeans" \%in\% loadedNamespaces()
-#- It's all better now
-}
 }
 \seealso{
 \code{\link{emmobj}}

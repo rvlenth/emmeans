@@ -5,7 +5,7 @@
 \title{Construct an \code{emmGrid} object from scratch}
 \usage{
 emmobj(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun,
-  dfargs = list(), post.beta = matrix(NA), ...)
+  dfargs = list(), post.beta = matrix(NA), nesting = NULL, ...)
 }
 \arguments{
 \item{bhat}{Numeric. Vector of regression coefficients}
@@ -34,6 +34,9 @@ This is ignored if df is numeric.}
 distribution of the regression coefficients (so that typically, the column
 averages will be \code{bhat}). A 1 x 1 matrix of \code{NA} indicates that
 such a sample is unavailable.}
+
+\item{nesting}{Nesting specification as in \code{\link{ref_grid}}. This is
+ignored if \code{model.info} is supplied.}
 
 \item{...}{Arguments passed to \code{\link{update.emmGrid}}}
 }

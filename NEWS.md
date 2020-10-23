@@ -1,7 +1,7 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.1.xxxx
-------------------
+emmeans 1.5.2
+-------------
 
   * Change to `plot.emmGrid(... comparisons = TRUE)` where we determine arrow 
     bounds and unnecessary-arrow deletions *separately* in each `by` group. 
@@ -14,7 +14,8 @@ emmeans 1.5.1.xxxx
     causing different CIs and PIs depending on `comparisons`) (#230)
   * Bug fixes in support for `stan_polr` models.
   * Bug fix for incorrect (and relatively harmless) warning in several models (#234)
-  * Lower object size with `aovlist` models (#232)
+  * Lower object size via removing unnecessary environment deps (#232)
+  * Repairs to `as.list()` and `as.emmGrid()` to fully support nesting and submodels.
   
 
 emmeans 1.5.1

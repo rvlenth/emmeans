@@ -537,6 +537,8 @@ emmeans = function(object, specs, by = NULL,
 #'   distribution of the regression coefficients (so that typically, the column
 #'   averages will be \code{bhat}). A 1 x 1 matrix of \code{NA} indicates that
 #'   such a sample is unavailable.
+#' @param nesting Nesting specification as in \code{\link{ref_grid}}. This is
+#'   ignored if \code{model.info} is supplied.
 #' @param ... Arguments passed to \code{\link{update.emmGrid}}
 #' 
 #' @seealso \code{\link{qdrg}}, an alternative that is useful when starting 
@@ -567,7 +569,7 @@ emmeans = function(object, specs, by = NULL,
 #' 
 #' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
 emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(), 
-                  post.beta = matrix(NA), ...) {
+                  post.beta = matrix(NA), nesting = NULL, ...) {
     if ((nrow(V) != ncol(V)) || (nrow(V) != ncol(linfct)) || (length(bhat) != ncol(linfct)))
         stop("bhat, V, and linfct are incompatible")
     if (!is.list(levels))
@@ -575,7 +577,14 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
     grid = do.call(expand.grid, levels)
     if (nrow(grid) != nrow(linfct))
         stop("linfct should have ", nrow(grid), "rows")
-    model.info = list(call = match.call(), xlev = levels)
+    pri.vars = names(grid)
+    dotargs = list(...)
+    for (nm in names(dotargs$extras))
+        grid[[nm]] = dotargs$extras[[nm]]
+    model.info = dotargs$model.info
+    if(is.null(model.info))
+        model.info = list(call = str2lang("emmobj"), xlev = levels, 
+                          nesting = .parse_nest(nesting))
     roles = list(predictors= names(grid), responses=character(0), 
                  multresp=character(0))
     if (!missing(dffun))
@@ -589,14 +598,14 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
     }
     misc = list(estName = "estimate", estType = "prediction", infer = c(TRUE,FALSE), level = .95,
                 adjust = "none", famSize = nrow(linfct), 
-                avgd.over = character(0), pri.vars = names(grid),
-                methDesc = "emmobj")
+                avgd.over = character(0), pri.vars = pri.vars,
+                methDesc = "emmobj", display = dotargs$display)
     result = new("emmGrid", model.info=model.info, roles=roles, grid=grid,
                  levels = levels, matlevs=list(),
                  linfct=linfct, bhat=bhat, nbasis=all.estble, V=V,
                  dffun=dffun, dfargs=dfargs, misc=misc, post.beta=post.beta)
-    
-    update(result, ..., silent=TRUE)
+    dotargs$model.info = dotargs$extras = dotargs$display = NULL
+    do.call(update, c(object = result, dotargs, silent = TRUE))
 }
 
 #' Convert to and from \code{emmGrid} objects
@@ -636,17 +645,6 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
 #' 
 #' pigs.anew <- as.emmGrid(pigs.sav)
 #' emmeans(pigs.anew, "source")
-#' 
-#' \dontrun{
-#' ## Convert an entire workspace saved from an old **lsmeans** session
-#' a.problem <- lsmeans::lsmeans(pigs.lm, "source")
-#' #- Now global env contains at least two ref.grid and lsmobj objects,
-#' #- and the "lsmeans" namespace is loaded
-#' emmeans:::convert_workspace()
-#' class(a.problem)
-#' "lsmeans" %in% loadedNamespaces()
-#' #- It's all better now
-#' }
 as.emmGrid = function(object, ...) {
     if (cls <- class(object)[1] %in% c("ref.grid", "lsmobj")) {
         object = as.list.emmGrid(object)
@@ -671,15 +669,25 @@ as.emmGrid = function(object, ...) {
 #' @rdname as.emmGrid
 #' @order 2
 #' @param x An \code{emmGrid} object
-#' @return \code{as.list.emmGrid} returns an object of class \code{list}. 
+#' @param model.info.slot Logical value: Include the \code{model.info} slot?
+#'   Set this to \code{TRUE} if you want to preserve the original call and 
+#'   information needed by the \code{submodel} option.
+#'   If \code{FALSE}, only the nesting information (if any) is saved
+#' @return \code{as.list.emmGrid} returns an object of class \code{list}.
 #' @method as.list emmGrid
 #' @export
-as.list.emmGrid = function(x, ...) {
+as.list.emmGrid = function(x, model.info.slot = FALSE, ...) {
     slots = c("bhat", "V", "levels", "linfct", "dffun", "dfargs", "post.beta")
     result = lapply(slots,function(nm) slot(x, nm))
     names(result) = slots
     result = c(result, x@misc)
-    result$nesting = x@model.info$nesting
+    if(model.info.slot)
+        result$model.info = x@model.info
+    else
+        result$nesting = x@model.info$nesting
+    nm = intersect(names(x@grid), c(".wgt.", ".offset."))
+    if (length(nm) > 0)
+        result$extras = x@grid[nm]
     result$pri.vars = NULL
     result
 }
