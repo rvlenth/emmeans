@@ -150,12 +150,17 @@ displayed by \code{\link{str.emmGrid}}.}
 \item{\code{levels}}{named \code{list} of new levels for the elements of the
 current \code{emmGrid}. The list name(s) are used as new variable names, and
 if needed, the list is expanded using \code{expand.grid}. These results replace
-current variable names and levels. This specification changes the \code{levels}, 
+current variable names and levels. This specification changes the \code{levels},
 \code{grid}, \code{roles}, and \code{misc} slots in the updated \code{emmGrid},
 and resets \code{pri.vars}, \code{by.vars}, \code{adjust}, \code{famSize},
-\code{avgd.over}, and \code{nesting}. 
+\code{avgd.over}, and \code{nesting}.
 \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
 it from \code{level}.}
+
+\item{\code{morph}}{\code{list} of arguments passed to \code{\link{transform.emmGrid}}.
+This is similr to \code{levels}, but it modifies/renames existing levels
+rather than replacing them completely.
+Using this option is equivalent to calling \code{transform} directly.}
 
 \item{\code{submodel}}{\code{formula} or \code{character} value specifying a 
 submodel (requires this feature being supported by underlying methods 

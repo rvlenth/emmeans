@@ -207,8 +207,8 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
         misc = list(estName = mode, offset.mult = 0)
     }
     nbasis = estimability::all.estble
-    dffun = function(k, dfargs) object$df.residual
-    dfargs = list()
+    dffun = function(k, dfargs) dfargs$df
+    dfargs = list(df = object$df.residual)
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
          dffun = dffun, dfargs = dfargs, misc = misc)
 }

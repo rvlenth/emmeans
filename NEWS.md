@@ -1,5 +1,16 @@
 ## NEWS for the emmeans package
 
+emmeans 1.5.2-001xxxx
+-------------
+
+  * Addition of `transform()` method to rescale, modify, or replace levels.
+    We also added a `labels<-` method (overrides the default method, which
+    does not work right), producing an error message and directing to 
+    `transform.emmGrid` (#237)
+  * New option `update(..., morph = ...)` so that it just passes its arguments
+    to`transform()`.
+
+
 emmeans 1.5.2
 -------------
 
