@@ -3,12 +3,9 @@
 emmeans 1.5.2-001xxxx
 -------------
 
-  * Addition of `transform()` method to rescale, modify, or replace levels.
-    We also added a `labels<-` method (overrides the default method, which
-    does not work right), producing an error message and directing to 
-    `transform.emmGrid` (#237)
-  * New option `update(..., morph = ...)` so that it just passes its arguments
-    to`transform()`.
+  * Per long-time threats, we really are removing `CLD()` once and for all.
+    We tried in version 1.5.0, but forced to cave due to downstream problems.
+  * Addition of `levels<-` method that maps to `update(... levels =)` (#237)
 
 
 emmeans 1.5.2

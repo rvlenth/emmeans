@@ -2,9 +2,12 @@
 % Please edit documentation in R/emmGrid-methods.R
 \name{update.emmGrid}
 \alias{update.emmGrid}
+\alias{levels<-.emmGrid}
 \title{Update an \code{emmGrid} object}
 \usage{
 \method{update}{emmGrid}(object, ..., silent = FALSE)
+
+\method{levels}{emmGrid}(x) <- value
 }
 \arguments{
 \item{object}{An \code{emmGrid} object}
@@ -15,9 +18,22 @@ Details)}
 \item{silent}{Logical value. If \code{FALSE} (the default), a message is
 displayed if any options are not matched. If \code{TRUE}, no messages are
 shown.}
+
+\item{x}{an \code{emmGrid} object}
+
+\item{value}{\code{list} or replacement levels. See the documentation for
+\code{\link{update.emmGrid}} with the \code{levels} argument, 
+as well as the section below on \dQuote{Replaciong levels}}
+
+\item{.rename}{Optional named character vector or list with elements
+of the form \code{oldname = newname}. The \code{oldname}s must
+equal names from among \code{x@levels} (or \code{levels(x)}).}
 }
 \value{
 an updated \code{emmGrid} object.
+
+\code{levels<-} replaces the levels of the object in-place.
+  See the section on  for details.
 }
 \description{
 Objects of class \code{emmGrid} contain several settings that affect such things as
@@ -153,7 +169,8 @@ if needed, the list is expanded using \code{expand.grid}. These results replace
 current variable names and levels. This specification changes the \code{levels},
 \code{grid}, \code{roles}, and \code{misc} slots in the updated \code{emmGrid},
 and resets \code{pri.vars}, \code{by.vars}, \code{adjust}, \code{famSize},
-\code{avgd.over}, and \code{nesting}.
+and \code{avgd.over}. In addition, if there is nesting of factors, that may be 
+altered; a warning is issued if it involves something other than mere name changes.
 \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
 it from \code{level}.}
 
@@ -202,6 +219,16 @@ conform.}
 } %%%%%%% end \describe
 }
 
+\section{Replacing levels}{
+
+The \code{levels<-} method uses \code{\link{update.emmGrid}} to replace the
+levels of one or more factors. This method allows selectively replacing
+the levels of just one factor (via subsetting operators), whereas 
+\code{update(x, levels = list(...))} requires a list of \emph{all} factors
+and their levels. If any factors are to be renamed, we must replace all
+levels and include the new names in the replacements. See the examples.
+}
+
 \examples{
 # Using an already-transformed response:
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
@@ -219,6 +246,23 @@ emmeans(pigs.rg, "source", submodel = ~ source + percent)
 
 # Type II ANOVA
 joint_tests(pigs.rg, submodel = "type2")
+
+## Changing levels of one factor
+newrg <- pigs.rg
+levels(newrg)$source <- 1:3
+newrg
+
+## Unraveling a previously standardized covariate
+zd = scale(fiber$diameter)
+fibz.lm <- lm(strength ~ machine * zd, data = fiber)
+(fibz.rg <- ref_grid(fibz.lm, at = list(zd = -2:2)))   ### 2*SD range
+lev <- levels(fibz.rg)
+levels(fibz.rg) <- list (
+    machine = lev$machine,
+    diameter = with(attributes(zd), 
+                    `scaled:center` + `scaled:scale` * lev$zd) )
+fibz.rg
+
 }
 \seealso{
 \code{\link{emm_options}}

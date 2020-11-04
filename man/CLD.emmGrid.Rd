@@ -2,17 +2,11 @@
 % Please edit documentation in R/cld-emm.R
 \name{cld.emmGrid}
 \alias{cld.emmGrid}
-\alias{CLD}
-\alias{CLD.emmGrid}
 \title{Compact letter displays}
 \usage{
 \method{cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
   reversed = FALSE, ...)
-
-CLD(object, ...)
-
-\method{CLD}{emmGrid}(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -59,10 +53,6 @@ visually group means with comparisons \emph{P} > \code{alpha} as though they
 are equal, when in fact we have only failed to prove that they differ.
 As alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
 values) or \code{\link{pwpm}} (matrix display).
-
-The \code{CLD} generic function and methods are deprecated and will disappear 
-in \pkg{emmeans} versions > 1.5.0. You should use 
-\code{multcomp::cld} instead.
 }
 \examples{
 if(requireNamespace("multcomp")) {

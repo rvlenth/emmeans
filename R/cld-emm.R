@@ -177,24 +177,27 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
 }
 
 
-### Not yet Deprecated as of version 1.5.0 (sigh)
-#' @rdname CLD.emmGrid
-#' @order 2
-#' @export
-CLD = function (object, ...) {
-    dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
-             "See '?cld.emmGrid' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
-    .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
-    UseMethod("CLD")
-}
+# I mean it this time!
+# ### Not yet Deprecated as of version 1.5.0 (sigh)
+# #' @rdname CLD.emmGrid
+# #' @order 2
+# #' @export
+# CLD = function (object, ...) {
+#     dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
+#              "See '?cld.emmGrid' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
+#     .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
+#     UseMethod("CLD")
+# # }
+# # 
+# # #' @rdname CLD.emmGrid
+# #' @order 3
+# #' @note
+# #' The \code{CLD} generic function and methods are deprecated and will disappear 
+# #' in \pkg{emmeans} versions > 1.5.0. You should use 
+# #' \code{multcomp::cld} instead.
+# #' @export
+# CLD.emmGrid = function(object, ...) {
+#     cld.emmGrid(object, ...)
+# }
+# # 
 
-#' @rdname CLD.emmGrid
-#' @order 3
-#' @note
-#' The \code{CLD} generic function and methods are deprecated and will disappear 
-#' in \pkg{emmeans} versions > 1.5.0. You should use 
-#' \code{multcomp::cld} instead.
-#' @export
-CLD.emmGrid = function(object, ...) {
-    cld.emmGrid(object, ...)
-}

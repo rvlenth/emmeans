@@ -311,6 +311,8 @@ add_grouping = function(object, newname, refname, newlevs) {
 #     trms$factors
 # The function returns a named list, e.g., list(A = "B")
 # If none found, an empty list is returned.
+# 
+# Added ver 1.5.3+ : if trms is NULL, we skip that part
 .find_nests = function(grid, trms, coerce, levels) {
     result = list()
     
@@ -333,32 +335,37 @@ add_grouping = function(object, newname, refname, newlevs) {
             result[[nm]] = otrs[max.levs == 1]
     }
     
-    # Now look at factors attribute
-    fac = attr(trms, "factors")
-    if (length(fac) > 0) {
-        if (!is.null(coerce)) for (stg in coerce) {
-            subst = paste(.all.vars(stats::reformulate(stg)), collapse = ":")
-            for (i in 1:2)
-                dimnames(fac)[[i]] = gsub(stg, subst, dimnames(fac)[[i]], 
-                                          fixed = TRUE)
-        }
-        fac = fac[intersect(nms, row.names(fac)), , drop = FALSE]
+    if(!is.null(trms)) {
         
-        ### new code
-        nms = row.names(fac)
-        cols = dimnames(fac)[[2]]
-        pert = setdiff(nms, intersect(nms, cols)) # pertinent - no main effect in model
-        for (nm in pert) {
-            pfac = fac[, fac[nm, ] == 1, drop = FALSE]  # cols where nm appears
-            if (ncol(pfac) == 0) { # case where there is no 1 in a row
-                pfac = fac[, fac[nm, ] == 2, drop = FALSE]
-                pfac[nm, ] = 1 # make own entry 1 so it isn't nested in self
+        # Now look at factors attribute
+        fac = attr(trms, "factors")
+        if (length(fac) > 0) {
+            if (!is.null(coerce)) for (stg in coerce) {
+                subst = paste(.all.vars(stats::reformulate(stg)), collapse = ":")
+                for (i in 1:2)
+                    dimnames(fac)[[i]] = gsub(stg, subst, dimnames(fac)[[i]], 
+                                              fixed = TRUE)
             }
-            nst = .strip.supersets(apply(pfac, 2, function(col) nms[col == 2]))
-            if (length(nst) > 0)
-                result[[nm]] = union(result[[nm]], nst)
+            fac = fac[intersect(nms, row.names(fac)), , drop = FALSE]
+            
+            ### new code
+            nms = row.names(fac)
+            cols = dimnames(fac)[[2]]
+            pert = setdiff(nms, intersect(nms, cols)) # pertinent - no main effect in model
+            for (nm in pert) {
+                pfac = fac[, fac[nm, ] == 1, drop = FALSE]  # cols where nm appears
+                if (ncol(pfac) == 0) { # case where there is no 1 in a row
+                    pfac = fac[, fac[nm, ] == 2, drop = FALSE]
+                    pfac[nm, ] = 1 # make own entry 1 so it isn't nested in self
+                }
+                nst = .strip.supersets(apply(pfac, 2, function(col) nms[col == 2]))
+                if (length(nst) > 0)
+                    result[[nm]] = union(result[[nm]], nst)
+            }
         }
-    }
+        
+    }  # [end if(!is.null(trms))]
+    
     # include nesting factors that are themselves nested
     for (nm in names(result))
         result[[nm]] = union(unlist(result[result[[nm]]]), result[[nm]])
