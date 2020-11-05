@@ -6,6 +6,9 @@ emmeans 1.5.2-001xxxx
   * Per long-time threats, we really are removing `CLD()` once and for all.
     We tried in version 1.5.0, but forced to cave due to downstream problems.
   * Addition of `levels<-` method that maps to `update(... levels =)` (#237)
+  * Fix `cld()` so it works with nested cases (#239)
+  * Enable `coef()` method to work with contrasts of nested models.
+    This makes it possible for `pwpp()` to work (#239)
 
 
 emmeans 1.5.2

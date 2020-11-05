@@ -257,17 +257,26 @@ add_grouping = function(object, newname, refname, newlevs) {
             contrast.emmGrid(wkrg[rows, drop.levels = TRUE], method = method, 
                               by = by, adjust = adjust, ...)
         })
+        # set up coef matrix
+        comb.nms = unique(do.call(paste, wkrg@grid[facs]))
+        ncon = sapply(result, function(x) nrow(x@grid))
+        con.idx = rep(seq_along(by.rows), ncon)  ## looks like 1,1, 2,2,2, 3, 4,4 ...
+        con.coef = matrix(0, nrow = sum(ncon), ncol = nrow(wkrg@grid))
         # Have to define .wgt. for nested emmGrid. Use average weight - seems most sensible
-        for (i in seq_along(by.rows))
+        for (i in seq_along(by.rows)) {
             result[[i]]@grid$.wgt. = mean(wkrg@grid[[".wgt."]][by.rows[[i]]])
+            con.coef[con.idx == i, by.rows[[i]]] = result[[i]]@misc$con.coef
+        }
         result$adjust = ifelse(is.null(adjust), "none", adjust)
         result = do.call(rbind.emmGrid, result)
+        result@misc$con.coef = con.coef
+        result@misc$orig.grid = wkrg@grid[names(wkrg@levels)]
         result = update(result, by = by, 
                         estType = ifelse(is.null(estType), "contrast", estType))
         cname = setdiff(names(result@levels), by)
         result@model.info$nesting[[cname]] = by
     }
-    result@misc$orig.grid = result@misc$con.code = NULL
+##    result@misc$orig.grid = result@misc$con.coef = NULL # we now provide these
 
     for (nm in by) {
         if (nm %in% names(nesting))

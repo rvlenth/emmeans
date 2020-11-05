@@ -174,11 +174,6 @@ altered; a warning is issued if it involves something other than mere name chang
 \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
 it from \code{level}.}
 
-\item{\code{morph}}{\code{list} of arguments passed to \code{\link{transform.emmGrid}}.
-This is similr to \code{levels}, but it modifies/renames existing levels
-rather than replacing them completely.
-Using this option is equivalent to calling \code{transform} directly.}
-
 \item{\code{submodel}}{\code{formula} or \code{character} value specifying a 
 submodel (requires this feature being supported by underlying methods 
 for the model class). When specified, the \code{linfct} slot is replaced by 
