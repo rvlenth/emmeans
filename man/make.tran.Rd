@@ -45,7 +45,7 @@ appropriately scaled (see also the \code{tran.mult} argument in
 
 A few additional character strings may be supplied as the \code{tran}
 argument in \code{\link{update.emmGrid}}: \code{"identity"},
-\code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"asin.sqrt"},
+\code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"log10"}, \code{"log2"}, \code{"asin.sqrt"},
 and \code{"asinh.sqrt"}.
 
 More general transformations may be provided as a list of functions and

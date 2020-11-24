@@ -416,8 +416,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     }
     else lcmpl = rcmpl = NULL
     
-    if(backtran) { ### we need to back-transform stuff... link must be non-missing
-        if(missing(link)) stop("Russ, you screwed up - link is missing")
+    if(backtran && !missing(link) && !is.null(link)) { ### we need to back-transform stuff... link must be non-missing
         summ$the.emmean = with(link, linkinv(summ$the.emmean))
         summ[[clNames[1]]] = lcl = with(link, linkinv(lcl))
         summ[[clNames[2]]] = ucl = with(link, linkinv(ucl))

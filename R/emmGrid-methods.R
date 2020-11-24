@@ -918,7 +918,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
                   bias.adjust = get_emm_option("back.bias.adj"), sigma, 
                   N.sim, sim = mvtnorm::rmvnorm, ...) 
 {
-    links = c("logit", "probit", "cauchit", "cloglog", "log", "sqrt", "1/mu^2", "inverse")
+    links = c("logit", "probit", "cauchit", "cloglog", "log", "log10", "log2", "sqrt", "1/mu^2", "inverse")
     if (is.logical(transform))   # for backward-compatibility
         transform = ifelse(transform, "response", "none")
     else if (is.list(transform)) {
@@ -1016,7 +1016,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
     }
     if (transform %in% c(links, "user")) { # fake a transformation
         link = if (transform == "user") userlink
-               else                     make.link(transform)
+               else                     .make.link(transform)
         bounds = range(link$linkinv(c(-1e6, -100, -1, 0, 1, 100, 1e6)))
         nas = which(is.na(object@bhat)) # already NA
         incl = vincl = which((object@bhat > bounds[1]) & (object@bhat < bounds[2]))

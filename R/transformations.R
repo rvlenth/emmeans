@@ -50,7 +50,7 @@
 #' 
 #' A few additional character strings may be supplied as the \code{tran}
 #' argument in \code{\link{update.emmGrid}}: \code{"identity"},
-#' \code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"asin.sqrt"},
+#' \code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"log10"}, \code{"log2"}, \code{"asin.sqrt"},
 #' and \code{"asinh.sqrt"}.
 #' 
 #' More general transformations may be provided as a list of functions and
@@ -313,11 +313,13 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
          `/` = .make.link("inverse"),
          reciprocal = .make.link("inverse"),
          log10 = list(
+             linkfun = log10,
              linkinv = function(eta) 10^eta,
              mu.eta = function(eta) 10^eta * log(10),
              name = "log10"
          ),
          log2 = list(
+             linkfun = log2,
              linkinv = function(eta) 2^eta,
              mu.eta = function(eta) 2^eta * log(2),
              name = "log2"

@@ -9,6 +9,10 @@ emmeans 1.5.2-001xxxx
   * Fix `cld()` so it works with nested cases (#239)
   * Enable `coef()` method to work with contrasts of nested models.
     This makes it possible for `pwpp()` to work (#239)
+  * Fixed a coding error in `plot()` that occurs if we use `type = "response"
+    but there is in fact no transformation 
+    ([reported on StackOverflow](https://stackoverflow.com/questions/64962094/in-r-plot-emmeans-of-glmmtmb-linear-model-error-in-linkinvsummthe-emmean/64995896#64995896))
+  * Added `"log10"` and `"log2"` as legal transformations in `regrid()`
 
 
 emmeans 1.5.2
