@@ -263,30 +263,44 @@ The example concerns CBPP, a serious disease of cattle in Ethiopia.
 A generalized linear mixed model was fitted to the data using the
 code below. (This is a Bayesian equivalent of the frequentist model we
 considered in the ["Transformations" vignette](transformations.html#cbpp).)
-We subsequently obtain its reference grid in the usual way.
+In fitting the model, we first set the contrast coding to `bayestestR::contr.bayes`
+because this equalizes the priors across different treatment levels 
+(a correction from an earlier version of this vignette.)
+We subsequently obtain the reference gridsn for these models in the usual way.
+For later use, we also fit the same mode with just the prior information.
 <!--- I'm faking this; I actually saved the ref_grid in a system file --->
 ```{r eval = FALSE}
 cbpp <- transform(lme4::cbpp, unit = 1:56)
+require("bayestestR")
+options(contrasts = c("contr.bayes", "contr.poly"))
 cbpp.rstan <- rstanarm::stan_glmer(
     cbind(incidence, size - incidence) ~ period + (1|herd) + (1|unit),
     data = cbpp, family = binomial,
-    chains = 2, cores = 1, seed = 12345, iter = 500)
+    prior = student_t(df = 5, location = 0, scale = 2, autoscale = FALSE),
+    chains = 2, cores = 1, seed = 2021.0120, iter = 1000)
+cbpp_prior.rstan <- rstanarm::stan_glmer(
+    cbind(incidence, size - incidence) ~ period + (1|herd) + (1|unit),
+    data = cbpp, family = binomial, prior_PD = TRUE,
+    prior = student_t(df = 5, location = 0, scale = 2, autoscale = FALSE),
+    chains = 2, cores = 1, iter = 1000)
 cbpp.rg <- ref_grid(cbpp.rstan)
+cbpp_prior.rg <- ref_grid(cbpp_prior.rstan)
 ```
 <!--- here's the system file with the ref_grid --->
 ```{r echo = FALSE}
 cbpp.rg <- do.call(emmobj, 
     readRDS(system.file("extdata", "cbpprglist", package = "emmeans")))
+cbpp_prior.rg <- do.call(emmobj, 
+    readRDS(system.file("extdata", "cbpppriorrglist", package = "emmeans")))
 cbpp.sigma <- readRDS(system.file("extdata", "cbppsigma", package = "emmeans"))
 ```
 Here is the structure of the reference grid:
 ```{r}
 cbpp.rg
 ```
-And, again in the usual way, we can obtain EMMs:
+So here are the EMMs (no averaging needed in this simple model):
 ```{r}
-period.emm <- emmeans(cbpp.rg, "period")
-period.emm
+summary(cbpp.rg)
 ```
 The summary for EMMs of Bayesian models shows the median of the posterior
 distribution of each estimate, along with highest posterior density (HPD)
@@ -296,18 +310,28 @@ summarized. (Technical note: the summary is actually rerouted to the
 `hpd.summary()` function.
 
 ###### {#bayesxtra}
-<!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; -->
+<!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; 
+    **bayestestR** package; Bayes factor; Region of practical equivalence; ROPE -->
 We can access the posterior EMMs via the `as.mcmc` method for `emmGrid` objects.
 This gives us an object of class `mcmc` (defined in the **coda** package), which
 can be summarized and explored as we please.
 ```{r}
 require("coda")
-summary(as.mcmc(period.emm))
+summary(as.mcmc(cbpp.rg))
 ```
 Note that `as.mcmc` will actually produce an `mcmc.list` when there is more than
 one chain present, as in this example.
 The 2.5th and 97.5th quantiles are similar, but not identical, to the
-95% confidence intervals in the frequentist summary. 
+95% confidence intervals in the frequentist summary.
+
+The **bayestestR** package provides `emmGrid` methods for most of its description
+and testing functions. For example:
+```{r}
+bayestestR::bayesfactor_parameters(pairs(cbpp.rg), prior = pairs(cbpp_prior.rg))
+bayestestR::p_rope(pairs(cbpp.rg), range = c(-0.25, 0.25))
+```
+Both of these sets of results suggest that period 1 is different from the others.
+
 
 ### Bias-adjusted incidence probabilities {#bias-adj-mcmc}
 <!-- @index Bias adjustment!in Bayesian models -->

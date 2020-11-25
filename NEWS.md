@@ -13,6 +13,7 @@ emmeans 1.5.2-001xxxx
     but there is in fact no transformation 
     ([reported on StackOverflow](https://stackoverflow.com/questions/64962094/in-r-plot-emmeans-of-glmmtmb-linear-model-error-in-linkinvsummthe-emmean/64995896#64995896))
   * Added `"log10"` and `"log2"` as legal transformations in `regrid()`
+  * Revised vignette example for MCMC models, added example with **bayestestR**
 
 
 emmeans 1.5.2

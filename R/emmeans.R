@@ -579,14 +579,14 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
         stop("linfct should have ", nrow(grid), "rows")
     pri.vars = names(grid)
     dotargs = list(...)
-    for (nm in names(dotargs$extras))
-        grid[[nm]] = dotargs$extras[[nm]]
     model.info = dotargs$model.info
     if(is.null(model.info))
         model.info = list(call = str2lang("emmobj"), xlev = levels, 
                           nesting = .parse_nest(nesting))
     roles = list(predictors= names(grid), responses=character(0), 
                  multresp=character(0))
+    for (nm in names(dotargs$extras))
+        grid[[nm]] = dotargs$extras[[nm]]
     if (!missing(dffun))
         df = dffun
     if (is.function(df)) {
