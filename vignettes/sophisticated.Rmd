@@ -266,8 +266,8 @@ considered in the ["Transformations" vignette](transformations.html#cbpp).)
 In fitting the model, we first set the contrast coding to `bayestestR::contr.bayes`
 because this equalizes the priors across different treatment levels 
 (a correction from an earlier version of this vignette.)
-We subsequently obtain the reference gridsn for these models in the usual way.
-For later use, we also fit the same mode with just the prior information.
+We subsequently obtain the reference grids for these models in the usual way.
+For later use, we also fit the same model with just the prior information.
 <!--- I'm faking this; I actually saved the ref_grid in a system file --->
 ```{r eval = FALSE}
 cbpp <- transform(lme4::cbpp, unit = 1:56)
@@ -278,11 +278,7 @@ cbpp.rstan <- rstanarm::stan_glmer(
     data = cbpp, family = binomial,
     prior = student_t(df = 5, location = 0, scale = 2, autoscale = FALSE),
     chains = 2, cores = 1, seed = 2021.0120, iter = 1000)
-cbpp_prior.rstan <- rstanarm::stan_glmer(
-    cbind(incidence, size - incidence) ~ period + (1|herd) + (1|unit),
-    data = cbpp, family = binomial, prior_PD = TRUE,
-    prior = student_t(df = 5, location = 0, scale = 2, autoscale = FALSE),
-    chains = 2, cores = 1, iter = 1000)
+cbpp_prior.rstan <- update(cbpp.rstan, prior_PD = TRUE)
 cbpp.rg <- ref_grid(cbpp.rstan)
 cbpp_prior.rg <- ref_grid(cbpp_prior.rstan)
 ```
@@ -330,7 +326,10 @@ and testing functions. For example:
 bayestestR::bayesfactor_parameters(pairs(cbpp.rg), prior = pairs(cbpp_prior.rg))
 bayestestR::p_rope(pairs(cbpp.rg), range = c(-0.25, 0.25))
 ```
-Both of these sets of results suggest that period 1 is different from the others.
+Both of these sets of results suggest that period 1 is different from the others. 
+For more information on these methods, refer to [the CRAN page for **bayestestR**](https://cran.r-project.org/package=bayestestR) 
+and its vignettes,
+e.g., the one on Bayes factors.
 
 
 ### Bias-adjusted incidence probabilities {#bias-adj-mcmc}
