@@ -174,6 +174,15 @@ emm_basis.clm = function (object, trms, xlev, grid,
     }
     else { ### ----- Piece together big matrix for each threshold ----- ###
         misc$ylevs = list(cut = cnm)
+        # support for links not in make.link
+        if (is.character(link) && !(link %in% c("logit", "probit", "cauchit", "cloglog"))) {
+            setLinks = get("setLinks", asNamespace("ordinal"))
+            env = new.env()
+            setLinks(env, link)
+            link = list(linkfun = quote(stop), 
+                        linkinv=env$pfun, mu.eta = env$dfun, name = env$link, 
+                        lambda = env$lambda)
+        }
         misc$tran = link
         misc$inv.lbl = "cumprob"
         misc$offset.mult = -1

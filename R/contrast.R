@@ -275,7 +275,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if(is.null(by))
         all.levs = levs
     
-    # parensthesize levels if they contain spaces or operators
+    # parenthesize levels if they contain spaces or operators
+    rawlevs = levs  # save orig ones
     if(missing(parens))
         parens = get_emm_option("parens")
     if(is.character(parens) && length(idx <- grep(parens[1], all.levs)) > 0) {
@@ -285,7 +286,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         idx = grep(parens[1], levs)
         if (length(idx) > 0)
             levs[idx] = paste0(parens[2], levs[idx], parens[3])
-     }
+    }
+    attr(levs, "raw") = rawlevs # so we can recover original levels when needed
     
     if (is.list(method)) {
         cmat = as.data.frame(method, optional = TRUE)

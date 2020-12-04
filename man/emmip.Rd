@@ -3,14 +3,24 @@
 \name{emmip}
 \alias{emmip}
 \alias{emmip.default}
+\alias{emmip_ggplot}
+\alias{emmip_lattice}
 \title{Interaction-style plots for estimated marginal means}
 \usage{
 emmip(object, formula, ...)
 
 \method{emmip}{default}(object, formula, type, CIs = FALSE, PIs = FALSE,
-  style, engine = get_emm_option("graphics.engine"), pch = c(1, 2, 6, 7, 9,
-  10, 15:20), lty = 1, col = NULL, plotit = TRUE,
+  style, engine = get_emm_option("graphics.engine"), plotit = TRUE,
   nesting.order = FALSE, ...)
+
+emmip_ggplot(emms, style = "factor", dodge = 0.1, xlab = labs$xlab,
+  ylab = labs$ylab, tlab = labs$tlab, dotarg = list(),
+  linearg = list(), CIarg = list(lwd = 2, alpha = 0.5), PIarg = list(lwd
+  = 1.25, alpha = 0.33), ...)
+
+emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
+  tlab = labs$tlab, pch = c(1, 2, 6, 7, 9, 10, 15:20), lty = 1,
+  col = NULL, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}, or a fitted model of a class
@@ -25,8 +35,8 @@ or a combination of factors using the \code{*} operator.}
 
 \item{...}{Additional arguments passed to \code{\link{emmeans}} (when
 \code{object} is not already an \code{emmGrid} object),
-\code{predict.emmGrid},
-\code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.}
+\code{predict.emmGrid}, 
+\code{emmip_ggplot}, or \code{emmip_lattice}.}
 
 \item{type}{As in \code{\link{predict.emmGrid}}, this determines
 whether we want to inverse-transform the predictions
@@ -55,18 +65,10 @@ curves are plotted using lines (and no symbols). With \code{style =
 lines and symbols. When the horizontal variable is character or factor, or
 a combination of more than one predictor, \code{"factor"} style is always used.}
 
-\item{engine}{Character value matching \code{"ggplot"} (default) or 
-\code{"lattice"}. The graphics engine to be used to produce the plot.
+\item{engine}{Character value matching \code{"ggplot"} (default), 
+\code{"lattice"}, or \code{"none"}. The graphics engine to be used to produce the plot.
 These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
-be installed.}
-
-\item{pch}{The plotting characters to use for each group (i.e., levels of
-\code{trace.factors}). They are recycled as needed.}
-
-\item{lty}{The line types to use for each group. Recycled as needed.}
-
-\item{col}{The colors to use for each group, recycled as needed. If not
-specified, the default trellis colors are used.}
+be installed. Specifying \code{"none"} is equivalent to setting \code{plotit = FALSE}.}
 
 \item{plotit}{Logical value. If \code{TRUE}, a graphical object is returned;
 if \code{FALSE}, a data.frame is returned containing all the values
@@ -76,6 +78,30 @@ used to construct the plot.}
 are presented in order according to their nesting factors, even if those nesting
 factors are not present in \code{formula}. If \code{FALSE}, only the
 variables in \code{formula} are used to order the variables.}
+
+\item{emms}{A \code{data.frame} created by calling \code{emmip} with
+\code{plotit = FALSE}. Certain variables and attributes are expected
+to exist in this data frame; see the section detailing the rendering functions.}
+
+\item{dodge}{Numerical amount passed to \code{ggplot2::position_dodge} 
+by which points and intervals are offset so they do not collide.}
+
+\item{dotarg}{\code{list}
+of arguments passed to \code{geom_point} to customize appearance of points}
+
+\item{linearg}{\code{list}
+of arguments passed to \code{geom_line} to customize appearance of lines}
+
+\item{CIarg, PIarg}{\code{list}s
+of arguments passed to \code{geom_linerange} to customize appearance of intervals}
+
+\item{pch}{The plotting characters to use for each group (i.e., levels of
+\code{trace.factors}). They are recycled as needed.}
+
+\item{lty}{The line types to use for each group. Recycled as needed.}
+
+\item{col}{The colors to use for each group, recycled as needed. If not
+specified, the default trellis colors are used.}
 }
 \value{
 If \code{plotit = FALSE}, a \code{data.frame} (actually, a
@@ -111,6 +137,18 @@ used, and it must contain one estimate for each combination of the factors
 present in \code{formula}.
 }
 
+\section{Rendering functions}{
+
+The functions \code{emmip_ggplot} and \code{emmip_lattice}
+are called when \code{plotit == TRUE} to render the plots; 
+but they may also be called later on an object saved via \code{plotit = FALSE}
+(or \code{engine = "none"}). The functions require that \code{emms} contains variables
+\code{xvar}, \code{yvar}, and \code{tvar}, and attributes \code{"labs"} and \code{"vars"}.
+Confidence intervals are plotted if variables \code{LCL} and \code{UCL} exist;
+and prediction intervals are plotted if \code{LPL} and \code{UPL} exist.
+Finally, it must contain the variables named in \code{attr(emms, "vars")}.
+}
+
 \examples{
 #--- Three-factor example
 noise.lm = lm(noise ~ size * type * side, data = auto.noise)
@@ -119,8 +157,9 @@ noise.lm = lm(noise ~ size * type * side, data = auto.noise)
 emmip(noise.lm, type ~ size | side)
 
 # One interaction plot, using combinations of size and side as the x factor
-# ... with added confidence intervals
-emmip(noise.lm, type ~ side * size, CIs = TRUE)
+# ... with added confidence intervals and some formatting changes
+emmip(noise.lm, type ~ side * size, CIs = TRUE,
+    linearg = list(linetype = "dashed"), CIarg = list(lwd = 1, alpha = 1))
 
 # One interaction plot using combinations of type and side as the trace factor
 emmip(noise.lm, type * side ~ size)

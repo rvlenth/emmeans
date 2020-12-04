@@ -395,6 +395,8 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
 ### utility to translate character keys to index keys
 #' @export
 .num.key = function(levs, key) {
+    if(!is.null(raw <- attr(levs, "raw")))
+        levs = raw
     orig.key = key
     if (is.character(key))
         key = match(key, levs)

@@ -64,15 +64,10 @@ emmip = function(object, formula, ...) {
 #'   (equally spaced along the horizontal scale), and curves are plotted using
 #'   lines and symbols. When the horizontal variable is character or factor, or
 #'   a combination of more than one predictor, \code{"factor"} style is always used.
-#' @param engine Character value matching \code{"ggplot"} (default) or 
-#'   \code{"lattice"}. The graphics engine to be used to produce the plot.
+#' @param engine Character value matching \code{"ggplot"} (default), 
+#'   \code{"lattice"}, or \code{"none"}. The graphics engine to be used to produce the plot.
 #'   These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
-#'   be installed.
-#' @param pch The plotting characters to use for each group (i.e., levels of
-#'   \code{trace.factors}). They are recycled as needed.
-#' @param lty The line types to use for each group. Recycled as needed.
-#' @param col The colors to use for each group, recycled as needed. If not
-#'   specified, the default trellis colors are used.
+#'   be installed. Specifying \code{"none"} is equivalent to setting \code{plotit = FALSE}.
 #' @param plotit Logical value. If \code{TRUE}, a graphical object is returned;
 #'   if \code{FALSE}, a data.frame is returned containing all the values
 #'   used to construct the plot.
@@ -82,8 +77,8 @@ emmip = function(object, formula, ...) {
 #'   variables in \code{formula} are used to order the variables.
 #' @param ... Additional arguments passed to \code{\link{emmeans}} (when
 #'   \code{object} is not already an \code{emmGrid} object),
-#'   \code{predict.emmGrid},
-#'   \code{\link[ggplot2]{ggplot}}, or \code{\link[lattice]{xyplot}}.
+#'   \code{predict.emmGrid}, 
+#'   \code{emmip_ggplot}, or \code{emmip_lattice}.
 #'   
 #' @section Details:
 #' If \code{object} is a fitted model, \code{\link{emmeans}} is called with an
@@ -123,8 +118,9 @@ emmip = function(object, formula, ...) {
 #' emmip(noise.lm, type ~ size | side)
 #'
 #' # One interaction plot, using combinations of size and side as the x factor
-#' # ... with added confidence intervals
-#' emmip(noise.lm, type ~ side * size, CIs = TRUE)
+#' # ... with added confidence intervals and some formatting changes
+#' emmip(noise.lm, type ~ side * size, CIs = TRUE,
+#'     linearg = list(linetype = "dashed"), CIarg = list(lwd = 1, alpha = 1))
 #'
 #' # One interaction plot using combinations of type and side as the trace factor
 #' emmip(noise.lm, type * side ~ size)
@@ -143,16 +139,19 @@ emmip = function(object, formula, ...) {
 emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
                          style,
                          engine = get_emm_option("graphics.engine"),
-                         pch = c(1,2,6,7,9,10,15:20), 
-                         lty = 1, col = NULL, plotit = TRUE, 
+                         # pch = c(1,2,6,7,9,10,15:20), 
+                         # lty = 1, col = NULL, 
+                         plotit = TRUE, 
                          nesting.order = FALSE, ...) {
-    engine = match.arg(engine, c("ggplot", "lattice"))
+    engine = match.arg(engine, c("ggplot", "lattice", "none"))
     if (engine == "ggplot")
         .requireNS("ggplot2",
                    "The 'ggplot' engine requires the 'ggplot2' package be installed.")
-    if (engine == "lattice")
+    else if (engine == "lattice")
         .requireNS("lattice", 
                 "The 'lattice' engine requires the 'lattice' package be installed.")
+    else
+        plotit = FALSE
     
     specs = .parse.by.formula(formula) # list of lhs, rhs, by
     
@@ -208,17 +207,9 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         tlab = ""
         tvars = ".single."
         emms$.single. = 1
-        my.key = function(tvars) list()
     }
-    else {
+    else 
         tlab = paste(tvars, collapse = sep)
-        my.key = function(tvars) 
-            list(space="right", 
-                 title = paste(tvars, collapse = sep), 
-                 points = TRUE, 
-                 lines=length(lty) > 1,
-                 cex.title=1)
-    }
     tv = do.call(paste, c(unname(emms[tvars]), sep = sep))
     emms$tvar = factor(tv, levels=unique(tv))
     
@@ -244,12 +235,8 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
         predicate = ""
     }
     emms = emms[order(emms$xvar), ]
-    plotform = yvar ~ xvar
-    
+
     byvars = specs$by
-    if (length(byvars) > 0) {
-         plotform = as.formula(paste("yvar ~ xvar |", paste(byvars, collapse="*")))
-    }
     xlab = ifelse(is.null(xargs$xlab),
                   paste0(predicate, paste(xvars, collapse = sep)), xargs$xlab)
     rspLbl = paste("Predicted", 
@@ -261,64 +248,143 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     # remove the unneeded stuff from xlabs
     xargs = xargs[setdiff(names(xargs), c("xlab","ylab"))]
     
-    if (!plotit) {
-        emms$.single. = NULL   # in case we have that trick column
-        attr(emms, "labs") = list(xlab = xlab, ylab = ylab, tlab = tlab)
+    emms$.single. = NULL   # in case we have that trick column
+    attr(emms, "labs") = list(xlab = xlab, ylab = ylab, tlab = tlab)
+    attr(emms, "vars") = list(byvars = byvars, tvars = setdiff(tvars, ".single."))
+
+    if (!plotit || engine == "none")
         return (emms)
-    }
     
-    if (engine == "lattice") {
-        # The strips the way I want them
-        my.strip = lattice::strip.custom(strip.names = c(TRUE,TRUE), strip.levels = c(TRUE,TRUE), sep = " = ")
-        
-        TP = TP.orig = lattice::trellis.par.get()
-        TP$superpose.symbol$pch = pch
-        TP$superpose.line$lty = lty
-        if (!is.null(col)) TP$superpose.symbol$col = TP$superpose.line$col = col
-        lattice::trellis.par.set(TP)
-        
-        plty = if(styl=="factor") c("p","l")   else "l"
-        plotspecs = list(x = plotform, data = emms, groups = ~ tvar, 
-                         xlab = xlab, ylab = ylab,
-                         strip = my.strip, auto.key = my.key(tvars), 
-                         type = plty)
-        grobj = do.call(lattice::xyplot, c(plotspecs, xargs))
-        lattice::trellis.par.set(TP.orig)
-    }  # --- end lattice method
-    else {  # engine = "ggplot"
-        pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, .1, 0)) # use dodging if CIs
-        if (!one.trace) {
-            grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, color = ~tvar))
-            if (styl == "factor")
-                grobj = grobj + ggplot2::geom_point(position = pos)
-            grobj = grobj +
-                ggplot2::geom_line(ggplot2::aes_(group = ~tvar), position = pos) +
-                ggplot2::labs(x = xlab, y = ylab, color = tlab)
-        }
-        else { # just one trace per plot
-            grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar))
-            if (styl == "factor")
-                grobj = grobj + ggplot2::geom_point()
-            grobj = grobj +
-                ggplot2::geom_line(ggplot2::aes_(group = ~tvar)) +
-                ggplot2::labs(x = xlab, y = ylab)
-            
-        }
-        if (PIs) # using linerange w/ extra width and semi-transparent
-            grobj = grobj + ggplot2::geom_linerange(ggplot2::aes_(ymin = ~LPL, ymax = ~UPL), 
-                                                    position = pos, lwd = 1.25, alpha = .33)
-        if (CIs) # using linerange w/ extra width and semi-transparent
-            grobj = grobj + ggplot2::geom_linerange(ggplot2::aes_(ymin = ~LCL, ymax = ~UCL), 
-                                                    position = pos, lwd = 2, alpha = .5)
-        if (length(byvars) > 0) {  # we have by variables 
-            if (length(byvars) > 1) {
-                byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))
-                grobj = grobj + ggplot2::facet_grid(byform, labeller = "label_both")
-            }
-            else
-                grobj = grobj + ggplot2::facet_wrap(byvars, labeller = "label_both")
-        }
+    fcn = paste("emmip", engine, sep = "_")
+    args = c(list(emms = emms, style = styl), xargs)
+    do.call(fcn, args)
+}
+
+### render emmip using ggplot
+#' @rdname emmip
+#' @param dodge Numerical amount passed to \code{ggplot2::position_dodge} 
+#'   by which points and intervals are offset so they do not collide.
+#' @param dotarg \code{list}
+#'   of arguments passed to \code{geom_point} to customize appearance of points
+#' @param linearg \code{list}
+#'   of arguments passed to \code{geom_line} to customize appearance of lines
+#' @param CIarg,PIarg \code{list}s
+#'   of arguments passed to \code{geom_linerange} to customize appearance of intervals
+#'   
+#' @section Rendering functions:
+#' The functions \code{emmip_ggplot} and \code{emmip_lattice}
+#' are called when \code{plotit == TRUE} to render the plots; 
+#' but they may also be called later on an object saved via \code{plotit = FALSE}
+#' (or \code{engine = "none"}). The functions require that \code{emms} contains variables
+#' \code{xvar}, \code{yvar}, and \code{tvar}, and attributes \code{"labs"} and \code{"vars"}.
+#' Confidence intervals are plotted if variables \code{LCL} and \code{UCL} exist;
+#' and prediction intervals are plotted if \code{LPL} and \code{UPL} exist.
+#' Finally, it must contain the variables named in \code{attr(emms, "vars")}.
+#' @export
+emmip_ggplot = function(emms, style = "factor", dodge = .1,
+                        xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
+                        dotarg = list(), linearg = list(),
+                        CIarg = list(lwd = 2, alpha = .5),
+                        PIarg = list(lwd = 1.25, alpha = .33), ...) {
+    
+    labs = attr(emms, "labs")
+    vars = attr(emms, "vars")
+    
+    CIs = !is.null(emms$LCL)
+    PIs = !is.null(emms$LPL)
+    pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, dodge, 0)) # use dodging if CIs
+    
+    dotarg$position = pos
+    linearg$mapping = ggplot2::aes_(group = ~tvar)
+    linearg$position = pos
+    if (length(vars$tvars) > 0) {
+        grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, color = ~tvar))
+        if (style == "factor")
+            grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+        grobj = grobj +
+            do.call(ggplot2::geom_line, linearg) +
+            ggplot2::labs(x = xlab, y = ylab, color = tlab)
     }
+    else { # just one trace per plot
+        grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar))
+        if (style == "factor")
+            grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+        grobj = grobj +
+            do.call(ggplot2::geom_line, linearg) +
+            ggplot2::labs(x = xlab, y = ylab)
+        
+    }
+    if (PIs) {
+        PIarg$mapping = ggplot2::aes_(ymin = ~LPL, ymax = ~UPL)
+        PIarg$position = pos
+        grobj = grobj + do.call(ggplot2::geom_linerange, PIarg)
+    }
+    if (CIs) {
+        CIarg$mapping = ggplot2::aes_(ymin = ~LCL, ymax = ~UCL)
+        CIarg$position = pos
+        grobj = grobj + do.call(ggplot2::geom_linerange, CIarg)
+    }
+    if (length(byvars <- vars$byvars) > 0) {  # we have by variables 
+        if (length(byvars) > 1) {
+            byform = as.formula(paste(byvars[1], " ~ ", paste(byvars[-1], collapse="*")))
+            grobj = grobj + ggplot2::facet_grid(byform, labeller = "label_both")
+        }
+        else
+            grobj = grobj + ggplot2::facet_wrap(byvars, labeller = "label_both")
+    }
+    grobj
+}
+
+#' @rdname emmip
+#' @param emms A \code{data.frame} created by calling \code{emmip} with
+#'   \code{plotit = FALSE}. Certain variables and attributes are expected
+#'   to exist in this data frame; see the section detailing the rendering functions.
+#' @param pch The plotting characters to use for each group (i.e., levels of
+#'   \code{trace.factors}). They are recycled as needed.
+#' @param lty The line types to use for each group. Recycled as needed.
+#' @param col The colors to use for each group, recycled as needed. If not
+#'   specified, the default trellis colors are used.
+#' @export
+emmip_lattice = function(emms, style = "factor", 
+                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab, 
+                         pch = c(1,2,6,7,9,10,15:20), 
+                         lty = 1, col = NULL, ...) {
+    labs = attr(emm, "labs")
+    vars = attr(emms, "vars")
+    
+    # The strips the way I want them
+    my.strip = lattice::strip.custom(strip.names = c(TRUE,TRUE), strip.levels = c(TRUE,TRUE), sep = " = ")
+    
+    if (length(vars$byvars) == 0)
+        plotform = yvar ~ xvar
+    else
+        plotform = as.formula(paste("yvar ~ xvar |", paste(vars$byvars, collapse="*")))
+    
+    sep = get_emm_option("sep")
+    my.key = function(tvars) 
+        list(space="right", 
+             title = paste(tvars, collapse = sep), 
+             points = TRUE, 
+             lines=length(lty) > 1,
+             cex.title=1)
+    
+    TP = TP.orig = lattice::trellis.par.get()
+    TP$superpose.symbol$pch = pch
+    TP$superpose.line$lty = lty
+    if (!is.null(col)) TP$superpose.symbol$col = TP$superpose.line$col = col
+    lattice::trellis.par.set(TP)
+    
+    plty = if(style=="factor") c("p","l")   else "l"
+    plotspecs = list(x = plotform, data = emms, groups = ~ tvar, 
+                     xlab = xlab, ylab = ylab,
+                     strip = my.strip, auto.key = my.key(vars$tvars), 
+                     type = plty)
+    if(length(vars$tvars) == 0)
+        plotspecs$auto.key = NULL # no key when single trace
+    grobj = do.call(lattice::xyplot, c(plotspecs, list(...)))
+    lattice::trellis.par.set(TP.orig)
     
     grobj
 }
+
+
