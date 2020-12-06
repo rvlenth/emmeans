@@ -27,8 +27,10 @@
 ### lm objects (and also aov, rlm, others that inherit) -- but NOT aovList
 #' @method recover_data lm
 #' @export
-recover_data.lm = function(object, data = object$model, ...) {
-        fcall = object$call
+recover_data.lm = function(object, data = NULL, ...) {
+    fcall = object$call
+    if (is.null(data)) 
+        data = object$model
     recover_data(fcall, delete.response(terms(object)), object$na.action, data = data, ...)
 }
 
@@ -85,7 +87,9 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
 
 #----------------------------------------------------------
 # manova objects
-recover_data.manova = function(object, data = object$model, ...) {
+recover_data.manova = function(object, data = NULL, ...) {
+    if (is.null(data)) 
+        data = object$model
     fcall = match.call(aov, object$call)   # need to borrow arg matching from aov()
     recover_data(fcall, delete.response(terms(object)), object$na.action, data = data, ...)
 }
@@ -96,7 +100,9 @@ recover_data.manova = function(object, data = object$model, ...) {
 #--------------------------------------------------------------
 ### merMod objects (lme4 package)
 #' @export
-recover_data.merMod = function(object, data = object@frame, ...) {
+recover_data.merMod = function(object, data = NULL, ...) {
+    if (is.null(data))
+        data = object@frame
     if(!lme4::isLMM(object) && !lme4::isGLMM(object)) 
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
@@ -486,8 +492,8 @@ emm_basis.gls = function(object, trms, xlev, grid,
 
 #--------------------------------------------------------------
 ### polr objects (MASS package)
-recover_data.polr = function(object, data = object$model, ...)
-    recover_data.lm(object, data = data, ...)
+recover_data.polr = function(object, ...)
+    recover_data.lm(object, ...)
 
 emm_basis.polr = function(object, trms, xlev, grid, 
                           mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
@@ -533,7 +539,9 @@ emm_basis.polr = function(object, trms, xlev, grid,
 
 #--------------------------------------------------------------
 ### survreg objects (survival package)
-recover_data.survreg = function(object, data = model.frame(object), ...) {
+recover_data.survreg = function(object, data = NULL, ...) {
+    if (is.null(data))
+        data = model.frame(object)
     fcall = object$call
     trms = delete.response(terms(object))
     # I'm gonna delete any terms involving cluster(), or frailty() -- keep strata()
