@@ -24,6 +24,9 @@ emmeans 1.5.2-001xxxx
     What to name rendering functions?? -- suggestions?)
   * Cleaned up code for `.emmc` functions so that parenthesization of levels
     does not get in the way of `ref`, `exclude`, or `include` arguments (#246)
+  * Trying harder to use internally stored data when available in `recover_data()`
+    (#247)
+  * Fixed bug in `emtrends()` when `data` is supplied (#247)
 
 
 emmeans 1.5.2

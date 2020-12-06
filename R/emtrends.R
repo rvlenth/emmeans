@@ -163,7 +163,7 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     
     rgargs$options$just.data = TRUE
     data = do.call("ref_grid", c(rgargs))
-    rgargs$options$just.data = NULL
+    rgargs$options$just.data = rgargs$data = NULL
     
     x = data[[var]]
     fcn = NULL   # differential

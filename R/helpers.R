@@ -27,9 +27,9 @@
 ### lm objects (and also aov, rlm, others that inherit) -- but NOT aovList
 #' @method recover_data lm
 #' @export
-recover_data.lm = function(object, ...) {
+recover_data.lm = function(object, data = object$model, ...) {
         fcall = object$call
-    recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
+    recover_data(fcall, delete.response(terms(object)), object$na.action, data = data, ...)
 }
 
 #' @export
@@ -85,9 +85,9 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
 
 #----------------------------------------------------------
 # manova objects
-recover_data.manova = function(object, ...) {
+recover_data.manova = function(object, data = object$model, ...) {
     fcall = match.call(aov, object$call)   # need to borrow arg matching from aov()
-    recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
+    recover_data(fcall, delete.response(terms(object)), object$na.action, data = data, ...)
 }
 
 
@@ -96,12 +96,12 @@ recover_data.manova = function(object, ...) {
 #--------------------------------------------------------------
 ### merMod objects (lme4 package)
 #' @export
-recover_data.merMod = function(object, ...) {
+recover_data.merMod = function(object, data = object@frame, ...) {
     if(!lme4::isLMM(object) && !lme4::isGLMM(object)) 
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
     recover_data(fcall, delete.response(terms(object)), 
-                 attr(object@frame, "na.action"), ...)
+                 attr(object@frame, "na.action"), data = data, ...)
 }
 
 #' @export
@@ -235,8 +235,11 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
 
 #--------------------------------------------------------------
 ### lme objects (nlme package)
+### NOTE: There is a complex (and undocumented) relationship among object$data,
+### subset, and na.action that can doom us to failure. So I'm not trying to
+### use object$data as the default data. (Moreover, model.frame() doesn't work right either)
 #' @export
-recover_data.lme = function(object, data, ...) {
+recover_data.lme = function(object, ...) {
     fcall = object$call
     if (!is.null(fcall$weights)) {  # painful -- we only get weights for complete cases
         if (!is.null(object$na.action)) {
@@ -248,7 +251,7 @@ recover_data.lme = function(object, data, ...) {
         else
             fcall$weights = nlme::varWeights(object$modelStruct)
     }
-    dat = recover_data(fcall, delete.response(object$terms), object$na.action, data = data, ...)
+    dat = recover_data(fcall, delete.response(object$terms), object$na.action, ...)
     attr(dat, "pass.it.on") = TRUE
     dat
 }
@@ -483,8 +486,8 @@ emm_basis.gls = function(object, trms, xlev, grid,
 
 #--------------------------------------------------------------
 ### polr objects (MASS package)
-recover_data.polr = function(object, ...)
-    recover_data.lm(object, ...)
+recover_data.polr = function(object, data = object$model, ...)
+    recover_data.lm(object, data = data, ...)
 
 emm_basis.polr = function(object, trms, xlev, grid, 
                           mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
@@ -530,7 +533,7 @@ emm_basis.polr = function(object, trms, xlev, grid,
 
 #--------------------------------------------------------------
 ### survreg objects (survival package)
-recover_data.survreg = function(object, ...) {
+recover_data.survreg = function(object, data = model.frame(object), ...) {
     fcall = object$call
     trms = delete.response(terms(object))
     # I'm gonna delete any terms involving cluster(), or frailty() -- keep strata()
@@ -538,7 +541,7 @@ recover_data.survreg = function(object, ...) {
     tmp = grep("cluster\\(|frailty\\(", mod.elts)
     if (length(tmp))
         trms = trms[-tmp]
-    recover_data(fcall, trms, object$na.action, ...)
+    recover_data(fcall, trms, object$na.action, data = data, ...)
 }
 
 # Seems to work right in a little testing.
@@ -741,36 +744,6 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 
-
-
-
-#--------------------------------------------------------------
-### glmmADMB package
-
-# recover_data.glmmadmb = recover_data.lm
-# 
-# emm_basis.glmmadmb = function (object, trms, xlev, grid, ...) 
-# {
-#     contrasts = attr(model.matrix(object), "contrasts")
-#     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-#     X = model.matrix(trms, m, contrasts.arg = contrasts)
-#     bhat = glmmADMB::fixef(object)
-#     V = .my.vcov(object, ...)
-#     misc = list()
-#     if (!is.null(object$family)) {
-#         fam = object$family
-#         misc$tran = object$link
-#         misc$inv.lbl = "response"
-#         if (!is.na(pmatch(fam,"binomial"))) 
-#             misc$inv.lbl = "prob"
-#         else if (!is.na(pmatch(fam,"poisson"))) 
-#             misc$inv.lbl = "rate"
-#     }
-#     nbasis = estimability::all.estble
-#     dffun = function(...) Inf
-#     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
-#          dfargs = list(), misc = misc)
-# }
 
 
 
