@@ -656,9 +656,6 @@ emm_defaults = list (
 #' @param value \code{list} or replacement levels. See the documentation for
 #' \code{\link{update.emmGrid}} with the \code{levels} argument, 
 #' as well as the section below on \dQuote{Replaciong levels}
-#' @param .rename Optional named character vector or list with elements
-#'   of the form \code{oldname = newname}. The \code{oldname}s must
-#'   equal names from among \code{x@levels} (or \code{levels(x)}).
 #'   
 #' @return \code{levels<-} replaces the levels of the object in-place.
 #'   See the section on  for details.

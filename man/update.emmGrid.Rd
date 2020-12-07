@@ -24,10 +24,6 @@ shown.}
 \item{value}{\code{list} or replacement levels. See the documentation for
 \code{\link{update.emmGrid}} with the \code{levels} argument, 
 as well as the section below on \dQuote{Replaciong levels}}
-
-\item{.rename}{Optional named character vector or list with elements
-of the form \code{oldname = newname}. The \code{oldname}s must
-equal names from among \code{x@levels} (or \code{levels(x)}).}
 }
 \value{
 an updated \code{emmGrid} object.

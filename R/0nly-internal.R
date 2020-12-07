@@ -46,6 +46,13 @@
     vars
 }
 
+### returns TRUE iff there is one or more function call in a formula
+.has.fcns = function(form) {
+    fcns = setdiff(.all.vars(form, functions = TRUE), 
+                   c("~", "+", "-", "*", "/", ":", "(", "|", .all.vars(form)))
+    length(fcns) > 0
+}
+
 ### parse a formula of the form lhs ~ rhs | by into a list
 ### of variable names in each part
 ### Returns character(0) for any missing pieces

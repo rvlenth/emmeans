@@ -86,6 +86,11 @@ to exist in this data frame; see the section detailing the rendering functions.}
 \item{dodge}{Numerical amount passed to \code{ggplot2::position_dodge} 
 by which points and intervals are offset so they do not collide.}
 
+\item{xlab, ylab, tlab}{Character labels for the horizontal axis, vertical
+axis, and traces (the different curves), respectively. The \code{emmip}
+function generates these automatically and provides therm via the \code{labs} 
+attribute, but the user may override these if desired.}
+
 \item{dotarg}{\code{list}
 of arguments passed to \code{geom_point} to customize appearance of points}
 

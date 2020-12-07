@@ -264,6 +264,10 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' @rdname emmip
 #' @param dodge Numerical amount passed to \code{ggplot2::position_dodge} 
 #'   by which points and intervals are offset so they do not collide.
+#' @param xlab,ylab,tlab Character labels for the horizontal axis, vertical
+#'   axis, and traces (the different curves), respectively. The \code{emmip}
+#'   function generates these automatically and provides therm via the \code{labs} 
+#'   attribute, but the user may override these if desired.
 #' @param dotarg \code{list}
 #'   of arguments passed to \code{geom_point} to customize appearance of points
 #' @param linearg \code{list}

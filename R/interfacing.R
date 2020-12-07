@@ -147,12 +147,23 @@ recover_data = function(object, ...) {
 #'   and the default value \code{"pi"} (the only numeric constant in base R)
 #'   is provided in case the model involves it. An example involving splines
 #'   may be found at \url{https://github.com/rvlenth/emmeans/issues/180}.
+#' @param frame Optional \code{data.frame}. Many model objects contain the 
+#'   model frame used when fitting the model. In cases where there are no 
+#'   predictor transformations, this model frame has all the original predictor
+#'   values and so is usable for recovering the data. Thus, if \code{frame} is
+#'   non-missing and \code{data} is \code{NULL}, a check is made on \code{trms}
+#'   and if there are no function calls, we use \code{data = frame}. This
+#'   can be helpful because it provides a modicum of security against the
+#'   possibility that the original data used when fitting the model has been
+#'   altered or removed.
 #' 
 #' @method recover_data call
 #' @export
-recover_data.call = function(object, trms, na.action, data = NULL, params = "pi", ...) {
+recover_data.call = function(object, trms, na.action, data = NULL, params = "pi", frame, ...) {
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
+    if (!missing(frame) && is.null(data) && !.has.fcns(trms))
+        data = frame
     tbl = data
     if (length(vars) == 0 || vars[1] == "1") {
         tbl = data.frame(c(1,1))

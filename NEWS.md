@@ -25,6 +25,11 @@ emmeans 1.5.2-001xxxx
   * Cleaned up code for `.emmc` functions so that parenthesization of levels
     does not get in the way of `ref`, `exclude`, or `include` arguments (#246)
   * Fix to bug in `emtrends()` when `data` is specified (#247)
+  * Tries harder to recover original data when available in the object (#247).
+    In particular, sometimes this is available, e.g., in `$model` slot in
+    a `lm` object, *as long as there are no predictor transformations*. This
+    provides a little bit more safety in cases the data have been removed 
+    or altered.
 
 
 emmeans 1.5.2

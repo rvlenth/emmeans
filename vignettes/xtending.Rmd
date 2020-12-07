@@ -104,10 +104,20 @@ head(rec.fake)
 Our recovered data excludes the response variable `y` (owing to the `delete.response` call), and this is fine. 
 
 #### Special arguments {#rdargs}
-<!-- @index `recover_data()!`data` and `params` arguments -->
+<!-- @index `recover_data()!`data` and `params` arguments;
+    `recover_data.call()`!`frame` argument -->
 By the way, there are two special arguments `data` and `params` that may be handed to `recover_data` via `ref_grid` or `emmeans` or a related function; and you may need to provide for if you don't use the `recover_data.call` function. The `data` argument is needed to cover a desperate situation that occurs with certain kinds of models where the underlying data information is not saved with the object---e.g., models that are fitted by iteratively modifying the data. In those cases, the only way to recover the data is to for the user to give it explicitly, and `recover_data` just adds a few needed attributes to it. 
 
 The `params` argument is needed when the model formula refers to variables besides predictors. For example, a model may include a spline term, and the knots are saved in the user's environment as a vector and referred to in the call to fit the model. In trying to recover the data, we try to construct a data frame containing all the variables present on the right-hand side of the model, but if some of those are scalars or of different lengths than the number of observations, an error occurs. So you need to exclude any names in `params` when reconstructing the data.
+
+Many model objects contain the model frame as a slot; for example, a model fitted with
+`lm(..., model = TRUE)` has a member `$model` containing the model frame. This can
+be useful for recovering the data, provided none of the predictors are transformed
+(when predictors are transformed, the original predictor values are not in the model
+frame so it's harder to recover them). Therefore, when the model frame is
+available in the model object, it should be provided in the `frame` argument of `recover_data.call()`; then when `data = NULL`, a check is made on `trms`, and if it
+has no function calls, then `data` is set to `frame`. Of course, in the rarer case 
+where the original data are available in the model object, specify that as `data`.
 
 #### Error handling {#rderrs}
 <!-- @index `recover_data()!Error handling -->

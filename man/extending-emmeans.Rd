@@ -12,7 +12,7 @@
 \usage{
 recover_data(object, ...)
 
-\method{recover_data}{call}(object, trms, na.action, data = NULL, params = "pi", ...)
+\method{recover_data}{call}(object, trms, na.action, data = NULL, params = "pi", frame, ...)
 
 emm_basis(object, trms, xlev, grid, ...)
 
@@ -45,6 +45,16 @@ needed to fit the model. Names of parameters not actually used are harmless,
 and the default value \code{"pi"} (the only numeric constant in base R)
 is provided in case the model involves it. An example involving splines
 may be found at \url{https://github.com/rvlenth/emmeans/issues/180}.}
+
+\item{frame}{Optional \code{data.frame}. Many model objects contain the 
+model frame used when fitting the model. In cases where there are no 
+predictor transformations, this model frame has all the original predictor
+values and so is usable for recovering the data. Thus, if \code{frame} is
+non-missing and \code{data} is \code{NULL}, a check is made on \code{trms}
+and if there are no function calls, we use \code{data = frame}. This
+can be helpful because it provides a modicum of security against the
+possibility that the original data used when fitting the model has been
+altered or removed.}
 
 \item{xlev}{Named list of factor levels (\emph{excluding} ones coerced to 
 factors in the model formula)}

@@ -29,7 +29,8 @@
 #' @export
 recover_data.lm = function(object, ...) {
         fcall = object$call
-    recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
+    recover_data(fcall, delete.response(terms(object)), object$na.action, 
+                 frame = object$model, ...)
 }
 
 #' @export
@@ -87,7 +88,8 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
 # manova objects
 recover_data.manova = function(object, ...) {
     fcall = match.call(aov, object$call)   # need to borrow arg matching from aov()
-    recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
+    recover_data(fcall, delete.response(terms(object)), object$na.action, 
+                 frame = object$model, ...)
 }
 
 
@@ -101,7 +103,7 @@ recover_data.merMod = function(object, ...) {
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
     recover_data(fcall, delete.response(terms(object)), 
-                 attr(object@frame, "na.action"), ...)
+                 attr(object@frame, "na.action"), frame = object@frame, ...)
 }
 
 #' @export
@@ -649,7 +651,7 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     V
 }
 
-# general-purpose emm_basis function
+# general-purpose emm_basis function for GEEs
 .emmb.geeGP = function(object, trms, xlev, grid, vcov.method, valid, idx = seq_along(valid), ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
@@ -743,34 +745,6 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
 
 
 
-
-#--------------------------------------------------------------
-### glmmADMB package
-
-# recover_data.glmmadmb = recover_data.lm
-# 
-# emm_basis.glmmadmb = function (object, trms, xlev, grid, ...) 
-# {
-#     contrasts = attr(model.matrix(object), "contrasts")
-#     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-#     X = model.matrix(trms, m, contrasts.arg = contrasts)
-#     bhat = glmmADMB::fixef(object)
-#     V = .my.vcov(object, ...)
-#     misc = list()
-#     if (!is.null(object$family)) {
-#         fam = object$family
-#         misc$tran = object$link
-#         misc$inv.lbl = "response"
-#         if (!is.na(pmatch(fam,"binomial"))) 
-#             misc$inv.lbl = "prob"
-#         else if (!is.na(pmatch(fam,"poisson"))) 
-#             misc$inv.lbl = "rate"
-#     }
-#     nbasis = estimability::all.estble
-#     dffun = function(...) Inf
-#     list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
-#          dfargs = list(), misc = misc)
-# }
 
 
 

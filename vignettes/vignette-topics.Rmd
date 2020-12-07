@@ -480,6 +480,8 @@ vignette: >
       * [Error handling](xtending.html#rderrs)
       * [for `lqs` objects](xtending.html#rd.lqs)
       * [for `rsm` objects](xtending.html#rdrsm)
+  * `recover_data.call()`
+      * [`frame` argument](xtending.html#rdargs)
   * [`ref_grid()`](basics.html#ref_grid)
       * [`at`](basics.html#altering)
       * [`cov.keep`](basics.html#altering)
