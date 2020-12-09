@@ -36,10 +36,17 @@ emmeans.list = function(object, specs, ...) {
         }
         desc
     }
+    name.arg = match.call()$name
     
     for (i in seq_len(length(specs))) {
-        res = emmeans(object=object, specs = specs[[i]], ...)
         nm = nms[i]
+        # We'll rename the contrasts if spec is named
+        if (is.null(name.arg)) {
+            contr.name = ifelse(nm == "", "contrast", paste0(nm, ".contrast"))
+            res = emmeans(object=object, specs = specs[[i]], name = contr.name, ...)
+        }
+        else
+            res = emmeans(object=object, specs = specs[[i]], ...)
         if (is.data.frame(res)) { # happens e.g. when cld is used
             if (is.null(nm))
                 nm = .make.desc("summary", attr(res, "pri.vars"), attr(res, "by.vars"))

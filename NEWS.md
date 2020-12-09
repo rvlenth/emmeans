@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.2-001xxxx
+emmeans 1.5.3
 -------------
 
   * Per long-time threats, we really are removing `CLD()` once and for all.
@@ -30,6 +30,7 @@ emmeans 1.5.2-001xxxx
     a `lm` object, *as long as there are no predictor transformations*. This
     provides a little bit more safety in cases the data have been removed 
     or altered.
+  * Tweaks to `rbind.emm_list()` to allow subsetting. (Also documentation & example)
 
 
 emmeans 1.5.2

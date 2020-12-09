@@ -40,8 +40,19 @@
 #'   is added to factors as needed.
 #'
 #' @return A revised object of class \code{emmGrid}
+#' @order 1
 #' @method rbind emmGrid
 #' @export
+#' @examples
+#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+#' warp.rg <- ref_grid(warp.lm)
+#' 
+#' # Do all pairwise comparisons within rows or within columns, 
+#' # all considered as one faily of tests:
+#' w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
+#' t.w <- pairs(emmeans(warp.rg, ~ tension | wool))
+#' rbind(w.t, t.w, adjust = "mvt")
+#' update(w.t + t.w, adjust = "fdr")  ## same as above except for adjustment
 rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
     objs = list(...)
     if (!all(sapply(objs, inherits, "emmGrid")))
@@ -91,7 +102,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
            avgd.over = avgd.over)
 }
 #' @rdname rbind.emmGrid
-#' 
+#' @order 2
 #' @param e1 An \code{emmGrid} object
 #' @param e2 Another \code{emmGrid} object
 #' @return The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
@@ -114,21 +125,10 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #'   
 #' @method [ emmGrid
 #' @export
-#'
 #' @examples
-#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' warp.rg <- ref_grid(warp.lm)
-#' 
-#' # Show only 3 of the 6 cases
-#' summary(warp.rg[c(2,4,5)])
-#' 
-#' # Do all pairwise comparisons within rows or within columns, 
-#' # all considered as one faily of tests:
-#' w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
-#' t.w <- pairs(emmeans(warp.rg, ~ tension | wool))
-#' rbind(w.t, t.w, adjust = "mvt")
-#' update(w.t + t.w, adjust = "fdr")  ## same as abve except for adjustment
 #'
+#' # Show only 3 of the 6 cases
+#' summary(warp.rg[c(2, 4, 5)])
 "[.emmGrid" = function(x, i, adjust, drop.levels = TRUE, ...) {
     x@linfct = x@linfct[i, , drop = FALSE]
     x@grid = x@grid[i, , drop = FALSE]                  
