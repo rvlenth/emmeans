@@ -25,12 +25,14 @@
 
 #--------------------------------------------------------------
 ### lm objects (and also aov, rlm, others that inherit) -- but NOT aovList
+### Recent additional arhument 'frame' should point to where the model frame 
+###   might be available, or NULL otherwise
 #' @method recover_data lm
 #' @export
-recover_data.lm = function(object, ...) {
+recover_data.lm = function(object, frame = object$model, ...) {
         fcall = object$call
     recover_data(fcall, delete.response(terms(object)), object$na.action, 
-                 frame = object$model, ...)
+                 frame = frame, ...)
 }
 
 #' @export
@@ -674,14 +676,16 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
 ###  gee objects  ####
 
 
-recover_data.gee = recover_data.lm
+recover_data.gee = function(object, ...)
+    recover_data.lm(object, frame = NULL, ...)
 
 emm_basis.gee = function(object, trms, xlev, grid, vcov.method = "robust.variance", ...)
     .emmb.geeGP(object, trms, xlev, grid, vcov.method, 
                 valid = c("robust.variance", "naive.variance"))
 
 ###  geepack objects  ####
-recover_data.geeglm = recover_data.lm
+recover_data.geeglm = function(object, ...)
+    recover_data.lm(object, ...)
 
 emm_basis.geeglm = function(object, trms, xlev, grid, vcov.method = "vbeta", ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)

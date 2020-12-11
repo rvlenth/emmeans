@@ -262,10 +262,8 @@ effects of the factors involved. This is most useful with `joint_tests()`:
 joint_tests(nutr.lm, submodel = "type2")
 ```
 These results are identical to the type II anova obtained 
-[at the beginning of this example](#nutrex)
-```{r}
-car::Anova(nutr.lm)
-```
+[at the beginning of this example](#nutrex).
+
 More details on how `submodel` works may be found in 
 [`vignette("xplanations")`](xplanations.html#submodels)
 

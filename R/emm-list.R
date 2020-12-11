@@ -130,9 +130,9 @@ plot.emm_list = function(x, ..., which = 1) {
 
 #' @rdname rbind.emmGrid
 #' @order 3
-#' @param which Integer vector of elements to use
-#' @return The \code{rbind} method for \code{emm_list} objects simply combines all 
-#' of the \code{emmGrid} objects comprising the first element of \code{...}.
+#' @param which Integer vector of subset of elements to use; if missing, all are combined
+#' @return The \code{rbind} method for \code{emm_list} objects simply combines 
+#' the \code{emmGrid} objects comprising the first element of \code{...}.
 #' @export
 #' @method rbind emm_list
 #' @examples
@@ -141,8 +141,10 @@ plot.emm_list = function(x, ..., which = 1) {
 #' mod <- lm(conc ~ source + factor(percent), data = pigs)
 #' all <- emmeans(mod, list(src = pairwise ~ source, pct = consec ~ percent))
 #' rbind(all, which = c(2, 4), adjust = "mvt")
-rbind.emm_list = function(..., which = seq_along(elobj), adjust = "bonferroni") {
-    elobj = list(...)[[1]][which]
+rbind.emm_list = function(..., which, adjust = "bonferroni") {
+    elobj = list(...)[[1]]
+    if(!missing(which))
+        elobj = elobj[which]
     class(elobj) = c("emm_list", "list")
     update(do.call(rbind.emmGrid, elobj), adjust = adjust)
 }

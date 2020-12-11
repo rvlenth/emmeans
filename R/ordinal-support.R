@@ -38,7 +38,8 @@ recover_data.clm = function(object, mode = "latent", ...) {
 }
 
 # For now at least, clmm doesn't cover scale, nominal options
-recover_data.clmm = recover_data.lm
+recover_data.clmm = function(object, ...)
+    recover_data.lm(object, ...)
 
 # Note: For ALL thresholds, object$Theta has all the threshold values
 # for the different cuts (same as object$alpha when threshold=="flexible")

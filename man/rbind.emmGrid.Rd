@@ -11,7 +11,7 @@
 
 \method{+}{emmGrid}(e1, e2)
 
-\method{rbind}{emm_list}(..., which = seq_along(elobj), adjust = "bonferroni")
+\method{rbind}{emm_list}(..., which, adjust = "bonferroni")
 
 \method{[}{emmGrid}(x, i, adjust, drop.levels = TRUE, ...)
 }
@@ -27,7 +27,7 @@ In \code{"["}, it is ignored.}
 
 \item{e2}{Another \code{emmGrid} object}
 
-\item{which}{Integer vector of elements to use}
+\item{which}{Integer vector of subset of elements to use; if missing, all are combined}
 
 \item{x}{An \code{emmGrid} object to be subsetted}
 
@@ -41,8 +41,8 @@ A revised object of class \code{emmGrid}
 
 The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 
-The \code{rbind} method for \code{emm_list} objects simply combines all 
-of the \code{emmGrid} objects comprising the first element of \code{...}.
+The \code{rbind} method for \code{emm_list} objects simply combines 
+the \code{emmGrid} objects comprising the first element of \code{...}.
 }
 \description{
 These functions provide methods for \code{\link[base:cbind]{rbind}} and

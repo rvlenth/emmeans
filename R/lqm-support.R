@@ -27,12 +27,16 @@ recover_data.lqmm = function(object, data = object$mfArgs$data, ...) {
     recover_data(fcall, trms, object$mfArgs$na.action, data = data, ...)
 }
 
-emm_basis.lqmm = function(object, trms, xlev, grid, tau = "0.5", ...) {
-    tau = as.character(tau)
-    bhat = coef(object)[, tau]
+emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
+    bhat = coef(object)
+    col = which(abs(tau - as.numeric(colnames(bhat))) < 0.0001)
+    if (length(col) == 0)
+        stop("No coefficients available for tau = ", tau)
+    col = col[1]
+    bhat = bhat[, col]
     nm = names(bhat)
     vcv = summary(object, covariance = TRUE)$Cov
-    V = vcv[nm, nm, tau]
+    V = vcv[nm, nm, col]
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     nbasis = estimability::all.estble
@@ -45,7 +49,7 @@ emm_basis.lqmm = function(object, trms, xlev, grid, tau = "0.5", ...) {
 
 # Use same functions for lqm objects
 recover_data.lqm = function(object, ...) {
-    recover_data.lm(object, ...)
+    recover_data.lm(object, frame = NULL, ...)
 }
 
 emm_basis.lqm = function(object, ...)
