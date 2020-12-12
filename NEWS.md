@@ -3,6 +3,7 @@
 emmeans 1.3.090xxx
   * Fix to bug in `rbind.emm_list()` to default for `which`
   * Fix for a glitch in recovering data for `gee` models (#249)
+  * Support for `svyglm` objects (#248)
 
 
 emmeans 1.5.3

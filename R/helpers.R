@@ -748,6 +748,18 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
 }
 
 
+### survey pacvkage
+# svyglm class
+recover_data.svyglm = function(object, data = NULL, ...) {
+    if (is.null(data)) {
+        env = environment(terms(object))
+        des = eval(object$call$design, envir = env)
+        data = eval(des$call$data, envir = env)
+    }
+    recover_data.lm(object, data = data, frame = object$model, ...)
+}
+
+# inherited emm_basis.lm method works fine
 
 
 
