@@ -28,15 +28,19 @@ recover_data.lqmm = function(object, data = object$mfArgs$data, ...) {
 }
 
 emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
-    bhat = coef(object)
-    col = which(abs(tau - as.numeric(colnames(bhat))) < 0.0001)
+    taudiff = abs(object$tau - tau)
+    col = which(taudiff < 0.0001)
     if (length(col) == 0)
         stop("No coefficients available for tau = ", tau)
-    col = col[1]
-    bhat = bhat[, col]
-    nm = names(bhat)
-    vcv = summary(object, covariance = TRUE)$Cov
-    V = vcv[nm, nm, col]
+    bhat = coef(object)
+    # Very touchy here because their boot() function doesn't take dots...
+    nm = intersect(names(list(...)), c("method", "R", "seed", "startQR"))
+    vargs = c(list(object = object, covariance = TRUE), list(...)[nm])
+    V = do.call("summary", vargs)$Cov
+    if (length(taudiff) > 1) {
+        bhat = bhat[, col[1]]
+        V = V[, , col]
+    }
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     nbasis = estimability::all.estble
@@ -54,3 +58,29 @@ recover_data.lqm = function(object, ...) {
 
 emm_basis.lqm = function(object, ...)
     emm_basis.lqmm(object, ...)
+
+
+
+#### rq objects (quantreg)
+
+recover_data.rq = function(object, ...) {
+    recover_data.lm(object, frame = object$model, ...)
+}
+    
+### TO DO: Finish-up support for multiple taus.
+emm_basis.rq = function(object, trms, xlev, grid, ...) {
+    bhat = object$coefficients
+    nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
+    m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
+    X = model.matrix(trms, m, contrasts.arg = object$contrasts)
+    assign = attr(X, "assign")
+    X = X[, nm, drop = FALSE]
+    bhat = as.numeric(bhat) 
+    summ = summary(object, covariance = TRUE, ...)
+    V = summ$cov
+    nbasis = estimability::all.estble
+    misc = list()
+    dfargs = list(df = summ$rdf)
+    dffun = function(k, dfargs) dfargs$df
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
+}

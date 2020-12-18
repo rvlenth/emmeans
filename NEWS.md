@@ -4,6 +4,10 @@ emmeans 1.3.090xxx
   * Fix to bug in `rbind.emm_list()` to default for `which`
   * Fix for a glitch in recovering data for `gee` models (#249)
   * Support for `svyglm` objects (#248)
+  * Better support for `lqm`, `lqmm`, and added support for `rq`
+    objects (**quantreg** package). User may pass `summary` or
+    `boot` arguments such as `method`, `se`, `R`, ... (#250)
+
 
 
 emmeans 1.5.3

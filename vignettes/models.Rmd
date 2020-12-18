@@ -74,7 +74,8 @@ Scroll down or follow the links to those groups for more information.
 |lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
 |             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
 |             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
-|lqm,lqmm     |lqmm     |[A](#A)  |`tau = "0.5"` (must match an entry in `object$tau`)          |
+|lqm,lqmm     |lqmm     |[Q](#Q)  |`tau = "0.5"` (must match an entry in `object$tau`)          |
+|             |         |         |Optional: `method`, `R`, `seed`, `startQR` (must be fully spelled-out) |
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
@@ -93,6 +94,8 @@ Scroll down or follow the links to those groups for more information.
 |rlm          |MASS     |[A](#A)  |inherits `lm` support                                        |
 |rms          |rms      |[O](#O)  |`mode = ("middle", "latent", "linear.predictor",`            |
 |             |         |         |`"cum.prob", "exc.prob", "prob", "mean.class")`              |
+|rq           |quantreg |[Q](#Q)  |`tau = "0.5"` (must match an entry in `object$tau`)          |
+|             |         |         |Optional: `se`, `R`, `bsmethod`, etc (must be fully spelled-out) |
 |rsm          |rsm      |[P](#P)  |Supported in **rsm** package                                 |
 |stanreg      |rstanarm |[S](#S)  |Args for `stanreg_`*xxx* similar to those for *xxx*          |
 |survreg      |survival |[A](#A)  |                                                             |
@@ -404,6 +407,16 @@ together.
 Models in this group have their **emmeans** support provided by the package
 that implements the model-fitting procedure. Users should refer to the
 package documentation for details on **emmeans** support.
+
+
+## Q -- Quantile regression {#Q}
+
+The argument `tau` should match (within a very small margin) one of the quantiles 
+actually specified in fitting the model; otherwise an error results. In these models, the
+covariance matrix is obtained via the model's `summary()` method with `covariance = TRUE`.
+The user may specify one or more of the other arguments for `summary` or to be passed
+to, say, a bootstrap routine. If so, those optional arguments must be spelled-out completely
+(e.g., `start` will *not* be matched to `startQR`).
 
 
 ## S -- Sampling (MCMC) methods {#S}
