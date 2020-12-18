@@ -67,20 +67,37 @@ recover_data.rq = function(object, ...) {
     recover_data.lm(object, frame = object$model, ...)
 }
     
-### TO DO: Finish-up support for multiple taus.
-emm_basis.rq = function(object, trms, xlev, grid, ...) {
+emm_basis.rq = function(object, trms, xlev, grid, tau = 0.5, ...) {
+    taudiff = abs(object$tau - tau)
+    col = which(taudiff < 0.0001)
+    if (length(col) == 0)
+        stop("No coefficients available for tau = ", tau)
     bhat = object$coefficients
+    summ = summary(object, covariance = TRUE, ...)
+    if (length(taudiff) == 1) {
+        V = summ$cov
+        df = summ$rdf
+    }
+    else {
+        bhat = bhat[, col[1]]
+        V = summ[[col]] $ cov
+        df = summ[[col]] $ rdf
+    }
     nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     assign = attr(X, "assign")
     X = X[, nm, drop = FALSE]
     bhat = as.numeric(bhat) 
-    summ = summary(object, covariance = TRUE, ...)
-    V = summ$cov
     nbasis = estimability::all.estble
     misc = list()
-    dfargs = list(df = summ$rdf)
+    dfargs = list(df = df)
     dffun = function(k, dfargs) dfargs$df
-    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+         dffun = dffun, dfargs = dfargs, misc = misc)
 }
+
+# we just reroute rqs objects to emm_basis.rq, as pretty similar
+recover_data.rqs = recover_data.rq
+emm_basis.rqs = function(object, ...)
+    emm_basis.rq(object, ...)
