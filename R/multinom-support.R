@@ -40,7 +40,9 @@ emm_basis.multinom = function(object, trms, xlev, grid,
                               mode = c("prob", "latent"), ...) {
     mode = match.arg(mode)
     bhat = t(coef(object))
-    V = .my.vcov(object, ...)
+    # get indices to follow along the transpose
+    perm = as.numeric(t(0 * coef(object) + seq_along(bhat)))
+    V = .my.vcov(object, ...)[perm, perm]
     k = ifelse(is.matrix(coef(object)), ncol(bhat), 1)
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
@@ -100,3 +102,13 @@ emm_basis.multinom = function(object, trms, xlev, grid,
         object@post.beta = postb
     object
 }
+
+
+### Support for mclogit::mblogit models???
+emm_basis.mblogit = function(object, ...) {
+    object$coefficients = object$coefmat
+    object$lev = levels(object$model[[1]])
+    object$edf = Inf
+    emm_basis.multinom(object, ...)
+}
+
