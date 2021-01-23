@@ -1,6 +1,7 @@
 ## NEWS for the emmeans package
 
 emmeans 1.5.3.090xxx
+
   * Fix to bug in `rbind.emm_list()` to default for `which`
   * Fix for a glitch in recovering data for `gee` models (#249)
   * Support for `svyglm` objects (#248)
@@ -8,7 +9,9 @@ emmeans 1.5.3.090xxx
     objects (**quantreg** package). User may pass `summary` or
     `boot` arguments such as `method`, `se`, `R`, ... (#250)
   * Correction to `multinom` objects (SEs were previously incorrect)
-    and addition of support for related `mclogit::mblogit` objects
+    and addition of support for related `mclogit::mblogit` objects.
+    **If at all possible, users should re-run any pre-1.5.4 analyses of
+    multinomial models**
 
 
 
