@@ -805,7 +805,7 @@ emm_defaults = list (
 ### Primary reason to do this is with transform = TRUE, then can 
 ### work with linear functions of the transformed predictions
 
-#' Reconstruct a reference grid with a new transformation or posterior sample
+#' Reconstruct a reference grid with a new transformation or simulations
 #' 
 #' The typical use of this function is to cause EMMs to be computed on
 #' a different scale, e.g., the back-transformed scale rather than the 
@@ -823,12 +823,13 @@ emm_defaults = list (
 #' contrasts will be conducted on the new scale -- which is
 #' the reason this function exists. 
 #' 
-#' This function may also be used to convert a reference grid for a 
-#' frequentist model to one for a Bayesian model. To do so, specify a value
-#' for \code{N.sim} and a posterior sample is simulated using the function \code{sim}.
-#' . The grid may be further processed in accordance with
-#' the other arguments; or if \code{transform = "pass"}, it is simply returned with the 
-#' only change being the addition of the posterior sample.
+#' This function may also be used to simulate a sample of regression
+#' coefficients for a frequentist model for subsequent use as though it were a
+#' Bayesian model. To do so, specify a value for \code{N.sim} and a sample is
+#' simulated using the function \code{sim}. The grid may be further processed in
+#' accordance with the other arguments; or if \code{transform = "pass"}, it is
+#' simply returned with the only change being the addition of the simulated
+#' sample.
 #' 
 #' @param object An object of class \code{emmGrid}
 #' @param transform Character, list, or logical value. If \code{"response"},
@@ -906,7 +907,7 @@ emm_defaults = list (
 #' # Same result, useful if we hadn't already created 'rg'
 #' # emm2 <- emmeans(pigs.lm, "source", transform = "response")
 #' 
-#' # Simulate a posterior sample
+#' # Simulate a sample of regression coefficients
 #' set.seed(2.71828)
 #' rgb <- regrid(rg, N.sim = 200, transform = "pass")
 #' emmeans(rgb, "source", type = "response")  ## similar to emm1
@@ -926,7 +927,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         transform = match.arg(transform)
     
     if (is.na(object@post.beta[1]) && !missing(N.sim)) {
-        message("Generating a posterior sample of size ", N.sim)
+        message("Simulating a sample of size ", N.sim, " of regression coefficients.")
         object@post.beta = sim(N.sim, object@bhat, object@V)
     }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/emmGrid-methods.R
 \name{regrid}
 \alias{regrid}
-\title{Reconstruct a reference grid with a new transformation or posterior sample}
+\title{Reconstruct a reference grid with a new transformation or simulations}
 \usage{
 regrid(object, transform = c("response", "mu", "unlink", "none", "pass",
   links), inv.link.lbl = "response", predict.type,
@@ -79,12 +79,13 @@ object using \samp{type="response"}. But subsequent EMMs or
 contrasts will be conducted on the new scale -- which is
 the reason this function exists. 
 
-This function may also be used to convert a reference grid for a 
-frequentist model to one for a Bayesian model. To do so, specify a value
-for \code{N.sim} and a posterior sample is simulated using the function \code{sim}.
-. The grid may be further processed in accordance with
-the other arguments; or if \code{transform = "pass"}, it is simply returned with the 
-only change being the addition of the posterior sample.
+This function may also be used to simulate a sample of regression
+coefficients for a frequentist model for subsequent use as though it were a
+Bayesian model. To do so, specify a value for \code{N.sim} and a sample is
+simulated using the function \code{sim}. The grid may be further processed in
+accordance with the other arguments; or if \code{transform = "pass"}, it is
+simply returned with the only change being the addition of the simulated
+sample.
 }
 \note{
 Another way to use \code{regrid} is to supply a \code{transform} 
@@ -121,7 +122,7 @@ pairs(emm2)  ## We obtain DIFFERENCES
 # Same result, useful if we hadn't already created 'rg'
 # emm2 <- emmeans(pigs.lm, "source", transform = "response")
 
-# Simulate a posterior sample
+# Simulate a sample of regression coefficients
 set.seed(2.71828)
 rgb <- regrid(rg, N.sim = 200, transform = "pass")
 emmeans(rgb, "source", type = "response")  ## similar to emm1

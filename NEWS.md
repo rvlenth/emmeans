@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.3.090xxx
+emmeans 1.5.4
 
   * Fix to bug in `rbind.emm_list()` to default for `which`
   * Fix for a glitch in recovering data for `gee` models (#249)
@@ -12,6 +12,10 @@ emmeans 1.5.3.090xxx
     and addition of support for related `mclogit::mblogit` objects.
     **If at all possible, users should re-run any pre-1.5.4 analyses of
     multinomial models**
+  * Change to less misleading messages and documentation related to the
+    `N.sim` argument of `regrid()`. We are no longer calling this a posterior 
+    sample because this is not really a Bayesian method, it is just a simulated
+    set of regression coefficients.
 
 
 

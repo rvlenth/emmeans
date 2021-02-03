@@ -96,7 +96,8 @@ Scroll down or follow the links to those groups for more information.
 |rms          |rms      |[O](#O)  |`mode = ("middle", "latent", "linear.predictor",`            |
 |             |         |         |`"cum.prob", "exc.prob", "prob", "mean.class")`              |
 |rq,rqs       |quantreg |[Q](#Q)  |`tau = "0.5"` (must match an entry in `object$tau`)          |
-|             |         |         |Optional: `se`, `R`, `bsmethod`, etc. |
+|             |         |         |Optional: `se`, `R`, `bsmethod`, etc.                        |
+|rlmerMod     |robustlmm|[P](#P)  |Supported in **robustlmm** package                           |
 |rsm          |rsm      |[P](#P)  |Supported in **rsm** package                                 |
 |stanreg      |rstanarm |[S](#S)  |Args for `stanreg_`*xxx* similar to those for *xxx*          |
 |survreg      |survival |[A](#A)  |                                                             |
