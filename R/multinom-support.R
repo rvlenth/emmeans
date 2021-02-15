@@ -40,9 +40,9 @@ emm_basis.multinom = function(object, trms, xlev, grid,
                               mode = c("prob", "latent"), ...) {
     mode = match.arg(mode)
     bhat = t(coef(object))
-    # get indices to follow along the transpose
-    perm = as.numeric(t(0 * coef(object) + seq_along(bhat)))
-    V = .my.vcov(object, ...)[perm, perm]
+    V = .my.vcov(object, ...)
+    # NOTE: entries in vcov(object) come out in same order as
+    # in as.numeric(bhat), even though latter has been transposed
     k = ifelse(is.matrix(coef(object)), ncol(bhat), 1)
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
@@ -105,10 +105,17 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 
 
 ### Support for mclogit::mblogit models???
-emm_basis.mblogit = function(object, ...) {
+emm_basis.mblogit = function(object, ..., vcov.) {
     object$coefficients = object$coefmat
     object$lev = levels(object$model[[1]])
     object$edf = Inf
-    emm_basis.multinom(object, ...)
+    # we have to arrange the vcov elements in row-major order
+    if(missing(vcov.))
+        vcov. = object$covmat
+    perm = matrix(seq_along(as.numeric(object$coefmat)), 
+                  ncol = ncol(object$coefmat))
+    perm = as.numeric(t(perm))
+    vcov. = vcov.[perm, perm]
+    emm_basis.multinom(object, ..., vcov. = vcov.)
 }
 

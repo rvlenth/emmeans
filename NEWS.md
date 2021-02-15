@@ -1,6 +1,16 @@
 ## NEWS for the emmeans package
 
+emmeans 1.5.4-09xxx
+-------------
+
+  * The `multinom` "correction" in version 1.5.4 was actually an
+    "incorrection." It was right before, and I made it wrong!
+    **If analyzing `multinom` models, use a version *other* than 1.5.4**
+  * Repairs to support for `mblogit` models
+  
+
 emmeans 1.5.4
+-------------
 
   * Fix to bug in `rbind.emm_list()` to default for `which`
   * Fix for a glitch in recovering data for `gee` models (#249)
@@ -10,8 +20,10 @@ emmeans 1.5.4
     `boot` arguments such as `method`, `se`, `R`, ... (#250)
   * Correction to `multinom` objects (SEs were previously incorrect)
     and addition of support for related `mclogit::mblogit` objects.
-    **If at all possible, users should re-run any pre-1.5.4 analyses of
-    multinomial models**
+    If at all possible, users should re-run any pre-1.5.4 analyses of
+    multinomial models<br>
+    **Note: This correction was wrong!** If using multinomial models,
+    you should use some version *other than* 1.5.4!
   * Change to less misleading messages and documentation related to the
     `N.sim` argument of `regrid()`. We are no longer calling this a posterior 
     sample because this is not really a Bayesian method, it is just a simulated
