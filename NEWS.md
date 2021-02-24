@@ -7,6 +7,9 @@ emmeans 1.5.4-09xxx
     "incorrection." It was right before, and I made it wrong!
     **If analyzing `multinom` models, use a version *other* than 1.5.4**
   * Repairs to support for `mblogit` models
+  * Bug fix for `survreg` support (#258) -- `survreg()` doesn't handle missing 
+    factor levels the same way as `lm()`. This also affects results from
+    `coxph()`, `AER::tobit()`, ...
   
 
 emmeans 1.5.4
