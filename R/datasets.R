@@ -38,7 +38,7 @@
 #'  
 #' @format A data frame with 36 observations on the following 4 variables.
 #'   \describe{
-#'   \item{\code{noise}}{Noise level in decibels - a numeric vector.}
+#'   \item{\code{noise}}{Noise level in decibels (but see note) - a numeric vector.}
 #'   \item{\code{size}}{The size of the vehicle - an ordered factor with
 #'     levels \code{S}, \code{M}, \code{L}.}
 #'   \item{\code{type}}{Type of anti-pollution filter - a factor with levels
@@ -51,8 +51,15 @@
 #'   original dataset was altered by assigning meaningful names to the factors
 #'   and sorting the observations in random order as if this were the run order
 #'   of the experiment.
+#' @note While the data source claims that \code{noise} is measured in decibels,
+#'   the values are implausible. I believe that these measurements are actually
+#'   in tenths of dB (centibels?). Looking at the values in the dataset, note 
+#'   that every measurement ends in 0 or 5, and it is reasonable to believe that
+#'   measurements are accurate to the nearest half of a decibel.
+#'   %%% Thanks to an email communication from a speech/hearing scientist
 #' @examples
-#' noise.lm <- lm(noise ~ size * type * side, data = auto.noise)
+#' # (Based on belief that noise/10 is in decibel units)
+#' noise.lm <- lm(noise/10 ~ size * type * side, data = auto.noise)
 #' 
 #' # Interaction plot of predictions
 #' emmip(noise.lm, type ~ size | side)

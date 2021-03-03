@@ -10,6 +10,9 @@ emmeans 1.5.4-09xxx
   * Bug fix for `survreg` support (#258) -- `survreg()` doesn't handle missing 
     factor levels the same way as `lm()`. This also affects results from
     `coxph()`, `AER::tobit()`, ...
+  * Addition of a note in help `auto.noise` dataset, and changing that
+    example and vignette example to have `noise/10` as the response variable.
+    (Thanks to speech and hearing professor Stuart Rosen for an e-mail comment.)
   
 
 emmeans 1.5.4

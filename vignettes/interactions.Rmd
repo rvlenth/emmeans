@@ -44,9 +44,11 @@ collected; for example, are these independent experimental runs, or are some
 cars measured more than once? The model is based on the independence assumption,
 but I have my doubts.
 
-Let's fit a model and obtain the ANOVA table:
+Let's fit a model and obtain the ANOVA table (because of the scale of the data, 
+we believe that the response is recorded in tenths of decibels; 
+so we compensate for this by scaling the response):
 ```{r}
-noise.lm <- lm(noise ~ size * type * side, data = auto.noise)
+noise.lm <- lm(noise/10 ~ size * type * side, data = auto.noise)
 anova(noise.lm)
 ```
 There are statistically strong 2- and 3-way interactions. 
