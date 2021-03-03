@@ -12,8 +12,7 @@ emmeans 1.5.4-09xxx
     `coxph()`, `AER::tobit()`, ...
   * Addition of a note in help `auto.noise` dataset, and changing that
     example and vignette example to have `noise/10` as the response variable.
-    (Thanks to speech and hearing professor Stuart Rosen for pointing
-    this out in an e-mail comment.)
+    (Thanks to speech and hearing professor Stuart Rosen for an e-mail comment.)
   
 
 emmeans 1.5.4
