@@ -259,10 +259,12 @@ recover_data.lme = function(object, data, ...) {
 
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite"), 
+        mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite", "asymptotic"), 
         sigmaAdjust = TRUE, options, ...) {
     mode = match.arg(mode)
     if (mode == "boot-satterthwaite") mode = "appx-satterthwaite"  # backward compatibility
+    if (mode == "asymptotic")
+        options$df = Inf
     if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
         mode = "fixed"
     if (mode == "auto")
@@ -329,19 +331,20 @@ emm_basis.lme = function(object, trms, xlev, grid,
 # covariance parameters
 gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data = object$data) {
     # check consistency of contrasts
-    cnm = names(object$contrasts)
-    cdiff = sapply(cnm, function(.) max(abs(contrasts(data[[.]]) - object$contrasts[[.]])))
-    if (max(cdiff) > 1e-6) {
-        message("Contrasts don't match those used when the model was fitted. Fix this and re-run")
-        stop()
-    }
+    #### This code doesn't work with coerced factors. Hardly seems messing with, so I commented it out
+    # cnm = names(object$contrasts)
+    # cdiff = sapply(cnm, function(.) max(abs(contrasts(data[[.]]) - object$contrasts[[.]])))
+    # if (max(cdiff) > 1e-6) {
+    #     message("Contrasts don't match those used when the model was fitted. Fix this and re-run")
+    #     stop()
+    # }
     
     A = object$apVar
     theta = attr(A, "Pars")
     V = object[[Vname]]
     sig = .01 * object$sigma
     #data = object$data
-    yname = all.vars(call)[1]
+    yname = all.vars(eval(call))[1]
     y = data[[yname]]
     n = length(y)
     dat = t(replicate(2 + length(theta), {
@@ -421,7 +424,7 @@ recover_data.gls = function(object, data, ...) {
 }
 
 emm_basis.gls = function(object, trms, xlev, grid, 
-                         mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite"), 
+                         mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite", "asymptotic"), 
                          options, misc, ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
@@ -449,7 +452,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
             mode = "appx-satterthwaite"
         }
         if (mode == "appx-satterthwaite") {
-            G = try(gradV.kludge(object, "varBeta", call = object$call,
+            G = try(gradV.kludge(object, "varBeta", call = object$call$model,
                                  data = data),
                     silent = TRUE)
         }
@@ -468,8 +471,9 @@ emm_basis.gls = function(object, trms, xlev, grid,
             2 * est^2 / varest
         }
     }
-    else if (mode == "df.error") {  ### mode == "df.error"
-        dfargs = list(df = object$dims$N - object$dims$p - length(attr(object$apVar, "Pars")))
+    else if (mode %in%  c("df.error", "asymptotic")) { 
+        df = ifelse(mode == "asymptotic", Inf, object$dims$N - object$dims$p - length(attr(object$apVar, "Pars")))
+        dfargs = list(df = df)
         dffun = function(k, dfargs) dfargs$df
     }
     attr(dffun, "mesg") = mode

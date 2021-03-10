@@ -65,12 +65,12 @@ Scroll down or follow the links to those groups for more information.
 |glmmadmb     |glmmADMB |         |No longer supported                                          |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
 |glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package (dev. version only?)        |
-|gls          |nlme     |[K](#K)  |`mode = c("auto", "df.error", "satterthwaite")`              |
+|gls          |nlme     |[K](#K)  |`mode = c("auto", "df.error", "satterthwaite", "asymptotic")`|
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
 |lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
 |lme          |nlme     |[K](#K)  |`sigmaAdjust = c(TRUE, FALSE),`                              |
-|             |         |         |`mode = c("auto", containment", "satterthwaite")`            |
+|             |         |         |`mode = c("auto", containment", "satterthwaite", "asymptotic")`|
 |lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
 |             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
 |             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
@@ -258,10 +258,12 @@ termed `"boot-satterthwaite"`; this is still supported for backward compatibilit
 The "boot" was abandoned because it is really an approximation method, not
 a bootstrap method in the sense as many statistical methods.)
 
-The alternative method is `"df.error"` (for `gls`) and
+An alternative method is `"df.error"` (for `gls`) and
 `"containment"` (for `lme`). `df.error` is just the error degrees of freedom for
 the model, minus the number of extra random effects estimated; it generally
-over-estimates the degrees of freedom. `"containment"` determines the degrees of
+over-estimates the degrees of freedom. The `asymptotic` mode simply sets the 
+degrees of freedom to infinity.
+"containment"` mode (for `lme` models) determines the degrees of
 freedom for the coarsest grouping involved in the contrast or linear function
 involved, so it tends to under-estimate the degrees of freedom.
 The default is `mode = "auto"`, which uses Satterthwaite if there are estimated 
