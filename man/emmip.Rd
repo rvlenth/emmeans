@@ -14,9 +14,9 @@ emmip(object, formula, ...)
   nesting.order = FALSE, ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.1, xlab = labs$xlab,
-  ylab = labs$ylab, tlab = labs$tlab, dotarg = list(),
-  linearg = list(), CIarg = list(lwd = 2, alpha = 0.5), PIarg = list(lwd
-  = 1.25, alpha = 0.33), ...)
+  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context",
+  dotarg = list(), linearg = list(), CIarg = list(lwd = 2, alpha = 0.5),
+  PIarg = list(lwd = 1.25, alpha = 0.33), ...)
 
 emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
   tlab = labs$tlab, pch = c(1, 2, 6, 7, 9, 10, 15:20), lty = 1,
@@ -90,6 +90,12 @@ by which points and intervals are offset so they do not collide.}
 axis, and traces (the different curves), respectively. The \code{emmip}
 function generates these automatically and provides therm via the \code{labs} 
 attribute, but the user may override these if desired.}
+
+\item{facetlab}{Labeller for facets (when by variables are in play).
+Use \code{"label_value"} to show just the factor levels, or \code{"label_both"}
+to show both the factor names and factor levels. The default of
+\code{"label_context"} decides which based on how many \code{by} factors there are.
+See the documentation for \code{ggplot2::label_context}.}
 
 \item{dotarg}{\code{list}
 of arguments passed to \code{geom_point} to customize appearance of points}

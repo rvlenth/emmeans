@@ -16,6 +16,8 @@ emmeans 1.5.4-09xxx
     out this issue in an e-mail comment.)
   * Bug fix for `appx-satterthwaite` mode in `gls`/`lme` models (#263)
   * Added `mode = "asymptotic"` for `gls`/`lme` models.
+  * Added `facetlab` argument to `emmip_ggplot()` so user can control how
+    facets are labeled (#261)
     
 
 emmeans 1.5.4
