@@ -245,13 +245,18 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         object = do.call(ref_grid, args)
     }
     facs = setdiff(names(object@levels), by)
+    trmtbl = attr(object@model.info$terms, "factors")
+    row.names(trmtbl) = sapply(row.names(trmtbl), function(x)
+        .all.vars(reformulate(x)))
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
-            emm = emmeans(object, these, by = by, ...)
-            tst = test(contrast(emm, interaction = "consec"), 
-                       joint = TRUE, status = TRUE)
-            tst = cbind(ord = k, `model term` = paste(these, collapse = ":"), tst)
-            result = rbind(result, tst)
+            if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) {
+                emm = emmeans(object, these, by = by, ...)
+                tst = test(contrast(emm, interaction = "consec"), 
+                           joint = TRUE, status = TRUE)
+                tst = cbind(ord = k, `model term` = paste(these, collapse = ":"), tst)
+                result = rbind(result, tst)
+            }
             last = max(match(these, facs))
         }
         else

@@ -18,6 +18,8 @@ emmeans 1.5.4-09xxx
   * Added `mode = "asymptotic"` for `gls`/`lme` models.
   * Added `facetlab` argument to `emmip_ggplot()` so user can control how
     facets are labeled (#261)
+  * Efficiency improvements in `joint_tests()` (#265)
+  
     
 
 emmeans 1.5.4
