@@ -245,9 +245,21 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         object = do.call(ref_grid, args)
     }
     facs = setdiff(names(object@levels), by)
+    
+    # Use "factors" attr if avail to screen-out interactions not in model
+    # For any factors not in model (created by emmeans fcns), assume they interact w/ everything
     trmtbl = attr(object@model.info$terms, "factors")
-    row.names(trmtbl) = sapply(row.names(trmtbl), function(x)
-        .all.vars(reformulate(x)))
+    if (is.null(trmtbl))
+        trmtbl = matrix(1, nrow = length(facs), dimnames = list(facs, NULL))
+    else
+        row.names(trmtbl) = sapply(row.names(trmtbl), function(x)
+            .all.vars(reformulate(x)))
+    xtras = setdiff(facs, row.names(trmtbl))
+    if (length(xtras) > 0) {
+        xt = matrix(1, nrow = length(xtras), ncol = ncol(trmtbl), dimnames = list(xtras, NULL))
+        trmtbl = rbind(trmtbl, xt)
+    }
+    
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
             if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) {
