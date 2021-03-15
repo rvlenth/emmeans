@@ -260,9 +260,20 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         trmtbl = rbind(trmtbl, xt)
     }
     
+    # internal routine to see if `nms` interaction is in model
+    chktrms = function(nms)
+        any(apply(trmtbl[nms, , drop = FALSE], 2, prod) != 0)
+    #internal routing to check nesting in 'nms'
+    chknst = function(nms) {
+        if (is.null(object@model.info$nesting)) return(TRUE)
+        nst = intersect(nms, names(object@model.info$nesting))
+        if (length(nst) > 0) nst = unlist(object@model.info$nesting[nst])
+        length(setdiff(nst, nms)) == 0   # TRUE if nms includes all of nst
+    }
+    
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
-            if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) {
+            if(chktrms(these) && chknst(these)) {
                 emm = emmeans(object, these, by = by, ...)
                 tst = test(contrast(emm, interaction = "consec"), 
                            joint = TRUE, status = TRUE)
