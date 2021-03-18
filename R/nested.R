@@ -224,7 +224,7 @@ add_grouping = function(object, newname, refname, newlevs) {
 
 
 ### contrast function for nested structures
-.nested_contrast = function(rgobj, method = "eff", by = NULL, adjust, ...) {
+.nested_contrast = function(rgobj, method = "eff", interaction = FALSE, by = NULL, adjust, ...) {
     nesting = rgobj@model.info$nesting
     # Prevent meaningless cases -- if A %in% B, we can't have A in 'by' without B
     # Our remedy will be to EXPAND the by list
@@ -251,11 +251,11 @@ add_grouping = function(object, newname, refname, newlevs) {
     wkrg@model.info$nesting = wkrg@misc$display = NULL
     by.rows = .find.by.rows(wkrg@grid, by)
     if(length(by.rows) == 1)
-        result = contrast(wkrg, method = method, by = by, ...)
+        result = contrast.emmGrid(wkrg, method = method, interaction = interaction, by = by, adjust = adjust, ...)
     else {
         result = lapply(by.rows, function(rows) {
             contrast.emmGrid(wkrg[rows, drop.levels = TRUE], method = method, 
-                              by = by, adjust = adjust, ...)
+                             interaction = interaction, by = by, adjust = adjust, ...)
         })
         # set up coef matrix
         comb.nms = unique(do.call(paste, wkrg@grid[facs]))
@@ -274,7 +274,9 @@ add_grouping = function(object, newname, refname, newlevs) {
         result = update(result, by = by, 
                         estType = ifelse(is.null(estType), "contrast", estType))
         cname = setdiff(names(result@levels), by)
-        result@model.info$nesting[[cname]] = by
+        if (!is.null(result@model.info$nesting))
+            for (nm in cname) 
+                result@model.info$nesting[[nm]] = by
     }
 ##    result@misc$orig.grid = result@misc$con.coef = NULL # we now provide these
 

@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.4-09xxx
+emmeans 1.5.5
 -------------
 
   * The `multinom` "correction" in version 1.5.4 was actually an
@@ -19,8 +19,8 @@ emmeans 1.5.4-09xxx
   * Added `facetlab` argument to `emmip_ggplot()` so user can control how
     facets are labeled (#261)
   * Efficiency improvements in `joint_tests()` (#265)
-  * Avoidance of so many duplicated results in `joint_tests()` 
-    in nested structures (#266)
+  * Bug fixes in `joint_tests()` and interaction contrasts for nested models (#266)
+  * Improvement to `multinom` support suggested by this [SO question](https://stackoverflow.com/questions/66675697/wrapping-nnetmultinom-ggeffectsggemmeans-in-a-custom-function-fails-th/66681184#66681184)
   
     
 

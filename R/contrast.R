@@ -192,7 +192,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     
     nesting = object@model.info$nesting
     if (!is.null(nesting) || !is.null(object@misc$display))
-        return (.nested_contrast(rgobj = object, method = method, by = by, adjust = adjust, parens = parens, ...))
+        return (.nested_contrast(rgobj = object, method = method, interaction = interaction, by = by, adjust = adjust, ...))
     
     orig.grid = object@grid[, , drop = FALSE]
     orig.grid[[".wgt."]] = orig.grid[[".offset."]] = NULL
