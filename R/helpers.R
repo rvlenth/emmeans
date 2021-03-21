@@ -564,7 +564,8 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     # X = model.matrix(object, m) # This is what predict.survreg does
     # But I have manipulated trms, so need to make sure things are consistent
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
-    bhat = bhat[colnames(X)]  # in case ref_grid code excluded some levels...
+    usecols = intersect(colnames(X), names(bhat))
+    bhat = bhat[usecols]  # in case ref_grid code excluded some levels...
     nbasis = estimability::nonest.basis(model.matrix(object))
     dfargs = list(df = object$df.residual)
     dffun = function(k, dfargs) dfargs$df

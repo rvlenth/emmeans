@@ -249,7 +249,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
     # Use "factors" attr if avail to screen-out interactions not in model
     # For any factors not in model (created by emmeans fcns), assume they interact w/ everything
     trmtbl = attr(object@model.info$terms, "factors")
-    if (is.null(trmtbl))
+    if (is.null(trmtbl) || (length(trmtbl) == 0))
         trmtbl = matrix(1, nrow = length(facs), dimnames = list(facs, NULL))
     else
         row.names(trmtbl) = sapply(row.names(trmtbl), function(x)
