@@ -244,7 +244,9 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         args = .zap.args(object = object, cov.reduce = cov.reduce, ..., omit = "submodel")
         object = do.call(ref_grid, args)
     }
-    facs = setdiff(names(object@levels), by)
+    facs = setdiff(names(object@levels), c(by, "1"))
+    if(length(facs) == 0)
+        stop("There are no factors to test")
     
     # Use "factors" attr if avail to screen-out interactions not in model
     # For any factors not in model (created by emmeans fcns), assume they interact w/ everything

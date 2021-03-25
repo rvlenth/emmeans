@@ -1,5 +1,14 @@
 ## NEWS for the emmeans package
 
+emmeans 1.5.5-9xxx
+-------------
+
+  * Changed handling of logit transformations in `contrast()`, so that the 
+    odds-ratio transformation persists into subsequent `contrast()` calls
+    e.g., interaction contrasts.
+  * We also made `contrast(..., type = ...)` work correctly
+  
+
 emmeans 1.5.5
 -------------
 

@@ -180,6 +180,9 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                         type, adjust, simple, combine = FALSE, ratios = TRUE, 
                         parens, ...) 
 {
+    if (!missing(type))
+        options = as.list(c(options, predict.type = type))
+    
     if(!missing(simple))
         return(.simcon(object, method = method, interaction = interaction,
                       offset = offset, scale = scale, name = name, options = options,
@@ -411,13 +414,16 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     # zap the transformation info except in special cases
     if (!is.null(misc$tran)) {
         misc$orig.tran = .fmt.tran(misc)
-        if (ratios && true.con && misc$tran %in% c("log", "genlog", "logit")) {
+        if (ratios && true.con && misc$tran %in% c("log", "genlog", "logit", "log.o.r.")) {
             misc$log.contrast = TRUE      # remember how we got here; used by summary
             misc$orig.inv.lbl = misc$inv.lbl
             if (misc$tran == "logit") {
                 misc$inv.lbl = "odds.ratio"
                 misc$tran = "log.o.r."
                 misc$tran.mult = misc$tran.offset = NULL
+            }
+            else if (misc$tran == "log.o.r.") {
+                # leave everything as-is. Once an odds ratio, always an odds ratio
             }
             else {
                 misc$inv.lbl = "ratio"
@@ -448,9 +454,6 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     result@grid = grid
     result@misc = misc
     result@roles$predictors = setdiff(names(result@levels), result@roles$multresp)
-    
-    if (!missing(type))
-        options = as.list(c(options, predict.type = type))
     
     .update.options(result, options, ...)
 }
