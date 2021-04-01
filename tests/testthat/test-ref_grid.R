@@ -49,3 +49,14 @@ test_that("ref_grid works with no data or subset", {
     expect_silent(ref_grid(lm(y ~ x)))
     expect_silent(ref_grid(mod1))
 })
+
+# Multivariate models
+MOats.lm <- lm (yield ~ Block + Variety, data = MOats)
+MOats.rg <- ref_grid (MOats.lm, mult.levs = list(
+    trt = LETTERS[1:2], dose = as.character(1:2))
+)
+test_that("We can construct multivariate reference grid", {
+    expect_equal(nrow(MOats.rg@grid), 72)
+    expect_equal(length(MOats.rg@levels), 4)
+})
+
