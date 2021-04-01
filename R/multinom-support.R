@@ -111,7 +111,7 @@ emm_basis.mblogit = function(object, ..., vcov.) {
     object$edf = Inf
     # we have to arrange the vcov elements in row-major order
     if(missing(vcov.))
-        vcov. = object$covmat
+        vcov. = vcov(object)
     perm = matrix(seq_along(as.numeric(object$coefmat)), 
                   ncol = ncol(object$coefmat))
     perm = as.numeric(t(perm))

@@ -470,6 +470,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
     fam.info = c(misc$famSize, by.size, et)
     cnm = NULL
     adjust = tolower(adjust)
+    if (adjust %in% c("bh", "by"))  # special cases in p.adjust.methods
+        adjust = toupper(adjust)
     
     # get vcov matrix only if needed (adjust == "mvt")
     corrmat = sch.rank = NULL
@@ -808,9 +810,9 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     if (n.contr == 1) # Force no adjustment when just one test
         adjust = "none"
     
-    # do a pmatch of the adjust method, case insensitive
+    # do a pmatch of the adjust method
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", p.adjust.methods)
-    k = pmatch(tolower(adjust), adj.meths)
+    k = pmatch(adjust, adj.meths)
     if(is.na(k))
         stop("Adjust method '", adjust, "' is not recognized or not valid")
     adjust = adj.meths[k]
@@ -907,7 +909,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         adjust = "none"
     
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", "bonferroni", "none")
-    k = pmatch(tolower(adjust), adj.meths)
+    k = pmatch(adjust, adj.meths)
     if(is.na(k))
         k = which(adj.meths == "bonferroni") 
     adjust = adj.meths[k]

@@ -7,6 +7,8 @@ emmeans 1.5.5-9xxx
     odds-ratio transformation persists into subsequent `contrast()` calls
     e.g., interaction contrasts.
   * We also made `contrast(..., type = ...)` work correctly
+  * Bug fix so that all `p.adjust.methods` work (#267)
+  * Support for `mblogit` extended to work with (some?) `mmblogit` models (#268)
   
 
 emmeans 1.5.5
