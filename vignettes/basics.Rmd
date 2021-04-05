@@ -24,6 +24,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
       d. [Derived covariates](#depcovs)
       d. [Non-predictor variables](#params)
       e. [Graphical displays](#plots)
+      e. [Formatting results](#formatting)
       f. [Weighting](#weights)
       g. [Multivariate models](#multiv)
   3. [Objects, structures, and methods](#emmobj)
@@ -376,6 +377,35 @@ emmip(pigs.lm1, ~ percent | source, CIs = TRUE) +
     geom_point(aes(x = percent, y = log(conc)), data = pigs, pch = 2, color = "blue")
 ```
 
+### Formatting results {#formatting}
+<!-- @index Formatting results; `kable`; Exporting output; `xtable` method; 
+  RMarkdown; -->
+If you want to include `emmeans()` results in a report, you might want to have it
+in a nicer format than just the printed output. We provide a little bit of help for this,
+especially if you are using RMarkdown or SWeave to prepare the report. 
+There is an `xtable` method for exporting these results, which we do not illustrate
+here but it works similarly to `xtable()` in other contexts. Also, the `export` option 
+the `print()` method allows the user to save exactly what is seen in the printed
+output as text, to be saved or formatted as the user likes (see the documentation for `print.emmGrid` for details).
+Here is an example using one of the objects above:
+```{r, eval = FALSE}
+ci <- confint(mtcars.rg_d.c, level = 0.90, adjust = "scheffe")
+xport <- print(ci, export = TRUE)
+cat("<font color = 'blue'>\n")
+knitr::kable(xport$summary, align = "r")
+invisible(sapply(xport$annotations, function(x) cat(paste(x, "<br>"))))
+cat("</font>\n")
+```
+```{r, results = "asis", echo = FALSE}
+ci <- confint(mtcars.rg_d.c, level = 0.90, adjust = "scheffe")
+xport <- print(ci, export = TRUE)
+cat("<font color = 'blue'>\n")
+knitr::kable(xport$summary, align = "r")
+invisible(sapply(xport$annotations, function(x) cat(paste(x, "<br>"))))
+cat("</font>\n")
+```
+
+
 [Back to Contents](#contents)
 
 ### Using weights {#weights}
@@ -475,6 +505,8 @@ results just like you would access data in a data frame. The `emmGrid` object it
 is not so accessible. There is a `print.summary_emm()` function that is what
 actually produces the output you see above -- a data frame with extra
 annotations.
+
+
 
 [Back to Contents](#contents)
 

@@ -1120,8 +1120,9 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 # Format a data.frame produced by summary.emmGrid
 #' @method print summary_emm
 #' @export
-print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
+print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, export = FALSE) {
     x.save = x
+    if(export) x.save = list()
     for(i in which(sapply(x, is.matrix))) 
         x[[i]] = NULL   # hide matrices
     for (i in seq_along(names(x)))   # zapsmall the numeric columns
@@ -1162,26 +1163,38 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE) {
     by.vars = attr(x, "by.vars")
     if (is.null(by.vars)) {
         m = .just.labs(m, just)
-        print(m, quote=FALSE, right=TRUE)
-        cat("\n")
+        if (export)
+            x.save$summary = m
+        else {
+            print(m, quote=FALSE, right=TRUE)
+            cat("\n")
+        }
     }
     else { # separate listing for each by variable
         m = .just.labs(m[, setdiff(names(x), by.vars), drop = FALSE], just)
+        if(export) 
+            x.save$summary = list()
         pargs = unname(as.list(x[,by.vars, drop=FALSE]))
         pargs$sep = ", "
         lbls = do.call(paste, pargs)
         for (lb in unique(lbls)) {
             rows = which(lbls==lb)
             levs = paste(by.vars, "=", xc[rows[1], by.vars])
-            cat(paste(paste(levs, collapse=", ")), ":\n", sep="")
-            print(m[rows, , drop=FALSE], ..., quote=quote, right=right)
-            cat("\n")
+            levs = paste(levs, collapse=", ")
+            if(export)
+                x.save$summary[[levs]] = m[rows, , drop = FALSE]
+            else {
+                cat(paste(levs, ":\n", sep=""))
+                print(m[rows, , drop=FALSE], ..., quote=quote, right=right)
+                cat("\n")
+            }
         }
     }
     
     msg = unique(attr(x, "mesg"))
-    if (!is.null(msg))
+    if (!is.null(msg) && !export)
         for (j in seq_len(length(msg))) cat(paste(msg[j], "\n"))
+    else (x.save$annotations = msg)
     
     invisible(x.save)
 }

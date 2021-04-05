@@ -25,3 +25,9 @@ to summarize a single member -- say the second one -- of an \code{emm_list},
 one may use \code{summary(object, which = 2)}, but it is probably preferable 
 to directly summarize it using \code{summary(object[[2]])}.
 }
+\note{
+No \code{export} option is provided for printing an \code{emm_list}
+(see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
+must do so separately for each element in the list.
+#'
+}

@@ -8,7 +8,7 @@
 \usage{
 \method{str}{emmGrid}(object, ...)
 
-\method{print}{emmGrid}(x, ...)
+\method{print}{emmGrid}(x, ..., export = FALSE)
 
 \method{vcov}{emmGrid}(object, ...)
 }
@@ -18,6 +18,14 @@
 \item{...}{(required but not used)}
 
 \item{x}{An \code{emmGrid} object}
+
+\item{export}{Logical value. If \code{FALSE}, the object is printed. 
+If \code{TRUE}, a list is invisibly returned, which contains character
+elements named \code{summary} and \code{annotations} that may be saved 
+or displayed as the user sees fit. \code{summary} is a character matrix 
+(or list of such matrices, if a \code{by} variable is in effect).
+\code{annotations} is a character vector of the annotations that would 
+have been printed below the summary or summaries.}
 }
 \value{
 The \code{vcov} method returns a symmetric matrix of variances and

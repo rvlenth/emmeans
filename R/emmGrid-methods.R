@@ -90,11 +90,18 @@ str.emmGrid <- function(object, ...) {
 
 
 #' @rdname emmGrid-methods
+#' @param export Logical value. If \code{FALSE}, the object is printed. 
+#'   If \code{TRUE}, a list is invisibly returned, which contains character
+#'   elements named \code{summary} and \code{annotations} that may be saved 
+#'   or displayed as the user sees fit. \code{summary} is a character matrix 
+#'   (or list of such matrices, if a \code{by} variable is in effect).
+#'   \code{annotations} is a character vector of the annotations that would 
+#'   have been printed below the summary or summaries.
 #' @method print emmGrid
 #' @param x An \code{emmGrid} object
 #' @export
-print.emmGrid = function(x,...)
-    print(summary.emmGrid(x, ...))
+print.emmGrid = function(x, ..., export = FALSE)
+    print(summary.emmGrid(x, ...), export = export)
 
 
 # vcov method

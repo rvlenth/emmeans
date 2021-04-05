@@ -9,6 +9,7 @@ emmeans 1.5.5-9xxx
   * We also made `contrast(..., type = ...)` work correctly
   * Bug fix so that all `p.adjust.methods` work (#267)
   * Support for `mblogit` extended to work with (some?) `mmblogit` models (#268)
+  * Added `export` option in `print.emmGrid()` and `print.emm_summary()`
   
 
 emmeans 1.5.5
