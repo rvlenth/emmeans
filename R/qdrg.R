@@ -128,7 +128,12 @@ qdrg = function(formula, data, coef, mcmc, vcov, object,
     if(!missing(link)) result$link = link
     if(!missing(qr) && any(is.na(result$coef))) result$qr = qr
     
-    # make sure "formula" is 2nd element so that response transformation can be found
+    # make sure "formula" exists, has a LHS and is is 2nd element so that 
+    # response transformation can be found
+    if (is.null(result$formula))
+        stop("No formula; cannot construct a reference grid")
+    if(length(result$formula) < 3)
+        result$formula = update(result$formula, .dummy ~ .)
     fpos = grep("formula", names(result))[1]
     result = result[c(1, fpos, seq_along(result)[-c(1, fpos)])]
 

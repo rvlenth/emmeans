@@ -393,7 +393,7 @@ ci <- confint(mtcars.rg_d.c, level = 0.90, adjust = "scheffe")
 xport <- print(ci, export = TRUE)
 cat("<font color = 'blue'>\n")
 knitr::kable(xport$summary, align = "r")
-invisible(sapply(xport$annotations, function(x) cat(paste(x, "<br>"))))
+for (a in xport$annotations) cat(paste(a, "<br>"))
 cat("</font>\n")
 ```
 ```{r, results = "asis", echo = FALSE}
@@ -401,7 +401,7 @@ ci <- confint(mtcars.rg_d.c, level = 0.90, adjust = "scheffe")
 xport <- print(ci, export = TRUE)
 cat("<font color = 'blue'>\n")
 knitr::kable(xport$summary, align = "r")
-invisible(sapply(xport$annotations, function(x) cat(paste(x, "<br>"))))
+for (a in xport$annotations) cat(paste(a, "<br>"))
 cat("</font>\n")
 ```
 
