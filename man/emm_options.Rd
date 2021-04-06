@@ -115,7 +115,8 @@ Some other options have more specific purposes:
 rank-deficient cases. If absent, the value in \code{emm_defaults$estble.tol)}
 is used.}
 \item{\code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
-latest reference grid created to be saved in \code{.Last.ref_grid}}
+latest reference grid created to be saved in \code{.Last.ref_grid}.
+The default is \code{FALSE}.}
 \item{Options for \code{lme4::lmerMod} models}{Options \code{lmer.df},
 \code{disable.pbkrtest}, \code{pbkrtest.limit}, \code{disable.lmerTest},
 and \code{lmerTest.limit}

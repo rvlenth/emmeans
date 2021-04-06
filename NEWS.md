@@ -10,6 +10,10 @@ emmeans 1.5.5-9xxx
   * Bug fix so that all `p.adjust.methods` work (#267)
   * Support for `mblogit` extended to work with (some?) `mmblogit` models (#268)
   * Added `export` option in `print.emmGrid()` and `print.emm_summary()`
+  * Changed default for `emm_options(save.ref_grid = FALSE)`. Years ago, it
+    seemed potentially useful to save the last reference grid, but this is
+    extra overhead, and writes in the user's global environment (which is not
+    recommended). The option remains if you want it.
   
 
 emmeans 1.5.5

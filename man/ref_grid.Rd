@@ -285,21 +285,21 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   \code{\link{regrid}}.
 }
 
-\section{Side effect}{
- The most recent result of \code{ref_grid}, whether
+\section{Optional side effect}{
+ If the \code{save.ref_grid} option is set to
+  \code{TRUE} (see \code{\link{emm_options}}),
+  The most recent result of \code{ref_grid}, whether
   called directly or indirectly via \code{\link{emmeans}},
   \code{\link{emtrends}}, or some other function that calls one of these, is
   saved in the user's environment as \code{.Last.ref_grid}. This facilitates
   checking what reference grid was used, or reusing the same reference grid
-  for further calculations. This automatic saving is enabled by default, but
-  may be disabled via \samp{emm_options(save.ref_grid = FALSE)}, and
-  re-enabled by specifying \code{TRUE}.
+  for further calculations. This automatic saving is disabled by default, but
+  may be enabled via \samp{emm_options(save.ref_grid = TRUE)}.
 }
 
 \examples{
 fiber.lm <- lm(strength ~ machine*diameter, data = fiber)
 ref_grid(fiber.lm)
-summary(.Last.ref_grid)
 
 ref_grid(fiber.lm, at = list(diameter = c(15, 25)))
 
