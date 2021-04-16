@@ -655,9 +655,22 @@ predict.emmGrid <- function(object, type,
 #' @param row.names passed to \code{\link{as.data.frame}}
 #' @param optional passed to \code{\link{as.data.frame}}
 #' @return The \code{as.data.frame} method returns a plain data frame,
-#'   equivalent to \code{as.data.frame(summary(.))}.
+#'   equivalent to \code{as.data.frame(summary(.))}. 
+#' @note The \code{as.data.frame} method is intended primarily to allow for
+#'   \code{emmGrid} objects to be coerced to a data frame as needed internally.
+#'   However, we recommend \emph{against} users 
+#'   routinely using \code{as.data.frame}; instead, use \code{summary},
+#'   \code{confint}, or \code{test}, which already return a special
+#'   \code{data.frame} with added annotations. Those annotations display
+#'   important information such as adjustment methods and confidence levels.
+#'   If you need to see more digits, use \code{print(summary(object), digits = ...)};
+#'   and if you \emph{always} want to see more digits, use 
+#'   \code{emm_options(opt.digits = FALSE)}.
 #' @method as.data.frame emmGrid
 #' @export
+#' @examples
+#' # Show estimates to more digits
+#' print(test(con), digits = 7)
 as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     as.data.frame(summary(x, ...), row.names = row.names, optional = optional)
 }

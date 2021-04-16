@@ -202,6 +202,17 @@ The default \code{show} method for \code{emmGrid} objects (with the
   Thus, with ordinary usage of \code{\link{emmeans}} and such, it is
   unnecessary to call \code{summary} unless there is a need to
   specify other than its default options.
+
+The \code{as.data.frame} method is intended primarily to allow for
+  \code{emmGrid} objects to be coerced to a data frame as needed internally.
+  However, we recommend \emph{against} users 
+  routinely using \code{as.data.frame}; instead, use \code{summary},
+  \code{confint}, or \code{test}, which already return a special
+  \code{data.frame} with added annotations. Those annotations display
+  important information such as adjustment methods and confidence levels.
+  If you need to see more digits, use \code{print(summary(object), digits = ...)};
+  and if you \emph{always} want to see more digits, use 
+  \code{emm_options(opt.digits = FALSE)}.
 }
 \section{Defaults}{
 
@@ -387,6 +398,8 @@ summary(con, infer = c(TRUE, TRUE), adjust = "scheffe")
 # Consider as some of many possible contrasts among the six cell means
 summary(con, infer = c(TRUE, TRUE), adjust = "scheffe", scheffe.rank = 5)
 
+# Show estimates to more digits
+print(test(con), digits = 7)
 }
 \seealso{
 \code{\link{hpd.summary}}

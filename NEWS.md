@@ -12,8 +12,11 @@ emmeans 1.5.5-9xxx
   * Added `export` option in `print.emmGrid()` and `print.emm_summary()`
   * Changed default for `emm_options(save.ref_grid = FALSE)`. Years ago, it
     seemed potentially useful to save the last reference grid, but this is
-    extra overhead, and writes in the user's global environment (which is not
-    recommended). The option remains if you want it.
+    extra overhead, and writes in the user's global environment. 
+    The option remains if you want it.
+  * Added a note advising against using `as.data.frame` (because we lose
+    potentially important annotations), and information/example on how to
+    see more digits (which I guess is why I'm seeing users do this).
   
 
 emmeans 1.5.5

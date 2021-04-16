@@ -79,6 +79,7 @@ Scroll down or follow the links to those groups for more information.
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mblogit      |mclogit  |[N](#N)  |`mode = c("prob", "latent")`                                 |
+|             |         |         |Should always include response in specs for `emmeans()`             |
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
 |MCMCglmm     |MCMCglmm |[S](#S)  |(see also [M](#M#))  `mult.name`, `mult.levs`, `trait`,              |
 |             |         |         |`mode = c("default", "multinomial")`; `data` is required     |
@@ -346,9 +347,6 @@ if `resp` is a response with *k* levels, `emmeans(model, ~ resp
 `trt`; but `emmeans(model, ~ trt)` will just yield the average
 probability of 1/*k* for each `trt`.
 
-*NOTE:* Due to a coding error, the SEs for these models are incorrect when
-obtained with **emmeans** versions 1.5.3 and earlier (the estimates themselves are correct).
-Re-run the analysis to obtain the correct results.
 
 [Back to quick reference](#quickref)
 
