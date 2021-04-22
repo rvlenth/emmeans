@@ -380,6 +380,12 @@ add_grouping = function(object, newname, refname, newlevs) {
     # include nesting factors that are themselves nested
     for (nm in names(result))
         result[[nm]] = union(unlist(result[result[[nm]]]), result[[nm]])
+
+    # omit any entries where factors are nested in themselves (we get such in a model like y ~ A : B)
+    for (nm in names(result))
+        if (nm %in% result[[nm]])
+            result[[nm]] = NULL
+    
     
     result
 }

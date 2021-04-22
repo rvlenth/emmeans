@@ -155,6 +155,17 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   with the reference grid as \code{newdata}. (This is done \emph{after} the
   reference grid is determined.) A formula is appropriate here when you think
   experimental conditions affect the covariate as well as the response.
+  
+  To allow for situations where a simple \code{lm()} call as described above won't
+  be adequate, a formula of the form \code{ext ~ fcnname} is also supported,
+  where the left-hand side may be \code{ext}, \code{extern}, or
+  \code{external} (and must \emph{not} be a predictor name) and the
+  right-hand side is the name of an existing function. The function is called
+  with one argument, a data frame with columns for each variable in the
+  reference grid. The function is expected to use that frame as new data to
+  be used to obtain predictions for one or more models; and it should return
+  a named list or data frame with replacement values for one or more of the
+  covariates.
 
   If \code{cov.reduce} is a named list, then the above criteria are used to
   determine what to do with covariates named in the list. (However, formula
@@ -322,6 +333,20 @@ mtcars.lm <- lm(mpg ~ disp + wt + vs * am, data = mtcars)
 # Two of these have the same grid but different weights:
 rg.default@grid
 rg.at@grid
+
+# Using cov.reduce formulas, realizing disp doesn't vary independently
+rg.alt <- ref_grid(mtcars.lm, at = list(wt = c(2.5, 3, 3.5)),
+    cov.reduce = disp ~ vs * wt)
+rg.alt@grid
+
+# Alternative to above where we model sqrt(disp)
+disp.mod <- lm(sqrt(disp) ~ vs * wt, data = mtcars)
+disp.fun <- function(dat)
+    list(disp = predict(disp.mod, newdata = dat)^2)
+rg.alt2 <- ref_grid(mtcars.lm, at = list(wt = c(2.5, 3, 3.5)),
+    cov.reduce = external ~ disp.fun)
+rg.alt2@grid
+
 
 # Multivariate example
 MOats.lm = lm(yield ~ Block + Variety, data = MOats)

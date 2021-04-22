@@ -17,6 +17,11 @@ emmeans 1.5.5-9xxx
   * Added a note advising against using `as.data.frame` (because we lose
     potentially important annotations), and information/example on how to
     see more digits (which I guess is why I'm seeing users do this).
+  * Further refinement to nesting detection. A model like `y ~ A:B` detected
+    `A %in% B` and `B %in% A`, and hence `A %in% A*B` and `B %in% A*B` 
+    due to a change in 1.4.6. Now we omit cases where factors are nested in themselves!
+  * Expansion of `cov.reduce` formulas to allow use of custom models for
+    predicting mediating covariates
   
 
 emmeans 1.5.5
