@@ -515,7 +515,6 @@ annotations.
 
 ## P values, "significance", and scientific integrity {#pvalues}
 <!-- @index Significance!Assessing; 
-    "Significant"@significant!Why you shouldn't say this;
     *P* values!Interpreting; ATOM; 
     ASA Statement on *P* values -->
 There is a growing consensus among statisticians and researchers that *P* values

@@ -63,7 +63,7 @@ vignette: >
       * [When *not* to use](transformations.html#insects)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
   * [`boot-satterthwaite` method](models.html#K)
-  * [`[ ]` and `[[ ]]` operators](utilities.html#brackets)
+  * [Brackets (`[ ]` and `[[ ]]` operators)](utilities.html#brackets)
   * [`brmsfit` objects](models.html#S)
   * [`by` groups](confidence-intervals.html#byvars)
       * [Identical comparisons](FAQs.html#additive)
@@ -521,8 +521,6 @@ vignette: >
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * Significance
       * [Assessing](basics.html#pvalues)
-  * "Significant"@significant
-      * [Why you shouldn't say this](basics.html#pvalues)
   * [`simple = "each"`](confidence-intervals.html#simple)
   * Simple comparisons
       * [in *confidence-intervals: simple*](confidence-intervals.html#simple)

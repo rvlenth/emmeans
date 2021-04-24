@@ -190,7 +190,7 @@ reverse order, we get both confidence intervals and tests, and transformation to
 the response scale.
 
 ###### {#brackets}
-<!-- @index Selecting results; `[ ]` and `[[ ]]` operators@brackets -->
+<!-- @index Selecting results; Brackets (`[ ]` and `[[ ]]` operators) -->
 To subset an `emmGrid` object, just use the subscripting operator `[]`.
 For instance,
 ```{r}
