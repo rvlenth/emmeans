@@ -1,14 +1,17 @@
 ## NEWS for the emmeans package
 
-emmeans 1.5.5-9xxx
+emmeans 1.6.0
 -------------
+This version has some changes that affect all users, e.g., not saving
+`.Last.ref_grid`, so we incremented the sub-version number.
 
   * Changed handling of logit transformations in `contrast()`, so that the 
     odds-ratio transformation persists into subsequent `contrast()` calls
     e.g., interaction contrasts.
   * We also made `contrast(..., type = ...)` work correctly
   * Bug fix so that all `p.adjust.methods` work (#267)
-  * Support for `mblogit` extended to work with (some?) `mmblogit` models (#268)
+  * Support for `mblogit` extended to work with `mmblogit` models (#268)
+    (However, since, **mclogit** pkg incorporates its own interface)
   * Added `export` option in `print.emmGrid()` and `print.emm_summary()`
   * Changed default for `emm_options(save.ref_grid = FALSE)`. Years ago, it
     seemed potentially useful to save the last reference grid, but this is

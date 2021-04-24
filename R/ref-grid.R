@@ -336,7 +336,8 @@
 #' rg.default@grid
 #' rg.at@grid
 #' 
-#' # Using cov.reduce formulas, realizing disp doesn't vary independently
+#' ### Using cov.reduce formulas...
+#' # Above suggests we can vary disp indep. of other factors - unrealistic
 #' rg.alt <- ref_grid(mtcars.lm, at = list(wt = c(2.5, 3, 3.5)),
 #'     cov.reduce = disp ~ vs * wt)
 #' rg.alt@grid
