@@ -4,6 +4,10 @@ emmeans 1.6.0.9xxxxxxxx
 -------------
 
   * Fixed a bug in parsing a response transformation (#274)
+  * Changed `handling of`contrast()` so that `log2` and `log10` transformations 
+    are handled just like `log`. (#273) Also disabled making ratios with
+    `genlog` as it seems ill-advised.
+  * Added support for `log1p` transformation
 
 
 emmeans 1.6.0

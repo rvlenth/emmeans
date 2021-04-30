@@ -41,6 +41,7 @@
 #' The functions \code{\link{emmeans}}, \code{\link{ref_grid}}, and related ones
 #' automatically detect response transformations that are recognized by
 #' examining the model formula. These are \code{log}, \code{log2}, \code{log10},
+#' \code{log1p},
 #' \code{sqrt}, \code{logit}, \code{probit}, \code{cauchit}, \code{cloglog}; as
 #' well as (for a response variable \code{y}) \code{asin(sqrt(y))},
 #' \code{asinh(sqrt(y))}, and \code{sqrt(y) + sqrt(y+1)}. In addition, any
@@ -323,6 +324,12 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
              linkinv = function(eta) 2^eta,
              mu.eta = function(eta) 2^eta * log(2),
              name = "log2"
+         ),
+         log1p = list(
+             linkfun = log1p,
+             linkinv = expm1,
+             mu.eta = exp,
+             name = "log1p"
          ),
          asin.sqrt = make.tran("asin.sqrt"),
          `asin.sqrt./` = make.tran("asin.sqrt", 100),

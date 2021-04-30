@@ -414,7 +414,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     # zap the transformation info except in special cases
     if (!is.null(misc$tran)) {
         misc$orig.tran = .fmt.tran(misc)
-        if (ratios && true.con && misc$tran %in% c("log", "genlog", "logit", "log.o.r.")) {
+        if (ratios && true.con && misc$tran %in% c("log", "log2", "log10", ### REMOVED "genlog", 
+                                                   "logit", "log.o.r.")) {
             misc$log.contrast = TRUE      # remember how we got here; used by summary
             misc$orig.inv.lbl = misc$inv.lbl
             if (misc$tran == "logit") {
@@ -427,7 +428,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             }
             else {
                 misc$inv.lbl = "ratio"
-                misc$tran = "log"
+                ### (stays at log, log2, log10)   misc$tran = "log"
                 misc$tran.mult = misc$tran.offset = NULL
             }
         }
