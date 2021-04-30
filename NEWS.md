@@ -1,5 +1,11 @@
 ## NEWS for the emmeans package
 
+emmeans 1.6.0.9xxxxxxxx
+-------------
+
+  * Fixed a bug in parsing a response transformation (#274)
+
+
 emmeans 1.6.0
 -------------
 This version has some changes that affect all users, e.g., not saving
