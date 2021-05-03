@@ -362,6 +362,12 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
     if(missing(by))
         by = misc$by.vars
     
+    # Disable Tukey if by vars don't match those used in construction
+    if((misc$estType == "pairs") && (paste(c("", by), collapse = ",") != misc$.pairby))
+        misc$estType = object@misc$estType = "contrast"
+    
+    
+    
     if (missing(type))
         type = .get.predict.type(misc)
     else

@@ -97,8 +97,10 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
     obj@levels = lapply(gnms, function(nm) unique(grid[[nm]]))
     names(obj@levels) = gnms
     obj@roles$predictors = setdiff(names(obj@levels), obj@roles$multresp)
+    obj@misc$con.coef = obj@misc$orig.grid = orb@misc$.pairby = NULL
     update(obj, pri.vars = gnms, by.vars = NULL, adjust = adjust,
-           famSize = round((1 + sqrt(1 + 8*n)) / 2, 3),
+           estType = "rbind",
+           famSize = n,   # instead of round((1 + sqrt(1 + 8*n)) / 2, 3),
            avgd.over = avgd.over)
 }
 #' @rdname rbind.emmGrid
@@ -132,7 +134,8 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 "[.emmGrid" = function(x, i, adjust, drop.levels = TRUE, ...) {
     x@linfct = x@linfct[i, , drop = FALSE]
     x@grid = x@grid[i, , drop = FALSE]                  
-    x = update(x, pri.vars = names(x@grid), famSize = length(i))
+    x = update(x, pri.vars = names(x@grid), famSize = length(i), estType = "[")
+    x@misc$orig.grid = x@misc$con.coef = x@misc$.pairby = NULL
     x@misc$by.vars = NULL
     if(!missing(adjust))
         x@misc$adjust = adjust

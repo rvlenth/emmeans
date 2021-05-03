@@ -8,6 +8,7 @@ emmeans 1.6.0.9xxxxxxxx
     are handled just like `log`. (#273) Also disabled making ratios with
     `genlog` as it seems ill-advised.
   * Added support for `log1p` transformation
+  * Improved detection of cases where Tukey adjustment is [in]appropriate (#275)
 
 
 emmeans 1.6.0
