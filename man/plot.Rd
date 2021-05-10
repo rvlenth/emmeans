@@ -11,8 +11,8 @@
   frequentist, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
-  layout, colors = c("black", "blue", "blue", "red"), intervals,
-  plotit = TRUE, ...)
+  layout, scale = NULL, colors = c("black", "blue", "blue", "red"),
+  intervals, plotit = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}
@@ -21,7 +21,11 @@
 
 \item{type}{Character value specifying the type of prediction desired
 (matching \code{"linear.predictor"}, \code{"link"}, or \code{"response"}).
-See details under \code{\link{summary.emmGrid}}.}
+See details under \code{\link{summary.emmGrid}}.
+In addition, the user may specify \code{type = "scale"}, in which case
+a transformed scale (e.g., a log scale) is displayed based on the transformation
+or link function used. Additional customization of this scale is available through
+including arguments to \code{ggplot2::scale_x_continuous} in \code{...} .}
 
 \item{CIs}{Logical value. If \code{TRUE}, confidence intervals are
 plotted for each estimate.}
@@ -73,6 +77,11 @@ plotted horizontally or vertically}
 \item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
 when \code{engine == "lattice"}.}
 
+\item{scale}{Object of class \code{trans} (in the \pkg{scales} package) to
+specify a nonlinear scale. This is used in lieu of \code{type = "scale"} when
+plotting a \code{summary_emm} object created with \code{type = "response"}.
+This is ignored with other types of summaries.}
+
 \item{plotit}{Logical value. If \code{TRUE}, a graphical object is returned;
 if \code{FALSE}, a data.frame is returned containing all the values
 used to construct the plot.}
@@ -122,4 +131,15 @@ warp.emm <- emmeans(warp.lm, ~ tension | wool)
 plot(warp.emm)
 plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
      horizontal = FALSE, colors = "darkgreen")
+
+### Using a transformed scale
+pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
+pigs.emm <- emmeans(pigs.lm, ~ percent | source)
+plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10))
+
+# Based on a summary. 
+# To get a transformed axis, must specify 'scale'; but it does not necessarily
+# have to be the same as the actual response transformation
+pigs.ci <- confint(pigs.emm, type = "response")
+plot(pigs.ci, scale = scales::log10_trans())
 }

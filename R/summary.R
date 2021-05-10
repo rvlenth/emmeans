@@ -826,11 +826,13 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     n.contr = fam.info[2]
     et = as.numeric(fam.info[3])
 
-    if (n.contr == 1) # Force no adjustment when just one test
+    # Force no adjustment when just one test, unless we're using scheffe
+    if ((n.contr == 1) && (pmatch(adjust, "scheffe", 0) != 1)) 
         adjust = "none"
     
     # do a pmatch of the adjust method
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", p.adjust.methods)
+    
     k = pmatch(adjust, adj.meths)
     if(is.na(k))
         stop("Adjust method '", adjust, "' is not recognized or not valid")
@@ -896,7 +898,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         fs = fam.size
         scheffe.dim = sch.rank[1]
     }
-    do.msg = (chk.adj > 1) && (nc > 1) && !((fs < 3) && (chk.adj < 10)) 
+    do.msg = (chk.adj > 1) && !((fs < 3) && (chk.adj < 10)) ### WAS (chk.adj > 1) && (nc > 1) && !((fs < 3) && (chk.adj < 10)) 
     if (do.msg) {
 #         xtra = if(chk.adj < 10) paste("a family of", fam.size, "tests")
 #         else             paste(n.contr, "tests")
@@ -924,7 +926,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
     et = as.numeric(fam.info[3])
     
     ragged.by = (is.character(fam.size))   # flag that we need to do groups separately
-    if (!ragged.by && n.contr == 1) # Force no adjustment when just one interval
+    if (!ragged.by && (n.contr == 1) && (pmatch(adjust, "scheffe", 0) != 1)) # Force no adjustment when just one interval, unless using Scheffe
         adjust = "none"
     
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", "bonferroni", "none")
@@ -956,7 +958,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
         fs = fam.size
         scheffe.dim = sch.rank[1]
     }
-    do.msg = (chk.adj > 1) && (nc > 1) && 
+    do.msg = (chk.adj > 1) && ###   (nc > 1) && 
         !((fs < 3) && (chk.adj < 10)) 
     
     if (do.msg) {

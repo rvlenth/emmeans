@@ -9,6 +9,14 @@ emmeans 1.6.0.9xxxxxxxx
     `genlog` as it seems ill-advised.
   * Added support for `log1p` transformation
   * Improved detection of cases where Tukey adjustment is [in]appropriate (#275)
+  * Added `type = "scale"` argument to `plot.emmGrid()` and `emmip()`. This
+    is the same as `type = "response"` except the scale itself is transformed
+    (i.e., a log scale if the log transformation was used). Since the same
+    transformation is used, the appearance of the plot will be the same as with
+    `type = "lp"`, but with an altered axis scale. Currently this is implemented
+    only with `engine = "ggplot"`.
+  * Fixed bug whereby Scheffe is ignored when there is only one contrast, even
+    though `scheffe.rank` > 1 was specified. (#171)
 
 
 emmeans 1.6.0

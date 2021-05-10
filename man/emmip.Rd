@@ -14,7 +14,7 @@ emmip(object, formula, ...)
   nesting.order = FALSE, ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.1, xlab = labs$xlab,
-  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context",
+  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context", scale,
   dotarg = list(), linearg = list(), CIarg = list(lwd = 2, alpha = 0.5),
   PIarg = list(lwd = 1.25, alpha = 0.33), ...)
 
@@ -42,7 +42,10 @@ or a combination of factors using the \code{*} operator.}
 whether we want to inverse-transform the predictions
 (\code{type = "response"}) or not (any other choice). The default is
 \code{"link"}, unless the \code{"predict.type"} option is in force; see
-\code{\link{emm_options}}.}
+\code{\link{emm_options}}.
+In addition, the user may specify \code{type = "scale"} to create a
+transformed scale for the vertical axis based on \code{object}'s response 
+transformation or link function.}
 
 \item{CIs}{Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
 for Bayesian models) are added to the plot 
@@ -96,6 +99,12 @@ Use \code{"label_value"} to show just the factor levels, or \code{"label_both"}
 to show both the factor names and factor levels. The default of
 \code{"label_context"} decides which based on how many \code{by} factors there are.
 See the documentation for \code{ggplot2::label_context}.}
+
+\item{scale}{If not missing, an object of class \code{scales::trans} specifying
+a (usually) nonlinear scaling for the vertical axis. For example, 
+\code{scales = scales::log_trans()} specifies a logarithmic scale. For
+fine-tuning purposes, additional
+arguments to \code{ggplot2::scale_y_continuous} may be included in \code{...} .}
 
 \item{dotarg}{\code{list}
 of arguments passed to \code{geom_point} to customize appearance of points}
@@ -186,6 +195,20 @@ emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 
 # For an example using extra ggplot2 code, see 'vignette("messy-data")',
 # in the section on nested models.
+
+### Options with transformations or link functions
+neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), 
+                     data = neuralgia) 
+
+# On link scale:
+emmip(neuralgia.glm, Treatment ~ Sex)
+
+# On response scale:
+emmip(neuralgia.glm, Treatment ~ Sex, type = "response")
+
+# With transformed axis scale and custom scale divisions
+emmip(neuralgia.glm, Treatment ~ Sex, type = "scale",
+    breaks = seq(0.10, 0.90, by = 0.10))
 }
 \seealso{
 \code{\link{emmeans}}, \code{\link{interaction.plot}}.

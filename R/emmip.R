@@ -46,6 +46,9 @@ emmip = function(object, formula, ...) {
 #'   (\code{type = "response"}) or not (any other choice). The default is
 #'   \code{"link"}, unless the \code{"predict.type"} option is in force; see
 #'   \code{\link{emm_options}}.
+#'   In addition, the user may specify \code{type = "scale"} to create a
+#'   transformed scale for the vertical axis based on \code{object}'s response 
+#'   transformation or link function. 
 #' @param CIs Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
 #'   for Bayesian models) are added to the plot 
 #'   (works only with \code{engine = "ggplot"}).
@@ -172,11 +175,17 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     emmopts$object = object
     emmopts$specs = .reformulate(unlist(specs))
     emmo = do.call("emmeans", emmopts)
+    
+    # add possibility of type = "scale". If so, we use "response" and set a flag
     if(missing(type)) {
         type = get_emm_option("summary")$predict.type
         if (is.null(type))
             type = .get.predict.type(emmo@misc)
     }
+    # If we say type = "scale", set it to "response" and set a flag
+    if (nonlin.scale <- (pmatch(type, "scale", 0) == 1)) 
+        type = "response"
+            
     type = .validate.type(type)
     
     emms = summary(emmo, type = type, infer = c(CIs, F))
@@ -257,6 +266,8 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     
     fcn = paste("emmip", engine, sep = "_")
     args = c(list(emms = emms, style = styl), xargs)
+    if (nonlin.scale)
+        args = c(args, list(scale = .make.scale(emmo@misc)))
     do.call(fcn, args)
 }
 
@@ -273,6 +284,11 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #'   to show both the factor names and factor levels. The default of
 #'   \code{"label_context"} decides which based on how many \code{by} factors there are.
 #'   See the documentation for \code{ggplot2::label_context}.
+#' @param scale If not missing, an object of class \code{scales::trans} specifying
+#'   a (usually) nonlinear scaling for the vertical axis. For example, 
+#'   \code{scales = scales::log_trans()} specifies a logarithmic scale. For
+#'   fine-tuning purposes, additional
+#'   arguments to \code{ggplot2::scale_y_continuous} may be included in \code{...} .
 #' @param dotarg \code{list}
 #'   of arguments passed to \code{geom_point} to customize appearance of points
 #' @param linearg \code{list}
@@ -289,13 +305,29 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' Confidence intervals are plotted if variables \code{LCL} and \code{UCL} exist;
 #' and prediction intervals are plotted if \code{LPL} and \code{UPL} exist.
 #' Finally, it must contain the variables named in \code{attr(emms, "vars")}.
+#' @examples
+#' 
+#'### Options with transformations or link functions
+#' neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), 
+#'                      data = neuralgia) 
+#' 
+#' # On link scale:
+#' emmip(neuralgia.glm, Treatment ~ Sex)
+#' 
+#' # On response scale:
+#' emmip(neuralgia.glm, Treatment ~ Sex, type = "response")
+#' 
+#' # With transformed axis scale and custom scale divisions
+#' emmip(neuralgia.glm, Treatment ~ Sex, type = "scale",
+#'     breaks = seq(0.10, 0.90, by = 0.10))
 #' @export
 emmip_ggplot = function(emms, style = "factor", dodge = .1,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
                         facetlab = "label_context",
+                        scale,
                         dotarg = list(), linearg = list(),
                         CIarg = list(lwd = 2, alpha = .5),
-                        PIarg = list(lwd = 1.25, alpha = .33), 
+                        PIarg = list(lwd = 1.25, alpha = .33),
                         ...) {
     
     labs = attr(emms, "labs")
@@ -343,6 +375,13 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         else
             grobj = grobj + ggplot2::facet_wrap(byvars, labeller = facetlab)
     }
+    if (!missing(scale)) {
+        args = list(...)
+        pass = pmatch(names(args), names(as.list(args(ggplot2::scale_y_continuous))))
+        args = c(list(trans = scale), args[which(!is.na(pass))])
+        grobj = grobj + do.call(ggplot2::scale_y_continuous, args)
+    }
+    
     grobj
 }
 

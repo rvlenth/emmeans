@@ -34,8 +34,13 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, frequentist, ...) {
     if(!missing(intervals))
         CIs = intervals
-    if(!missing(type))
+    nonlin.scale = FALSE
+    if(!missing(type)) {
+        # If we say type = "scale", set it to "response" and set a flag
+        if (nonlin.scale <- (pmatch(type, "scale", 0) == 1)) 
+            type = "response"
         object = update(x, predict.type = type, ..., silent = TRUE)
+    }
     else
         object = update(x, ..., silent = TRUE)
     ptype = ifelse(is.null(object@misc$predict.type), "lp", object@misc$predict.type)
@@ -75,9 +80,13 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
         extra@misc$comp.alpha = alpha
         extra@misc$comp.adjust = adjust
     }
+    if (nonlin.scale)
+        scale = .make.scale(object@misc)
+    else
+        scale = NULL
     .plot.srg(x = summ, CIs = CIs, PIs = PIs, colors = colors, extra = extra, 
               backtran = !(ptype %in% c("link", "lp", "linear.predictor")), 
-              link = attr(.est.se.df(object), "link"), ...)
+              link = attr(.est.se.df(object), "link"), scale = scale, ...)
 }
 
 # May use in place of plot.emmGrid but no control over level etc.
@@ -102,6 +111,14 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' @param type Character value specifying the type of prediction desired
 #'   (matching \code{"linear.predictor"}, \code{"link"}, or \code{"response"}).
 #'   See details under \code{\link{summary.emmGrid}}.
+#'   In addition, the user may specify \code{type = "scale"}, in which case
+#'   a transformed scale (e.g., a log scale) is displayed based on the transformation
+#'   or link function used. Additional customization of this scale is available through
+#'   including arguments to \code{ggplot2::scale_x_continuous} in \code{...} .
+#' @param scale Object of class \code{trans} (in the \pkg{scales} package) to
+#'   specify a nonlinear scale. This is used in lieu of \code{type = "scale"} when
+#'   plotting a \code{summary_emm} object created with \code{type = "response"}.
+#'   This is ignored with other types of summaries.
 #' @param CIs Logical value. If \code{TRUE}, confidence intervals are
 #'   plotted for each estimate.
 #' @param PIs Logical value. If \code{TRUE}, prediction intervals are
@@ -178,13 +195,27 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' plot(warp.emm)
 #' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
 #'      horizontal = FALSE, colors = "darkgreen")
+#' 
+#' ### Using a transformed scale
+#' pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
+#' pigs.emm <- emmeans(pigs.lm, ~ percent | source)
+#' plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10))
+#' 
+#' # Based on a summary. 
+#' # To get a transformed axis, must specify 'scale'; but it does not necessarily
+#' # have to be the same as the actual response transformation
+#' pigs.ci <- confint(pigs.emm, type = "response")
+#' plot(pigs.ci, scale = scales::log10_trans())
 plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
-                            xlab, ylab, layout, 
+                            xlab, ylab, layout, scale = NULL,
                             colors = c("black", "blue", "blue", "red"), intervals, 
                             plotit = TRUE, ...) {
     if(!missing(intervals))
         CIs = intervals
-    .plot.srg (x, y, horizontal, xlab, ylab, layout, CIs = CIs, colors = colors, plotit = plotit, ...)
+    if(attr(x, "type") != "response")   # disable scale when no response transformation
+        scale = NULL
+    .plot.srg (x, y, horizontal, xlab, ylab, layout, scale = scale,
+               CIs = CIs, colors = colors, plotit = plotit, ...)
 }
 
 # Workhorse for plot.summary_emm
@@ -192,7 +223,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                      horizontal = TRUE, xlab, ylab, layout, colors,
                      engine = get_emm_option("graphics.engine"),
                      CIs = TRUE, PIs = FALSE, extra = NULL, 
-                     plotit = TRUE, backtran = FALSE, link, ...) {
+                     plotit = TRUE, backtran = FALSE, link, scale = NULL, ...) {
     
     engine = match.arg(engine, c("ggplot", "lattice"))
     if (engine == "ggplot") 
@@ -309,7 +340,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         
         alpha = extra@misc$comp.alpha
         adjust = extra@misc$comp.adjust
-        psumm = confint(pairs(extra), level = 1 - alpha, type = "lp", adjust = adjust)
+        psumm = suppressMessages(confint(pairs(extra), level = 1 - alpha, type = "lp", adjust = adjust))
         k = ncol(psumm)
         del = (psumm[[k]] - psumm[[k-1]]) / 4 # half the halfwidth, on lp scale
         diff = psumm[[attr(psumm, "estName")]]
@@ -504,6 +535,14 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
                                        labeller = "label_both")
         grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
+        
+        if(!is.null(scale)) {
+            args = list(...)
+            pass = pmatch(names(args), names(as.list(args(ggplot2::scale_x_continuous))))
+            args = c(list(trans = scale), args[which(!is.na(pass))])
+            grobj = grobj + do.call(ggplot2::scale_x_continuous, args)
+        }
+            
         if (missing(xlab)) xlab = attr(summ, "estName")
         if (missing(ylab)) ylab = facName
             
