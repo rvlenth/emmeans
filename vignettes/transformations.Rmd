@@ -19,6 +19,7 @@ This vignette covers the intricacies of transformations and link functions in **
   1. [Overview](#overview)
   2. [Re-gridding](#regrid)
   3. [Link functions](#links)
+  3. [Graphing transformations and links](#trangraph)
   4. [Both a response transformation and a link](#tranlink)
   5. [Special transformations](#special)
   6. [Specifying a transformation after the fact](#after)
@@ -199,7 +200,55 @@ There is no practical difference between females and males in the patterns of
 response to `Treatment`; so I think most people would be quite comfortable with
 the marginal results that are reported earlier.
 
+[Back to Contents](#contents)
 
+
+## Graphing transformations and links {#trangraph}
+<!-- @index Transformations!Graphical display; Examples!`neuralgia`;
+    `type = "scale"`; `"scale"` type; -->
+There are a few options for displaying transformed results graphically. First, the `type` 
+argument works just as it does in displaying a tabular summary. Following through with
+the `neuralgia` example, let us display the marginal `Treatment` EMMs on both the
+link scale and the response scale (we are opting to do the averaging on the link scale):
+```{r, fig.height = 1.5}
+neur.Trt.emm <- suppressMessages(emmeans(neuralgia.glm, "Treatment"))
+plot(neur.Trt.emm)   # Link scale by default
+plot(neur.Trt.emm, type = "response")
+```
+
+Besides whether or not we see response values, there is a dramatic difference
+in the symmetry of the intervals.
+
+For `emmip()` and `plot()` *only* (and currently only with the "ggplot" engine), 
+there is also the option of specifying `type = "scale"`,
+which causes the response values to be calculated but plotted on a nonlinear scale
+corresponding to the transformation or link:
+```{r, fig.height = 1.5}
+plot(neur.Trt.emm, type = "scale")
+```
+
+Notice that the interior part of this plot is identical to the plot on the link scale.
+Only the horizontal axis is different. That is because the response values are actually transformed using the link function to determine the plotting positions of the graphical elements.
+
+As is the case here, nonlinear scales can be confusing to read, and it is very often
+true that you will want to display more scale divisions, and even add minor ones.
+This is done via adding arguments for the function `ggplot2::scale_x_continuous()`
+(see its documentation):
+```{r, fig.height = 1.5}
+plot(neur.Trt.emm, type = "scale", breaks = seq(0.10, 0.90, by = 0.10),
+     minor_breaks = seq(0.05, 0.95, by = 0.05))
+```
+
+When using the `"ggplot"` engine, you actually always have the option of using **ggplot2** to incorporate a transformed scale -- and it doesn't even have to be the same as the transformation used in the model. For example, here we display the same results on an arcsin-square-root scale.
+```{r, fig.height = 1.5}
+plot(neur.Trt.emm, type = "response") +
+  ggplot2::scale_x_continuous(trans = scales::asn_trans(),
+                              breaks = seq(0.10, 0.90, by = 0.10))
+```
+
+This comes across as a compromise: not as severe as the logit scaling, and not as distorted as the linear scaling of response values.
+
+Again, the same techniques can be used with `emmip()`, except it is the vertical scale that is affected.
 
 [Back to Contents](#contents)
 
