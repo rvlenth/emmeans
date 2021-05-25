@@ -17,6 +17,8 @@ emmeans 1.6.0.9xxxxxxxx
     only with `engine = "ggplot"`.
   * Fixed bug whereby Scheffe is ignored when there is only one contrast, even
     though `scheffe.rank` > 1 was specified. (#171)
+  * Added a `subset()` method for `emmGrid` objects
+  * Bug fix for `mcmc.list` objects (#278)
 
 
 emmeans 1.6.0

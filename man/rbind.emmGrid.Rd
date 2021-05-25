@@ -5,6 +5,7 @@
 \alias{+.emmGrid}
 \alias{rbind.emm_list}
 \alias{[.emmGrid}
+\alias{subset.emmGrid}
 \title{Combine or subset \code{emmGrid} objects}
 \usage{
 \method{rbind}{emmGrid}(..., deparse.level = 1, adjust = "bonferroni")
@@ -14,10 +15,14 @@
 \method{rbind}{emm_list}(..., which, adjust = "bonferroni")
 
 \method{[}{emmGrid}(x, i, adjust, drop.levels = TRUE, ...)
+
+\method{subset}{emmGrid}(x, subset, ...)
 }
 \arguments{
-\item{...}{In \code{rbind}, object(s) of class \code{emmGrid}. 
-In \code{"["}, it is ignored.}
+\item{...}{Additional arguments:
+In \code{rbind}, object(s) of class \code{emmGrid}. 
+In \code{"["}, it is ignored. 
+In \code{subset}, it is passed to \code{[.emmGrid]}}
 
 \item{deparse.level}{(required but not used)}
 
@@ -35,6 +40,8 @@ In \code{"["}, it is ignored.}
 
 \item{drop.levels}{Logical value. If \code{TRUE}, the \code{"levels"} slot in
 the returned object is updated to hold only the predictor levels that actually occur}
+
+\item{subset}{logical expression indicating which rows of the grid to keep}
 }
 \value{
 A revised object of class \code{emmGrid}
@@ -75,4 +82,8 @@ rbind(all, which = c(2, 4), adjust = "mvt")
 
 # Show only 3 of the 6 cases
 summary(warp.rg[c(2, 4, 5)])
+
+# After-the-fact 'at' specification
+subset(warp.rg, wool == "A")
+
 }

@@ -487,7 +487,7 @@ recover_data.mcmc.list = function(object, formula, data, ...) {
 }
 
 emm_basis.mcmc.list = function(object, trms, xlev, grid, vcov., ...) {
-    result = emm_basis.mcmc(object[[1]], trms, xlev, grid, vcov, ...)
+    result = emm_basis.mcmc(object[[1]], trms, xlev, grid, vcov., ...)
     cols = seq_len(ncol(result$post.beta))
     for (i in 2:length(object))
         result$post.beta = rbind(result$post.beta, 

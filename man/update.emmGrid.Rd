@@ -22,14 +22,14 @@ shown.}
 \item{x}{an \code{emmGrid} object}
 
 \item{value}{\code{list} or replacement levels. See the documentation for
-\code{\link{update.emmGrid}} with the \code{levels} argument, 
+\code{update.emmGrid} with the \code{levels} argument, 
 as well as the section below on \dQuote{Replaciong levels}}
 }
 \value{
 an updated \code{emmGrid} object.
 
 \code{levels<-} replaces the levels of the object in-place.
-  See the section on  for details.
+  See the section on replacing levels for details.
 }
 \description{
 Objects of class \code{emmGrid} contain several settings that affect such things as
@@ -212,7 +212,7 @@ conform.}
 
 \section{Replacing levels}{
 
-The \code{levels<-} method uses \code{\link{update.emmGrid}} to replace the
+The \code{levels<-} method uses \code{update.emmGrid} to replace the
 levels of one or more factors. This method allows selectively replacing
 the levels of just one factor (via subsetting operators), whereas 
 \code{update(x, levels = list(...))} requires a list of \emph{all} factors

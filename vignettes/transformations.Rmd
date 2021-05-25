@@ -228,7 +228,7 @@ plot(neur.Trt.emm, type = "scale")
 ```
 
 Notice that the interior part of this plot is identical to the plot on the link scale.
-Only the horizontal axis is different. That is because the response values are actually transformed using the link function to determine the plotting positions of the graphical elements.
+Only the horizontal axis is different. That is because the response values are transformed using the link function to determine the plotting positions of the graphical elements -- putting them back where they started.
 
 As is the case here, nonlinear scales can be confusing to read, and it is very often
 true that you will want to display more scale divisions, and even add minor ones.
@@ -239,7 +239,7 @@ plot(neur.Trt.emm, type = "scale", breaks = seq(0.10, 0.90, by = 0.10),
      minor_breaks = seq(0.05, 0.95, by = 0.05))
 ```
 
-When using the `"ggplot"` engine, you actually always have the option of using **ggplot2** to incorporate a transformed scale -- and it doesn't even have to be the same as the transformation used in the model. For example, here we display the same results on an arcsin-square-root scale.
+When using the `"ggplot"` engine, you always have the option of using **ggplot2** to incorporate a transformed scale -- and it doesn't even have to be the same as the transformation used in the model. For example, here we display the same results on an arcsin-square-root scale.
 ```{r, fig.height = 1.5}
 plot(neur.Trt.emm, type = "response") +
   ggplot2::scale_x_continuous(trans = scales::asn_trans(),

@@ -29,8 +29,10 @@
 #' doing this would be to obtain multiplicity-adjusted results for smaller
 #' or larger families of tests or confidence intervals. 
 #' 
-#' @param ... In \code{rbind}, object(s) of class \code{emmGrid}. 
-#'   In \code{"["}, it is ignored.
+#' @param ... Additional arguments:
+#'   In \code{rbind}, object(s) of class \code{emmGrid}. 
+#'   In \code{"["}, it is ignored. 
+#'   In \code{subset}, it is passed to \code{[.emmGrid]}
 #' @param deparse.level (required but not used)
 #' @param adjust Character value passed to \code{\link{update.emmGrid}}
 #' 
@@ -146,5 +148,19 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
             x@levels[[nm]] = unique(x@grid[[nm]])
     }
     x
+}
+
+#' @rdname rbind.emmGrid
+#' @param subset logical expression indicating which rows of the grid to keep
+#' @method subset emmGrid
+#' @export
+#' @examples
+#' 
+#' # After-the-fact 'at' specification
+#' subset(warp.rg, wool == "A")
+#' 
+subset.emmGrid = function(x, subset, ...) {
+    sel = eval(substitute(subset), envir = x@grid)
+    x[sel, ...]
 }
 
