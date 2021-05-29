@@ -465,9 +465,9 @@ recover_data.mcmc = function(object, formula, data, ...) {
     recover_data(cl, trms, NULL, data, ...)
 }
 
-emm_basis.mcmc = function(object, trms, xlev, grid, vcov., ...) {
+emm_basis.mcmc = function(object, trms, xlev, grid, vcov., contrasts.arg = NULL, ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-    X = model.matrix(trms, m, contrasts.arg = NULL)
+    X = model.matrix(trms, m, contrasts.arg = contrasts.arg)
     samp = as.matrix(object)[, seq_len(ncol(X)), drop = FALSE]
     bhat = apply(samp, 2, mean)
     if (missing(vcov.))
