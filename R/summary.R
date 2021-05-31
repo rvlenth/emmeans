@@ -534,11 +534,11 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
         }
     }
     if(infer[2]) { # add tests
-        if (!all(null == 0)) {
-            result[["null"]] = null
-            if (inv && !is.null(link))
-                result[["null"]] = link$linkinv(null)
-        }
+        result[["null"]] = null
+        if (inv && !is.null(link))
+            result[["null"]] = link$linkinv(null)
+        if (all(result$null == 0))
+            result[["null"]] = NULL
         tnm = ifelse (zFlag, "z.ratio", "t.ratio")
         tail = ifelse(side == 0, -sign(abs(delta)), side)
         if (side == 0) {

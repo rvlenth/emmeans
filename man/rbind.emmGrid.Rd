@@ -84,6 +84,6 @@ rbind(all, which = c(2, 4), adjust = "mvt")
 summary(warp.rg[c(2, 4, 5)])
 
 # After-the-fact 'at' specification
-subset(warp.rg, wool == "A")
+subset(warp.rg, wool == "A")  ## or warp.rg |> subset(wool == "A")
 
 }

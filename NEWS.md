@@ -19,6 +19,7 @@ emmeans 1.6.0.9xxxxxxxx
     though `scheffe.rank` > 1 was specified. (#171)
   * Added a `subset()` method for `emmGrid` objects
   * Bug fixes for `mcmc` and `mcmc.list` objects (#278, #279)
+  * `test()` shows `null` whenever it is nonzero on the chosen scale (#280)
 
 
 emmeans 1.6.0
