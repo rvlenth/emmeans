@@ -398,7 +398,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     misc$adjust = adjust
     misc$infer = c(FALSE, TRUE)
     misc$by.vars = by
-    if(misc$estType == "pairs") # internal flag to keep track of original by vars for paired comps
+    if(!is.na(misc$estType) && misc$estType == "pairs") # internal flag to keep track of original by vars for paired comps
         misc$.pairby = paste(c("", by), collapse = ",")
     # save contrast coefs
     by.cols = seq_len(ncol(tcmat))

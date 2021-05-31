@@ -284,6 +284,9 @@ add_grouping = function(object, newname, refname, newlevs) {
         if (nm %in% names(nesting))
             result@model.info$nesting[[nm]] = intersect(nesting[[nm]], by)
     }
+    if(result@misc$estType == "pairs") # internal flag to keep track of original by vars for paired comps
+        result@misc$.pairby = paste(c("", by), collapse = ",")
+    
     result
 }
 

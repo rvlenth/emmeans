@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.6.0.9xxxxxxxx
+emmeans 1.6.1
 -------------
 
   * Fixed a bug in parsing a response transformation (#274)
