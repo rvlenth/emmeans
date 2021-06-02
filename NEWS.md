@@ -1,10 +1,16 @@
 ## NEWS for the emmeans package
 
+emmeans 1.6.1.09xxxxx
+-------------
+
+    * Fixed navigation error in vignette index
+    
+
 emmeans 1.6.1
 -------------
 
   * Fixed a bug in parsing a response transformation (#274)
-  * Changed `handling of`contrast()` so that `log2` and `log10` transformations 
+  * Changed handling of `contrast()` so that `log2` and `log10` transformations 
     are handled just like `log`. (#273) Also disabled making ratios with
     `genlog` as it seems ill-advised.
   * Added support for `log1p` transformation

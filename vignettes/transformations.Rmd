@@ -205,7 +205,7 @@ the marginal results that are reported earlier.
 
 ## Graphing transformations and links {#trangraph}
 <!-- @index Transformations!Graphical display; Examples!`neuralgia`;
-    `type = "scale"`; `"scale"` type; -->
+    `type = "scale"`; `"scale"` type@scale; -->
 There are a few options for displaying transformed results graphically. First, the `type` 
 argument works just as it does in displaying a tabular summary. Following through with
 the `neuralgia` example, let us display the marginal `Treatment` EMMs on both the
