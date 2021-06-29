@@ -2,11 +2,14 @@
 % Please edit documentation in R/cld-emm.R
 \name{cld.emmGrid}
 \alias{cld.emmGrid}
+\alias{cld.emm_list}
 \title{Compact letter displays}
 \usage{
 \method{cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
   reversed = FALSE, ...)
+
+\method{cld}{emm_list}(object, ..., which = 1)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -34,6 +37,9 @@ order of results is reversed.}
 
 \item{...}{Arguments passed to \code{\link{contrast}} (for example,
 an \code{adjust} method)}
+
+\item{which}{Which element of the \code{emm_list} object to process
+(If length exceeds one, only the first one is used)}
 }
 \description{
 A method for \code{multicomp::cld()} is provided for users desiring to produce 

@@ -78,6 +78,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
         register_s3_method("multcomp", "glht", "emmlf")
         register_s3_method("multcomp", "glht", "emmGrid")
         register_s3_method("multcomp", "cld", "emmGrid")
+        register_s3_method("multcomp", "cld", "emm_list")
         register_s3_method("multcomp", "modelparm", "emmwrap")
     }
 }

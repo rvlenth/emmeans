@@ -50,7 +50,7 @@
 #' value exceeds \code{alpha}, then the two means have at least one letter in
 #' common.
 #' 
-#' @rdname CLD.emmGrid
+#' @rdname cld.emmGrid
 #' @order 1
 #' @param object An object of class \code{emmGrid}
 #' @param details Logical value determining whether detailed information on tests of
@@ -177,14 +177,30 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
         emmtbl[r, ] = emmtbl[rev(r), ]
     }
     
+    dontusemsg = paste0("NOTE: Compact letter displays are a misleading way to display comparisons\n",
+                        "      because they show NON-findings rather than findings.\n",
+                        "      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead.")
+    
     attr(emmtbl, "mesg") = c(attr(emmtbl,"mesg"), attr(pwtbl, "mesg"), 
-                             paste("significance level used: alpha =", alpha))
+                             paste("significance level used: alpha =", alpha), dontusemsg)
     
     if (details)
         list(emmeans = emmtbl, comparisons = pwtbl)
     else
         emmtbl
 }
+
+### Registered dynamically in zzz.R
+#' @rdname cld.emmGrid
+#' @order 2
+#' @method cld emm_list
+#' @param which Which element of the \code{emm_list} object to process
+#'   (If length exceeds one, only the first one is used)
+cld.emm_list = function(object, ..., which = 1) {
+    multcomp::cld(object[[which[1]]], ...)
+}
+
+
 
 
 # I mean it this time!

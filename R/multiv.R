@@ -1,0 +1,89 @@
+##############################################################################
+#    Copyright (c) 2012-2021 Russell V. Lenth                                #
+#                                                                            #
+#    This file is part of the emmeans package for R (*emmeans*)              #
+#                                                                            #
+#    *emmeans* is free software: you can redistribute it and/or modify       #
+#    it under the terms of the GNU General Public License as published by    #
+#    the Free Software Foundation, either version 2 of the License, or       #
+#    (at your option) any later version.                                     #
+#                                                                            #
+#    *emmeans* is distributed in the hope that it will be useful,            #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of          #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           #
+#    GNU General Public License for more details.                            #
+#                                                                            #
+#    You should have received a copy of the GNU General Public License       #
+#    along with R and *emmeans*.  If not, see                                #
+#    <https://www.r-project.org/Licenses/> and/or                            #
+#    <http://www.gnu.org/licenses/>.                                         #
+##############################################################################
+
+#' Multivariate contrasts
+#' 
+#' This function displays tests of multivariate comparisons or contrasts.
+#' The contrasts are constructed at each level of the variable in \code{mult.name},
+#' and then we do a multivariate test that the vector of estimates is equal to
+#' \code{null} (zero by default). The \emph{F} statistics and degrees of freedom are
+#' computed according to the Wilks' lambda procedure.
+#' 
+#' @param object An object of class \code{emmGrid}
+#' @param method A contrast method, per \code{\link{contrast.emmGrid}}
+#' @param mult.name Name of the factor that defines the multivariate response
+#' @param null Scalar or conformable vector of null-hypothesis values to test against
+#' @param by Any \code{by} variable(s). These should not include the primary variables
+#'   to be contrasted.
+#' @param name Name to use in labeling the contrasts, per the same argument in \code{contrast}.
+#' @param show.ests Logical flag determining whether the multivariate means are displayed
+#' @param ... Additional arguments passed to \code{contrast}
+#'
+#' @return An object of class \code{summary_emm} containing the multivariate
+#'   test results; or a list of the estimates and the tests if \code{show.ests}
+#'   is \code{TRUE}.
+#' @note
+#' While designed primarily for testing contrasts, multivariate tests of the mean
+#' vector itself can be implemented via \code{method = "identity")} (see the examples).
+#'
+
+#' @export
+#'
+#' @examples
+#' MOats.lm <- lm(yield ~ Variety + Block, data = MOats)
+#' MOats.emm <- emmeans(MOats.lm, ~ Variety | rep.meas)
+#' mvcontrast(MOats.emm, "consec", show.ests = TRUE)
+#' 
+#' # Test each mean against a specified null vector
+#' mvcontrast(MOats.emm, "identity", name = "Variety", 
+#'            null = c(80, 100, 120, 140))
+#' 
+mvcontrast = function(object, method, mult.name = "rep.meas", null = 0,
+                      by = object@misc$by.vars, name = "contrast", 
+                      show.ests = FALSE, ...) {
+    by = union(by, mult.name)
+    con = contrast(object, method = method,
+                   by = by, name = name)
+    by = union(setdiff(by, mult.name), name)
+    con = contrast(con, "identity", by = by, name = "dimension.") # just re-orders it
+    ese = .est.se.df(con)
+    est = ese$est
+    df = ese$df
+    V = vcov(con)
+    rows = .find.by.rows(con@grid, by)
+    result = lapply(rows, function(r) {
+        df1 = length(r)
+        rawdf = mean(df[r])
+        df2 = rawdf - df1 + 1
+        F = t(est[r] - null) %*% solve(V[r, r], est[r] - null) / df1 * (df2 / rawdf)
+        data.frame(df1 = df1, df2 = df2, F.ratio = F)
+    })
+    result = cbind(con@grid[sapply(rows, function(r) r[1]), ], do.call(rbind, result))
+    result[["dimension."]] = NULL
+    result$p.value = with(result, pf(F.ratio, df1, df2, lower.tail = FALSE))
+    class(result) = c("summary_emm", "data.frame")
+    attr(result, "estName") = "F.ratio"
+    attr(result, "by.vars") = if(length(by) == 1) NULL else setdiff(by, name)
+    if (show.ests)
+        list(estimates = summary(con, by = name), tests = result)
+    else
+        result
+}

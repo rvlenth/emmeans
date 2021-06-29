@@ -53,8 +53,6 @@
 #' @rdname emm_list-object
 #' @name emm_list
 
-### deprecated#' @aliases CLD.emm_list
-NULL
 
 
 #' @export
@@ -109,15 +107,6 @@ test.emm_list = function(object, ..., which = seq_along(object)) {
 confint.emm_list = function(object, ..., which = seq_along(object)) {
     lapply(object[which], confint, ...)
 }
-
-### #' @export
-### #' @method CLD emm_list
-# CLD.emm_list = function(object, ..., which = seq_along(object)) {
-#     if (length(which) > 1)
-#         warning("`CLD()` called with a list of ", length(which), " objects. ",
-#              "Only the first one was used.")
-#     CLD(object[[which[1]]], ...)
-# }
 
 #' @export
 #' @method coef emm_list

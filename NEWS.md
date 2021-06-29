@@ -4,6 +4,9 @@ emmeans 1.6.1.09xxxxx
 -------------
 
     * Fixed navigation error in vignette index
+    * Discouraging message added to `cld()` results. 
+      Also am providing an `emm_list` method for `emm_list` objects.
+    * Added `mvcontrast()` function (#281)
     
 
 emmeans 1.6.1
