@@ -34,8 +34,11 @@ An object of class \code{summary_emm} containing the multivariate
 This function displays tests of multivariate comparisons or contrasts.
 The contrasts are constructed at each level of the variable in \code{mult.name},
 and then we do a multivariate test that the vector of estimates is equal to
-\code{null} (zero by default). The \emph{F} statistics and degrees of freedom are
-computed according to the Wilks' lambda procedure.
+\code{null} (zero by default). The \emph{F} statistic and degrees
+of freedom are determined via the Hotelling distribution. that is, if there are
+\eqn{m} error degrees of freedom and multivariate dimensionality \eqn{d}, then
+the resulting \eqn{F} statistic has degrees of freedom \eqn{(d, m - d + 1)}
+as shown in Hotelling (1931).
 }
 \note{
 While designed primarily for testing contrasts, multivariate tests of the mean
@@ -50,4 +53,8 @@ mvcontrast(MOats.emm, "consec", show.ests = TRUE)
 mvcontrast(MOats.emm, "identity", name = "Variety", 
            null = c(80, 100, 120, 140))
 
+}
+\references{
+Hotelling, Harold (1931) "The generalization of Student's ratio", 
+  \emph{Annals of Mathematical Statistics} 2(3), 360–378. doi:10.1214/aoms/1177732979
 }
