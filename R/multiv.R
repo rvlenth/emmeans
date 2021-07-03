@@ -37,13 +37,14 @@
 #' @param null Scalar or conformable vector of null-hypothesis values to test against
 #' @param by Any \code{by} variable(s). These should not include the primary variables
 #'   to be contrasted.
-#' @param name Name to use in labeling the contrasts, per the same argument in \code{contrast}.
+#' @param adjust Character value of a multiplicity adjustment method (\code{"none"} for no adjustment)
 #' @param show.ests Logical flag determining whether the multivariate means are displayed
 #' @param ... Additional arguments passed to \code{contrast}
 #'
 #' @return An object of class \code{summary_emm} containing the multivariate
 #'   test results; or a list of the estimates and the tests if \code{show.ests}
-#'   is \code{TRUE}.
+#'   is \code{TRUE}. The test results include the Mahalanobis distances (\emph{not} squared),
+#'   \eqn{F} ratios, degrees of freedom, and \eqn{P} values.
 #' @note
 #' While designed primarily for testing contrasts, multivariate tests of the mean
 #' vector itself can be implemented via \code{method = "identity")} (see the examples).
@@ -60,36 +61,48 @@
 #' 
 #' # Test each mean against a specified null vector
 #' mvcontrast(MOats.emm, "identity", name = "Variety", 
-#'            null = c(80, 100, 120, 140))
+#'            null = c(80, 100, 120, 140), adjust = "none")
+#' # (Note 'name' is passed to contrast() and overrides default name "contrast")
 #' 
-mvcontrast = function(object, method, mult.name = "rep.meas", null = 0,
-                      by = object@misc$by.vars, name = "contrast", 
+mvcontrast = function(object, method = "eff", mult.name = "rep.meas", null = 0,
+                      by = object@misc$by.vars, adjust = c("sidak", p.adjust.methods),
                       show.ests = FALSE, ...) {
-    by = union(by, mult.name)
-    con = contrast(object, method = method,
-                   by = by, name = name)
-    by = union(setdiff(by, mult.name), name)
-    con = contrast(con, "identity", by = by, name = "dimension.") # just re-orders it
+    con = contrast(object, method = method, by = union(by, mult.name), ...)
+    con = contrast(con, "identity", simple = mult.name, name = "dimension.") # just re-orders it
     ese = .est.se.df(con)
     est = ese$est
     df = ese$df
     V = vcov(con)
-    rows = .find.by.rows(con@grid, by)
+    rows = .find.by.rows(con@grid, con@misc$by.vars)
     result = lapply(rows, function(r) {
         df1 = length(r)
         rawdf = mean(df[r])
         df2 = rawdf - df1 + 1
-        F = t(est[r] - null) %*% solve(V[r, r], est[r] - null) / df1 * (df2 / rawdf)
-        data.frame(df1 = df1, df2 = df2, F.ratio = F)
+        D2 = mahalanobis(est[r], null, V[r, r])
+        F = D2 / df1 * (df2 / rawdf)
+        data.frame(Mahal.dist = sqrt(D2), df1 = df1, df2 = df2, F.ratio = F)
     })
     result = cbind(con@grid[sapply(rows, function(r) r[1]), ], do.call(rbind, result))
     result[["dimension."]] = NULL
-    result$p.value = with(result, pf(F.ratio, df1, df2, lower.tail = FALSE))
     class(result) = c("summary_emm", "data.frame")
+
+    by = setdiff(by, mult.name)
+    if (length(by) == 0) 
+        by = NULL
+    rows = .find.by.rows(result, by)
+    adjust = match.arg(adjust)
+    result$p.value = NA
+    for (r in rows) {
+        pv = with(result[r, ], pf(F.ratio, df1, df2, lower.tail = FALSE))
+        result$p.value[r] = switch(adjust, sidak = 1 - (1 - pv)^length(r),
+            p.adjust(pv, adjust))
+    }
     attr(result, "estName") = "F.ratio"
-    attr(result, "by.vars") = if(length(by) == 1) NULL else setdiff(by, name)
+    attr(result, "by.vars") = by
+    if (adjust != "none")
+        attr(result, "mesg") = paste("P value adjustment:", adjust)
     if (show.ests)
-        list(estimates = summary(con, by = name), tests = result)
+        list(estimates = summary(con, by = setdiff(con@misc$by.vars, mult.name)), tests = result)
     else
         result
 }

@@ -1149,17 +1149,22 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     for (i in seq_along(names(x)))   # zapsmall the numeric columns
         if (is.numeric(x[[i]]))  
             x[[i]] = zapsmall(x[[i]])
+    just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")  ### was later
     if (!is.null(x$df)) x$df = round(x$df, 2)
     if (!is.null(x$t.ratio)) 
         x$t.ratio = format(round(x$t.ratio, 3), nsmall = 3, sci = FALSE)
     if (!is.null(x$z.ratio)) 
         x$z.ratio = format(round(x$z.ratio, 3), nsmall = 3, sci = FALSE)
+    if (!is.null(x$F.ratio)) 
+        x$F.ratio = format(round(x$F.ratio, 3), nsmall = 3, sci = FALSE)
+    if (!is.null(x$Mahal.dist)) 
+        x$Mahal.dist = format(round(x$Mahal.dist, 3), nsmall = 3, sci = FALSE)
     if (!is.null(x$p.value)) {
         fp = x$p.value = format(round(x$p.value, 4), nsmall = 4, sci = FALSE)
         x$p.value[fp=="0.0000"] = "<.0001"
     }
     estn = attr(x, "estName")
-    just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")
+### moved up    just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")
     est = x[[estn]]
     if (get_emm_option("opt.digits") && is.null(digits)) {
         if (!is.null(x[["SE"]]))
@@ -1218,6 +1223,26 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     else (x.save$annotations = msg)
     
     invisible(x.save)
+}
+
+#' @method update summary_emm
+#' @export
+#' @rdname update.emmGrid
+#' @order 9
+#' @param by.vars,mesg Attributes that can be altered in \code{update.summary_emm}
+#' @section Method for \code{summary_emm} objects:
+#' This method exists so that we can change the way a summary is displayed,
+#' by changing the by variables or the annotations.
+#' 
+#' @examples
+#' ### Compactify results with a by variable
+#' update(joint_tests(pigs.rg, by = "source"), by = NULL)
+update.summary_emm = function(object, by.vars, mesg) {
+    args = match.call()[-1]
+    args$object = NULL
+    for (nm in names(args))
+        attr(object, nm) = args[[nm]]
+    object
 }
 
 # determine optimum digits to display based on a conf or cred interval

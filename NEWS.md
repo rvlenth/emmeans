@@ -7,6 +7,7 @@ emmeans 1.6.1.09xxxxx
     * Discouraging message added to `cld()` results. 
       Also am providing an `emm_list` method for `emm_list` objects.
     * Added `mvcontrast()` function (#281)
+    * Added `update.summary_emm()`
     
 
 emmeans 1.6.1

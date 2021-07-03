@@ -4,8 +4,9 @@
 \alias{mvcontrast}
 \title{Multivariate contrasts}
 \usage{
-mvcontrast(object, method, mult.name = "rep.meas", null = 0,
-  by = object@misc$by.vars, name = "contrast", show.ests = FALSE, ...)
+mvcontrast(object, method = "eff", mult.name = "rep.meas", null = 0,
+  by = object@misc$by.vars, adjust = c("sidak", p.adjust.methods),
+  show.ests = FALSE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -19,7 +20,7 @@ mvcontrast(object, method, mult.name = "rep.meas", null = 0,
 \item{by}{Any \code{by} variable(s). These should not include the primary variables
 to be contrasted.}
 
-\item{name}{Name to use in labeling the contrasts, per the same argument in \code{contrast}.}
+\item{adjust}{Character value of a multiplicity adjustment method (\code{"none"} for no adjustment)}
 
 \item{show.ests}{Logical flag determining whether the multivariate means are displayed}
 
@@ -28,7 +29,8 @@ to be contrasted.}
 \value{
 An object of class \code{summary_emm} containing the multivariate
   test results; or a list of the estimates and the tests if \code{show.ests}
-  is \code{TRUE}.
+  is \code{TRUE}. The test results include the Mahalanobis distances (\emph{not} squared),
+  \eqn{F} ratios, degrees of freedom, and \eqn{P} values.
 }
 \description{
 This function displays tests of multivariate comparisons or contrasts.
@@ -51,7 +53,8 @@ mvcontrast(MOats.emm, "consec", show.ests = TRUE)
 
 # Test each mean against a specified null vector
 mvcontrast(MOats.emm, "identity", name = "Variety", 
-           null = c(80, 100, 120, 140))
+           null = c(80, 100, 120, 140), adjust = "none")
+# (Note 'name' is passed to contrast() and overrides default name "contrast")
 
 }
 \references{

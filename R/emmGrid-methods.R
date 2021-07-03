@@ -154,6 +154,7 @@ vcov.emmGrid = function(object, ...) {
 #' @return an updated \code{emmGrid} object.
 #' 
 #' @method update emmGrid
+#' @order 1
 #' @export
 #' 
 #' @section Details:
@@ -659,6 +660,7 @@ emm_defaults = list (
 
 # override levels<- method
 #' @rdname update.emmGrid
+#' @order 5
 #' @export
 #' @param x an \code{emmGrid} object
 #' @param value \code{list} or replacement levels. See the documentation for
