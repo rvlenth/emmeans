@@ -1142,6 +1142,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
 #' @method print summary_emm
 #' @export
 print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, export = FALSE) {
+    test.stat.names = c("t.ratio", "z.ratio", "F.ratio", "T.square")  # format these w 3 dec places
     x.save = x
     if(export) x.save = list()
     for(i in which(sapply(x, is.matrix))) 
@@ -1151,14 +1152,9 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
             x[[i]] = zapsmall(x[[i]])
     just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")  ### was later
     if (!is.null(x$df)) x$df = round(x$df, 2)
-    if (!is.null(x$t.ratio)) 
-        x$t.ratio = format(round(x$t.ratio, 3), nsmall = 3, sci = FALSE)
-    if (!is.null(x$z.ratio)) 
-        x$z.ratio = format(round(x$z.ratio, 3), nsmall = 3, sci = FALSE)
-    if (!is.null(x$F.ratio)) 
-        x$F.ratio = format(round(x$F.ratio, 3), nsmall = 3, sci = FALSE)
-    if (!is.null(x$Mahal.dist)) 
-        x$Mahal.dist = format(round(x$Mahal.dist, 3), nsmall = 3, sci = FALSE)
+    for (nm in test.stat.names)
+        if(!is.null(x[[nm]]))
+            x[[nm]] = format(round(x[[nm]], 3), nsmall = 3, sci = FALSE)
     if (!is.null(x$p.value)) {
         fp = x$p.value = format(round(x$p.value, 4), nsmall = 4, sci = FALSE)
         x$p.value[fp=="0.0000"] = "<.0001"

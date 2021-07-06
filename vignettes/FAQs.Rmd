@@ -131,7 +131,7 @@ difference. This is closely related to the next topic.
 
 
 ## emmeans() doesn't work as expected {#numeric}
-<!-- @index Covariates!`emmeans()` doesn't work; Covariates!`cov.keep; Covariates!`cov.reduce;  -->
+<!-- @index Covariates!`emmeans()` doesn't work; Covariates!`cov.keep`; Covariates!`cov.reduce`;  -->
 Equivalently, users ask how to get *post hoc* comparisons when we have
 covariates rather than factors.
 Yes, it does work, but you have to tell it the appropriate reference grid.

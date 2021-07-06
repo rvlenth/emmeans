@@ -33,19 +33,27 @@
 #' 
 #' @param object An object of class \code{emmGrid}
 #' @param method A contrast method, per \code{\link{contrast.emmGrid}}
-#' @param mult.name Name of the factor that defines the multivariate response
+#' @param mult.name Name of the factor that defines the multivariate response.
+#'     This may be a vector of names in which case the factor combinations become the 
+#'     muultivariate response (these factors \emph{must} interact).
 #' @param null Scalar or conformable vector of null-hypothesis values to test against
 #' @param by Any \code{by} variable(s). These should not include the primary variables
-#'   to be contrasted.
-#' @param adjust Character value of a multiplicity adjustment method (\code{"none"} for no adjustment)
+#'   to be contrasted. For convenience, the \code{by} variable is nulled-out 
+#'   if it would result in no primary factors being contrasted.
+#' @param adjust Character value of a multiplicity adjustment method (\code{"none"} for no adjustment).
+#'     The available adjustment methods are more limited that in \code{contrast},
+#'     and any default adjustment returned via \code{method} is ignored.
 #' @param show.ests Logical flag determining whether the multivariate means are displayed
 #' @param ... Additional arguments passed to \code{contrast}
 #'
 #' @return An object of class \code{summary_emm} containing the multivariate
 #'   test results; or a list of the estimates and the tests if \code{show.ests}
-#'   is \code{TRUE}. The test results include the Mahalanobis distances (\emph{not} squared),
+#'   is \code{TRUE}. The test results include the Hotelling \eqn{T^2} statistic,
 #'   \eqn{F} ratios, degrees of freedom, and \eqn{P} values.
 #' @note
+#' Abnormal conditions result in statistics being \code{NA}; such situations can arise when
+#' factors involved do not interact, or when there are non-estimable results.
+#' 
 #' While designed primarily for testing contrasts, multivariate tests of the mean
 #' vector itself can be implemented via \code{method = "identity")} (see the examples).
 #'
@@ -64,9 +72,16 @@
 #'            null = c(80, 100, 120, 140), adjust = "none")
 #' # (Note 'name' is passed to contrast() and overrides default name "contrast")
 #' 
-mvcontrast = function(object, method = "eff", mult.name = "rep.meas", null = 0,
+#' # Multivariate factor need not be a multivariate response
+#' mvcontrast(MOats.emm, "trt.vs.ctrl1", mult.name = "Variety")
+#' 
+mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp, null = 0,
                       by = object@misc$by.vars, adjust = c("sidak", p.adjust.methods),
                       show.ests = FALSE, ...) {
+    if (is.null(mult.name) || length(mult.name) == 0)
+        stop("Must specify at least one factor in 'mult.name'")
+    if(length(setdiff(names(object@levels), union(by, mult.name))) == 0)
+        by = NULL   # avoid the case where we're left with no variables
     con = contrast(object, method = method, by = union(by, mult.name), ...)
     con = contrast(con, "identity", simple = mult.name, name = "dimension.") # just re-orders it
     ese = .est.se.df(con)
@@ -74,13 +89,22 @@ mvcontrast = function(object, method = "eff", mult.name = "rep.meas", null = 0,
     df = ese$df
     V = vcov(con)
     rows = .find.by.rows(con@grid, con@misc$by.vars)
+    red.rank = FALSE  # flag for red.rank cases
     result = lapply(rows, function(r) {
-        df1 = length(r)
-        rawdf = mean(df[r])
-        df2 = rawdf - df1 + 1
-        D2 = mahalanobis(est[r], null, V[r, r])
-        F = D2 / df1 * (df2 / rawdf)
-        data.frame(Mahal.dist = sqrt(D2), df1 = df1, df2 = df2, F.ratio = F)
+        QR = try(qr(V[r, r, drop = FALSE]), silent = TRUE)
+        if (inherits(QR, "try-error"))
+            T2 = df1 = df2 = F = NA
+        else {
+            df1 = QR$rank
+            if(df1 < length(r)) red.rank <<- TRUE
+            rawdf = mean(df[r])
+            df2 = rawdf - df1 + 1
+            qe = qr.coef(QR, est[r] - null)
+            qe[is.na(qe)] = 0
+            T2 = sum(qe * (est[r] - null))
+            F = T2 / df1 * (df2 / rawdf)
+        }
+        data.frame(T.square = T2, df1 = df1, df2 = df2, F.ratio = F)
     })
     result = cbind(con@grid[sapply(rows, function(r) r[1]), ], do.call(rbind, result))
     result[["dimension."]] = NULL
@@ -99,8 +123,16 @@ mvcontrast = function(object, method = "eff", mult.name = "rep.meas", null = 0,
     }
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
-    if (adjust != "none")
-        attr(result, "mesg") = paste("P value adjustment:", adjust)
+    if (adjust == "none") 
+        mesg = NULL
+    else
+        mesg = paste("P value adjustment:", adjust)
+    if (red.rank)
+        mesg = c(mesg, "NOTE: Some or all d.f. are reduced due to singularities")
+    if(any(is.na(result$T.square)))
+        mesg = c(mesg, 
+            "NAs indicate singular case(s), due to non-estimability or other errors")
+    attr(result, "mesg") = mesg
     if (show.ests)
         list(estimates = summary(con, by = setdiff(con@misc$by.vars, mult.name)), tests = result)
     else

@@ -109,6 +109,7 @@ vignette: >
       * [of other contrasts](interactions.html#contrasts)
       * [Custom](comparisons.html#linfcns)
       * [Formula](comparisons.html#formulas)
+      * [Multivariate](interactions.html#multiv)
       * [Pairwise](comparisons.html#pairwise)
       * [Polynomial](comparisons.html#contrasts)
       * Tests of
@@ -117,8 +118,8 @@ vignette: >
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
       * [Adjusted](messy-data.html#adjcov)
-      * [`cov.keep](FAQs.html#numeric)
-      * [`cov.reduce](FAQs.html#numeric)
+      * [`cov.keep`](FAQs.html#numeric)
+      * [`cov.reduce`](FAQs.html#numeric)
       * [Derived](basics.html#depcovs)
       * [`emmeans()` doesn't work](FAQs.html#numeric)
       * [Interacting with factors](FAQs.html#trends)
@@ -279,6 +280,7 @@ vignette: >
 
 
   * [Hook functions](xtending.html#hooks)
+  * [Hotelling's $T^2$](interactions.html#multiv)
   * [`hpd.summary()`](sophisticated.html#mcmc)
   * [`hurdle` models](models.html#C)
 
@@ -375,12 +377,14 @@ vignette: >
   * [Multinomial models](models.html#N)
   * [Multiple imputation](models.html#I)
   * [Multiplicity adjustments](confidence-intervals.html#adjust)
+  * [Multivariate contrasts](interactions.html#multiv)
   * Multivariate models
       * [in *basics: multiv*](basics.html#multiv)
       * [in *interactions: oranges*](interactions.html#oranges)
       * [in *models: M*](models.html#M)
       * [with `submodel`](xplanations.html#mult.submodel)
   * [Multivariate *t* (`"mvt"`) adjustment](confidence-intervals.html#adjmore)
+  * [`mvcontrast()`](interactions.html#multiv)
   * [**mvtnorm** package](confidence-intervals.html#adjmore)
 
 

@@ -23,7 +23,8 @@ predictor, and other related analyses.
   3. [Formula interface](#formulas)
   4. [Custom contrasts and linear functions](#linfcns)
   5. [Special behavior with log transformations](#logs)
-  6. Interaction contrasts (see ["interactions" vignette](interactions.html))
+  6. Interaction contrasts (in ["interactions" vignette](interactions.html#contrasts))
+  7. Multivariate contrasts (in ["interactions" vignette](interactions.html#multiv))
   
 [Index of all vignette topics](vignette-topics.html)
 
@@ -343,5 +344,7 @@ Poisson or count regression, for which the usual link is the log; and logistic
 regression, because logits are logs of odds ratios.
 
 [Back to Contents](#contents)
+
+
 
 [Index of all vignette topics](vignette-topics.html)

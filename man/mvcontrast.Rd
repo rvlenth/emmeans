@@ -4,23 +4,28 @@
 \alias{mvcontrast}
 \title{Multivariate contrasts}
 \usage{
-mvcontrast(object, method = "eff", mult.name = "rep.meas", null = 0,
-  by = object@misc$by.vars, adjust = c("sidak", p.adjust.methods),
-  show.ests = FALSE, ...)
+mvcontrast(object, method = "eff", mult.name = object@roles$multresp,
+  null = 0, by = object@misc$by.vars, adjust = c("sidak",
+  p.adjust.methods), show.ests = FALSE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
 
 \item{method}{A contrast method, per \code{\link{contrast.emmGrid}}}
 
-\item{mult.name}{Name of the factor that defines the multivariate response}
+\item{mult.name}{Name of the factor that defines the multivariate response.
+This may be a vector of names in which case the factor combinations become the 
+muultivariate response (these factors \emph{must} interact).}
 
 \item{null}{Scalar or conformable vector of null-hypothesis values to test against}
 
 \item{by}{Any \code{by} variable(s). These should not include the primary variables
-to be contrasted.}
+to be contrasted. For convenience, the \code{by} variable is nulled-out 
+if it would result in no primary factors being contrasted.}
 
-\item{adjust}{Character value of a multiplicity adjustment method (\code{"none"} for no adjustment)}
+\item{adjust}{Character value of a multiplicity adjustment method (\code{"none"} for no adjustment).
+The available adjustment methods are more limited that in \code{contrast},
+and any default adjustment returned via \code{method} is ignored.}
 
 \item{show.ests}{Logical flag determining whether the multivariate means are displayed}
 
@@ -29,7 +34,7 @@ to be contrasted.}
 \value{
 An object of class \code{summary_emm} containing the multivariate
   test results; or a list of the estimates and the tests if \code{show.ests}
-  is \code{TRUE}. The test results include the Mahalanobis distances (\emph{not} squared),
+  is \code{TRUE}. The test results include the Hotelling \eqn{T^2} statistic,
   \eqn{F} ratios, degrees of freedom, and \eqn{P} values.
 }
 \description{
@@ -43,6 +48,9 @@ the resulting \eqn{F} statistic has degrees of freedom \eqn{(d, m - d + 1)}
 as shown in Hotelling (1931).
 }
 \note{
+Abnormal conditions result in statistics being \code{NA}; such situations can arise when
+factors involved do not interact, or when there are non-estimable results.
+
 While designed primarily for testing contrasts, multivariate tests of the mean
 vector itself can be implemented via \code{method = "identity")} (see the examples).
 }
@@ -55,6 +63,9 @@ mvcontrast(MOats.emm, "consec", show.ests = TRUE)
 mvcontrast(MOats.emm, "identity", name = "Variety", 
            null = c(80, 100, 120, 140), adjust = "none")
 # (Note 'name' is passed to contrast() and overrides default name "contrast")
+
+# Multivariate factor need not be a multivariate response
+mvcontrast(MOats.emm, "trt.vs.ctrl1", mult.name = "Variety")
 
 }
 \references{

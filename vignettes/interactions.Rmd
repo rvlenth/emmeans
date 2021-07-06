@@ -25,8 +25,10 @@ this vignette will be helpful in shedding some light on how to use the
   1. [Interacting factors](#factors)
      a. [Simple contrasts](#simple)
   2. [Interaction contrasts](#contrasts)
-  3. [Interactions with covariates](#covariates)
-  4. [Summary](#summary)
+  3. [Multivariate contrasts](#multiv)
+  4. [Interactions with covariates](#covariates)
+  9. [Summary](#summary)
+
 
 [Index of all vignette topics](vignette-topics.html)
 
@@ -200,6 +202,53 @@ joint_tests(noise.lm, by = "side")
 
 [Back to Contents](#contents)
 
+## Multivariate contrasts {#multiv}
+<!-- @index Multivariate contrasts; Contrasts!Multivariate; Hotelling's $T^2$;
+            `mvcontrast()`    -->
+In the preceding sections, the way we addressed interacting factors was to do
+comparisons or contrasts of some factors()) separately at levels of other factor(s). 
+This leads to a lot of estimates and associated tests.
+
+Another approach is to compare things in a multivariate way. In the auto-noise example,
+for example, we have four means (corrtesponding to the four combinations of `type` and `size`)
+with each size of car, and we could consider comparing 
+these *sets* of means. Such multivariate comparisons can be done via the *Mahalanobis distance*
+(a kind of standardized distance measure) between one set of four means and another.
+This is facilitated by the `mvcontrast()` function:
+```{r}
+mvcontrast(noise.emm, "pairwise", mult.name = c("type", "side"))
+```
+In this output, the `T.square` values are Hotelling's $T^2$ statistics, which are
+the squared Mahalanobis distances among the sets of four means. These results thus 
+accomplish a similar objective as the initial comparisons presented in this vignette,
+but are not complicated by the issue that the factors interact. (Instead, we lose the 
+directionality of the comparisons.) While all comparisons are "significant," the `T.square`
+values indicate that small and medium cars are much closer together, and larger ones
+are more separate -- as can be visualized in the earlier plot.
+
+We may still break things down using `by` variables. Suppose, for example, we wish to 
+compare the two filter types for each size of car, without regard to which side:
+```{r}
+update(mvcontrast(noise.emm, "consec", mult.name = "side", by = "size"), 
+       by = NULL)
+```
+
+One detail to note about multivariate comparisons: in order to make complete sense,
+all the factors involved must interact. Suppose we were to repeat the initial multivariate
+comparison after removing all interactions:
+```{r}
+mvcontrast(update(noise.emm, submodel = ~ side + size + type), 
+           "pairwise", mult.name = c("type", "side"))
+```
+Note that each $F$ ratio now has 1 d.f. Also, note that `T.square = F.ratio`,
+and uou can verify that these values are equal to the squares of the `t.ratio`s in the initial
+example in this vignette ($(-6.147)^2 = 37.786$, etc.). That is, if we ignore all interactions, the multivariate
+tests are exactly equivalent to the univariate tests of the marginal means.
+
+[Back to Contents](#contents)
+
+
+
 ## Interactions with covariates {#covariates}
 <!-- @index Interactions!Covariate with factors; `emtrends()`; Examples!`fiber` -->
 When a covariate and a factor interact, we typically don't want EMMs themselves,
@@ -309,7 +358,7 @@ difference of about .92.
 [Back to Contents](#contents)
 
 ## Summary {#summary}
-Interaction, by nature, make things more complicated. One must resist pressures 
+Interactions, by nature, make things more complicated. One must resist pressures 
 and inclinations to try to produce simple bottom-line conclusions. Interactions
 require more work and more patience; they require presenting more cases -- more
 than are presented in the examples in this vignette -- in order to provide a
