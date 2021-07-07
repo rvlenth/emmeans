@@ -177,7 +177,7 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
         emmtbl[r, ] = emmtbl[rev(r), ]
     }
     
-    dontusemsg = paste0("NOTE: Compact letter displays are a misleading way to display comparisons\n",
+    dontusemsg = paste0("NOTE: Compact letter displays can be misleading\n",
                         "      because they show NON-findings rather than findings.\n",
                         "      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead.")
     

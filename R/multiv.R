@@ -33,17 +33,20 @@
 #' 
 #' @param object An object of class \code{emmGrid}
 #' @param method A contrast method, per \code{\link{contrast.emmGrid}}
-#' @param mult.name Name of the factor that defines the multivariate response.
-#'     This may be a vector of names in which case the factor combinations become the 
-#'     muultivariate response (these factors \emph{must} interact).
+#' @param mult.name Character vector of nNames of the factors whose levels
+#'   define the multivariate means to contrast. If the model itself has a
+#'   multivariate response, that is what is used. Otherwise, \code{mult.name}
+#'   \emph{must} be specified.
 #' @param null Scalar or conformable vector of null-hypothesis values to test against
-#' @param by Any \code{by} variable(s). These should not include the primary variables
-#'   to be contrasted. For convenience, the \code{by} variable is nulled-out 
-#'   if it would result in no primary factors being contrasted.
-#' @param adjust Character value of a multiplicity adjustment method (\code{"none"} for no adjustment).
-#'     The available adjustment methods are more limited that in \code{contrast},
-#'     and any default adjustment returned via \code{method} is ignored.
-#' @param show.ests Logical flag determining whether the multivariate means are displayed
+#' @param by Any \code{by} variable(s). These should not include the primary
+#'   variables to be contrasted. For convenience, the \code{by} variable is
+#'   nulled-out if it would result in no primary factors being contrasted.
+#' @param adjust Character value of a multiplicity adjustment method
+#'   (\code{"none"} for no adjustment). The available adjustment methods are
+#'   more limited that in \code{contrast}, and any default adjustment returned
+#'   via \code{method} is ignored.
+#' @param show.ests Logical flag determining whether the multivariate means 
+#'   are displayed
 #' @param ... Additional arguments passed to \code{contrast}
 #'
 #' @return An object of class \code{summary_emm} containing the multivariate
@@ -51,11 +54,15 @@
 #'   is \code{TRUE}. The test results include the Hotelling \eqn{T^2} statistic,
 #'   \eqn{F} ratios, degrees of freedom, and \eqn{P} values.
 #' @note
-#' Abnormal conditions result in statistics being \code{NA}; such situations can arise when
-#' factors involved do not interact, or when there are non-estimable results.
-#' 
-#' While designed primarily for testing contrasts, multivariate tests of the mean
-#' vector itself can be implemented via \code{method = "identity")} (see the examples).
+#' If some interactions among the primary and \code{mult.name} factors are
+#' absent, the covariance of the multivariate means is singular; this situation
+#' is accommodated, but the result has reduced degrees of freedom and a message
+#' is displayed. If there are other abnormal conditions such as non-estimable
+#' results, estimates are shown as \code{NA}.
+#'
+#' While designed primarily for testing contrasts, multivariate tests of the
+#' mean vector itself can be implemented via \code{method = "identity")} (see
+#' the examples).
 #'
 #' @references Hotelling, Harold (1931) "The generalization of Student's ratio", 
 #'   \emph{Annals of Mathematical Statistics} 2(3), 360–378. doi:10.1214/aoms/1177732979
@@ -65,14 +72,14 @@
 #' @examples
 #' MOats.lm <- lm(yield ~ Variety + Block, data = MOats)
 #' MOats.emm <- emmeans(MOats.lm, ~ Variety | rep.meas)
-#' mvcontrast(MOats.emm, "consec", show.ests = TRUE)
+#' mvcontrast(MOats.emm, "consec", show.ests = TRUE)  # mult.name defaults to rep.meas
 #' 
 #' # Test each mean against a specified null vector
 #' mvcontrast(MOats.emm, "identity", name = "Variety", 
 #'            null = c(80, 100, 120, 140), adjust = "none")
 #' # (Note 'name' is passed to contrast() and overrides default name "contrast")
 #' 
-#' # Multivariate factor need not be a multivariate response
+#' # 'mult.name' need not refer to a multivariate response
 #' mvcontrast(MOats.emm, "trt.vs.ctrl1", mult.name = "Variety")
 #' 
 mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp, null = 0,
@@ -83,7 +90,8 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
     if(length(setdiff(names(object@levels), union(by, mult.name))) == 0)
         by = NULL   # avoid the case where we're left with no variables
     con = contrast(object, method = method, by = union(by, mult.name), ...)
-    con = contrast(con, "identity", simple = mult.name, name = "dimension.") # just re-orders it
+    mvnm = paste(mult.name, collapse = " ")
+    con = contrast(con, "identity", simple = mult.name, name = mvnm) # just re-orders it
     ese = .est.se.df(con)
     est = ese$est
     df = ese$df
@@ -107,7 +115,7 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
         data.frame(T.square = T2, df1 = df1, df2 = df2, F.ratio = F)
     })
     result = cbind(con@grid[sapply(rows, function(r) r[1]), ], do.call(rbind, result))
-    result[["dimension."]] = NULL
+    result[[mvnm]] = NULL
     class(result) = c("summary_emm", "data.frame")
 
     by = setdiff(by, mult.name)
@@ -131,10 +139,10 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
         mesg = c(mesg, "NOTE: Some or all d.f. are reduced due to singularities")
     if(any(is.na(result$T.square)))
         mesg = c(mesg, 
-            "NAs indicate singular case(s), due to non-estimability or other errors")
+            "NAs indicate non-estimabile cases or other errors")
     attr(result, "mesg") = mesg
     if (show.ests)
-        list(estimates = summary(con, by = setdiff(con@misc$by.vars, mult.name)), tests = result)
+        list(estimates = con, tests = result)
     else
         result
 }

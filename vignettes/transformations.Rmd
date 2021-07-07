@@ -448,7 +448,7 @@ emmeans(mod, "group", type = "response")
 
 ### Reverse-engineering a standardized response
 An interesting twist on all this is the reverse situation: Suppose we fitted the model 
-*without* the standardized response, but we want to kniow what the results would be if
+*without* the standardized response, but we want to know what the results would be if
 we had standardized. Here we reverse-engineer the `fiber.lm` example above:
 ```{r, message = FALSE}
 fib.lm <- lm(strength ~ machine * diameter, data = fiber)
@@ -512,7 +512,7 @@ This estimate is used by default. The bias-adjusted EMMs for the sources are:
 summary(pigs.emm.s, type = "response", bias.adj = TRUE)
 ```
 These estimates (and also their SEs) are slightly larger than we had without
-bias adjustment. They are estimates of the *aritmetic* mean responses, rather
+bias adjustment. They are estimates of the *arithmetic* mean responses, rather
 than the *geometric* means shown in the overview. Had the value of `sigma` been
 larger, the adjustment would have been greater. You can experiment with this by
 adding a `sigma =` argument to the above call.

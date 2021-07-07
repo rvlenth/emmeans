@@ -10,7 +10,7 @@
 
 \method{levels}{emmGrid}(x) <- value
 
-\method{update}{summary_emm}(object, by.vars, mesg)
+\method{update}{summary_emm}(object, by.vars, mesg, ...)
 }
 \arguments{
 \item{object}{An \code{emmGrid} object}

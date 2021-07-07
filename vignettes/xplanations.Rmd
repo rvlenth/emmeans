@@ -187,7 +187,7 @@ That's the essence of the algorithm. Note, however, that there are a few complic
   * Depending on the number $k$ of EMMs and the number of tied minima and maxima, the system of equations could be under-determined, over-determined, or just right.
   * It is possible that the solution could result in some $L_i$ or $R_j$ being negative. That would result in an error.
 
-In summary, the algorithm does not always work (in fact it is possible to construct cases where no solution is possible). But we try to do the best we can. The main reason for trying to do this is to enourage people to not ever use confidence intervals for the $m_i$ as a means of testing the comparisons $d_{ij}$. That is almost always incorrect. 
+In summary, the algorithm does not always work (in fact it is possible to construct cases where no solution is possible). But we try to do the best we can. The main reason for trying to do this is to encourage people to not ever use confidence intervals for the $m_i$ as a means of testing the comparisons $d_{ij}$. That is almost always incorrect. 
 
 What is better yet is to simply avoid using comparison arrows altogether and use `pwpp()` or `pwpm()` to display the *P* values directly. 
 
@@ -202,8 +202,8 @@ plot(foo, CIs = FALSE, comparisons = TRUE)
 ```
 
 This came out pretty well. But now let's keep the means and SEs the same but make them correlated. Such correlations happen, for example, in designs with subject effects.
-The function below is used to set a specified intra-sclass correlation, treating `A` as a within-subjects (or split-plot) factor and `B` as a between-subjects (whole-plot) factor.
-We'll start with a corelation of 0.3.
+The function below is used to set a specified intra-class correlation, treating `A` as a within-subjects (or split-plot) factor and `B` as a between-subjects (whole-plot) factor.
+We'll start with a correlation of 0.3.
 ```{r, message = FALSE}
 mkmat <- function(V, rho = 0, indexes = list(1:3, 4:6)) {
     sd = sqrt(diag(V))
@@ -211,7 +211,7 @@ mkmat <- function(V, rho = 0, indexes = list(1:3, 4:6)) {
         V[i,i] = (1 - rho)*diag(sd[i]^2) + rho*outer(sd[i], sd[i])
     V
 }
-# Intraclass correrlation = 0.3
+# Intraclass correlation = 0.3
 foo3 = foo
 foo3@V <- mkmat(foo3@V, 0.3)
 plot(foo3, CIs = FALSE, comparisons = TRUE)

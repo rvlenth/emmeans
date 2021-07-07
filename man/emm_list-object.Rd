@@ -2,11 +2,7 @@
 % Please edit documentation in R/emm-list.R
 \name{emm_list}
 \alias{emm_list}
-\alias{str.emm_list}
 \title{The \code{emm_list} class}
-\usage{
-\method{str}{emm_list}(object, ...)
-}
 \description{
 An \code{emm_list} object is simply a list of
 \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,

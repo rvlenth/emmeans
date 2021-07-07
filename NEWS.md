@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.6.1.09xxxxx
+emmeans 1.6.2
 -------------
 
     * Fixed navigation error in vignette index

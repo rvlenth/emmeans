@@ -1233,7 +1233,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
 #' @examples
 #' ### Compactify results with a by variable
 #' update(joint_tests(pigs.rg, by = "source"), by = NULL)
-update.summary_emm = function(object, by.vars, mesg) {
+update.summary_emm = function(object, by.vars, mesg, ...) {
     args = match.call()[-1]
     args$object = NULL
     for (nm in names(args))

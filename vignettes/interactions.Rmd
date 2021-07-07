@@ -210,7 +210,7 @@ comparisons or contrasts of some factors()) separately at levels of other factor
 This leads to a lot of estimates and associated tests.
 
 Another approach is to compare things in a multivariate way. In the auto-noise example,
-for example, we have four means (corrtesponding to the four combinations of `type` and `size`)
+for example, we have four means (corresponding to the four combinations of `type` and `size`)
 with each size of car, and we could consider comparing 
 these *sets* of means. Such multivariate comparisons can be done via the *Mahalanobis distance*
 (a kind of standardized distance measure) between one set of four means and another.
@@ -223,8 +223,7 @@ the squared Mahalanobis distances among the sets of four means. These results th
 accomplish a similar objective as the initial comparisons presented in this vignette,
 but are not complicated by the issue that the factors interact. (Instead, we lose the 
 directionality of the comparisons.) While all comparisons are "significant," the `T.square`
-values indicate that small and medium cars are much closer together, and larger ones
-are more separate -- as can be visualized in the earlier plot.
+values indicate that large cars are statistically most different from the other sizes.
 
 We may still break things down using `by` variables. Suppose, for example, we wish to 
 compare the two filter types for each size of car, without regard to which side:
@@ -241,7 +240,7 @@ mvcontrast(update(noise.emm, submodel = ~ side + size + type),
            "pairwise", mult.name = c("type", "side"))
 ```
 Note that each $F$ ratio now has 1 d.f. Also, note that `T.square = F.ratio`,
-and uou can verify that these values are equal to the squares of the `t.ratio`s in the initial
+and you can verify that these values are equal to the squares of the `t.ratio`s in the initial
 example in this vignette ($(-6.147)^2 = 37.786$, etc.). That is, if we ignore all interactions, the multivariate
 tests are exactly equivalent to the univariate tests of the marginal means.
 

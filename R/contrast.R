@@ -479,7 +479,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         if(combine)
             result = do.call(rbind.emmGrid, result)
     }
-    else if ((simple == "each") && !("each" %in% names(object@levels))) {
+    else if ((length(simple) == 1) && (simple == "each") && !("each" %in% names(object@levels))) {
         result = .simcon(object, ..., 
             simple = as.list(names(object@levels)), combine = combine)
     }

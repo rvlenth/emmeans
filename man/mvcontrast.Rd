@@ -13,21 +13,24 @@ mvcontrast(object, method = "eff", mult.name = object@roles$multresp,
 
 \item{method}{A contrast method, per \code{\link{contrast.emmGrid}}}
 
-\item{mult.name}{Name of the factor that defines the multivariate response.
-This may be a vector of names in which case the factor combinations become the 
-muultivariate response (these factors \emph{must} interact).}
+\item{mult.name}{Character vector of nNames of the factors whose levels
+define the multivariate means to contrast. If the model itself has a
+multivariate response, that is what is used. Otherwise, \code{mult.name}
+\emph{must} be specified.}
 
 \item{null}{Scalar or conformable vector of null-hypothesis values to test against}
 
-\item{by}{Any \code{by} variable(s). These should not include the primary variables
-to be contrasted. For convenience, the \code{by} variable is nulled-out 
-if it would result in no primary factors being contrasted.}
+\item{by}{Any \code{by} variable(s). These should not include the primary
+variables to be contrasted. For convenience, the \code{by} variable is
+nulled-out if it would result in no primary factors being contrasted.}
 
-\item{adjust}{Character value of a multiplicity adjustment method (\code{"none"} for no adjustment).
-The available adjustment methods are more limited that in \code{contrast},
-and any default adjustment returned via \code{method} is ignored.}
+\item{adjust}{Character value of a multiplicity adjustment method
+(\code{"none"} for no adjustment). The available adjustment methods are
+more limited that in \code{contrast}, and any default adjustment returned
+via \code{method} is ignored.}
 
-\item{show.ests}{Logical flag determining whether the multivariate means are displayed}
+\item{show.ests}{Logical flag determining whether the multivariate means 
+are displayed}
 
 \item{...}{Additional arguments passed to \code{contrast}}
 }
@@ -48,23 +51,27 @@ the resulting \eqn{F} statistic has degrees of freedom \eqn{(d, m - d + 1)}
 as shown in Hotelling (1931).
 }
 \note{
-Abnormal conditions result in statistics being \code{NA}; such situations can arise when
-factors involved do not interact, or when there are non-estimable results.
+If some interactions among the primary and \code{mult.name} factors are
+absent, the covariance of the multivariate means is singular; this situation
+is accommodated, but the result has reduced degrees of freedom and a message
+is displayed. If there are other abnormal conditions such as non-estimable
+results, estimates are shown as \code{NA}.
 
-While designed primarily for testing contrasts, multivariate tests of the mean
-vector itself can be implemented via \code{method = "identity")} (see the examples).
+While designed primarily for testing contrasts, multivariate tests of the
+mean vector itself can be implemented via \code{method = "identity")} (see
+the examples).
 }
 \examples{
 MOats.lm <- lm(yield ~ Variety + Block, data = MOats)
 MOats.emm <- emmeans(MOats.lm, ~ Variety | rep.meas)
-mvcontrast(MOats.emm, "consec", show.ests = TRUE)
+mvcontrast(MOats.emm, "consec", show.ests = TRUE)  # mult.name defaults to rep.meas
 
 # Test each mean against a specified null vector
 mvcontrast(MOats.emm, "identity", name = "Variety", 
            null = c(80, 100, 120, 140), adjust = "none")
 # (Note 'name' is passed to contrast() and overrides default name "contrast")
 
-# Multivariate factor need not be a multivariate response
+# 'mult.name' need not refer to a multivariate response
 mvcontrast(MOats.emm, "trt.vs.ctrl1", mult.name = "Variety")
 
 }

@@ -52,7 +52,7 @@
 #' #'
 #' @rdname emm_list-object
 #' @name emm_list
-
+NULL
 
 
 #' @export
