@@ -207,7 +207,10 @@
 #'   \code{vcov.} argument, specifying a matrix or a function. If a matrix, it
 #'   must be square and of the same dimension and parameter order of the fixed
 #'   effects. If a function, must return a suitable matrix when it is called
-#'   with \code{object} as its only argument.
+#'   with arguments \code{(object, ...)}. Be careful with possible 
+#'   unintended conflicts with arguments in \code{...}; for example, 
+#'   \code{sandwich::vcovHAC()} has optional arguments \code{adjust} and \code{weights}
+#'   that may be intended for \code{emmeans()} but will also be passed to \code{vcov.()}.
 #'
 #'   \bold{Nested factors.} Having a nesting structure affects marginal
 #'   averaging in \code{emmeans} in that it is done separately for each level
@@ -524,6 +527,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         n.orig = nrow(grid) # remember how many rows we had
         grid = grid[rep(seq_len(n.orig), length(delts)), , drop = FALSE]
         options$var = options$delts = NULL
+        grid[[var]] = grid[[var]] + rep(delts, each = n.orig)  # MOVED UP from after the covariate calcs
     }
     
     # add any matrices
@@ -552,9 +556,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         }
     }
     
-    # finish-up our hook for expanding the grid
-    if (!is.null(delts)) # add increments if any
-        grid[[var]] = grid[[var]] + rep(delts, each = n.orig)
+    # # finish-up our hook for expanding the grid 
+    #### (MOVED UP - why did I defer this before???)
+    # if (!is.null(delts)) # add increments if any
+    #     grid[[var]] = grid[[var]] + rep(delts, each = n.orig)
     
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss et al.
         attr(object, "data") = data

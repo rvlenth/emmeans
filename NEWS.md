@@ -1,5 +1,12 @@
 ## NEWS for the emmeans package
 
+emmeans 1.6.2-999xxxx
+-------------
+
+    * Clarification of documentation of `ref_grid(object, vcov. = ...)` (#283)
+    * Fix to `emmtrems()` with covariate formulas (#284)
+
+
 emmeans 1.6.2
 -------------
 

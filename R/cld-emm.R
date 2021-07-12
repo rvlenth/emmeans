@@ -38,6 +38,8 @@
 
 
 ### Lingering support for multcomp::cld -- registered dynamically in zzz.R
+### NOTE: MUST KEEP the rdname of CLD.emmGrid 
+###       because it's referenced by augmentedRCBD package
 #' Compact letter displays
 #' 
 #' A method for \code{multicomp::cld()} is provided for users desiring to produce 
@@ -50,7 +52,7 @@
 #' value exceeds \code{alpha}, then the two means have at least one letter in
 #' common.
 #' 
-#' @rdname cld.emmGrid
+#' @rdname CLD.emmGrid
 #' @order 1
 #' @param object An object of class \code{emmGrid}
 #' @param details Logical value determining whether detailed information on tests of
@@ -191,7 +193,9 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
 }
 
 ### Registered dynamically in zzz.R
-#' @rdname cld.emmGrid
+### NOTE: MUST KEEP the rdname of CLD.emmGrid 
+###       because it's referenced by augmentedRCBD package
+#' @rdname CLD.emmGrid
 #' @order 2
 #' @method cld emm_list
 #' @param which Which element of the \code{emm_list} object to process
@@ -199,31 +203,4 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
 cld.emm_list = function(object, ..., which = 1) {
     multcomp::cld(object[[which[1]]], ...)
 }
-
-
-
-
-# I mean it this time!
-# ### Not yet Deprecated as of version 1.5.0 (sigh)
-# #' @rdname CLD.emmGrid
-# #' @order 2
-# #' @export
-# CLD = function (object, ...) {
-#     dmsg = c("'CLD' will be deprecated. Its use is discouraged.\n",
-#              "See '?cld.emmGrid' for an explanation. Use 'pwpp' or 'multcomp::cld' instead.")
-#     .Deprecated(new = "pwpp", msg = dmsg, old = "CLD")
-#     UseMethod("CLD")
-# # }
-# # 
-# # #' @rdname CLD.emmGrid
-# #' @order 3
-# #' @note
-# #' The \code{CLD} generic function and methods are deprecated and will disappear 
-# #' in \pkg{emmeans} versions > 1.5.0. You should use 
-# #' \code{multcomp::cld} instead.
-# #' @export
-# CLD.emmGrid = function(object, ...) {
-#     cld.emmGrid(object, ...)
-# }
-# # 
 

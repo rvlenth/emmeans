@@ -226,7 +226,10 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   \code{vcov.} argument, specifying a matrix or a function. If a matrix, it
   must be square and of the same dimension and parameter order of the fixed
   effects. If a function, must return a suitable matrix when it is called
-  with \code{object} as its only argument.
+  with arguments \code{(object, ...)}. Be careful with possible 
+  unintended conflicts with arguments in \code{...}; for example, 
+  \code{sandwich::vcovHAC()} has optional arguments \code{adjust} and \code{weights}
+  that may be intended for \code{emmeans()} but will also be passed to \code{vcov.()}.
 
   \bold{Nested factors.} Having a nesting structure affects marginal
   averaging in \code{emmeans} in that it is done separately for each level
