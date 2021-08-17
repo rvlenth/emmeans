@@ -46,7 +46,6 @@ vignette: >
 ### B {#b}
 
 
-  * [Back story of **emmeans**](basics.html#backstory)
   * [Bayes factor](sophisticated.html#bayesxtra)
   * Bayesian models
       * [in *models: S*](models.html#S)
@@ -95,6 +94,7 @@ vignette: >
   * [`confint()`](confidence-intervals.html#summary)
   * [`consec` contrasts](comparisons.html#contrasts)
   * [Constrained marginal means](xplanations.html#submodels)
+  * [Consultants](basics.html#recs3)
   * [Containment d.f.](models.html#K)
   * [`contrast()`](comparisons.html#contrasts)
       * [`adjust`](comparisons.html#linfcns)
@@ -245,6 +245,7 @@ vignette: >
 
   * *F* test
       * [vs. pairwise comparisons](FAQs.html#anova)
+      * [Role in *post hoc* tests](basics.html#recs1)
   * Factors
       * [Mediating](messy-data.html#weights)
   * [Formatting results](basics.html#formatting)
@@ -341,7 +342,8 @@ vignette: >
   * Logistic regression
       * [Odds ratios](transformations.html#oddsrats)
       * [Surprising results](FAQs.html#transformations)
-  * [**lsmeans**](basics.html#backstory)
+  * LSD
+      * [protected](basics.html#recs2)
 
 
 [Back to top](#topnav)
@@ -366,6 +368,7 @@ vignette: >
   * [`mlm` models](models.html#N)
   * [`mmer` models](models.html#G)
   * Model
+      * [Get it right first](basics.html#recs2)
       * [Importance of](FAQs.html#fastest)
       * [Importance of getting it right](FAQs.html#nowelch)
   * [Model averaging](models.html#I)
@@ -427,6 +430,7 @@ vignette: >
 
 
   * *P* values
+      * [Adjusted](basics.html#recs1)
       * [Interpreting](basics.html#pvalues)
   * [`pairs()`](comparisons.html#pairwise)
   * [Pairwise comparisons](comparisons.html#pairwise)
@@ -449,6 +453,7 @@ vignette: >
   * Pooled *t*
       * [Instead of Welch's *t*](FAQs.html#nowelch)
   * [`postGridHook`](xtending.html#hooks)
+  * [Practices, recommended](basics.html#recs1)
   * Predictions
       * Bayesian models
           * [in *predictions: bayes*](predictions.html#bayes)
@@ -481,6 +486,7 @@ vignette: >
 
   * [`rbind()`](utilities.html#rbind)
   * [Re-labeling](utilities.html#relevel)
+  * [Recommended practices](basics.html#recs1)
   * [`recover_data()`](xtending.html#intro)
       * [Communicating with `emm_basis()`](xtending.html#communic)
       * [`data` and `params` arguments](xtending.html#rdargs)
@@ -539,6 +545,8 @@ vignette: >
   * [`stanreg` objects](models.html#S)
   * [* gazing (star gazing)](interactions.html#factors)
   * [Startup options](utilities.html#startup)
+  * [Statistical consultants](basics.html#recs3)
+  * [Statistics is hard](basics.html#recs3)
   * [`str()`](basics.html#emmobj)
   * `submodel`
       * [`"minimal"` and `"type2"`](messy-data.html#type2submodel)
@@ -615,7 +623,6 @@ vignette: >
 
 
   * [Unadjusted tests](confidence-intervals.html#adjmore)
-  * [University administration](basics.html#backstory)
   * [`update()`](utilities.html#update)
       * [`tran`](transformations.html#after)
   * [Using results](utilities.html#data)

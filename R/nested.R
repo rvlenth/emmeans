@@ -30,26 +30,29 @@
 #' Add a grouping factor
 #' 
 #' This function adds a grouping factor to an existing reference grid or other 
-#' \code{emmGrid} object, such that the levels of an existing factor (call it the
-#' reference factor) are mapped to a smaller number of levels of the new
-#' grouping factor. The reference factor is then nested in the grouping factor. 
+#' \code{emmGrid} object, such that the levels of one or more existing factors (call them the
+#' reference factors) are mapped to a smaller number of levels of the new
+#' grouping factor. The reference factors are then nested in the new grouping factor. 
 #' This facilitates obtaining marginal means of the grouping factor, and 
 #' contrasts thereof.
 #'
 #' @param object An \code{emmGrid} object
 #' @param newname Character name of grouping factor to add (different from any
 #'   existing factor in the grid)
-#' @param refname Character name of the reference factor
-#' @param newlevs Character vector or factor of the same length as that of the levels for 
+#' @param refname Character name(s) of the reference factor(s)
+#' @param newlevs Character vector or factor of the same length as that of the (combined) levels for 
 #'   \code{refname}. The grouping factor \code{newname} will have the unique
-#'   values of \code{newlevs} as its levels.
+#'   values of \code{newlevs} as its levels. The order of levels in \code{newlevs}
+#'   is the same as the order of the level combinations produced by 
+#'   \code{\link{expand.grid}} applied to the levels of \code{refname} -- that is, the
+#'   first factor's levels change the fastest and the last one's vary the slowest.
 #'
 #' @return A revised \code{emmGrid} object having an additional factor named 
-#'   \code{newname}, and a new nesting structure \code{refname \%in\% newname}
+#'   \code{newname}, and a new nesting structure with each \code{refname \%in\% newname}
 #' 
 #' @note By default, the levels of \code{newname} will be ordered
 #'   alphabetically. To dictate a different ordering of levels, supply 
-#'   \code{newlevs} as a \code{factor} having its levels in the required order.
+#'   \code{newlevs} as a \code{factor} having its levels in the desired order.
 #'   
 #' @export
 #'
@@ -64,12 +67,23 @@
 #' emmeans(gfrg, "machine")
 #' 
 #' emmeans(gfrg, "brand")
+#' 
+#' ### More than one reference factor
+#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+#' gwrg <- add_grouping(ref_grid(warp.lm), 
+#'     "prod",  c("tension", "wool"),  c(2, 1, 1,  1, 2, 1))
+#'         # level combinations:         LA MA HA  LB MB HB
+#' 
+#' emmeans(gwrg, ~ wool * tension)   # some NAs due to impossible combinations
+#' 
+#' emmeans(gwrg, "prod")
+#' 
 add_grouping = function(object, newname, refname, newlevs) {
     if(!is.null(object@model.info$nesting[[refname]]))
         stop("'", refname, "' is already nested in another factor; cannot re-group it")
     if(newname %in% object@roles$predictors)
         stop("'", newname, "' is already the name of an existing predictor")
-    rlevs = object@levels[[refname]]
+    rlevs = do.call(paste, do.call(expand.grid, object@levels[refname]))
     if (length(newlevs) != length(rlevs))
         stop("Length of 'newlevs' doesn't match # levels of '", refname, "'")
     newlevs = factor(newlevs)
@@ -81,6 +95,7 @@ add_grouping = function(object, newname, refname, newlevs) {
     object@levels[[newname]] = glevs
     object@roles$predictors = c(object@roles$predictors, newname)
     
+    ref = do.call(paste, object@grid[refname]) # obs levels of rlevs
     wgt = object@grid$.wgt.
     if (is.null(wgt)) wgt = rep(1, nrow(object@grid))
     offset = object@grid$.offset.
@@ -94,7 +109,7 @@ add_grouping = function(object, newname, refname, newlevs) {
         g$.offset. = offset
         grid = rbind(grid, g)
         alevs = rlevs[newlevs == glevs[i]]
-        valid = c(valid, g[[refname]] %in% alevs)
+        valid = c(valid, ref %in% alevs)
     }
     # screen out invalid rows
     grid[!valid, ".wgt."] = 0
@@ -111,9 +126,10 @@ add_grouping = function(object, newname, refname, newlevs) {
     if (is.null(nesting))
         nesting = list()
     for (nm in names(nesting))
-        if (refname %in% nesting[[nm]])
+        if (any(refname %in% nesting[[nm]]))
             nesting[[nm]] = c(nesting[[nm]], newname)
-    nesting[[refname]] = newname
+    for (nm in refname)
+        nesting[[nm]] = newname   ### ??? should it be c(nesting[[nm]], newname)
     object@model.info$nesting = nesting
     
     object

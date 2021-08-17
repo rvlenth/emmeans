@@ -4,7 +4,10 @@ emmeans 1.6.2-999xxxx
 -------------
 
     * Clarification of documentation of `ref_grid(object, vcov. = ...)` (#283)
-    * Fix to `emmtrems()` with covariate formulas (#284)
+    * Fix to `emmtrends()` with covariate formulas (#284)
+    * Improved parts of "Basics" vignette - removed "back story",
+      revised guidance on $P$ values and models
+    * Allow for > 1 reference factor in `add_grouping()` (#286)
 
 
 emmeans 1.6.2

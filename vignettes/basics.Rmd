@@ -28,9 +28,8 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
       f. [Weighting](#weights)
       g. [Multivariate models](#multiv)
   3. [Objects, structures, and methods](#emmobj)
-  3. [P values, "significance", and scientific integrity](#pvalues)
-  4. [Summary](#summary)
-  5. [The back story of **emmeans**](#backstory)
+  4. [P values, "significance", and recommendations](#pvalues)
+  5. [Summary](#summary)
   6. [Further reading](#more)
   
 [Index of all vignette topics](vignette-topics.html)
@@ -142,7 +141,12 @@ The reference grid for this model can be found via the `ref_grid` function:
 ```{r}
 ref_grid(pigs.lm1)
 ```
-Both predictors are factors, and the reference grid consists of the 
+(*Note:* Many of the calculations that follow are meant to illustrate what is inside
+this reference-grid object; You don't need to do such calculations yourself
+in routine analysis; just use the `emmeans()` (or possibly `ref_grid()`) 
+function as we do later.)
+
+In this model, both predictors are factors, and the reference grid consists of the 
 $3\times4 = 12$ combinations of these factor levels. It can be seen explicitly
 by looking at the `grid` slot of this object:
 ```{r}
@@ -513,13 +517,13 @@ annotations.
 
 
 
-## P values, "significance", and scientific integrity {#pvalues}
+## P values, "significance", and recommendations {#pvalues}
 <!-- @index Significance!Assessing; 
     *P* values!Interpreting; ATOM; 
     ASA Statement on *P* values -->
-There is a growing consensus among statisticians and researchers that *P* values
-are widely misunderstood, and that the term "statistical significance" is
-downright misleading. If you have a small *P* value, it *only* means that the
+There is some debate among statisticians and researchers about the appropriateness
+of *P* values, and that the term "statistical significance" can be misleading. 
+If you have a small *P* value, it *only* means that the
 effect being tested is unlikely to be explained by chance variation alone, in
 the context of the current study and the current statistical model underlying
 the test. If you have a large *P* value, it *only* means that the observed
@@ -527,66 +531,55 @@ effect could plausibly be due to chance alone: it is *wrong* to conclude that
 there is no effect.
 
 The American Statistical Association has for some time been advocating very
-cautious use of *P* values (Wasserman *et al.* 2014, 2019). The ASA now
-*advises against ever using the term "statistically significant"* 
-(or a related descriptor) because it is
-too often misinterpreted, and too often used carelessly. 
-
-Wasserman *et al.* (2019),
-and the 43 articles it accompanies in the same issue of *TAS*, recommend a
+cautious use of *P* values (Wasserman *et al.* 2014) because it is
+too often misinterpreted, and too often used carelessly. Wasserman *et al.* (2019) 
+even goes so far as to advise against *ever* using the term "statistically significant".
+The 43 articles it accompanies in the same issue of *TAS*, recommend a
 number of alternatives. I do not agree with all that is said in the main
 article, and there are portions that are too cutesy or wander off-topic.
 Further, it is quite dizzying to try to digest all the accompanying articles,
-and to reconcile their disagreeing viewpoints. But the basic ideas are
-summarized with the help of the acronym **ATOM**, for the four highlighted words
-below:
+and to reconcile their disagreeing viewpoints. 
 
-  * **Acceptance** of uncertainty. If you
-    were to repeat your study, you would get somewhat different results and perhaps
-    different effects will stand out. Likewise, there are other reasonable
-    models that you might have chosen, and those would have yielded different
-    results. If the topic is worth studying, others will try to replicate it,
-    perhaps with different study designs and different ways of operationalizing
-    important concepts -- again, yielding different results.
+For some time I included a summary of Wasserman *et al.*'s
+recommendations and their *ATOM* paradigm (Acceptance of uncertainty, Thoughtfulness, Openness,
+Modesty). But in the meantime, I have handled a large number of user questions, and many of
+those have made it clear to me that there are more important fish to fry in  a vignette 
+section like this. It is just a fact that *P* values are used, and are useful. So I have my own set of recommendations regarding them.
+
+#### A set of comparisons or well-chosen contrasts is more useful and interpretable than an omnibus *F* test {#recs1}
+<!-- @index Recommended practices; Practices, recommended;
+     *P* values!Adjusted; *F* test!Role in *post hoc* tests; -->
+*F* tests are useful for model selection, but don't tell you anything specific about the nature of an effect. If *F* has a small *P* value, it suggests that there is some effect, somewhere. It doesn't
+even necessarily imply that any two means differ statistically.
+
+#### Use *adjusted* *P* values
+When you run a bunch of tests, there is a risk of
+making too many type-I errors, and adjusted *P* values (e.g., the Tukey adjustment 
+for pairwise comparisons) keep you from making too many mistakes. That said,
+it is possible to go overboard; and it's usually reasonable to regard each
+"by" group as a separate family of tests for purposes of adjustment.
     
-  * **Thoughtfulness**. Design your study with clear objectives in mind, and
-    spend time considering the best way to address those objectives in your study
-    design. Pilot the study to ensure that the procedures actually work, how much
-    variability to expect, and ensure that the sample size is adequate. How do
-    your results fit in the big picture, scientifically? Think about the
-    importance of the effects you have observed in your model(s)/data
-    in the context of the science. Think carefully about how well your model 
-    fits the data and if there are other possibilities.
-    
-  * **Openness**. Be transparent in disclosing the methods used, and reporting 
-    comprehensively all the successes and failures, the small and large effects.
-    If hypothesis tests are used, report the actual *P* values found (e.g., "*P* = 0.075")
-    and don't suppress or withhold results just because they are "nonsignificant,"
-    because those results may still be useful to other researchers via meta-analysis.
-    Trust in the expert judgment of other researchers.
-    
-  * **Modesty**. Be clear in examining and expressing the limitations of your work.
-    Understand that other researchers with different subject-area strengths may choose
-    other models that may cast a different light on your work. Encourage others to try to
-    reproduce your work, and be a good scientific colleague to them. Do not
-    exaggerate the importance of your findings. Your study is not final or
-    definitive; recognize that it is just one part of a broader picture.
-    Ironically, the more important the research, the more related research will
-    be undertaken, making that picture bigger (and, potentially,  your part of it smaller).
+#### It is *not* necessary to have a significant *F* test as a prerequisite to doing comparisons or contrasts {#recs2}
+<!-- @index LSD!protected; Model!Get it right first -->
 
-  
+... as long as an appropriate adjustment is used. There do
+exist rules such as the "protected LSD" by which one is given license to do unadjusted
+comparisons provided the $F$ statistic is "significant." However, this is a very weak
+form of protection for which the justification is, basically, "if $F$ is significant,
+you can say absolutely anything you want."
 
-### References
- Wasserman RL, Lazar NA (2016)
-   "The ASA's Statement on *p*-Values: Context, Process, and Purpose,"
-   *The American Statistician*, **70**, 129--133,
-   https://doi.org/10.1080/00031305.2016.1154108
- 
- Wasserman RL, Schirm AL, Lazar, NA (2019)
-   "Moving to a World Beyond 'p < 0.05',"
-   *The American Statistician*, **73**, 1--19,
-   https://doi.org/10.1080/00031305.2019.1583913
+#### Get the model right first
+Everything the **emmeans** package does is an interpretation of the model that you
+fitted to the data. If the model is bad, you will get bad results from `emmeans()` and other
+functions. Every single limitation of your model, be it presuming constant error variance,
+omitting interaction terms, etc., becomes a limitation of the results `emmeans()` produces.
+So do a responsible job of fitting the model. And if you don't know what's meant by that...
 
+#### Consider seeking the advice of a statistical consultant {#recs3}
+<!-- @index Statistical consultants; Consultants; Statistics is hard -->
+Statistics is hard. It is a lot more than just running programs and copying output.
+It is *your* research; is it important that it be done right?
+Many academic statistics and biostatistics departments can refer you to someone who can help.
 
 
 
@@ -607,65 +600,24 @@ below:
   * Reference grids and `emmeans()` results may be plotted via `plot()`
     (for parallel confidence intervals) or `emmip()` (for an interaction-style
     plot).
-  * Be cautious with the terms "significant" and "nonsignificant", and avoid using hard
-    thresholds like *P* < 0.05 as a criterion for scientific meaning or
-    importance. The importance of a result is established by scientific context,
-    not by some *P* value. Remember ATOM.
+  * Be cautious with the terms "significant" and "nonsignificant", and don't ever
+    interpret a "nonsignificant" result as saying that there is no effect.
+  * Follow good practices such as getting the model right first, and using adjusted *P* values
+    for appropriately chosen families of comparisons or contrasts.
     
 [Back to Contents](#contents)
 
+### References
+ Wasserman RL, Lazar NA (2016)
+   "The ASA's Statement on *p*-Values: Context, Process, and Purpose,"
+   *The American Statistician*, **70**, 129--133,
+   https://doi.org/10.1080/00031305.2016.1154108
+ 
+ Wasserman RL, Schirm AL, Lazar, NA (2019)
+   "Moving to a World Beyond 'p < 0.05',"
+   *The American Statistician*, **73**, 1--19,
+   https://doi.org/10.1080/00031305.2019.1583913
 
-## The back story of **emmeans** {#backstory}
-<!-- @index Back story of **emmeans**; University administration; **lsmeans** -->
-The **emmeans** package and its predecessor, **lsmeans**, were developed in part
-because I wanted it for teaching. This is hardly a surprise, as I am an
-academic. I had taught experimental design and analysis a number of times,
-usually requiring SAS to do the kind of *post hoc* comparisons that I like to
-encourage people to do. SAS is fine software (in spite of the opinions of some
-Rusers with attitude), but it is quite different from R, and more and more, I
-had students who were bewildered by it. Some colleagues of mine think it is
-absolutely essential that masters-level students learn to use SAS. I can see
-that point, but my job was to teach design, not SAS -- and there are a lot 
-of topics to cover.
-
-But here's what you wouldn't expect: the real impetus to develop the package
-came from doing some consulting work for the university administration. They
-wanted help in analyzing faculty salaries, especially with regard to gender and
-ethnicity differences. Accordingly, we fitted a pretty complicated regression
-model with effects for gender and ethnicity, as well as such things as college
-department, rank, tenure status, seniority, etc. It is a really messy model.
-I first came to the conclusion that to make sense of the model results
-in terms that the administration could understand, I could obtain predictions 
-from that model and average them together in meaningful ways to summarize the 
-primary factor effects. I figured out how to write R code to estimate those
-averages and test differences among them. Only after all that did I
-realize that really what I was computing was least-squares means (or EMMs);
-so the package was born.
-
-It grew from there, especially in terms of supporting more models, evolving from
-a spaghetti-code design to one incorporating essential building blocks with
-methods for different models. Meanwhile, I retired, so I had time on my hands to
-dink around with it (and to keep learning about new or unfamiliar models
-and data-analysis approaches). 
-
-One aspect of the package that I am especially proud of is the ability to
-express results in accessible ways when there is a transformed response or link
-function (see the ["transformations" vignette](transformations.html)). Again,
-this grew out of my needs for that administrative salary analysis. The model
-that fitted the best used a reciprocal transformation, but I wanted to express
-the predicted salaries in dollars. Moreover, I wanted to compare them using
-ratios. Those requirements led directly to the development of the `regrid()`
-function and the options to metamorphose any `emmGrid` object to the response or
-the log scale.
-
-The lesson is that it is possible that even university service duties can lead
-to technical developments in statistics. One never knows where new ideas and
-inspirations will arise. Speaking of this, I have learned and benefited
-enormously from users' questions about the package, and basically all recent
-improvements to **emmeans** are a direct result of those communications. So
-don't be shy about asking questions or requesting features.
-
-[Back to Contents](#contents)
 
 
 ## Further reading {#more}
