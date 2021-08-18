@@ -8,6 +8,8 @@ emmeans 1.6.2-999xxxx
     * Improved parts of "Basics" vignette - removed "back story",
       revised guidance on $P$ values and models
     * Allow for > 1 reference factor in `add_grouping()` (#286)
+    * Repairs to `contrast()` to avoid all-`nonEst` results in irregular
+      nested structures
 
 
 emmeans 1.6.2

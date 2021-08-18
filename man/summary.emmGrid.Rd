@@ -307,6 +307,10 @@ The \code{as.data.frame} method is intended primarily to allow for
   one-step adjustment, but it can be very slow. One may use
   \code{\link{as.glht}} with methods in the \pkg{multcomp} package to obtain
   non-conservative multi-step adjustments to tests.
+  
+  \emph{Warning:} Non-estimable cases are \emph{included} in the family to which adjustments
+  are applied. You may wish to subset the object using the \code{[]} operator
+  to work around this problem.
 }
 
 \section{Tests of significance, nonsuperiority, noninferiority, or equivalence}{
@@ -358,6 +362,9 @@ The \code{as.data.frame} method is intended primarily to allow for
   \eqn{||Nx||^2 / ||x||^2} exceeds \code{tol}, which by default is
   \code{1e-8}. You may change it via \code{\link{emm_options}} by setting
   \code{estble.tol} to the desired value.
+  
+  See the warning above that non-estimable cases are still included when
+  determining the family size for \emph{P}-value adjustments.
 }
 
 \section{Warning about potential misuse of P values}{

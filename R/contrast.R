@@ -328,8 +328,16 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                  " does not conform with ", nrow(tcmat), " contrasts", call. = FALSE)
     }
     
+    # do some bookkeeping whereby we get NAs only when NA rows get nonzero weight
+    NAflag = linfct[, 1] * 0
+    NAflag[is.na(linfct[, 1])] = 1
+    linfct[is.na(linfct)] = 0 # now we don't have any NAs but we know where to put them back later
+    .NArows = function(mat, flag) # utility for flagging bad rows (any nonzero coef applied to an NA)
+        apply(mat, 1, function(x, f) any(x * f != 0), flag)
+    
     if (is.null(by)) {
         linfct = tcmat %*% linfct
+        linfct[.NArows(tcmat, NAflag), ] = NA # put back the NAs where they belong
         grid = data.frame(.contrast.=names(cmat))
         if (hasName(object@grid, ".offset."))
             grid[[".offset."]] = t(cmat) %*% object@grid[[".offset."]]
@@ -341,6 +349,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     else {
         tcmat = kronecker(.diag(rep(1,length(by.rows))), tcmat)
         linfct = tcmat %*% linfct[unlist(by.rows), , drop = FALSE]
+        linfct[.NArows(tcmat, NAflag[unlist(by.rows)]), ] = NA
         tmp = expand.grid(con = names(cmat), by = seq_len(length(by.rows)), stringsAsFactors = FALSE)###unique(by.id))
         # check if levs have different orderings in subsequent by groups
         for (i in 1 + seq_along(by.rows[-1])) { 
