@@ -1,6 +1,6 @@
 ## NEWS for the emmeans package
 
-emmeans 1.6.2-999xxxx
+emmeans 1.6.3
 -------------
 
     * Clarification of documentation of `ref_grid(object, vcov. = ...)` (#283)
