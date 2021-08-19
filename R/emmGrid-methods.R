@@ -960,9 +960,14 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
     
     est = .est.se.df(object, do.se = TRUE) ###FALSE)
     estble = !(is.na(est[[1]]))
-    object@V = vcov(object)[estble, estble, drop=FALSE]
+    object@V = vcov(object)[estble, estble, drop = FALSE]
     object@bhat = est[[1]]
     object@linfct = diag(1, length(estble))
+    if (!is.null(disp <- object@misc$display)) {  # fix up for the bookkeeping in nested models
+        object@V = object@V[disp, disp, drop = FALSE]
+        object@linfct = matrix(0, nrow = length(disp), ncol = length(estble))
+        object@linfct[disp, ] = diag(1, length(estble))
+    }
     if(all(estble))
         object@nbasis = estimability::all.estble
     else

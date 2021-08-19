@@ -483,6 +483,8 @@ emmeans = function(object, specs, by = NULL,
         object@model.info$nesting = NULL
         result = .nested_emm(object, specs, by = by, fac.reduce = fac.reduce, 
                        options = options, weights = weights, offset = offset, nesting = nesting)
+        if(!is.null(type <- list(...)$type))
+            result = update(result, type = type)
     }
     
 
@@ -490,7 +492,7 @@ emmeans = function(object, specs, by = NULL,
         # NULL-out a bunch of arguments to not pass. 
         dontpass = c("data", "avgd.over", "by.vars", "df", "initMesg", "estName", "estType",
                      "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars", 
-                     "tran", "tran.mult", "tran.offset", "tran2", "type", "is.new.rg")
+                     "tran", "tran.mult", "tran.offset", "tran2", "is.new.rg")
         args = .zap.args(object = result, method = contr, by = by, ..., omit = dontpass)
         ctrs = do.call(contrast, args)
         result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)

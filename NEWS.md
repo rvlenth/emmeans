@@ -1,5 +1,12 @@
 ## NEWS for the emmeans package
 
+emmeans 1.6.3-9900xxx
+-------------
+
+    * Fix to bug in `regrid()` with nested structures (#287)
+    * Allow `type` to be passed in `emmeans()` when `object` is already an `emmGrid`
+      (incidentally noticed in #287)
+
 emmeans 1.6.3
 -------------
 
