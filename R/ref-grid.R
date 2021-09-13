@@ -564,8 +564,18 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss et al.
         attr(object, "data") = data
     
+    ###!! Prevent a warning like in https://stackoverflow.com/questions/68969384/emmeans-warning-in-model-frame-defaultformula-data-data-variable-gr/68990172#68990172
+    xl = xlev
+    modnm = rownames(attr(trms, "factors"))
+    chk = sapply(modnm, function(mn) mn %in% names(xl))
+    for(i in which(!chk)) { # replace names in xl - e.g., as.factor(trt) where trt already a factor
+        fn = all.vars(reformulate(modnm[i]))
+        names(xl)[names(xl) == fn] = modnm[i]
+    }
+    ###!! If we remove this code, also need to change xl back to xlev in 'basis =' call below
+    
     # we've added args `misc` and `options` so emm_basis methods can access and use these if they want
-    basis = emm_basis(object, trms, xlev, grid, misc = attr(data, "misc"), options = options, ...)
+    basis = emm_basis(object, trms, xl, grid, misc = attr(data, "misc"), options = options, ...)
     environment(basis$dffun) = baseenv()   # releases unnecessary storage
     if(length(basis$bhat) != ncol(basis$X))
         stop("Something went wrong:\n",

@@ -37,6 +37,13 @@ contrasts thereof.
 By default, the levels of \code{newname} will be ordered
   alphabetically. To dictate a different ordering of levels, supply 
   \code{newlevs} as a \code{factor} having its levels in the desired order.
+
+When \code{refname} specifies more than one factor, this can
+  fundamentally (and permanently) change what is meant by the levels of those
+  individual factors. For instance, in the \code{gwrg} example below, there
+  are two levels of \code{wool} nested in each \code{prod}; and that implies
+  that we now regard these as four different kinds of wool. Similarly, there
+  are five different tensions (L, M, H in prod 1, and L, M in prod 2).
 }
 \examples{
 fiber.lm <- lm(strength ~ diameter + machine, data = fiber)

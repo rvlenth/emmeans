@@ -6,6 +6,10 @@ emmeans 1.6.3-9900xxx
     * Fix to bug in `regrid()` with nested structures (#287)
     * Allow `type` to be passed in `emmeans()` when `object` is already an `emmGrid`
       (incidentally noticed in #287)
+    * Code to prevent a warning when an existing factor is coerced to a factor
+      in the model formula -- see [stackoverflow question](https://stackoverflow.com/questions/68969384/emmeans-warning-in-model-frame-defaultformula-data-data-variable-gr/68990172#68990172)
+    * Add documentation note for `add_grouping` with multiple reference factors (#291)
+      
 
 emmeans 1.6.3
 -------------
