@@ -7,7 +7,8 @@
 ref_grid(object, at, cov.reduce = mean,
   cov.keep = get_emm_option("cov.keep"), mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type, transform, nesting,
-  offset, sigma, ...)
+  offset, sigma, nuisance = character(0), non.nuisance, wt.nuis = "equal",
+  rg.limit = get_emm_option("rg.limit"), ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -74,6 +75,21 @@ relative to the offset that had been specified in the model.}
 \item{sigma}{Numeric value to use for subsequent predictions or
 back-transformation bias adjustments. If not specified, we use
 \code{sigma(object)}, if available, and \code{NULL} otherwise.}
+
+\item{nuisance, non.nuisance, wt.nuis}{If \code{nuisance} is a vector of predictor names,
+those predictors are omitted from the reference grid. Instead, the result 
+will be as if we had averaged over the levels of those factors, with either 
+equal or proportional weights as specified in \code{wt.nuis} (see the 
+\code{weights} argument in \code{\link{emmeans}}). The factors in 
+\code{nuisance} must not interact with other factors, not even other
+nuisance factors. Specifying nuisance factors can save considerable
+storage and computation time, and help avoid exceeding the maximum
+reference-grid size (\code{get_emm_option("rg.limit")}).}
+
+\item{rg.limit}{Integer value for the maximum allowed size of the reference grid.
+The reference grid comprises all factor combinations; so for models with a 
+large number of factors, this can be huge, and can cause problems with
+memory consumption and computing time.}
 
 \item{...}{Optional arguments passed to \code{\link{summary.emmGrid}},
 \code{\link{emm_basis}}, and

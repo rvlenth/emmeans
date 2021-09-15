@@ -7,8 +7,20 @@ emmeans 1.6.3-9900xxx
     * Allow `type` to be passed in `emmeans()` when `object` is already an `emmGrid`
       (incidentally noticed in #287)
     * Code to prevent a warning when an existing factor is coerced to a factor
-      in the model formula -- see [stackoverflow question](https://stackoverflow.com/questions/68969384/emmeans-warning-in-model-frame-defaultformula-data-data-variable-gr/68990172#68990172)
+      in the model formula -- see [SO question](https://stackoverflow.com/questions/68969384)
     * Add documentation note for `add_grouping` with multiple reference factors (#291)
+    * New `rg.limit` option (and argument for `ref_grid()`) to limit the size of the
+      reference grid (#292).
+      **This change could affect existing code that used to work** --
+      but only in fairly extreme situations. Some users report extreme performance issues
+      that can be traced to the size of the reference grid being in the billions, causing
+      memory to be paged, etc. So providing this limit really is necessary. 
+      The default is 100,000 rows. I hope that most exsiting users don't bump up against that
+      too often, but let me know if it is a problem.
+    * New `nuisance` option in `ref_grid()`, by which we can specify names of factors to
+      exclude from the reference grid (accommodating them by averaging) (#292). These must be
+      factors that don't interact with anything, even other nuisance factors. This provides
+      a remedy for excessive grid sizes.
       
 
 emmeans 1.6.3
@@ -102,7 +114,7 @@ emmeans 1.5.5
     facets are labeled (#261)
   * Efficiency improvements in `joint_tests()` (#265)
   * Bug fixes in `joint_tests()` and interaction contrasts for nested models (#266)
-  * Improvement to `multinom` support suggested by this [SO question](https://stackoverflow.com/questions/66675697/wrapping-nnetmultinom-ggeffectsggemmeans-in-a-custom-function-fails-th/66681184#66681184)
+  * Improvement to `multinom` support suggested by this [SO question](https://stackoverflow.com/questions/66675697)
   
     
 
@@ -139,7 +151,7 @@ emmeans 1.5.3
     This makes it possible for `pwpp()` to work (#239)
   * Fixed a coding error in `plot()` that occurs if we use `type = "response"
     but there is in fact no transformation 
-    ([reported on StackOverflow](https://stackoverflow.com/questions/64962094/in-r-plot-emmeans-of-glmmtmb-linear-model-error-in-linkinvsummthe-emmean/64995896#64995896))
+    ([reported on StackOverflow](https://stackoverflow.com/questions/64962094))
   * Added `"log10"` and `"log2"` as legal transformations in `regrid()`
   * Revised vignette example for MCMC models, added example with **bayestestR**
   * Expanded support for ordinal models to all link functions available in
@@ -166,7 +178,7 @@ emmeans 1.5.2
 
   * Change to `plot.emmGrid(... comparisons = TRUE)` where we determine arrow 
     bounds and unnecessary-arrow deletions *separately* in each `by` group. 
-    See also [Stack Overflow posting](https://stackoverflow.com/questions/63713439/interpreting-results-from-emmeans-comparison/63734042#63734042)
+    See also [Stack Overflow posting](https://stackoverflow.com/questions/63713439)
   * `emmeans()` with contrasts specified ignores `adjust` and passes to 
     `contrast()` instead. Associated documentation improved (I hope)
   * Bug-fix for missing cases in `plot(..., comparisons = TRUE)` (#228)
@@ -191,7 +203,7 @@ emmeans 1.5.1
     so that an external package's methods are always found and given priority
     whether or not they are registered (#220)
   * Patches to `gamlss` support. Smoothers are not supported but other aspects
-   are more reliable. See [CV posting](https://stats.stackexchange.com/questions/484886/post-hoc-analysis-for-gamlss-model-in-r)
+   are more reliable. See [CV posting](https://stats.stackexchange.com/questions/484886)
   * Improvement to auto-detection of transformations (#223)
   * Added `aes` argument in `pwpp()` for more control over rendering (#178)
   * Fix to a situation in `plot.emmGrid()` where ordering of factor levels

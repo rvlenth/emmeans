@@ -102,6 +102,19 @@
 #' @param sigma Numeric value to use for subsequent predictions or
 #'   back-transformation bias adjustments. If not specified, we use
 #'   \code{sigma(object)}, if available, and \code{NULL} otherwise.
+#' @param nuisance,non.nuisance,wt.nuis If \code{nuisance} is a vector of predictor names,
+#'   those predictors are omitted from the reference grid. Instead, the result 
+#'   will be as if we had averaged over the levels of those factors, with either 
+#'   equal or proportional weights as specified in \code{wt.nuis} (see the 
+#'   \code{weights} argument in \code{\link{emmeans}}). The factors in 
+#'   \code{nuisance} must not interact with other factors, not even other
+#'   nuisance factors. Specifying nuisance factors can save considerable
+#'   storage and computation time, and help avoid exceeding the maximum
+#'   reference-grid size (\code{get_emm_option("rg.limit")}).
+#' @param rg.limit Integer value for the maximum allowed size of the reference grid.
+#'   The reference grid comprises all factor combinations; so for models with a 
+#'   large number of factors, this can be huge, and can cause problems with
+#'   memory consumption and computing time.
 #' @param ... Optional arguments passed to \code{\link{summary.emmGrid}},
 #'   \code{\link{emm_basis}}, and
 #'   \code{\link{recover_data}}, such as \code{params}, \code{vcov.} (see
@@ -370,7 +383,9 @@
 ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("cov.keep"),
                      mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
-                     transform, nesting, offset, sigma, ...) 
+                     transform, nesting, offset, sigma, 
+                     nuisance = character(0), non.nuisance, wt.nuis = "equal", 
+                     rg.limit = get_emm_option("rg.limit"), ...) 
 {
     ### transform = match.arg(transform)
     if (!missing(df)) {
@@ -518,8 +533,18 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     }
     
 
+    if (!missing(non.nuisance))
+        nuisance = setdiff(names(ref.levels), non.nuisance)
+
     # Now create the reference grid
-    grid = do.call(expand.grid, ref.levels)
+    if(no.nuis <- (length(nuisance) == 0)) {
+        .check.grid(ref.levels, rg.limit)
+        grid = do.call(expand.grid, ref.levels)
+    }
+    else {
+        nuis.info = .setup.nuis(nuisance, ref.levels, trms, rg.limit)
+        grid = nuis.info$grid
+    }
     
     # undocumented hook to expand grid by increments of 'var' (needed by emtrends)
     if (!is.null(delts <- options$delts)) {
@@ -581,6 +606,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         stop("Something went wrong:\n",
              " Non-conformable elements in reference grid.",
              call. = TRUE)
+    
+    if(!no.nuis) {
+        basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data)
+        non.nuis = setdiff(names(ref.levels), nuis.info$nuis)
+        nuisance = ref.levels[nuis.info$nuis] # now nuisance has the levels info
+        ref.levels = ref.levels[non.nuis]
+        grid = grid[seq_len(nrow(basis$X)), non.nuis, drop = FALSE]
+    }
     
     misc = basis$misc
     
@@ -723,6 +756,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         data[["(weights)"]] = 1
     cov.keep = intersect(unique(cov.keep), names(ref.levels))
     nms = union(union(union(names(xlev), names(chrlev)), coerced$factors), cov.keep)
+    nms = intersect(nms, names(grid))
     #### Old code...
     # if (!covnest)
     #     nms = union(union(names(xlev), names(chrlev)), coerced$factors) # only factors, no covariates or mult.resp
@@ -760,14 +794,15 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     misc$level = .95
     misc$adjust = "none"
     misc$famSize = nrow(grid)
-    misc$avgd.over = character(0)
+    if(is.null(misc$avgd.over))
+       misc$avgd.over = character(0)
     misc$sigma = sigma
 
     post.beta = basis$post.beta
     if (is.null(post.beta))
         post.beta = matrix(NA)
     
-    predictors = attr(data, "predictors")
+    predictors = intersect(attr(data, "predictors"), names(grid))
     
     simp.tbl = environment(trms)$.simplify.names.
     if (! is.null(simp.tbl)) {
@@ -787,7 +822,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
          model.info = model.info,
          roles = list(predictors = predictors, 
                       responses = attr(data, "responses"), 
-                      multresp = multresp),
+                      multresp = multresp,
+                      nuisance = nuisance),
          grid = grid, levels = ref.levels, matlevs = matlevs,
          linfct = basis$X, bhat = basis$bhat, nbasis = basis$nbasis, V = basis$V,
          dffun = basis$dffun, dfargs = basis$dfargs, 
@@ -883,5 +919,86 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     list(factors = cfac, covariates = ccov, orig = orig)
 }
 
+# Utility to error-out when potential reference grid size is too big
+.check.grid = function(levs, limit = get_emm_option("rg.limit")) {
+    size = prod(sapply(levs, length))
+    if (size > limit)
+        stop("The size of your requested reference grid would be ", size, ", which exceeds\n",
+             "the limit of ", limit, ". your options are:\n",
+             "  1. Specify some (or more) nuisance factors using the 'nuisance' argument\n",
+             "     (see ?ref_grid). These must be factors that do not interact with others.\n",
+             "  2. Add the argument 'rg.limit = <new limit>' to the call. Be careful,\n",
+             "     because this could cause excessive memory use and performance issues.\n",
+             "     Or, change the default via 'emm_options(rg.limit = <new limit>)'.\n",
+             call. = NULL)
+}
 
+# Utility to set up the grid for nuisance factors. This consists of two or more
+# data.frames rbinded together:
+#   * the expanded grid for all factors *not* in nuis, with the nuis factors set 
+#     at their first levels
+#   * for each factor in f nuis, a set of rows for (levs$f), with the other 
+#     factors at their first levels (this is arbitrary)
+# In addition, we return a character vector 'row.assign' corresponding to the rows 
+# in the grid, telling which is what: ".main.grid." for the first part of the grid,
+# otherwise factor names from nuis.
+# We also return 'nuis' itself - which may be reduced since illegal 
+# entries are silently removed
+.setup.nuis = function(nuis, levs, trms, rg.limit) {
+    firsts =  args = lapply(levs, function(x) x[1])
+    nuis = intersect(nuis, names(levs))
+    # sanity checks on terms, and term indexes
+    fsum = rep(99, length(nuis))
+    tbl = attr(trms, "factors")
+    rn = row.names(tbl) = sapply(row.names(tbl), function(nm) all.vars(.reformulate(nm))[1])
+    for (i in seq_along(nuis)) {
+        f = nuis[i]
+        if(f %in% rn)
+            fsum[i] = sum(tbl[f, ])
+    }
+    nuis = nuis[fsum == 1]   # silently remove any unfound or interacting factors
 
+    # top part...
+    non.nuis = setdiff(names(levs), nuis)
+    for (n in non.nuis)
+        args[[n]] = levs[[n]]
+    .check.grid(args, rg.limit)
+    grid = do.call(expand.grid, args)
+    ra = rep(".main.grid.", nrow(grid))
+    # bottom parts
+    for (f in nuis) {
+        args = firsts
+        args[[f]] = levs[[f]]
+        grid = rbind(grid, do.call(expand.grid, args))
+        ra = c(ra, rep(f, length(levs[[f]])))
+    }
+    list(grid = grid, row.assign = ra, nuis = nuis)
+}
+
+# Do the required post-processing for nuisance factors...
+# After we get the model matrix for this grid, we'll average each set of rows in the
+# bottom part, and substitute those averages in the required columns in the top part 
+# of the model matrix.
+.basis.nuis = function(basis, info, wt, levs, data) {
+    ra = info$row.assign
+    X = basis$X
+    n = sum(ra == ".main.grid.")
+    nuis = info$nuis
+    for (f in nuis) {
+        wts = rep(1, length(levs[[f]]))
+        if(wt != "equal") { # proportional
+            x = data[[f]]
+            wts = sapply(levs[[f]], function(lev) sum(x == lev))
+        }
+        subX = X[ra == f, , drop = FALSE]
+        cols = which(apply(subX, 2, function(x) diff(range(x)) > 0))
+        subX = sweep(subX[, cols, drop = FALSE], 1, wts / sum(wts), "*")
+        avg = apply(subX, 2, sum)
+        avg = matrix(rep(avg, each = n), nrow = n) # now several copies
+        X[1:n, cols] = avg
+    }
+    basis$misc$nuis = nuis
+    basis$misc$avgd.over = paste(length(nuis), "nuisance factors")
+    basis$X = X[1:n, , drop = FALSE]
+    basis
+}

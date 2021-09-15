@@ -76,6 +76,12 @@ str.emmGrid <- function(object, ...) {
             showlevs(levs[[nm]])
         cat("\n")
     }
+    if (length(nuis <- object@roles$nuisance) > 0) {
+        cat("    Nuisance factors that have been collapsed by averaging:\n\t")
+        tmp = paste0(names(nuis), "(", sapply(nuis, length), ")")
+        cat(paste(tmp, collapse = ", "))
+        cat("\n")
+    }
     if(!is.null(object@model.info$nesting)) {
         cat("Nesting structure:  ")
         cat(.fmt.nest(object@model.info$nesting))
@@ -650,6 +656,7 @@ emm_defaults = list (
     back.bias.adj = FALSE,    # Try to bias-adjust back-transformations?
     opt.digits = TRUE,        # optimize displayed digits?
     enable.submodel = TRUE,   # enable saving extra info for submodel
+    rg.limit = 100000,        # limit on number of rows in a reference grid
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling K-R
