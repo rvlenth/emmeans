@@ -608,11 +608,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
              call. = TRUE)
     
     if(!no.nuis) {
-        basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data)
-        non.nuis = setdiff(names(ref.levels), nuis.info$nuis)
+        basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data, grid, ref.levels)
+        grid = basis$grid
         nuisance = ref.levels[nuis.info$nuis] # now nuisance has the levels info
-        ref.levels = ref.levels[non.nuis]
-        grid = grid[seq_len(nrow(basis$X)), non.nuis, drop = FALSE]
+        ref.levels = basis$ref.levels
     }
     
     misc = basis$misc
@@ -979,26 +978,43 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 # After we get the model matrix for this grid, we'll average each set of rows in the
 # bottom part, and substitute those averages in the required columns in the top part 
 # of the model matrix.
-.basis.nuis = function(basis, info, wt, levs, data) {
+.basis.nuis = function(basis, info, wt, levs, data, grid, ref.levels) {
     ra = info$row.assign
+    r. = rep(".", length(ra))  # fillers
     X = basis$X
     n = sum(ra == ".main.grid.")
+    k = nrow(X) / length(ra)   # multivariate dimension
     nuis = info$nuis
-    for (f in nuis) {
-        wts = rep(1, length(levs[[f]]))
-        if(wt != "equal") { # proportional
+    wts = lapply(nuis, function(f) {
+        if (wt == "equal")
+            w = rep(1, length(levs[[f]]))
+        else {
             x = data[[f]]
-            wts = sapply(levs[[f]], function(lev) sum(x == lev))
+            w = sapply(levs[[f]], function(lev) sum(x == lev))
         }
-        subX = X[ra == f, , drop = FALSE]
-        cols = which(apply(subX, 2, function(x) diff(range(x)) > 0))
-        subX = sweep(subX[, cols, drop = FALSE], 1, wts / sum(wts), "*")
-        avg = apply(subX, 2, sum)
-        avg = matrix(rep(avg, each = n), nrow = n) # now several copies
-        X[1:n, cols] = avg
+        w / sum(w)
+    })
+    names(wts) = nuis
+    
+    # In a multivariate case, we have to repeat the same operations for each block of X rows
+    for (m in 1:k) {
+        RA = c(rep(r., m - 1), ra, rep(r., k - m))
+        for (f in nuis) {
+            subX = X[RA == f, , drop = FALSE]
+            cols = which(apply(subX, 2, function(x) diff(range(x)) > 0))
+            subX = sweep(subX[, cols, drop = FALSE], 1, wts[[f]], "*")
+            avg = apply(subX, 2, sum)
+            avg = matrix(rep(avg, each = n), nrow = n) # now several copies
+            X[RA == ".main.grid.", cols] = avg
+        }
     }
     basis$misc$nuis = nuis
     basis$misc$avgd.over = paste(length(nuis), "nuisance factors")
-    basis$X = X[1:n, , drop = FALSE]
+    RA = rep(ra, k)
+    basis$X = X[RA == ".main.grid.", , drop = FALSE]
+    non.nuis = setdiff(names(ref.levels), info$nuis)
+    basis$ref.levels = ref.levels[non.nuis]
+    basis$grid = grid[1:n, non.nuis, drop = FALSE]
     basis
 }
+
