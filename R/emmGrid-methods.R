@@ -77,7 +77,7 @@ str.emmGrid <- function(object, ...) {
         cat("\n")
     }
     if (length(nuis <- object@roles$nuisance) > 0) {
-        cat("    Nuisance factors that have been collapsed by averaging:\n\t")
+        cat("Nuisance factors that have been collapsed by averaging:\n    ")
         tmp = paste0(names(nuis), "(", sapply(nuis, length), ")")
         cat(paste(tmp, collapse = ", "))
         cat("\n")
@@ -503,6 +503,14 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   main effects but included them in interactions. This does not change the
 #'   model fit, but it produces a different parameterization that is picked
 #'   up when the reference grid is constructed. Defaults to \code{TRUE}.}
+#' \item{\code{rg.limit}}{An integer value setting a limit on the number of rows
+#'   in a newly constructed reference grid. This is checked based on the number of
+#'   levels of the factors involved; but it excludes the levels of any multivariate
+#'   responses because those are not yet known. The reference grid consists of all
+#'   possible combinations of the predictors, and this can become huge if there are
+#'   several factors. An error is thrown if this limit is exceeded. One can use the 
+#'   \code{nuisance} argument of \code{\link{ref_grid}} to collapse on nuisance
+#'   factors, thus making the grid smaller. Defaults to 10,000.}
 #' \item{\code{simplify.names}}{A logical value controlling whether to
 #'   simplify (when possible) names in the model formula that refer to datasets --
 #'   for example, should we simplify a predictor name like \dQuote{\code{data$trt}}
@@ -656,7 +664,7 @@ emm_defaults = list (
     back.bias.adj = FALSE,    # Try to bias-adjust back-transformations?
     opt.digits = TRUE,        # optimize displayed digits?
     enable.submodel = TRUE,   # enable saving extra info for submodel
-    rg.limit = 100000,        # limit on number of rows in a reference grid
+    rg.limit = 10000,         # limit on number of rows in a reference grid
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling K-R

@@ -20,6 +20,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   1. [Issues with observational data](#issues) 
   2. [Mediating covariates](#mediators) 
   3. [Mediating factors and weights](#weights)
+  3. [Nuisance factors](#nuisance)
   4. [Sub-models](#submodels)
   5. [Nested fixed effects](#nesting)
      a. [Avoiding mis-identified nesting](#nest-trap)
@@ -220,6 +221,106 @@ averaged over; thus, the results for `"prop"` and `"outer"` weights will be
 identical in that case.
 
 [Back to Contents](#contents)
+
+
+## Nuisance factors {#nuisance}
+<!-- @index Nuisance factors; `nuisance`; `non.nuisance`; `wt.nuis`;
+     Memory usage; Large models; Models!Large -->
+Consider a situation where we have a model with 15 factors, each at 5 levels.
+Regardless of how simple or complex the model is, the reference grid consists of
+all combinations of these factors -- and there are $%^15$ of these, or over 30
+billion. If there are, say, 100 regression coefficients in the model, then just
+the `linfct` slot in the reference grid requires $100\times5^15\times8$ bytes of
+storage, or almost 23,000 gigabytes. Suppose in addition the model has a
+multivariate response with 5 levels. That multiplies *both* the rows and columns
+in `linfct`, increasing the storage requirements by a factor of 25. Either way,
+your computer can't store that much -- so this definitely qualifies as a messy
+situation!
+
+The `ref_grid()` function now provides some relief, in the way of specifying
+some of the factors as "nuisance" factors. The reference grid is then
+constructed with those factors already averaged-out. So, for example with the
+same scenario, if only three of those 15 factors are of primary interest, and we
+specify the other 12 as nuisance factors to be averaged, that leaves us with
+only $3^5=125$ rows in the reference grid, and hence
+$125\times100\times8=10,000$ bytes of storage required for `linfct`. If there is
+a 5-level multivariate response, we'll have 625 rows in the reference grid and
+$25\times1000=250,000$ bytes in `linfct`. Suddenly a horribly unmanageable
+situation becomes quite manageable!
+
+But of course, there is a restriction: nuisance factors must not interact with
+any other factors -- not even other nuisance factors. And a multivariate
+response (or an implied multivariate response, e.g., in an ordinal model) can
+never be a nuisance factor. Under that condition, the average effects of a
+nuisance factor are the same regardless of the levels of other factors, making
+it possible to pre-average them by considering just one case. 
+
+We specify nuisance factors by listing their names in a `nuisance` argument to 
+`ref_grid()` (in `emmeans()`, this argument is passed to `ref_grid)`). Often,
+it is much more convenient to give the factors that are *not* nuisance factors, 
+via a `non.nuisance` argument. If you do specify
+a nuisance factor that does interact with others, or doesn't exist, it is 
+quietly excluded from the nuisance list. 
+
+###### {#nuis.example}
+<!-- @index Examples!`mtcars` -->
+Time for an example. Consider the `mtcars` dataset standard in R, and the model
+```{r}
+mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs + 
+                  factor(gear) + factor(carb), data = mtcars)
+```
+And let's construct two different reference grids:
+```{r}
+rg.usual <- ref_grid(mtcars.lm)
+rg.usual
+nrow(rg.usual@linfct)
+rg.nuis = ref_grid(mtcars.lm, non.nuisance = "cyl")
+rg.nuis
+nrow(rg.nuis@linfct)
+```
+Notice that we left `am` out of `non.nuisance` and hence included it in `nuisance`.
+However, it interacts with `cyl`, so it was not allowed as a nuisance factor.
+But `rg.nuis` requires 1/36 as much storage.
+There's really nothing else to show, other than to demonstrate that we get the same EMMs
+either way, with slightly different annotations:
+```{r}
+emmeans(rg.usual, ~ cyl * am)
+emmeans(rg.nuis, ~ cyl * am)
+```
+
+By default, the pre-averaging is done with equal weights. If we specify
+`wt.nuis` as anything other than `"equal"`, they are averaged proportionally. As
+described above, this really amounts to `"outer"` weights since they are
+averaged separately. Let's try it to see how the estimates differ:
+```{r}
+predict(emmeans(mtcars.lm, ~ cyl * am, weights = "outer"))
+predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"), 
+                wt.nuis = "prop"))
+```
+These are the same as each other, but different from the equally-weighted 
+EMMs we obtained before.
+
+
+### Limiting the size of the reference grid {#rg.limit}
+<!-- @index  `rg.limit` option; Memory usage!Limiting -->
+
+We have just seen how easily the size of a reference grid can get out of hand.
+The `rg.limit` option (set via `emm_options()` or as an optional argument in `ref_grid()` or `emmeans()`) serves to guard against excessive memory demands. It specifies the number
+of allowed rows in the reference grid. But because of the way `ref_grid()` works, this 
+check is made *before* any multivariate-response levels are taken into account.
+If the limit is exceeded, an error is thrown:
+```{r, error = TRUE}
+ref_grid(mtcars.lm, rg.limit = 200)
+```
+The default `rg.limit` is 10,000. With this limit, and if we have 1,000 columns 
+in the model matrix, then the size of `linfct` is limited to about 80MB. 
+If in addition, there is a 5-level multivariate response, the limit is 2GB --
+darn big, but perhaps manageable. Even so, I suspect that the 10000-row default may be
+to loose to guard against some users getting into a tight situation.
+
+
+[Back to Contents](#contents)
+
 
 
 ## Sub-models {#submodels}

@@ -89,6 +89,14 @@ object.}
   main effects but included them in interactions. This does not change the
   model fit, but it produces a different parameterization that is picked
   up when the reference grid is constructed. Defaults to \code{TRUE}.}
+\item{\code{rg.limit}}{An integer value setting a limit on the number of rows
+  in a newly constructed reference grid. This is checked based on the number of
+  levels of the factors involved; but it excludes the levels of any multivariate
+  responses because those are not yet known. The reference grid consists of all
+  possible combinations of the predictors, and this can become huge if there are
+  several factors. An error is thrown if this limit is exceeded. One can use the 
+  \code{nuisance} argument of \code{\link{ref_grid}} to collapse on nuisance
+  factors, thus making the grid smaller. Defaults to 10,000.}
 \item{\code{simplify.names}}{A logical value controlling whether to
   simplify (when possible) names in the model formula that refer to datasets --
   for example, should we simplify a predictor name like \dQuote{\code{data$trt}}

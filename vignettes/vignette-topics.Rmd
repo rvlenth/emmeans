@@ -204,7 +204,9 @@ vignette: >
       * [Logistic regression](transformations.html#links)
       * [`lqs` objects](xtending.html#lqs)
       * [`MOats`](basics.html#multiv)
-      * [`mtcars`](basics.html#altering)
+      * `mtcars`
+          * [in *basics: altering*](basics.html#altering)
+          * [in *messy-data: nuis.example*](messy-data.html#nuis.example)
       * [Multivariate](basics.html#multiv)
       * [Nested fixed effects](messy-data.html#cows)
       * `neuralgia`
@@ -329,6 +331,7 @@ vignette: >
 
   * Labels
       * [Changing](utilities.html#relevel)
+  * [Large models](messy-data.html#nuisance)
   * [Least-squares means](FAQs.html#what)
   * Levels
       * [Changing](utilities.html#relevel)
@@ -363,6 +366,8 @@ vignette: >
           * [in *basics: eqwts*](basics.html#eqwts)
           * [in *basics: weights*](basics.html#weights)
   * [Mediating covariates](messy-data.html#mediators)
+  * [Memory usage](messy-data.html#nuisance)
+      * [Limiting](messy-data.html#rg.limit)
   * [`mira` models](models.html#I)
   * [`misc` attribute and argument](xtending.html#communic)
   * [`mlm` models](models.html#N)
@@ -374,6 +379,7 @@ vignette: >
   * [Model averaging](models.html#I)
   * Models
       * [Constrained](messy-data.html#submodels)
+      * [Large](messy-data.html#nuisance)
       * [Quick reference](models.html#quickref)
       * [Unsupported](FAQs.html#qdrg)
   * [Multi-factor studies](FAQs.html#interactions)
@@ -402,7 +408,10 @@ vignette: >
   * Nesting factors
       * [Creating](utilities.html#groups)
   * [Non-estimability](messy-data.html#nonestex)
+  * [`non.nuisance`](messy-data.html#nuisance)
   * [`NonEst` values](FAQs.html#NAs)
+  * [`nuisance`](messy-data.html#nuisance)
+  * [Nuisance factors](messy-data.html#nuisance)
 
 
 [Back to top](#topnav)
@@ -513,6 +522,7 @@ vignette: >
       * [`transform` vs. `type`](transformations.html#regrid)
   * [Response scale](confidence-intervals.html#tran)
   * [`revpairwise` contrasts](comparisons.html#contrasts)
+  * [`rg.limit` option](messy-data.html#rg.limit)
   * [RMarkdown](basics.html#formatting)
   * [ROPE](sophisticated.html#bayesxtra)
   * [**rsm** package](xtending.html#rsm)
@@ -659,6 +669,7 @@ vignette: >
   * [`weights`](messy-data.html#weights)
   * [Welch's *t* comparisons](FAQs.html#nowelch)
       * [Example](utilities.html#relevel)
+  * [`wt.nuis`](messy-data.html#nuisance)
 
 
 [Back to top](#topnav)

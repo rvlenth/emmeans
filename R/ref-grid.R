@@ -111,10 +111,8 @@
 #'   nuisance factors. Specifying nuisance factors can save considerable
 #'   storage and computation time, and help avoid exceeding the maximum
 #'   reference-grid size (\code{get_emm_option("rg.limit")}).
-#' @param rg.limit Integer value for the maximum allowed size of the reference grid.
-#'   The reference grid comprises all factor combinations; so for models with a 
-#'   large number of factors, this can be huge, and can cause problems with
-#'   memory consumption and computing time.
+#' @param rg.limit Integer limit on the number of reference-grid rows to allow
+#'   (checked before any multivariate responses are included).
 #' @param ... Optional arguments passed to \code{\link{summary.emmGrid}},
 #'   \code{\link{emm_basis}}, and
 #'   \code{\link{recover_data}}, such as \code{params}, \code{vcov.} (see
@@ -922,14 +920,15 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 .check.grid = function(levs, limit = get_emm_option("rg.limit")) {
     size = prod(sapply(levs, length))
     if (size > limit)
-        stop("The size of your requested reference grid would be ", size, ", which exceeds\n",
-             "the limit of ", limit, ". your options are:\n",
+        stop("The rows of your requested reference grid would be ", size, ", which exceeds\n",
+             "the limit of ", limit, " (not including any multivariate responses).\n",
+             "Your options are:\n",
              "  1. Specify some (or more) nuisance factors using the 'nuisance' argument\n",
              "     (see ?ref_grid). These must be factors that do not interact with others.\n",
              "  2. Add the argument 'rg.limit = <new limit>' to the call. Be careful,\n",
              "     because this could cause excessive memory use and performance issues.\n",
              "     Or, change the default via 'emm_options(rg.limit = <new limit>)'.\n",
-             call. = NULL)
+             call. = FALSE)
 }
 
 # Utility to set up the grid for nuisance factors. This consists of two or more
@@ -949,7 +948,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # sanity checks on terms, and term indexes
     fsum = rep(99, length(nuis))
     tbl = attr(trms, "factors")
-    rn = row.names(tbl) = sapply(row.names(tbl), function(nm) all.vars(.reformulate(nm))[1])
+    rn = row.names(tbl) = sapply(row.names(tbl), function(nm) all.vars(reformulate(nm))[1])
     for (i in seq_along(nuis)) {
         f = nuis[i]
         if(f %in% rn)

@@ -86,10 +86,8 @@ nuisance factors. Specifying nuisance factors can save considerable
 storage and computation time, and help avoid exceeding the maximum
 reference-grid size (\code{get_emm_option("rg.limit")}).}
 
-\item{rg.limit}{Integer value for the maximum allowed size of the reference grid.
-The reference grid comprises all factor combinations; so for models with a 
-large number of factors, this can be huge, and can cause problems with
-memory consumption and computing time.}
+\item{rg.limit}{Integer limit on the number of reference-grid rows to allow
+(checked before any multivariate responses are included).}
 
 \item{...}{Optional arguments passed to \code{\link{summary.emmGrid}},
 \code{\link{emm_basis}}, and

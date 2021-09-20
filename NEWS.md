@@ -9,18 +9,19 @@ emmeans 1.6.3-9900xxx
     * Code to prevent a warning when an existing factor is coerced to a factor
       in the model formula -- see [SO question](https://stackoverflow.com/questions/68969384)
     * Add documentation note for `add_grouping` with multiple reference factors (#291)
-    * New `rg.limit` option (and argument for `ref_grid()`) to limit the size of the
-      reference grid (#292).
-      **This change could affect existing code that used to work** --
-      but only in fairly extreme situations. Some users report extreme performance issues
-      that can be traced to the size of the reference grid being in the billions, causing
-      memory to be paged, etc. So providing this limit really is necessary. 
-      The default is 100,000 rows. I hope that most exsiting users don't bump up against that
-      too often, but let me know if it is a problem.
-    * New `nuisance` option in `ref_grid()`, by which we can specify names of factors to
-      exclude from the reference grid (accommodating them by averaging) (#292). These must be
-      factors that don't interact with anything, even other nuisance factors. This provides
-      a remedy for excessive grid sizes.
+    * New `rg.limit` option (and argument for `ref_grid()`) to limit the numbwr
+      of rows in the reference grid (#282, #292). **This change could affect
+      existing code that used to work** -- but only in fairly extreme situations.
+      Some users report extreme performance issues that can be traced to the size
+      of the reference grid being in the billions, causing memory to be paged,
+      etc. So providing this limit really is necessary. The default is 10,000
+      rows. I hope that most existing users don't bump up against that too often.
+      The `nuisance` (or `non.nuisance`) argument in `ref_grid()` (see below) can
+      help work around this limit.
+    * New `nuisance` option in `ref_grid()`, by which we can specify names of
+      factors to exclude from the reference grid (accommodating them by averaging)
+      (#282, #292). These must be factors that don't interact with anything, even
+      other nuisance factors. This provides a remedy for excessive grid sizes.
       
 
 emmeans 1.6.3
