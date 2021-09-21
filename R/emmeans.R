@@ -364,16 +364,18 @@ emmeans = function(object, specs, by = NULL,
                     warning("'weights' requested but no weighting information is available")
                 else {
                     wopts = c("equal","proportional","outer","cells","flat","show.levels","invalid")
+### FIXME : outer weights do not come out right.
+### need equivalent of plyr::aaply, .drop = FALSE)
                     weights = switch(wopts[pmatch(weights, wopts, 7)],
                                      equal = rep(1, prod(dims[avgd.mars])),
-                                     proportional = as.numeric(plyr::aaply(row.idx, avgd.mars,
+                                     proportional = as.numeric(apply(row.idx, avgd.mars,
                                                                            function(idx) sum(wgt[idx]))),
                                      outer = {
-                                         ftbl = plyr::aaply(row.idx, avgd.mars,
-                                                            function(idx) sum(wgt[idx]), .drop = FALSE)
+                                         ftbl = apply(row.idx, avgd.mars,
+                                                            function(idx) sum(wgt[idx])) # had .drop = FALSE in plyr::aaply
                                          w = N = sum(ftbl)
                                          for (d in seq_along(dim(ftbl)))
-                                             w = outer(w, plyr::aaply(ftbl, d, sum) / N)
+                                             w = outer(w, apply(ftbl, d, sum) / N)
                                          as.numeric(w)
                                      },
                                      cells = "fq",
@@ -416,18 +418,18 @@ emmeans = function(object, specs, by = NULL,
         }
         combs = do.call("expand.grid", levs)
         if (!missing(weights) && is.character(weights) && (weights %in% c("fq", "fl")))
-            K = plyr::alply(row.idx, use.mars, function(idx) {
+            K = apply(row.idx, use.mars, function(idx) {
                 fq = RG@grid[[".wgt."]][idx]
                 if (weights == "fl")
                     fq = 0 + (fq > 0)  # fq = 1 if > 0, else 0
                 apply(.diag(fq) %*% RG@linfct[idx, , drop=FALSE], 2, sum) / sum(fq)
             })
         else
-            K = plyr::alply(row.idx, use.mars, function(idx) {
+            K = apply(row.idx, use.mars, function(idx) {
                 fac.reduce(RG@linfct[idx, , drop=FALSE])
             })
         
-        linfct = t(as.matrix(as.data.frame(K)))
+        linfct = t(matrix(as.numeric(K), nrow = ncol(RG@linfct)))
         row.names(linfct) = NULL
         
         if(.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
@@ -437,8 +439,8 @@ emmeans = function(object, specs, by = NULL,
         
         # Figure offset, if any
         if (hasName(RG@grid, ".offset.")) {
-            combs[[".offset."]] = as.numeric(plyr::aaply(row.idx, use.mars, function(idx)
-                fac.reduce(as.matrix(RG@grid[idx, ".offset.", drop=FALSE]))))
+            combs[[".offset."]] = as.numeric(apply(row.idx, use.mars, function(idx)
+                fac.reduce(as.matrix(RG@grid[idx, ".offset.", drop = FALSE]))))
         }
         
         avgd.over = names(RG@levels[avgd.mars])
@@ -451,7 +453,7 @@ emmeans = function(object, specs, by = NULL,
         
         # Update .wgt column of grid, if it exists
         if (!is.null(wgt)) {
-            combs[[".wgt."]] = as.numeric(plyr::aaply(row.idx, use.mars, 
+            combs[[".wgt."]] = as.numeric(apply(row.idx, use.mars, 
                                                       function(idx) sum(wgt[idx])))
         }
         

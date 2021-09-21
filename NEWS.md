@@ -22,6 +22,7 @@ emmeans 1.6.3-9900xxx
       factors to exclude from the reference grid (accommodating them by averaging)
       (#282, #292). These must be factors that don't interact with anything, even
       other nuisance factors. This provides a remedy for excessive grid sizes.
+    * Removed dependency on **plyr** package (#298)
       
 
 emmeans 1.6.3

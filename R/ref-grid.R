@@ -593,7 +593,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     chk = sapply(modnm, function(mn) mn %in% names(xl))
     for(i in which(!chk)) { # replace names in xl - e.g., as.factor(trt) where trt already a factor
         fn = all.vars(reformulate(modnm[i]))
-        names(xl)[names(xl) == fn] = modnm[i]
+        if (length(fn) == 1)
+            names(xl)[names(xl) == fn] = modnm[i]
     }
     ###!! If we remove this code, also need to change xl back to xlev in 'basis =' call below
     
@@ -762,7 +763,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (length(nms) == 0)
         wgt = rep(1, nrow(grid))  # all covariates; give each weight 1
     else {
-        id = plyr::id(data[, nms, drop = FALSE], drop = TRUE)
+        id = .my.id(data[, nms, drop = FALSE])
         uid = !duplicated(id)
         key = do.call(paste, unname(data[uid, nms, drop = FALSE]))
         key = key[order(id[uid])]
@@ -916,6 +917,13 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     list(factors = cfac, covariates = ccov, orig = orig)
 }
 
+# My replacement for plyr::id(, drop = TRUE)
+.my.id = function(data){
+    p = do.call(paste, data)
+    u = unique(p)
+    match(p, u)
+}
+
 # Utility to error-out when potential reference grid size is too big
 .check.grid = function(levs, limit = get_emm_option("rg.limit")) {
     size = prod(sapply(levs, length))
@@ -948,7 +956,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # sanity checks on terms, and term indexes
     fsum = rep(99, length(nuis))
     tbl = attr(trms, "factors")
-    rn = row.names(tbl) = sapply(row.names(tbl), function(nm) all.vars(reformulate(nm))[1])
+    rn = row.names(tbl) = sapply(row.names(tbl), function(nm)
+        paste(all.vars(reformulate(nm)), collapse = ","))
     for (i in seq_along(nuis)) {
         f = nuis[i]
         if(f %in% rn)
