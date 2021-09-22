@@ -364,15 +364,15 @@ emmeans = function(object, specs, by = NULL,
                     warning("'weights' requested but no weighting information is available")
                 else {
                     wopts = c("equal","proportional","outer","cells","flat","show.levels","invalid")
-### FIXME : outer weights do not come out right.
-### need equivalent of plyr::aaply, .drop = FALSE)
                     weights = switch(wopts[pmatch(weights, wopts, 7)],
                                      equal = rep(1, prod(dims[avgd.mars])),
                                      proportional = as.numeric(apply(row.idx, avgd.mars,
                                                                            function(idx) sum(wgt[idx]))),
                                      outer = {
                                          ftbl = apply(row.idx, avgd.mars,
-                                                            function(idx) sum(wgt[idx])) # had .drop = FALSE in plyr::aaply
+                                                            function(idx) sum(wgt[idx]))
+                                         # Fix up the dimensions
+                                         ftbl = array(ftbl, dim(row.idx)[avgd.mars])
                                          w = N = sum(ftbl)
                                          for (d in seq_along(dim(ftbl)))
                                              w = outer(w, apply(ftbl, d, sum) / N)
