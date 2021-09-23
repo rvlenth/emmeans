@@ -4,8 +4,8 @@
 \alias{qdrg}
 \title{Quick and dirty reference grid}
 \usage{
-qdrg(formula, data, coef, mcmc, vcov, object, df, subset, weights, contrasts,
-  link, qr, ...)
+qdrg(formula, data, coef, vcov, df, mcmc, object, subset, weights, contrasts,
+  link, qr, ordinal.dim, ...)
 }
 \arguments{
 \item{formula}{Formula for the fixed effects}
@@ -14,14 +14,14 @@ qdrg(formula, data, coef, mcmc, vcov, object, df, subset, weights, contrasts,
 
 \item{coef}{Fixed-effect regression coefficients (must conform to formula)}
 
-\item{mcmc}{Posterior sample of fixed-effect coefficients}
-
 \item{vcov}{Variance-covariance matrix of the fixed effects}
+
+\item{df}{Error degrees of freedom}
+
+\item{mcmc}{Posterior sample of fixed-effect coefficients}
 
 \item{object}{Optional model object. If provided, it is used to set 
 certain other arguments, if not specified. See Details.}
-
-\item{df}{Error degrees of freedom}
 
 \item{subset}{Subset of \code{data} used in fitting the model}
 
@@ -53,11 +53,11 @@ will work. The default values for the arguments are as follows:
   \item{\code{data}: }{Required if variables are not in \code{parent.frame()} or 
       obtainable via \code{object$data}}
   \item{\code{coef}: }{\code{coef(object)}}
-  \item{\code{mcmc}: }{\code{object$sample}}
   \item{\code{vcov}: }{\code{vcov(object)}}
   \item{\code{df}: }{Set to \code{Inf} if not available in \code{object$df.residual}}
+  \item{\code{mcmc}: }{\code{object$sample}}
   \item{\code{subset}: }{\code{NULL} (so that all observations in \code{data} are used)}
-  \item{\code{contrasts}: }{\code{NULL} (so that \code{getOption("contrasts")} is used)}
+  \item{\code{contrasts}: }{\code{object$contrasts}}
 }
 
 The functions \code{\link{qdrg}} and \code{emmobj} are close cousins, in that
@@ -69,9 +69,13 @@ statistics for an existing grid, \code{emmobj} is more useful, while
 if (require(biglm)) {
   # Post hoc analysis of a "biglm" object -- not supported by emmeans
   bigmod <- biglm(log(conc) ~ source + factor(percent), data = pigs)
-   
-  rg2 <- qdrg(object = bigmod, data = pigs)
-  summary(emmeans(rg2, "source"), type = "response")
+  
+  rg2 <- qdrg(log(conc) ~ source + factor(percent), data = pigs, 
+      coef = coef(bigmod), vcov = vcov(bigmod), df = bigmod$df.residual)
+  emmeans(rg1, "source", type = "response")
+  
+  ## But in this particular case, we could have done it the easy way:
+  ##     rg2 <- qdrg(object = bigmod, data = pigs)
 }
 if(require(coda) && require(lme4)) {
   # Use a stored example having a posterior sample

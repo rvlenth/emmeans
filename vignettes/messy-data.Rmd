@@ -293,13 +293,25 @@ By default, the pre-averaging is done with equal weights. If we specify
 described above, this really amounts to `"outer"` weights since they are
 averaged separately. Let's try it to see how the estimates differ:
 ```{r}
-predict(emmeans(mtcars.lm, ~ cyl * am, weights = "outer"))
 predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"), 
                 wt.nuis = "prop"))
+predict(emmeans(mtcars.lm, ~ cyl * am, weights = "outer"))
 ```
-These are the same as each other, but different from the equally-weighted 
-EMMs we obtained before.
+These are the same as each other, but different from the equally-weighted EMMs
+we obtained before. By the way, to help make things consistent, if `weights` is
+character, `emmeans()` passes `wt.nuis = weights` to `ref_grid` (if it is
+called), unless `wt.nuis` is also specified.
 
+There is a trick to get `emmeans` to use the smallest possible reference grid: 
+Pass the `specs` argument to `ref_grid()` as `non.nuisance`. 
+But we have to quote it
+to delay evaluation, and also use `all.vars()` if (and only if)
+`specs` is a formula:
+```{r}
+emmeans(mtcars.lm, ~ gear | am, non.nuis = quote(all.vars(specs)))
+```
+Observe that `cyl` was passed over as a nuisance factor because it interacts with
+another factor.
 
 ### Limiting the size of the reference grid {#rg.limit}
 <!-- @index  `rg.limit` option; Memory usage!Limiting -->

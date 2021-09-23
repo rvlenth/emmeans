@@ -23,6 +23,11 @@ emmeans 1.6.3-9900xxx
       (#282, #292). These must be factors that don't interact with anything, even
       other nuisance factors. This provides a remedy for excessive grid sizes.
     * Removed dependency on **plyr** package (#298)
+    * Improvements to and broadening of `qdrg()`:
+        - Changed the order of arguments in to something a bit more natural
+        - Default for `contrasts` now `object$contrasts` when `object` is specified
+        - Detection of multivariate situations
+        - Added `ordinal.dim` argument to support ordinal models
       
 
 emmeans 1.6.3

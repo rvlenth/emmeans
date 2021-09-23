@@ -125,6 +125,12 @@ emmeans.list = function(object, specs, ...) {
 #'   section below.)
 #' @param weights Character value, numeric vector, or numeric matrix specifying
 #'   weights to use in averaging predictions. See \dQuote{Weights} section below.
+#'   Also, if \code{object} is not already a reference grid, \code{weights}
+#'   (if it is character) is passed to \code{ref_grid} as \code{wt.nuis} in case 
+#'   nuisance factors are specified. We can override this by specifying 
+#'   \code{wt.nuis} explicitly.
+#'   This more-or-less makes the weighting of nuisance factors consistent with
+#'   that of primary factors.
 #' @param offset Numeric vector or scalar. If specified, this adds an offset to
 #'   the predictions, or overrides any offset in the model or its
 #'   reference grid. If a vector of length differing from the number of rows in 
@@ -217,6 +223,7 @@ emmeans.list = function(object, specs, ...) {
 #' \code{"cells"}, except nonempty cells are weighted equally and empty cells
 #' are ignored.
 #' 
+#' 
 #' @section Offsets:
 #' Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values
 #' are supplied, they are cyclically recycled. For a vector of offsets, it is 
@@ -295,6 +302,8 @@ emmeans = function(object, specs, by = NULL,
     
     if(!is(object, "emmGrid")) {
         args = .zap.args(object = object, ..., omit = "submodel")
+        if (is.null(args$wt.nuis)) # pass weights as wt.nuis
+            args$wt.nuis = ifelse(!missing(weights) && is.character(weights), weights, "equal")
         object = do.call(ref_grid, args)
     }
     if (is.list(specs)) {
@@ -429,7 +438,7 @@ emmeans = function(object, specs, by = NULL,
                 fac.reduce(RG@linfct[idx, , drop=FALSE])
             })
         
-        linfct = t(matrix(as.numeric(K), nrow = ncol(RG@linfct)))
+        linfct = t(matrix(K, nrow = ncol(RG@linfct)))
         row.names(linfct) = NULL
         
         if(.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))

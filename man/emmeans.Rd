@@ -39,7 +39,13 @@ to \code{\link{update.emmGrid}}, just after the object is constructed.
 section below.)}
 
 \item{weights}{Character value, numeric vector, or numeric matrix specifying
-weights to use in averaging predictions. See \dQuote{Weights} section below.}
+weights to use in averaging predictions. See \dQuote{Weights} section below.
+Also, if \code{object} is not already a reference grid, \code{weights}
+(if it is character) is passed to \code{ref_grid} as \code{wt.nuis} in case 
+nuisance factors are specified. We can override this by specifying 
+\code{wt.nuis} explicitly.
+This more-or-less makes the weighting of nuisance factors consistent with
+that of primary factors.}
 
 \item{offset}{Numeric vector or scalar. If specified, this adds an offset to
 the predictions, or overrides any offset in the model or its
