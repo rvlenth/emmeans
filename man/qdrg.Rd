@@ -35,6 +35,13 @@ certain other arguments, if not specified. See Details.}
 \item{qr}{QR decomposition of the model matrix; needed only if there are \code{NA}s
 in \code{coef}.}
 
+\item{ordinal.dim}{Integer number of levels in an ordinal response. If not
+missing, the intercept terms are modified appropriate to predicting the latent
+response (see \code{vignette("models")}, Section O. In this case, we expect
+the first \code{ordinal.dim - 1} elements of \code{coef} to be the
+estimated threshold parameters, followed by the coefficients for the
+linear predictor.)}
+
 \item{...}{Optional arguments passed to \code{\link{ref_grid}}}
 }
 \value{
@@ -70,20 +77,26 @@ if (require(biglm)) {
   # Post hoc analysis of a "biglm" object -- not supported by emmeans
   bigmod <- biglm(log(conc) ~ source + factor(percent), data = pigs)
   
-  rg2 <- qdrg(log(conc) ~ source + factor(percent), data = pigs, 
+  rg1 <- qdrg(log(conc) ~ source + factor(percent), data = pigs, 
       coef = coef(bigmod), vcov = vcov(bigmod), df = bigmod$df.residual)
   emmeans(rg1, "source", type = "response")
   
   ## But in this particular case, we could have done it the easy way:
-  ##     rg2 <- qdrg(object = bigmod, data = pigs)
+  ##     rg1 <- qdrg(object = bigmod, data = pigs)
 }
 if(require(coda) && require(lme4)) {
   # Use a stored example having a posterior sample
   # Model is based on the data in lme4::cbpp
   
   post <- readRDS(system.file("extdata", "cbpplist", package = "emmeans"))$post.beta
-  rg1 <- qdrg(~ size + period, data = lme4::cbpp, mcmc = post, link = "logit")
-  summary(rg1, type = "response")
+  rg2 <- qdrg(~ size + period, data = lme4::cbpp, mcmc = post, link = "logit")
+  summary(rg2, type = "response")
+}
+if(require(ordinal)) {
+  wine.clm <- clm(rating ~ temp * contact, data = wine)
+  ref_grid(wine.clm)
+  # verify that we get the same thing via:
+  qdrg(object = wine.clm, data = wine, ordinal.dim = 5)
 }
 
 }
