@@ -35,6 +35,7 @@ This vignette contains answers to questions received from users or posted on dis
  10. [I get exactly the same comparisons for each "by" group](#additive)
  11. [My ANOVA *F* is significant, but no pairwise comparisons are](#anova)
  12. [I asked for a Tukey adjustments, but that's not what I got](#notukey)
+ 12. [`emmeans()` completely ignores my P-value adjustments](#noadjust)
  13. [`emmeans()` gives me pooled *t* tests, but I expected Welch's *t*](#nowelch)
 
 [Index of all vignette topics](vignette-topics.html)
@@ -303,16 +304,33 @@ no adjustment to "repair" this problem.)
 <!-- @index Tukey adjustment!Ignored or changed -->
 There are two reasons this could happen:
 
-  1. There are only two means (or only two in each `by` group). Thus there is
-     only one comparison. When there is only one thing to test, there is no 
-     multiplicity issue, and hence no multiplicity adjustment to the *P* values.
+  1. There is only one comparison in each `by` group (see next topic).
   2. A Tukey adjustment is inappropriate. The Tukey adjustment is appropriate
   for pairwise comparisons of means. When you have some other set of contrasts,
   the Tukey method is deemed unsuitable and the Sidak method is used instead. A
   suggestion is to use `"mvt"` adjustment (which is exact); we don't default to
   this because it can require a lot of computing time for a large set of
   contrasts or comparisons.
+  
+  
+## `emmeans()` completely ignores my P-value adjustments  {#noadjust}
+<!-- @index *P* values!Adjustment is ignored -->
+This happens when there are only two means (or only two in each `by` group).
+Thus there is only one comparison. When there is only one thing to test, there
+is no multiplicity issue, and hence no multiplicity adjustment to the *P*
+values.
 
+If you wish to apply a *P*-value adjustment to all tests across all groups,
+you need to null-out the `by` variable and summarize, as in the following:
+```r
+EMM <- emmeans(model, ~ treat | group)   # where treat has 2 levels
+pairs(EMM, adjust = "sidak")   # adjustment is ignored - only 1 test per group
+summary(pairs(EMM), by = NULL, adjust = "sidak")   # all are in one group now
+```
+Note that if you put `by = NULL` *inside* the call to `pairs()`, then this
+causes all `treat`,`group` combinations to be compared.
+     
+     
 [Back to Contents](#contents)
 
 

@@ -440,6 +440,7 @@ vignette: >
 
   * *P* values
       * [Adjusted](basics.html#recs1)
+      * [Adjustment is ignored](FAQs.html#noadjust)
       * [Interpreting](basics.html#pvalues)
   * [`pairs()`](comparisons.html#pairwise)
   * [Pairwise comparisons](comparisons.html#pairwise)

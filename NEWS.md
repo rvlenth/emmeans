@@ -28,6 +28,8 @@ emmeans 1.6.3-9900xxx
         - Default for `contrasts` now `object$contrasts` when `object` is specified
         - Detection of multivariate situations
         - Added `ordinal.dim` argument to support ordinal models
+    * Major repairs to `clm` and `clmm` support to fix issues related to
+      rank deficiency and nested models, particularly with `mode = "prob"` (#300)
       
 
 emmeans 1.6.3
