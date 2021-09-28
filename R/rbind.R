@@ -87,7 +87,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
         for (nm in setdiff(names(g), c(".wgt.", ".offset.")))
             grid[rows, nm] = as.character(g[[nm]])
         if (!is.null(g$.wgt.)) grid[rows, ".wgt."] = g$.wgt.
-        if (!is.null(g$.offset.)) grid[rows, ".wgt."] = g$.offset.
+        if (!is.null(g$.offset.)) grid[rows, ".offset."] = g$.offset.
     }
     if (all(grid$.wgt. == 0)) 
         grid$.wgt. = 1
@@ -106,7 +106,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
            avgd.over = avgd.over)
 }
 #' @rdname rbind.emmGrid
-#' @order 2
+#' @order 4
 #' @param e1 An \code{emmGrid} object
 #' @param e2 Another \code{emmGrid} object
 #' @return The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
@@ -122,6 +122,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 ### Subset a reference grid
 # if drop = TRUE, the levels of factors are reduced
 #' @rdname rbind.emmGrid
+#' @order 5
 #' @param x An \code{emmGrid} object to be subsetted
 #' @param i Integer vector of indexes
 #' @param drop.levels Logical value. If \code{TRUE}, the \code{"levels"} slot in
@@ -151,6 +152,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 }
 
 #' @rdname rbind.emmGrid
+#' @order 7
 #' @param subset logical expression indicating which rows of the grid to keep
 #' @method subset emmGrid
 #' @export

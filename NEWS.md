@@ -1,62 +1,62 @@
-## NEWS for the emmeans package
+---
+title: "NEWS for the emmeans package"
+---
 
-emmeans 1.6.3-9900xxx
--------------
 
-    * Fix to bug in `regrid()` with nested structures (#287)
-    * Allow `type` to be passed in `emmeans()` when `object` is already an `emmGrid`
-      (incidentally noticed in #287)
-    * Code to prevent a warning when an existing factor is coerced to a factor
-      in the model formula -- see [SO question](https://stackoverflow.com/questions/68969384)
-    * Add documentation note for `add_grouping` with multiple reference factors (#291)
-    * New `rg.limit` option (and argument for `ref_grid()`) to limit the numbwr
-      of rows in the reference grid (#282, #292). **This change could affect
-      existing code that used to work** -- but only in fairly extreme situations.
-      Some users report extreme performance issues that can be traced to the size
-      of the reference grid being in the billions, causing memory to be paged,
-      etc. So providing this limit really is necessary. The default is 10,000
-      rows. I hope that most existing users don't bump up against that too often.
-      The `nuisance` (or `non.nuisance`) argument in `ref_grid()` (see below) can
-      help work around this limit.
-    * New `nuisance` option in `ref_grid()`, by which we can specify names of
-      factors to exclude from the reference grid (accommodating them by averaging)
-      (#282, #292). These must be factors that don't interact with anything, even
-      other nuisance factors. This provides a remedy for excessive grid sizes.
-    * Removed dependency on **plyr** package (#298)
-    * Improvements to and broadening of `qdrg()`:
-        - Changed the order of arguments in to something a bit more natural
-        - Default for `contrasts` now `object$contrasts` when `object` is specified
-        - Detection of multivariate situations
-        - Added `ordinal.dim` argument to support ordinal models
-    * Major repairs to `clm` and `clmm` support to fix issues related to
-      rank deficiency and nested models, particularly with `mode = "prob"` (#300)
+## emmeans 1.7.0
+#### Notable changes
+  * New `rg.limit` option (and argument for `ref_grid()`) to limit the number
+    of rows in the reference grid (#282, #292). **This change could affect
+    existing code that used to work** -- but only in fairly extreme situations.
+    Some users report extreme performance issues that can be traced to the size
+    of the reference grid being in the billions, causing memory to be paged,
+    etc. So providing this limit really is necessary. The default is 10,000
+    rows. I hope that most existing users don't bump up against that too often.
+    The `nuisance` (or `non.nuisance`) argument in `ref_grid()` (see below) can
+    help work around this limit.
+  * New `nuisance` option in `ref_grid()`, by which we can specify names of
+    factors to exclude from the reference grid (accommodating them by averaging)
+    (#282, #292). These must be factors that don't interact with anything, even
+    other nuisance factors. This provides a remedy for excessive grid sizes.
+  * Improvements to and broadening of `qdrg()`:
+    - Changed the order of arguments in to something a bit more natural
+    - Default for `contrasts` now `object$contrasts` when `object` is specified
+    - Detection of multivariate situations
+    - Added `ordinal.dim` argument to support ordinal models
+  * New `force_regular()` function adds invisible rows to an irregular `emmGrid`
+    to make it regular (i.e., covers all factor combinations)
       
+#### Bug fixes and tweaks     
+  * Removed dependency on **plyr** package (#298)
+  * Fix to bug in `regrid()` with nested structures (#287)
+  * Fix bug in `rbind()` which mishandled `@grid$.offset.`
+  * Major repairs to `clm` and `clmm` support to fix issues related to
+    rank deficiency and nested models, particularly with `mode = "prob"` (#300)
+  * Allow `type` to be passed in `emmeans()` when `object` is already an `emmGrid`
+    (incidentally noticed in #287)
+  * Code to prevent a warning when an existing factor is coerced to a factor
+    in the model formula -- see [SO question](https://stackoverflow.com/questions/68969384)
+  * Add documentation note for `add_grouping` with multiple reference factors (#291)
 
-emmeans 1.6.3
--------------
-
-    * Clarification of documentation of `ref_grid(object, vcov. = ...)` (#283)
-    * Fix to `emmtrends()` with covariate formulas (#284)
-    * Improved parts of "Basics" vignette - removed "back story",
-      revised guidance on $P$ values and models
-    * Allow for > 1 reference factor in `add_grouping()` (#286)
-    * Repairs to `contrast()` to avoid all-`nonEst` results in irregular
-      nested structures
+## emmeans 1.6.3
+  * Clarification of documentation of `ref_grid(object, vcov. = ...)` (#283)
+  * Fix to `emmtrends()` with covariate formulas (#284)
+  * Improved parts of "Basics" vignette - removed "back story",
+    revised guidance on $P$ values and models
+  * Allow for > 1 reference factor in `add_grouping()` (#286)
+  * Repairs to `contrast()` to avoid all-`nonEst` results in irregular
+    nested structures
 
 
-emmeans 1.6.2
--------------
-
-    * Fixed navigation error in vignette index
-    * Discouraging message added to `cld()` results. 
-      Also am providing an `emm_list` method for `emm_list` objects.
-    * Added `mvcontrast()` function (#281) and assoc vignette material
-    * Added `update.summary_emm()`
+## emmeans 1.6.2
+  * Fixed navigation error in vignette index
+  * Discouraging message added to `cld()` results. 
+    Also am providing an `emm_list` method for `emm_list` objects.
+  * Added `mvcontrast()` function (#281) and assoc vignette material
+  * Added `update.summary_emm()`
     
 
-emmeans 1.6.1
--------------
-
+## emmeans 1.6.1
   * Fixed a bug in parsing a response transformation (#274)
   * Changed handling of `contrast()` so that `log2` and `log10` transformations 
     are handled just like `log`. (#273) Also disabled making ratios with

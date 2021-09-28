@@ -339,7 +339,8 @@ emmeans = function(object, specs, by = NULL,
         # Check that grid is complete
         # This isn't a 100% reliable check, but...
         if(nrow(RG@grid) != prod(sapply(RG@levels, length)))
-            stop("Irregular reference grid: Marginal means cannot be determined")
+            stop("Irregular reference grid: Marginal means cannot be determined.\n",
+                 "You can possibly fix this with the 'force_regular' function.")
         
         if (!is.null(RG@misc$display)) {
             RG@misc$display = NULL

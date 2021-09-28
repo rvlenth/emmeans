@@ -247,7 +247,7 @@ add_grouping = function(object, newname, refname, newlevs) {
 
 
 ### contrast function for nested structures
-.nested_contrast = function(rgobj, method = "eff", interaction = FALSE, by = NULL, adjust, offset = NULL, ...) {
+.nested_contrast = function(rgobj, method = "eff", interaction = FALSE, by = NULL, adjust, ...) {
     nesting = rgobj@model.info$nesting
     # Prevent meaningless cases -- if A %in% B, we can't have A in 'by' without B
     # Our remedy will be to EXPAND the by list
@@ -275,11 +275,11 @@ add_grouping = function(object, newname, refname, newlevs) {
     wkrg@model.info$nesting = wkrg@misc$display = NULL
     by.rows = .find.by.rows(wkrg@grid, by)
     if(length(by.rows) == 1)
-        result = contrast.emmGrid(wkrg, method = method, interaction = interaction, by = by, adjust = adjust, offset = offset, ...)
+        result = contrast.emmGrid(wkrg, method = method, interaction = interaction, by = by, adjust = adjust, ...)
     else {
         result = lapply(by.rows, function(rows) {
             contrast.emmGrid(wkrg[rows, drop.levels = TRUE], method = method, 
-                             interaction = interaction, by = by, adjust = adjust, offset = offset, ...)
+                             interaction = interaction, by = by, adjust = adjust, ...)
         })
         # set up coef matrix
         comb.nms = unique(do.call(paste, wkrg@grid[facs]))
@@ -339,6 +339,20 @@ add_grouping = function(object, newname, refname, newlevs) {
 }
 
 # Fill-in extra elements to make a grid regular
+#' @rdname rbind.emmGrid
+#' @order 9
+#' @param object an object of class \code{emmGrid}
+#' @return \code{force_regular} adds extra (invisible) rows to an \code{emmGrid} object
+#'   to make it a regular grid (all combinations of factors). This regular structure is 
+#'   needed by \code{emmeans}. An object can become irregular by, for example,
+#'   subsetting rows, or by obtaining contrasts of a nested structure.
+#' @export
+#' @examples
+#' 
+#' ### Irregular object
+#' tmp <- warp.rg[-1]
+#' ## emmeans(tmp, "tension")   # will fail because tmp is irregular
+#' emmeans(force_regular(tmp), "tension")   # will show some results
 force_regular = function(object) {
     newgrid = do.call(expand.grid, object@levels)
     newkey = do.call(paste, newgrid)

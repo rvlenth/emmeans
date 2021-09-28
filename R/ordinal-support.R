@@ -219,7 +219,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
          dfargs = list(), misc = misc)
 }
 
-# fuction called at end of ref_grid
+# function called at end of ref_grid
 # I use this for polr as well
 # Also used for stanreg result of stan_polr & potentially other MCMC ordinal models
 .clm.postGrid = function(object, ...) {
@@ -268,6 +268,8 @@ emm_basis.clm = function (object, trms, xlev, grid,
     # proceed to disavow that this was ever exposed to 'emmeans' or 'contrast'
     ## class(newrg) = "ref.grid"
     misc = newrg@misc
+    if(!is.null(misc$display) && all(misc$display))
+        misc$display = NULL
     misc$is.new.rg = TRUE
     misc$infer = c(FALSE,FALSE)
     misc$estName = "prob"
@@ -280,18 +282,22 @@ emm_basis.clm = function (object, trms, xlev, grid,
     newrg
 }
 
+# special 'contrast' fcn used by .clm.mean.class
+.meanclass.emmc = function(levs, lf, ...) 
+    data.frame(mean = lf)
+
 .clm.mean.class = function(object, ...) {
     prg = .clm.prob.grid(object, newname = "class", ...)
     byv = setdiff(names(prg@levels), "class")
     lf = as.numeric(prg@levels$class)
-    newrg = contrast(prg, list(mean = lf), by = byv, ...)
+    newrg = contrast(prg, ".meanclass", lf = lf, by = byv, ...)
     newrg = update(newrg, infer = c(FALSE, FALSE), 
         pri.vars = NULL, by.vars = NULL, estName = "mean.class")
     newrg@levels$contrast = newrg@grid$contrast = NULL
     prg@roles$multresp = NULL
     newrg@roles = prg@roles
     ## class(newrg) = "ref.grid"
-    update(newrg, is.new.rg = TRUE)
+    update(force_regular(newrg), is.new.rg = TRUE)
 }
 
 # Contrast fcn for turning estimates of cumulative probabilities
