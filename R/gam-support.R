@@ -71,6 +71,48 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 }
 
 
+.emm_basis.gam_multinom = function(object, trms, xlev, grid,
+                                   freq = FALSE, unconditional = FALSE,
+                                   mode = c("prob", "latent"), ...) {
+    mode = match.arg(mode)
+
+    X = mgcv::predict.gam(object, newdata = grid, type = "lpmatrix",
+                          newdata.guaranteed = TRUE)
+
+    k = length(attr(X, "lpi"))
+    nbhat = vapply(attr(X, "lpi"), length, FUN.VALUE = integer(1))
+    pat = (rbind(0, diag(k + 1, k)) - 1) / (k + 1)
+
+    X = apply(pat, 1, function(row) {
+        y = rep.int(row, times = nbhat)
+        out = apply(X, 1, "*", y = y, simplify = FALSE)
+        do.call(rbind, out)
+    }, simplify = FALSE)
+
+    X = do.call(rbind, X)
+
+    bhat = as.numeric(coef(object))
+    V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)
+    nbasis = kronecker(rep.int(1, times = k), estimability::all.estble)
+
+    dfargs = list(df = sum(object$edf))
+    dffun = function(k, dfargs) dfargs$df
+
+    misc = list(tran = "log", inv.lbl = "e^y")
+
+    ylevs = list(class = seq.int(0, k))
+    names(ylevs) = as.character(object$formula[[1]][[2]])
+    misc$ylevs = ylevs
+
+    if (mode == "prob") {
+        misc$postGridHook = .multinom.postGrid
+    }
+
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun,
+         dfargs = dfargs, misc = misc)
+}
+
+
 ### emm_basis method for mgcv::gam objects
 ### extra arg `unconditional` and `freq` as in `vcov.gam`
 emm_basis.gam = function(object, trms, xlev, grid,
@@ -86,9 +128,13 @@ emm_basis.gam = function(object, trms, xlev, grid,
     fam_name = object$family$family
     what_num = what
     
-    if (fam_name == "multinom" || fam_name == "mvn") {
+    if (fam_name == "multinom") {
+        return(.emm_basis.gam_multinom(object, trms, xlev, grid, freq,
+                                       unconditional, ...))
+    }
+    else if (fam_name == "mvn") {
         if (!is.numeric(what)) {
-            stop("Family '", fam_name, "' requires a numeric argument 'what'")
+            stop("Family 'mvn' requires a numeric argument 'what'")
         }
     } 
     else if (is.character(what)) {
