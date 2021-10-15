@@ -1,8 +1,6 @@
 R package **emmeans**: Estimated marginal means
 ====
 
-##### *Note: **emmeans** is a continuation of the package **lsmeans**. The latter will eventually be retired.*
-
 ## Features
 Estimated marginal means (EMMs, previously known as least-squares means in the
 context of traditional regression models) are derived by using a model to make
@@ -16,18 +14,29 @@ easily produce these results, as well as various graphs of them
 
 
   * Estimation and testing of pairwise comparisons of EMMs, and several other
-    types of contrasts, are provided. There is also a `cld` method for display of
-    grouping  symbols.
+    types of contrasts, are provided.
     
-  * Two-way support of the `glht` function in the **multcomp** package.
-  
+  * In rank-deficient models, the estimability of predictions is checked,
+    to avoid outputting results that are not uniquely defined.
+    
   * For models where continuous predictors interact with factors, the package's
     `emtrends` function works in terms of a reference grid of predicted slopes of
     trend lines for each factor combination.
     
   * Vignettes are provided on various aspects of EMMs and using the package. 
-    See the [CRAN page](https://CRAN.R-project.org/package=emmeans)
+    See the [CRAN page](https://CRAN.R-project.org/package=emmeans).
+    
+  * We try to provide flexible (but pretty basic) graphics support for
+    the `emmGrid` objects produced by the package. Also, support is provided
+    for nested fixed effects.
+    
+  * Response transformations and link functions are supported via a `type`
+    argument in many functions (e.g., `type = "response"` to back-transform
+    results to the response scale). Also, a `regrid()` function is provided
+    to reconstruct the object on any transformed scale that the user wishes.
 
+  * Two-way support of the `glht` function in the **multcomp** package.
+  
 
 ## Model support
 
@@ -48,9 +57,9 @@ easily produce these results, as well as various graphs of them
     contrasts thereof, which may then be examined using tools such as in the
     **coda** package.
     
-  * Package developers may provide **emmeans** support for their models by
-    writing `recover_data` and `emm_basis` methods. See `vignette("extending",
-    package = "emmeans")`
+  * Package developers are encouraged to incorporate **emmeans** support for
+  their models by writing `recover_data` and `emm_basis` methods.
+    See [`vignette("extending", package = "emmeans")`](https://CRAN.R-project.org/package=emmeans/vignettes/xtending.html)
     
 
 ## Versions and installation
@@ -60,7 +69,7 @@ easily produce these results, as well as various graphs of them
     Also at that site, formatted versions of this package's vignettes 
     may be viewed.
 
-  * **Github** To install the latest development version from Github, 
+  * **GitHub** To install the latest development version from GitHub, 
     install the newest version (definitely 2.0 or higher) of the **devtools** 
     package; then run
     
@@ -76,3 +85,17 @@ remotes::install_github("rvlenth/emmeans")
 
 For the latest release notes on this development version, see the 
 [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS.md)
+
+## Supersession plan
+The developer of **emmeans** continues to maintain and occasionally add new
+features. However, none of us is immortal; and neither is software. I have
+thought of trying to find a co-maintainer who could carry the ball once I am
+gone or lose interest, but the flip side of that is that the codebase is not
+getting less messy as time goes on -- why impose that on someone else? So my
+thought now is that if at some point, enough active R developers want the
+capabilities of **emmeans** but I am no longer in the picture, they should feel free to supersede it with some other package that does it better. All of the code is publicly available on
+GitHub, so just take what is useful and replace what is not.
+
+##### *Note: **emmeans** supersedes the package **lsmeans**. The latter is just a front end for **emmeans**, and in fact, the `lsmeans()` function itself is part of **emmeans**.*
+
+
