@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.7.0.0099xxx
+  * Support from multinomial models in mgcv::gam (#303) thanks to Hannes Riebl
+
+
 
 ## emmeans 1.7.0
 #### Notable changes

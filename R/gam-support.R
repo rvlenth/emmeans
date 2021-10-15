@@ -71,6 +71,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 }
 
 
+### This addition contributed by Hannes Riebl (#303)
 .emm_basis.gam_multinom = function(object, trms, xlev, grid,
                                    freq = FALSE, unconditional = FALSE,
                                    mode = c("prob", "latent"), ...) {
