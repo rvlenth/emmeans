@@ -185,7 +185,13 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' internal \code{adjust} setting saved in \code{pairs(x)} and \code{x} 
 #' respectively (see \code{\link{update.emmGrid}}).
 #' 
+#' @note In order to play nice with the plotting functions,
+#' any variable names that are not syntactically correct (e.g., contain spaces)
+#' are altered using \code{\link{make.names}}.
+#' 
 #' @importFrom graphics plot
+#' 
+
 #' @method plot summary_emm
 #' @export
 #'
@@ -245,6 +251,9 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         lcl = summ[[clNames[1]]]
         ucl = summ[[clNames[2]]]
     }
+    
+    # ensure all names are syntactically valid
+    summ = .validate.names(summ)
     
     if (engine == "lattice") { # ---------- lattice-specific stuff ----------
         
@@ -341,6 +350,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         alpha = extra@misc$comp.alpha
         adjust = extra@misc$comp.adjust
         psumm = suppressMessages(confint(pairs(extra), level = 1 - alpha, type = "lp", adjust = adjust))
+        psumm = .validate.names(psumm)
         k = ncol(psumm)
         del = (psumm[[k]] - psumm[[k-1]]) / 4 # half the halfwidth, on lp scale
         diff = psumm[[attr(psumm, "estName")]]
@@ -533,7 +543,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         }
         if (length(byv) > 0)
             grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
-                                       labeller = "label_both")
+                                                labeller = "label_both")
         grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
         
         if(!is.null(scale)) {

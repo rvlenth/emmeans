@@ -4,6 +4,14 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.7.0.0099xxx
   * Support from multinomial models in mgcv::gam (#303) thanks to Hannes Riebl
+  * Bug fix for spaces in `by` variable names (#305). Related to this are:
+      - `plot.emmGrid()` now forces all names to be syntactically valid
+      - In `as.data.frame.emmGrid()`, we changed the `optional` argument
+        to `check.names` (defaulting to `TRUE`), and it actually has an effect.
+        So by default, the result will have syntactically valid names; this is
+        a change, but only because `optional` did not work right (because
+        it is an argument for `as.data.frame.list()).
+    
 
 
 

@@ -666,7 +666,7 @@ predict.emmGrid <- function(object, type,
 #' @order 5
 #' @param x object of the given class
 #' @param row.names passed to \code{\link{as.data.frame}}
-#' @param optional passed to \code{\link{as.data.frame}}
+#' @param check.names passed to \code{\link{data.frame}}
 #' @return The \code{as.data.frame} method returns a plain data frame,
 #'   equivalent to \code{as.data.frame(summary(.))}. 
 #' @note The \code{as.data.frame} method is intended primarily to allow for
@@ -684,8 +684,8 @@ predict.emmGrid <- function(object, type,
 #' @examples
 #' # Show estimates to more digits
 #' print(test(con), digits = 7)
-as.data.frame.emmGrid = function(x, row.names = NULL, optional = FALSE, ...) {
-    as.data.frame(summary(x, ...), row.names = row.names, optional = optional)
+as.data.frame.emmGrid = function(x, row.names = NULL, check.names = TRUE, ...) {
+    data.frame(summary(x, ...), row.names = row.names, check.names = check.names)
 }
 
 

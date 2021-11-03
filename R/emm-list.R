@@ -146,7 +146,7 @@ rbind.emm_list = function(..., which, adjust = "bonferroni") {
 #' @export
 #' @method as.data.frame emm_list
 as.data.frame.emm_list = function(x, ...) {
-    as.data.frame(rbind(x, ...))
+    data.frame(rbind(x, ..., check.names = FALSE))
 }
 
 #' @export

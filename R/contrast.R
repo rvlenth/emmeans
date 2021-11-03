@@ -365,7 +365,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         xlevs = list()
         for (v in by)
             xlevs[[v]] = rep(bylevs[row.1st, v], each=n.each)
-        grid = cbind(grid, as.data.frame(xlevs))
+        grid = cbind(grid, data.frame(xlevs, check.names = FALSE))
         if (hasName(object@grid, ".offset."))
             grid[[".offset."]] = tcmat %*% object@grid[unlist(by.rows), ".offset."]
     }

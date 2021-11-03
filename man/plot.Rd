@@ -102,6 +102,11 @@ If \code{plotit = TRUE}, a graphical object is returned.
 Methods are provided to plot EMMs as side-by-side CIs, and optionally to display 
   \dQuote{comparison arrows} for displaying pairwise comparisons.
 }
+\note{
+In order to play nice with the plotting functions,
+any variable names that are not syntactically correct (e.g., contain spaces)
+are altered using \code{\link{make.names}}.
+}
 \section{Details}{
 
 If any \code{by} variables are in force, the plot is divided into separate

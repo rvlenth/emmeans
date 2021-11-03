@@ -25,7 +25,7 @@ test(object, null, ...)
   "prediction"), level = 0.95,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
-\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.data.frame}{emmGrid}(x, row.names = NULL, check.names = TRUE, ...)
 
 \method{[}{summary_emm}(x, ..., as.df = TRUE)
 }
@@ -143,7 +143,7 @@ such issues.}
 
 \item{row.names}{passed to \code{\link{as.data.frame}}}
 
-\item{optional}{passed to \code{\link{as.data.frame}}}
+\item{check.names}{passed to \code{\link{data.frame}}}
 
 \item{as.df}{Logical value. With \code{x[..., as.df = TRUE]}, the result is
 object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
