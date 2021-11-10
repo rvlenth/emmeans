@@ -11,7 +11,7 @@ title: "NEWS for the emmeans package"
         So by default, the result will have syntactically valid names; this is
         a change, but only because `optional` did not work right (because
         it is an argument for `as.data.frame.list()).
-    
+  * Fix for missing column names in `linfct` from `emmeans()` (#308)
 
 
 

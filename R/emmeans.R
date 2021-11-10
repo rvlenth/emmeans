@@ -439,7 +439,8 @@ emmeans = function(object, specs, by = NULL,
                 fac.reduce(RG@linfct[idx, , drop=FALSE])
             })
         
-        linfct = t(matrix(K, nrow = ncol(RG@linfct)))
+        linfct = t(matrix(K, nrow = ncol(RG@linfct),
+                          dimnames = list(colnames(RG@linfct))))
         row.names(linfct) = NULL
         
         if(.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
