@@ -440,9 +440,8 @@ emmeans = function(object, specs, by = NULL,
             })
         
         linfct = t(matrix(K, nrow = ncol(RG@linfct),
-                          dimnames = list(colnames(RG@linfct))))
-        row.names(linfct) = NULL
-        
+                          dimnames = list(colnames(RG@linfct), NULL)))
+
         if(.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
             if(get_emm_option("msg.interaction"))
                 message("NOTE: Results may be misleading due ", 
