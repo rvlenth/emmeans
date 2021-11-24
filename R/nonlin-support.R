@@ -96,14 +96,12 @@ recover_data.gnls = function(object, param, data, ...) {
     if(missing(param))
         return("'param' argument is required for gnls objects")
 
-    plist <- object$plist
-    pnames <- names(plist)
-    if(is.null(params <- eval(object$call$params))){
-        params <- list(formula(paste0(paste(pnames, collapse = "+"), "~ 1")))
-    }else{ 
-        if (!is.list(params)) params <- list(params)
-    }
-    params <- unlist(lapply(params, function(pp){
+    plist = object$plist
+    pnames = names(plist)
+    params = eval(object$call$params)
+    if (!is.list(params)) params = list(params)
+    
+    params = unlist(lapply(params, function(pp){
         if(is.name(pp[[2]])){
             list(pp)
         }else{
@@ -114,10 +112,9 @@ recover_data.gnls = function(object, param, data, ...) {
                                     ")")))
         }
     }), recursive=FALSE)
-    
-    names(params) <- pnames
-    
-    form <- params[[param]]
+
+    names(params) = pnames
+    form = params[[param]]
     
     trms = delete.response(terms(eval(form, envir = environment(formula(object)))))
     if(is.null(data))
