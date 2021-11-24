@@ -88,4 +88,51 @@ emm_basis.nlme = function(object, trms, xlev, grid, param, ...) {
          misc = list(estName = param))
 }
 
+# experimental support for gnls - femiguez@iastate.edu
+recover_data.gnls = function(object, param, data, ...) {
+    fcall = object$call$params
+    if (is.null(fcall))
+        return("Models fitted without a 'params' specification are not supported.")
+    if(missing(param))
+        return("'param' argument is required for gnls objects")
+
+    plist = object$plist
+    pnames = names(plist)
+    params = eval(object$call$params)
+    if (!is.list(params)) params = list(params)
+    
+    params = unlist(lapply(params, function(pp){
+        if(is.name(pp[[2]])){
+            list(pp)
+        }else{
+            ## multiple parameters on left hand side
+            eval(parse(text = paste("list(",
+                                    paste(paste(all.vars(pp[[2]]), deparse(pp[[3]]), sep = "~"),
+                                          collapse = ","),
+                                    ")")))
+        }
+    }), recursive=FALSE)
+
+    names(params) = pnames
+    form = params[[param]]
+    
+    trms = delete.response(terms(eval(form, envir = environment(formula(object)))))
+    if(is.null(data))
+        data = eval(object$call$data, envir = environment(formula(object)))
+    recover_data(fcall, trms, object$na.action, data = data, ...)
+}
+
+emm_basis.gnls = function(object, trms, xlev, grid, param, ...) {
+    idx = object$pmap[[param]]
+    V = object$varBeta[idx, idx, drop = FALSE]
+    bhat = object$coefficients[idx]
+    contr = attr(object$plist[[param]], "contrasts")
+    m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
+    X = model.matrix(trms, m, contrasts.arg = contr)
+    dfx = object$dims$N - object$dims$p
+    dffun = function(k, dfargs) dfargs$dfx
+    list(X = X, bhat = bhat, nbasis = estimability::all.estble, 
+         V = V, dffun = dffun, dfargs = list(dfx = dfx), 
+         misc = list(estName = param))
+}
 
