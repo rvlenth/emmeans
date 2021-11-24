@@ -89,16 +89,13 @@ emm_basis.nlme = function(object, trms, xlev, grid, param, ...) {
 }
 
 # experimental support for gnls
-### For gnls objects: More code might be required to extract parameter
-### list and names
-### Additional REQUIRED argument is 'param' - parameter name to explore
-recover_data.gnls = function(object, param, ...) {
+recover_data.gnls = function(object, param, data, ...) {
+    fcall = object$call$params
+    if (is.null(fcall))
+        return("Models fitted without a 'params' specification are not supported.")
     if(missing(param))
         return("'param' argument is required for gnls objects")
-    fcall = object$call
-    if (!is.null(fcall$weights))
-        fcall$weights = nlme::varWeights(object$modelStruct)
-    ## The 'fixed' part in a gnls object is not as simple as in an nlme object
+
     plist <- object$plist
     pnames <- names(plist)
     if(is.null(params <- eval(object$call$params))){
@@ -119,24 +116,13 @@ recover_data.gnls = function(object, param, ...) {
     }), recursive=FALSE)
     
     names(params) <- pnames
-    fixed = params
-    if (is.call(fixed))
-        fixed = eval(fixed, envir = parent.frame())
-    if(!is.list(fixed))
-        fixed = as.list(fixed)
-    form = NULL
-    for (x in fixed)
-        if (param %in% all.names(x)) form = x   
-    if (is.null(form))
-        return(paste("Can't find '", param, "' among the parameters", sep = ""))
-    fcall$weights = NULL
-    ## trms = delete.response(terms(update(terms(object), form)))
-    vars.wo.parms <- setdiff(all.vars(formula(object)), pnames)
-    trms <- nlme::asOneFormula(formula(object), fcall$params,
-                               omit = c(names(object$plist), "pi", vars.wo.parms))
-    if (length(.all.vars(trms)) == 0)
-        return(paste("No predictors for '", param, "' in fixed model", sep = ""))
-    recover_data(fcall, trms, object$na.action, ...)
+    
+    form <- params[[param]]
+    
+    trms = delete.response(terms(eval(form, envir = environment(formula(object)))))
+    if(is.null(data))
+        data = eval(object$call$data, envir = environment(formula(object)))
+    recover_data(fcall, trms, object$na.action, data = data, ...)
 }
 
 emm_basis.gnls = function(object, trms, xlev, grid, param, ...) {
@@ -146,14 +132,8 @@ emm_basis.gnls = function(object, trms, xlev, grid, param, ...) {
     contr = attr(object$plist[[param]], "contrasts")
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contr)
-    dfx = rep(object$dims$N, ncol(object$plist[[param]])) - rep(1, ncol(object$plist[[param]]))
-    names(dfx) <- colnames(object$plist[[param]])
-    ## dfx[1] = min(dfx) # I'm assuming 1st one is intercept
-    ## There is no intercept in nonlinear models. I'm confused about this
-    dffun = function(k, dfargs) { # containment df
-        idx = which(abs(k) > 1e-6)
-        ifelse(length(idx) > 0, min(dfargs$dfx[idx]), NA)
-    }
+    dfx = object$dims$N - object$dims$p
+    dffun = function(k, dfargs) dfargs$dfx
     list(X = X, bhat = bhat, nbasis = estimability::all.estble, 
          V = V, dffun = dffun, dfargs = list(dfx = dfx), 
          misc = list(estName = param))
