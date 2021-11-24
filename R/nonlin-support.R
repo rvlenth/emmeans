@@ -88,7 +88,7 @@ emm_basis.nlme = function(object, trms, xlev, grid, param, ...) {
          misc = list(estName = param))
 }
 
-# experimental support for gnls
+# experimental support for gnls - femiguez@iastate.edu
 recover_data.gnls = function(object, param, data, ...) {
     fcall = object$call$params
     if (is.null(fcall))
