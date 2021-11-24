@@ -22,6 +22,12 @@
 # Functions used only internally and of fairly general use
 # More of these with specific uses only within a certain context remain there.
 
+
+## %in%-style operator with partial matching
+## e.g.,  ("bonf" %.pin% p.adjust.methods)  is TRUE
+"%.pin%" = function (x, table) pmatch(x, table, nomatch = 0L) > 0L
+
+
 ## Alternative to all.vars, but keeps vars like foo$x and foo[[1]] as-is
 ##   Passes ... to all.vars
 #' @export

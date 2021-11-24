@@ -260,7 +260,7 @@ recover_data.lme = function(object, data, ...) {
 #' @export
 emm_basis.lme = function(object, trms, xlev, grid, 
         mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite", "asymptotic"), 
-        sigmaAdjust = TRUE, options, ...) {
+        sigmaAdjust = TRUE, options, extra.iter = 0, ...) {
     mode = match.arg(mode)
     if (mode == "boot-satterthwaite") mode = "appx-satterthwaite"  # backward compatibility
     if (mode == "asymptotic")
@@ -289,7 +289,8 @@ emm_basis.lme = function(object, trms, xlev, grid,
         dffun = function(k, dfargs) dfargs$df
     }
     else if (mode %in% c("satterthwaite", "appx-satterthwaite")) {
-        G = try(gradV.kludge(object), silent = TRUE)
+        mode = "appx-satterthwaite"
+        G = try(gradV.kludge(object, extra.iter = extra.iter), silent = TRUE)
         ###! not yet, doesn't work G = try(lme_grad(object, object$call, object$data, V))
         if (inherits(G, "try-error"))
             stop("Unable to estimate Satterthwaite parameters")
@@ -329,7 +330,8 @@ emm_basis.lme = function(object, trms, xlev, grid,
 # model with a few random perturbations of y, then
 # regressing the changes in V against the changes in the 
 # covariance parameters
-gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data = object$data) {
+gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, 
+                        data = object$data, extra.iter = 0) {
     # check consistency of contrasts
     #### This code doesn't work with coerced factors. Hardly seems messing with, so I commented it out
     # cnm = names(object$contrasts)
@@ -347,7 +349,7 @@ gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, data
     yname = all.vars(eval(call))[1]
     y = data[[yname]]
     n = length(y)
-    dat = t(replicate(2 + length(theta), {
+    dat = t(replicate(2 + extra.iter + length(theta), {
         data[[yname]] = y + sig * rnorm(n)
         mod = update(object, data = data)
         c(attr(mod$apVar, "Pars") - theta, as.numeric(mod[[Vname]] - V))
@@ -425,7 +427,7 @@ recover_data.gls = function(object, data, ...) {
 
 emm_basis.gls = function(object, trms, xlev, grid, 
                          mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite", "asymptotic"), 
-                         options, misc, ...) {
+                         extra.iter = 0, options, misc, ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
@@ -453,7 +455,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
         }
         if (mode == "appx-satterthwaite") {
             G = try(gradV.kludge(object, "varBeta", call = object$call$model,
-                                 data = data),
+                                 data = data, extra.iter = extra.iter),
                     silent = TRUE)
         }
         else

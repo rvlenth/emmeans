@@ -66,11 +66,13 @@ Scroll down or follow the links to those groups for more information.
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
 |glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package (dev. version only?)        |
 |gls          |nlme     |[K](#K)  |`mode = c("auto", "df.error", "satterthwaite", "asymptotic")`|
+|gnls         |nlme     |[A](#A)  |Supports `params` part. Requires `param = "<name>"`          |
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
 |lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
 |lme          |nlme     |[K](#K)  |`sigmaAdjust = c(TRUE, FALSE),`                              |
-|             |         |         |`mode = c("auto", containment", "satterthwaite", "asymptotic")`|
+|             |         |         |`mode = c("auto", containment", "satterthwaite", "asymptotic"),`|
+|             |         |         |`extra.iter = 0`                                             |
 |lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
 |             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
 |             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
@@ -88,8 +90,8 @@ Scroll down or follow the links to those groups for more information.
 |mmer         |sommer   |[G](#G)  |                                                             |
 |multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |
 |             |         |         |Always include response in specs for `emmeans()`             |
-|nauf         |nauf.*xxx* |[P](#P)  |Supported in **nauf** package                                |
-|nlme         |nlme     |[A](#A)  |Supports fixed part. Requires `param`                        |
+|nauf         |nauf.*xxx* |[P](#P)  |Supported in **nauf** package                              |
+|nlme         |nlme     |[A](#A)  |Supports fixed part. Requires `param = "<name>"`             |
 |polr         |MASS     |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
 |             |         |         |`"exc.prob", "prob", "mean.class")`                          |
 |rlm          |MASS     |[A](#A)  |inherits `lm` support                                        |
@@ -253,7 +255,10 @@ is `2*s^4 / Var(s^2)`. In case our numerical methods for this fail, we also
 offer `mode = "appx-satterthwaite"` as a backup, by which quantities related to
 `Var(s^2)` are obtained by randomly perturbing the response values. Currently,
 only `"appx-satterthwaite"` is available for `lme` objects, and it is used
-if `"satterthwaite"` is requested. (Note: Previously, `"appx-satterthwaite"` was
+if `"satterthwaite"` is requested. 
+Because `appx-satterthwaite` is simulation-based, results may vary if the same 
+analysis is repeated. An `extra.iter` argument may be added to request additional simulation runs (at [possibly considerable] cost of repeating the model-fitting that many more times).
+(Note: Previously, `"appx-satterthwaite"` was
 termed `"boot-satterthwaite"`; this is still supported for backward compatibility.
 The "boot" was abandoned because it is really an approximation method, not
 a bootstrap method in the sense as many statistical methods.)
@@ -268,6 +273,9 @@ freedom for the coarsest grouping involved in the contrast or linear function
 involved, so it tends to under-estimate the degrees of freedom.
 The default is `mode = "auto"`, which uses Satterthwaite if there are estimated 
 random effects and the non-Satterthwaite option otherwise.
+
+The `extra.iter` argument is ignored unless the d.f. method is (or defaults to) 
+`appx-satterthwaite`.
 
 [Back to quick reference](#quickref)
 

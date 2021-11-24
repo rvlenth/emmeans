@@ -183,7 +183,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
             type = .get.predict.type(emmo@misc)
     }
     # If we say type = "scale", set it to "response" and set a flag
-    if (nonlin.scale <- (pmatch(type, "scale", 0) == 1)) 
+    if (nonlin.scale <- (type %.pin% "scale")) 
         type = "response"
             
     type = .validate.type(type)
@@ -377,8 +377,8 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     }
     if (!missing(scale)) {
         args = list(...)
-        pass = pmatch(names(args), names(as.list(args(ggplot2::scale_y_continuous))))
-        args = c(list(trans = scale), args[which(!is.na(pass))])
+        pass = names(args) %.pin% names(as.list(args(ggplot2::scale_y_continuous)))
+        args = c(list(trans = scale), args[pass])
         grobj = grobj + do.call(ggplot2::scale_y_continuous, args)
     }
     

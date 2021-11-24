@@ -12,6 +12,7 @@ title: "NEWS for the emmeans package"
         a change, but only because `optional` did not work right (because
         it is an argument for `as.data.frame.list()).
   * Fix for missing column names in `linfct` from `emmeans()` (#308)
+  * Added `gnls` support (#313, #314, thanks to Fernando Miguez)
 
 
 

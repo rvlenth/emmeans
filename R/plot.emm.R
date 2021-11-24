@@ -37,7 +37,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
     nonlin.scale = FALSE
     if(!missing(type)) {
         # If we say type = "scale", set it to "response" and set a flag
-        if (nonlin.scale <- (pmatch(type, "scale", 0) == 1)) 
+        if (nonlin.scale <- (type %.pin% "scale"))  ##(pmatch(type, "scale", 0) == 1)) 
             type = "response"
         object = update(x, predict.type = type, ..., silent = TRUE)
     }
@@ -548,8 +548,8 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         
         if(!is.null(scale)) {
             args = list(...)
-            pass = pmatch(names(args), names(as.list(args(ggplot2::scale_x_continuous))))
-            args = c(list(trans = scale), args[which(!is.na(pass))])
+            pass = (names(args) %.pin% names(as.list(args(ggplot2::scale_x_continuous))))
+            args = c(list(trans = scale), args[pass])
             grobj = grobj + do.call(ggplot2::scale_x_continuous, args)
         }
             

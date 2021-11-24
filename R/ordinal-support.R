@@ -22,7 +22,7 @@
 ### support for the ordinal package
 
 recover_data.clm = function(object, mode = "latent", ...) {
-    if (!is.na(pmatch(mode, "scale"))) {
+    if (mode %.pin% "scale") {  ###(!is.na(pmatch(mode, "scale"))) {
         if (is.null(trms <- object$S.terms))
             return("Specified mode=\"scale\", but no scale model is present") # ref_grid's error handler takes it from here
         recover_data(object$call, trms, object$na.action, ...)

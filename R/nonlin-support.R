@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-201y Russell V. Lenth                                #
+#    Copyright (c) 2012-2021 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -63,7 +63,6 @@ recover_data.nlme = function(object, param, ...) {
     if (is.null(form))
         return(paste("Can't find '", param, "' among the fixed parameters", sep = ""))
     fcall$weights = NULL
-    #trms = delete.response(terms(update(terms(object), form)))
     trms = delete.response(terms(form))
     if (length(.all.vars(trms)) == 0)
         return(paste("No predictors for '", param, "' in fixed model", sep = ""))
@@ -88,7 +87,8 @@ emm_basis.nlme = function(object, trms, xlev, grid, param, ...) {
          misc = list(estName = param))
 }
 
-# experimental support for gnls - femiguez@iastate.edu
+
+# Support for gnls - contributed by Fernando Miguez <femiguez@iastate.edu>
 recover_data.gnls = function(object, param, data, ...) {
     fcall = object$call$params
     if (is.null(fcall))
@@ -101,17 +101,17 @@ recover_data.gnls = function(object, param, data, ...) {
     params = eval(object$call$params)
     if (!is.list(params)) params = list(params)
     
-    params = unlist(lapply(params, function(pp){
-        if(is.name(pp[[2]])){
+    params = unlist(lapply(params, function(pp) {
+        if (is.name(pp[[2]])){
             list(pp)
-        }else{
-            ## multiple parameters on left hand side
+        }
+        else { ## multiple parameters on left hand side
             eval(parse(text = paste("list(",
                                     paste(paste(all.vars(pp[[2]]), deparse(pp[[3]]), sep = "~"),
                                           collapse = ","),
                                     ")")))
         }
-    }), recursive=FALSE)
+    }), recursive = FALSE)
 
     names(params) = pnames
     form = params[[param]]

@@ -270,10 +270,10 @@
 #'   determining the family size for \emph{P}-value adjustments.
 #'   
 #' @section Warning about potential misuse of P values:
-#'   A growing consensus in the statistical and scientific community is that
+#'   Some in the statistical and scientific community argue that
 #'   the term \dQuote{statistical significance} should be completely abandoned, and
 #'   that criteria such as \dQuote{p < 0.05} never be used to assess the
-#'   importance of an effect. These practices are just too misleading and prone to abuse.
+#'   importance of an effect. These practices can be too misleading and are prone to abuse.
 #'   See \href{../doc/basics.html#pvalues}{the \dQuote{basics} vignette} for more
 #'   discussion.
 #'   
@@ -283,8 +283,14 @@
 #'   scale of the linear predictor, regardless of the setting for `type`. If
 #'   \code{type = "response"}, the null value displayed in the summary table 
 #'   will be back-transformed from the value supplied by the user. But the
-#'   displayed \code{delta} will not be changed, because there (usually) is
+#'   displayed \code{delta} will not be changed, because there (often) is
 #'   not a natural way to back-transform it.
+#'   
+#' @note When we have \code{type = "response"}, and \code{bias.adj = TRUE},
+#'   the \code{null} value displayed in the output is both back-transformed
+#'   and bias-adjusted, leading to a rather non-intuitive-looking null value.
+#'   However, since the tests themselves are performed on the link scale,
+#'   this is the response value at which a *P* value of 1 would be obtained.
 #' 
 #' @note The default \code{show} method for \code{emmGrid} objects (with the
 #'   exception of newly created reference grids) is \code{print(summary())}.
@@ -488,11 +494,11 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
     
     # get vcov matrix only if needed (adjust == "mvt")
     corrmat = sch.rank = NULL
-    if (!is.na(pmatch(adjust, "mvt"))) {
+    if (adjust %.pin% "mvt") { ##(!is.na(pmatch(adjust, "mvt"))) {
         corrmat = cov2cor(vcov(object))
         attr(corrmat, "by.rows") = by.rows
     }
-    else if (!is.na(pmatch(adjust, "scheffe"))) {
+    else if (adjust %.pin% "scheffe") {  ##(!is.na(pmatch(adjust, "scheffe"))) {
         if(is.null(sch.rank <- .match.dots("scheffe.rank", ...)))
             sch.rank = sapply(by.rows, function(.) qr(zapsmall(object@linfct[., , drop = FALSE]))$rank)
         if(length(unique(sch.rank)) > 1)
@@ -834,7 +840,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, check.names = TRUE, ...) {
     et = as.numeric(fam.info[3])
 
     # Force no adjustment when just one test, unless we're using scheffe
-    if ((n.contr == 1) && (pmatch(adjust, "scheffe", 0) != 1)) 
+    if ((n.contr == 1) && (adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) 
         adjust = "none"
     
     # do a pmatch of the adjust method
@@ -933,7 +939,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, check.names = TRUE, ...) {
     et = as.numeric(fam.info[3])
     
     ragged.by = (is.character(fam.size))   # flag that we need to do groups separately
-    if (!ragged.by && (n.contr == 1) && (pmatch(adjust, "scheffe", 0) != 1)) # Force no adjustment when just one interval, unless using Scheffe
+    if (!ragged.by && (n.contr == 1) && (adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) # Force no adjustment when just one interval, unless using Scheffe
         adjust = "none"
     
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", "bonferroni", "none")
@@ -1122,7 +1128,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, check.names = TRUE, ...) {
 # check a "type" arg to make it legal
 # NOTE: if not matched, returns "link", i.e., no back-transformation will be done
 .validate.type = function (type) {
-    type = .valid.types[pmatch(type, .valid.types, 1)]
+    type = .valid.types[type %.pin% .valid.types]  ##[pmatch(type, .valid.types, 1)]
     if (length(type) > 1) {
         type = type[1]
         warning("You specified more than one prediction type. Only type = \"", type, "\" was used")
