@@ -13,6 +13,10 @@ title: "NEWS for the emmeans package"
         it is an argument for `as.data.frame.list()).
   * Fix for missing column names in `linfct` from `emmeans()` (#308)
   * Added `gnls` support (#313, #314, thanks to Fernando Miguez)
+  * Modified `glm` support so that `df.residual` is used unless the
+    family is binomial or poisson. Thus, e.g., we match `lm` results 
+    when the model is fitted with a Gaussian family. Previously we ignored
+    the d.f. for all `glm` objects.
 
 
 

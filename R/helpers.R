@@ -55,8 +55,9 @@ emm_basis.lm = function(object, trms, xlev, grid, ...) {
     misc = list()
     if (inherits(object, "glm")) {
         misc = .std.link.labels(object$family, misc)
-        dffun = function(k, dfargs) Inf
-        dfargs = list()
+        dffun = function(k, dfargs) dfargs$df
+        dfargs = list(df = ifelse(object$family$family %in% c("binomial", "poisson"), 
+                                  Inf, object$df.residual))
     }
     else {
         dfargs = list(df = object$df.residual)
