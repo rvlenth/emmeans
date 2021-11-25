@@ -1128,7 +1128,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, check.names = TRUE, ...) {
 # check a "type" arg to make it legal
 # NOTE: if not matched, returns "link", i.e., no back-transformation will be done
 .validate.type = function (type) {
-    type = .valid.types[type %.pin% .valid.types]  ##[pmatch(type, .valid.types, 1)]
+    type = .valid.types[pmatch(type, .valid.types, 1)]
     if (length(type) > 1) {
         type = type[1]
         warning("You specified more than one prediction type. Only type = \"", type, "\" was used")
