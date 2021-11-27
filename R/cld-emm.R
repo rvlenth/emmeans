@@ -19,7 +19,7 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-# Runs the function multicompLetters from the multcompView package
+# Runs the function multcompLetters from the multcompView package
 # returns an error if not installed
 .mcletters = function(..., Letters=c("1234567890",LETTERS,letters), reversed=FALSE) {
     .requireNS("multcompView", 
@@ -42,7 +42,7 @@
 ###       because it's referenced by augmentedRCBD package
 #' Compact letter displays
 #' 
-#' A method for \code{multicomp::cld()} is provided for users desiring to produce 
+#' A method for \code{multcomp::cld()} is provided for users desiring to produce 
 #' compact-letter displays (CLDs). 
 #' This method uses the Piepho (2004) algorithm (as implemented in the
 #' \pkg{multcompView} package) to generate a compact letter display of all

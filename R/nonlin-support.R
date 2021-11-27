@@ -129,7 +129,7 @@ emm_basis.gnls = function(object, trms, xlev, grid, param, ...) {
     contr = attr(object$plist[[param]], "contrasts")
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contr)
-    dfx = object$dims$N - object$dims$p
+    dfx = with(attributes(logLik(object)), nobs - df)
     dffun = function(k, dfargs) dfargs$dfx
     list(X = X, bhat = bhat, nbasis = estimability::all.estble, 
          V = V, dffun = dffun, dfargs = list(dfx = dfx), 
