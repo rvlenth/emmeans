@@ -27,6 +27,7 @@ This vignette covers the intricacies of transformations and link functions in **
   6. [Standardized response](#stdize)
   7. [Faking a log transformation](#logs)
      a. [Faking other transformations](#faking)
+     b. [Alternative scale](#altscale)
   8. [Bias adjustment](#bias-adj)
   
 [Index of all vignette topics](vignette-topics.html) 
@@ -380,9 +381,28 @@ regrid(emm, transform = "probit")
 would re-grid the existing `emm` to the probit scale. Note that any estimates in `emm`
 outside of the interval $(0,1)$ will be flagged as non-estimable.
 
-The section on standardized responses gives an example of reverse-engineering 
+The [section on standardized responses](#stdize) gives an example of reverse-engineering 
 a standardized response transformation in this way.
 
+
+### Alternative scale {#altscale}
+<!-- @index Transformations!Percent difference; Percentage differences; Examples!`pigs` -->
+It is possible to create a report on an alternative scale by updating the `tran` component.
+For example, suppose we want percent differences instead of ratios in the preceding example
+with the `pigs` dataset. This is possible by modifying the inverse transformation:
+since the uusual inverse transformation is a ratio of the form $r = a/b$, we have that
+the percentage difference between $a$ and $b$ is $100(a-b)/b = 100(r-1)$. Thus,
+```{r}
+pct.diff.tran <- list(
+    linkfun = function(mu) log(mu/100 + 1),
+    linkinv = function(eta) 100 * (exp(eta) - 1),
+    mu.eta = function(eta) 100 * exp(eta),
+    name = "log(pct.diff)"
+)
+
+update(pairs(piglog.emm.s, type = "response"), 
+       tran = pct.diff.tran, inv.lbl = "pct.diff")
+```
 
 ## Standardized response {#stdize}
 <!-- @index Transformations!Standardizing; Transformations!`scale()`;

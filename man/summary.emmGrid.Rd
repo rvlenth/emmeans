@@ -25,7 +25,7 @@ test(object, null, ...)
   "prediction"), level = 0.95,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
-\method{as.data.frame}{emmGrid}(x, row.names = NULL, check.names = TRUE, ...)
+\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional, check.names = TRUE, ...)
 
 \method{[}{summary_emm}(x, ..., as.df = TRUE)
 }
@@ -142,6 +142,8 @@ such issues.}
 \item{x}{object of the given class}
 
 \item{row.names}{passed to \code{\link{as.data.frame}}}
+
+\item{optional}{required argument, but ignored in \code{as.data.frame.emmGrid}}
 
 \item{check.names}{passed to \code{\link{data.frame}}}
 

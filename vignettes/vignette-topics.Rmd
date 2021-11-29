@@ -89,6 +89,7 @@ vignette: >
           * [How arrows are determined](xplanations.html#arrows)
       * [with logs](comparisons.html#logs)
       * [with overlapping CIs](FAQs.html#CIerror)
+  * [Comparisons result in `(nothing)`](FAQs.html#nopairs)
   * [Confidence intervals](confidence-intervals.html#summary)
       * [Overlapping](FAQs.html#CIerror)
   * [`confint()`](confidence-intervals.html#summary)
@@ -223,6 +224,7 @@ vignette: >
       * `pigs`
           * [in *basics: motivation*](basics.html#motivation)
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
+          * [in *transformations: altscale*](transformations.html#altscale)
           * [in *transformations: overview*](transformations.html#overview)
           * [in *transformations: pigs-biasadj*](transformations.html#pigs-biasadj)
       * [`rlm` objects](xtending.html#rlm)
@@ -410,6 +412,7 @@ vignette: >
   * [Non-estimability](messy-data.html#nonestex)
   * [`non.nuisance`](messy-data.html#nuisance)
   * [`NonEst` values](FAQs.html#NAs)
+  * [`(nothing)` in output](FAQs.html#nopairs)
   * [`nuisance`](messy-data.html#nuisance)
   * [Nuisance factors](messy-data.html#nuisance)
 
@@ -448,6 +451,7 @@ vignette: >
   * [`pairwise` contrasts](comparisons.html#contrasts)
   * [Pairwise *P*-value plots](comparisons.html#pwpp)
   * [`params`](basics.html#params)
+  * [Percentage differences](transformations.html#altscale)
   * `plot()`
       * [nested factors](messy-data.html#cows)
   * [`plot.emmGrid()`](basics.html#plot.emmGrid)
@@ -610,6 +614,7 @@ vignette: >
       * [with link function](transformations.html#tranlink)
       * [Log](comparisons.html#logs)
       * [Overview](transformations.html#overview)
+      * [Percent difference](transformations.html#altscale)
       * [Re-gridding](transformations.html#regrid)
       * [Response versus link functions](transformations.html#link-bias)
       * [`scale()`](transformations.html#stdize)

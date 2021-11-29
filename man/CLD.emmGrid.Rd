@@ -42,7 +42,7 @@ an \code{adjust} method)}
 (If length exceeds one, only the first one is used)}
 }
 \description{
-A method for \code{multicomp::cld()} is provided for users desiring to produce 
+A method for \code{multcomp::cld()} is provided for users desiring to produce 
 compact-letter displays (CLDs). 
 This method uses the Piepho (2004) algorithm (as implemented in the
 \pkg{multcompView} package) to generate a compact letter display of all

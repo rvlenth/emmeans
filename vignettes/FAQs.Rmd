@@ -21,6 +21,7 @@ This vignette contains answers to questions received from users or posted on dis
 
  1. [What are EMMs/lsmeans?](#what)
  2. [What is the fastest way to obtain EMMs and pairwise comparisons?](#fastest)
+ 2. [I wanted comparisons, but all I get is (nothing)](#nopairs)
  2. [The model I fitted is not supported by **emmeans**](#qdrg)
  2. [I have three (or two or four) factors that interact](#interactions)
  3. [I have covariate(s) that interact(s) with factor(s)](#trends)
@@ -63,6 +64,26 @@ If you use a bad model, you will get bad results. And if you use a good model,
 you will get appropriate results. It's up to you: it's your research---is it important?
 
 [Back to Contents](#contents)
+
+## I wanted comparisons, but all I get is (nothing) {#nopairs}
+<!-- @index Comparisons result in `(nothing)`; `(nothing)` in output@nothing -->
+This happens when you have only one estimate; and you can't compare it
+with itself! This is turn can happen when you have a situation like this:
+you have fitted 
+```
+mod <- lm(RT ~ treat, data = mydata)
+```
+and `treat` is coded in
+your dataset with numbers 1, 2, 3, ... . Since `treat` is a numeric predictor,
+`emmeans()` just reduces it to a single number, its mean, rather than separate values for
+each treatment. Also, please note that this is almost certainly NOT the model you want,
+because it forces an assumption that the treatment effects all fall on a straight line.
+You should fit a model like 
+```
+mod <- lm(RT ~ factor(treat), data = mydata)
+```
+then you
+will have much better luck with comparisons.
 
 ## The model I fitted is not supported by **emmeans** {#qdrg}
 <!-- @index Models!Unsupported; `qdrg()` -->

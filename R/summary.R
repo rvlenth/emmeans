@@ -376,7 +376,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
         by = misc$by.vars
     
     # Disable Tukey if by vars don't match those used in construction
-    if((misc$estType == "pairs") && (paste(c("", by), collapse = ",") != misc$.pairby))
+    if((!is.na(misc$estType) && misc$estType == "pairs") && (paste(c("", by), collapse = ",") != misc$.pairby))
         misc$estType = object@misc$estType = "contrast"
     
     
@@ -672,6 +672,7 @@ predict.emmGrid <- function(object, type,
 #' @order 5
 #' @param x object of the given class
 #' @param row.names passed to \code{\link{as.data.frame}}
+#' @param optional required argument, but ignored in \code{as.data.frame.emmGrid}
 #' @param check.names passed to \code{\link{data.frame}}
 #' @return The \code{as.data.frame} method returns a plain data frame,
 #'   equivalent to \code{as.data.frame(summary(.))}. 
@@ -690,8 +691,8 @@ predict.emmGrid <- function(object, type,
 #' @examples
 #' # Show estimates to more digits
 #' print(test(con), digits = 7)
-as.data.frame.emmGrid = function(x, row.names = NULL, check.names = TRUE, ...) {
-    data.frame(summary(x, ...), row.names = row.names, check.names = check.names)
+as.data.frame.emmGrid = function(x, row.names = NULL, optional, check.names = TRUE, ...) {
+    as.data.frame(summary(x, ...), row.names = row.names, check.names = check.names)
 }
 
 
