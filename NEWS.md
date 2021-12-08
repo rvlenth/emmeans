@@ -1,6 +1,9 @@
 ---
 title: "NEWS for the emmeans package"
 ---
+## emmeans 1.7.1-999xxx
+  * Improvements to `averaging` support (#319)
+  
 
 ## emmeans 1.7.1
   * Support from multinomial models in mgcv::gam (#303) thanks to Hannes Riebl

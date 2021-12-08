@@ -38,16 +38,16 @@ recover_data.averaging = function(object, data, ...) {
         rhs = sapply(ml, function(m) {f = formula(m); f[[length(f)]]})
         object$formula = update(as.formula(paste("~", paste(rhs, collapse = "+"))), lhs)
     }
-    trms = terms(object$formula)
     if (is.null(data))
         data = ml[[1]]$call$data
+    trms = attr(model.frame(object$formula, data = data), "terms")
     fcall = call("model.avg", formula = object$formula, data = data)
     recover_data(fcall, delete.response(trms), na.action = NULL, ...)
 }
 
 emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     bhat = coef(object, full = TRUE)
-    V = .my.vcov(object, function(.) vcov(., full = TRUE))
+    V = .my.vcov(object, function(.) vcov(., full = TRUE), ...)
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
 
