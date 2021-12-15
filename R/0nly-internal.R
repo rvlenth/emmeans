@@ -289,7 +289,8 @@ model.frame = function(formula, data, ...) {
 # utility to make all names in a summary syntactically valid
 .validate.names = function(object) {
     for (a in c("names", "pri.vars", "by.vars"))
-        attr(object, a) = make.names(attr(object, a))
+        if (!is.null(att <- attr(object, a))) 
+            attr(object, a) = make.names(att)
     object
 }
 
