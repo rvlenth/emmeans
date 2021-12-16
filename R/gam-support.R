@@ -232,8 +232,10 @@ emm_basis.gamlss = function(object, trms, xlev, grid,
         vcov. = V[idx, idx, drop = FALSE]
     }
     if (!is.null(link <- object[[paste0(what, ".link")]])) {
-        # Hack to decide whether to use d.f. or not
-        fam = ifelse(object$family[1] %in% c("NO", "GA"), "gaussian", "other")
+        # Decide whether to use d.f. or not
+        use.df = c("BCCG", "BCPE", "BCT", "GA", "GT", "NO", "NOF", "TF")
+        fam = ifelse((what == "mu") && (object$family[1] %in% use.df), 
+                     "gaussian", "other")
         object$family = list(family = fam, link = link)
     }
     ###object$qr = object[[paste0(what, ".qr")]]
