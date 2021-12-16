@@ -231,8 +231,11 @@ emm_basis.gamlss = function(object, trms, xlev, grid,
         idx = before + seq_along(object$coefficients)
         vcov. = V[idx, idx, drop = FALSE]
     }
-    if (!is.null(link <- object[[paste0(what, ".link")]]))
-        object$family = list(link = link)
+    if (!is.null(link <- object[[paste0(what, ".link")]])) {
+        # Hack to decide whether to use d.f. or not
+        fam = ifelse(object$family[1] %in% c("NO", "GA"), "gaussian", "other")
+        object$family = list(family = fam, link = link)
+    }
     ###object$qr = object[[paste0(what, ".qr")]]
     ###NextMethod("emm_basis", vcov. = vcov., ...)
     emm_basis.lm(object, trms, xlev, grid, vcov. = vcov., ...)

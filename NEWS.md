@@ -4,6 +4,10 @@ title: "NEWS for the emmeans package"
 ## emmeans 1.7.1-999xxx
   * Improvements to `averaging` support (#319)
   * Fixed bug in comparison arrows when `by = NULL` (#321)
+    (this bug was a subtle byproduct of the name-checking in #305)
+    Note this fixes visible errors in the vignettes for ver 1.7.1-1
+  * Patch for `gamlss` support (#323)
+    
 
 ## emmeans 1.7.1
   * Support from multinomial models in mgcv::gam (#303) thanks to Hannes Riebl
