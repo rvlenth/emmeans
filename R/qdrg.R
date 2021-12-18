@@ -75,31 +75,29 @@
 #' 
 #' @export
 #' @examples
-#' if (require(biglm)) {
+#' if (require(biglm, quietly = TRUE)) withAutoprint({
 #'   # Post hoc analysis of a "biglm" object -- not supported by emmeans
 #'   bigmod <- biglm(log(conc) ~ source + factor(percent), data = pigs)
-#'   
 #'   rg1 <- qdrg(log(conc) ~ source + factor(percent), data = pigs, 
 #'       coef = coef(bigmod), vcov = vcov(bigmod), df = bigmod$df.residual)
 #'   emmeans(rg1, "source", type = "response")
-#'   
 #'   ## But in this particular case, we could have done it the easy way:
 #'   ##     rg1 <- qdrg(object = bigmod, data = pigs)
-#' }
-#' if(require(coda) && require(lme4)) {
+#' }, spaced = TRUE)
+#' if(require(coda, quietly = TRUE) && require(lme4, quietly = TRUE)) 
+#'     withAutoprint({
 #'   # Use a stored example having a posterior sample
 #'   # Model is based on the data in lme4::cbpp
-#'   
 #'   post <- readRDS(system.file("extdata", "cbpplist", package = "emmeans"))$post.beta
 #'   rg2 <- qdrg(~ size + period, data = lme4::cbpp, mcmc = post, link = "logit")
 #'   summary(rg2, type = "response")
-#' }
-#' if(require(ordinal)) {
+#' }, spaced = TRUE)
+#' if(require(ordinal, quietly = TRUE)) withAutoprint({
 #'   wine.clm <- clm(rating ~ temp * contact, data = wine)
 #'   ref_grid(wine.clm)
 #'   # verify that we get the same thing via:
 #'   qdrg(object = wine.clm, data = wine, ordinal.dim = 5)
-#' }
+#' }, spaced = TRUE)
 #'
 qdrg = function(formula, data, coef, vcov, df, mcmc, object,
                 subset, weights, contrasts, link, qr, ordinal.dim, ...) {

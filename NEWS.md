@@ -7,6 +7,8 @@ title: "NEWS for the emmeans package"
     (this bug was a subtle byproduct of the name-checking in #305)
     Note this fixes visible errors in the vignettes for ver 1.7.1-1
   * Patch for `gamlss` support (#323)
+  * Added `withAutoprint()` to documentation examples with `require()`
+    clauses, so we see interactive-style results
     
 
 ## emmeans 1.7.1

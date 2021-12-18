@@ -72,6 +72,8 @@ what is the appropriate \code{sigma} to use in computing effect sizes; or,
 indeed, whether \emph{any} effect-size measure is appropriate for some
 situations. The user is completely responsible for specifying 
 appropriate parameters (or for failing to do so).
+
+The examples here illustrate a sobering message that effect sizes are often not nearly as accurate as you may think.
 }
 \section{Computation}{
 
@@ -97,28 +99,22 @@ eff_size(pairs(emm), sigma(fiber.lm), df.residual(fiber.lm), method = "identity"
 
 
 ### Mixed model example:
-if (require(nlme)) {
-
+if (require(nlme)) withAutoprint({
   Oats.lme <- lme(yield ~ Variety + factor(nitro), 
                   random = ~ 1 | Block / Variety,
                   data = Oats)
-                  
   # Combine variance estimates
   VarCorr(Oats.lme)
-  totSD <- sqrt(214.4724 + 109.6931 + 162.5590)
+  (totSD <- sqrt(214.4724 + 109.6931 + 162.5590))
   # I figure edf is somewhere between 5 (Blocks df) and 51 (Resid df)
-  
   emmV <- emmeans(Oats.lme, ~ Variety)
-  print(eff_size(emmV, sigma = totSD, edf = 5))
-  print(eff_size(emmV, sigma = totSD, edf = 51))
-}
+  eff_size(emmV, sigma = totSD, edf = 5)
+  eff_size(emmV, sigma = totSD, edf = 51)
+}, spaced = TRUE)
 
 # Multivariate model for the same data:
  MOats.lm <- lm(yield ~ Variety, data = MOats)
  eff_size(emmeans(MOats.lm, "Variety"), 
           sigma = sqrt(mean(sigma(MOats.lm)^2)),   # RMS of sigma()
           edf = df.residual(MOats.lm))
-
-# These results illustrate a sobering message that effect sizes are often
-# not nearly as accurate as you may think.
 }

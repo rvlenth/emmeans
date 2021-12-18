@@ -96,5 +96,6 @@ if(requireNamespace("coda")) {
   # Predictive distribution for herds of size 20
   # (perhaps a bias adjustment should be applied; see "sophisticated" vignette)
   pred.incidence <- coda::as.mcmc(regrid(cbpp.rg), likelihood = "binomial", trials = 20)
+  summary(pred.incidence)
 }
 }
