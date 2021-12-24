@@ -9,6 +9,8 @@ title: "NEWS for the emmeans package"
   * Patch for `gamlss` support (#323)
   * Added `withAutoprint()` to documentation examples with `require()`
     clauses, so we see interactive-style results
+  * Correction to a logic error in adjustment corrections in 
+    `summary.emmGrid` (#31)
     
 
 ## emmeans 1.7.1

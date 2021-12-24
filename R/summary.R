@@ -841,7 +841,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional, check.names = TR
     et = as.numeric(fam.info[3])
 
     # Force no adjustment when just one test, unless we're using scheffe
-    if ((n.contr == 1) && (adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) 
+    if ((n.contr == 1) && !(adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) 
         adjust = "none"
     
     # do a pmatch of the adjust method
@@ -940,7 +940,7 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional, check.names = TR
     et = as.numeric(fam.info[3])
     
     ragged.by = (is.character(fam.size))   # flag that we need to do groups separately
-    if (!ragged.by && (n.contr == 1) && (adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) # Force no adjustment when just one interval, unless using Scheffe
+    if (!ragged.by && (n.contr == 1) && !(adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) # Force no adjustment when just one interval, unless using Scheffe
         adjust = "none"
     
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", "bonferroni", "none")
