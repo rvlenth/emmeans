@@ -11,6 +11,12 @@ title: "NEWS for the emmeans package"
     clauses, so we see interactive-style results
   * Correction to a logic error in adjustment corrections in 
     `summary.emmGrid` (#31)
+  * Revised `summary.emmGrid()` so that if we have both a response
+    transformation and a link function, then both transformations
+    are followed through with `type = "response"`. Previously, I took
+    the lazy way out and used 
+    `summary(regrid(object, transform = "unlink"), type = "response")`
+    (see #325)
     
 
 ## emmeans 1.7.1
