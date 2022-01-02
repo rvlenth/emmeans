@@ -17,6 +17,7 @@ title: "NEWS for the emmeans package"
     the lazy way out and used 
     `summary(regrid(object, transform = "unlink"), type = "response")`
     (see #325)
+  * Fix to `force_regular()` which caused an unintended warning (#326)
     
 
 ## emmeans 1.7.1

@@ -376,6 +376,8 @@ force_regular = function(object) {
     }
     object@grid = newgrid
     object@linfct = newlf
+    if(is.null(object@model.info$nesting) && all(newdisp))  # remove 'display` if all TRUE`
+        newdisp = NULL
     object@misc$display = newdisp
     object
 }

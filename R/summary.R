@@ -388,7 +388,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
     
     # if there are two transformations and we want response, then we need to undo both
     if ((type == "response") && (!is.null(misc$tran2))) {
-        orig.call = match.call()
+        tmp = match.call()
+        tmp$type = "unlink"
+        summ.unlink = eval(tmp) #this is summary with type = "unlink"
         object = regrid(object, transform = "mu")
         two.trans = TRUE
     }
@@ -545,11 +547,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
             linkname = link$name
         }
         else {
-            orig.call$type = "mu"
-            orig.call$infer = c(TRUE, FALSE)
-            tmp = eval(orig.call)
-            result[cnm] = tmp[cnm]
-            linkname = paste0(link$name, "[", attr(tmp, "linkname"), "]")
+            result[cnm] = summ.unlink[cnm]
+            linkname = paste0(link$name, "[", attr(summ.unlink, "linkname"), "]")
         }
         mesg = c(mesg, paste("Confidence level used:", level), acv$mesg)
         if (inv) {
@@ -587,13 +586,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
             mesg = c(mesg, apv$mesg)
         }
         else {
-            orig.call$type = "mu"
-            orig.call$infer = c(FALSE, TRUE)
-            tmp = eval(orig.call)
-            result$null = ifelse(is.null(tmp$null), link$linkinv(0), link$linkinv(tmp$null))
-            result[[tnm]] = tmp[[tnm]]
-            result$p.value = tmp$p.value
-            linkname = paste0(link$name, "[", attr(tmp, "linkname"), "]")
+            result$null = ifelse(is.null(summ.unlink$null), link$linkinv(0), link$linkinv(summ.unlink$null))
+            result[[tnm]] = summ.unlink[[tnm]]
+            result$p.value = summ.unlink$p.value
+            linkname = paste0(link$name, "[", attr(summ.unlink, "linkname"), "]")
             apv = .adj.p.value(0, result$df, adjust, fam.info, tail, corrmat, by.rows, sch.rank)
             # we ignore everything about apv except the message
             mesg = c(mesg, apv$mesg)
