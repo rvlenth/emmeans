@@ -18,6 +18,7 @@ title: "NEWS for the emmeans package"
     `summary(regrid(object, transform = "unlink"), type = "response")`
     (see #325)
   * Fix to `force_regular()` which caused an unintended warning (#326)
+  * Fixes to issues in `emtrends()` (#327)
     
 
 ## emmeans 1.7.1

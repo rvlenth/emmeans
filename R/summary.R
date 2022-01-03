@@ -397,6 +397,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
     else
         two.trans = FALSE
     
+
+    
     if ((type %in% c("mu", "unlink")) && (!is.null(t2 <- misc$tran2))) {
         if (!is.character(t2))
             t2 = "tran"
@@ -526,7 +528,14 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
                 " so it is omitted")
         }
     }
-
+    
+    
+    # add linkname attribute
+    if (two.trans)
+        linkname = paste0(link$name, "[", attr(summ.unlink, "linkname"), "]")
+    else
+        linkname = link$name
+    
     if(infer[1]) { # add CIs
         acv = .adj.critval(level, result$df, adjust, fam.info, side, corrmat, by.rows, sch.rank)
         ###adjust = acv$adjust # in older versions, I forced same adj method for tests
@@ -544,11 +553,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
         if (!two.trans) {
             result[[cnm[1]]] = result[[1]] + cv[, 1]*result$SE
             result[[cnm[2]]] = result[[1]] + cv[, 2]*result$SE
-            linkname = link$name
         }
         else {
             result[cnm] = summ.unlink[cnm]
-            linkname = paste0(link$name, "[", attr(summ.unlink, "linkname"), "]")
         }
         mesg = c(mesg, paste("Confidence level used:", level), acv$mesg)
         if (inv) {
@@ -582,14 +589,12 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
             apv = .adj.p.value(t.ratio, result$df, adjust, fam.info, tail, corrmat, by.rows, sch.rank)
             adjust = apv$adjust   # in case it was abbreviated
             result$p.value = apv$pval
-            linkname = link$name
             mesg = c(mesg, apv$mesg)
         }
         else {
             result$null = ifelse(is.null(summ.unlink$null), link$linkinv(0), link$linkinv(summ.unlink$null))
             result[[tnm]] = summ.unlink[[tnm]]
             result$p.value = summ.unlink$p.value
-            linkname = paste0(link$name, "[", attr(summ.unlink, "linkname"), "]")
             apv = .adj.p.value(0, result$df, adjust, fam.info, tail, corrmat, by.rows, sch.rank)
             # we ignore everything about apv except the message
             mesg = c(mesg, apv$mesg)

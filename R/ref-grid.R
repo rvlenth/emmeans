@@ -550,7 +550,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         n.orig = nrow(grid) # remember how many rows we had
         grid = grid[rep(seq_len(n.orig), length(delts)), , drop = FALSE]
         options$var = options$delts = NULL
-        grid[[var]] = grid[[var]] + rep(delts, each = n.orig)  # MOVED UP from after the covariate calcs
+        # grid[[var]] = grid[[var]] + rep(delts, each = n.orig)
+        #     (we have to wait until after covariate calcs to do this)
     }
     
     # add any matrices
@@ -579,10 +580,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         }
     }
     
-    # # finish-up our hook for expanding the grid 
-    #### (MOVED UP - why did I defer this before???)
-    # if (!is.null(delts)) # add increments if any
-    #     grid[[var]] = grid[[var]] + rep(delts, each = n.orig)
+    # finish-up our hook for expanding the grid
+    if (!is.null(delts)) # add increments if any
+        grid[[var]] = grid[[var]] + rep(delts, each = n.orig)
     
     if (!is.null(attr(data, "pass.it.on")))   # a hook needed by emm_basis.gamlss et al.
         attr(object, "data") = data
@@ -699,7 +699,6 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         multresp = names(mult.levs)
         MF = do.call("expand.grid", mult.levs)
         grid = merge(grid, MF)
-        
     }
             
     # add any matrices
