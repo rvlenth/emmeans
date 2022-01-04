@@ -1,7 +1,7 @@
 ---
 title: "NEWS for the emmeans package"
 ---
-## emmeans 1.7.1-999xxx
+## emmeans 1.7.2
   * Improvements to `averaging` support (#319)
   * Fixed bug in comparison arrows when `by = NULL` (#321)
     (this bug was a subtle byproduct of the name-checking in #305)
