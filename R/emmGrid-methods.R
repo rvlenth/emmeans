@@ -384,7 +384,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                     warning("Changes to levels may have altered nesting structure.\n",
                             "You likely need to also run 'update(..., nesting = ...)'")
                 object@levels = lvls
-                for (nm in c(".wgt.", ".offset"))
+                for (nm in c(".wgt.", ".offset."))
                         grd[[nm]] = object@grid[[nm]]
                 object@grid = grd
                 object@roles$predictors = misc$pri.vars = names(lvls)

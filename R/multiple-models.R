@@ -40,6 +40,8 @@ recover_data.averaging = function(object, data, ...) {
     }
     if (is.null(data))
         data = ml[[1]]$call$data
+    ### temporary patch -- $formula often excludes the intercept
+    object$formula = update(object$formula, .~.+1)
     trms = attr(model.frame(object$formula, data = data), "terms")
     fcall = call("model.avg", formula = object$formula, data = data)
     recover_data(fcall, delete.response(trms), na.action = NULL, ...)
@@ -47,10 +49,20 @@ recover_data.averaging = function(object, data, ...) {
 
 emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     bhat = coef(object, full = TRUE)
-    V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...)
+    # change names like "cond(xyz)" to "xyz"
+    bnms = sub("([a-z]+\\()([0-9:_() A-Za-z]+)(\\))", "\\2", names(bhat), perl = TRUE)
+    bnms[bnms == "(Int)"] = "(Intercept)"
+    names(bhat) = bnms
+    
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
-
+    
+    perm = match(colnames(X), bnms)
+    if (any(is.na(perm)))
+        stop ("Unable to match model terms")
+    bhat = bhat[perm]
+    V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...)[perm, perm]
+    
     nbasis = estimability::all.estble
     ml = attr(object, "modelList")
     ml1 = ml[[1]]
