@@ -19,8 +19,8 @@ as.glht(object, ...)
 \arguments{
 \item{...}{In \code{emm}, the \code{specs}, \code{by}, and \code{contr}
 arguments you would normally supply to \code{\link{emmeans}}. Only
-\code{specs} is required. Otherwise, arguments that are passed to other
-methods.}
+\code{specs} is required. Otherwise, arguments are passed to other
+methods. You may also include a \code{which} argument; see Details.}
 
 \item{object}{An object of class \code{emmGrid} or \code{emm_list}}
 }
@@ -37,22 +37,32 @@ These functions and methods provide an interface between \pkg{emmeans} and
 the \code{multcomp::glht} function for simultaneous inference provided
 by the \pkg{multcomp} package.
 }
-\details{
-\code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
-(\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
-except with \code{specs} (and optionally \code{by} and \code{contr}
-arguments) provided as in a call to \code{\link{emmeans}}.
-}
 \note{
 The multivariate-\eqn{t} routines used by \code{glht} require that all
   estimates in the family have the same integer degrees of freedom. In cases
   where that is not true, a message is displayed that shows what df is used.
   The user may override this via the \code{df} argument.
 }
-\section{Details}{
+\section{Details for \code{emm}}{
+  
+\code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
+(\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
+except with \code{specs} (and optionally \code{by} and \code{contr}
+arguments) provided as in a call to \code{\link{emmeans}}.
 
-A \code{glht_list} object is simply a \code{list} of \code{glht} objects. 
-It is created as needed -- for example, when there is a \code{by} variable. 
+If the specifications in \code{...} would result in a list (i.e., an
+\code{emm_list} object), then by default, only the last element of that list
+is passed to \code{glht}. However, if \code{...} contains a \code{which}
+argument consisting of integer values, the list elements with those indexes
+are selected and combined and passed on to \code{glht}. No checking is done
+on whether the indexes are valid, and the keyword \code{which} must be spelled-out.
+}
+
+\section{Details for \code{as.glht}}{
+
+When no \code{by} variable is in force, we obtain a \code{glht} object; otherwise
+it is a \code{glht_list}. The latter is defined in \pkg{emmeans}, not \pkg{multcomp},
+and is simply a \code{list} of \code{glht} objects. 
 Appropriate convenience methods \code{coef},
 \code{confint}, \code{plot}, \code{summary}, and \code{vcov} are provided,
 which simply apply the corresponding \code{glht} methods to each member.
@@ -63,7 +73,11 @@ if(require(multcomp, quietly = TRUE)) withAutoprint({ # --- multcomp must be ins
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 # Using 'emm'
 summary(glht(warp.lm, emm(pairwise ~ tension | wool)))
-# Same, but using an existing 'emmeans' result
+# Combine the means and the comparisons into one family
+summary(glht(warp.lm, emm(pairwise ~ tension | wool, 
+                          which = 1:2, by = "wool")))
+                          
+# Same as first example, but use an existing 'emmeans' result
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
 summary(as.glht(pairs(warp.emm)))
 # Same contrasts, but treat as one family

@@ -6,6 +6,8 @@ title: "NEWS for the emmeans package"
   * Repairs to `aveaging` support (#324). 
     Previous versions were potentially dead wrong except for models 
     created by `lm()` (and maybe some of those were bad too)
+  * Added a `which` argument to `emm()` to select which list elements 
+    to pass to `multcomp::glht()`
 
 
 ## emmeans 1.7.2

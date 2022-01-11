@@ -34,17 +34,27 @@
 #' the \code{multcomp::glht} function for simultaneous inference provided
 #' by the \pkg{multcomp} package.
 #' 
-#' \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
-#' (\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
-#' except with \code{specs} (and optionally \code{by} and \code{contr}
-#' arguments) provided as in a call to \code{\link{emmeans}}.
 #' 
 #' @rdname glht-support
 #' @aliases glht-support glht.emmGrid glht.emmlf modelparm.emmwrap
 #' @param ... In \code{emm}, the \code{specs}, \code{by}, and \code{contr}
 #'   arguments you would normally supply to \code{\link{emmeans}}. Only
-#'   \code{specs} is required. Otherwise, arguments that are passed to other
-#'   methods.
+#'   \code{specs} is required. Otherwise, arguments are passed to other
+#'   methods. You may also include a \code{which} argument; see Details.
+#'   
+#' @section Details for \code{emm}:  
+#' \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
+#' (\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
+#' except with \code{specs} (and optionally \code{by} and \code{contr}
+#' arguments) provided as in a call to \code{\link{emmeans}}.
+#' 
+#' If the specifications in \code{...} would result in a list (i.e., an
+#' \code{emm_list} object), then by default, only the last element of that list
+#' is passed to \code{glht}. However, if \code{...} contains a \code{which}
+#' argument consisting of integer values, the list elements with those indexes
+#' are selected and combined and passed on to \code{glht}. No checking is done
+#' on whether the indexes are valid, and the keyword \code{which} must be spelled-out.
+#' 
 #'
 #' @return \code{emm} returns an object of an intermediate class for which
 #'   there is a \code{multcomp::glht} method.
@@ -64,8 +74,14 @@ glht.emmlf <- function(model, linfct, ...) {
     # Now pass the ref_grid to emmeans:
     linfct$object <- do.call("ref_grid", args)
     emmo <- do.call("emmeans", linfct)
-    if (is.list(emmo)) 
-        emmo = emmo[[length(emmo)]]
+    if (is.list(emmo)) {
+        if(is.null(linfct$which))
+            emmo = emmo[[length(emmo)]]
+        else {
+            emmo = do.call(rbind.emmGrid, emmo[linfct$which])
+            emmo@misc$by.vars = linfct$by
+        }
+    }
     # Then call the method for emmo objject
     glht.emmGrid(model, emmo, ...)
 }
@@ -129,9 +145,10 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #'   according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}. 
 #'   See Details below for more on \code{glht_list}s.
 #'   
-#' @section Details:
-#' A \code{glht_list} object is simply a \code{list} of \code{glht} objects. 
-#' It is created as needed -- for example, when there is a \code{by} variable. 
+#' @section Details for \code{as.glht}:
+#' When no \code{by} variable is in force, we obtain a \code{glht} object; otherwise
+#' it is a \code{glht_list}. The latter is defined in \pkg{emmeans}, not \pkg{multcomp},
+#' and is simply a \code{list} of \code{glht} objects. 
 #' Appropriate convenience methods \code{coef},
 #' \code{confint}, \code{plot}, \code{summary}, and \code{vcov} are provided,
 #' which simply apply the corresponding \code{glht} methods to each member.
@@ -146,7 +163,11 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 #' # Using 'emm'
 #' summary(glht(warp.lm, emm(pairwise ~ tension | wool)))
-#' # Same, but using an existing 'emmeans' result
+#' # Combine the means and the comparisons into one family
+#' summary(glht(warp.lm, emm(pairwise ~ tension | wool, 
+#'                           which = 1:2, by = "wool")))
+#'                           
+#' # Same as first example, but use an existing 'emmeans' result
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
 #' summary(as.glht(pairs(warp.emm)))
 #' # Same contrasts, but treat as one family
