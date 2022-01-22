@@ -229,14 +229,15 @@ subsets or imputed values. The `bhat` and `V` slots are obtained via averaging
 and, in the case of multiple imputation, adding a multiple of the between-imputation 
 covariance per Rubin's rules. 
 
-Support for `MuMIn::averaging` objects may be somewhat dodgy, as it is not clear that
-all supported model classes will work. The object *must* have a `"modelList"` attribute
-(obtained by constructing the object explicitly from a model list or by including 
-`fit = TRUE` in the call). And each model should be fitted with `data` as a **named**
-argument in the call; or else provide a `data` argument in the call to `emmeans()` or
-`ref_grid()`. No estimability checking is done at present: if/when it is added,
-a linear function will be estimable only if it is estimable in *all* models included
-in the averaging.
+Support for `MuMIn::averaging` objects may be somewhat dodgy, as it is not clear
+that all supported model classes will work. The object *must* have a
+`"modelList"` attribute (obtained by constructing the object explicitly from a
+model list or by including `fit = TRUE` in the call). And each model should be
+fitted with `data` as a **named** argument in the call; or else provide a `data`
+argument in the call to `emmeans()` or `ref_grid()`. Only ``full'' averaging is
+supported; conditional averaging can result in non-positive-definite covariance
+matrices, and so cannot be considered. No estimability checking is done at
+present (not clear what we even mean by it).
 
 
 ## Group K -- `gls` and `lme` models {#K}
@@ -273,6 +274,10 @@ freedom for the coarsest grouping involved in the contrast or linear function
 involved, so it tends to under-estimate the degrees of freedom.
 The default is `mode = "auto"`, which uses Satterthwaite if there are estimated 
 random effects and the non-Satterthwaite option otherwise.
+
+User reports indicate that models with special terms like `poly()` are not adequately
+supported by `gls` in that the needed basis is not recoverable from its `terms`
+component. This is not a problem with `lme`.
 
 The `extra.iter` argument is ignored unless the d.f. method is (or defaults to) 
 `appx-satterthwaite`.

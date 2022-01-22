@@ -8,6 +8,8 @@ title: "NEWS for the emmeans package"
     created by `lm()` (and maybe some of those were bad too)
   * Added a `which` argument to `emm()` to select which list elements 
     to pass to `multcomp::glht()`
+  * Support for rank-deficient `gls` models (note that **nlme** 
+    allows such models with `gls`, but not `lme`)
 
 
 ## emmeans 1.7.2

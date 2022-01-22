@@ -432,9 +432,20 @@ emm_basis.gls = function(object, trms, xlev, grid,
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
-    bhat = coef(object)
+
+    # submodel support (not great because I don't know how to retrieve the weights)
+    mf = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
+    mm = model.matrix(trms, mf, contrasts.arg = contrasts)
+    mm = .cmpMM(mm, assign = attr(mm, "assign"))
+    
+    tmp = coef(object)
+    bhat = rep(NA, ncol(X))
+    bhat[match(names(tmp), colnames(X), nomatch = 0)] = tmp
     V = .my.vcov(object, ...)
-    nbasis = estimability::all.estble
+    if (any(is.na(bhat)))
+        nbasis = estimability::nonest.basis(mm)
+    else
+        nbasis = estimability::all.estble
     mode = match.arg(mode)
     if (mode == "boot-satterthwaite") mode = "appx-satterthwaite"  # backward compatibility
     if (!is.null(options$df)) # if we're gonna override the df anyway, keep it simple!
@@ -480,11 +491,6 @@ emm_basis.gls = function(object, trms, xlev, grid,
         dffun = function(k, dfargs) dfargs$df
     }
     attr(dffun, "mesg") = mode
-    
-    # submodel support (not great because I don't know how to retrieve the weights)
-    m = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
-    mm = model.matrix(trms, m, contrasts.arg = contrasts)
-    mm = .cmpMM(mm, assign = attr(mm, "assign"))
     
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc,
          model.matrix = mm)
