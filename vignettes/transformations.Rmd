@@ -130,15 +130,15 @@ because the averaging is done on the `conc` scale rather than the `log(conc)`
 scale.
 
 ###### {#regrid}
-<!-- @index `regrid()`!`transform` vs. `type` -->
+<!-- @index `regrid()`!`regrid` vs. `type`; `ref_grid()`!`regrid` argument -->
 Note: For those who want to routinely back-transform before averaging,
-the `transform` argument in `ref_grid()` simplifies this. The first two
+the `regrid` argument in `ref_grid()` simplifies this. The first two
 steps above could have been done more easily as follows:
 ```{r eval = FALSE}
-pigs.remm.s <- emmeans(pigs.lm, "source", transform = "response")
+pigs.remm.s <- emmeans(pigs.lm, "source", regrid = "response")
 ```
-But don't get `transform` and `type` confused. The `transform` argument is 
-passed to `regrid()` after the reference grid is constructed, whereas the `type`
+But don't get `regrid` and `type` confused. The `regrid` argument is 
+passed to `regrid()` (as the `transform` argument) after the reference grid is constructed, whereas the `type`
 argument is simply remembered and used by `summary()`. So a similar-looking
 call:
 ```{r eval = FALSE}
@@ -406,7 +406,7 @@ update(pairs(piglog.emm.s, type = "response"),
 
 ## Standardized response {#stdize}
 <!-- @index Transformations!Standardizing; Transformations!`scale()`;
-    `scale()`; Standardized response; Examples!`fiber` -->
+    `scale()`; Standardized response; Examples!`fiber`; `regrid` argument -->
 In some disciplines, it is common to fit a model to a standardized response variable.
 R's base function `scale()` makes this easy to do; but it is important to notice that
 `scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires 
@@ -425,9 +425,9 @@ emtrends(fiber.lm, "machine", var = "diameter")
 ```
 These slopes are (change in `scale(strength)`) / (change in `diameter`); that is,
 we didn't do anything to undo the response transformation, but the trend is
-based on exactly the variable specified, `diameter`. To get (change in `strength`) / (change in `diameter`), we need to undo the response transformation, and that is done via `transform` (which invokes `regrid()` after the reference grid is constructed):
+based on exactly the variable specified, `diameter`. To get (change in `strength`) / (change in `diameter`), we need to undo the response transformation, and that is done via `regrid` (which invokes `regrid()` after the reference grid is constructed):
 ```{r}
-emtrends(fiber.lm, "machine", var = "diameter", transform = "response")
+emtrends(fiber.lm, "machine", var = "diameter", regrid = "response")
 ```
 What if we want slopes for (change in `scale(strength)`) / (change in `scale(diameter)`)?
 This can be done, but it is necessary to manually specify the scaling parameters for `diameter`.
@@ -478,9 +478,9 @@ emmeans(fib.lm, "machine")
 
 # On standardized scale:
 tran <- make.tran("scale", y = fiber$strength)
-emmeans(fib.lm, "machine", transform = tran)
+emmeans(fib.lm, "machine", regrid = tran)
 ```
-In the latter call, the `transform` argument causes `regrid()` to
+In the latter call, the `regrid` argument causes `regrid()` to
 be called after the reference grid is constructed.
 
 

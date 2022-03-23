@@ -88,9 +88,10 @@ simply returned with the only change being the addition of the simulated
 sample.
 }
 \note{
-Another way to use \code{regrid} is to supply a \code{transform} 
+Another way to use \code{regrid} is to supply a \code{regrid} 
   argument to \code{\link{ref_grid}} (either directly of indirectly via
-  \code{\link{emmeans}}). This is often a simpler approach if the reference
+  \code{\link{emmeans}}), in which case its value is passed to \code{regrid} as
+  \code{transform}. This is often a simpler approach if the reference
   grid has not already been constructed.
 }
 \section{Degrees of freedom}{
@@ -120,7 +121,7 @@ pairs(emm1) ## We obtain RATIOS
 (emm2 <- emmeans(regrid(rg, transform = "response"), "source"))
 pairs(emm2)  ## We obtain DIFFERENCES
 # Same result, useful if we hadn't already created 'rg'
-# emm2 <- emmeans(pigs.lm, "source", transform = "response")
+# emm2 <- emmeans(pigs.lm, "source", regrid = "response")
 
 # Simulate a sample of regression coefficients
 set.seed(2.71828)

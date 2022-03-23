@@ -6,7 +6,7 @@
 \usage{
 ref_grid(object, at, cov.reduce = mean,
   cov.keep = get_emm_option("cov.keep"), mult.names, mult.levs,
-  options = get_emm_option("ref_grid"), data, df, type, transform, nesting,
+  options = get_emm_option("ref_grid"), data, df, type, regrid, nesting,
   offset, sigma, nuisance = character(0), non.nuisance, wt.nuis = "equal",
   rg.limit = get_emm_option("rg.limit"), ...)
 }
@@ -55,10 +55,13 @@ df)}. See \code{\link{update.emmGrid}}.}
 \code{"predict.type"} setting. See \code{\link{update.emmGrid}} and the
 section below on prediction types and transformations.}
 
-\item{transform}{Character, logical, or list. If non-missing, the reference
-grid is reconstructed via \code{\link{regrid}} with the given
-\code{transform} argument. See the section below on prediction types and
-transformations.}
+\item{regrid}{Character, logical, or list. If non-missing, the reference
+grid is reconstructed via \code{\link{regrid}} with the argument
+\code{transform = regrid}. See the section below on prediction types and
+transformations. \emph{Note:} This argument was named \code{transform} in
+version 1.7.2 and earlier. For compatibility with old code, \code{transform}
+is still accepted if found among \code{...}, 
+as long as it doesn't match \code{tran}.}
 
 \item{nesting}{If the model has nested fixed effects, this may be specified
 here via a character vector or named \code{list} specifying the nesting
@@ -143,7 +146,7 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   are factors: all the unique levels are kept in the reference grid. The user
   may also specify an integer value, in which case any covariate having no more
   than that number of unique values is implicitly included in \code{cov.keep}.
-  The default for \code{cove.keep} is set and retrieved via the 
+  The default for \code{cov.keep} is set and retrieved via the 
   \code{\link{emm_options}} framework, and the system default is \code{"2"},
   meaning that covariates having only two unique values are automatically
   treated as two-level factors. See also the Note below on backward compatibility.
@@ -299,17 +302,17 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   the help page for \code{\link{make.tran}} for information on some advanced methods.
   
   There is a subtle difference
-  between specifying \samp{type = "response"} and \samp{transform =
+  between specifying \samp{type = "response"} and \samp{regrid =
   "response"}. While the summary statistics for the grid itself are the same,
   subsequent use in \code{\link{emmeans}} will yield different results if
   there is a response transformation or link function. With \samp{type =
   "response"}, EMMs are computed by averaging together predictions on the
   \emph{linear-predictor} scale and then back-transforming to the response
-  scale; while with \samp{transform = "response"}, the predictions are
+  scale; while with \samp{regrid = "response"}, the predictions are
   already on the response scale so that the EMMs will be the arithmetic means
   of those response-scale predictions. To add further to the possibilities,
   \emph{geometric} means of the response-scale predictions are obtainable via
-  \samp{transform = "log", type = "response"}. See also the help page for 
+  \samp{regrid = "log", type = "response"}. See also the help page for 
   \code{\link{regrid}}.
 }
 

@@ -139,7 +139,7 @@ emmeans.list = function(object, specs, ...) {
 #' @param ... When \code{object} is not already a \code{"emmGrid"}
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
 #'   examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
-#'   \code{transform}, \code{df}, \code{nesting}, and \code{vcov.}.
+#'   \code{regrid}, \code{df}, \code{nesting}, and \code{vcov.}.
 #'   Model-type-specific options (see
 #'   \href{../doc/models.html}{\code{vignette("models", "emmeans")}}), commonly
 #'   \code{mode}, may be used here as well. In addition, if the model formula
@@ -274,7 +274,6 @@ emmeans.list = function(object, specs, ...) {
 #' emmeans (warp.lm, ~ tension | wool, adjust = "sidak")
 #' }
 #' 
-#' 
 #' \dontrun{
 #'   ### Offsets: Consider a silly example:
 #'   emmeans(warp.lm, ~ tension | wool, offset = c(17, 23, 47)) @ grid
@@ -282,18 +281,6 @@ emmeans.list = function(object, specs, ...) {
 #'   # the same offset for each wool.
 #'   # But using the same offsets with ~ wool | tension will probably not
 #'   # be what you want because the ordering of combinations is different.
-#'   
-#'   ### Conflicting arguments...
-#'   # This will error because 'tran' is passed to both ref_grid and update
-#'   emmeans(some.model, "treatment", tran = "log", type = "response")
-#'   
-#'   # Use this if the response was a variable that is the log of some other variable
-#'   # (Keep 'tran' from being passed to ref_grid)
-#'   emmeans(some.model, "treatment", options = list(tran = "log"), type = "response")
-#'   
-#'   # This will re-grid the result as if the response had been log-transformed
-#'   # ('transform' is passed only to ref_grid, not to update)
-#'   emmeans(some.model, "treatment", transform = "log", type = "response")
 #' }
 emmeans = function(object, specs, by = NULL, 
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 

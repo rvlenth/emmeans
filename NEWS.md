@@ -3,13 +3,20 @@ title: "NEWS for the emmeans package"
 ---
 
 ## emmeans 1.7.2-900xxx
-  * Repairs to `aveaging` support (#324). 
+  * **argument change** `ref_grid(..., transform = ...)` now should
+    be `ref_grid(..., regrid = ...)` to avoid confusing `transform` 
+    with the `tran` option (which kind of does the opposite). If we match 
+    `transform` and don't match `tran`, it will still work, but a 
+    message is displayed with advice to use `regrid` instead.
+  * Repairs to `averaging` support (#324). 
     Previous versions were potentially dead wrong except for models 
     created by `lm()` (and maybe some of those were bad too)
   * Added a `which` argument to `emm()` to select which list elements 
     to pass to `multcomp::glht()`
   * Support for rank-deficient `gls` models (note that **nlme** 
     allows such models with `gls`, but not `lme`)
+  * Bug in `lqm` / `lqmm` support (#340)
+  * Other minor corrections (e.g. #334)
 
 
 ## emmeans 1.7.2

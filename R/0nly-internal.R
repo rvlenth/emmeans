@@ -199,28 +199,23 @@
     comp
 }
 
-### Find `arg` in `...`. If pmatched, return its value, else NULL
-### If arg is a vector, runs .match.dots.list
-.match.dots = function(arg, ..., lst) {
-    if(missing(lst))
-        lst = list(...)
-    if (length(arg) > 1)
-        return (.match.dots.list(arg, lst = lst))
-    m = pmatch(names(lst), arg)
-    idx = which(!is.na(m))
-    if(length(idx) == 1)  lst[[idx]]
-    else                  NULL
-}
 
-# like .match.dots, but returns a list of all matched args
+# returns a list of all matches to ... or lst with full names from args
 .match.dots.list = function(args, ..., lst) {
     if(missing(lst))
         lst = list(...)
-    rtn = list()
-    for (a in args)
-        rtn[[a]] = .match.dots(a, lst = lst)
+    idx = pmatch(names(lst), args, nomatch = 0)
+    rtn = lst[idx > 0]
+    names(rtn) = args[idx]
     rtn
 }
+
+### Find single arg in `...`. If pmatched, return its value, else NULL
+.match.dots = function(arg, ..., lst) {
+    rtn = .match.dots.list(arg[1], ..., lst = lst)
+    if (length(rtn) > 0) rtn[[1]] else NULL
+}
+
 
 # return a list from ..., omitting any that pmatch omit
 .zap.args = function(..., omit) {

@@ -36,7 +36,7 @@ emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
     # Very touchy here because their boot() function doesn't take dots...
     nm = intersect(names(list(...)), c("method", "R", "seed", "startQR"))
     vargs = c(list(object = object, covariance = TRUE), list(...)[nm])
-    V = do.call("summary", vargs)$Cov
+    V = do.call("summary", vargs)$Cov[names(bhat), names(bhat)]
     if (length(taudiff) > 1) {
         bhat = bhat[, col[1]]
         V = V[, , col]
