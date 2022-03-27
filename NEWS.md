@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.7.2-900xxx
+## emmeans 1.7.3
   * **argument change** `ref_grid(..., transform = ...)` now should
     be `ref_grid(..., regrid = ...)` to avoid confusing `transform` 
     with the `tran` option (which kind of does the opposite). If we match 
