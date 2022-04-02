@@ -12,7 +12,7 @@ contrast(object, ...)
 \method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE, by,
   offset = NULL, scale = NULL, name = "contrast",
   options = get_emm_option("contrast"), type, adjust, simple,
-  combine = FALSE, ratios = TRUE, parens, ...)
+  combine = FALSE, ratios = TRUE, parens, enhance.levels = TRUE, ...)
 
 \method{pairs}{emmGrid}(x, reverse = FALSE, ...)
 
@@ -81,6 +81,20 @@ Optionally, \code{parens} may contain second and third elements specifying
 what to use for left and right parentheses (default \code{"("} and \code{")"}).
 Specify \code{parens = NULL} or \code{parens = "a^"} (which won't match anything)
 to disable all parenthesization.}
+
+\item{enhance.levels}{character or logical. 
+If character, the levels of the named factors that are contrasted are enhanced 
+by appending the name of the factor; e.g., if a factor named \code{"trt"} has
+levels \code{A} and code{B}, a \code{trt} comparison is labeled \code{trtA - trtB}.
+
+If \code{enhance.levels} is logical, then if \code{TRUE} (the default), 
+only factors with numeric levels are enhanced; and of
+course if \code{FALSE}, no levels are enhanced.
+
+The levels of \code{by} variables are not enhanced, and any 
+names of factors that don't exist are silently ignored. 
+To enhance the labels beyond what is done here, change them
+directly via \code{\link[=update.emmGrid]{levels<-}}.}
 
 \item{x}{An \code{emmGrid} object}
 
@@ -157,9 +171,15 @@ When \code{object} has a nesting structure (this can be seen via
 \examples{
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
+
 contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
-pairs(warp.emm)               # ditto
-contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+
+pairs(warp.emm)
+
+# Effects (dev from mean) of the 6 factor combs, with enhanced levels:
+contrast(warp.emm, "eff", by = NULL, 
+    enhance.levels = c("wool", "tension"))  
+    
 pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
 
 # Do all "simple" comparisons, combined into one family

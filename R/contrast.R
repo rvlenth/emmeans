@@ -81,6 +81,20 @@ contrast = function(object, ...)
 #'   what to use for left and right parentheses (default \code{"("} and \code{")"}).
 #'   Specify \code{parens = NULL} or \code{parens = "a^"} (which won't match anything)
 #'   to disable all parenthesization.
+#' @param enhance.levels character or logical. 
+#'   If character, the levels of the named factors that are contrasted are enhanced 
+#'   by appending the name of the factor; e.g., if a factor named \code{"trt"} has
+#'   levels \code{A} and code{B}, a \code{trt} comparison is labeled \code{trtA - trtB}.
+#'   
+#'   If \code{enhance.levels} is logical, then if \code{TRUE} (the default), 
+#'   only factors with numeric levels are enhanced; and of
+#'   course if \code{FALSE}, no levels are enhanced.
+#'   
+#'   The levels of \code{by} variables are not enhanced, and any 
+#'   names of factors that don't exist are silently ignored. 
+#'   To enhance the labels beyond what is done here, change them
+#'   directly via \code{\link[=update.emmGrid]{levels<-}}.
+#'
 #' @param ... Additional arguments passed to other methods
 #'
 #' @return \code{contrast} and \code{pairs} return an object of class
@@ -142,9 +156,15 @@ contrast = function(object, ...)
 #' @examples
 #' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' 
 #' contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
-#' pairs(warp.emm)               # ditto
-#' contrast(warp.emm, "eff", by = NULL)  # contrasts of the 6 factor combs
+#' 
+#' pairs(warp.emm)
+#' 
+#' # Effects (dev from mean) of the 6 factor combs, with enhanced levels:
+#' contrast(warp.emm, "eff", by = NULL, 
+#'     enhance.levels = c("wool", "tension"))  
+#'     
 #' pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
 #' 
 #' # Do all "simple" comparisons, combined into one family
@@ -178,7 +198,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                         by, offset = NULL, scale = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
                         type, adjust, simple, combine = FALSE, ratios = TRUE, 
-                        parens, ...) 
+                        parens, enhance.levels = TRUE, ...) 
 {
     if (!missing(type))
         options = as.list(c(options, predict.type = type))
@@ -234,7 +254,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             else
                 nm = paste(nms[i], "custom", sep = "_")
             pos = which(vars == nms[i])
-            object = contrast.emmGrid(object, interaction[[i]], by = vars[-pos], name = nm, ...)
+            object = contrast.emmGrid(object, interaction[[i]], by = vars[-pos], 
+                                      name = nm, enhance.levels = FALSE, ...)
             if(is.null(tcm))
                 tcm = object@misc$con.coef
             else
@@ -256,6 +277,18 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     args = g = object@grid[, , drop = FALSE]
     args[[".offset."]] = NULL 
     args[[".wgt."]] = NULL # ignore auxiliary stuff in labels, etc.
+    
+    # figure out any enhancement of factor levels
+    if (is.logical(enhance.levels)) { # convert to character
+        if(enhance.levels)
+            enhance.levels = names(args[sapply(args, is.numeric)])               
+        else # FALSE
+            enhance.levels = character(0)
+    }
+    enhance.levels = intersect(setdiff(enhance.levels, by), names(args))
+    for (nm in enhance.levels)
+        args[[nm]] = paste0(nm, args[[nm]])
+    
     if (!is.null(by)) {
         by.rows = .find.by.rows(args, by)
         ulen = unique(sapply(by.rows, length))

@@ -2,6 +2,15 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.7.3-900xxx
+  * Added an argument `enhance.levels` to `contrast()` that allows
+    better labeling of the levels being contrasted. For example, now
+    (by default) if a factor `treat` has numeric levels, then comparisons
+    will have levels like `treat1 - treat2` rather than `1 - 2`. We can
+    request similar behavior with non-numeric levels, but only if we 
+    specify which factors.
+
+
 ## emmeans 1.7.3
   * **argument change** `ref_grid(..., transform = ...)` now should
     be `ref_grid(..., regrid = ...)` to avoid confusing `transform` 
