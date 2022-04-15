@@ -27,6 +27,13 @@
 ## e.g.,  ("bonf" %.pin% p.adjust.methods)  is TRUE
 "%.pin%" = function (x, table) pmatch(x, table, nomatch = 0L) > 0L
 
+## Like is.numeric() but returns TRUE for character vectors like c("1", "3", "2")
+## (but will return FALSE if any x is NA)
+.is.num = function(x) {
+    nx = suppressWarnings(as.numeric(as.character(x)))
+    !any(is.na(nx))
+}
+
 
 ## Alternative to all.vars, but keeps vars like foo$x and foo[[1]] as-is
 ##   Passes ... to all.vars

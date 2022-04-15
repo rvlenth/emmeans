@@ -116,6 +116,15 @@
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
 #' contrast(warp.emm, "poly")
 #' contrast(warp.emm, "trt.vs.ctrl", ref = "M")
+#' \dontrun{
+#' ## Same when enhanced labeling is used:
+#' contrast(warp.emm, "trt.vs.ctrl", 
+#'          enhance.levels = "tension", ref = "tensionM")}
+#' 
+#' # Comparisons with grand mean
+#' contrast(warp.emm, "eff")
+#' # Comparisons with a weighted grand mean
+#' contrast(warp.emm, "eff", wts = c(2, 5, 3))
 #'
 #' # Compare only low and high tensions
 #' # Note pairs(emm, ...) calls contrast(emm, "pairwise", ...)
@@ -224,7 +233,8 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 # New version -- allows more than one control group (ref is a vector)
 #' @rdname emmc-functions
 #' @param ref Integer(s) or character(s) specifying which level(s) to use 
-#'   as the reference. Character values must exactly match elements of \code{levs}.
+#'   as the reference. Character values must exactly match elements of \code{levs}
+#'   (including any enhancements -- see examples)
 trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, 
                             exclude = integer(0), include, ...) {
     ref = .num.key(levs, ref)
@@ -281,22 +291,35 @@ dunnett.emmc = function(levs, ref = 1, ...) {
 }
 
 # effects contrasts. Each mean versus the average of all
+
 #' @rdname emmc-functions
-eff.emmc = function(levs, exclude = integer(0), include, ...) {
+#' @param wts Optional weights to use with \code{eff.emmc} and \code{del.eff.emmc} contrasts.
+#'   These default to equal weights.
+#'   If \code{exclude} or \code{include} are specified, \code{wts} may be
+#'   either the same length as \code{levs} or the length of the included levels.
+#'   In the former case, weights for any excluded levels are set to zero.
+#'   \code{wts} has no impact on the results unless there are at least
+#'   three levels included in the contrast.
+eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(levs)), ...) {
     exclude = .get.excl(levs, exclude, include)
-    k = length(levs)
-    kk = k - length(exclude)
-    start = rep(-1/kk, k)
-    start[exclude] = 0
-    M = data.frame(levs=levs)
-    for (i in setdiff(seq_len(k), exclude)) {
-        con = start
-        con[i] = (kk - 1)/kk
+    if ((length(exclude) > 0) && (length(wts) == length(levs) - length(exclude))) {
+        tmp = rep(0, length(levs))
+        tmp[-exclude] = wts
+        wts = tmp
+    }
+    if (length(wts) != length(levs))
+        stop("length of 'wts' must equal the number of levels",
+             " or the number of included levels")
+    wts[exclude] = 0
+    
+    M = data.frame(row.names = levs)
+    wts = wts / sum(wts)
+    for (i in setdiff(seq_along(levs), exclude)) {
+        con = -wts
+        con[i] = 1 + con[i]
         nm = paste(levs[i], "effect")
         M[[nm]] = con
     }
-    row.names(M) = levs
-    M = M[-1]
     attr(M, "desc") = "differences from grand mean"
     attr(M, "adjust") = "fdr"
     if(length(exclude) > 0)
@@ -304,18 +327,13 @@ eff.emmc = function(levs, exclude = integer(0), include, ...) {
     M
 }
 
-# "deleted" effects contrasts. 
-# Each mean versus the average of all others
 #' @rdname emmc-functions
-del.eff.emmc = function(levs, exclude = integer(0), include, ...) {
-    exclude = .get.excl(levs, exclude, include)
-    k = length(levs) - length(exclude)
-    M = as.matrix(eff.emmc(levs, exclude = exclude, ...)) * k / (k-1)
-    M = as.data.frame(M)
+del.eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(levs)), ...) {
+    M = eff.emmc(levs, exclude, include, wts, ...)
+    use = setdiff(seq_along(levs), .get.excl(levs, exclude, include))
+    for(i in seq_along(M))
+        M[[i]] = M[[i]] / M[[i]][use[i]]
     attr(M, "desc") = "differences from mean of others"
-    attr(M, "adjust") = "fdr"
-    if(length(exclude) > 0)
-        attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
 

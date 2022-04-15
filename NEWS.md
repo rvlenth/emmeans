@@ -9,6 +9,10 @@ title: "NEWS for the emmeans package"
     will have levels like `treat1 - treat2` rather than `1 - 2`. We can
     request similar behavior with non-numeric levels, but only if we 
     specify which factors.
+  * Two new functions `comb_facs()` and `split_fac()` for manipulating
+    the factors in an `emmGrid`.
+  * Added an argument `wts` to `eff.emmc` and `del.eff.emmc`, which
+    allows for weighted versions of effect-style contrasts (#346)
 
 
 ## emmeans 1.7.3

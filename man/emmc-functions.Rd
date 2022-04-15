@@ -35,9 +35,10 @@ trt.vs.ctrlk.emmc(levs, ref = length(levs), ...)
 
 dunnett.emmc(levs, ref = 1, ...)
 
-eff.emmc(levs, exclude = integer(0), include, ...)
+eff.emmc(levs, exclude = integer(0), include, wts = rep(1, length(levs)), ...)
 
-del.eff.emmc(levs, exclude = integer(0), include, ...)
+del.eff.emmc(levs, exclude = integer(0), include, wts = rep(1,
+  length(levs)), ...)
 
 consec.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
@@ -63,7 +64,16 @@ both \code{exclude} and \code{include}.}
 \item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
 
 \item{ref}{Integer(s) or character(s) specifying which level(s) to use 
-as the reference. Character values must exactly match elements of \code{levs}.}
+as the reference. Character values must exactly match elements of \code{levs}
+(including any enhancements -- see examples)}
+
+\item{wts}{Optional weights to use with \code{eff.emmc} and \code{del.eff.emmc} contrasts.
+These default to equal weights.
+If \code{exclude} or \code{include} are specified, \code{wts} may be
+either the same length as \code{levs} or the length of the included levels.
+In the former case, weights for any excluded levels are set to zero.
+\code{wts} has no impact on the results unless there are at least
+three levels included in the contrast.}
 }
 \value{
 A data.frame, each column containing contrast coefficients for levs.
@@ -146,6 +156,15 @@ warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
 contrast(warp.emm, "poly")
 contrast(warp.emm, "trt.vs.ctrl", ref = "M")
+\dontrun{
+## Same when enhanced labeling is used:
+contrast(warp.emm, "trt.vs.ctrl", 
+         enhance.levels = "tension", ref = "tensionM")}
+
+# Comparisons with grand mean
+contrast(warp.emm, "eff")
+# Comparisons with a weighted grand mean
+contrast(warp.emm, "eff", wts = c(2, 5, 3))
 
 # Compare only low and high tensions
 # Note pairs(emm, ...) calls contrast(emm, "pairwise", ...)

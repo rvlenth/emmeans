@@ -281,7 +281,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     # figure out any enhancement of factor levels
     if (is.logical(enhance.levels)) { # convert to character
         if(enhance.levels)
-            enhance.levels = names(args[sapply(args, is.numeric)])               
+            enhance.levels = names(args[sapply(args, .is.num)])               
         else # FALSE
             enhance.levels = character(0)
     }
