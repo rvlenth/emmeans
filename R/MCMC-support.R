@@ -592,7 +592,9 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
         
         misc$respName = as.character.default(terms(object))[2]
     }
-    samp = as.matrix(object$stanfit)[, nms, drop = FALSE]
+    samp = as.matrix(object$stanfit)
+    nms = intersect(nms, colnames(samp)) # in case some are excl by rank def.
+    samp = samp[, nms, drop = FALSE]
     attr(samp, "n.chains") = object$stanfit@sim$chains
 
     bhat = apply(samp, 2, mean)

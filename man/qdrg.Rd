@@ -37,7 +37,9 @@ in \code{coef}.}
 
 \item{ordinal.dim}{Integer number of levels in an ordinal response. If not
 missing, the intercept terms are modified appropriate to predicting the latent
-response (see \code{vignette("models")}, Section O. In this case, we expect
+response (see \code{vignette("models")}, Section O, but note that the other 
+modes, e.g., \code{mode = "prob"} are not provided). 
+In this case, we expect
 the first \code{ordinal.dim - 1} elements of \code{coef} to be the
 estimated threshold parameters, followed by the coefficients for the
 linear predictor.)}
