@@ -172,13 +172,13 @@ split_fac = function(object, fac, newfacs) {
     object@misc$by.vars = NULL
     if(!is.null(nests <- object@model.info$nesting)) {
         if(fac %in% names(nests)) {
-            for (f in newfacs)
+            for (f in names(newfacs))
                 nests[[f]] = nests[[fac]]
             nests[[fac]] = NULL
         }
         for (nm in names(nests)) 
             if (fac %in% nests[[nm]])
-                nests[[nm]] = union(setdiff(nests[[nm]], fac), newfacs)
+                nests[[nm]] = union(setdiff(nests[[nm]], fac), names(newfacs))
         object@model.info$nesting = nests
     }
     object
