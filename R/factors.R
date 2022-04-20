@@ -170,6 +170,17 @@ split_fac = function(object, fac, newfacs) {
     object@levels = c(object@levels[i < idx], newfacs, object@levels[i > idx])
     object@roles$predictors = object@misc$pri.vars = names(object@levels)
     object@misc$by.vars = NULL
+    if(!is.null(nests <- object@model.info$nesting)) {
+        if(fac %in% names(nests)) {
+            for (f in newfacs)
+                nests[[f]] = nests[[fac]]
+            nests[[fac]] = NULL
+        }
+        for (nm in names(nests)) 
+            if (fac %in% nests[[nm]])
+                nests[[nm]] = union(setdiff(nests[[nm]], fac), newfacs)
+        object@model.info$nesting = nests
+    }
     object
 }
 

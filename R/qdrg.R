@@ -59,7 +59,7 @@
 #' @param contrasts List of contrasts specified in fitting the model
 #' @param link Link function (character or list) used, if a generalized linear model.
 #'     (Note: response transformations are auto-detected from \code{formula})
-#' @param qr QR decomposition of the model matrix; needed only if there are \code{NA}s
+#' @param qr QR decomposition of the model matrix; used only if there are \code{NA}s
 #'     in \code{coef}.
 #' @param ordinal.dim Integer number of levels in an ordinal response. If not
 #'     missing, the intercept terms are modified appropriate to predicting the latent
@@ -72,6 +72,14 @@
 #' @param ... Optional arguments passed to \code{\link{ref_grid}}
 #'
 #' @return An \code{emmGrid} object constructed from the arguments
+#' 
+#' @section Rank deficiencies:
+#' Different model-fitting packages take different approaches when the
+#' model matrix is singular, but \code{qdrg} tries to reconcile them
+#' by comparing the linear functions created by \code{formula} to \code{coefs}.
+#' and \code{V}. Ideally, \code{coefs} should be named for this to work right
+#' with the \pkg{estimability} package. For more details, see the documentation
+#' in that package.
 #' 
 #' @seealso \code{\link{emmobj}} for an alternative way to construct an \code{emmGrid}.
 #' 
@@ -183,14 +191,21 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
         X = cbind(intcpt, X[, -1, drop = FALSE])
     }
     
+    bhat = .impute.NAs(bhat, X) # make coefs lm-compatible
     nbasis = estimability::all.estble
     if (sum(is.na(bhat)) > 0) {
-        if(!is.na(object$qr))
+        if(!is.null(object$qr))
             nbasis = estimability::nonest.basis(object$qr)
-        else
-            warning("Non-estimable cases can't be determined.\n",
-                "To rectify, provide appropriate 'qr' in call to qdrg()")
-    }
+        else {
+            mm = suppressWarnings(model.frame(trms, object$data, na.action = na.pass, xlev = xlev))
+            XX = model.matrix(trms, mm, contrasts.arg = object$contrasts)
+            nbasis = estimability::nonest.basis(XX)
+            if (nrow(V) == length(bhat)) {
+                ii = which(!is.na(bhat))
+                V = V[ii, ii, drop = FALSE]
+            }
+        }
+     }
     
     misc = list()
     

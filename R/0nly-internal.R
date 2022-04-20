@@ -22,6 +22,19 @@
 # Functions used only internally and of fairly general use
 # More of these with specific uses only within a certain context remain there.
 
+## create an lm-compatible set of coefficients in singular cases
+## requires both bhat and X to be named; if not, silently returns bhat
+.impute.NAs = function(bhat, X) {
+    if (is.null(bnm <- names(bhat)) || is.null(colnames(X)))
+        return(bhat)
+    nm = intersect(bnm, (xnm <- colnames(X)))
+    if(length(nm) == length(xnm))
+        return(bhat[nm])
+    tmp = rep(NA, length(xnm))
+    names(tmp) = xnm
+    tmp[nm] = bhat[nm]
+    tmp
+}
 
 ## %in%-style operator with partial matching
 ## e.g.,  ("bonf" %.pin% p.adjust.methods)  is TRUE

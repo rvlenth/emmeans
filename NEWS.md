@@ -13,6 +13,8 @@ title: "NEWS for the emmeans package"
     the factors in an `emmGrid`.
   * Added an argument `wts` to `eff.emmc` and `del.eff.emmc`, which
     allows for weighted versions of effect-style contrasts (#346)
+  * Made `qdrg()` more robust in accommodating various manifestations
+    of rank-deficient models.
 
 
 ## emmeans 1.7.3

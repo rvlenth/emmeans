@@ -32,7 +32,7 @@ certain other arguments, if not specified. See Details.}
 \item{link}{Link function (character or list) used, if a generalized linear model.
 (Note: response transformations are auto-detected from \code{formula})}
 
-\item{qr}{QR decomposition of the model matrix; needed only if there are \code{NA}s
+\item{qr}{QR decomposition of the model matrix; used only if there are \code{NA}s
 in \code{coef}.}
 
 \item{ordinal.dim}{Integer number of levels in an ordinal response. If not
@@ -74,6 +74,16 @@ they both produce \code{emmGrid} objects. When starting with summary
 statistics for an existing grid, \code{emmobj} is more useful, while
 \code{qdrg} is more useful when starting from a fitted model.
 }
+\section{Rank deficiencies}{
+
+Different model-fitting packages take different approaches when the
+model matrix is singular, but \code{qdrg} tries to reconcile them
+by comparing the linear functions created by \code{formula} to \code{coefs}.
+and \code{V}. Ideally, \code{coefs} should be named for this to work right
+with the \pkg{estimability} package. For more details, see the documentation
+in that package.
+}
+
 \examples{
 if (require(biglm, quietly = TRUE)) withAutoprint({
   # Post hoc analysis of a "biglm" object -- not supported by emmeans
