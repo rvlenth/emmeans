@@ -486,12 +486,9 @@ emm_basis.gls = function(object, trms, xlev, grid,
         }
     }
     else if (mode %in%  c("df.error", "asymptotic")) {
-        if (mode == "asymptotic")
-            df = Inf
-        else {
-            p = attr(object$apVar, "Pars")
-            df = object$dims$N - object$dims$p - sum(names(p) != "lSigma")
-        }
+        df = ifelse(mode == "asymptotic",
+                    Inf, 
+                    object$dims$N - object$dims$p - length(unlist(object$modelStruct)))
         dfargs = list(df = df)
         dffun = function(k, dfargs) dfargs$df
     }
