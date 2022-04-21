@@ -15,6 +15,7 @@ title: "NEWS for the emmeans package"
     allows for weighted versions of effect-style contrasts (#346)
   * Made `qdrg()` more robust in accommodating various manifestations
     of rank-deficient models.
+  * Fix to `df.error` calculation with `gls` (#347)
 
 
 ## emmeans 1.7.3
