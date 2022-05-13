@@ -26,9 +26,26 @@
 #' This function may make it possible to compute a reference grid for a model 
 #' object that is otherwise not supported.
 #' 
-#' If \code{object} is specified, it is used to try to obtain certain 
-#' other arguments, as detailed below. The user should ensure that these defaults
-#' will work. The default values for the arguments are as follows:
+#' Usually, you need to provide 
+#' \code{formula}, \code{data}, \code{coef}, and \code{vcov}, and perhaps other
+#' parameters. It is usually fairly straightforward to figure out how to get
+#' these from the model \code{object}; see the documentation for the model class that
+#' was fitted. Sometimes one or more of these quantities contains extra parameters,
+#' and if so, you may need to subset them to make everything conformable. For a given \code{formula} and \code{data},
+#' you can find out what is needed via \code{colnames(model.matrix(formula, data))}.
+#' (However, for an ordinal model, we expect the first \code{ordinal.dim - 1} coefficients
+#' to replace \code{(Intercept)}. And for a multivariate model, we expect \code{coef} 
+#' to be a matrix with these row names, and \code{vcov} to have as many rows and columns as
+#' the total number of elements of \code{coef}.)
+#' 
+#' If your model object follows fairly closely the conventions of an \code{\link[stats]{lm}}
+#' object, you may be able to get by providing the model as \code{object}, plus and (probably) \code{data},
+#' and perhaps some other parameters to override the defaults.
+#' When \code{object} is specified, it is used as detailed below to try to obtain the 
+#' other arguments. The user should ensure that the defaults
+#' shown below do indeed work. 
+#' 
+#' The default values for the arguments are as follows:
 #' \itemize{
 #'   \item{\code{formula}: }{Required unless obtainable via \code{formula(object)}}
 #'   \item{\code{data}: }{Required if variables are not in \code{parent.frame()} or 
@@ -52,8 +69,10 @@
 #' @param vcov Variance-covariance matrix of the fixed effects
 #' @param df Error degrees of freedom
 #' @param mcmc Posterior sample of fixed-effect coefficients
-#' @param object Optional model object. If provided, it is used to set 
-#'     certain other arguments, if not specified. See Details.
+#' @param object Optional model object. \emph{This rarely works!}; 
+#'        but if provided, we try to set 
+#'        other arguments based on an expectation that `object` has a similar
+#'        structure to `lm` objects. See Details.
 #' @param subset Subset of \code{data} used in fitting the model
 #' @param weights Weights used in fitting the model
 #' @param contrasts List of contrasts specified in fitting the model
@@ -74,14 +93,20 @@
 #' @return An \code{emmGrid} object constructed from the arguments
 #' 
 #' @section Rank deficiencies:
-#' Different model-fitting packages take different approaches when the
-#' model matrix is singular, but \code{qdrg} tries to reconcile them
-#' by comparing the linear functions created by \code{formula} to \code{coefs}.
-#' and \code{V}. Ideally, \code{coefs} should be named for this to work right
-#' with the \pkg{estimability} package. For more details, see the documentation
-#' in that package.
+#' Different model-fitting packages take different approaches when the model
+#' matrix is singular, but \code{qdrg} tries to reconcile them by comparing the
+#' linear functions created by \code{formula} to \code{coefs} and \code{vcov}.
+#' We may then use the \pkg{estimability} package to determine what quantities
+#' are estimable. For reconciling to work properly, \code{coef} should be named
+#' and \code{vcov} should have dimnames. To disable this name-matching
+#' action, remove the names from \code{coef}, e.g., by calling \code{unname()}.
+#' No reconciliation is attempted in multivariate-response cases. For more
+#' details on estimability, see the documentation in the \pkg{estimability}
+#' package.
 #' 
 #' @seealso \code{\link{emmobj}} for an alternative way to construct an \code{emmGrid}.
+#' 
+#' 
 #' 
 #' @export
 #' @examples
@@ -188,6 +213,7 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
     # If ordinal, add extra avgd, subtracted intercepts -- for latent mode
     if(!is.null(od <- object$ordinal.dim)) { 
         intcpt = matrix(-1 / (od - 1), nrow = nrow(X), ncol = od - 1)
+        colnames(intcpt) = names(bhat)[1:(od-1)]
         X = cbind(intcpt, X[, -1, drop = FALSE])
     }
     
@@ -197,6 +223,8 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
         if(!is.null(object$qr))
             nbasis = estimability::nonest.basis(object$qr)
         else {
+            if (is.name(object$data))
+                object$data = eval(object$data)
             mm = suppressWarnings(model.frame(trms, object$data, na.action = na.pass, xlev = xlev))
             XX = model.matrix(trms, mm, contrasts.arg = object$contrasts)
             nbasis = estimability::nonest.basis(XX)
@@ -220,15 +248,11 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
         bhat = as.numeric(bhat)
     }
     
-    if (!is.null(object$link)) {
+    if (!is.null(object$link))
         misc = .std.link.labels(eval(list(link = object$link)), misc)
-        dffun = function(k, dfargs) Inf
-        dfargs = list()
-    }
-    else {
-        dfargs = list(df = object$df)
-        dffun = function(k, dfargs) dfargs$df
-    }
+    dfargs = list(df = object$df)
+    dffun = function(k, dfargs) dfargs$df
+    
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, 
          misc=misc, post.beta=object$mcmc)
     }

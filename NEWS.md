@@ -15,6 +15,8 @@ title: "NEWS for the emmeans package"
     allows for weighted versions of effect-style contrasts (#346)
   * Made `qdrg()` more robust in accommodating various manifestations
     of rank-deficient models.
+  * `qdrg()` now always uses `df` if provided. Previously forced `df = Inf`
+    when a link function was provided.
   * Fix to `df.error` calculation with `gls` (#347)
 
 
