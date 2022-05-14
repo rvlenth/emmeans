@@ -4,7 +4,7 @@
 #xxxx' @importFrom brms parse_bf
 recover_data.brmsfit = function(object, data, ...) {
     bt = brms::parse_bf(formula(object))
-    if (class(bt) != "brmsterms")
+    if (inherits(bt, "brmsterms"))
         stop("This model is currently not supported.")
     mt = attr(model.frame(bt$dpars$mu$fe, data = object$data), "terms")
     # form = bt$dpars$mu$fe

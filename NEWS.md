@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.7.3-900xxx
+## emmeans 1.7.4
   * Added an argument `enhance.levels` to `contrast()` that allows
     better labeling of the levels being contrasted. For example, now
     (by default) if a factor `treat` has numeric levels, then comparisons
