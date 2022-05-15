@@ -4,12 +4,9 @@
 #xxxx' @importFrom brms parse_bf
 recover_data.brmsfit = function(object, data, ...) {
     bt = brms::parse_bf(formula(object))
-    if (inherits(bt, "brmsterms"))
+    if (!inherits(bt, "brmsterms"))
         stop("This model is currently not supported.")
     mt = attr(model.frame(bt$dpars$mu$fe, data = object$data), "terms")
-    # form = bt$dpars$mu$fe
-    # for (att in c("predvars", "dataClasses"))
-    #     attr(trms, att) = attr(mt, att)
     ### we don't have a call component so I'll just put in NULL
     recover_data.call(NULL, mt, "na.omit", data = object$data, ...)
 }

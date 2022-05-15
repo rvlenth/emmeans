@@ -175,7 +175,7 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
                               adjV = pbkrtest::vcovAdj.lmerMod(object, 0))
                 V = as.matrix(dfargs$adjV)
                 tst = try(pbkrtest::Lb_ddf)
-                if(class(tst) != "try-error")
+                if(!inherits(tst, "try-error"))
                     dffun = function(k, dfargs) pbkrtest::Lb_ddf (k, dfargs$unadjV, dfargs$adjV)
                 else {
                     mode = "asymptotic"
