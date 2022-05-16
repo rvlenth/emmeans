@@ -177,6 +177,10 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     }
 }
 
+as.mcmc.emm_list = function(x, ...) {
+    as.mcmc(x[[I_bet(1)]], ...)
+}
+
 
 ### as.mcmc.list - guaranteed to return a list
 #' @rdname mcmc-support

@@ -21,7 +21,8 @@
 
 # Methods for emm_list objects
 
-# First, ehere is documentation for the emm_list class
+
+# First, here is documentation for the emm_list class
 
 
 #' The \code{emm_list} class
@@ -29,34 +30,56 @@
 #' An \code{emm_list} object is simply a list of
 #' \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 #' for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
-#' \code{specs} argument.
+#' \code{specs} argument. Several methods for this class are provided, as detailed below.
 #' 
-#' Methods for \code{emm_list} objects include \code{summary}, 
-#' \code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{plot},
-#' \code{print}, and
-#' \code{test}. These are all the same as those methods for \code{emmGrid}
-#' objects, with an additional \code{which} argument (integer) to specify which 
-#' members of the list to use. The default is \code{which = seq_along(object)};
-#' i.e., the method is applied to every member of the \code{emm_list} object.
-#' The exception is \code{plot}, where only the \code{which[1]}th element is 
-#' plotted.
+#' @param object,x an object of class \code{emm_list}
+#' @param ... additional arguments passed to corresponding \code{emmGrid} method
+#' @param which integer vector specifying which elements to select.
 #' 
-#' As an example,
-#' to summarize a single member -- say the second one -- of an \code{emm_list}, 
-#' one may use \code{summary(object, which = 2)}, but it is probably preferable 
-#' to directly summarize it using \code{summary(object[[2]])}.
+#' @return a \code{list} of objects returned by the corresponding \code{emmGrid}
+#'   method (thus, often, another \code{emm_list} object). However, if
+#'   \code{which} has length 1, the one result is not wrapped in a list.
 #' 
-#' @note No \code{export} option is provided for printing an \code{emm_list}
-#' (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
-#' must do so separately for each element in the list.
-#' #'
 #' @rdname emm_list-object
 #' @name emm_list
+#' @order 1
 NULL
+
+#' @rdname emm_list-object
+#' @order 99
+#' 
+#' @note \code{I_bet()} provides a default value for \code{which} noisily.
+#' It is used in cases where users
+#' most likely intended to call a method for an \code{emmGrid} object
+#' rather than an \code{emm_list} object. 
+#' An informative message is displayed
+#' and then the \code{which}th element is returned. 
+#'
+#' @export
+I_bet = function(which) {
+    message("I bet you wanted to call this with just object[[", which, "]]")
+    which
+}
+
+# Internal utility to noisily return one of an emm_list
+.chk.list = function(object, which = 1) {
+    if (inherits(object, "emm_list"))
+        object = object[[I_bet(which)]]
+    object
+}
+
+# My own lapply() function that drops when the dimension is 1
+.lapply = function(...) {
+    rtn = lapply(...)
+    if (length(rtn) == 1)   rtn[[1]]
+    else                    rtn
+}
 
 
 #' @export
 #' @method str emm_list
+#' @rdname emm_list-object
+#' @order 2
 str.emm_list = function(object, ...) {
     for(nm in names(object)) {
         cat(paste("$", nm, "\n", sep=""))
@@ -72,53 +95,74 @@ str.emm_list = function(object, ...) {
 
 #' @export
 #' @method summary emm_list
+#' @rdname emm_list-object
+#' @order 3
 summary.emm_list <- function(object, ..., which = seq_along(object))
-    lapply(object[which], function(x) {
+    .lapply(object[which], function(x) {
         if (inherits(x, "summary.emmGrid"))  x
         else summary.emmGrid(x, ...)
     })
 
 #' @export
 #' @method print emm_list
+#' @rdname emm_list-object
+#' @order 4
+#' @note No \code{export} option is provided for printing an \code{emm_list}
+#' (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
+#' must do so separately for each element in the list.
+#'
 print.emm_list = function(x, ...) {
     print(summary(x, ...))
 }
 
 #' @export
 #' @method contrast emm_list
-contrast.emm_list = function(object, ... , which = seq_along(object)) {
-    lapply(object[which], contrast, ...)
+#' @rdname emm_list-object
+#' @order 11
+contrast.emm_list = function(object, ... , which = I_bet(1)) {
+    .lapply(object[which], contrast, ...)
 }
 
 #' @export
 #' @method pairs emm_list
-pairs.emm_list = function(x, ..., which = seq_along(x)) {
-    lapply(x[which], pairs, ...)
+#' @rdname emm_list-object
+#' @order 12
+pairs.emm_list = function(x, ..., which = I_bet(1)) {
+    .lapply(x[which], pairs, ...)
 }
 
 #' @export
 #' @method test emm_list
+#' @rdname emm_list-object
+#' @order 6
 test.emm_list = function(object, ..., which = seq_along(object)) {
-    lapply(object[which], test, ...)
+    .lapply(object[which], test, ...)
 }
 
 #' @export
 #' @method confint emm_list
+#' @rdname emm_list-object
+#' @order 5
 confint.emm_list = function(object, ..., which = seq_along(object)) {
-    lapply(object[which], confint, ...)
+    .lapply(object[which], confint, ...)
 }
 
 #' @export
 #' @method coef emm_list
-coef.emm_list = function(object, ..., which = seq_along(object)) {
-    lapply(object[which], coef, ...)
+#' @rdname emm_list-object
+#' @order 7
+coef.emm_list = function(object, ..., which = I_bet(1)) {
+    .lapply(object[which], coef, ...)
 }
 
 # plot just plots one
 
 #' @export
 #' @method plot emm_list
-plot.emm_list = function(x, ..., which = 1) {
+#' @rdname emm_list-object
+#' @order 15
+#' @note The \code{plot} method uses only the first element of \code{which}; the others are ignored.
+plot.emm_list = function(x, ..., which = I_bet(1)) {
     plot.emmGrid(x[[which[1]]], ...)
 }
 
@@ -171,4 +215,18 @@ as.emm_list = function(object, ...) {
         lapply(object, as.emmGrid, ...)
 }
 
+
+### Others we won't document
+
+update.emm_list = function(object, ...)
+    update.emmGrid(object[[I_bet(1)]])
+
+predict.emm_list = function(object, ...)
+    predict.emmGrid(object[[I_bet(1)]], ...)
+
+vcov.emm_list = function(object, ...)
+    vcov.emmGrid(object[[I_bet(1)]], ...)
+
+xtable.emm_list = function(x, ...)
+    xtable.emmGrid(x[[I_bet(1)]], ...)
 

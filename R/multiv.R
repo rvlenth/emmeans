@@ -85,6 +85,7 @@
 mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp, null = 0,
                       by = object@misc$by.vars, adjust = c("sidak", p.adjust.methods),
                       show.ests = FALSE, ...) {
+    object = .chk.list(object)
     if (is.null(mult.name) || length(mult.name) == 0)
         stop("Must specify at least one factor in 'mult.name'")
     if(length(setdiff(names(object@levels), union(by, mult.name))) == 0)

@@ -72,6 +72,7 @@
 #' 
 comb_facs = function(object, facs, newname = paste(facs, collapse = "."),
                      drop = FALSE) {
+    object = .chk.list(object)
     if((length(facs)  < 1))
         stop("No factors have been specified to combine")
     levs = object@levels
@@ -154,6 +155,7 @@ comb_facs = function(object, facs, newname = paste(facs, collapse = "."),
 #' str(IS.new)
 #'
 split_fac = function(object, fac, newfacs) {
+    object = .chk.list(object)
     if (!(fac %in% names(object@grid)))
         stop("The factor '", fac, "' is not in the reference grid")
     newg = expand.grid(newfacs)
@@ -246,6 +248,7 @@ split_fac = function(object, fac, newfacs) {
 #' emmeans(gwrg, "prod")
 #' 
 add_grouping = function(object, newname, refname, newlevs) {
+    object = .chk.list(object)
     if(!is.null(object@model.info$nesting[[refname]]))
         stop("'", refname, "' is already nested in another factor; cannot re-group it")
     if(newname %in% object@roles$predictors)

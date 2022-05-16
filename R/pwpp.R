@@ -115,6 +115,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
                 rows = ".",
                 xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, 
                 aes, ...) {
+    emm = .chk.list(emm)
     if(missing(by)) 
         by = emm@misc$by.vars
     
@@ -408,6 +409,7 @@ gran = function(x, min_incr = .01) {
 pwpm = function(emm, by, reverse = FALSE,
                 pvals = TRUE, means = TRUE, diffs = TRUE, 
                 flip = FALSE, digits, ...) {
+    emm = .chk.list(emm)
     if(missing(by)) 
         by = emm@misc$by.vars
     

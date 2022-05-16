@@ -200,7 +200,7 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
 #' @method cld emm_list
 #' @param which Which element of the \code{emm_list} object to process
 #'   (If length exceeds one, only the first one is used)
-cld.emm_list = function(object, ..., which = 1) {
+cld.emm_list = function(object, ..., which = I_bet(1)) {
     multcomp::cld(object[[which[1]]], ...)
 }
 

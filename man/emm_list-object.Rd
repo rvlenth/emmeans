@@ -2,32 +2,67 @@
 % Please edit documentation in R/emm-list.R
 \name{emm_list}
 \alias{emm_list}
+\alias{str.emm_list}
+\alias{summary.emm_list}
+\alias{print.emm_list}
+\alias{confint.emm_list}
+\alias{test.emm_list}
+\alias{coef.emm_list}
+\alias{contrast.emm_list}
+\alias{pairs.emm_list}
+\alias{plot.emm_list}
+\alias{I_bet}
 \title{The \code{emm_list} class}
+\usage{
+\method{str}{emm_list}(object, ...)
+
+\method{summary}{emm_list}(object, ..., which = seq_along(object))
+
+\method{print}{emm_list}(x, ...)
+
+\method{confint}{emm_list}(object, ..., which = seq_along(object))
+
+\method{test}{emm_list}(object, ..., which = seq_along(object))
+
+\method{coef}{emm_list}(object, ..., which = I_bet(1))
+
+\method{contrast}{emm_list}(object, ..., which = I_bet(1))
+
+\method{pairs}{emm_list}(x, ..., which = I_bet(1))
+
+\method{plot}{emm_list}(x, ..., which = I_bet(1))
+
+I_bet(which)
+}
+\arguments{
+\item{object, x}{an object of class \code{emm_list}}
+
+\item{...}{additional arguments passed to corresponding \code{emmGrid} method}
+
+\item{which}{integer vector specifying which elements to select.}
+}
+\value{
+a \code{list} of objects returned by the corresponding \code{emmGrid}
+  method (thus, often, another \code{emm_list} object). However, if
+  \code{which} has length 1, the one result is not wrapped in a list.
+}
 \description{
 An \code{emm_list} object is simply a list of
 \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
-\code{specs} argument.
-}
-\details{
-Methods for \code{emm_list} objects include \code{summary}, 
-\code{coef}, \code{confint}, \code{contrast}, \code{pairs}, \code{plot},
-\code{print}, and
-\code{test}. These are all the same as those methods for \code{emmGrid}
-objects, with an additional \code{which} argument (integer) to specify which 
-members of the list to use. The default is \code{which = seq_along(object)};
-i.e., the method is applied to every member of the \code{emm_list} object.
-The exception is \code{plot}, where only the \code{which[1]}th element is 
-plotted.
-
-As an example,
-to summarize a single member -- say the second one -- of an \code{emm_list}, 
-one may use \code{summary(object, which = 2)}, but it is probably preferable 
-to directly summarize it using \code{summary(object[[2]])}.
+\code{specs} argument. Several methods for this class are provided, as detailed below.
 }
 \note{
 No \code{export} option is provided for printing an \code{emm_list}
 (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
 must do so separately for each element in the list.
-#'
+
+The \code{plot} method uses only the first element of \code{which}; the others are ignored.
+
+\code{I_bet()} provides a default value for \code{which} noisily.
+It is used in cases where users
+most likely intended to call a method for an \code{emmGrid} object
+rather than an \code{emm_list} object. 
+An informative message is displayed
+and then the \code{which}th element is returned.
 }

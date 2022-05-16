@@ -240,6 +240,7 @@ test.emmGrid = function(object, null = 0,
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
 joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, ...) {
+    object = .chk.list(object)
     if (!inherits(object, "emmGrid")) {
         args = .zap.args(object = object, cov.reduce = cov.reduce, ..., omit = "submodel")
         object = do.call(ref_grid, args)

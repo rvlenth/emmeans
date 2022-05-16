@@ -9,7 +9,7 @@
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
   reversed = FALSE, ...)
 
-\method{cld}{emm_list}(object, ..., which = 1)
+\method{cld}{emm_list}(object, ..., which = I_bet(1))
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}

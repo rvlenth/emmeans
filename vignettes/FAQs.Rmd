@@ -126,7 +126,7 @@ usually not the same as `mean(x)^2`. So you need to use `at` to ensure that the
 covariates are set consistently with respect to the model. See [this subsection
 of the "basics" vignette](basics.html#depcovs) for an example.
 
-## 3. Some "significant" comparisons have overlapping confidence intervals {#CIerror}
+## Some "significant" comparisons have overlapping confidence intervals {#CIerror}
 <!-- @index Confidence intervals!Overlapping; Comparisons!with overlapping CIs@over -->
 That can happen because 
 *it is just plain wrong to use [non-]overlapping CIs for individual means to do comparisons*. 
