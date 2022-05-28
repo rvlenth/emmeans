@@ -253,7 +253,8 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     
     # args for emmeans calls
     args = list(object = NULL, specs = specs, ...)
-    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend = args$transform = NULL
+    args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend =
+              args$regrid = args$tran = NULL
     if(max.degree > 1) {
         chk = union(all.vars(specs), args$by)
         if (!("degree" %in% chk))

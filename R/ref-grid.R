@@ -290,6 +290,16 @@
 #'   \emph{geometric} means of the response-scale predictions are obtainable via
 #'   \samp{regrid = "log", type = "response"}. See also the help page for 
 #'   \code{\link{regrid}}.
+#'   
+#'   \emph{Order-of-processing issues:} 
+#'   The \code{regrid} argument, if present, is acted on immediately after the reference 
+#'   grid is constructed, while some of the \code{...} arguments may be used to
+#'   update the object at the very end. Thus, code like
+#'   \code{ref_grid(mod, tran = "sqrt", regrid = "response")} will not work correctly
+#'   if the intention was to specify the response transformation, because the re-grid 
+#'   is done \emph{before} it processes \code{tran = "sqrt"}. To get the intended
+#'   result, do
+#'   \code{regrid(ref_grid(mod, tran = "sqrt"), transform = "response")}.
 #'
 #' @section Optional side effect: If the \code{save.ref_grid} option is set to
 #'   \code{TRUE} (see \code{\link{emm_options}}),
