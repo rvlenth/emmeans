@@ -17,6 +17,9 @@ title: "NEWS for the emmeans package"
     distinction between an `emmGrid` and an `emm_list`, and expect these functions
     to work. So we need to just try to accommodate them as much as
     possible.
+  * The object returned by `joint_tests()` and `test(..., joint = TRUE)` now has
+    an `"est.fcns"` attribute, which is a list of the linear functions associated
+    with the joint test(s).
     
 
 ## emmeans 1.7.4

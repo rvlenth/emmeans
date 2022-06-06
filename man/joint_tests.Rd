@@ -22,7 +22,10 @@ degrees of freedom are displayed, if \code{FALSE} they are skipped}
 \value{
 a \code{summary_emm} object (same as is produced by 
   \code{\link{summary.emmGrid}}). All effects for which there are no
-  estimable contrasts are omitted from the results.
+  estimable contrasts are omitted from the results. 
+  The returned object also includes an \code{"est.fcns"} attribute, which is a
+  named list containing the linear functions associated with each joint test. 
+  The order of this list may not be the same as the order of the summary.
 }
 \description{
 This function produces an analysis-of-variance-like table based on linear
@@ -48,7 +51,10 @@ which may or may not have anything to do with EMMs or contrasts.
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 
-joint_tests(pigs.lm)                     ## will be same as type III ANOVA
+(jt <- joint_tests(pigs.lm))             ## will be same as type III ANOVA
+
+### Estimable functions associated with "percent"
+attr(jt, "est.fcns") $ "percent"
 
 joint_tests(pigs.lm, weights = "outer")  ## differently weighted
 

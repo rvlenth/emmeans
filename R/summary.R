@@ -36,8 +36,8 @@
 #' diverted to \code{\link{hpd.summary}}.
 #' 
 #' \code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
-#' infer = c(TRUE, FALSE)}. When called with \code{joint = FALSE}, \code{test.emmGrid}
-#' is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 
+#' infer = c(TRUE, FALSE)}. The function \code{test.emmGrid}, when called with 
+#' \code{joint = FALSE}, is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 
 #' 
 #' With \code{joint = TRUE}, \code{test.emmGrid} calculates the Wald test of the
 #' hypothesis \code{linfct \%*\% bhat = null}, where \code{linfct} and
@@ -46,7 +46,8 @@
 #' non-estimable. It is permissible for the rows of \code{linfct} to be linearly
 #' dependent, as long as \code{null == 0}, in which case a reduced set of 
 #' contrasts is tested. Linear dependence and nonzero \code{null} cause an 
-#' error.
+#' error. The returned object has an aditional \code{"est.fcns"} attribute, which
+#' is a list of the linear functions associated with the joint test.
 #'
 #' @param object An object of class \code{"emmGrid"} (see \link{emmGrid-class})
 #' @param infer A vector of one or two logical values. The first determines

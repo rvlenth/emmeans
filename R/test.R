@@ -134,11 +134,14 @@ test.emmGrid = function(object, null = 0,
                     p.value = pchisq(F*r, r, lower.tail = FALSE)
                 else
                     p.value = pf(F, r, df2, lower.tail = FALSE)
-                c(round(c(df1 = r, df2 = df2), 2), 
+                rtn = c(round(c(df1 = r, df2 = df2), 2), 
                   F.ratio = round(F, 3), p.value = p.value, note = rrflag)
+                attr(rtn, "LL") = LL
+                rtn
             }
         })
         
+        LL = lapply(result, function(r) attr(r, "LL"))
         result = as.data.frame(t(as.data.frame(result)))
         if (!missing(by)) {
             fbr = sapply(by.rows, "[", 1)
@@ -146,6 +149,7 @@ test.emmGrid = function(object, null = 0,
         }
         class(result) = c("summary_emm", "data.frame")
         attr(result, "estName") = "F.ratio"
+        attr(result, "est.fcns") = lapply(LL, zapsmall)        
         if (!status && all(result$note == 0))
             result$note = NULL
         else {
@@ -198,7 +202,10 @@ test.emmGrid = function(object, null = 0,
 #'
 #' @return a \code{summary_emm} object (same as is produced by 
 #'   \code{\link{summary.emmGrid}}). All effects for which there are no
-#'   estimable contrasts are omitted from the results.
+#'   estimable contrasts are omitted from the results. 
+#'   The returned object also includes an \code{"est.fcns"} attribute, which is a
+#'   named list containing the linear functions associated with each joint test. 
+#'   The order of this list may not be the same as the order of the summary.
 #'   
 #' @seealso \code{\link{test}}
 #' @export
@@ -206,7 +213,10 @@ test.emmGrid = function(object, null = 0,
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 #' 
-#' joint_tests(pigs.lm)                     ## will be same as type III ANOVA
+#' (jt <- joint_tests(pigs.lm))             ## will be same as type III ANOVA
+#' 
+#' ### Estimable functions associated with "percent"
+#' attr(jt, "est.fcns") $ "percent"
 #' 
 #' joint_tests(pigs.lm, weights = "outer")  ## differently weighted
 #' 
@@ -268,6 +278,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         n = ncol(trmtbl)
         trmtbl[c(nst, nesting[[nst]]), n] = 1
     }
+    est.fcns = list()
 
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
@@ -282,9 +293,15 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
                     emm = emmeans(object, these, by = by, ...)
                     tst = test(contrast(emm, interaction = "consec", by = union(by, nesters)), 
                                by = by, joint = TRUE, status = TRUE)
-                    tst = cbind(ord = k, `model term` = paste(these, collapse = ":"), tst)
+                    mt = paste(these, collapse = ":")
+                    ef = attr(tst, "est.fcns")
+                    if (length(ef) > 1)
+                        ef = list(ef)
+                    names(ef) = mt
+                    est.fcns <<- c(est.fcns, ef)
+                    tst = cbind(ord = k, `model term` = mt, tst)
                     result = rbind(result, tst)
-                }
+                 }
             }
             last = max(match(these, facs))
         }
@@ -302,6 +319,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
     class(result) = c("summary_emm", "data.frame")
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
+    attr(result, "est.fcns") = est.fcns
     if (any(result$note != "")) {
         msg = character(0)
         if (any(result$note %in% c(" d", " d e")))  
