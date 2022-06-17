@@ -200,8 +200,8 @@ This accomplishes the goal of putting all the comparisons in one family of 6
 comparisons. Note that the Tukey adjustment may not be used here because we no
 longer have *one* set of pairwise comparisons.
 
-An alternative is to specify `cross.adjust`, which specifies an adjustment method
-to apply to corresponding sets of *P* values across groups:
+An alternative is to specify `cross.adjust`, which specifies an additional adjustment method
+to apply to corresponding sets of within-group adjusted *P* values:
 ```{r}
 test(warp.pw, adjust = "tukey", cross.adjust = "bonferroni")
 ```

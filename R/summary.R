@@ -62,7 +62,8 @@
 #' @param by Character name(s) of variables to use for grouping into separate 
 #'   tables. This affects the family of tests considered in adjusted \emph{P}
 #'   values. 
-#' @param cross.adjust Character: \eqn{p}-value adjustment method to use \emph{across} 
+#' @param cross.adjust Character: \eqn{p}-value adjustment method to 
+#'   additionally apply \emph{across} 
 #'   the \code{by} groups. See the section on P-value adjustments for details.
 #' @param type Character: type of prediction desired. This only has an effect if
 #'   there is a known transformation or link function. \code{"response"} 
@@ -227,8 +228,9 @@
 #'   options are one of the \code{p.adjust.methods} or \code{"sidak"}. This
 #'   argument is ignored unless it is other than \code{"none"}, there is more 
 #'   than one \code{by} group, and they are all the same size. Under those conditions,
-#'   each set of corresponding \eqn{p} values (by order of appearance in the \code{by} 
-#'   groups) is adjusted using the specified method. Specifying a Bonferroni adjustment
+#'   after the adjusted \eqn{p} values are determined within each group,
+#'   each set of corresponding adjusted \eqn{p} values (by order of appearance in the \code{by} 
+#'   groups) is further adjusted using the specified method. Specifying a Bonferroni adjustment
 #'   for both \code{adjust} and \code{cross.adjust} is equivalent to applying the Bonferroni 
 #'   adjustment to all tests as a whole (e.g., using \code{by = NULL}). But specifying an 
 #'   \dQuote{exact} method in each group and cross-adjusting with Bonferroni will be less
@@ -356,7 +358,7 @@
 #' prs <- pairs(warp.emm)   # pairwise comparisons of tension, by wool
 #' test(prs, adjust = "tukey", cross.adjust = "bonferroni")
 #' 
-#' # Same comparisons taken as one big family: more conservative adjustment
+#' # Same comparisons taken as one big family (more conservative)
 #' test(prs, adjust = "bonferroni", by = NULL)
 #' 
 summary.emmGrid <- function(object, infer, level, adjust, by, 
