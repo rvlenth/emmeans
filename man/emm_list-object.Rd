@@ -2,35 +2,35 @@
 % Please edit documentation in R/emm-list.R
 \name{emm_list}
 \alias{emm_list}
+\alias{contrast.emm_list}
+\alias{pairs.emm_list}
+\alias{test.emm_list}
+\alias{confint.emm_list}
+\alias{plot.emm_list}
+\alias{coef.emm_list}
 \alias{str.emm_list}
 \alias{summary.emm_list}
 \alias{print.emm_list}
-\alias{confint.emm_list}
-\alias{test.emm_list}
-\alias{coef.emm_list}
-\alias{contrast.emm_list}
-\alias{pairs.emm_list}
-\alias{plot.emm_list}
 \alias{I_bet}
 \title{The \code{emm_list} class}
 \usage{
+\method{contrast}{emm_list}(object, ..., which = I_bet(1))
+
+\method{pairs}{emm_list}(x, ..., which = I_bet(1))
+
+\method{test}{emm_list}(object, ..., which = seq_along(object))
+
+\method{confint}{emm_list}(object, ..., which = seq_along(object))
+
+\method{plot}{emm_list}(x, ..., which = I_bet(1))
+
+\method{coef}{emm_list}(object, ..., which = I_bet(1))
+
 \method{str}{emm_list}(object, ...)
 
 \method{summary}{emm_list}(object, ..., which = seq_along(object))
 
 \method{print}{emm_list}(x, ...)
-
-\method{confint}{emm_list}(object, ..., which = seq_along(object))
-
-\method{test}{emm_list}(object, ..., which = seq_along(object))
-
-\method{coef}{emm_list}(object, ..., which = I_bet(1))
-
-\method{contrast}{emm_list}(object, ..., which = I_bet(1))
-
-\method{pairs}{emm_list}(x, ..., which = I_bet(1))
-
-\method{plot}{emm_list}(x, ..., which = I_bet(1))
 
 I_bet(which)
 }
@@ -53,11 +53,11 @@ for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 \code{specs} argument. Several methods for this class are provided, as detailed below.
 }
 \note{
+The \code{plot} method uses only the first element of \code{which}; the others are ignored.
+
 No \code{export} option is provided for printing an \code{emm_list}
 (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
 must do so separately for each element in the list.
-
-The \code{plot} method uses only the first element of \code{which}; the others are ignored.
 
 \code{I_bet()} provides a default value for \code{which} noisily.
 It is used in cases where users

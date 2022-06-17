@@ -10,8 +10,8 @@
 \alias{[.summary_emm}
 \title{Summaries, predictions, intervals, and tests for \code{emmGrid} objects}
 \usage{
-\method{summary}{emmGrid}(object, infer, level, adjust, by, type, df, calc,
-  null, delta, side, frequentist,
+\method{summary}{emmGrid}(object, infer, level, adjust, by,
+  cross.adjust = "none", type, df, calc, null, delta, side, frequentist,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 
 \method{confint}{emmGrid}(object, parm, level = 0.95, ...)
@@ -47,6 +47,9 @@ the P-value adjustments section below.}
 \item{by}{Character name(s) of variables to use for grouping into separate 
 tables. This affects the family of tests considered in adjusted \emph{P}
 values.}
+
+\item{cross.adjust}{Character: \eqn{p}-value adjustment method to use \emph{across} 
+the \code{by} groups. See the section on P-value adjustments for details.}
 
 \item{type}{Character: type of prediction desired. This only has an effect if
 there is a known transformation or link function. \code{"response"} 
@@ -320,6 +323,19 @@ The \code{as.data.frame} method is intended primarily to allow for
   \emph{Warning:} Non-estimable cases are \emph{included} in the family to which adjustments
   are applied. You may wish to subset the object using the \code{[]} operator
   to work around this problem.
+  
+  The \code{cross.adjust} argument is a way of specifying a multiplicity adjustment
+  across the \code{by} groups (otherwise by default, each group is treated as a separate
+  family in regards to multiplicity adjustments). It applies only to \eqn{p} values. Valid
+  options are one of the \code{p.adjust.methods} or \code{"sidak"}. This
+  argument is ignored unless it is other than \code{"none"}, there is more 
+  than one \code{by} group, and they are all the same size. Under those conditions,
+  each set of corresponding \eqn{p} values (by order of appearance in the \code{by} 
+  groups) is adjusted using the specified method. Specifying a Bonferroni adjustment
+  for both \code{adjust} and \code{cross.adjust} is equivalent to applying the Bonferroni 
+  adjustment to all tests as a whole (e.g., using \code{by = NULL}). But specifying an 
+  \dQuote{exact} method in each group and cross-adjusting with Bonferroni will be less
+  conservative.
 }
 
 \section{Tests of significance, nonsuperiority, noninferiority, or equivalence}{
@@ -416,6 +432,15 @@ summary(con, infer = c(TRUE, TRUE), adjust = "scheffe", scheffe.rank = 5)
 
 # Show estimates to more digits
 print(test(con), digits = 7)
+
+# --------------------------------------------------------------
+# Cross-adjusting P values
+prs <- pairs(warp.emm)   # pairwise comparisons of tension, by wool
+test(prs, adjust = "tukey", cross.adjust = "bonferroni")
+
+# Same comparisons taken as one big family: more conservative adjustment
+test(prs, adjust = "bonferroni", by = NULL)
+
 }
 \seealso{
 \code{\link{hpd.summary}}

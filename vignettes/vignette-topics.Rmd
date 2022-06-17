@@ -23,6 +23,7 @@ vignette: >
   * `adjust`
       * [in *comparisons: pairwise*](comparisons.html#pairwise)
       * [in *confidence-intervals: adjust*](confidence-intervals.html#adjust)
+      * [vs. `cross.adjust`](confidence-intervals.html#cross-adjust)
   * [`afex_aov` objects](models.html#V)
   * [Alias matrix](xplanations.html#submodels)
   * [Analysis of subsets of data](FAQs.html#model)
@@ -65,6 +66,7 @@ vignette: >
   * [Brackets (`[ ]` and `[[ ]]` operators)](utilities.html#brackets)
   * [`brmsfit` objects](models.html#S)
   * [`by` groups](confidence-intervals.html#byvars)
+      * [Adjusting across groups](confidence-intervals.html#cross-adjust)
       * [Identical comparisons](FAQs.html#additive)
 
 
@@ -125,6 +127,8 @@ vignette: >
       * [`emmeans()` doesn't work](FAQs.html#numeric)
       * [Interacting with factors](FAQs.html#trends)
       * [Mediating](messy-data.html#mediators)
+  * [cross-group comparisons](confidence-intervals.html#cross-adjust)
+  * [`cross.adjust`](confidence-intervals.html#cross-adjust)
 
 
 [Back to top](#topnav)
@@ -232,6 +236,7 @@ vignette: >
       * [Split-plot experiment](sophisticated.html#lmer)
       * [Unbalanced data](basics.html#motivation)
       * `warpbreaks`
+          * [in *confidence-intervals: cross-adjust*](confidence-intervals.html#cross-adjust)
           * [in *transformations: tranlink*](transformations.html#tranlink)
           * [in *utilities: relevel*](utilities.html#relevel)
       * [Welch's *t* comparisons](utilities.html#relevel)

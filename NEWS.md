@@ -20,6 +20,8 @@ title: "NEWS for the emmeans package"
   * The object returned by `joint_tests()` and `test(..., joint = TRUE)` now has
     an `"est.fcns"` attribute, which is a list of the linear functions associated
     with the joint test(s).
+  * New `cross.adjust` argument in `summary.emmGrid()` allows for additional 
+    *multiplicity*P*-value adjustment across `by` groups.
     
 
 ## emmeans 1.7.4

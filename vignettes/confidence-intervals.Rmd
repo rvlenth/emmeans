@@ -163,9 +163,9 @@ purpose, the `by` argument in `summary()` is useful. For example,
 ```{r}
 confint(pigs.rg, by = "source")
 ```
-If there is also an `adjust` in force when `by` variables are used, the 
+If there is also an `adjust` in force when `by` variables are used, by default, the 
 adjustment is made *separately* on each `by` group; e.g., in the above, we would
-be adjusting for sets of 4 intervals, not all 12 together.
+be adjusting for sets of 4 intervals, not all 12 together (but see "cross-adjustments" below.)
 
 There can be a `by` specification in `emmeans()` (or equivalently, a `|` in the
 formula); and if so, it is passed on to `summary()` and used unless overridden
@@ -175,6 +175,39 @@ emmeans(pigs.lm, ~ percent | source)     ### same results as above
 summary(.Last.value, by = percent)       ### grouped the other way
 ```
 Specifying `by = NULL` will remove all grouping.
+
+
+### Adjustments across `by` groups {#cross-adjust}
+<!-- @index cross-group comparisons; `cross.adjust`; `adjust`!vs. `cross.adjust`
+     `by` groups!Adjusting across groups; Examples!`warpbreaks` -->
+As was mentioned, each `by` group is regarded as a separate family with regards to
+the `adjust` procedure. For example, consider a model with interaction for the `warpbreaks` data,
+and construct pairwise comparisons of `tension` by `wool`:
+```{r}
+warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+warp.pw <- pairs(emmeans(warp.lm, ~ tension | wool))
+warp.pw
+```
+We have two sets of 3 comparisons, and the (default) Tukey adjustment is made *separately* in each group.
+
+However, sometimes we want the multiplicity adjustment to be broader.
+This broadening can be done in two ways. One is to remove the `by` variable,
+which then treats all results as one family. In our example:
+```{r}
+test(warp.pw, by = NULL, adjust = "bonferroni")
+```
+This accomplishes the goal of putting all the comparisons in one family of 6
+comparisons. Note that the Tukey adjustment may not be used here because we no
+longer have *one* set of pairwise comparisons.
+
+An alternative is to specify `cross.adjust`, which specifies an adjustment method
+to apply to corresponding sets of *P* values across groups:
+```{r}
+test(warp.pw, adjust = "tukey", cross.adjust = "bonferroni")
+```
+These adjustments are less conservative than the previous result, but it is still
+a conservative adjustment to the set of 6 tests. Had we also specified `adjust = "bonferroni"`,
+we would have obtained the same adjusted *P* values as we obtained with `by = NULL`.
 
 ### Simple comparisons {#simple}
 <!-- @index Simple comparisons; `contrast()`!`simple`; `simple = "each"` -->

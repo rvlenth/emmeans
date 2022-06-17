@@ -57,7 +57,9 @@ NULL
 #'
 #' @export
 I_bet = function(which) {
-    message("I bet you wanted to call this with just object[[", which, "]]")
+    message("I bet you wanted to call this with just object[[", which, "]]",
+            " - use 'which' if I'm wrong.\n", 
+            "See '? emm_list' for more information")
     which
 }
 
@@ -79,7 +81,7 @@ I_bet = function(which) {
 #' @export
 #' @method str emm_list
 #' @rdname emm_list-object
-#' @order 2
+#' @order 12
 str.emm_list = function(object, ...) {
     for(nm in names(object)) {
         cat(paste("$", nm, "\n", sep=""))
@@ -96,7 +98,7 @@ str.emm_list = function(object, ...) {
 #' @export
 #' @method summary emm_list
 #' @rdname emm_list-object
-#' @order 3
+#' @order 13
 summary.emm_list <- function(object, ..., which = seq_along(object))
     .lapply(object[which], function(x) {
         if (inherits(x, "summary.emmGrid"))  x
@@ -106,7 +108,7 @@ summary.emm_list <- function(object, ..., which = seq_along(object))
 #' @export
 #' @method print emm_list
 #' @rdname emm_list-object
-#' @order 4
+#' @order 14
 #' @note No \code{export} option is provided for printing an \code{emm_list}
 #' (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
 #' must do so separately for each element in the list.
@@ -118,7 +120,7 @@ print.emm_list = function(x, ...) {
 #' @export
 #' @method contrast emm_list
 #' @rdname emm_list-object
-#' @order 11
+#' @order 3
 contrast.emm_list = function(object, ... , which = I_bet(1)) {
     .lapply(object[which], contrast, ...)
 }
@@ -126,7 +128,7 @@ contrast.emm_list = function(object, ... , which = I_bet(1)) {
 #' @export
 #' @method pairs emm_list
 #' @rdname emm_list-object
-#' @order 12
+#' @order 4
 pairs.emm_list = function(x, ..., which = I_bet(1)) {
     .lapply(x[which], pairs, ...)
 }
@@ -142,7 +144,7 @@ test.emm_list = function(object, ..., which = seq_along(object)) {
 #' @export
 #' @method confint emm_list
 #' @rdname emm_list-object
-#' @order 5
+#' @order 7
 confint.emm_list = function(object, ..., which = seq_along(object)) {
     .lapply(object[which], confint, ...)
 }
@@ -150,24 +152,23 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 #' @export
 #' @method coef emm_list
 #' @rdname emm_list-object
-#' @order 7
+#' @order 9
 coef.emm_list = function(object, ..., which = I_bet(1)) {
     .lapply(object[which], coef, ...)
 }
 
-# plot just plots one
 
 #' @export
 #' @method plot emm_list
 #' @rdname emm_list-object
-#' @order 15
+#' @order 8
 #' @note The \code{plot} method uses only the first element of \code{which}; the others are ignored.
 plot.emm_list = function(x, ..., which = I_bet(1)) {
     plot.emmGrid(x[[which[1]]], ...)
 }
 
 #' @rdname rbind.emmGrid
-#' @order 3
+#' @order 23
 #' @param which Integer vector of subset of elements to use; if missing, all are combined
 #' @return The \code{rbind} method for \code{emm_list} objects simply combines 
 #' the \code{emmGrid} objects comprising the first element of \code{...}.

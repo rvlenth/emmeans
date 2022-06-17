@@ -62,6 +62,8 @@
 #' @param by Character name(s) of variables to use for grouping into separate 
 #'   tables. This affects the family of tests considered in adjusted \emph{P}
 #'   values. 
+#' @param cross.adjust Character: \eqn{p}-value adjustment method to use \emph{across} 
+#'   the \code{by} groups. See the section on P-value adjustments for details.
 #' @param type Character: type of prediction desired. This only has an effect if
 #'   there is a known transformation or link function. \code{"response"} 
 #'   specifies that the inverse transformation be applied. \code{"mu"} (or 
@@ -218,6 +220,19 @@
 #'   \emph{Warning:} Non-estimable cases are \emph{included} in the family to which adjustments
 #'   are applied. You may wish to subset the object using the \code{[]} operator
 #'   to work around this problem.
+#'   
+#'   The \code{cross.adjust} argument is a way of specifying a multiplicity adjustment
+#'   across the \code{by} groups (otherwise by default, each group is treated as a separate
+#'   family in regards to multiplicity adjustments). It applies only to \eqn{p} values. Valid
+#'   options are one of the \code{p.adjust.methods} or \code{"sidak"}. This
+#'   argument is ignored unless it is other than \code{"none"}, there is more 
+#'   than one \code{by} group, and they are all the same size. Under those conditions,
+#'   each set of corresponding \eqn{p} values (by order of appearance in the \code{by} 
+#'   groups) is adjusted using the specified method. Specifying a Bonferroni adjustment
+#'   for both \code{adjust} and \code{cross.adjust} is equivalent to applying the Bonferroni 
+#'   adjustment to all tests as a whole (e.g., using \code{by = NULL}). But specifying an 
+#'   \dQuote{exact} method in each group and cross-adjusting with Bonferroni will be less
+#'   conservative.
 #'
 #' @section Tests of significance, nonsuperiority, noninferiority, or equivalence:
 #'   When \code{delta = 0}, test statistics are the usual tests of significance.
@@ -333,10 +348,22 @@
 #' # Consider as some of many possible contrasts among the six cell means
 #' summary(con, infer = c(TRUE, TRUE), adjust = "scheffe", scheffe.rank = 5)
 #'
-summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
-                        null, delta, side, frequentist, 
-                        bias.adjust = get_emm_option("back.bias.adj"),
-                        sigma, ...) {
+#' # Show estimates to more digits
+#' print(test(con), digits = 7)
+#' 
+#' # --------------------------------------------------------------
+#' # Cross-adjusting P values
+#' prs <- pairs(warp.emm)   # pairwise comparisons of tension, by wool
+#' test(prs, adjust = "tukey", cross.adjust = "bonferroni")
+#' 
+#' # Same comparisons taken as one big family: more conservative adjustment
+#' test(prs, adjust = "bonferroni", by = NULL)
+#' 
+summary.emmGrid <- function(object, infer, level, adjust, by, 
+                            cross.adjust = "none", type, df, calc,
+                            null, delta, side, frequentist, 
+                            bias.adjust = get_emm_option("back.bias.adj"),
+                            sigma, ...) {
     if(missing(sigma))
         sigma = object@misc$sigma
     if(missing(frequentist) && !is.null(object@misc$frequentist))
@@ -600,6 +627,27 @@ summary.emmGrid <- function(object, infer, level, adjust, by, type, df, calc,
             # we ignore everything about apv except the message
             mesg = c(mesg, apv$mesg)
         }
+        
+        # Handle cross-adjustments
+        if ( (length(by.rows) > 1) && 
+             (length(len <- sapply(by.rows, length)) > 1) &&
+             is.na(pmatch(cross.adjust, "none")) ) {
+            val = c("sidak", p.adjust.methods)
+            w = pmatch(tolower(cross.adjust), tolower(val))
+            if (!is.na(w)) {
+                cross.adjust = val[w]
+                mat = matrix(result$p.value, nrow = len)
+                apv = apply(mat, 1, function(p) {
+                    if (w > 1)   p.adjust(p, cross.adjust)
+                    else         1 - (1 - p)^ncol(mat)
+                })
+                result$p.value = as.numeric(t(apv))
+                mesg = c(mesg, paste("Cross-group P-value adjustment:", cross.adjust))
+            }
+            else
+                message("Invalid cross-adjustment method: '", cross.adjust, "'")
+        }
+        
         if (delta > 0)
             mesg = c(mesg, paste("Statistics are tests of", c("nonsuperiority","equivalence","noninferiority")[side+2],
                                  "with a threshold of", signif(delta, 5)))
@@ -722,9 +770,6 @@ predict.emmGrid <- function(object, type,
 #'   \code{emm_options(opt.digits = FALSE)}.
 #' @method as.data.frame emmGrid
 #' @export
-#' @examples
-#' # Show estimates to more digits
-#' print(test(con), digits = 7)
 as.data.frame.emmGrid = function(x, row.names = NULL, optional, check.names = TRUE, ...) {
     as.data.frame(summary(x, ...), row.names = row.names, check.names = check.names)
 }
