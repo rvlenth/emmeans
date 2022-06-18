@@ -60,7 +60,7 @@ Scroll down or follow the links to those groups for more information.
 |             |         |         |`"vbeta.fij", "robust", "naive")` or a matrix                |
 |geese        |geepack  |[E](#E)  |Like `geeglm`                                                |
 |glm          |stats    |[G](#G)  |                                                             |
-|glm.nb       |MASS     |[G](#G)  |Requires `data` argument                                     |
+|glm.nb       |MASS     |[G](#G)  |                                     |
 |glmerMod     |lme4     |[G](#G)  |                                                             |
 |glmmadmb     |glmmADMB |         |No longer supported                                          |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
@@ -187,7 +187,7 @@ Most models in this group receive only standard support as in [Group A](#A), but
 typically the tests and confidence intervals are asymptotic. Thus the
 `df` column for tabular results will be `Inf`.
 
-Some objects in this group *require* that the original or reference dataset 
+Some objects in this group may require that the original or reference dataset 
 be provided when calling `ref_grid()` or `emmeans()`.
 
 In the case of `mgcv::gam` objects, there are optional `freq` and

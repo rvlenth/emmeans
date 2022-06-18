@@ -21,7 +21,8 @@ title: "NEWS for the emmeans package"
     an `"est.fcns"` attribute, which is a list of the linear functions associated
     with the joint test(s).
   * New `cross.adjust` argument in `summary.emmGrid()` allows for additional 
-    *multiplicity*P*-value adjustment across `by` groups.
+    *P*-value adjustment across `by` groups.
+  * Apparently, `glm.nb` support no longer requires `data` (#355)
     
 
 ## emmeans 1.7.4

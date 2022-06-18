@@ -325,19 +325,27 @@ The \code{as.data.frame} method is intended primarily to allow for
   are applied. You may wish to subset the object using the \code{[]} operator
   to work around this problem.
   
-  The \code{cross.adjust} argument is a way of specifying a multiplicity adjustment
-  across the \code{by} groups (otherwise by default, each group is treated as a separate
-  family in regards to multiplicity adjustments). It applies only to \eqn{p} values. Valid
-  options are one of the \code{p.adjust.methods} or \code{"sidak"}. This
-  argument is ignored unless it is other than \code{"none"}, there is more 
-  than one \code{by} group, and they are all the same size. Under those conditions,
-  after the adjusted \eqn{p} values are determined within each group,
-  each set of corresponding adjusted \eqn{p} values (by order of appearance in the \code{by} 
-  groups) is further adjusted using the specified method. Specifying a Bonferroni adjustment
-  for both \code{adjust} and \code{cross.adjust} is equivalent to applying the Bonferroni 
-  adjustment to all tests as a whole (e.g., using \code{by = NULL}). But specifying an 
-  \dQuote{exact} method in each group and cross-adjusting with Bonferroni will be less
-  conservative.
+  The \code{cross.adjust} argument is a way of specifying a multiplicity
+  adjustment across the \code{by} groups (otherwise by default, each group is
+  treated as a separate family in regards to multiplicity adjustments). It
+  applies only to \eqn{p} values. Valid options are one of the
+  \code{p.adjust.methods} or \code{"sidak"}. This argument is ignored unless
+  it is other than \code{"none"}, there is more than one \code{by} group, and
+  they are all the same size. Under those conditions, we first use
+  \code{adjust} to determine the within-group adjusted \eqn{p} values.
+  Imagine each group's adjusted \eqn{p} values arranged in side-by-side
+  columns, thus forming a matrix with the number of columns equal to the
+  number of \code{by} groups. Then we use the \code{cross.adjust} method to
+  further adjust the adjusted \eqn{p} values in each row of this matrix. Note
+  that an \emph{overall} Bonferroni (or Sidak) adjustment is obtainable by
+  specifying \emph{both} \code{adjust} and \code{cross.adjust} as
+  \code{"bonferroni"} (or \code{"sidak"}). However, less conservative (but
+  yet conservative) overall adjustments are available when it is possible to
+  use an \dQuote{exact} within-group method (e.g., \code{adjust = "tukey"}
+  for pairwise comparisons) and \code{cross.adjust} as a conservative
+  adjustment. [\code{cross.adjust} methods other than \code{"none"}, 
+  \code{"bonferroni"}, or \code{"sidak"} do not seem advisable, but other 
+  \code{p.adjust} methods are available if you can make sense of them.]
 }
 
 \section{Tests of significance, nonsuperiority, noninferiority, or equivalence}{
