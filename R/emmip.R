@@ -146,7 +146,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
                          # lty = 1, col = NULL, 
                          plotit = TRUE, 
                          nesting.order = FALSE, ...) {
-    object = .chk.list(object)
+    object = .chk.list(object, ...)
     engine = match.arg(engine, c("ggplot", "lattice", "none"))
     if (engine == "ggplot")
         .requireNS("ggplot2",

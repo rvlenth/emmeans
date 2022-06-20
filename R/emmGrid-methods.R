@@ -942,7 +942,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
                   bias.adjust = get_emm_option("back.bias.adj"), sigma, 
                   N.sim, sim = mvtnorm::rmvnorm, ...) 
 {
-    object = .chk.list(object)
+    object = .chk.list(object, ...)
     links = c("logit", "probit", "cauchit", "cloglog", "log", "log10", "log2", "sqrt", "1/mu^2", "inverse")
     if (is.logical(transform))   # for backward-compatibility
         transform = ifelse(transform, "response", "none")

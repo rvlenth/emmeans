@@ -11,9 +11,9 @@ title: "NEWS for the emmeans package"
     default `which` to `I_bet(1)`, which shows a message and sets `which` to 1.
     Also, when `which` is of length 1, we return that one result rather than a
     list.
-  * We also added the same object[[I_bet(1)]] default to functions like
+  * We also added the same `object[[I_bet(1)]]` default to functions like
     `add_grouping()`, `emmip()`, and `emmeans)` itself when they are called with
-    an `emm_list` object. Basically, lots of users are not attuned to the
+    an `emm_list` object. Basically, some users are not attuned to the
     distinction between an `emmGrid` and an `emm_list`, and expect these functions
     to work. So we need to just try to accommodate them as much as
     possible.

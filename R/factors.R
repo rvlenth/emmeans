@@ -38,6 +38,7 @@
 #'     weight zero. If \code{FALSE}, all levels are retained. 
 #'     (This argument is ignored if there is no \code{.wgt.} column
 #'     in \code{object@grid}.)
+#' @param ... arguments passed to other methods
 #' @rdname manip-factors
 #'
 #' @return A modified object of class \code{emmGrid}
@@ -71,8 +72,8 @@
 #' split_fac(v.cg, "cyl.gear", list(cyl = c(4, 6, 8), gear = 3:5))
 #' 
 comb_facs = function(object, facs, newname = paste(facs, collapse = "."),
-                     drop = FALSE) {
-    object = .chk.list(object)
+                     drop = FALSE, ...) {
+    object = .chk.list(object, ...)
     if((length(facs)  < 1))
         stop("No factors have been specified to combine")
     levs = object@levels
@@ -154,8 +155,8 @@ comb_facs = function(object, facs, newname = paste(facs, collapse = "."),
 #' IS.new <- split_fac(IS.emm, "spray", list(A = 1:2, B = c("low", "med", "hi")))
 #' str(IS.new)
 #'
-split_fac = function(object, fac, newfacs) {
-    object = .chk.list(object)
+split_fac = function(object, fac, newfacs, ...) {
+    object = .chk.list(object, ...)
     if (!(fac %in% names(object@grid)))
         stop("The factor '", fac, "' is not in the reference grid")
     newg = expand.grid(newfacs)
@@ -247,8 +248,8 @@ split_fac = function(object, fac, newfacs) {
 #' 
 #' emmeans(gwrg, "prod")
 #' 
-add_grouping = function(object, newname, refname, newlevs) {
-    object = .chk.list(object)
+add_grouping = function(object, newname, refname, newlevs, ...) {
+    object = .chk.list(object, ...)
     if(!is.null(object@model.info$nesting[[refname]]))
         stop("'", refname, "' is already nested in another factor; cannot re-group it")
     if(newname %in% object@roles$predictors)

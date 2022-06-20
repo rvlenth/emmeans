@@ -287,7 +287,7 @@ emmeans = function(object, specs, by = NULL,
                    contr, options = get_emm_option("emmeans"), 
                    weights, offset, trend, ..., tran) {
     
-    object = .chk.list(object)
+    object = .chk.list(object, ...)
     if(!is(object, "emmGrid")) {
         args = .zap.args(object = object, ..., omit = "submodel")
         if (is.null(args$wt.nuis)) # pass weights as wt.nuis

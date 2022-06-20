@@ -6,11 +6,12 @@
 \alias{add_grouping}
 \title{Manipulate factors in a reference grid}
 \usage{
-comb_facs(object, facs, newname = paste(facs, collapse = "."), drop = FALSE)
+comb_facs(object, facs, newname = paste(facs, collapse = "."),
+  drop = FALSE, ...)
 
-split_fac(object, fac, newfacs)
+split_fac(object, fac, newfacs, ...)
 
-add_grouping(object, newname, refname, newlevs)
+add_grouping(object, newname, refname, newlevs, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -25,6 +26,8 @@ are dropped if all occurrences in the newly reconstructed object have
 weight zero. If \code{FALSE}, all levels are retained. 
 (This argument is ignored if there is no \code{.wgt.} column
 in \code{object@grid}.)}
+
+\item{...}{arguments passed to other methods}
 
 \item{fac}{The name of a factor that is part of the grid in \code{object}}
 

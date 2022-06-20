@@ -58,15 +58,19 @@ NULL
 #' @export
 I_bet = function(which) {
     message("I bet you wanted to call this with just object[[", which, "]]",
-            " - use 'which' if I'm wrong.\n", 
+            " - use '[[]]' or which' if I'm wrong.\n", 
             "See '? emm_list' for more information")
     which
 }
 
 # Internal utility to noisily return one of an emm_list
-.chk.list = function(object, which = 1) {
-    if (inherits(object, "emm_list"))
-        object = object[[I_bet(which)]]
+# Call with ... argument so that message is suppressed if we specify 'which'
+.chk.list = function(object, which) {
+    if (inherits(object, "emm_list")) {
+        if (missing(which))
+            which = I_bet(1)
+        object = object[[which]]
+    }
     object
 }
 
