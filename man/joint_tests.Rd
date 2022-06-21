@@ -23,6 +23,9 @@ degrees of freedom are displayed, if \code{FALSE} they are skipped}
 a \code{summary_emm} object (same as is produced by 
   \code{\link{summary.emmGrid}}). All effects for which there are no
   estimable contrasts are omitted from the results. 
+  There may be an additional row named \code{(confounded)} which accounts
+  for joint tests of effects that are estimable but are not 
+  determined by contrasts of any one term.
   The returned object also includes an \code{"est.fcns"} attribute, which is a
   named list containing the linear functions associated with each joint test. 
   The order of this list may not be the same as the order of the summary.
@@ -87,6 +90,12 @@ joint_tests(toy.cov, at = list(female = 0))
 ## treat            1    252.0833333    252.0833333    208.62   <.0001
 ## female           1     78.8928571     78.8928571     65.29   0.0002
 ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
+
+### Example with empty cells and confounded effects
+low3 <- unlist(attr(ubds, "cells")[1:3]) 
+ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
+joint_tests(ubds.lm, by = "B")
+
 }
 \seealso{
 \code{\link{test}}

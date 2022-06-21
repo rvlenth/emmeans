@@ -65,7 +65,7 @@ I_bet = function(which) {
 
 # Internal utility to noisily return one of an emm_list
 # Call with ... argument so that message is suppressed if we specify 'which'
-.chk.list = function(object, which) {
+.chk.list = function(object, which, ...) {
     if (inherits(object, "emm_list")) {
         if (missing(which))
             which = I_bet(1)

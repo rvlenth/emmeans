@@ -3,26 +3,28 @@ title: "NEWS for the emmeans package"
 ---
 
 ## emmeans 1.7.4.999xxxx
-  * Modified default behavior of many methods for class `emm_list`,
-    and added more complete documentation. Many users start with
-    objects like `emm <- emmeans(model, pairwise ~ treatment)` and then
-    expect to use something like `plot(emm)` when what they want is
-    `plot(emm[[1]])`. For situations where this is likely, we now
-    default `which` to `I_bet(1)`, which shows a message and sets `which` to 1.
-    Also, when `which` is of length 1, we return that one result rather than a
-    list.
-  * We also added the same `object[[I_bet(1)]]` default to functions like
-    `add_grouping()`, `emmip()`, and `emmeans)` itself when they are called with
-    an `emm_list` object. Basically, some users are not attuned to the
-    distinction between an `emmGrid` and an `emm_list`, and expect these functions
-    to work. So we need to just try to accommodate them as much as
-    possible.
+  * Modified the defaults for several methods for class `emm_list`,
+    and added more complete documentation. We also added hidden
+    `emm_list` support to several functions like
+    `add_grouping()`, `emmip()`, and `emmeans()` itself.
+    These changes, we hope, help in situations where users create
+    objects like `emm <- emmeans(model, pairwise ~ treatment)` but are
+    not experienced or attuned to the distinction between `emmGrid` and
+    `emm_list` objects. The mechanism for this is to provide a 
+    default of \code{I_bet(1)} for which element of the `emm_list` to
+    use. A message is shown that specifies which element was selected
+    and encourages the user to specify it explicitly in the future
+    via either `[[ ]]` or a `which` argument; for example, `plot(emm[[1]])`
+    or `plot(emm, which = 1)`.
   * The object returned by `joint_tests()` and `test(..., joint = TRUE)` now has
     an `"est.fcns"` attribute, which is a list of the linear functions associated
     with the joint test(s).
+  * `joint_tests()` results now possibly include a `(confounded)` entry for
+    effects not purely explained  by a model term.f
   * New `cross.adjust` argument in `summary.emmGrid()` allows for additional 
     *P*-value adjustment across `by` groups.
-  * Apparently, `glm.nb` support no longer requires `data` (#355)
+  * Apparently, `glm.nb` support no longer requires `data` (#355) so
+    the documentation was updated.
     
 
 ## emmeans 1.7.4

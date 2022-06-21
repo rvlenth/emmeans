@@ -98,16 +98,16 @@ test.emmGrid = function(object, null = 0,
             LL = L[rows, , drop = FALSE]
 
             # discard any rows that have NAs
-            narows = apply(LL, 1, function(x) any(is.na(x)))
-            LL = LL[!narows, , drop = FALSE]
+            narows = apply(LL, 1, function(x) any(is.na(x)) | all(x == 0))
+            L.all = LL = LL[!narows, , drop = FALSE]
             rrflag = 0 + 2 * any(narows)  ## flag for estimability issue
             
             if(est.flag)  { 
                 if (any(!estimability::is.estble(LL, nbasis, est.tol))) {
-                    LL = estimability::estble.subspace(zapsmall(LL), nbasis)
+                    L.all = estimability::estble.subspace(zapsmall(L.all), nbasis)
                     rrflag = bitwOr(rrflag, 2)
                 }
-                LL = LL[, estble.idx, drop = FALSE]
+                LL = L.all[, estble.idx, drop = FALSE]
             }
             # Check rank
             qrLt = qr(t(LL)) # this will work even if LL has 0 rows
@@ -121,9 +121,15 @@ test.emmGrid = function(object, null = 0,
                 rrflag = bitwOr(rrflag, 1)
             }
             tR = t(qr.R(qrLt))[1:r, 1:r, drop = FALSE]
+            # for some reason I am getting overly optimistic ranks sometimes...
+            rr = min(which(zapsmall(c(diag(tR), 0)) == 0)) - 1
+            if (rr < r) {
+                r = rr
+                tR = tR[1:r, 1:r]
+            }
             tQ = t(qr.Q(qrLt))[1:r, , drop = FALSE]
             if(length(null) < r) null = rep(null, r)
-            z = tQ %*% bhat - solve(tR, null[1:r])
+            z = try(tQ %*% bhat - solve(tR, null[1:r]), silent = TRUE)
             zcov = tQ %*% object@V %*% t(tQ)
             F = try(sum(z * solve(zcov, z)) / r)
             if (inherits(F, "try-error"))
@@ -131,17 +137,18 @@ test.emmGrid = function(object, null = 0,
             else {
                 df2 = min(apply(tQ, 1, function(.) object@dffun(., object@dfargs)))
                 if (is.na(df2))
-                    p.value = pchisq(F*r, r, lower.tail = FALSE)
+                    p.value = suppressWarnings(pchisq(F*r, r, lower.tail = FALSE))
                 else
-                    p.value = pf(F, r, df2, lower.tail = FALSE)
+                    p.value = suppressWarnings(pf(F, r, df2, lower.tail = FALSE))
                 rtn = c(round(c(df1 = r, df2 = df2), 2), 
                   F.ratio = round(F, 3), p.value = p.value, note = rrflag)
-                attr(rtn, "LL") = LL
+                attr(L.all, "B") = NULL
+                attr(rtn, "L") = L.all
                 rtn
             }
         })
         
-        LL = lapply(result, function(r) attr(r, "LL"))
+        ef = lapply(result, function(r) attr(r, "L"))
         result = as.data.frame(t(as.data.frame(result)))
         if (!missing(by)) {
             fbr = sapply(by.rows, "[", 1)
@@ -149,7 +156,7 @@ test.emmGrid = function(object, null = 0,
         }
         class(result) = c("summary_emm", "data.frame")
         attr(result, "estName") = "F.ratio"
-        attr(result, "est.fcns") = lapply(LL, zapsmall)        
+        attr(result, "est.fcns") = lapply(ef, zapsmall)        
         if (!status && all(result$note == 0))
             result$note = NULL
         else {
@@ -203,6 +210,9 @@ test.emmGrid = function(object, null = 0,
 #' @return a \code{summary_emm} object (same as is produced by 
 #'   \code{\link{summary.emmGrid}}). All effects for which there are no
 #'   estimable contrasts are omitted from the results. 
+#'   There may be an additional row named \code{(confounded)} which accounts
+#'   for joint tests of effects that are estimable but are not 
+#'   determined by contrasts of any one term.
 #'   The returned object also includes an \code{"est.fcns"} attribute, which is a
 #'   named list containing the linear functions associated with each joint test. 
 #'   The order of this list may not be the same as the order of the summary.
@@ -249,8 +259,14 @@ test.emmGrid = function(object, null = 0,
 #' ## treat            1    252.0833333    252.0833333    208.62   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
+#' 
+#' ### Example with empty cells and confounded effects
+#' low3 <- unlist(attr(ubds, "cells")[1:3]) 
+#' ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
+#' joint_tests(ubds.lm, by = "B")
+#' 
 joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, ...) {
-    object = .chk.list(object, ...)
+    object = .chk.list(object,...)
     if (!inherits(object, "emmGrid")) {
         args = .zap.args(object = object, cov.reduce = cov.reduce, ..., omit = "submodel")
         object = do.call(ref_grid, args)
@@ -279,6 +295,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         trmtbl[c(nst, nesting[[nst]]), n] = 1
     }
     est.fcns = list()
+    ef.ord = character(0)
 
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
@@ -299,6 +316,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
                         ef = list(ef)
                     names(ef) = mt
                     est.fcns <<- c(est.fcns, ef)
+                    ef.ord <<- c(ef.ord, k)
                     tst = cbind(ord = k, `model term` = mt, tst)
                     result = rbind(result, tst)
                  }
@@ -313,9 +331,39 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         result
     }
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
+    
+    ## look at leftover effects
+    tmp = contrast(comb_facs(object, facs, newname = ".cmb."), 
+                   "consec", by = by, name = ".cnt.", ...)
+    # rbind all the est.fcns
+    ef = est.fcns
+    if (!is.null(by))
+        ef = lapply(ef, function(x) do.call(rbind, x))
+    ef = do.call(rbind, ef)
+    tlf = qr.resid(qr(t(ef)), t(tmp@linfct))
+    if (any(abs(tlf) > 1e-6)) { # skip over if we just have fuzz
+        tmp@linfct = zapsmall(t(tlf))
+        jt = test(tmp, by = by, joint = TRUE, status = TRUE)
+        tst = cbind(ord = 999, `model term` = "(confounded)", jt)
+        result = rbind(result, tst)
+        ef = lapply(attr(jt, "est.fcns"), zapsmall)
+        if (length(ef) > 1)
+            ef = list(ef)
+        names(ef) = "(confounded)"
+        est.fcns = c(est.fcns, ef)
+        ef.ord = c(ef.ord, 999)
+    }
+    
+    
     result = result[order(result[[1]]), -1, drop = FALSE]
-    if(!show0df)
+    est.fcns = est.fcns[order(ef.ord)]
+    if(!show0df) {
         result = result[result$df1 > 0, , drop = FALSE]
+        if(!is.null(by))
+            est.fcns = lapply(est.fcns, function(x) x[!sapply(x, is.null)])
+        est.fcns = est.fcns[!sapply(est.fcns, is.null)]
+    }
+        
     class(result) = c("summary_emm", "data.frame")
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
@@ -332,19 +380,4 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
         result$note = NULL
     result
 }
-
-# provide for displaying in standard 'anova' format (with astars etc.)
-# I'm not g
-
-# #' @export
-# as.anova = function(object, ...)
-#     UseMethod("as.anova")
-# 
-# as.anova.summary_emm = function(object, ...) {
-#     class(object) = c("anova", "data.frame")
-#     row.names(object) = as.character(object[[1]])
-#     names(object) = gsub("p.value", "Pr(>F)", names(object))
-#     object[-1]
-# }
-
 
