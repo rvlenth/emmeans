@@ -177,19 +177,31 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     }
 }
 
-as.mcmc.emm_list = function(x, ...) {
-    as.mcmc(x[[I_bet(1)]], ...)
+#' @method as.mcmc emm_list
+#' @export as.mcmc.emm_list
+#' @rdname mcmc-support
+#' @param which item in the \code{emm_list} to use
+as.mcmc.emm_list = function(x, which = I_bet(1), ...) {
+    as.mcmc.emmGrid(x[[which]], ...)
 }
 
 
 ### as.mcmc.list - guaranteed to return a list
-#' @rdname mcmc-support
 #' @method as.mcmc.list emmGrid
+#' @export as.mcmc.list.emmGrid
+#' @rdname mcmc-support
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
     if(!inherits(result, "mcmc.list"))
         result = coda::mcmc.list(result)
     result
+}
+
+#' @method as.mcmc.list emm_list
+#' @export as.mcmc.list.emm_list
+#' @rdname mcmc-support
+as.mcmc.list.emm_list = function(x, which = I_bet(1), ...) {
+    as.mcmc.list.emmGrid(x[[which]], ...)
 }
 
 

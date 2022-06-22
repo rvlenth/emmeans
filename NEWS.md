@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.7.4.999xxxx
+## emmeans 1.7.5
   * Modified the defaults for several methods for class `emm_list`,
     and added more complete documentation. We also added hidden
     `emm_list` support to several functions like

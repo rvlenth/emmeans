@@ -93,6 +93,11 @@ test.emmGrid = function(object, null = 0,
             if (!is.null(by)) 
                 by.rows = .find.by.rows(object@grid, by)
         }
+        # my own zapsmall fcn, sets a hard threshold
+        zapsm = function(x, tol = 1e-7) {
+            x[abs(x) < tol] = 0
+            x
+        }
         
         result = lapply(by.rows, function(rows) {
             LL = L[rows, , drop = FALSE]
@@ -104,13 +109,13 @@ test.emmGrid = function(object, null = 0,
             
             if(est.flag)  { 
                 if (any(!estimability::is.estble(LL, nbasis, est.tol))) {
-                    L.all = estimability::estble.subspace(zapsmall(L.all), nbasis)
+                    L.all = estimability::estble.subspace(zapsm(L.all), nbasis)
                     rrflag = bitwOr(rrflag, 2)
                 }
                 LL = L.all[, estble.idx, drop = FALSE]
             }
             # Check rank
-            qrLt = qr(t(LL)) # this will work even if LL has 0 rows
+            qrLt = qr(zapsm(t(LL))) # this will work even if LL has 0 rows
             r = qrLt$rank
             if (r == 0)
                 return(c(df1 = 0, df2 = NA, F.ratio = NA, p.value = NA, note = 3))
@@ -120,16 +125,17 @@ test.emmGrid = function(object, null = 0,
                     stop("Rows are linearly dependent - cannot do the test when 'null' != 0")
                 rrflag = bitwOr(rrflag, 1)
             }
-            tR = t(qr.R(qrLt))[1:r, 1:r, drop = FALSE]
+            nz = 1:r   # indexes to use
+            tR = t(qr.R(qrLt))[nz, nz, drop = FALSE]
             # for some reason I am getting overly optimistic ranks sometimes...
-            rr = min(which(zapsmall(c(diag(tR), 0)) == 0)) - 1
-            if (rr < r) {
-                r = rr
-                tR = tR[1:r, 1:r]
+            nz = which(zapsmall(diag(tR)) != 0)
+            if (length(nz) < r) {
+                r = length(nz)
+                tR = tR[nz, nz, drop = FALSE]
             }
-            tQ = t(qr.Q(qrLt))[1:r, , drop = FALSE]
+            tQ = t(qr.Q(qrLt))[nz, , drop = FALSE]
             if(length(null) < r) null = rep(null, r)
-            z = try(tQ %*% bhat - solve(tR, null[1:r]), silent = TRUE)
+            z = try(tQ %*% bhat - solve(tR, null[nz]), silent = TRUE)
             zcov = tQ %*% object@V %*% t(tQ)
             F = try(sum(z * solve(zcov, z)) / r)
             if (inherits(F, "try-error"))
@@ -205,6 +211,13 @@ test.emmGrid = function(object, null = 0,
 #'    run for each combination of these.
 #' @param show0df logical value; if \code{TRUE}, results with zero numerator
 #'    degrees of freedom are displayed, if \code{FALSE} they are skipped
+#' @param showconf logical value; if \code{true}, we look for additional effects 
+#'    that are not purely due to contrasts of a single term, and if found, are
+#'    labeled \code{(confounded)}. Such effects can occur, e.g., when there are empty
+#'    cells in the data. Setting this to \code{FALSE} can save some computation
+#'    time, especially when there are a lot of factors. The default is based on
+#'    the internal vector \code{facs}, which is the number of factors being
+#'    considered.
 #' @param ... additional arguments passed to \code{ref_grid} and \code{emmeans}
 #'
 #' @return a \code{summary_emm} object (same as is produced by 
@@ -216,6 +229,18 @@ test.emmGrid = function(object, null = 0,
 #'   The returned object also includes an \code{"est.fcns"} attribute, which is a
 #'   named list containing the linear functions associated with each joint test. 
 #'   The order of this list may not be the same as the order of the summary.
+#'   
+#' @note
+#' When we have models with estimability issues (e.g., missing cells), the results
+#' can depend on what contrast method is used. The default is 
+#' \code{use.contr = c("consec", "eff")}, meaning that we use \code{"consec"} comparisons
+#' for constructing [interaction] contrasts for named terms, and \code{"eff"} contrasts
+#' for constructing contrasts for confounded effects (we construct the latter overall, then
+#' remove any linear dependence on the named contrasts). You may override these defaults
+#' via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
+#' Examining the \code{"est.fcns"} attribute may help understand what you are testing,
+#' but the more redundant the contrast method, the more redundant are the estimable
+#' functions.
 #'   
 #' @seealso \code{\link{test}}
 #' @export
@@ -241,31 +266,36 @@ test.emmGrid = function(object, null = 0,
 #' toy.cov = lm(resp ~ treat * female, data = toy)
 #' # (These two models have identical fitted values and residuals)
 #' 
-#' joint_tests(toy.fac)
-#' joint_tests(toy.cov)   # female is regarded as a 2-level factor by default
-#' 
-#' joint_tests(toy.cov, at = list(female = 0.5))
-#' joint_tests(toy.cov, cov.keep = 0)   # i.e., female = mean(toy$female)
-#' joint_tests(toy.cov, at = list(female = 0))
-#' 
-#' # -- Compare with SAS output -- female as factor --
+#' # -- SAS output we'd get with toy.fac --
 #' ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 #' ## treat            1    488.8928571    488.8928571    404.60   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## treat*female     1      1.7500000      1.7500000      1.45   0.2741
 #' # 
-#' # -- Compare with SAS output -- female as covariate --
+#' # -- SAS output we'd get with toy.cov --
 #' ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 #' ## treat            1    252.0833333    252.0833333    208.62   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
+#' 
+#' joint_tests(toy.fac)
+#' joint_tests(toy.cov)   # female is regarded as a 2-level factor by default
+#' 
+#' # results for toy.cov depend on value we use for 'female'
+#' joint_tests(toy.cov, at = list(female = 0.5))
+#' joint_tests(toy.cov, cov.keep = 0)   # i.e., female = mean(toy$female)
+#' joint_tests(toy.cov, at = list(female = 0))
 #' 
 #' ### Example with empty cells and confounded effects
 #' low3 <- unlist(attr(ubds, "cells")[1:3]) 
 #' ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
 #' joint_tests(ubds.lm, by = "B")
 #' 
-joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, ...) {
+joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(facs) < 4),
+                       cov.reduce = range, ...) {
+    # hidden defaults for contrast methods:
+    use.contr = (function(use.contr = c("consec", "eff"), ...) use.contr)(...)
+    
     object = .chk.list(object,...)
     if (!inherits(object, "emmGrid")) {
         args = .zap.args(object = object, cov.reduce = cov.reduce, ..., omit = "submodel")
@@ -308,7 +338,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
                 }
                 if (is.null(nesting) || length(setdiff(nesters, these)) == 0) {   
                     emm = emmeans(object, these, by = by, ...)
-                    tst = test(contrast(emm, interaction = "consec", by = union(by, nesters)), 
+                    tst = test(contrast(emm, interaction = use.contr[1], by = union(by, nesters)), 
                                by = by, joint = TRUE, status = TRUE)
                     mt = paste(these, collapse = ":")
                     ef = attr(tst, "est.fcns")
@@ -333,27 +363,27 @@ joint_tests = function(object, by = NULL, show0df = FALSE, cov.reduce = range, .
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
     
     ## look at leftover effects
-    tmp = contrast(comb_facs(object, facs, newname = ".cmb."), 
-                   "consec", by = by, name = ".cnt.", ...)
-    # rbind all the est.fcns
-    ef = est.fcns
-    if (!is.null(by))
-        ef = lapply(ef, function(x) do.call(rbind, x))
-    ef = do.call(rbind, ef)
-    tlf = qr.resid(qr(t(ef)), t(tmp@linfct))
-    if (any(abs(tlf) > 1e-6)) { # skip over if we just have fuzz
-        tmp@linfct = zapsmall(t(tlf))
-        jt = test(tmp, by = by, joint = TRUE, status = TRUE)
-        tst = cbind(ord = 999, `model term` = "(confounded)", jt)
-        result = rbind(result, tst)
-        ef = lapply(attr(jt, "est.fcns"), zapsmall)
-        if (length(ef) > 1)
-            ef = list(ef)
-        names(ef) = "(confounded)"
-        est.fcns = c(est.fcns, ef)
-        ef.ord = c(ef.ord, 999)
+    if (showconf) {
+        tmp = contrast(object, use.contr[2], by = by, name = ".cnt.", ...)
+        # rbind all the est.fcns
+        ef = est.fcns
+        if (!is.null(by))
+            ef = lapply(ef, function(x) do.call(rbind, x))
+        ef = do.call(rbind, ef)
+        tlf = qr.resid(qr(t(ef)), t(tmp@linfct))
+        if (any(abs(tlf) > 1e-6)) { # skip over if we just have fuzz
+            tmp@linfct = zapsmall(t(tlf))
+            jt = test(tmp, by = by, joint = TRUE, status = TRUE)
+            tst = cbind(ord = 999, `model term` = "(confounded)", jt)
+            result = rbind(result, tst)
+            ef = lapply(attr(jt, "est.fcns"), zapsmall)
+            if (length(ef) > 1)
+                ef = list(ef)
+            names(ef) = "(confounded)"
+            est.fcns = c(est.fcns, ef)
+            ef.ord = c(ef.ord, 999)
+        }
     }
-    
     
     result = result[order(result[[1]]), -1, drop = FALSE]
     est.fcns = est.fcns[order(ef.ord)]

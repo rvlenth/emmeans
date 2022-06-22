@@ -73,6 +73,8 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
     if (.requireNS("coda", fail = .nothing)) {
         register_s3_method("coda", "as.mcmc", "emmGrid")
         register_s3_method("coda", "as.mcmc.list", "emmGrid")
+        register_s3_method("coda", "as.mcmc", "emm_list")
+        register_s3_method("coda", "as.mcmc.list", "emm_list")
     }
     if (.requireNS("multcomp", fail = .nothing)) {
         register_s3_method("multcomp", "glht", "emmlf")

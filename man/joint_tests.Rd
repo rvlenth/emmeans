@@ -4,7 +4,8 @@
 \alias{joint_tests}
 \title{Compute joint tests of the terms in a model}
 \usage{
-joint_tests(object, by = NULL, show0df = FALSE, cov.reduce = range, ...)
+joint_tests(object, by = NULL, show0df = FALSE, showconf = (length(facs)
+  < 4), cov.reduce = range, ...)
 }
 \arguments{
 \item{object, cov.reduce}{\code{object} is a fitted model or an \code{emmGrid}. 
@@ -16,6 +17,14 @@ run for each combination of these.}
 
 \item{show0df}{logical value; if \code{TRUE}, results with zero numerator
 degrees of freedom are displayed, if \code{FALSE} they are skipped}
+
+\item{showconf}{logical value; if \code{true}, we look for additional effects 
+that are not purely due to contrasts of a single term, and if found, are
+labeled \code{(confounded)}. Such effects can occur, e.g., when there are empty
+cells in the data. Setting this to \code{FALSE} can save some computation
+time, especially when there are a lot of factors. The default is based on
+the internal vector \code{facs}, which is the number of factors being
+considered.}
 
 \item{...}{additional arguments passed to \code{ref_grid} and \code{emmeans}}
 }
@@ -51,6 +60,18 @@ this documentation. The point that one must always remember is that
 reference grid, whereas type III tests are tests of model coefficients --
 which may or may not have anything to do with EMMs or contrasts.
 }
+\note{
+When we have models with estimability issues (e.g., missing cells), the results
+can depend on what contrast method is used. The default is 
+\code{use.contr = c("consec", "eff")}, meaning that we use \code{"consec"} comparisons
+for constructing [interaction] contrasts for named terms, and \code{"eff"} contrasts
+for constructing contrasts for confounded effects (we construct the latter overall, then
+remove any linear dependence on the named contrasts). You may override these defaults
+via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
+Examining the \code{"est.fcns"} attribute may help understand what you are testing,
+but the more redundant the contrast method, the more redundant are the estimable
+functions.
+}
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 
@@ -72,24 +93,25 @@ toy.fac = lm(resp ~ treat * factor(female), data = toy)
 toy.cov = lm(resp ~ treat * female, data = toy)
 # (These two models have identical fitted values and residuals)
 
-joint_tests(toy.fac)
-joint_tests(toy.cov)   # female is regarded as a 2-level factor by default
-
-joint_tests(toy.cov, at = list(female = 0.5))
-joint_tests(toy.cov, cov.keep = 0)   # i.e., female = mean(toy$female)
-joint_tests(toy.cov, at = list(female = 0))
-
-# -- Compare with SAS output -- female as factor --
+# -- SAS output we'd get with toy.fac --
 ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 ## treat            1    488.8928571    488.8928571    404.60   <.0001
 ## female           1     78.8928571     78.8928571     65.29   0.0002
 ## treat*female     1      1.7500000      1.7500000      1.45   0.2741
 # 
-# -- Compare with SAS output -- female as covariate --
+# -- SAS output we'd get with toy.cov --
 ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 ## treat            1    252.0833333    252.0833333    208.62   <.0001
 ## female           1     78.8928571     78.8928571     65.29   0.0002
 ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
+
+joint_tests(toy.fac)
+joint_tests(toy.cov)   # female is regarded as a 2-level factor by default
+
+# results for toy.cov depend on value we use for 'female'
+joint_tests(toy.cov, at = list(female = 0.5))
+joint_tests(toy.cov, cov.keep = 0)   # i.e., female = mean(toy$female)
+joint_tests(toy.cov, at = list(female = 0))
 
 ### Example with empty cells and confounded effects
 low3 <- unlist(attr(ubds, "cells")[1:3]) 

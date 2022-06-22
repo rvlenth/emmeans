@@ -3,13 +3,19 @@
 \name{as.mcmc.emmGrid}
 \alias{as.mcmc.emmGrid}
 \alias{mcmc-support}
+\alias{as.mcmc.emm_list}
 \alias{as.mcmc.list.emmGrid}
+\alias{as.mcmc.list.emm_list}
 \title{Support for MCMC-based estimation}
 \usage{
 \method{as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE, likelihood,
   NE.include = FALSE, ...)
 
+\method{as.mcmc}{emm_list}(x, which = I_bet(1), ...)
+
 \method{as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
+
+\method{as.mcmc.list}{emm_list}(x, which = I_bet(1), ...)
 }
 \arguments{
 \item{x}{An object of class \code{emmGrid}}
@@ -36,6 +42,8 @@ non-estimable columns are dropped, and a warning is issued. (If all are
 non-estimable, an error is thrown.)}
 
 \item{...}{arguments passed to other methods}
+
+\item{which}{item in the \code{emm_list} to use}
 }
 \value{
 An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
