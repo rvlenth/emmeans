@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.7.5-090xxx
+  * Fixed minor bug in `lme` support (#356)
+
+
 ## emmeans 1.7.5
   * Modified the defaults for several methods for class `emm_list`,
     and added more complete documentation. We also added hidden
