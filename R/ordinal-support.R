@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2016 Russell V. Lenth                                #
+#    Copyright (c) 2012-2022 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -384,4 +384,19 @@ emm_basis.clmm = function (object, trms, xlev, grid, ...) {
     keep = seq_along(result$bhat[!is.na(result$bhat)])
     result$V = result$V[keep,keep]
     result
+}
+
+
+### Support for 'svyolr' objects (survey package)
+### It appears all we have to do is pretend it is class polr
+### and get the data via model.frame
+recover_data.svyolr = function(object, data = NULL, ...) {
+    if (is.null(data))
+        data = get("model.frame.svyolr", asNamespace("survey"))(object)
+    class(object) = "polr"
+    recover_data(object, data = data, ...)
+}
+emm_basis.svyolr = function(object, ...) {
+    class(object) = "polr"
+    emm_basis(object, ...)
 }

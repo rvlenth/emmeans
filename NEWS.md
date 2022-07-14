@@ -4,6 +4,7 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.7.5-090xxx
   * Fixed minor bug in `lme` support (#356)
+  * Added support for `svyolr` objects from the **survey** package (#350)
 
 
 ## emmeans 1.7.5

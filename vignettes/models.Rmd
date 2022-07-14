@@ -104,6 +104,7 @@ Scroll down or follow the links to those groups for more information.
 |stanreg      |rstanarm |[S](#S)  |Args for `stanreg_`*xxx* similar to those for *xxx*          |
 |survreg      |survival |[A](#A)  |                                                             |
 |svyglm       |survey   |[A](#A)  |                                                             |
+|svyolr       |survey   |[O](#O)  |Piggybacks on `polr` support         |
 |zeroinfl     |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0")`,            |
 |             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
 
