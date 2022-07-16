@@ -114,17 +114,36 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 }
 
 
+### for mgcv::gam objects
+### Many thanks to Maarten Jung for help on sorting-out fixed and random effects
+recover_data.gam = function(object, ...) {
+    if(!is.null(object$smooth)) { # get rid of random terms
+        fixnm = sapply(object$smooth, function(s) {ifelse(inherits(s, "random.effect"), NA, s$term)})
+        fixnm = union(.all.vars(delete.response(object$pterms)), fixnm[!is.na(fixnm)])
+        object$terms = terms(.reformulate(fixnm, env = environment(terms(object))))
+    }
+    recover_data.lm(object, ...)
+}
+
+
 ### emm_basis method for mgcv::gam objects
 ### extra arg `unconditional` and `freq` as in `vcov.gam`
 emm_basis.gam = function(object, trms, xlev, grid,
                          freq = FALSE, unconditional = FALSE,
                          what = c("location", "scale", "shape", "rate", "prob.gt.0"), 
                          ...) {
-    bhat = object$coefficients
+    if(!is.null(object$smooth)) { # get rid of random terms 
+        rand = sapply(object$smooth, function(s) {ifelse(inherits(s, "random.effect"), s$label, NA)})
+        rand = rand[!is.na(rand)]
+    }
+    else
+        rand = NULL
     X = mgcv::predict.gam(object, newdata = grid, type = "lpmatrix", 
-                newdata.guaranteed = TRUE)
-    bhat = as.numeric(bhat) 
-    V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)
+                exclude = rand, newdata.guaranteed = TRUE)
+    keep = apply(X, 2, function(x) !all(x == 0))
+    X = X[, keep, drop = FALSE]
+    bhat = as.numeric(object$coefficients[keep])
+    V = .my.vcov(object, freq = freq, unconditional = unconditional, ...)[keep, keep]
 
     fam_name = object$family$family
     what_num = what
