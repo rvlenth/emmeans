@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2022 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -93,12 +93,13 @@ test.emmGrid = function(object, null = 0,
             if (!is.null(by)) 
                 by.rows = .find.by.rows(object@grid, by)
         }
-        # my own zapsmall fcn, sets a hard threshold
+        
+        # my own zapsmall fcn - sets a hard limit
         zapsm = function(x, tol = 1e-7) {
             x[abs(x) < tol] = 0
             x
         }
-        
+
         result = lapply(by.rows, function(rows) {
             LL = L[rows, , drop = FALSE]
 
@@ -233,8 +234,8 @@ test.emmGrid = function(object, null = 0,
 #' @note
 #' When we have models with estimability issues (e.g., missing cells), the results
 #' can depend on what contrast method is used. The default is 
-#' \code{use.contr = c("consec", "eff")}, meaning that we use \code{"consec"} comparisons
-#' for constructing [interaction] contrasts for named terms, and \code{"eff"} contrasts
+#' \code{use.contr = c("consec", "consec")}, meaning that we use \code{"consec"} comparisons
+#' for constructing [interaction] contrasts for named terms, and also use \code{"consec"} contrasts
 #' for constructing contrasts for confounded effects (we construct the latter overall, then
 #' remove any linear dependence on the named contrasts). You may override these defaults
 #' via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
@@ -294,7 +295,7 @@ test.emmGrid = function(object, null = 0,
 joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(facs) < 4),
                        cov.reduce = range, ...) {
     # hidden defaults for contrast methods:
-    use.contr = (function(use.contr = c("consec", "eff"), ...) use.contr)(...)
+    use.contr = (function(use.contr = c("consec", "consec"), ...) use.contr)(...)
     
     object = .chk.list(object,...)
     if (!inherits(object, "emmGrid")) {
@@ -370,19 +371,28 @@ joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(fa
         if (!is.null(by))
             ef = lapply(ef, function(x) do.call(rbind, x))
         ef = do.call(rbind, ef)
-        tlf = qr.resid(qr(t(ef)), t(tmp@linfct))
-        if (any(abs(tlf) > 1e-6)) { # skip over if we just have fuzz
-            tmp@linfct = zapsmall(t(tlf))
-            jt = test(tmp, by = by, joint = TRUE, status = TRUE)
-            tst = cbind(ord = 999, `model term` = "(confounded)", jt)
-            result = rbind(result, tst)
-            ef = lapply(attr(jt, "est.fcns"), zapsmall)
-            if (length(ef) > 1)
-                ef = list(ef)
-            names(ef) = "(confounded)"
-            est.fcns = c(est.fcns, ef)
-            ef.ord = c(ef.ord, 999)
+        if (!is.null(ef)) {
+            lf = t(qr.resid(qr(t(ef)), t(tmp@linfct)))
+            br = .find.by.rows(tmp@grid, by)
+            for (r in br) {
+                slf = .squash(lf[r, , drop = FALSE])
+                k = seq_len(nrow(slf))
+                lf[r[k], ] = slf
+                lf[r[-k], ] = NA
+            }
+            k = !is.na(lf[,1])
+            tmp@linfct = lf[k, , drop = FALSE]
+            tmp@grid = tmp@grid[k, , drop = FALSE]
         }
+        jt = test(tmp, by = by, joint = TRUE, status = TRUE)
+        tst = cbind(ord = 999, `model term` = "(confounded)", jt)
+        result = rbind(result, tst)
+        ef = lapply(attr(jt, "est.fcns"), zapsmall)
+        if (length(ef) > 1)
+            ef = list(ef)
+        names(ef) = "(confounded)"
+        est.fcns = c(est.fcns, ef)
+        ef.ord = c(ef.ord, 999)
     }
     
     result = result[order(result[[1]]), -1, drop = FALSE]
@@ -409,5 +419,16 @@ joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(fa
     else
         result$note = NULL
     result
+}
+
+
+### Squash rows of L to best nrows of row space
+### If nrows not specified, determine via those with SVs > tol
+.squash = function(L, tol = 1e-3, nrow) {
+    svd = svd(L, nu = 0)
+    if (missing(nrow))
+        nrow = sum(svd$d > tol)
+    r = seq_len(nrow)
+    diag(svd$d[r], nrow = nrow) %*% t(svd$v[, r, drop = FALSE])
 }
 

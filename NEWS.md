@@ -8,6 +8,10 @@ title: "NEWS for the emmeans package"
   * Improvements to `mgcv::gam` support. Previously, random smoothers were
     included. Thanks for Maarten Jung for observing this and helping to 
     identify them.
+  * Results for `(confounded)` entry in `joint_tests()` is now much
+    more robust. **Note:** If you have **estimability** version 1.4
+    installed, please install another version (1.3 or later, but
+    not 1.4)
 
 
 ## emmeans 1.7.5

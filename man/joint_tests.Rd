@@ -63,8 +63,8 @@ which may or may not have anything to do with EMMs or contrasts.
 \note{
 When we have models with estimability issues (e.g., missing cells), the results
 can depend on what contrast method is used. The default is 
-\code{use.contr = c("consec", "eff")}, meaning that we use \code{"consec"} comparisons
-for constructing [interaction] contrasts for named terms, and \code{"eff"} contrasts
+\code{use.contr = c("consec", "consec")}, meaning that we use \code{"consec"} comparisons
+for constructing [interaction] contrasts for named terms, and also use \code{"consec"} contrasts
 for constructing contrasts for confounded effects (we construct the latter overall, then
 remove any linear dependence on the named contrasts). You may override these defaults
 via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
