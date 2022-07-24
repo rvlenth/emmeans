@@ -4,8 +4,9 @@
 \alias{joint_tests}
 \title{Compute joint tests of the terms in a model}
 \usage{
-joint_tests(object, by = NULL, show0df = FALSE, showconf = (length(facs)
-  < 4), cov.reduce = range, ...)
+joint_tests(object, by = NULL, show0df = FALSE,
+  showconf = (!is.na(object@nbasis[1]) && length(facs) < 4),
+  cov.reduce = range, ...)
 }
 \arguments{
 \item{object, cov.reduce}{\code{object} is a fitted model or an \code{emmGrid}. 
@@ -23,7 +24,7 @@ that are not purely due to contrasts of a single term, and if found, are
 labeled \code{(confounded)}. Such effects can occur, e.g., when there are empty
 cells in the data. Setting this to \code{FALSE} can save some computation
 time, especially when there are a lot of factors. The default is based on
-the internal vector \code{facs}, which is the number of factors being
+the internal vector \code{facs}, which is the names of factors being
 considered.}
 
 \item{...}{additional arguments passed to \code{ref_grid} and \code{emmeans}}
@@ -62,14 +63,14 @@ which may or may not have anything to do with EMMs or contrasts.
 }
 \note{
 When we have models with estimability issues (e.g., missing cells), the results
-can depend on what contrast method is used. The default is 
+may in rare cases depend on what contrast method is used. 
+The default is 
 \code{use.contr = c("consec", "consec")}, meaning that we use \code{"consec"} comparisons
 for constructing [interaction] contrasts for named terms, and also use \code{"consec"} contrasts
 for constructing contrasts for confounded effects (we construct the latter overall, then
 remove any linear dependence on the named contrasts). You may override these defaults
 via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
-Examining the \code{"est.fcns"} attribute may help understand what you are testing,
-but the more redundant the contrast method, the more redundant are the estimable
+Examining the \code{"est.fcns"} attribute may help understand what you are testing.
 functions.
 }
 \examples{

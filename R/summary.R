@@ -1299,7 +1299,12 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
         m = .just.labs(m[, setdiff(names(x), by.vars), drop = FALSE], just)
         if(export) 
             x.save$summary = list()
-        pargs = unname(as.list(x[,by.vars, drop=FALSE]))
+        pargs = unname(as.list(x[, by.vars, drop=FALSE]))
+        # We want labels to come out in order though...
+        ord = do.call(order, rev(pargs))
+        m = m[ord, , drop = FALSE]
+        xc = xc[ord, , drop = FALSE]
+        pargs = unname(as.list(x[ord, by.vars, drop=FALSE]))
         pargs$sep = ", "
         lbls = do.call(paste, pargs)
         for (lb in unique(lbls)) {

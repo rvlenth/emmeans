@@ -105,15 +105,14 @@ test.emmGrid = function(object, null = 0,
 
             # discard any rows that have NAs
             narows = apply(LL, 1, function(x) any(is.na(x)) | all(x == 0))
-            L.all = LL = LL[!narows, , drop = FALSE]
+            LL = LL[!narows, , drop = FALSE]
             rrflag = 0 + 2 * any(narows)  ## flag for estimability issue
             
             if(est.flag)  { 
                 if (any(!estimability::is.estble(LL, nbasis, est.tol))) {
-                    L.all = estimability::estble.subspace(zapsm(L.all), nbasis)
+                    LL = estimability::estble.subspace(zapsm(LL), nbasis)
                     rrflag = bitwOr(rrflag, 2)
                 }
-                LL = L.all[, estble.idx, drop = FALSE]
             }
             # Check rank
             qrLt = qr(zapsm(t(LL))) # this will work even if LL has 0 rows
@@ -134,8 +133,12 @@ test.emmGrid = function(object, null = 0,
                 r = length(nz)
                 tR = tR[nz, nz, drop = FALSE]
             }
-            tQ = t(qr.Q(qrLt))[nz, , drop = FALSE]
             if(length(null) < r) null = rep(null, r)
+            tQ = tQ.all = t(qr.Q(qrLt))[nz, , drop = FALSE]
+            # tQ.all will have all the columns. tQ may get subsetted
+            # NOW get rid of the NA parts...
+            if (est.flag)
+                tQ = tQ[, estble.idx, drop = FALSE]
             z = try(tQ %*% bhat - solve(tR, null[nz]), silent = TRUE)
             zcov = tQ %*% object@V %*% t(tQ)
             F = try(sum(z * solve(zcov, z)) / r)
@@ -148,9 +151,8 @@ test.emmGrid = function(object, null = 0,
                 else
                     p.value = suppressWarnings(pf(F, r, df2, lower.tail = FALSE))
                 rtn = c(round(c(df1 = r, df2 = df2), 2), 
-                  F.ratio = round(F, 3), p.value = p.value, note = rrflag)
-                attr(L.all, "B") = NULL
-                attr(rtn, "L") = L.all
+                        F.ratio = round(F, 3), p.value = p.value, note = rrflag)
+                attr(rtn, "L") = tQ.all
                 rtn
             }
         })
@@ -217,7 +219,7 @@ test.emmGrid = function(object, null = 0,
 #'    labeled \code{(confounded)}. Such effects can occur, e.g., when there are empty
 #'    cells in the data. Setting this to \code{FALSE} can save some computation
 #'    time, especially when there are a lot of factors. The default is based on
-#'    the internal vector \code{facs}, which is the number of factors being
+#'    the internal vector \code{facs}, which is the names of factors being
 #'    considered.
 #' @param ... additional arguments passed to \code{ref_grid} and \code{emmeans}
 #'
@@ -233,14 +235,14 @@ test.emmGrid = function(object, null = 0,
 #'   
 #' @note
 #' When we have models with estimability issues (e.g., missing cells), the results
-#' can depend on what contrast method is used. The default is 
+#' may in rare cases depend on what contrast method is used. 
+#' The default is 
 #' \code{use.contr = c("consec", "consec")}, meaning that we use \code{"consec"} comparisons
 #' for constructing [interaction] contrasts for named terms, and also use \code{"consec"} contrasts
 #' for constructing contrasts for confounded effects (we construct the latter overall, then
 #' remove any linear dependence on the named contrasts). You may override these defaults
 #' via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
-#' Examining the \code{"est.fcns"} attribute may help understand what you are testing,
-#' but the more redundant the contrast method, the more redundant are the estimable
+#' Examining the \code{"est.fcns"} attribute may help understand what you are testing.
 #' functions.
 #'   
 #' @seealso \code{\link{test}}
@@ -292,11 +294,13 @@ test.emmGrid = function(object, null = 0,
 #' ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
 #' joint_tests(ubds.lm, by = "B")
 #' 
-joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(facs) < 4),
+joint_tests = function(object, by = NULL, show0df = FALSE, 
+                       showconf = (!is.na(object@nbasis[1]) && length(facs) < 4),
                        cov.reduce = range, ...) {
-    # hidden defaults for contrast methods:
-    use.contr = (function(use.contr = c("consec", "consec"), ...) use.contr)(...)
     
+    # hidden defaults for contrast methods and which basis to use for all contrasts
+    use.contr = (function(use.contr = c("consec", "consec"), ...) use.contr)(...)
+
     object = .chk.list(object,...)
     if (!inherits(object, "emmGrid")) {
         args = .zap.args(object = object, cov.reduce = cov.reduce, ..., omit = "submodel")
@@ -368,31 +372,48 @@ joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(fa
         tmp = contrast(object, use.contr[2], by = by, name = ".cnt.", ...)
         # rbind all the est.fcns
         ef = est.fcns
-        if (!is.null(by))
-            ef = lapply(ef, function(x) do.call(rbind, x))
-        ef = do.call(rbind, ef)
+        # if (!is.null(by))
+        #     ef = lapply(ef, function(x) do.call(rbind, x))
+        # ef = do.call(rbind, ef)
         if (!is.null(ef)) {
-            lf = t(qr.resid(qr(t(ef)), t(tmp@linfct)))
+            lf = tmp@linfct
             br = .find.by.rows(tmp@grid, by)
-            for (r in br) {
-                slf = .squash(lf[r, , drop = FALSE])
+            for (i in seq_along(br)) {
+                r = br[[i]]
+                nm = names(br)[i]
+                tst = test(tmp[r], by = NULL, joint = TRUE)
+                efi = if (!is.null(nm)) lapply(ef, function(e) e[[nm]])
+                else ef
+                efi = do.call(rbind, efi)
+                
+                ## which should we regress on efi? I'm not sure. But they're different
+                allcon = attr(tst, "est.fcns")[[1]]
+                
+                lfi = t(qr.resid(qr(t(efi)), t(allcon)))
+                slf = .squash(lfi, nbasis = tmp@nbasis)
                 k = seq_len(nrow(slf))
-                lf[r[k], ] = slf
-                lf[r[-k], ] = NA
+                if (nrow(slf) == 0)
+                    lf[r, ] = NA
+                else {
+                    lf[r[k], ] = slf
+                    lf[r[-k], ] = NA
+                }
             }
             k = !is.na(lf[,1])
             tmp@linfct = lf[k, , drop = FALSE]
             tmp@grid = tmp@grid[k, , drop = FALSE]
         }
-        jt = test(tmp, by = by, joint = TRUE, status = TRUE)
-        tst = cbind(ord = 999, `model term` = "(confounded)", jt)
-        result = rbind(result, tst)
-        ef = lapply(attr(jt, "est.fcns"), zapsmall)
-        if (length(ef) > 1)
-            ef = list(ef)
-        names(ef) = "(confounded)"
-        est.fcns = c(est.fcns, ef)
-        ef.ord = c(ef.ord, 999)
+        if (nrow(tmp@linfct) > 0) {
+            jt = test(tmp, by = by, joint = TRUE, status = TRUE)
+            tst = cbind(ord = 999, `model term` = "(confounded)", jt)
+            result = rbind(result, tst)
+            ef = lapply(attr(jt, "est.fcns"), zapsmall)
+            if (length(ef) > 1)
+                ef = list(ef)
+            names(ef) = "(confounded)"
+            est.fcns = c(est.fcns, ef)
+            ef.ord = c(ef.ord, 999)
+        }
     }
     
     result = result[order(result[[1]]), -1, drop = FALSE]
@@ -424,8 +445,11 @@ joint_tests = function(object, by = NULL, show0df = FALSE, showconf = (length(fa
 
 ### Squash rows of L to best nrows of row space
 ### If nrows not specified, determine via those with SVs > tol
-.squash = function(L, tol = 1e-3, nrow) {
-    svd = svd(L, nu = 0)
+.squash = function(L, nbasis, tol = 1e-3, nrow) {
+    if(!missing(nbasis))
+        L = estimability::estble.subspace(L, nbasis)
+    svd = try(svd(L, nu = 0), silent = TRUE)
+    if(inherits(svd, "try-error")) return(L * 0)
     if (missing(nrow))
         nrow = sum(svd$d > tol)
     r = seq_len(nrow)
