@@ -32,7 +32,6 @@ vignette: >
       * [Type III](confidence-intervals.html#joint_tests)
   * [`aovList` objects](models.html#V)
   * [`appx-satterthwaite` method](models.html#K)
-  * [`as.data.frame()`](utilities.html#data)
   * `as.mcmc()`
       * [in *models: S*](models.html#S)
       * [in *sophisticated: bayesxtra*](sophisticated.html#bayesxtra)
@@ -138,6 +137,8 @@ vignette: >
 
   * [Degrees of freedom](sophisticated.html#dfoptions)
       * [Infinite](FAQs.html#asymp)
+  * Digits
+      * [Displaying more digits](utilities.html#data)
   * [Digits, optimizing](utilities.html#digits)
   * [Dunnett method](comparisons.html#contrasts)
 
@@ -473,6 +474,8 @@ vignette: >
       * [Instead of Welch's *t*](FAQs.html#nowelch)
   * [`postGridHook`](xtending.html#hooks)
   * [Practices, recommended](basics.html#recs1)
+  * Precision
+      * [Displaying results with more digits](utilities.html#data)
   * Predictions
       * Bayesian models
           * [in *predictions: bayes*](predictions.html#bayes)

@@ -18,6 +18,10 @@ title: "NEWS for the emmeans package"
         not 1.4)
   * `print.summary_emm()` now puts `by` groups in correct order rather
     than in order of appearance.
+  * Documentation of `as.data.frame` has been suppressed. I see too many users
+    routinely abusing it. `as.data.frame` destroys annotations, so users don't see
+    crucial information, then send me emails asking unnecessary questions. If you
+    are one of those users, please, please break that habit!
 
 
 ## emmeans 1.7.5

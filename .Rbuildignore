@@ -13,6 +13,10 @@
 # Deprecated code is excluded
 R/deprecated.R
 
+# Issue templates etc.
+.github
+.github/*
+
 
 # Vignette intermediate files (also in svn ignore list)
 vignettes/*.pdf

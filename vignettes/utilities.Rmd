@@ -198,24 +198,33 @@ pigs.emm[2:3]
 ```
 
 ## Accessing results to use elsewhere {#data}
-<!-- @index `as.data.frame()`; `emmGrid` objects!Accessing data; Using results 
-     `summary_emm` object!As a data frame; `as.data.frame()` -->
+<!-- @index `emmGrid` objects!Accessing data; Using results 
+     `summary_emm` object!As a data frame; Digits!Displaying more digits;
+     Precision!Displaying results with more digits; -->
 Sometimes, users want to use the results of an analysis (say, an `emmeans()` call)
 in other computations. The `summary()` method creates a `summary_emm` object
 that inherits from the `data.frame` class; so one may use the variables therein
 just as those in a data frame.
 
-Another way is to use the `as.data.frame()` method for `emmGrid` objects.
-This is provided to implement the standard way to coerce an object to a data frame.
-For illustration, let's compute the widths of the confidence intervals in our example.
+An `emmGrid` object has its own internal structure and we can't directly access
+the values we see displayed. If follow-up computations are needed, use
+`summary()` (or `confint()` or `test()`), creates a `summary_emm` object which
+inherits from `data.frame` -- making it possible to access the values.
+For illustration, let's add the widths of the confidence intervals in our example.
 ```{r}
-transform(pigs.emm, CI.width = upper.CL - lower.CL)
+CIs <- confint(pigs.emm)
+CIs$CI.width <- with(CIs, upper.CL - lower.CL)
+CIs
 ```
-This implicitly converted `pigs.emm` to a data frame by passing it to the
-`as.data.frame()` method, then performed the required computation. But sometimes
-you have to explicitly call `as.data.frame()`. [Note that the `opt.digits`
-option is ignored here, because this is a regular data frame, not the summary of
-an `emmGrid`.]
+By the way, the values stored internally are kept to full precision, more than is
+typically displayed:
+```{r}
+CIs$emmean
+```
+If you want to display more digits, specify so using the `print` method:
+```{r}
+print(CIs, digits = 5)
+```
 
 
 [Back to contents](#contents)
