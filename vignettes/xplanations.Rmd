@@ -27,6 +27,7 @@ implemented in the **emmeans** package.
 
   1. [Sub-models](#submodels)
   2. [Comparison arrows](#arrows)
+  3. [Confounded effects in joint tests](#joint_tests)
 
 
 
@@ -248,4 +249,93 @@ pwpm(foo6)
 
 [Back to Contents](#contents)
 
+## Confounded effects in joint tests {#joint_tests}
+<!-- @index Confounded effects; `joint_tests()`!Confounded effects;
+       Rank deficiency; Missing cells;  Estimable functions -->
+When a design has empty cells, this creates estimability issues; and in the
+context of `joint_tests()`, this means that certain main- and interaction
+effects cannot be estimated, leading to reduced degrees of freedom in the joint
+tests. Instead, the estimable parts of these lost effects are pooled together
+into a set of contrasts labeled `(confounded)` in the output (as long as
+`showconf = TRUE`). Here is a simple illustration based on the `warpbreaks` 
+dataset with the last cell removed.
+```{r}
+options(contrasts = c("contr.treatment", "contr.poly"))   ## ensure system default
+w <- warpbreaks[1:40, ]   ### no data for (wool = B, tension = H)
+w.lm <- lm(breaks ~ wool * tension, data = w)
+w.rg <- ref_grid(w.lm)
+(jt <- joint_tests(w.rg))
+```
+With no empty cells, we would have had 1 d.f. for `wool`, 2 d.f. for `tension`, 
+and 2 d.f. for `wool:tension`, for a total of 5 d.f. (6 cells, 6 - 1 = 5 d.f.
+for contrasts among them). With the missing cell, we can estimate only 
+5 - 1 = 4 d.f. worth of effects, and the `(confounding)` part accounts for
+2 of them that are not purely main effects nor interaction effects.
+
+How do we obtain these extra 2 d.f.? Well, first of all, it is easy to obtain
+the linear functions associated with comparisons (say, consecutive ones) 
+among the cell means:
+```{r}
+(lf <- contrast(w.rg, "consec")@linfct)
+```
+And, in addition, we can get the same for the estimable `tension` and 
+`wool:tension` effects represented in `jt`:
+```{r}
+(ef <- attr(jt, "est.fcns")[1:2])
+```
+So then we use our favorite tool -- regression, of course -- to obtain (as
+residuals) the parts of `lf` not already explained by `ef`. This is easily
+done using the QR methods available in R (keeping in mind that we are working with the *rows* of all these, so there is a lot of transposin' goin' on):
+```{r}
+efX <- do.call(rbind, ef)
+(res <- t(qr.resid(qr(t(efX)), t((lf)))))
+```
+Then we can get a joint test of `res` via some trickery:
+```{r}
+tmp <- w.rg
+tmp@linfct <- res
+tmp@grid <- data.frame(row = 1:5)
+test(tmp, joint = TRUE)
+```
+Lo and behold! we see here the same *F* ratio, etc. as in the `(confounded)`
+part from `joint_tests(w.rg)`. Of course, there are accompanying messages that
+some parts of `res` are non-estimable, and some parts are linearly dependent.
+
+### Context matters {#context}
+<!-- @index `joint_tests()`!Context; 
+         `joint_tests()`!Confounded effects!Not unique; -->
+This is all well and good; however, what if we parameterize the model differently:
+```{r}
+w.lmS <- update(w.lm, contrasts = list(wool = "contr.SAS", tension = "contr.SAS"))
+joint_tests(w.lmS)
+```
+Whoa! We have the same tests for `tension` and `wool:tension` -- but a different
+result for `(confounded)`. What happened? Well, we have a different
+parameterization; that changes the `@linfct` slot, and it means the
+orthogonalizing done above is on a different space. Even though the tests of
+`tension` and `wool:tension` are the same, their associated contrasts are
+manifested differently by their linear functions, leading to different results.
+So it is important to remember that *interpreting the confounded effects 
+is in the context of the parameterization used*. By the way, in experimenting with
+randomly chosen parameterizations, I have only seen the two results shown with this example. But that does not prove there aren't others out there.
+
+Along related lines, let's see what happens if we re-grid the object:
+
+```{r}
+(jt.regrid <- joint_tests(regrid(w.rg)))
+```
+Interestingly, we get the same results as with `w.lmS`.
+With re-gridding, there is now a direct mapping between the cells and the contrast coefficients, and that makes it easier to interpret the estimable functions:
+```{r}
+attr(jt.regrid, "est.fcns")
+```
+A by-product of this is that the contrast coefficients themselves for the
+confounded part are orthogonal to the contrasts for the other terms. So one way
+to resolve the issue of getting unique results for any parameterization 
+is to always assess the
+confounded effects on the re-gridded scale. We can do this by specifying
+`context = "cells"` in the call to `joint_tests()`.
+
+
+[Back to Contents](#contents)
 [Index of all vignette topics](vignette-topics.html)

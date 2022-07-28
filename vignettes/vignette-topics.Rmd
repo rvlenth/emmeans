@@ -94,6 +94,7 @@ vignette: >
   * [Confidence intervals](confidence-intervals.html#summary)
       * [Overlapping](FAQs.html#CIerror)
   * [`confint()`](confidence-intervals.html#summary)
+  * [Confounded effects](xplanations.html#joint_tests)
   * [`consec` contrasts](comparisons.html#contrasts)
   * [Constrained marginal means](xplanations.html#submodels)
   * [Consultants](basics.html#recs3)
@@ -190,6 +191,7 @@ vignette: >
   * [`estHook`](xtending.html#hooks)
   * [Estimability](messy-data.html#nonestex)
   * [Estimability issues](FAQs.html#NAs)
+  * [Estimable functions](xplanations.html#joint_tests)
   * [Estimated marginal means](basics.html#EMMdef)
       * [Defined](basics.html#emmeans)
   * Examples
@@ -319,6 +321,9 @@ vignette: >
   * [`joint`](confidence-intervals.html#joint)
   * `joint_tests()`
       * [in *confidence-intervals: joint_tests*](confidence-intervals.html#joint_tests)
+      * [Confounded effects](xplanations.html#joint_tests)
+          * [Not unique](xplanations.html#context)
+      * [Context](xplanations.html#context)
       * [in *interactions: contrasts*](interactions.html#contrasts)
       * [with `submodel = "type2"`](messy-data.html#type2submodel)
 
@@ -378,6 +383,7 @@ vignette: >
       * [Limiting](messy-data.html#rg.limit)
   * [`mira` models](models.html#I)
   * [`misc` attribute and argument](xtending.html#communic)
+  * [Missing cells](xplanations.html#joint_tests)
   * [`mlm` models](models.html#N)
   * [`mmer` models](models.html#G)
   * Model
@@ -506,6 +512,7 @@ vignette: >
 ### R {#r}
 
 
+  * [Rank deficiency](xplanations.html#joint_tests)
   * [`rbind()`](utilities.html#rbind)
   * [Re-labeling](utilities.html#relevel)
   * [Recommended practices](basics.html#recs1)

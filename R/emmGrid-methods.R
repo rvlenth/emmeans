@@ -980,6 +980,9 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
     object@V = vcov(object)[estble, estble, drop = FALSE]
     object@bhat = est[[1]]
     object@linfct = diag(1, length(estble))
+    pargs = object@grid[names(object@levels)]
+    lbls = do.call(paste, c(pargs, sep = "."))
+    colnames(object@linfct) = lbls
     if (!is.null(disp <- object@misc$display)) {  # fix up for the bookkeeping in nested models
         object@V = object@V[disp, disp, drop = FALSE]
         object@linfct = matrix(0, nrow = length(disp), ncol = length(estble))

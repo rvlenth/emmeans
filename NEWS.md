@@ -13,6 +13,8 @@ title: "NEWS for the emmeans package"
       - `"est.fcns"` attribute is actually estimable
       - Results for `(confounded)` entry in `joint_tests()` is now much
         more robust. 
+      - Addition of `context` argument in `joint_tests()`
+      - Added section related to this in `xplanations` vignette
       - **Note:** If you have **estimability** version 1.4
         installed, please install another version (1.3 or later, but
         not 1.4)

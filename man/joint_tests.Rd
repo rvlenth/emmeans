@@ -4,8 +4,8 @@
 \alias{joint_tests}
 \title{Compute joint tests of the terms in a model}
 \usage{
-joint_tests(object, by = NULL, show0df = FALSE,
-  showconf = (!is.na(object@nbasis[1]) && length(facs) < 4),
+joint_tests(object, by = NULL, show0df = FALSE, context = c("row.space",
+  "cells"), showconf = (!is.na(object@nbasis[1]) && length(facs) < 4),
   cov.reduce = range, ...)
 }
 \arguments{
@@ -19,13 +19,10 @@ run for each combination of these.}
 \item{show0df}{logical value; if \code{TRUE}, results with zero numerator
 degrees of freedom are displayed, if \code{FALSE} they are skipped}
 
-\item{showconf}{logical value; if \code{true}, we look for additional effects 
-that are not purely due to contrasts of a single term, and if found, are
-labeled \code{(confounded)}. Such effects can occur, e.g., when there are empty
-cells in the data. Setting this to \code{FALSE} can save some computation
-time, especially when there are a lot of factors. The default is based on
-the internal vector \code{facs}, which is the names of factors being
-considered.}
+\item{context}{character value matching either \code{"row.space"}, or \code{"cells"}.
+See the \dQuote{Context...} section below.}
+
+\item{showconf}{logical value; see the \dQuote{Context...} section below.}
 
 \item{...}{additional arguments passed to \code{ref_grid} and \code{emmeans}}
 }
@@ -36,9 +33,9 @@ a \code{summary_emm} object (same as is produced by
   There may be an additional row named \code{(confounded)} which accounts
   for joint tests of effects that are estimable but are not 
   determined by contrasts of any one term.
+  
   The returned object also includes an \code{"est.fcns"} attribute, which is a
-  named list containing the linear functions associated with each joint test. 
-  The order of this list may not be the same as the order of the summary.
+  named list containing the linear functions associated with each joint test.
 }
 \description{
 This function produces an analysis-of-variance-like table based on linear
@@ -61,18 +58,30 @@ this documentation. The point that one must always remember is that
 reference grid, whereas type III tests are tests of model coefficients --
 which may or may not have anything to do with EMMs or contrasts.
 }
-\note{
-When we have models with estimability issues (e.g., missing cells), the results
-may in rare cases depend on what contrast method is used. 
-The default is 
-\code{use.contr = c("consec", "consec")}, meaning that we use \code{"consec"} comparisons
-for constructing [interaction] contrasts for named terms, and also use \code{"consec"} contrasts
-for constructing contrasts for confounded effects (we construct the latter overall, then
-remove any linear dependence on the named contrasts). You may override these defaults
-via a hidden option: specify \code{use.contr = <character 2-vector>} among the arguments.
-Examining the \code{"est.fcns"} attribute may help understand what you are testing.
-functions.
+\section{Context and confounding}{
+
+With
+\code{context = "row.space"}, we use estimable functions of the rows of the
+model matrix, same as \code{object@linfct}. With \code{context = "cells"},
+\code{object} is replaced by \code{regrid(object, "none")} so that the
+estimable functions are associated directly with contrasts among cell means.
+This argument does not affect the tests obtained (except perhaps the
+confounded effects), but it changes the interpretation of 
+\code{attr(, "est.fcns")}.
+
+When we have models with estimability issues (e.g., missing cells), then with
+\code{showconf = TRUE}, we look for additional effects that are not purely
+due to contrasts of a single term. If found, they are labeled
+\code{(confounded)}. This part of the results may depend on \code{context},
+as well as on the contrast families used to construct the joint tests. See
+\code{vignette("xplanations")} for more information.
+
+Setting  \code{showconf = FALSE}
+can save some computation time, especially when there are a lot of factors.
+The default is based on the internal vector \code{facs}, which is the names
+of factors being considered.
 }
+
 \examples{
 pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 
