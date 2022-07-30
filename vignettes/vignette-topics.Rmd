@@ -322,8 +322,6 @@ vignette: >
   * `joint_tests()`
       * [in *confidence-intervals: joint_tests*](confidence-intervals.html#joint_tests)
       * [Confounded effects](xplanations.html#joint_tests)
-          * [Not unique](xplanations.html#context)
-      * [Context](xplanations.html#context)
       * [in *interactions: contrasts*](interactions.html#contrasts)
       * [with `submodel = "type2"`](messy-data.html#type2submodel)
 

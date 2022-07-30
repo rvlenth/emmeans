@@ -214,9 +214,12 @@ test.emmGrid = function(object, null = 0,
 #'    run for each combination of these.
 #' @param show0df logical value; if \code{TRUE}, results with zero numerator
 #'    degrees of freedom are displayed, if \code{FALSE} they are skipped
-#' @param context character value matching either \code{"row.space"}, or \code{"cells"}.
-#'    See the \dQuote{Context...} section below.
-#' @param showconf logical value; see the \dQuote{Context...} section below.
+#' @param showconf logical value.
+#'    When we have models with estimability issues (e.g., missing cells), then with
+#'    \code{showconf = TRUE}, we test any remaining effects that are not purely
+#'    due to contrasts of a single term. If found, they are labeled
+#'    \code{(confounded)}. See
+#'    \code{vignette("xplanations")} for more information.
 #' @param ... additional arguments passed to \code{ref_grid} and \code{emmeans}
 #'
 #' @return a \code{summary_emm} object (same as is produced by 
@@ -228,28 +231,8 @@ test.emmGrid = function(object, null = 0,
 #'   
 #'   The returned object also includes an \code{"est.fcns"} attribute, which is a
 #'   named list containing the linear functions associated with each joint test. 
+#'   No estimable functions are included for confounded effects.
 #'   
-#' @section Context and confounding:
-#' With
-#' \code{context = "row.space"}, we use estimable functions of the rows of the
-#' model matrix, same as \code{object@linfct}. With \code{context = "cells"},
-#' \code{object} is replaced by \code{regrid(object, "none")} so that the
-#' estimable functions are associated directly with contrasts among cell means.
-#' This argument does not affect the tests obtained (except perhaps the
-#' confounded effects), but it changes the interpretation of 
-#' \code{attr(, "est.fcns")}.
-#'
-#' When we have models with estimability issues (e.g., missing cells), then with
-#' \code{showconf = TRUE}, we look for additional effects that are not purely
-#' due to contrasts of a single term. If found, they are labeled
-#' \code{(confounded)}. This part of the results may depend on \code{context},
-#' as well as on the contrast families used to construct the joint tests. See
-#' \code{vignette("xplanations")} for more information.
-#' 
-#' Setting  \code{showconf = FALSE}
-#' can save some computation time, especially when there are a lot of factors.
-#' The default is based on the internal vector \code{facs}, which is the names
-#' of factors being considered. 
 #' 
 #' @seealso \code{\link{test}}
 #' @export
@@ -301,8 +284,7 @@ test.emmGrid = function(object, null = 0,
 #' joint_tests(ubds.lm, by = "B")
 #' 
 joint_tests = function(object, by = NULL, show0df = FALSE, 
-                       context = c("row.space", "cells"), 
-                       showconf = (!is.na(object@nbasis[1]) && length(facs) < 4),
+                       showconf = TRUE,
                        cov.reduce = range, ...) {
     
     # hidden defaults for contrast methods and which basis to use for all contrasts
@@ -316,10 +298,6 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     facs = setdiff(names(object@levels), c(by, "1"))
     if(length(facs) == 0)
         stop("There are no factors to test")
-    
-    context = match.arg(context)
-    if(context == "cells")
-        object = regrid(object, transform = "none")
     
     # Use "factors" attr if avail to screen-out interactions not in model
     # For any factors not in model (created by emmeans fcns), assume they interact w/ everything
@@ -380,12 +358,10 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     
     ## look at leftover effects
     if (showconf) {
+        refjt = refr = NULL
         tmp = contrast(object, use.contr[2], by = by, name = ".cnt.", ...)
         # rbind all the est.fcns
         ef = est.fcns
-        # if (!is.null(by))
-        #     ef = lapply(ef, function(x) do.call(rbind, x))
-        # ef = do.call(rbind, ef)
         if (!is.null(ef)) {
             lf = tmp@linfct
             br = .find.by.rows(tmp@grid, by)
@@ -396,35 +372,31 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
                 efi = if (!is.null(nm)) lapply(ef, function(e) e[[nm]])
                 else ef
                 efi = do.call(rbind, efi)
-                
-                ## which should we regress on efi? I'm not sure. But they're different
-                allcon = attr(tst, "est.fcns")[[1]]
-                
-                lfi = t(qr.resid(qr(t(efi)), t(allcon)))
-                slf = .squash(lfi, nbasis = tmp@nbasis)
-                k = seq_len(nrow(slf))
-                if (nrow(slf) == 0)
-                    lf[r, ] = NA
-                else {
-                    lf[r[k], ] = slf
-                    lf[r[-k], ] = NA
+                tmpi = tmp
+                tmpi@linfct = efi
+                tmpi@grid = tmpi@grid[seq_along(efi[, 1]), , drop = FALSE]
+                efi.test = test(tmpi, by = NULL, joint = TRUE)
+                ref.test = test(tmp[r], joint = TRUE)
+                cdf = ref.test$df1 - efi.test$df1
+                if (cdf > 0) {
+                    efi.test$F.ratio = (ref.test$df1 * ref.test$F.ratio - 
+                                            efi.test$df1 * efi.test$F.ratio) / cdf
+                    efi.test$p.value = pf(efi.test$F.ratio, cdf, efi.test$df2, lower.tail = FALSE)
+                    efi.test$df1 = cdf
+                    refjt = rbind(refjt, efi.test)
                 }
+                refr = c(refr, r[seq_len(cdf)]) # sham rows to use
             }
-            k = !is.na(lf[,1])
-            tmp@linfct = lf[k, , drop = FALSE]
-            tmp@grid = tmp@grid[k, , drop = FALSE]
-        }
+            tmp = tmp[refr]
+         }
         if (nrow(tmp@linfct) > 0) {
+            # (tmp is just a sham emmGrid with the right #'s of rows)
             jt = test(tmp, by = by, joint = TRUE, status = TRUE)
             tst = cbind(ord = 999, `model term` = "(confounded)", jt)
+            cols = c("df1", "df2", "F.ratio", "p.value")
+            tst[, cols] = refjt[, cols]
+            tst$note = ""
             result = rbind(result, tst)
-            ef = lapply(attr(jt, "est.fcns"), zapsmall)
-            if (length(ef) > 1)
-                ef = list(ef)
-            names(ef) = "(confounded)"
-            est.fcns = c(est.fcns, ef)
-            
-            ef.ord = c(ef.ord, 999)
         }
     }
     
@@ -440,9 +412,9 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     class(result) = c("summary_emm", "data.frame")
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
-    attr(est.fcns, "context") = context
     nms = colnames(object@linfct)
-    est.fcns = lapply(est.fcns, function(x) {colnames(x) = nms; x})
+    if(is.null(by)) est.fcns = lapply(est.fcns, function(x) {colnames(x) = nms; x})
+    else est.fcns = lapply(est.fcns, function(L) lapply(L, function(x) {colnames(x) = nms; x}))
     attr(result, "est.fcns") = est.fcns
     if (any(result$note != "")) {
         msg = character(0)
@@ -460,14 +432,15 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 
 ### Squash rows of L to best nrows of row space
 ### If nrows not specified, determine via those with SVs > tol
-.squash = function(L, nbasis, tol = 1e-3, nrow) {
-    if(!missing(nbasis))
-        L = estimability::estble.subspace(L, nbasis)
-    svd = try(svd(L, nu = 0), silent = TRUE)
-    if(inherits(svd, "try-error")) return(L * 0)
-    if (missing(nrow))
-        nrow = sum(svd$d > tol)
-    r = seq_len(nrow)
-    diag(svd$d[r], nrow = nrow) %*% t(svd$v[, r, drop = FALSE])
-}
+### ... but I guess this is no longer needed at all...
+# .squash = function(L, nbasis, tol = 1e-3, nrow) {
+#     if(!missing(nbasis))
+#         L = estimability::estble.subspace(L, nbasis)
+#     svd = try(svd(L, nu = 0), silent = TRUE)
+#     if(inherits(svd, "try-error")) return(L * 0)
+#     if (missing(nrow))
+#         nrow = sum(svd$d > tol)
+#     r = seq_len(nrow)
+#     diag(svd$d[r], nrow = nrow) %*% t(svd$v[, r, drop = FALSE])
+# }
 

@@ -12,8 +12,7 @@ title: "NEWS for the emmeans package"
       - Sometimes did incorrect computations with rank deficient models
       - `"est.fcns"` attribute is actually estimable
       - Results for `(confounded)` entry in `joint_tests()` is now much
-        more robust. 
-      - Addition of `context` argument in `joint_tests()`
+        better formulated and more robust. 
       - Added section related to this in `xplanations` vignette
       - **Note:** If you have **estimability** version 1.4
         installed, please install another version (1.3 or later, but
