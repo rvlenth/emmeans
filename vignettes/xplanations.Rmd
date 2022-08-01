@@ -289,6 +289,9 @@ tmp@linfct <- do.call(rbind, ef)      # combine EFs into a matrix
 tmp@grid <- tmp@grid[1:2, ]           # replace the @linfct and @grid slots
 (test.ef <- test(tmp, joint = TRUE))  #  -- that's enough to get the test
 ```
+(Note: In case this isn't obvious, we couldn't have just pooled together the F
+ratios for those effects, because they are type-III tests which are not
+necessarily independent.)
 So now we have `test.all` with the 4 d.f. worth of all effects comparing the
 cells, and `test.ef` with just the effects in the top part of the `jt` table.
 We can get the unexplained part of `test.all` by d.f.-weighted subtraction:

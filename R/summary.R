@@ -802,9 +802,14 @@ as.data.frame.emmGrid = function(x, row.names = NULL, optional, check.names = TR
 # Computes the quadratic form y'Xy after subsetting for the nonzero elements of y
 .qf.non0 = function(X, y) {
     ii = (zapsmall(y) != 0)
-    if (any(ii))
+    rtn = if (any(ii))
         sum(y[ii] * (X[ii, ii, drop = FALSE] %*% y[ii]))
     else 0
+    if (rtn < 0) {
+        warning("Negative variance estimate obtained!")
+        rtn = NaN
+    }
+    rtn
 }
 
 

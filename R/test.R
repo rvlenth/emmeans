@@ -226,8 +226,8 @@ test.emmGrid = function(object, null = 0,
 #'   \code{\link{summary.emmGrid}}). All effects for which there are no
 #'   estimable contrasts are omitted from the results. 
 #'   There may be an additional row named \code{(confounded)} which accounts
-#'   for joint tests of effects that are estimable but are not 
-#'   determined by contrasts of any one term.
+#'   for additional degrees of freedom for effects not accounted for in the 
+#'   preceding rows.
 #'   
 #'   The returned object also includes an \code{"est.fcns"} attribute, which is a
 #'   named list containing the linear functions associated with each joint test. 
@@ -356,47 +356,33 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     }
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
     
-    ## look at leftover effects
+    ## look at as-yet-unexplained effects
     if (showconf) {
-        refjt = refr = NULL
         tmp = contrast(object, use.contr[2], by = by, name = ".cnt.", ...)
-        # rbind all the est.fcns
+        br = .find.by.rows(tmp@grid, by)
         ef = est.fcns
         if (!is.null(ef)) {
-            lf = tmp@linfct
-            br = .find.by.rows(tmp@grid, by)
-            for (i in seq_along(br)) {
+            lf = rows = NULL
+            for (i in seq_along(br)) {  # assemble est fcns for each by variable
                 r = br[[i]]
                 nm = names(br)[i]
-                tst = test(tmp[r], by = NULL, joint = TRUE)
                 efi = if (!is.null(nm)) lapply(ef, function(e) e[[nm]])
                 else ef
                 efi = do.call(rbind, efi)
-                tmpi = tmp
-                tmpi@linfct = efi
-                tmpi@grid = tmpi@grid[seq_along(efi[, 1]), , drop = FALSE]
-                efi.test = test(tmpi, by = NULL, joint = TRUE)
-                ref.test = test(tmp[r], joint = TRUE)
-                cdf = ref.test$df1 - efi.test$df1
-                if (cdf > 0) {
-                    efi.test$F.ratio = (ref.test$df1 * ref.test$F.ratio - 
-                                            efi.test$df1 * efi.test$F.ratio) / cdf
-                    efi.test$p.value = pf(efi.test$F.ratio, cdf, efi.test$df2, lower.tail = FALSE)
-                    efi.test$df1 = cdf
-                    refjt = rbind(refjt, efi.test)
-                }
-                refr = c(refr, r[seq_len(cdf)]) # sham rows to use
+                lf = rbind(lf, efi)     # stack 'em up into lf
+                rows = c(rows, r[seq_len(nrow(efi))])   # rows w/ same by combs
             }
-            tmp = tmp[refr]
-         }
-        if (nrow(tmp@linfct) > 0) {
-            # (tmp is just a sham emmGrid with the right #'s of rows)
-            jt = test(tmp, by = by, joint = TRUE, status = TRUE)
-            tst = cbind(ord = 999, `model term` = "(confounded)", jt)
-            cols = c("df1", "df2", "F.ratio", "p.value")
-            tst[, cols] = refjt[, cols]
-            tst$note = ""
-            result = rbind(result, tst)
+            tmpe = tmp
+            tmpe@linfct = lf
+            tmpe@grid = tmp@grid[rows, , drop = FALSE]
+            
+            ref = conf = test(tmp, joint = TRUE, status = TRUE)
+            tst = test(tmpe, joint = TRUE)
+            conf$df1 = ref$df1 - tst$df1
+            conf$F.ratio = (ref$df1 * ref$F.ratio - tst$df1 * tst$F.ratio) / conf$df1
+            conf$p.value = pf(conf$F.ratio, conf$df1, conf$df2, lower.tail = FALSE)
+            conf = cbind(ord = 999, `model term` = "(confounded)", conf)
+            result = rbind(result, conf)
         }
     }
     
@@ -413,8 +399,12 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
     nms = colnames(object@linfct)
-    if(is.null(by)) est.fcns = lapply(est.fcns, function(x) {colnames(x) = nms; x})
-    else est.fcns = lapply(est.fcns, function(L) lapply(L, function(x) {colnames(x) = nms; x}))
+    if(is.null(by)) 
+        est.fcns = lapply(est.fcns, function(x) {
+            if(!is.null(x)) colnames(x) = nms; x})
+    else 
+        est.fcns = lapply(est.fcns, function(L) lapply(L, function(x) {
+            if(!is.null(x)) colnames(x) = nms; x}))
     attr(result, "est.fcns") = est.fcns
     if (any(result$note != "")) {
         msg = character(0)

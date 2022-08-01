@@ -32,8 +32,8 @@ a \code{summary_emm} object (same as is produced by
   \code{\link{summary.emmGrid}}). All effects for which there are no
   estimable contrasts are omitted from the results. 
   There may be an additional row named \code{(confounded)} which accounts
-  for joint tests of effects that are estimable but are not 
-  determined by contrasts of any one term.
+  for additional degrees of freedom for effects not accounted for in the 
+  preceding rows.
   
   The returned object also includes an \code{"est.fcns"} attribute, which is a
   named list containing the linear functions associated with each joint test. 
