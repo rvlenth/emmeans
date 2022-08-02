@@ -324,11 +324,11 @@
 #'   unnecessary to call \code{summary} unless there is a need to
 #'   specify other than its default options.
 #'   
-#' @note An \code{as.data.frame} method exists only for internal
-#'   use in case an \code{emmGrid} object needs to be coerced to a data.frame.
-#'   Do not use this directly because it destroys important information.
-#'   If a data.frame is needed, use \code{summary}, \code{confint},
-#'   or \code{test}. If you want to see more digits in the output, use
+#' @note If a data frame is needed, \code{summary}, \code{confint},
+#'   and \code{test} serve this need. \code{as.data.frame} routes to
+#'   \code{summary} by default; calling it with \code{destroy.annotations = TRUE}
+#'   is not recommended for exactly that reason.
+#'   If you want to see more digits in the output, use
 #'   \code{print(summary(object), digits = ...)}; and if you \emph{always} want
 #'   to see more digits, use \code{emm_options(opt.digits = FALSE)}.
 #' @seealso \code{\link{hpd.summary}}
@@ -766,20 +766,28 @@ predict.emmGrid <- function(object, type,
 }
 
 # as.data.frame method
-#xxx "The secretary has disavowed any knowledge of this method"
-#xxx @rdname summary.emmGrid
-#xxx @order 5
-#xxx @param x object of the given class
-#xxx @param row.names passed to \code{\link{as.data.frame}}
-#xxx @param optional required argument, but ignored in \code{as.data.frame.emmGrid}
-#xxx @param check.names passed to \code{\link{data.frame}}
-#xxx @return The \code{as.data.frame} method coerces an \code{emmGrid} object
-#xxx   to a data frame. It is \emph{not} meant to be called directly by users
-#xxx   because needed information is lost.
+#' @rdname summary.emmGrid
+#' @order 5
+#' @param x object of the given class
+#' @param destroy.annotations Logical value. If \code{FALSE}, an object of class
+#'   \code{summary_emm} is returned (which inherits from \code{data.frame}),
+#'   but if displayed, details like confidence levels, P-value adjustments, 
+#'   transformations, etc. are also shown.
+#'   If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is 
+#'   returned, based on \code{row.names} and \code{check.names}.
+#' @param row.names passed to \code{\link{as.data.frame}}
+#' @param optional required argument, but ignored in \code{as.data.frame.emmGrid}
+#' @param check.names passed to \code{\link{data.frame}}
+#' @return The \code{as.data.frame} method returns an object that inherits 
+#'   from \code{"data.frame"}.
 #' @export
 #' @method as.data.frame emmGrid
-as.data.frame.emmGrid = function(x, row.names = NULL, optional, check.names = TRUE, ...) {
-    as.data.frame(summary(x, ...), row.names = row.names, check.names = check.names)
+as.data.frame.emmGrid = function(x, destroy.annotations = FALSE,
+                                 row.names = NULL, optional, check.names = TRUE, ...) {
+    rtn = summary(x, ...)
+    if(destroy.annotations)
+        rtn = as.data.frame(rtn, row.names = row.names, check.names = check.names)
+    rtn
 }
 
 

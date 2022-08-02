@@ -12,10 +12,8 @@ A clear and concise description of what the bug is.
 
 **To reproduce**
 Show me code and output that reproduces the bug. 
-But please:
-
-  1. Do not use `as.data.frame` anywhere. That suppresses annotations that you need to see
-  2. Do not create different objects having the same name. That just causes confusion.
+But please, do not create different objects having the same name; 
+that causes confusion.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
