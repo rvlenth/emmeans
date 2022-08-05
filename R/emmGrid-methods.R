@@ -92,6 +92,10 @@ str.emmGrid <- function(object, ...) {
         if (!is.null(tran2 <- object@misc$tran2))
             showtran(list(tran = tran2), "Additional response transformation:")
     }
+    if(!is.na(object@nbasis[1])) {
+        cat(paste0("Some things are non-estimable (null space dim = ",
+                  ncol(object@nbasis), ")\n"))
+    }
 }
 
 

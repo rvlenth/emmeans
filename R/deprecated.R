@@ -133,9 +133,6 @@ lsm.basis = function(object, ...)
 #' \CLS{ref.grid}{Both this  and the \cls{lsmobj} have been replaced by the
 #' \cls{emmGrid}.}
 #' 
-#' \ARG{trend}{The \code{trend} argument in \code{lsmeans} (now \code{emmeans})
-#' is now deprecated. Use \code{emtrends()} instead.}
-#' 
 #' }% list of deprecated stuff
 #' @name emmeans-deprecated
 NULL

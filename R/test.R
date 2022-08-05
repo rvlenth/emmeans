@@ -197,19 +197,23 @@ test.emmGrid = function(object, null = 0,
 #' \code{by} variable(s), so that separate tables of tests are produced for
 #' each combination of them.
 #' 
-#' In models with only factors, no covariates, we believe these tests correspond
-#' to \dQuote{type III} tests a la \pkg{SAS}, as long as equal-weighted
-#' averaging is used and there are no estimability issues. When covariates are
-#' present and interact with factors, the results depend on how the covariate is
-#' handled in constructing the reference grid. See the example at the end of
-#' this documentation. The point that one must always remember is that
-#' \code{joint_tests} always tests contrasts among EMMs, in the context of the
-#' reference grid, whereas type III tests are tests of model coefficients --
-#' which may or may not have anything to do with EMMs or contrasts.
+#' In models with only factors, no covariates, these tests correspond to
+#' \dQuote{type III} tests a la \pkg{SAS}, as long as equal-weighted averaging
+#' is used and there are no estimability issues. When covariates are present and
+#' they interact with factors, the results depend on how the covariate is
+#' handled in constructing the reference grid. See the section on covariates
+#' below. The point that one must always remember is that \code{joint_tests}
+#' always tests contrasts among EMMs, in the context of the reference grid,
+#' whereas type III tests are tests of model coefficients -- which may or may
+#' not have anything to do with EMMs or contrasts.
 #' 
-#' @param object,cov.reduce \code{object} is a fitted model or an \code{emmGrid}. 
-#'    If a fitted model, it is
-#'    replaced by \code{ref_grid(object, cov.reduce = cov.reduce, ...)}
+#' @param object a fitted model or an \code{emmGrid} 
+#' @param cov.reduce a function.
+#'    If \code{object} is a fitted model, it is
+#'    replaced by \code{ref_grid(object, cov.reduce = cov.reduce, ...)}.
+#'    For this purpose, the functions \code{meanint} and \code{symmint} are
+#'    available for returning an interval around the mean or around zero,
+#'    respectively. Se the section below on covariates.
 #' @param by character names of \code{by} variables. Separate sets of tests are
 #'    run for each combination of these.
 #' @param show0df logical value; if \code{TRUE}, results with zero numerator
@@ -233,8 +237,31 @@ test.emmGrid = function(object, null = 0,
 #'   named list containing the linear functions associated with each joint test. 
 #'   No estimable functions are included for confounded effects.
 #'   
+#' @section Dealing with covariates:
+#' A covariate (or any other predictor) must have \emph{more than one value in 
+#' the reference grid} in order to test its effect and be included in the results.
+#' Therefore, when \code{object} is a model, we default to \code{cov.reduce = meanint}
+#' which sets each covariate at a symmetric interval about its mean. But
+#' when \code{object} is an existing reference grid, it often has only one value 
+#' for covariates, in which case they are excluded from the joint tests.
+#' 
+#' Covariates present further complications in that their values in the
+#' reference grid can affect the joint tests of \emph{other} effects. When
+#' covariates are centered around their means (the default), then the tests we
+#' obtain can be described as joint tests of covariate-adjusted means; and that
+#' is our intended use here. However, some software such as \pkg{SAS} and
+#' \code{car::Anova} adopt the convention of centering covariates around zero;
+#' and for that purpose, one can use \code{cov.reduce = symmint(0)} when calling
+#' with a model object (or in constructing a reference grid). However, adjusted
+#' means with covariates set at or around zero do not make much sense in the
+#' context of interpreting estimated marginal means, unless the covariate means
+#' really are zero.
+#' 
+#' See the examples below with the \code{toy} dataset.
+#' 
 #' 
 #' @seealso \code{\link{test}}
+#' @order 1
 #' @export
 #'
 #' @examples
@@ -249,7 +276,7 @@ test.emmGrid = function(object, null = 0,
 #' 
 #' joint_tests(pigs.lm, by = "source")      ## separate joint tests of 'percent'
 #' 
-#' ### Comparisons with type III tests
+#' ### Comparisons with type III tests in SAS
 #' toy = data.frame(
 #'     treat = rep(c("A", "B"), c(4, 6)),
 #'     female = c(1, 0, 0, 1,   0, 0, 0, 1, 1, 0 ),
@@ -273,19 +300,29 @@ test.emmGrid = function(object, null = 0,
 #' joint_tests(toy.fac)
 #' joint_tests(toy.cov)   # female is regarded as a 2-level factor by default
 #' 
-#' # results for toy.cov depend on value we use for 'female'
-#' joint_tests(toy.cov, at = list(female = 0.5))
-#' joint_tests(toy.cov, cov.keep = 0)   # i.e., female = mean(toy$female)
-#' joint_tests(toy.cov, at = list(female = 0))
+#' ## Treat 'female' as a numeric covariate (via cov.keep = 0)
+#' ## ... then tests depend on where we center things
+#' 
+#' # Center around the mean
+#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = meanint)
+#' # Center around zero (like SAS's results for toy.cov)
+#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = symmint(0))
+#' # Center around 0.5 (like SAS's results for toy.fac)
+#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = range)
 #' 
 #' ### Example with empty cells and confounded effects
 #' low3 <- unlist(attr(ubds, "cells")[1:3]) 
 #' ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
-#' joint_tests(ubds.lm, by = "B")
+#' 
+#' # Show overall joint tests by C:
+#' ref_grid(ubds.lm, by = "C") |> contrast("consec") |> test(joint = TRUE)
+#' 
+#' # Break each of the above into smaller components:
+#' joint_tests(ubds.lm, by = "C")
 #' 
 joint_tests = function(object, by = NULL, show0df = FALSE, 
                        showconf = TRUE,
-                       cov.reduce = range, ...) {
+                       cov.reduce = meanint, ...) {
     
     # hidden defaults for contrast methods and which basis to use for all contrasts
     use.contr = (function(use.contr = c("consec", "consec"), ...) use.contr)(...)
@@ -369,8 +406,14 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
                 efi = if (!is.null(nm)) lapply(ef, function(e) e[[nm]])
                 else ef
                 efi = do.call(rbind, efi)
-                lf = rbind(lf, efi)     # stack 'em up into lf
-                rows = c(rows, r[seq_len(nrow(efi))])   # rows w/ same by combs
+                if(!is.null(efi)) {
+                    lf = rbind(lf, efi)     # stack 'em up into lf
+                    rows = c(rows, r[seq_len(nrow(efi))])   # rows w/ same by combs
+                }
+                else {
+                    lf = rbind(lf, NA * tmp@linfct[r[1], ])
+                    rows = c(rows, r[1])
+                }
             }
             tmpe = tmp
             tmpe@linfct = lf
@@ -381,6 +424,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
             conf$df1 = ref$df1 - tst$df1
             conf$F.ratio = (ref$df1 * ref$F.ratio - tst$df1 * tst$F.ratio) / conf$df1
             conf$p.value = pf(conf$F.ratio, conf$df1, conf$df2, lower.tail = FALSE)
+            conf$note = ""
             conf = cbind(ord = 999, `model term` = "(confounded)", conf)
             result = rbind(result, conf)
         }
@@ -419,6 +463,31 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     result
 }
 
+# mean pm 1
+#' @rdname joint_tests
+#' @order 6
+#'
+#' @param x,ctr arguments for \code{meanint} and \code{symmint}
+#'
+#' @return \code{meanint} returns \code{mean(c) + c(-1, 1)}. 
+#'         \code{symmint(ctr)} returns a function that returns \code{ctr + c(-1, 1)}.
+#'         These functions are available primarily for use with \code{cov.reduce}.
+#' @export
+meanint = function(x) { mean(x) + c(-1, 1) }
+
+# # zero pm 1
+# #' @rdname joint_tests
+# #' @order 7
+# #' @export
+# zeroint = function(x) { c(-1, 1) }
+ 
+# const pm 1
+#' @rdname joint_tests
+#' @order 8
+#' @export
+symmint = function(ctr) {
+    return(function(x) ctr + c(-1, 1)) 
+}
 
 ### Squash rows of L to best nrows of row space
 ### If nrows not specified, determine via those with SVs > tol

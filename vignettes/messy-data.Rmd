@@ -81,8 +81,8 @@ of this study that cannot be overcome without collecting additional data. Our
 choices for further analysis are to focus only on Black and White populations;
 or to focus only on age group 3. For example (the latter):
 ```{r}
-summary(emmeans(nutr.lm, pairwise ~ group | race, at = list(age = "3")), 
-    by = NULL)
+emmeans(nutr.lm, pairwise ~ group | race, at = list(age = "3")) |>
+    summary(by = NULL)
 ```
  (We used trickery with providing a `by` variable, and then taking it
 away, to make the output more compact.) Evidently, the training program has been
@@ -197,7 +197,7 @@ weighting applied one factor at a time; the following two would yield the same
 results: 
 ```{r eval = FALSE} 
 emmeans(model, "A", weights = "outer") 
-emmeans(emmeans(model, c("A", "B"), weights = "prop"),  weights = "prop") 
+emmeans(model, c("A", "B"), weights = "prop") |>  emmeans(weights = "prop") 
 ```
 
 
@@ -213,8 +213,8 @@ non-estimable cases.)
 Here is a comparison of predictions for `nutr.lm` defined [above](#issues),
 using different weighting schemes:
 ```{r message = FALSE}
-sapply(c("equal", "prop", "outer", "cells", "flat"), function(w)
-    predict(emmeans(nutr.lm, ~ race, weights = w)))
+sapply(c("equal", "prop", "outer", "cells", "flat"), \(w)
+    emmeans(nutr.lm, ~ race, weights = w) |> predict())
 ```
 In the other hand, if we do `group * race` EMMs, only one factor (`age`) is
 averaged over; thus, the results for `"prop"` and `"outer"` weights will be
@@ -346,8 +346,8 @@ with a `submodel` specification so as to impose such a constraint. For illustrat
 return again to the nutrition example, and consider the analysis of `group`
 and `race` as before, after removing interactions involving `age`:
 ```{r}
-summary(emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race), 
-        by = NULL)
+emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race) |> 
+        summary(by = NULL)
 ```
 If you like, you may confirm that we would obtain exactly the same
 estimates if we had fitted that sub-model to the data, except we continue

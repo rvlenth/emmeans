@@ -5,8 +5,8 @@
 \title{Estimated marginal means (Least-squares means)}
 \usage{
 emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
-  2, mean), contr, options = get_emm_option("emmeans"), weights, offset,
-  trend, ..., tran)
+  2, mean), contr, options = get_emm_option("emmeans"), weights, offset, ...,
+  tran)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}; or a fitted model object
@@ -51,8 +51,6 @@ that of primary factors.}
 the predictions, or overrides any offset in the model or its
 reference grid. If a vector of length differing from the number of rows in 
 the result, it is subsetted or cyclically recycled.}
-
-\item{trend}{This is now deprecated. Use \code{\link{emtrends}} instead.}
 
 \item{...}{When \code{object} is not already a \code{"emmGrid"}
 object, these arguments are passed to \code{\link{ref_grid}}. Common

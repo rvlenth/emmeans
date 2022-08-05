@@ -73,21 +73,6 @@ emmeans.list = function(object, specs, ...) {
 }
 
 
-# # Generic for after we've gotten specs in character form
-# emmeans.character = function(object, specs, ...) {
-#     UseMethod("emmeans.character")
-# }
-# 
-# # Needed for model objects
-# emmeans.character.default = function(object, specs, trend, ...) {
-#     if (!missing(trend)) {
-#         warning("The `trend` argument is being deprecated. Use `emtrends()` instead.")
-#         emtrends(object, specs, var = trend, ...)
-#     }
-#     else
-#         emmeans.default(object, specs, ...)
-# }
-
 
 # Here's our flagship function!
 #' Estimated marginal means (Least-squares means)
@@ -135,7 +120,6 @@ emmeans.list = function(object, specs, ...) {
 #'   the predictions, or overrides any offset in the model or its
 #'   reference grid. If a vector of length differing from the number of rows in 
 #'   the result, it is subsetted or cyclically recycled.
-#' @param trend This is now deprecated. Use \code{\link{emtrends}} instead.
 #' @param ... When \code{object} is not already a \code{"emmGrid"}
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
 #'   examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
@@ -285,7 +269,7 @@ emmeans.list = function(object, specs, ...) {
 emmeans = function(object, specs, by = NULL, 
                    fac.reduce = function(coefs) apply(coefs, 2, mean), 
                    contr, options = get_emm_option("emmeans"), 
-                   weights, offset, trend, ..., tran) {
+                   weights, offset, ..., tran) {
     
     object = .chk.list(object, ...)
     if(!is(object, "emmGrid")) {
@@ -297,7 +281,7 @@ emmeans = function(object, specs, by = NULL,
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
                              contr = contr, weights = weights, 
-                             offset = offset, trend = trend, ...))
+                             offset = offset, ...))
     }
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)
@@ -308,9 +292,6 @@ emmeans = function(object, specs, by = NULL,
             contr = spc$lhs
     }
     
-    if (!missing(trend)) {
-        stop("The 'trend' argument has been deprecated. Use 'emtrends()' instead.")
-    }
     if (!missing(tran)) {
         options $tran = tran
     }
@@ -706,7 +687,6 @@ as.list.emmGrid = function(x, model.info.slot = FALSE, ...) {
 #### --- internal stuff used only by emmeans -------------
 
 # Check if model contains a term containing all elts of facs
-# Note: if an lstrends call, we want to include trend var in facs
 # terms is terms() component of model
 .some.term.contains = function(facs, terms) {
     for (trm in attr(terms, "term.labels")) {

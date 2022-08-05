@@ -178,8 +178,8 @@ output.
 
 The three-way interaction may be explored via interaction contrasts too:
 ```{r}
-contrast(emmeans(noise.lm, ~ size*type*side),
-         interaction = c("poly", "consec", "consec"))
+emmeans(noise.lm, ~ size*type*side) |>
+    contrast(interaction = c("poly", "consec", "consec"))
 ```
 One interpretation of this is that the comparison by `type` of the linear 
 contrasts for `size` is different on the left side than on the right side; but 

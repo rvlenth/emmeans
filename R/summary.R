@@ -782,8 +782,9 @@ predict.emmGrid <- function(object, type,
 #'   from \code{"data.frame"}.
 #' @export
 #' @method as.data.frame emmGrid
-as.data.frame.emmGrid = function(x, destroy.annotations = FALSE,
-                                 row.names = NULL, optional, check.names = TRUE, ...) {
+as.data.frame.emmGrid = function(x, 
+                                 row.names = NULL, optional, check.names = TRUE, 
+                                 destroy.annotations = FALSE, ...) {
     rtn = summary(x, ...)
     if(destroy.annotations)
         rtn = as.data.frame(rtn, row.names = row.names, check.names = check.names)

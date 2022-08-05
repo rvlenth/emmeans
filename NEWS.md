@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.7.5-090xxx
+## emmeans 1.8.0
   * Fixed minor bug in `lme` support (#356)
   * Added support for `svyolr` objects from the **survey** package (#350)
   * Improvements to `mgcv::gam` support. Previously, random smoothers were
@@ -14,9 +14,17 @@ title: "NEWS for the emmeans package"
       - Results for `(confounded)` entry in `joint_tests()` is now much
         better formulated and more robust. 
       - Added section related to this in `xplanations` vignette
-      - **Note:** If you have **estimability** version 1.4
-        installed, please install another version (1.3 or later, but
-        not 1.4)
+      - Version dependency for `estimability (>= 1.4.1)` due to
+        a bug in version 1.4
+  * In `joint_tests()`, we changed the default from `cov.reduce = range`
+    to `cov.reduce = meanint`, where `meanint(x)` returns `mean(x) + c(-1, 1)`.
+    This centers the covariate values around their means, rather than their 
+    midranges, and is more in line with the default of 
+    `ref_grid(..., cov.reduce = mean)`. However, this change in default
+    will change the results of `joint_tests()` from past experiences with
+    models having covariates that interact with factors or other covariates.
+    We also added a section on covariates to the help for `joint_tests()`,
+    and added another function `symmint()` for use in `cov.reduce`.
   * `print.summary_emm()` now puts `by` groups in correct order rather
     than in order of appearance.
   * The `as.data.frame` method has a new argument `destroy.annotations`, which
@@ -26,6 +34,11 @@ title: "NEWS for the emmeans package"
     in later steps. But in doing so they have missed potentially useful
     annotations. Users who have used `as.data.frame` to see results with
     lots of digits should instead use `emm_options(opt.digits = FALSE)`.
+  * New R version dependency `>= 4.1.0`, allowing freedom to use the native pipe 
+    operator `|>` and other features.
+  * *Housecleaning:* We removed completely the `trend` argument in `emmeans()`,
+    which has long since been deprecated. We removed wrappers that implement
+    `pmmeans()`, `pmtrends()`, etc. -- which I believe nobody ever used.
 
 
 ## emmeans 1.7.5

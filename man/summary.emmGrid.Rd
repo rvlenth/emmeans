@@ -6,6 +6,7 @@
 \alias{test}
 \alias{test.emmGrid}
 \alias{predict.emmGrid}
+\alias{as.data.frame.emmGrid}
 \alias{[.summary_emm}
 \title{Summaries, predictions, intervals, and tests for \code{emmGrid} objects}
 \usage{
@@ -23,6 +24,9 @@ test(object, null, ...)
 \method{predict}{emmGrid}(object, type, interval = c("none", "confidence",
   "prediction"), level = 0.95,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
+
+\method{as.data.frame}{emmGrid}(x, row.names = NULL, optional,
+  check.names = TRUE, destroy.annotations = FALSE, ...)
 
 \method{[}{summary_emm}(x, ..., as.df = TRUE)
 }
@@ -140,6 +144,21 @@ such issues.}
   otherwise confidence or prediction intervals with given arguments, 
   via \code{\link{confint.emmGrid}}.}
 
+\item{x}{object of the given class}
+
+\item{row.names}{passed to \code{\link{as.data.frame}}}
+
+\item{optional}{required argument, but ignored in \code{as.data.frame.emmGrid}}
+
+\item{check.names}{passed to \code{\link{data.frame}}}
+
+\item{destroy.annotations}{Logical value. If \code{FALSE}, an object of class
+\code{summary_emm} is returned (which inherits from \code{data.frame}),
+but if displayed, details like confidence levels, P-value adjustments, 
+transformations, etc. are also shown.
+If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is 
+returned, based on \code{row.names} and \code{check.names}.}
+
 \item{as.df}{Logical value. With \code{x[..., as.df = TRUE]}, the result is
 object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
 \code{summary_emm} object.}
@@ -155,6 +174,9 @@ object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left
   results of \code{as.mcmc}.
 
 \code{predict} returns a vector of predictions for each row of \code{object@grid}.
+
+The \code{as.data.frame} method returns an object that inherits 
+  from \code{"data.frame"}.
 }
 \description{
 These are the primary methods for obtaining numerical or tabular results from
@@ -202,11 +224,11 @@ The default \code{show} method for \code{emmGrid} objects (with the
   unnecessary to call \code{summary} unless there is a need to
   specify other than its default options.
 
-An \code{as.data.frame} method exists only for internal
-  use in case an \code{emmGrid} object needs to be coerced to a data.frame.
-  Do not use this directly because it destroys important information.
-  If a data.frame is needed, use \code{summary}, \code{confint},
-  or \code{test}. If you want to see more digits in the output, use
+If a data frame is needed, \code{summary}, \code{confint},
+  and \code{test} serve this need. \code{as.data.frame} routes to
+  \code{summary} by default; calling it with \code{destroy.annotations = TRUE}
+  is not recommended for exactly that reason.
+  If you want to see more digits in the output, use
   \code{print(summary(object), digits = ...)}; and if you \emph{always} want
   to see more digits, use \code{emm_options(opt.digits = FALSE)}.
 }

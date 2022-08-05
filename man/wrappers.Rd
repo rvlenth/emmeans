@@ -3,38 +3,23 @@
 \name{lsmeans}
 \alias{lsmeans}
 \alias{wrappers}
-\alias{pmmeans}
 \alias{lstrends}
-\alias{pmtrends}
 \alias{lsmip}
-\alias{pmmip}
 \alias{lsm}
-\alias{pmm}
 \alias{lsmobj}
-\alias{pmmobj}
 \alias{lsm.options}
 \alias{get.lsm.option}
 \title{Wrappers for alternative naming of EMMs}
 \usage{
 lsmeans(...)
 
-pmmeans(...)
-
 lstrends(...)
-
-pmtrends(...)
 
 lsmip(...)
 
-pmmip(...)
-
 lsm(...)
 
-pmm(...)
-
 lsmobj(...)
-
-pmmobj(...)
 
 lsm.options(...)
 
@@ -51,19 +36,21 @@ get.lsm.option(x, default = emm_defaults[[x]])
 The result of the call to \code{em}\emph{xxxx}, suitably modified.
 
 \code{get.lsm.option} and \code{lsm.options} remap options from
-  and to corresponding options in the \pkg{lsmeans} options system.
+  and to corresponding options in the \pkg{emmeans} options system.
 }
 \description{
 These are wrappers for \code{\link{emmeans}} and related functions to provide
 backward compatibility, or for users who may prefer to
 use other terminology than \dQuote{estimated marginal means} -- namely 
-\dQuote{least-squares means} or \dQuote{predicted marginal means}.
+\dQuote{least-squares means}. These functions also provide the functionality
+formerly provided by the \pkg{lsmeans} package, which is now just a front-end
+for \pkg{emmeans}.
 }
 \details{
-For each function with \code{ls}\emph{xxxx} or \code{pm}\emph{xxxx} in its name,
+For each function with \code{ls}\emph{xxxx} in its name,
 the same function named \code{em}\emph{xxxx} is called. Any estimator names or 
-list items beginning with \dQuote{em} are replaced with \dQuote{ls} or 
-\dQuote{pm} before the results are returned
+list items beginning with \dQuote{em} are replaced with \dQuote{ls} 
+before the results are returned
 }
 \examples{
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)

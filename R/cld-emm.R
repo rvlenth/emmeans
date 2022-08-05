@@ -179,9 +179,9 @@ cld.emmGrid = function(object, details=FALSE, sort=TRUE,
         emmtbl[r, ] = emmtbl[rev(r), ]
     }
     
-    dontusemsg = paste0("NOTE: Compact letter displays can be misleading\n",
-                        "      because they show NON-findings rather than findings.\n",
-                        "      Consider using 'pairs()', 'pwpp()', or 'pwpm()' instead.")
+    dontusemsg = paste0("NOTE: If two or more means share the same grouping letter,\n",
+                        "      then we cannot show them to be different.\n",
+                        "      But we also did not show them to be the same.")
     
     attr(emmtbl, "mesg") = c(attr(emmtbl,"mesg"), attr(pwtbl, "mesg"), 
                              paste("significance level used: alpha =", alpha), dontusemsg)

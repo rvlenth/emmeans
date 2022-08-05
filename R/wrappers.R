@@ -19,10 +19,11 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
-### Wrappers for those who want other (familiar) terminology: lsmeans and pmmeans
+### Wrappers for those who want other (familiar) terminology: lsmeans 
+                                                    #xxx  and pmmeans xxx#
 
 ### general-purpose wrapper for creating pmxxxxx and lsxxxxx functions
-### use subst arg to specify e.g. "ls" or "pm"
+### use subst arg to specify e.g. "ls" #xxx or "pm"
 .emwrap = function(emmfcn, subst, ...) {
     result = emmfcn(...)
 
@@ -52,12 +53,14 @@
 #' These are wrappers for \code{\link{emmeans}} and related functions to provide
 #' backward compatibility, or for users who may prefer to
 #' use other terminology than \dQuote{estimated marginal means} -- namely 
-#' \dQuote{least-squares means} or \dQuote{predicted marginal means}.
+#' \dQuote{least-squares means}. These functions also provide the functionality
+#' formerly provided by the \pkg{lsmeans} package, which is now just a front-end
+#' for \pkg{emmeans}.
 #' 
-#' For each function with \code{ls}\emph{xxxx} or \code{pm}\emph{xxxx} in its name,
+#' For each function with \code{ls}\emph{xxxx} in its name,
 #' the same function named \code{em}\emph{xxxx} is called. Any estimator names or 
-#' list items beginning with \dQuote{em} are replaced with \dQuote{ls} or 
-#' \dQuote{pm} before the results are returned
+#' list items beginning with \dQuote{em} are replaced with \dQuote{ls} 
+#' before the results are returned
 #' 
 #' @param ... Arguments passed to the corresponding \code{em}\emph{xxxx} function
 #' 
@@ -74,23 +77,11 @@
 lsmeans = function(...)
     .emwrap(emmeans, subst = "ls", ...)
 
-#' @rdname wrappers
-#' @export
-pmmeans = function(...)
-    .emwrap(emmeans, subst = "pm", ...)
-
-
 
 #' @rdname wrappers
 #' @export
 lstrends = function(...)
     .emwrap(emtrends, subst = "ls", ...)
-
-#' @rdname wrappers
-#' @export
-pmtrends = function(...)
-    .emwrap(emtrends, subst = "pm", ...)
-
 
 
 #' @rdname wrappers
@@ -98,34 +89,17 @@ pmtrends = function(...)
 lsmip = function(...)
     emmip(...)
 
-#' @rdname wrappers
-#' @export
-pmmip = function(...)
-    emmip(...)
-
-
 
 #' @rdname wrappers
 #' @export
 lsm = function(...)
     emm(...)
 
-#' @rdname wrappers
-#' @export
-pmm = function(...)
-    emm(...)
-
-
 
 #' @rdname wrappers
 #' @export
 lsmobj = function(...)
     .emwrap(emmobj, subst = "ls", ...)
-
-#' @rdname wrappers
-#' @export
-pmmobj = function(...)
-    .emwrap(emmobj, subst = "pm", ...)
 
 #' @rdname wrappers
 #' @export
@@ -144,7 +118,7 @@ lsm.options = function(...) {
 #' @param default default value to return if \code{x} not found
 #' 
 #' @return \code{get.lsm.option} and \code{lsm.options} remap options from
-#'   and to corresponding options in the \pkg{lsmeans} options system.
+#'   and to corresponding options in the \pkg{emmeans} options system.
 #' @export
 get.lsm.option = function(x, default = emm_defaults[[x]]) {
     .Deprecated("get_emm_option")
