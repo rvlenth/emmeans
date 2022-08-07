@@ -814,7 +814,7 @@ as.data.frame.emmGrid = function(x,
     rtn = if (any(ii))
         sum(y[ii] * (X[ii, ii, drop = FALSE] %*% y[ii]))
     else 0
-    if (rtn < 0) {
+    if (!is.na(rtn) && (rtn < 0)) {
         warning("Negative variance estimate obtained!")
         rtn = NaN
     }

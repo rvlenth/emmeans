@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.0-1
+  * Fixed new bug in `summary()` introduced in #359 and reported in #364
+
+
 ## emmeans 1.8.0
   * Fixed minor bug in `lme` support (#356)
   * Added support for `svyolr` objects from the **survey** package (#350)
