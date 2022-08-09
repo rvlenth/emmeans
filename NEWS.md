@@ -2,8 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.0-1
+## emmeans 1.8.0-2
   * Fixed new bug in `summary()` introduced in #359 and reported in #364
+  * Fixed `as.data.frame.emm_list()` so it preserves annotations like
+    in `as.data.frame.emmGrid()`
 
 
 ## emmeans 1.8.0
@@ -38,7 +40,7 @@ title: "NEWS for the emmeans package"
     in later steps. But in doing so they have missed potentially useful
     annotations. Users who have used `as.data.frame` to see results with
     lots of digits should instead use `emm_options(opt.digits = FALSE)`.
-  * New R version dependency `>= 4.1.0`, allowing freedom to use the native pipe 
+  * New R version dependency `>= 4.1.0`, allowing freedom to use the forward pipe 
     operator `|>` and other features.
   * *Housecleaning:* We removed completely the `trend` argument in `emmeans()`,
     which has long since been deprecated. We removed wrappers that implement

@@ -11,6 +11,7 @@
 \alias{str.emm_list}
 \alias{summary.emm_list}
 \alias{print.emm_list}
+\alias{as.data.frame.emm_list}
 \alias{I_bet}
 \title{The \code{emm_list} class}
 \usage{
@@ -32,6 +33,8 @@
 
 \method{print}{emm_list}(x, ...)
 
+\method{as.data.frame}{emm_list}(x, ...)
+
 I_bet(which)
 }
 \arguments{
@@ -45,6 +48,10 @@ I_bet(which)
 a \code{list} of objects returned by the corresponding \code{emmGrid}
   method (thus, often, another \code{emm_list} object). However, if
   \code{which} has length 1, the one result is not wrapped in a list.
+
+The \code{as.data.frame} method returns a single data frame via
+\code{as.data.frame(rbind(x))}.
+See also \code{\link{rbind.emm_list}} and \code{\link{as.data.frame.emmGrid}}
 }
 \description{
 An \code{emm_list} object is simply a list of

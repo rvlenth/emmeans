@@ -193,9 +193,14 @@ rbind.emm_list = function(..., which, adjust = "bonferroni") {
 }
 
 #' @export
+#' @rdname emm_list-object
+#' @order 24
+#' @return The \code{as.data.frame} method returns a single data frame via
+#' \code{as.data.frame(rbind(x))}.
+#' See also \code{\link{rbind.emm_list}} and \code{\link{as.data.frame.emmGrid}}
 #' @method as.data.frame emm_list
 as.data.frame.emm_list = function(x, ...) {
-    data.frame(rbind(x, ..., check.names = FALSE))
+    as.data.frame(rbind(x, ..., check.names = FALSE))
 }
 
 #' @export
