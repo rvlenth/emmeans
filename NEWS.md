@@ -2,10 +2,11 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.0-2
+## emmeans 1.8.0-4
   * Fixed new bug in `summary()` introduced in #359 and reported in #364
   * Fixed `as.data.frame.emm_list()` so it preserves annotations like
     in `as.data.frame.emmGrid()`
+  * Fix to `mgcv::gam` support to accommodate fancier smoothers (#365, #366)
   * Fix in call to `summary()` from inside a function (#367)
 
 
