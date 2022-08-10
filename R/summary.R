@@ -434,6 +434,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     # if there are two transformations and we want response, then we need to undo both
     if ((type == "response") && (!is.null(misc$tran2))) {
         tmp = match.call()
+        tmp$object = quote(object)
         tmp$type = "unlink"
         summ.unlink = eval(tmp) #this is summary with type = "unlink"
         object = regrid(object, transform = "mu")
