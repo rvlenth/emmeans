@@ -122,7 +122,8 @@ recover_data.gam = function(object, ...) {
                               if(inherits(s, "random.effect")) NA
                               else c(s$term, s$by)
             }))
-        fixnm = union(.all.vars(delete.response(object$pterms)), fixnm[!is.na(fixnm)])
+        fixnm = union(.all.vars(delete.response(object$pterms)), fixnm)
+        fixnm = setdiff(fixnm, c("1", "NA"))
         object$terms = terms(.reformulate(fixnm, env = environment(terms(object))))
     }
     recover_data.lm(object, ...)
