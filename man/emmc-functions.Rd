@@ -35,7 +35,8 @@ trt.vs.ctrlk.emmc(levs, ref = length(levs), ...)
 
 dunnett.emmc(levs, ref = 1, ...)
 
-eff.emmc(levs, exclude = integer(0), include, wts = rep(1, length(levs)), ...)
+eff.emmc(levs, exclude = integer(0), include, wts = rep(1, length(levs)),
+  ...)
 
 del.eff.emmc(levs, exclude = integer(0), include, wts = rep(1,
   length(levs)), ...)

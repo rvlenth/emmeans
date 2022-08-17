@@ -393,8 +393,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     }
     
     if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
-        return (hpd.summary(object, prob = level, by = by, type = type, 
+        return (hpd.summary(object, prob = level, by = by, type = type, delta = delta,
                             bias.adjust = bias.adjust, sigma = sigma, ...))
+
     
     # Any "summary" options override built-in
     opt = get_emm_option("summary")

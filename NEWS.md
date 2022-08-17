@@ -8,6 +8,8 @@ title: "NEWS for the emmeans package"
     in `as.data.frame.emmGrid()`
   * Fix to `mgcv::gam` support to accommodate fancier smoothers (#365, #366, #369)
   * Fix in call to `summary()` from inside a function (#367)
+  * Added a `delta` argument to `hpd.summary()`, thus allowing a way to
+    assess equivalence with Bayesian estimates (#370)
 
 
 ## emmeans 1.8.0

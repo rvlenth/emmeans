@@ -221,6 +221,11 @@ as.mcmc.list.emm_list = function(x, which = I_bet(1), ...) {
 #' @param type prediction type as in \code{\link{summary.emmGrid}}
 #' @param point.est function to use to compute the point estimates from the 
 #'   posterior sample for each grid point
+#' @param delta Numeric equivalence threshold (on the linear predictor scale 
+#'   regardless of \code{type}).
+#'   If positive, a column labeled \code{p.equiv} is appended, showing the
+#'   fraction of posterior estimates having absolute values less than \code{delta}.
+#'   A high value of \code{p.delta} is evidence in favor of equivalence.
 #' @param bias.adjust Logical value for whether to adjust for bias in
 #'   back-transforming (\code{type = "response"}). This requires a value of 
 #'   \code{sigma} to exist in the object or be specified.
@@ -246,6 +251,7 @@ as.mcmc.list.emm_list = function(x, which = I_bet(1), ...) {
 #' }
 #' 
 hpd.summary = function(object, prob, by, type, point.est = median, 
+                       delta,
                        bias.adjust = get_emm_option("back.bias.adj"), sigma, 
                        ...) {
     if(!is.null(object@misc$.predFlag))
@@ -308,6 +314,12 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE, 
                            NE.include = TRUE, ...)
     mcmc = mcmc[, use.elts, drop = FALSE]
+    p.equiv = NULL
+    if (!missing(delta) && (delta > 0)) {
+        p.equiv = apply(mcmc, 2, \(x) mean(abs(x) < delta))
+        mesg = c(mesg, paste0("'p.equiv' based on posterior P(|lin. pred.| < ", 
+                              round(delta, digits = 4), ")"))
+    }
     if (inv) {
         if (bias.adjust) {
             if (missing(sigma))
@@ -335,6 +347,8 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     lblnms = setdiff(names(grid), 
                      c(object@roles$responses, ".offset.", ".wgt."))
     lbls = grid[lblnms]
+    if(!is.null(p.equiv))
+        summ$p.equiv = p.equiv
     if (inv) {
         if (!is.null(misc$inv.lbl)) {
             names(pt.est) = misc$estName = misc$inv.lbl

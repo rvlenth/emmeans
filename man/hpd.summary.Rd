@@ -4,7 +4,7 @@
 \alias{hpd.summary}
 \title{Summarize an emmGrid from a Bayesian model}
 \usage{
-hpd.summary(object, prob, by, type, point.est = median,
+hpd.summary(object, prob, by, type, point.est = median, delta,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 }
 \arguments{
@@ -19,6 +19,12 @@ the current \code{level} option is used; see \code{\link{emm_options}})}
 
 \item{point.est}{function to use to compute the point estimates from the 
 posterior sample for each grid point}
+
+\item{delta}{Numeric equivalence threshold (on the linear predictor scale 
+regardless of \code{type}).
+If positive, a column labeled \code{p.equiv} is appended, showing the
+fraction of posterior estimates having absolute values less than \code{delta}.
+A high value of \code{p.delta} is evidence in favor of equivalence.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
 back-transforming (\code{type = "response"}). This requires a value of 
