@@ -2,14 +2,22 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.0-4
+## emmeans 1.8.0-xxx
   * Fixed new bug in `summary()` introduced in #359 and reported in #364
   * Fixed `as.data.frame.emm_list()` so it preserves annotations like
     in `as.data.frame.emmGrid()`
-  * Fix to `mgcv::gam` support to accommodate fancier smoothers (#365, #366, #369)
+  * Fix to `mgcv::gam` support to accommodate fancier smoothers 
+    and more accurately detect random terms (#365, #366, #369)
   * Fix in call to `summary()` from inside a function (#367)
   * Added a `delta` argument to `hpd.summary()`, thus allowing a way to
     assess equivalence with Bayesian estimates (#370)
+  * Bug fix for `stanreg` estimability code when `subset` was used in model.
+  * `emmip()` and `plot.emmGrid()` now do appropriate things if `point.est` 
+    or `frequentist` appear among the `...` arguments, when we have Bayesian 
+    models (note also, `frequentist` was removed from the visible arguments for
+    `plot.emmGrid`). 
+  * With Bayesian models, `emmip()` plotted intervals regardless of `CIs`; 
+    this has been corrected
 
 
 ## emmeans 1.8.0

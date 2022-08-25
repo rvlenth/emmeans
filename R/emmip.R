@@ -189,7 +189,11 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
             
     type = .validate.type(type)
     
-    emms = summary(emmo, type = type, infer = c(CIs, F))
+    # get point.est & frequentist if specified (affects only Bayesian models)
+    point.est = (\(point.est = "median", ...) point.est)(...)
+    frequentist = (\(frequentist = FALSE, ...) frequentist)(...)
+    emms = summary(emmo, type = type, infer = c(CIs, FALSE), 
+                   point.est = point.est, frequentist = frequentist)
     if(PIs) {
         prd = predict(emmo, interval = "pred", ...)
         emms$LPL = prd$lower.PL
@@ -202,6 +206,8 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     for (i in 1:3)
         names(emms)[nm == tgts[i]] = subs[i] 
     attr(emms, "estName") = "yvar"
+    if(!CIs)
+        emms$LCL = emms$UCL = NULL
     
     if(!nesting.order) { # re-order by factor levels actually in plot
         snm = intersect(nm, unlist(specs))

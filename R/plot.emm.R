@@ -31,7 +31,7 @@
 #' @export
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
                     colors = c("black", "blue", "blue", "red"),
-                    alpha = .05, adjust = "tukey", int.adjust = "none", intervals, frequentist, ...) {
+                    alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
     if(!missing(intervals))
         CIs = intervals
     nonlin.scale = FALSE
@@ -55,8 +55,9 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
             int.adjust = "none"
     }
     
+    frequentist = (\(frequentist = FALSE, ...) frequentist)(...)
     # we will do everything on link scale and back-transform later in .plot.srg...
-    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, frequentist = frequentist, type = "lp", ...)
+    summ = summary(object, infer = c(TRUE, FALSE), adjust = int.adjust, type = "lp", ...)
     if (is.null(attr(summ, "pri.vars"))) { ## new ref_grid - use all factors w/ > 1 level
         pv = names(x@levels)
         len = sapply(x@levels, length)
@@ -74,7 +75,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
     extra = NULL
     bayes = 
     if(comparisons) {
-        if ((!is.na(object@post.beta[1])) && (missing(frequentist) || !frequentist))
+        if ((!is.na(object@post.beta[1])) && (!frequentist))
             stop("Comparison intervals are not implemented for Bayesian analyses")
         extra = object
         extra@misc$comp.alpha = alpha
@@ -122,8 +123,9 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' @param CIs Logical value. If \code{TRUE}, confidence intervals are
 #'   plotted for each estimate.
 #' @param PIs Logical value. If \code{TRUE}, prediction intervals are
-#'   plotted for each estimate. If \code{objecct} is a Bayesian model,
-#'   this requires \code{frequentist = TRUE} and \code{sigma =} (some value).
+#'   plotted for each estimate. If \code{object} is a Bayesian model,
+#'   this requires the \code{...} arguments to include
+#'   \code{frequentist = TRUE} and \code{sigma =} (some value).
 #'   Note that the \code{PIs} option is \emph{not} available with
 #'   \code{summary_emm} objects -- only for \code{emmGrid} objects.
 #'   Also, prediction intervals are not available
@@ -142,14 +144,11 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
 #' @param intervals If specified, it is used to set \code{CIs}. This is the previous
 #'   argument name for \code{CIs} and is provided for backward compatibility.
-#' @param frequentist Logical value. If there is a posterior MCMC sample and 
-#'   \code{frequentist} is non-missing and TRUE, a frequentist summary is used for
-#'   obtaining the plot data, rather than the posterior point estimate and HPD
-#'   intervals. This argument is ignored when it is not a Bayesian model.
 #' @param plotit Logical value. If \code{TRUE}, a graphical object is returned;
 #'   if \code{FALSE}, a data.frame is returned containing all the values
 #'   used to construct the plot.
 #' @param ... Additional arguments passed to \code{\link{update.emmGrid}}, 
+#'   \code{\link{summary.emmGrid}},
 #'   \code{\link{predict.emmGrid}}, or
 #'   \code{\link[lattice:xyplot]{dotplot}}
 #'

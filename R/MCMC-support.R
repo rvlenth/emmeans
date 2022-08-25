@@ -646,7 +646,12 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
         coef = NA * X[1, ]
         coef[names(bhat)] = bhat
         bhat = coef
-        mmat = model.matrix(trms, object$data, contrasts.arg = contr)
+        data = object$data
+        if(!is.null(subset <- object$call$subset)) {
+            subset = eval(subset, envir = data, enclos = environment(terms(object)))
+            data = data[subset, , drop = FALSE]
+        }
+        mmat = model.matrix(trms, data, contrasts.arg = contr)
         nbasis = estimability::nonest.basis(mmat)
     }
     

@@ -398,6 +398,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                 misc$adjust = "none"
                 misc$famSize = nrow(grd)
             }
+            else if((fullname == "estName") && startsWith(misc$predict.type, "r"))
+                misc$inv.lbl = args[[nm]]
             else if (fullname %in% valid.slots) # all slots but "levels"
                 slot(object, fullname) = args[[nm]]
             else {

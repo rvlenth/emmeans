@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2022 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -114,8 +114,11 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 }
 
 # Local utility for identifying random smooths
-.smooth.is.random = function(s) 
-    (inherits(s, "random.effect") || inherits(s, "fs.interaction"))
+.smooth.is.random = function(s) {
+    rcls = c("random.effect", "fs.interaction") ### what to look for
+    cls = c(class(s), unname(unlist(lapply(s$margin, class))))
+    any(cls %in% rcls)
+}
 
 ### for mgcv::gam objects
 ### Many thanks to Maarten Jung for help on sorting-out fixed and random effects

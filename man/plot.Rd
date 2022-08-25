@@ -7,8 +7,7 @@
 \usage{
 \method{plot}{emmGrid}(x, y, type, CIs = TRUE, PIs = FALSE,
   comparisons = FALSE, colors = c("black", "blue", "blue", "red"),
-  alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals,
-  frequentist, ...)
+  alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
   layout, scale = NULL, colors = c("black", "blue", "blue", "red"),
@@ -31,8 +30,9 @@ including arguments to \code{ggplot2::scale_x_continuous} in \code{...} .}
 plotted for each estimate.}
 
 \item{PIs}{Logical value. If \code{TRUE}, prediction intervals are
-plotted for each estimate. If \code{objecct} is a Bayesian model,
-this requires \code{frequentist = TRUE} and \code{sigma =} (some value).
+plotted for each estimate. If \code{object} is a Bayesian model,
+this requires the \code{...} arguments to include
+\code{frequentist = TRUE} and \code{sigma =} (some value).
 Note that the \code{PIs} option is \emph{not} available with
 \code{summary_emm} objects -- only for \code{emmGrid} objects.
 Also, prediction intervals are not available
@@ -58,12 +58,8 @@ so all plot elements are visible even if a single color is specified.}
 \item{intervals}{If specified, it is used to set \code{CIs}. This is the previous
 argument name for \code{CIs} and is provided for backward compatibility.}
 
-\item{frequentist}{Logical value. If there is a posterior MCMC sample and 
-\code{frequentist} is non-missing and TRUE, a frequentist summary is used for
-obtaining the plot data, rather than the posterior point estimate and HPD
-intervals. This argument is ignored when it is not a Bayesian model.}
-
 \item{...}{Additional arguments passed to \code{\link{update.emmGrid}}, 
+\code{\link{summary.emmGrid}},
 \code{\link{predict.emmGrid}}, or
 \code{\link[lattice:xyplot]{dotplot}}}
 
