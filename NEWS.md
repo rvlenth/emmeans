@@ -18,6 +18,10 @@ title: "NEWS for the emmeans package"
     `plot.emmGrid`). 
   * With Bayesian models, `emmip()` plotted intervals regardless of `CIs`; 
     this has been corrected
+  * Added `head()` and `tail()` methods for `emmGrid` objects
+  * In `[.summary_emm()`, we changed the default to `as.df = FALSE` so that
+    annotations are still visible by default. This also preserves annotations
+    in `head()` and `tail()` for summaries
 
 
 ## emmeans 1.8.0

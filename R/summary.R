@@ -801,7 +801,7 @@ as.data.frame.emmGrid = function(x,
 #'   object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
 #'   \code{summary_emm} object.
 #' @export
-"[.summary_emm" = function(x, ..., as.df = TRUE) {
+"[.summary_emm" = function(x, ..., as.df = FALSE) {
     if (as.df)
         as.data.frame(x)[...]
     else

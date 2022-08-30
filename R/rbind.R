@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2016 Russell V. Lenth                                #
+#    Copyright (c) 2012-2022 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -29,10 +29,8 @@
 #' doing this would be to obtain multiplicity-adjusted results for smaller
 #' or larger families of tests or confidence intervals. 
 #' 
-#' @param ... Additional arguments:
-#'   In \code{rbind}, object(s) of class \code{emmGrid}. 
-#'   In \code{"["}, it is ignored. 
-#'   In \code{subset}, it is passed to \code{[.emmGrid]}
+#' @param ... In \code{rbind}, object(s) of class \code{emmGrid}.
+#'   In others, additional arguments passed to other methods
 #' @param deparse.level (required but not used)
 #' @param adjust Character value passed to \code{\link{update.emmGrid}}
 #' 
@@ -107,8 +105,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 }
 #' @rdname rbind.emmGrid
 #' @order 4
-#' @param e1 An \code{emmGrid} object
-#' @param e2 Another \code{emmGrid} object
+#' @param e1,e2,x,object Objects of class \code{emmGrid}
 #' @return The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 #' @method + emmGrid
 #' @export
@@ -123,7 +120,6 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 # if drop = TRUE, the levels of factors are reduced
 #' @rdname rbind.emmGrid
 #' @order 5
-#' @param x An \code{emmGrid} object to be subsetted
 #' @param i Integer vector of indexes
 #' @param drop.levels Logical value. If \code{TRUE}, the \code{"levels"} slot in
 #'   the returned object is updated to hold only the predictor levels that actually occur
@@ -152,7 +148,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 }
 
 #' @rdname rbind.emmGrid
-#' @order 7
+#' @order 9
 #' @param subset logical expression indicating which rows of the grid to keep
 #' @method subset emmGrid
 #' @export
@@ -164,5 +160,27 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 subset.emmGrid = function(x, subset, ...) {
     sel = eval(substitute(subset), envir = x@grid)
     x[sel, ...]
+}
+
+#' @rdname rbind.emmGrid
+#' @order 6
+#' @param n integer number of entries to include (or exclude if negative)
+#' @method head emmGrid
+#' @export
+head.emmGrid = function(x, n = 6, ...) {
+    s = sign(n[1])
+    n = min(abs(n[1]), nrow(x@grid))
+    x[s * seq_len(n)]
+}
+
+#' @rdname rbind.emmGrid
+#' @order 7
+#' @method tail emmGrid
+#' @export
+tail.emmGrid = function(x, n = 6, ...) {
+    s = sign(n[1])
+    N = nrow(x@grid)
+    n = min(abs(n[1]), N)
+    x[s * (seq_len(n) - n + N)]
 }
 

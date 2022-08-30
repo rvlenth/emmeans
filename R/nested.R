@@ -224,9 +224,9 @@
 }
 
 # Fill-in extra elements to make a grid regular
+# Note: this will be documented at the end of methods for rbind and []
 #' @rdname rbind.emmGrid
-#' @order 9
-#' @param object an object of class \code{emmGrid}
+#' @order 50
 #' @return \code{force_regular} adds extra (invisible) rows to an \code{emmGrid} object
 #'   to make it a regular grid (all combinations of factors). This regular structure is 
 #'   needed by \code{emmeans}. An object can become irregular by, for example,

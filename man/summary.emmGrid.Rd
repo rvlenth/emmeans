@@ -28,7 +28,7 @@ test(object, null, ...)
 \method{as.data.frame}{emmGrid}(x, row.names = NULL, optional,
   check.names = TRUE, destroy.annotations = FALSE, ...)
 
-\method{[}{summary_emm}(x, ..., as.df = TRUE)
+\method{[}{summary_emm}(x, ..., as.df = FALSE)
 }
 \arguments{
 \item{object}{An object of class \code{"emmGrid"} (see \link{emmGrid-class})}
