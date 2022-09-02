@@ -22,9 +22,7 @@ posterior sample for each grid point}
 
 \item{delta}{Numeric equivalence threshold (on the linear predictor scale 
 regardless of \code{type}).
-If positive, a column labeled \code{p.equiv} is appended, showing the
-fraction of posterior estimates having absolute values less than \code{delta}.
-A high value of \code{p.delta} is evidence in favor of equivalence.}
+See the section below on equivalence testing.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
 back-transforming (\code{type = "response"}). This requires a value of 
@@ -48,13 +46,34 @@ may be called independently, it is called automatically by the S3 method
 \code{\link{summary.emmGrid}} when the object is based on a Bayesian model.
 (Note: the \code{level} argument, or its default, is passed as \code{prob}).
 }
-\examples{
-if(require("coda")) {
-  # Create an emmGrid object from a system file
-  cbpp.rg <- do.call(emmobj, 
-      readRDS(system.file("extdata", "cbpplist", package = "emmeans")))
-  hpd.summary(emmeans(cbpp.rg, "period"))
+\section{Equivalence testing note}{
+
+  If \code{delta} is positive, two columns labeled \code{p.equiv} and
+  \code{odds.eq} are appended to the summary. \code{p.equiv} is the fraction
+  of posterior estimates having absolute values less than \code{delta}. The
+  \code{odds.eq} column is just \code{p.equiv} converted to an odds ratio; so
+  it is the posterior odds of equivalence.
+  
+  A high value of \code{p.equiv} is evidence
+  in favor of equivalence. It can be used to obtain something equivalent
+  (in spirit) to the frequentist Schuirmann (TOST) procedure, whereby we would
+  conclude equivalence at significance level \eqn{\alpha} if the \eqn{(1 - 2\alpha)}
+  confidence interval falls entirely in the interval \eqn{[-\delta, \delta]}.
+  Similarly in the Bayesian context, an equally strong argument for
+  equivalence is obtained if \code{p.equiv} exceeds \eqn{1 - 2\alpha}.
+  
+  A closely related quantity is the ROPE (region of practical equivalence),
+  obtainable via \code{bayestestR::rope(object, range = c(-delta, delta))}.
+  Its value is approximately \code{100 * p.equiv / 0.95} if the default
+  \code{ci = 0.95} is used.
+  
+  Finally, a Bayes factor for equivalence is obtainable by dividing 
+  \code{odds.eq} by the prior odds of equivalence, assessed or elicited separately.
 }
+
+\examples{
+if(require("coda")) 
+    emm_example("hpd.summary-coda")
 
 }
 \seealso{

@@ -22,6 +22,8 @@ title: "NEWS for the emmeans package"
   * In `[.summary_emm()`, we changed the default to `as.df = FALSE` so that
     annotations are still visible by default. This also preserves annotations
     in `head()` and `tail()` for summaries
+  * New `emm_example()` function used to tidy-up certain help-file examples
+    when they are conditional on an external package
 
 
 ## emmeans 1.8.0

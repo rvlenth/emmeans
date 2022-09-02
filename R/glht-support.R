@@ -159,20 +159,10 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 #'   The user may override this via the \code{df} argument.
 #' 
 #' @examples
-#' if(require(multcomp, quietly = TRUE)) withAutoprint({ # --- multcomp must be installed
-#' warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
-#' # Using 'emm'
-#' summary(glht(warp.lm, emm(pairwise ~ tension | wool)))
-#' # Combine the means and the comparisons into one family
-#' summary(glht(warp.lm, emm(pairwise ~ tension | wool, 
-#'                           which = 1:2, by = "wool")))
-#'                           
-#' # Same as first example, but use an existing 'emmeans' result
-#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' summary(as.glht(pairs(warp.emm)))
-#' # Same contrasts, but treat as one family
-#' summary(as.glht(pairs(warp.emm), by = NULL))
-#' }, spaced = TRUE)
+#' if(require(multcomp, quietly = TRUE)) 
+#'     emm_example("glht-multcomp") 
+#'     # Use emm_example("glht-multcomp", list = TRUE) # to see just the code
+#'     
 #' @export
 as.glht <- function(object, ...) {
     UseMethod("as.glht")

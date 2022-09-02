@@ -804,8 +804,10 @@ as.data.frame.emmGrid = function(x,
 "[.summary_emm" = function(x, ..., as.df = FALSE) {
     if (as.df)
         as.data.frame(x)[...]
-    else
+    else {
+        attr(x, "by.vars") = NULL
         base::`[.data.frame`(x, ...)
+    }
 }
 
 

@@ -38,6 +38,10 @@
 #'   the objects' coefficients, covariance structures, etc. But they 
 #'   are allowed to have different factors; a missing level \code{'.'}
 #'   is added to factors as needed.
+#' 
+#' @note These functions generally reset \code{by.vars} to \code{NULL};
+#' so if you want to keep any \dQuote{by} variables, you should follow-up
+#' with \code{\link{update.emmGrid}}.
 #'
 #' @return A revised object of class \code{emmGrid}
 #' @order 1

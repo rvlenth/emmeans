@@ -73,6 +73,10 @@ or larger families of tests or confidence intervals.
   the objects' coefficients, covariance structures, etc. But they 
   are allowed to have different factors; a missing level \code{'.'}
   is added to factors as needed.
+
+These functions generally reset \code{by.vars} to \code{NULL};
+so if you want to keep any \dQuote{by} variables, you should follow-up
+with \code{\link{update.emmGrid}}.
 }
 \examples{
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
