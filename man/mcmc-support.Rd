@@ -99,5 +99,6 @@ a character value. They are:
 \examples{
 if(requireNamespace("coda")) 
     emm_example("as.mcmc-coda")
+    # Use emm_example("as.mcmc-coda", list = TRUE) # to see just the code
     
 }

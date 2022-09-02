@@ -7,7 +7,7 @@
 emm_example(name, run = !list, list = FALSE, ...)
 }
 \arguments{
-\item{name}{Character name of file to run. We look for a file with the name
+\item{name}{Character name of file to run. We look for a file with this name
 (with \code{".R"} appended) in the system files provided with \pkg{emmeans}.}
 
 \item{run}{Logical choosing whether or not to run the example code}
@@ -23,6 +23,10 @@ Typically we want to run the code (\code{run = TRUE} is the default),
 or otherwise just list it on the console (\code{list = TRUE}).
 }
 \examples{
+# List an example
+emm_example("qdrg-biglm", list = TRUE)
+
+# Run an example
 if (require(biglm))
     emm_example("qdrg-biglm")
 

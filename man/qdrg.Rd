@@ -108,6 +108,8 @@ package.
 }
 
 \examples{
+# In these examples, use emm_example(..., list = TRUE) # to see just the code
+
 if (require(biglm, quietly = TRUE)) 
     emm_example("qdrg-biglm")
     

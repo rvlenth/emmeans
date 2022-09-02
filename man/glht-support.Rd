@@ -70,6 +70,7 @@ which simply apply the corresponding \code{glht} methods to each member.
 
 \examples{
 if(require(multcomp, quietly = TRUE)) 
-    emm_example("glht-multcomp")
+    emm_example("glht-multcomp") 
+    # Use emm_example("glht-multcomp", list = TRUE) # to see just the code
     
 }

@@ -74,6 +74,7 @@ may be called independently, it is called automatically by the S3 method
 \examples{
 if(require("coda")) 
     emm_example("hpd.summary-coda")
+    # Use emm_example("hpd.summary-coda", list = TRUE) # to see just the code
 
 }
 \seealso{
