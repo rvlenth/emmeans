@@ -92,6 +92,9 @@ are created. \code{xsub} is used to note special features; e.g., equivalence
 thresholds or one-sided tests.
 }
 \note{
+If \code{emm} is the result of a Bayesian analysis, the plot is based on
+  summaries with \code{frequentist = TRUE}.
+
 The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
   for \code{pwpp} to work.
 

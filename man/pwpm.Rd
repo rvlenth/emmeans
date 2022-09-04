@@ -55,6 +55,10 @@ Optional arguments are passed to \code{contrast.emmGrid} and/or
 \code{summary.emmGrid}, making it possible to control what estimates 
 and tests are displayed.
 }
+\note{
+If \code{emm} is the result of a Bayesian analysis, \code{pwpm} is
+  based on a frequentist analysis
+}
 \examples{
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)

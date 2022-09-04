@@ -160,8 +160,9 @@ If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is
 returned, based on \code{row.names} and \code{check.names}.}
 
 \item{as.df}{Logical value. With \code{x[..., as.df = TRUE]}, the result is
-object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
-\code{summary_emm} object.}
+object is coerced to a \code{\link{data.frame}} before the subscripting 
+is applied. With \code{as.df = FALSE}, the result is
+returned as a \code{summary_emm} object when possible.}
 }
 \value{
 \code{summary.emmGrid}, \code{confint.emmGrid}, and

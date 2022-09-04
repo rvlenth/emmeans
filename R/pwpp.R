@@ -89,7 +89,8 @@
 #' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}, 
 #'   as well as to \code{geom_segment} and \code{geom_label}
 #' 
-#' 
+#' @note If \code{emm} is the result of a Bayesian analysis, the plot is based on
+#'   summaries with \code{frequentist = TRUE}.
 #' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
 #'   for \code{pwpp} to work.
 #' @note Additional plot aesthetics are available by adding them to the returned object;
@@ -140,10 +141,10 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     args$interaction = args$simple = args$offset = NULL
     con = do.call(contrast, args)
     
-    args = list(object = emm, infer = c(FALSE, FALSE), by = by, ...)
+    args = list(object = emm, infer = c(FALSE, FALSE), by = by, frequentist = TRUE, ...)
     emm.summ = do.call(summary.emmGrid, args)
     
-    args = list(object = con, infer = c(FALSE, TRUE), ...)
+    args = list(object = con, infer = c(FALSE, TRUE), frequentist = TRUE, ...)
     args$null = NULL
     con.summ = do.call(summary.emmGrid, args)
     
@@ -397,6 +398,9 @@ gran = function(x, min_incr = .01) {
 #' @seealso A graphical display of essentially the same results is available
 #'   from \code{\link{pwpp}}
 #' @export
+#' 
+#' @note If \code{emm} is the result of a Bayesian analysis, \code{pwpm} is
+#'   based on a frequentist analysis
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
@@ -415,10 +419,10 @@ pwpm = function(emm, by, reverse = FALSE,
     
     emm = update(emm, by = by)
     pri = paste(emm@misc$pri.vars, collapse = ":")
-    mns = confint(emm, ...)
+    mns = confint(emm, frequentist = TRUE, ...)
     mns$lbls = do.call(paste, c(unname(mns[attr(mns, "pri.vars")]), sep = get_emm_option("sep")))
     estName = attr(mns, "estName")
-    prs = test(pairs(emm, reverse = reverse, ...), ...)
+    prs = test(pairs(emm, reverse = reverse, frequentist = TRUE, ...), ...)
     diffName = attr(prs, "estName")
     null.hyp = "0"
     if (!reverse) 

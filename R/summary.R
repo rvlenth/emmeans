@@ -798,18 +798,17 @@ as.data.frame.emmGrid = function(x,
 #' @order 6
 #' @method [ summary_emm
 #' @param as.df Logical value. With \code{x[..., as.df = TRUE]}, the result is
-#'   object is coerced to an ordinary \code{\link{data.frame}}; otherwise, it is left as a 
-#'   \code{summary_emm} object.
+#'   object is coerced to a \code{\link{data.frame}} before the subscripting 
+#'   is applied. With \code{as.df = FALSE}, the result is
+#'   returned as a \code{summary_emm} object when possible.
 #' @export
 "[.summary_emm" = function(x, ..., as.df = FALSE) {
-    if (as.df)
-        as.data.frame(x)[...]
-    else {
-        attr(x, "by.vars") = NULL
-        base::`[.data.frame`(x, ...)
-    }
-}
-
+    attr(x, "by.vars") = NULL
+    rtn = as.data.frame(x)[...]
+    if ((!as.df) && (!is.null(attr(rtn, "estName"))))
+        class(rtn) = c("summary_emm", "data.frame")
+    rtn
+}    
 
 
 # Computes the quadratic form y'Xy after subsetting for the nonzero elements of y

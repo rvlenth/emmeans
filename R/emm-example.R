@@ -47,7 +47,7 @@
 emm_example = function(name, run = !list, list = FALSE, ...) {
     test = (\(test = FALSE, ...) test)(...)
     if(test) {
-        file = paste0("H:/progs/R/devel/EMMEANS/emmeans/inst/extexamples/", name, ".R")
+        file = paste0("inst/extexamples/", name, ".R")
         filestg = paste0("inst/extexamples/", name, ".R")
     }
     else {
