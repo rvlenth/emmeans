@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.0-xxx
+## emmeans 1.8.1
   * Fixed new bug in `summary()` introduced in #359 and reported in #364
   * Fixed `as.data.frame.emm_list()` so it preserves annotations like
     in `as.data.frame.emmGrid()`
@@ -24,6 +24,13 @@ title: "NEWS for the emmeans package"
     in `head()` and `tail()` for summaries
   * New `emm_example()` function used to tidy-up certain help-file examples
     when they are conditional on an external package
+  * Continued efforts to prevent users from hiding annotations they need to
+    see. The functions/methods `summary()`, `confint()`, `test()`, and `as.data.frame()`
+    all produce data frames with annotations intact and visible. Additional
+    wrapping in `data.frame()`, `as.data.frame()`, etc. is completely unnecessary,
+    and if you send questions or bug reports with such code, I will regard
+    it as willful ignorance and will refuse to respond. See also the news for
+    version 1.8.0.
 
 
 ## emmeans 1.8.0

@@ -169,6 +169,7 @@ subset.emmGrid = function(x, subset, ...) {
 #' @rdname rbind.emmGrid
 #' @order 6
 #' @param n integer number of entries to include (or exclude if negative)
+#' @importFrom utils head
 #' @method head emmGrid
 #' @export
 head.emmGrid = function(x, n = 6, ...) {
@@ -179,6 +180,7 @@ head.emmGrid = function(x, n = 6, ...) {
 
 #' @rdname rbind.emmGrid
 #' @order 7
+#' @importFrom utils tail
 #' @method tail emmGrid
 #' @export
 tail.emmGrid = function(x, n = 6, ...) {
