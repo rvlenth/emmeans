@@ -1260,6 +1260,10 @@ as.data.frame.emmGrid = function(x,
 #' @method print summary_emm
 #' @export
 print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, export = FALSE) {
+    estn = attr(x, "estName")
+    if (is.null(estn)) # uh-oh, somebody messed it up - so Hail Mary
+        return(invisible(print(data.frame(x))))
+    
     test.stat.names = c("t.ratio", "z.ratio", "F.ratio", "T.square")  # format these w 3 dec places
     x.save = x
     if(export) x.save = list()
@@ -1277,8 +1281,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
         fp = x$p.value = format(round(x$p.value, 4), nsmall = 4, sci = FALSE)
         x$p.value[fp=="0.0000"] = "<.0001"
     }
-    estn = attr(x, "estName")
-### moved up    just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")
+
     est = x[[estn]]
     if (get_emm_option("opt.digits") && is.null(digits)) {
         if (!is.null(x[["SE"]]))
