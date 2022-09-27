@@ -7,7 +7,7 @@
 \usage{
 \method{cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
-  reversed = FALSE, ...)
+  reversed = FALSE, signif.sets = FALSE, delta = 0, ...)
 
 \method{cld}{emm_list}(object, ..., which = I_bet(1))
 }
@@ -35,11 +35,32 @@ If \code{TRUE}, the order of use of the letters is reversed.
 In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
 order of results is reversed.}
 
+\item{signif.sets}{Logical value. If \code{FALSE} (and \code{delta = 0}), a 
+\sQuote{traditional}
+compact-letter display is constructed with groupings representing sets of
+estimates that are not statistically different. If \code{TRUE}, the criteria
+are reversed so that two estimates sharing the same symbol test as significantly
+different. See also \code{delta}.}
+
+\item{delta}{Numeric value passed to \code{\link{test.emmGrid}}. If this
+is positive, it is used as an equivalence threshold in the TOST procedure for
+two-sided equivalence testing. In the resulting compact letter display,
+two estimates share the same grouping letter only if they are found to be
+statistically equivalent -- that is, groupings reflect actual \emph{findings}
+of equivalence rather than failure to find a significant difference.
+When \code{delta} is nonzero, \code{signif.sets} is ignored.}
+
 \item{...}{Arguments passed to \code{\link{contrast}} (for example,
 an \code{adjust} method)}
 
 \item{which}{Which element of the \code{emm_list} object to process
 (If length exceeds one, only the first one is used)}
+}
+\value{
+A \code{\link{summary_emm}} object showing the estimated marginal means
+plus an additional column labeled \code{.group} (when \code{signif.sets = FALSE}), 
+\code{.signif.set} (when \code{signif.sets = TRUE}), or \code{.equiv.set} 
+(when \code{delta > 0}).
 }
 \description{
 A method for \code{multcomp::cld()} is provided for users desiring to produce 
@@ -53,19 +74,26 @@ value exceeds \code{alpha}, then the two means have at least one letter in
 common.
 }
 \note{
-We warn that such displays encourage a poor
-practice in interpreting significance tests. CLDs are misleading because they
+We warn that the default display encourages a poor
+practice in interpreting significance tests. Such CLDs are misleading because they
 visually group means with comparisons \emph{P} > \code{alpha} as though they 
 are equal, when in fact we have only failed to prove that they differ.
-As alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
+A better alternative if one wants to show groupings is to specify an equivalence
+threshold \code{delta}; then groupings will be based on actual findings of
+equivalence. Another way to display actual findings is to set
+\code{signif.sets = TRUE}, so that estimates in the same group are those 
+found to be statistically \emph{different}. Obviously, these different options
+require different interpretations of the results; the annotations and the label
+given the final column help guide how to assess the results.
+
+As further alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
 values) or \code{\link{pwpm}} (matrix display).
 }
 \examples{
-if(requireNamespace("multcomp")) {
-    pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
-    pigs.emm <- emmeans(pigs.lm, "percent", type = "response")
-    multcomp::cld(pigs.emm, alpha = 0.10, Letters = LETTERS)
-}
+if(requireNamespace("multcomp"))
+    emm_example("cld-multcomp")
+    # Use emm_example("cld-multcomp", list = TRUE) # to just list the code
+
 }
 \references{
 Piepho, Hans-Peter (2004) An algorithm for a letter-based 

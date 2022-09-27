@@ -1,6 +1,13 @@
 ---
 title: "NEWS for the emmeans package"
 ---
+## emmeans 1.8.1-9xxxx
+  * Extended `cld()` so it can show findings rather than non-findings,
+    in two different ways: Using `delta`, groupings are based on actual
+    tests of equivalence with threshold `delta`; or setting `signif.sets = TRUE`,
+    means that have the share letter are significantly *different*.
+
+
 
 ## emmeans 1.8.1
   * Fixed new bug in `summary()` introduced in #359 and reported in #364
