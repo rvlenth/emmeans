@@ -6,6 +6,7 @@ title: "NEWS for the emmeans package"
     in two different ways: Using `delta`, groupings are based on actual
     tests of equivalence with threshold `delta`; or setting `signif.sets = TRUE`,
     means that have the share letter are significantly *different*.
+  * Bug fix for subtle error in `emtrends()` (#133)
 
 
 

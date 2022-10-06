@@ -91,7 +91,7 @@
 #'   13(2), 456-466.
 #' 
 #' @return
-#' A \code{\link{summary_emm}} object showing the estimated marginal means
+#' A \code{\link[=summary.emmGrid]{summary_emm}} object showing the estimated marginal means
 #' plus an additional column labeled \code{.group} (when \code{signif.sets = FALSE}), 
 #' \code{.signif.set} (when \code{signif.sets = TRUE}), or \code{.equiv.set} 
 #' (when \code{delta > 0}).

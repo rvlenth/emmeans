@@ -417,6 +417,9 @@ recover_data.gls = function(object, data, ...) {
         fcall$weights = NULL
     }
     trms = delete.response(terms(nlme::getCovariateFormula(object)))
+    attr(trms, "predvars") = attr(delete.response(terms(object)), "predvars")
+    # above copies scaling info for scale() and poly() terms
+    
     result = recover_data.call(fcall, trms, object$na.action, data = data, ...)
     if (!is.null(wts))
         result[["(weights)"]] = wts
