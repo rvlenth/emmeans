@@ -7,6 +7,9 @@ title: "NEWS for the emmeans package"
     tests of equivalence with threshold `delta`; or setting `signif.sets = TRUE`,
     means that have the share letter are significantly *different*.
   * Bug fix for subtle error in `emtrends()` (#133)
+  * Improved customization of `emmip()` so that `we can specify`color`,
+    `linetype`, and `symbol` are all associated with groupings; and addition of
+    an example to produce a black-and-white plot.
 
 
 

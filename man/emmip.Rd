@@ -15,8 +15,9 @@ emmip(object, formula, ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.1, xlab = labs$xlab,
   ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context", scale,
-  dotarg = list(), linearg = list(), CIarg = list(lwd = 2, alpha = 0.5),
-  PIarg = list(lwd = 1.25, alpha = 0.33), ...)
+  dotarg = list(shape = "circle"), linearg = list(linetype = "solid"),
+  CIarg = list(lwd = 2, alpha = 0.5), PIarg = list(lwd = 1.25, alpha =
+  0.33), col, ...)
 
 emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
   tlab = labs$tlab, pch = c(1, 2, 6, 7, 9, 10, 15:20), lty = 1,
@@ -113,15 +114,20 @@ of arguments passed to \code{geom_point} to customize appearance of points}
 of arguments passed to \code{geom_line} to customize appearance of lines}
 
 \item{CIarg, PIarg}{\code{list}s
-of arguments passed to \code{geom_linerange} to customize appearance of intervals}
+of arguments passed to \code{geom_linerange} to customize appearance of intervals.
+(Note: the \code{linetype} aesthetic defaults to \code{"solid"} under the hood)}
 
-\item{pch}{The plotting characters to use for each group (i.e., levels of
+\item{col}{With \code{emmip_ggplot}, this adds \code{color = col} (not
+\code{colour}) to all of the \code{*arg} lists. This is intended for setting a
+common color for everything, such as a black-and-white plot. 
+With \code{emmip_lattice}, \code{col} specifies the colors to use
+for each group, recycled as needed. If not specified, the default trellis
+colors are used.}
+
+\item{pch}{(Lattice only) The plotting characters to use for each group (i.e., levels of
 \code{trace.factors}). They are recycled as needed.}
 
-\item{lty}{The line types to use for each group. Recycled as needed.}
-
-\item{col}{The colors to use for each group, recycled as needed. If not
-specified, the default trellis colors are used.}
+\item{lty}{(Lattice only) The line types to use for each group. Recycled as needed.}
 }
 \value{
 If \code{plotit = FALSE}, a \code{data.frame} (actually, a
@@ -167,6 +173,10 @@ but they may also be called later on an object saved via \code{plotit = FALSE}
 Confidence intervals are plotted if variables \code{LCL} and \code{UCL} exist;
 and prediction intervals are plotted if \code{LPL} and \code{UPL} exist.
 Finally, it must contain the variables named in \code{attr(emms, "vars")}.
+
+In \code{emmip_ggplot}, colors, linetypes, and shapes are all assigned to
+groups (according to \code{tvar}) unless overridden. So, for example, one may 
+have different symbols for each group by simply specifying \code{dotarg = list()}.
 }
 
 \examples{
@@ -179,7 +189,14 @@ emmip(noise.lm, type ~ size | side)
 # One interaction plot, using combinations of size and side as the x factor
 # ... with added confidence intervals and some formatting changes
 emmip(noise.lm, type ~ side * size, CIs = TRUE,
-    linearg = list(linetype = "dashed"), CIarg = list(lwd = 1, alpha = 1))
+    CIarg = list(lwd = 1, alpha = 1, color = "cyan"),
+    dotarg = list(color = "black"))
+
+# Create a black-and-white version of above with different linetypes
+# (Let the linetypes and symbols default to the palette)
+emmip(noise.lm, type ~ side * size, CIs = TRUE, col = "black",
+      linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 1)) +
+    ggplot2::theme_bw()
 
 # One interaction plot using combinations of type and side as the trace factor
 emmip(noise.lm, type * side ~ size)

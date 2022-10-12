@@ -123,7 +123,14 @@ emmip = function(object, formula, ...) {
 #' # One interaction plot, using combinations of size and side as the x factor
 #' # ... with added confidence intervals and some formatting changes
 #' emmip(noise.lm, type ~ side * size, CIs = TRUE,
-#'     linearg = list(linetype = "dashed"), CIarg = list(lwd = 1, alpha = 1))
+#'     CIarg = list(lwd = 1, alpha = 1, color = "cyan"),
+#'     dotarg = list(color = "black"))
+#' 
+#' # Create a black-and-white version of above with different linetypes
+#' # (Let the linetypes and symbols default to the palette)
+#' emmip(noise.lm, type ~ side * size, CIs = TRUE, col = "black",
+#'       linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 1)) +
+#'     ggplot2::theme_bw()
 #'
 #' # One interaction plot using combinations of type and side as the trace factor
 #' emmip(noise.lm, type * side ~ size)
@@ -301,7 +308,8 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' @param linearg \code{list}
 #'   of arguments passed to \code{geom_line} to customize appearance of lines
 #' @param CIarg,PIarg \code{list}s
-#'   of arguments passed to \code{geom_linerange} to customize appearance of intervals
+#'   of arguments passed to \code{geom_linerange} to customize appearance of intervals.
+#'   (Note: the \code{linetype} aesthetic defaults to \code{"solid"} under the hood)
 #'   
 #' @section Rendering functions:
 #' The functions \code{emmip_ggplot} and \code{emmip_lattice}
@@ -312,6 +320,12 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' Confidence intervals are plotted if variables \code{LCL} and \code{UCL} exist;
 #' and prediction intervals are plotted if \code{LPL} and \code{UPL} exist.
 #' Finally, it must contain the variables named in \code{attr(emms, "vars")}.
+#' 
+#' In \code{emmip_ggplot}, colors, linetypes, and shapes are all assigned to
+#' groups (according to \code{tvar}) unless overridden. So, for example, one may 
+#' have different symbols for each group by simply specifying \code{dotarg = list()}.
+#' 
+#' 
 #' @examples
 #' 
 #'### Options with transformations or link functions
@@ -331,10 +345,12 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 emmip_ggplot = function(emms, style = "factor", dodge = .1,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
                         facetlab = "label_context",
-                        scale,
-                        dotarg = list(), linearg = list(),
+                        scale, 
+                        dotarg = list(shape = "circle"), 
+                        linearg = list(linetype = "solid"),
                         CIarg = list(lwd = 2, alpha = .5),
                         PIarg = list(lwd = 1.25, alpha = .33),
+                        col,
                         ...) {
     
     labs = attr(emms, "labs")
@@ -344,21 +360,25 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     PIs = !is.null(emms$LPL)
     pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, dodge, 0)) # use dodging if CIs
     
+    if(!missing(col)) ### brute-force color setting
+        dotarg$color = linearg$color = CIarg$color = PIarg$color = col
+
     dotarg$position = pos
     linearg$mapping = ggplot2::aes_(group = ~tvar)
     linearg$position = pos
     if (length(vars$tvars) > 0) {
-        grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, color = ~tvar))
+        grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, 
+                    color = ~tvar, linetype = ~tvar, shape = ~tvar, group = ~tvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg)
         grobj = grobj +
             do.call(ggplot2::geom_line, linearg) +
-            ggplot2::labs(x = xlab, y = ylab, color = tlab)
+            ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab)
     }
     else { # just one trace per plot
         grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar))
-        if (style == "factor")
-            grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+        # if (style == "factor")
+        #     grobj = grobj + do.call(ggplot2::geom_point, dotarg)
         grobj = grobj +
             do.call(ggplot2::geom_line, linearg) +
             ggplot2::labs(x = xlab, y = ylab)
@@ -367,11 +387,13 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     if (PIs) {
         PIarg$mapping = ggplot2::aes_(ymin = ~LPL, ymax = ~UPL)
         PIarg$position = pos
+        if(is.null(PIarg$linetype))  PIarg$linetype = "solid"
         grobj = grobj + do.call(ggplot2::geom_linerange, PIarg)
     }
     if (CIs) {
         CIarg$mapping = ggplot2::aes_(ymin = ~LCL, ymax = ~UCL)
         CIarg$position = pos
+        if(is.null(CIarg$linetype))  CIarg$linetype = "solid"
         grobj = grobj + do.call(ggplot2::geom_linerange, CIarg)
     }
     if (length(byvars <- vars$byvars) > 0) {  # we have by variables 
@@ -388,6 +410,9 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         args = c(list(trans = scale), args[pass])
         grobj = grobj + do.call(ggplot2::scale_y_continuous, args)
     }
+    if (style == "factor")
+        grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+    
     
     grobj
 }
@@ -396,11 +421,15 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
 #' @param emms A \code{data.frame} created by calling \code{emmip} with
 #'   \code{plotit = FALSE}. Certain variables and attributes are expected
 #'   to exist in this data frame; see the section detailing the rendering functions.
-#' @param pch The plotting characters to use for each group (i.e., levels of
+#' @param pch (Lattice only) The plotting characters to use for each group (i.e., levels of
 #'   \code{trace.factors}). They are recycled as needed.
-#' @param lty The line types to use for each group. Recycled as needed.
-#' @param col The colors to use for each group, recycled as needed. If not
-#'   specified, the default trellis colors are used.
+#' @param lty (Lattice only) The line types to use for each group. Recycled as needed.
+#' @param col With \code{emmip_ggplot}, this adds \code{color = col} (not
+#'   \code{colour}) to all of the \code{*arg} lists. This is intended for setting a
+#'   common color for everything, such as a black-and-white plot. 
+#'   With \code{emmip_lattice}, \code{col} specifies the colors to use
+#'   for each group, recycled as needed. If not specified, the default trellis
+#'   colors are used.
 #' @export
 emmip_lattice = function(emms, style = "factor", 
                          xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab, 
