@@ -259,7 +259,7 @@ recover_data.lme = function(object, data, ...) {
 }
 
 #' @export
-emm_basis.lme = function(object, trms, xlev, grid, 
+emm_basis.lme = function(object, trms, xlev, grid, vcov.,
         mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite", "asymptotic"), 
         sigmaAdjust = TRUE, options, extra.iter = 0, ...) {
     mode = match.arg(mode)
@@ -276,7 +276,10 @@ emm_basis.lme = function(object, trms, xlev, grid,
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = nlme::fixef(object)
-    V = .my.vcov(object, ...)
+    if (missing(vcov.))
+        V = as.matrix(vcov(object, ...))
+    else
+        V = as.matrix(.my.vcov(object, vcov., ...))
     if (sigmaAdjust && object$method == "ML") 
         V = V * object$dims$N / (object$dims$N - nrow(V))
     misc = list()
