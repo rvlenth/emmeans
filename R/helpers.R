@@ -277,7 +277,7 @@ emm_basis.lme = function(object, trms, xlev, grid, vcov.,
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = nlme::fixef(object)
     if (missing(vcov.))
-        V = as.matrix(vcov(object, ...))
+        V = as.matrix(.my.vcov(object, ...))
     else
         V = as.matrix(.my.vcov(object, vcov., ...))
     if (sigmaAdjust && object$method == "ML") 
