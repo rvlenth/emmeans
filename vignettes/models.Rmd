@@ -270,7 +270,7 @@ An alternative method is `"df.error"` (for `gls`) and
 the model, minus the number of extra random effects estimated; it generally
 over-estimates the degrees of freedom. The `asymptotic` mode simply sets the 
 degrees of freedom to infinity.
-"containment"` mode (for `lme` models) determines the degrees of
+`"containment"` mode (for `lme` models) determines the degrees of
 freedom for the coarsest grouping involved in the contrast or linear function
 involved, so it tends to under-estimate the degrees of freedom.
 The default is `mode = "auto"`, which uses Satterthwaite if there are estimated 
