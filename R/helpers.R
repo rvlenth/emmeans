@@ -276,7 +276,7 @@ emm_basis.lme = function(object, trms, xlev, grid,
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = nlme::fixef(object)
-    V = .my.vcov(object, ...)
+    V = as.matrix(.my.vcov(object, ...))
     if (sigmaAdjust && object$method == "ML") 
         V = V * object$dims$N / (object$dims$N - nrow(V))
     misc = list()
