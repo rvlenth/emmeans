@@ -794,7 +794,8 @@ recover_data.svyglm = function(object, data = NULL, ...) {
 .my.vcov = function(object, vcov. = .statsvcov, ...) {
     if (is.function(vcov.))
         vcov. = vcov.(object, ...)
-    else if (!is.matrix(vcov.))
+    vcov. = try(as.matrix(vcov.), silent = TRUE)
+    if (inherits(vcov., "try-error") || (nrow(vcov.) != ncol(vcov.)))
         stop("vcov. must be a function or a square matrix")
     vcov.
 }

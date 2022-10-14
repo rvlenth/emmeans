@@ -9,7 +9,11 @@ title: "NEWS for the emmeans package"
   * Bug fix for subtle error in `emtrends()` (#133)
   * Improved customization of `emmip()` so that `we can specify`color`,
     `linetype`, and `symbol` are all associated with groupings; and addition of
-    an example to produce a black-and-white plot.
+    an example to produce a black-and-white plot. Note: While the default appearance
+    of plots is unchanged, plots from your existing code may be altered if
+    you have used `linearg`, `dotarg`, etc.
+  * Allow `vcov.` to be coercible to a matrix, or a function that yields
+    a result coercible to a matrix (#383)
 
 
 
