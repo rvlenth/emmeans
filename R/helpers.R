@@ -110,17 +110,14 @@ recover_data.merMod = function(object, ...) {
 }
 
 #' @export
-emm_basis.merMod = function(object, trms, xlev, grid, vcov., 
+emm_basis.merMod = function(object, trms, xlev, grid, 
                             mode = get_emm_option("lmer.df"), lmer.df, 
                             disable.pbkrtest = get_emm_option("disable.pbkrtest"), 
                             pbkrtest.limit = get_emm_option("pbkrtest.limit"), 
                             disable.lmerTest = get_emm_option("disable.lmerTest"), 
                             lmerTest.limit = get_emm_option("lmerTest.limit"), 
                             options, ...) {
-    if (missing(vcov.))
-        V = as.matrix(vcov(object, correlation = FALSE))
-    else
-        V = as.matrix(.my.vcov(object, vcov.))
+    V = .my.vcov(object, ...)
     dfargs = misc = list()
     
     if (lme4::isLMM(object)) {
@@ -170,7 +167,7 @@ emm_basis.merMod = function(object, trms, xlev, grid, vcov.,
         # if my logic isn't flawed, we are guaranteed that mode is both desired and possible
         
         if (mode == "kenward-roger") {
-            if (missing(vcov.)) {
+            if ((\(vcov., ...) missing(vcov.))(...)) {   # if (vcov. not in ...)
                 dfargs = list(unadjV = V, 
                               adjV = pbkrtest::vcovAdj.lmerMod(object, 0))
                 V = as.matrix(dfargs$adjV)
