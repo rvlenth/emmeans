@@ -53,8 +53,8 @@ emm_example = function(name, run = !list, list = FALSE, ...) {
     else {
         file = system.file("extexamples", paste0(name, ".R"), package = "emmeans")
         if (file == "") stop("File '", name, ".R' not found")
-        filestg = paste0("system.file(\"extexamples\", ", paste0(name, ".R"),
-        ", package = \"emmeans\")")
+        filestg = paste0("system.file(\"extexamples\", \"", paste0(name, ".R"),
+        "\", package = \"emmeans\")")
     }
     if (list) {
         cat(readLines(file), sep = "\n")

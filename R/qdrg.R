@@ -184,15 +184,17 @@ recover_data.qdrg = function(object, ...) {
     recover_data.call(object, delete.response(terms(object$formula)), object$na.action, ...)
 }
 
-vcov.qdrg = function(object, ...)
+vcov.qdrg = function(object, ...) 
     object$vcov
 
 emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
-    bhat = object$coef
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
-    V = .my.vcov(object, ...)
-    if (!is.null(object$mcmc)) {
+    if (is.null(object$mcmc)) {
+        bhat = object$coef
+        V = .my.vcov(object, ...)
+    }
+    else {
         if (is.null(object$coef)) bhat = apply(object$mcmc, 2, mean)
         if (is.null(object$vcov)) V = cov(object$mcmc)
     }
