@@ -328,7 +328,7 @@ emm_basis.lme = function(object, trms, xlev, grid,
 # model with a few random perturbations of y, then
 # regressing the changes in V against the changes in the 
 # covariance parameters
-gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed, 
+gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms), 
                         data = object$data, extra.iter = 0) {
     # check consistency of contrasts
     #### This code doesn't work with coerced factors. Hardly seems messing with, so I commented it out
@@ -349,7 +349,7 @@ gradV.kludge = function(object, Vname = "varFix", call = object$call$fixed,
     n = length(y)
     dat = t(replicate(2 + extra.iter + length(theta), {
         data[[yname]] = y + sig * rnorm(n)
-        mod = update(object, data = data)
+        mod = update(object, fixed = call, data = data)
         c(attr(mod$apVar, "Pars") - theta, as.numeric(mod[[Vname]] - V))
     }))
     dimnames(dat) = c(NULL, NULL)
