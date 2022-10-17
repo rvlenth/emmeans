@@ -347,9 +347,10 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
     yname = all.vars(eval(call))[1]
     y = data[[yname]]
     n = length(y)
+    object$call[[2]] = call
     dat = t(replicate(2 + extra.iter + length(theta), {
         data[[yname]] = y + sig * rnorm(n)
-        mod = update(object, fixed = call, data = data)
+        mod = update(object, data = data)
         c(attr(mod$apVar, "Pars") - theta, as.numeric(mod[[Vname]] - V))
     }))
     dimnames(dat) = c(NULL, NULL)
