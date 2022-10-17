@@ -6,6 +6,7 @@ title: "NEWS for the emmeans package"
     in two different ways: Using `delta`, groupings are based on actual
     tests of equivalence with threshold `delta`; or setting `signif.sets = TRUE`,
     means that have the share letter are significantly *different*.
+    We also added a vignette on "Re-engineering CLDs".
   * Bug fix for subtle error in `emtrends()` (#133)
   * Improved customization of `emmip()` so that `we can specify`color`,
     `linetype`, and `symbol` are all associated with groupings; and addition of
@@ -14,6 +15,7 @@ title: "NEWS for the emmeans package"
     you have used `linearg`, `dotarg`, etc.
   * Allow `vcov.` to be coercible to a matrix, or a function that yields
     a result coercible to a matrix (#383)
+  * Robustness improvement for `"appx-satterthwaite"` method (#384)
 
 
 

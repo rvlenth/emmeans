@@ -1,11 +1,12 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
-Version: 1.8.1-90003
-Date: 2022-10-12
+Version: 1.8.1-90004
+Date: 2022-10-17
 Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Paul", "Buerkner", role = "ctb"),
+    person("Iago", "Giné-Vázquez", role = "ctb"),
     person("Maxime", "Herve", role = "ctb"),
     person("Maarten", "Jung", role = "ctb"),
     person("Jonathon", "Love", role = "ctb"),

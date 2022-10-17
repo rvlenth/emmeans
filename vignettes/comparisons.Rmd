@@ -132,7 +132,7 @@ at them individually.
 
 #### Pairwise *P*-value plots {#pwpp}
 <!-- @index `pwpp()`; Pairwise *P*-value plots; Comparisons!Displaying *P* values -->
-In trying to develop an alternative to compact-letter displays (see next subsection), we 
+In trying to develop an alternative to compact letter displays (see next subsection), we 
 devised the "pairwise *P*-value plot" displaying all the *P* values in pairwise comparisons:
 ```{r}
 pwpp(pigs.emm.s)
@@ -171,7 +171,7 @@ than 0.1 when all are in one family of 12 means, but about 0.02 relative to
 a smaller family of 4 means as depicted in the three-paneled plot.
 
 
-#### Compact letter displays {#CLD}
+#### Compact letter displays (CLDs) {#CLD}
 <!-- @index `cld()`; Compact letter displays;
              Comparisons!Displaying as groups -->
 Another way to depict comparisons is by *compact letter displays*, whereby
