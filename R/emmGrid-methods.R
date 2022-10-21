@@ -47,7 +47,10 @@ setMethod("show", "emmGrid", function(object) {
 str.emmGrid <- function(object, ...) {
     showlevs = function(x) { # internal convenience function
         if (is.null(x)) cat("(predicted by other variables)")
-        else cat(paste(format(x, digits = 5, justify = "none"), collapse=", "))
+        else {
+            if (length(x) > 9) x = c(x[1:9], "...", x[length(x)])
+            cat(paste(format(x, digits = 5, justify = "none"), collapse=", "))
+        }
     }
     showtran = function(misc, label) { # internal convenience fcn
         cat(paste(label, dQuote(.fmt.tran(misc)), "\n"))

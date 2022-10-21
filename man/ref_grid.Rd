@@ -7,8 +7,8 @@
 ref_grid(object, at, cov.reduce = mean,
   cov.keep = get_emm_option("cov.keep"), mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type, regrid, nesting,
-  offset, sigma, nuisance = character(0), non.nuisance, wt.nuis = "equal",
-  rg.limit = get_emm_option("rg.limit"), ...)
+  offset, sigma, counterfactuals, nuisance = character(0), non.nuisance,
+  wt.nuis = "equal", rg.limit = get_emm_option("rg.limit"), ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -78,6 +78,13 @@ relative to the offset that had been specified in the model.}
 \item{sigma}{Numeric value to use for subsequent predictions or
 back-transformation bias adjustments. If not specified, we use
 \code{sigma(object)}, if available, and \code{NULL} otherwise.}
+
+\item{counterfactuals}{Character names of counterfactual factors.
+If this is non-missing, the reference grid will consist of combinations
+of counterfactual levels and a constructed factor \code{.obs.no.}
+having level for each observation in the dataset. Also, if specified, a side effect
+is that \code{regrid} defaults to \code{"response"} if it is not
+specified. See the section below on counterfactuals.}
 
 \item{nuisance, non.nuisance, wt.nuis}{If \code{nuisance} is a vector of predictor names,
 those predictors are omitted from the reference grid. Instead, the result 
@@ -324,6 +331,29 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   is done \emph{before} it processes \code{tran = "sqrt"}. To get the intended
   result, do
   \code{regrid(ref_grid(mod, tran = "sqrt"), transform = "response")}.
+}
+
+\section{Counterfactuals}{
+
+  If \code{counterfactuals} is specified, the rows of the entire dataset
+  become a factor in the reference grid, and the other reference levels are
+  confined to those named in \code{counterfactuals}. In this type of analysis
+  (called G-computation), we substitute each combination of counterfactual
+  levels into the entire dataset. Thus, predictions from this grid are those
+  of each observation under each of the counterfactual levels. For this to
+  make sense, we require an assumption of exchangeability of these levels.
+  Be warned that the resulting reference grid is potentially huge -- the
+  number of observations in the dataset times the number of counterfactual 
+  combinations, with additional multipliers for multivariate or matrix levels.
+  (If there are such multivariate situations, those automatically become additional
+  counterfactuals, whether they are specified or not.)
+  
+  If there is no response transformation or link, you will obtain the same
+  EMMs much more efficiently using \code{weights = "outer"} and no
+  counterfactuals. Thus, the only reason to use counterfactuals is in the
+  case of a nonlinear transformation to the respoinse scale. For this reason,
+  a side iffect of specifying counterfactuals is to set \code{regrid =
+  "response"} if it is not specified.
 }
 
 \section{Optional side effect}{

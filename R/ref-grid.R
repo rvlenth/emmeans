@@ -105,6 +105,12 @@
 #' @param sigma Numeric value to use for subsequent predictions or
 #'   back-transformation bias adjustments. If not specified, we use
 #'   \code{sigma(object)}, if available, and \code{NULL} otherwise.
+#' @param counterfactuals Character names of counterfactual factors.
+#'   If this is non-missing, the reference grid will consist of combinations
+#'   of counterfactual levels and a constructed factor \code{.obs.no.}
+#'   having level for each observation in the dataset. Also, if specified, a side effect
+#'   is that \code{regrid} defaults to \code{"response"} if it is not
+#'   specified. See the section below on counterfactuals.
 #' @param nuisance,non.nuisance,wt.nuis If \code{nuisance} is a vector of predictor names,
 #'   those predictors are omitted from the reference grid. Instead, the result 
 #'   will be as if we had averaged over the levels of those factors, with either 
@@ -301,6 +307,27 @@
 #'   result, do
 #'   \code{regrid(ref_grid(mod, tran = "sqrt"), transform = "response")}.
 #'
+#' @section Counterfactuals:
+#'   If \code{counterfactuals} is specified, the rows of the entire dataset
+#'   become a factor in the reference grid, and the other reference levels are
+#'   confined to those named in \code{counterfactuals}. In this type of analysis
+#'   (called G-computation), we substitute each combination of counterfactual
+#'   levels into the entire dataset. Thus, predictions from this grid are those
+#'   of each observation under each of the counterfactual levels. For this to
+#'   make sense, we require an assumption of exchangeability of these levels.
+#'   Be warned that the resulting reference grid is potentially huge -- the
+#'   number of observations in the dataset times the number of counterfactual 
+#'   combinations, with additional multipliers for multivariate or matrix levels.
+#'   (If there are such multivariate situations, those automatically become additional
+#'   counterfactuals, whether they are specified or not.)
+#'   
+#'   If there is no response transformation or link, you will obtain the same
+#'   EMMs much more efficiently using \code{weights = "outer"} and no
+#'   counterfactuals. Thus, the only reason to use counterfactuals is in the
+#'   case of a nonlinear transformation to the respoinse scale. For this reason,
+#'   a side iffect of specifying counterfactuals is to set \code{regrid =
+#'   "response"} if it is not specified.
+#' 
 #' @section Optional side effect: If the \code{save.ref_grid} option is set to
 #'   \code{TRUE} (see \code{\link{emm_options}}),
 #'   The most recent result of \code{ref_grid}, whether
@@ -310,6 +337,8 @@
 #'   checking what reference grid was used, or reusing the same reference grid
 #'   for further calculations. This automatic saving is disabled by default, but
 #'   may be enabled via \samp{emm_options(save.ref_grid = TRUE)}.
+#'   
+#' 
 #'
 #' @return An object of the S4 class \code{"emmGrid"} (see
 #'   \code{\link{emmGrid-class}}). These objects encapsulate everything needed
@@ -394,9 +423,9 @@
 ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("cov.keep"),
                      mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
-                     regrid, nesting, offset, sigma, 
-                     nuisance = character(0), non.nuisance, wt.nuis = "equal", 
-                     rg.limit = get_emm_option("rg.limit"), ...) 
+                     regrid, nesting, offset, sigma, counterfactuals,
+                     nuisance = character(0), non.nuisance, wt.nuis = "equal",
+                      rg.limit = get_emm_option("rg.limit"), ...) 
 {
     # hack to ignore 'tran' in dots arguments and interpret 'transform' as `regrid` :
     .foo = function(t,tr,tra,tran, transform = NULL, ...) transform
@@ -557,8 +586,17 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 
     # Now create the reference grid
     if(no.nuis <- (length(nuisance) == 0)) {
-        .check.grid(ref.levels, rg.limit)
-        grid = do.call(expand.grid, ref.levels)
+        if (!missing(counterfactuals)) {
+            cfac = intersect(counterfactuals, names(ref.levels))
+            ref.levels = ref.levels[cfac]
+            ref.levels$.obs.no. = seq_len(nrow(data))
+            .check.grid(ref.levels, rg.limit)
+            grid = .setup.cf(ref.levels, data)
+        }
+        else {
+            .check.grid(ref.levels, rg.limit)
+            grid = do.call(expand.grid, ref.levels)
+        }
     }
     else {
         nuis.info = .setup.nuis(nuisance, ref.levels, trms, rg.limit)
@@ -626,6 +664,13 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         stop("Something went wrong:\n",
              " Non-conformable elements in reference grid.",
              call. = TRUE)
+    if (!missing(counterfactuals)) {
+        k = length(ref.levels)
+        grid = do.call(expand.grid, c(ref.levels[k], ref.levels[-k]))
+        grid = grid[, c(2:k, 1)]
+        if (missing(regrid))       # side effect
+            regrid = "response"
+    }
     
     if(!no.nuis) {
         basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data, grid, ref.levels)
@@ -821,6 +866,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         post.beta = matrix(NA)
     
     predictors = intersect(attr(data, "predictors"), names(grid))
+    if(!missing(counterfactuals)) predictors = c(predictors, ".obs.no.")
     
     simp.tbl = environment(trms)$.simplify.names.
     if (! is.null(simp.tbl)) {
@@ -1046,3 +1092,17 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     basis
 }
 
+
+# Set up grid for counterfactuals - i.e., copies of whole dataset with
+# counterfactual levels substituted
+.setup.cf = function(levs, data) {
+    lv = levs[-length(levs)] # omit .obs.no.
+    g = do.call(expand.grid, lv) 
+    xdata = data.frame()
+    for (i in seq_along(g[, 1])) {
+        for (j in names(lv))
+            data[, j] = g[i, j]
+        xdata = rbind(xdata, data)
+    }
+    xdata
+}

@@ -16,6 +16,12 @@ title: "NEWS for the emmeans package"
   * Allow `vcov.` to be coercible to a matrix, or a function that yields
     a result coercible to a matrix (#383)
   * Robustness improvement for `"appx-satterthwaite"` method (#384)
+  * Added `counterfactuals` argument to `ref_grid()`, setting up a reference
+    grid consisting of the stated factors and a constructed factor, `.obs.no.`.
+    This facilitates G-computation under the exchageability assumption for
+    counterfactuals. This works, but the reference grid is potentially enormous,
+    and creates an incredible computational burden when re-gridding. So it isn't
+    really ready for prime time.
 
 
 
