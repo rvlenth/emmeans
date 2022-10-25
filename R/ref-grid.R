@@ -105,12 +105,16 @@
 #' @param sigma Numeric value to use for subsequent predictions or
 #'   back-transformation bias adjustments. If not specified, we use
 #'   \code{sigma(object)}, if available, and \code{NULL} otherwise.
-#' @param counterfactuals Character names of counterfactual factors.
-#'   If this is non-missing, the reference grid will consist of combinations
-#'   of counterfactual levels and a constructed factor \code{.obs.no.}
-#'   having level for each observation in the dataset. Also, if specified, a side effect
-#'   is that \code{regrid} defaults to \code{"response"} if it is not
-#'   specified. See the section below on counterfactuals.
+#' @param counterfactuals,wt.counter,avg.counter \code{counterfactuals} specifies character
+#'   names of counterfactual factors. If this is non-missing, a reference grid
+#'   is created consisting of combinations of counterfactual levels and a constructed
+#'   factor \code{.obs.no.} having a level for each observation in the dataset.
+#'   By default, this grid is re-gridded with the response transformation
+#'   and averaged over \code{.obs.no.} (by default, with equal weights, but
+#'   a vector of weights may be specified in \code{wt.counter}; it must be
+#'   of length equal to the number of observations in the dataset).
+#'   If \code{avg.counter} is set to \code{FALSE}, this averaging is disabled.
+#'   See the section below on counterfactuals.
 #' @param nuisance,non.nuisance,wt.nuis If \code{nuisance} is a vector of predictor names,
 #'   those predictors are omitted from the reference grid. Instead, the result 
 #'   will be as if we had averaged over the levels of those factors, with either 
@@ -315,18 +319,19 @@
 #'   levels into the entire dataset. Thus, predictions from this grid are those
 #'   of each observation under each of the counterfactual levels. For this to
 #'   make sense, we require an assumption of exchangeability of these levels.
-#'   Be warned that the resulting reference grid is potentially huge -- the
+#'   By default, this grid is converted to the response scale (unless otherwise
+#'   specified in \code{regrid} and averaged over the observations in the dataset.
+#'   Averaging can be disabled by setting \code{avg.counter = FALSE}, but
+#'   be warned that the resulting reference grid is potentially huge -- the
 #'   number of observations in the dataset times the number of counterfactual 
 #'   combinations, with additional multipliers for multivariate or matrix levels.
 #'   (If there are such multivariate situations, those automatically become additional
 #'   counterfactuals, whether they are specified or not.)
 #'   
 #'   If there is no response transformation or link, you will obtain the same
-#'   EMMs much more efficiently using \code{weights = "outer"} and no
+#'   EMMs much more efficiently using \code{weights = "freq"} and no
 #'   counterfactuals. Thus, the only reason to use counterfactuals is in the
-#'   case of a nonlinear transformation to the respoinse scale. For this reason,
-#'   a side iffect of specifying counterfactuals is to set \code{regrid =
-#'   "response"} if it is not specified.
+#'   case of a nonlinear transformation to the response scale. 
 #' 
 #' @section Optional side effect: If the \code{save.ref_grid} option is set to
 #'   \code{TRUE} (see \code{\link{emm_options}}),
@@ -413,6 +418,14 @@
 #' # Silly illustration of how to use 'mult.levs' to make comb's of two factors
 #' ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 #' 
+#' # Comparing estimates with and without counterfactuals
+#' neuralgia.glm <- glm(Pain ~ Treatment + Sex + Age + Duration, 
+#'                      family = binomial(), data = neuralgia)
+#' emmeans(neuralgia.glm, "Treatment", type = "response")
+#' 
+#' emmeans(neuralgia.glm, "Treatment", counterfactuals = "Treatment")
+#' 
+#' 
 #' # Using 'params'
 #' require("splines")
 #' my.knots = c(2.5, 3, 3.5)
@@ -423,7 +436,8 @@
 ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("cov.keep"),
                      mult.names, mult.levs, 
                      options = get_emm_option("ref_grid"), data, df, type, 
-                     regrid, nesting, offset, sigma, counterfactuals,
+                     regrid, nesting, offset, sigma, 
+                     counterfactuals, wt.counter, avg.counter = TRUE,
                      nuisance = character(0), non.nuisance, wt.nuis = "equal",
                       rg.limit = get_emm_option("rg.limit"), ...) 
 {
@@ -664,12 +678,13 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         stop("Something went wrong:\n",
              " Non-conformable elements in reference grid.",
              call. = TRUE)
+    
+    collapse = NULL
     if (!missing(counterfactuals)) {
-        k = length(ref.levels)
-        grid = do.call(expand.grid, c(ref.levels[k], ref.levels[-k]))
-        grid = grid[, c(2:k, 1)]
-        if (missing(regrid))       # side effect
+        grid = do.call(expand.grid, ref.levels)
+        if (missing(regrid)) 
             regrid = "response"
+        if (avg.counter) collapse = ".obs.no."
     }
     
     if(!no.nuis) {
@@ -923,8 +938,13 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         result@misc$postGridHook = NULL
         result = hook(result, ...)
     }
-    if(!missing(regrid))
-        result = regrid(result, transform = regrid, sigma = sigma, ...)
+    if(!missing(regrid)) {
+        if(missing(wt.counter)) wt.counter = 1
+        result = regrid(result, transform = regrid, sigma = sigma, 
+                        .collapse = collapse, wt.counter = wt.counter, ...)
+        if(!is.null(collapse))
+            result@misc$avgd.over = collapse
+    }
     
     .save.ref_grid(result)
     result
@@ -1094,15 +1114,16 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 
 
 # Set up grid for counterfactuals - i.e., copies of whole dataset with
-# counterfactual levels substituted
+# counterfactual levels substituted, with obs index varying the slowest
 .setup.cf = function(levs, data) {
-    lv = levs[-length(levs)] # omit .obs.no.
-    g = do.call(expand.grid, lv) 
-    xdata = data.frame()
-    for (i in seq_along(g[, 1])) {
+    lv = arg = levs[-length(levs)] # omit .obs.no.
+    arg$stringsAsFactors = FALSE
+    g = do.call(expand.grid, arg)
+    idx = rep(seq_len(nrow(data)), each = nrow(g))
+    xdata = data[idx, , drop = FALSE]
+    idx = matrix(seq_len(nrow(xdata)), nrow = nrow(g))
+    for (i in seq_along(g[, 1]))
         for (j in names(lv))
-            data[, j] = g[i, j]
-        xdata = rbind(xdata, data)
-    }
+            xdata[idx[i, ], j] = g[i, j]
     xdata
 }

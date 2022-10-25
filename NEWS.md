@@ -18,10 +18,9 @@ title: "NEWS for the emmeans package"
   * Robustness improvement for `"appx-satterthwaite"` method (#384)
   * Added `counterfactuals` argument to `ref_grid()`, setting up a reference
     grid consisting of the stated factors and a constructed factor, `.obs.no.`.
+    We then (by default) average this grid over the covariate distribution.
     This facilitates G-computation under the exchageability assumption for
-    counterfactuals. This works, but the reference grid is potentially enormous,
-    and creates an incredible computational burden when re-gridding. So it isn't
-    really ready for prime time.
+    counterfactuals. 
 
 
 
