@@ -319,15 +319,17 @@
 #'   levels into the entire dataset. Thus, predictions from this grid are those
 #'   of each observation under each of the counterfactual levels. For this to
 #'   make sense, we require an assumption of exchangeability of these levels.
+#'   
 #'   By default, this grid is converted to the response scale (unless otherwise
 #'   specified in \code{regrid} and averaged over the observations in the dataset.
 #'   Averaging can be disabled by setting \code{avg.counter = FALSE}, but
 #'   be warned that the resulting reference grid is potentially huge -- the
 #'   number of observations in the dataset times the number of counterfactual 
-#'   combinations, with additional multipliers for multivariate or matrix levels.
-#'   (If there are such multivariate situations, those automatically become additional
-#'   counterfactuals, whether they are specified or not.)
+#'   combinations, times the number of multivariate levels.
 #'   
+#'   The counterfactuals code is still fairly rudimentary and we can't guarantee
+#'   it will always work, such as in cases of nested models. Sometimes, an error
+#'   can be averted by specifying \code{avg.counter = FALSE}.
 #' 
 #' @section Optional side effect: If the \code{save.ref_grid} option is set to
 #'   \code{TRUE} (see \code{\link{emm_options}}),

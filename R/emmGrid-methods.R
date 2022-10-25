@@ -979,8 +979,6 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
     
     # Save post.beta stuff
     PB = object@post.beta
-    if(!is.na(PB[1]))
-        .collapse = NULL  # we're not gonna mess with this collapse stuff with MCMC models
     NC = attr(PB, "n.chains")
     
     if (!is.na(PB[1])) { # fix up post.beta BEFORE we overwrite parameters
@@ -1046,29 +1044,35 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
             else
                 flink = link
         }
+        if (!is.na(PB[1]))
+            PB = matrix(flink$linkinv(PB), ncol = ncol(PB))
         if(is.null(.collapse)) {
             D = flink$mu.eta(object@bhat[estble])
             object@bhat = flink$linkinv(object@bhat)
             # efficient repl for D'VD with D <- diag(D)
             object@V = sweep(sweep(object@V, 1, D, "*"), 2, D, "*")
-            if (!is.na(PB[1]))
-                PB = matrix(link$linkinv(PB), ncol = ncol(PB))
         }
-        else {  # we'll average over the levels of .collapse (assume it varies w/ every row)
+        else {  # we'll average over the levels of .collapse (assume it varies slowest)
             est = est[[1]]
             nobs = length(object@levels[[.collapse]])
-            idx = matrix(seq_len(nrow(object@grid)), ncol = nobs)
+            idx = sapply(seq_len(nobs), \(i) which(object@grid[[.collapse]] == i))
             X = sweep(object@linfct, 1, flink$mu.eta(est), "*")
-            est = matrix(est, nrow = nrow(idx))
             wt.counter = (\(wt.counter, ...) wt.counter)(...)
             if (length(wt.counter) == 1) wt.counter = rep(1, nobs)
             wmn = function(x) sum(wt.counter*x) / sum(wt.counter)
-            object@bhat = apply(flink$linkinv(est), 1, wmn)
-            L = matrix(0, nrow = nrow(est), ncol = ncol(X))
+            est = flink$linkinv(est)
+            object@bhat = sapply(seq_len(nrow(idx)), \(i) wmn(est[idx[i,]]))
+            L = matrix(0, nrow = nrow(idx), ncol = ncol(X))
             for (i in seq_len(nrow(idx)))
                 L[i, ] = apply(X[idx[i,], , drop = FALSE], 2, wmn)
             object@V = L %*% tcrossprod(object@V, L)
             object@linfct = diag(1, nrow(L))
+            if(!is.na(PB[1])) {
+                pb = matrix(0, ncol = nrow(L), nrow = nrow(PB))
+                for (i in seq_len(nrow(idx)))
+                    pb[, i] = apply(PB[, idx[i,], drop = FALSE], 1, wmn)
+                PB = pb
+            }
         }
         
         inm = object@misc$inv.lbl

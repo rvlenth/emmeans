@@ -74,6 +74,7 @@ vignette: >
 ### C {#c}
 
 
+  * [Causal inference](messy-data.html#counterfact)
   * [`cld()`](comparisons.html#CLD)
   * CLDs
       * [Alternative](re-engineering-clds.html#alt-CLDs)
@@ -129,6 +130,7 @@ vignette: >
       * Tests of
           * [with transformations](comparisons.html#logs)
   * [Count regression](models.html#C)
+  * [Counterfactuals](messy-data.html#counterfact)
   * [`cov.reduce`](messy-data.html#med.covred)
   * Covariates
       * [Adjusted](messy-data.html#adjcov)
@@ -231,6 +233,7 @@ vignette: >
       * [Multivariate](basics.html#multiv)
       * [Nested fixed effects](messy-data.html#cows)
       * `neuralgia`
+          * [`counterfactuals`](messy-data.html#neuralgia)
           * [in *transformations: links*](transformations.html#links)
           * [in *transformations: trangraph*](transformations.html#trangraph)
       * [`nutrition`](messy-data.html#nutrex)
@@ -282,6 +285,7 @@ vignette: >
 ### G {#g}
 
 
+  * [G-Computation](messy-data.html#counterfact)
   * [`gam` models](models.html#G)
   * [`gamlss` models](models.html#H)
   * [GEE models](models.html#E)
@@ -568,6 +572,7 @@ vignette: >
 
 
   * [Sample size, displaying](confidence-intervals.html#summary)
+  * [Sandwich estimators](messy-data.html#neuralgia)
   * Satterthwaite d.f.
       * [in *models: K*](models.html#K)
       * [in *models: L*](models.html#L)
@@ -680,6 +685,7 @@ vignette: >
 
 
   * [Variables that are not predictors](basics.html#params)
+  * [`vcov.`](messy-data.html#neuralgia)
   * [`vcovHook`](xtending.html#hooks)
   * Vignettes
       * [Basics](basics.html)

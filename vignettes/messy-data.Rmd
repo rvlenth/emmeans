@@ -21,6 +21,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   2. [Mediating covariates](#mediators) 
   3. [Mediating factors and weights](#weights)
   3. [Nuisance factors](#nuisance)
+  3. [Counterfactuals and G-Computation](#counterfact)
   4. [Sub-models](#submodels)
   5. [Nested fixed effects](#nesting)
      a. [Avoiding mis-identified nesting](#nest-trap)
@@ -333,6 +334,61 @@ to loose to guard against some users getting into a tight situation.
 
 [Back to Contents](#contents)
 
+
+## Counterfactuals and G-Computation {#counterfact}
+<!-- @index Counterfactuals; Causal inference; G-Computation; -->
+G-computation is a method for model-based causal inference originated by JM Robins
+(*Mathematical Modelling*, 1986), and we want to remove confounding of treatment effects due to time-varying covariates and such.
+The idea is that, under certain assumptions, we can use the model to predict 
+*every* subject's response to each treatment -- not just the treatment they 
+received. To do this, we make several copies of the whole dataset, substituting
+the actual treatment(s) with each of the possible treatment levels; these
+provide us with *counterfactual* predictions. We then average those predictions
+over each copy of the dataset. Typically, this averaging is done on the response 
+scale; that is the interesting case because on the link scale, everything is linear
+and we can obtain basically the same results using ordinary `emmeans()` computations
+with proportional weights.
+
+An additional consideration is that when we average each of the counterfactual
+datasets, we are trying to represent the entire covariate distribution, rather
+than conditioning on the cases in the dataset. So it is a good idea to broaden
+the covariance estimate using, say, a sandwich estimate.
+
+This kind of computation has just a little bit in common with nuisance variables,
+in that the net result is that we can sweep several predictors out of the 
+reference grid just by averaging them away. For this to make sense, the predictors
+averaged-away will have been observed *before* treatment so that their effects are 
+separate from the treatment effects.
+
+The implementation of this in **emmeans** is via the `counterfactuals` argument
+in `ref_grid()` (but usually passed from `emmeans()`). We simply specify the
+factor(s) we want to keep. This creates an index variable `.obs.no.` to keep
+track of the observations in the dataset, and then the reference grid (before
+averaging) consists of every observation of the dataset in combination with the
+`counterfactuals` combinations.
+
+##### {#neuralgia}
+<!-- @index `vcov.`; Sandwich estimators;
+    Examples!`neuralgia`!`counterfactuals` -->
+As an example, consider the `neuralgia` data, where we have a binary response,
+pain, a treatment of interest (two active treatments and placebo), and
+pre-treatment predictors of sex, age, and duration of the condition. 
+We will include the `vcovHC()` covariance estimate in the **sandwich** package.
+```{r}
+neuralgia.glm <- glm(Pain ~ Sex + Age + Duration + Treatment,
+                     data = neuralgia, family = binomial)
+emmeans(neuralgia.glm, "Treatment", counterfactuals = "Treatment",
+        vcov. = sandwich::vcovHC)
+```
+Note that the results are already on the response (probability) scale,
+which is the default. Let's compare this with what we get without using counterfactuals (i.e., predicting at each covariate average):
+```{r}
+emmeans(neuralgia.glm, "Treatment", weights = "prop", type = "response")
+```
+These results are markedly different; the counterfactual method produces
+smaller differences between each of the active treatments and placebo.
+
+[Back to Contents](#contents)
 
 
 ## Sub-models {#submodels}
