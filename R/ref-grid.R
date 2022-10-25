@@ -328,10 +328,6 @@
 #'   (If there are such multivariate situations, those automatically become additional
 #'   counterfactuals, whether they are specified or not.)
 #'   
-#'   If there is no response transformation or link, you will obtain the same
-#'   EMMs much more efficiently using \code{weights = "freq"} and no
-#'   counterfactuals. Thus, the only reason to use counterfactuals is in the
-#'   case of a nonlinear transformation to the response scale. 
 #' 
 #' @section Optional side effect: If the \code{save.ref_grid} option is set to
 #'   \code{TRUE} (see \code{\link{emm_options}}),

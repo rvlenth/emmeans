@@ -355,11 +355,6 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   combinations, with additional multipliers for multivariate or matrix levels.
   (If there are such multivariate situations, those automatically become additional
   counterfactuals, whether they are specified or not.)
-  
-  If there is no response transformation or link, you will obtain the same
-  EMMs much more efficiently using \code{weights = "freq"} and no
-  counterfactuals. Thus, the only reason to use counterfactuals is in the
-  case of a nonlinear transformation to the response scale.
 }
 
 \section{Optional side effect}{

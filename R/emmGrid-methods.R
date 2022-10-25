@@ -1032,6 +1032,9 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
                 paste("inherited from", prev.df.msg, "when re-gridding"))
     }
     
+    if(!is.null(.collapse) && is.null(object@misc$tran))  # need explicit link so we can collapse
+        object@misc$tran = attr(est, "link") = make.link("identity")
+    
     if(transform %in% c("response", "mu", "unlink", links, "user") && !is.null(object@misc$tran)) {
         flink = link = attr(est, "link")
         if (bias.adjust) {
