@@ -1,11 +1,11 @@
 ---
 title: "NEWS for the emmeans package"
 ---
-## emmeans 1.8.1-9xxxx
+## emmeans 1.8.2
   * Extended `cld()` so it can show findings rather than non-findings,
     in two different ways: Using `delta`, groupings are based on actual
     tests of equivalence with threshold `delta`; or setting `signif.sets = TRUE`,
-    means that have the share letter are significantly *different*.
+    means that have the same letter are significantly *different*.
     We also added a vignette on "Re-engineering CLDs".
   * Bug fix for subtle error in `emtrends()` (#133)
   * Improved customization of `emmip()` so that we can specify `color`,
@@ -19,7 +19,7 @@ title: "NEWS for the emmeans package"
   * Added `counterfactuals` argument to `ref_grid()`, setting up a reference
     grid consisting of the stated factors and a constructed factor, `.obs.no.`.
     We then (by default) average this grid over the covariate distribution.
-    This facilitates G-computation under the exchageability assumption for
+    This facilitates G-computation under the exchangeability assumption for
     counterfactuals. 
 
 
