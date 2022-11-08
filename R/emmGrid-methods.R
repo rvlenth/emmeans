@@ -996,12 +996,13 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         object@linfct = diag(1, length(estble))
         pargs = object@grid[names(object@levels)]
         lbls = do.call(paste, c(pargs, sep = "."))
-        colnames(object@linfct) = lbls
         if (!is.null(disp <- object@misc$display)) {  # fix up for the bookkeeping in nested models
             object@V = object@V[disp, disp, drop = FALSE]
             object@linfct = matrix(0, nrow = length(disp), ncol = length(estble))
             object@linfct[disp, ] = diag(1, length(estble))
+            lbls = lbls[disp]
         }
+        colnames(object@linfct) = lbls
         if(all(estble))
             object@nbasis = estimability::all.estble
         else

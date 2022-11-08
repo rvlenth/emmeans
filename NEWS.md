@@ -1,6 +1,11 @@
 ---
 title: "NEWS for the emmeans package"
 ---
+
+## emmeans 1.8.2-080xxxx
+  * Fix to logic error in `regrid()` (#287, revisited)
+  
+
 ## emmeans 1.8.2
   * Extended `cld()` so it can show findings rather than non-findings,
     in two different ways: Using `delta`, groupings are based on actual
