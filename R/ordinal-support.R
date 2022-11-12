@@ -146,8 +146,9 @@ emm_basis.clm = function (object, trms, xlev, grid,
             nbasis = estimability::nonest.basis(NOMX)
             # replicate and reverse the sign of the NOM parts
             nomcols = seq_len(ncol(NOM))
+            nomreps = length(object$alpha) / ncol(NOM)
             nbasis = apply(nbasis, 2, function(x)
-                c(rep(-x[nomcols], each = nrow(NOM)), x[-nomcols]))
+                c(rep(-x[nomcols], each = nomreps), x[-nomcols]))
         }
         if (!is.null(mm$S)) {
             if (any(is.na(object$zeta))) {

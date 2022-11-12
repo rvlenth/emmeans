@@ -4,7 +4,7 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.8.2-080xxxx
   * Fix to logic error in `regrid()` (#287, revisited)
-  
+  * Fix to `nbasis` calculation in ordinal models (#387)
 
 ## emmeans 1.8.2
   * Extended `cld()` so it can show findings rather than non-findings,
