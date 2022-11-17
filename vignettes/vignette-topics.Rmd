@@ -60,6 +60,7 @@ vignette: >
       * [In GLMMs and GEE models](transformations.html#cbpp)
       * [When back-transforming](transformations.html#bias-adj)
       * [When *not* to use](transformations.html#insects)
+      * [with random slopes](sophisticated.html#random-slopes)
   * [Bonferroni adjustment](confidence-intervals.html#adjmore)
   * [`boot-satterthwaite` method](models.html#K)
   * [Brackets (`[ ]` and `[[ ]]` operators)](utilities.html#brackets)
@@ -214,6 +215,7 @@ vignette: >
       * `cbpp`
           * [in *sophisticated: mcmc*](sophisticated.html#mcmc)
           * [in *transformations: cbpp*](transformations.html#cbpp)
+      * [`ChickWeight`](sophisticated.html#random-slopes)
       * [CLDs (simulated)](re-engineering-clds.html#CLD-example)
       * [`cows`](messy-data.html#cows)
       * [`feedlot`](predictions.html#feedlot)
@@ -527,6 +529,8 @@ vignette: >
 ### R {#r}
 
 
+  * Random slopes
+      * [Bias adjustment](sophisticated.html#random-slopes)
   * [Rank deficiency](xplanations.html#joint_tests)
   * [`rbind()`](utilities.html#rbind)
   * [Re-labeling](utilities.html#relevel)

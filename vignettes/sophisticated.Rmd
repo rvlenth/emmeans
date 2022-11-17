@@ -8,7 +8,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 ```{r, echo = FALSE, results = "hide", message = FALSE} 
-require("emmeans") 
+require("emmeans")
+require("lme4")
 options(show.signif.stars = FALSE, width = 100) 
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
 ```
@@ -24,6 +25,7 @@ all supported models is provided in the ["models" vignette](models.html).
 
  1. [Linear mixed models (lmer)](#lmer)
     a. [System options for lmerMod models](#lmerOpts)
+    b. [Bias adjustment with random slopes](#random-slopes)
  2. [Models with offsets](#offsets)
  3. [Ordinal models](#ordinal)
  4. [Models fitted using MCMC methods](#mcmc)
@@ -46,7 +48,8 @@ within each plot. We will consider a linear mixed model for these data,
 excluding interaction (which is justified in this case). For sake of 
 illustration, we will exclude a few observations.
 ```{r}
-Oats.lmer <- lme4::lmer(yield ~ Variety + factor(nitro) + (1|Block/Variety),
+library(lme4)
+Oats.lmer <- lmer(yield ~ Variety + factor(nitro) + (1|Block/Variety),
                         data = nlme::Oats, subset = -c(1,2,3,5,8,13,21,34,55))
 ```
 Let's look at the EMMs for `nitro`:
@@ -111,6 +114,64 @@ TRUE`). Finally, the options `pbkrtest.limit` and `lmerTest.limit`, which should
 be set to numeric values, enable the given package conditionally on whether the
 number of data rows does not exceed the given limit. The factory default is 3000
 for both limits.
+
+
+### Bias adjustment with random slopes {#random-slopes}
+<!-- @index Bias adjustment!with random slopes; Random slopes!Bias adjustment;
+    Examples!`ChickWeight` -->
+In the [`cbpp` example](transformations.html#cbpp), we saw an example
+where we applied a bias adjustment to the inverse transformation. To do that 
+adjustment, we required an estimate of the total SD of the response.
+That computation was (relatively) simple because the model had only random 
+intercepts. But what if we have random slopes as well? The short answer is 
+"it gets more complicated;" but here is an example of how we can muddle through it.
+
+Our illustration is a model fitted to the `ChickWeight` data in the R **datasets** package. The data comprise weight determinations, over time (in days since birth), of chicks who are
+randomized to different diets. Our model fits a trend in the square root of weight 
+for each diet, with random intercepts and slopes for each chick (this is likely not the best model, but it's not totally stupid and it serves an an illustration).
+```{r}
+cw.lmer <- lmer(sqrt(weight) ~ Time*Diet + (1+Time|Chick), data = ChickWeight)
+```
+Our goal is to use this model to estimate the mean `weight` at times 5, 10, 15, and 20,
+for each diet. Accordingly, let's get the estimates needed:
+```{r}
+cw.emm <- emmeans(cw.lmer, ~ Time|Diet, at = list(Time = c(5, 10, 15, 20)))
+```
+If we just summarize this with `type = "response", we will under-estimate the
+mean weights. We need to apply a bias adjustment; but that involves providing an
+estimate of the SD of each transformed response. The problem is that since
+random slopes are involved, that SD depends on time. In particular, 
+the model states that at time $t$,
+$$ \sqrt Y_t = \mu_t + E + C + S\times t $$
+where $\mu_t$ is the mean at time $t$, $E$ is the residual error, $C$ is the random intercept for chicks, and $S$ is the random slope for chicks. For purposes of bias correction, we need an estimate of $SD(E + C + S\times t)$ for each $t$.
+
+The first step is to obtain an estimated covariance matrix for $(E, C, S)$:
+```{r}
+V <- matrix(0, nrow = 3, ncol = 3, dimnames = list(c("E","C","S"), c("E","C","S")))
+V[1, 1] <- sigma(cw.lmer)^2              # Var(E)
+V[2:3, 2:3] <- VarCorr(cw.lmer)$Chick    # Cov(C, S)
+V
+```
+Now, using the matrix expression $Var(a'X) = a'Va$ for $X=c(E,C,S)$ and a given vector $a$, we can obtain the needed SDs:
+```{r}
+sig <- sapply(c(5, 10, 15, 20), function(t) {
+    a <- c(1, 1, t)
+    sqrt(sum(a * V %*% a))
+})
+sig  
+```
+As expected, these values increase with $t$.
+Finally, we obtain the bias-adjusted estimated weights. We can use `sigma = sig`
+as-is since the values follow the same ordering as `cw.emm@grid`.
+```{r}
+confint(cw.emm, type = "response", bias.adj = TRUE, sigma = sig)
+```
+
+This example illustrates that it is possible to deal with random slopes in
+bias corrections. However it does require some fairly careful attention to
+technical details and familiarity with matrix calculations; so if you don't have
+a comfort level with those, it is best to get outside help.
+
 
 [Back to Contents](#contents)
 

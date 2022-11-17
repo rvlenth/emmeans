@@ -111,8 +111,8 @@
 #'   \code{type = "response"} and a transformation
 #'   is in effect), or for constructing prediction intervals. If not specified,
 #'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
-#'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the number of rows
-#'   of the reference grid.
+#'   \emph{Note:} \code{sigma} may be a vector, but be careful that it correctly
+#'   corresponds (perhaps after recycling) to the order of the reference grid.
 #' @param ... Optional arguments such as \code{scheffe.rank} 
 #'   (see \dQuote{P-value adjustments}). 
 #'   In \code{confint.emmGrid}, 
