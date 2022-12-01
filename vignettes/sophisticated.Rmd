@@ -421,7 +421,7 @@ summary(cbpp.rgrd)
 ```
 Here is a plot of
 the posterior incidence probabilities, back-transformed:
-```{r}
+```{r, fig.alt = "kernel denity estimates for each of the 4 periods. Their medians and spreads decrease with period, and period 1 is especially different. See the previous summary table for the numerical values of the estimated means"}
 bayesplot::mcmc_areas(as.mcmc(cbpp.rgrd))
 ```
 
@@ -439,7 +439,7 @@ To predict from an MCMC model, just specify the
 simulate data from the posterior predictive distribution. 
 For example, if we want to predict the CBPP incidence in future herds of 
 25 cattle, we can do:
-```{r}
+```{r, fig.alt = "Histograms of the predictive distributions for each period. The one for period 1 has bins from 0 to 15; the number of bins decreases until period 4 has only bins for 0 through 5."}
 set.seed(2019.0605)
 cbpp.preds <- as.mcmc(cbpp.rgrd, likelihood = "binomial", trials = 25)
 bayesplot::mcmc_hist(cbpp.preds, binwidth = 1)

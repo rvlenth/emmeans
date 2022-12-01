@@ -193,7 +193,7 @@ may be misleading. It is important to take it seriously, because if two factors
 interact, it may be the case that marginal averages of predictions don't reflect
 what is happening at any level of the factors being averaged over. To find out,
 look at an interaction plot of the fitted model:
-```{r}
+```{r fig.alt = "Interaction-plot display of the results of emmeans(neuralgia.glm, ~ Treatment | Sex)"}
 emmip(neuralgia.glm, Sex ~ Treatment)
 ```
 
@@ -211,7 +211,7 @@ There are a few options for displaying transformed results graphically. First, t
 argument works just as it does in displaying a tabular summary. Following through with
 the `neuralgia` example, let us display the marginal `Treatment` EMMs on both the
 link scale and the response scale (we are opting to do the averaging on the link scale):
-```{r, fig.height = 1.5}
+```{r, fig.height = 1.5, fig.alt = c("Plot A: Display of the results of confint(neur.Trt.emm)", 'Plot B: Display of the results of confint(neur.Trt.emm, type = "response"). These intervals are markedly skewed right|left for low|high estimated probabilities')}
 neur.Trt.emm <- suppressMessages(emmeans(neuralgia.glm, "Treatment"))
 plot(neur.Trt.emm)   # Link scale by default
 plot(neur.Trt.emm, type = "response")
@@ -224,7 +224,7 @@ For `emmip()` and `plot()` *only* (and currently only with the "ggplot" engine),
 there is also the option of specifying `type = "scale"`,
 which causes the response values to be calculated but plotted on a nonlinear scale
 corresponding to the transformation or link:
-```{r, fig.height = 1.5}
+```{r, fig.height = 1.5, fig.alt = "Plot C: On the inside, this plot looks exactly like Plot A above, but the scale is transformed to show the values in Plot B. However, there are not enough tick marks."}
 plot(neur.Trt.emm, type = "scale")
 ```
 
@@ -235,13 +235,13 @@ As is the case here, nonlinear scales can be confusing to read, and it is very o
 true that you will want to display more scale divisions, and even add minor ones.
 This is done via adding arguments for the function `ggplot2::scale_x_continuous()`
 (see its documentation):
-```{r, fig.height = 1.5}
+```{r, fig.height = 1.5, fig.alt = "Plot D: Same as Plot C except there are more tick marks so we can discern the values better"}
 plot(neur.Trt.emm, type = "scale", breaks = seq(0.10, 0.90, by = 0.10),
      minor_breaks = seq(0.05, 0.95, by = 0.05))
 ```
 
 When using the `"ggplot"` engine, you always have the option of using **ggplot2** to incorporate a transformed scale -- and it doesn't even have to be the same as the transformation used in the model. For example, here we display the same results on an arcsin-square-root scale.
-```{r, fig.height = 1.5}
+```{r, fig.height = 1.5, fig.alt = "Plot E: An alternative to Plot D using an arcsin scaling. This scale is less nonlinear than in plot D so the intervals are somewhat skewed, but less so than plot B"}
 plot(neur.Trt.emm, type = "response") +
   ggplot2::scale_x_continuous(trans = scales::asn_trans(),
                               breaks = seq(0.10, 0.90, by = 0.10))

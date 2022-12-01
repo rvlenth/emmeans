@@ -9,6 +9,9 @@ title: "NEWS for the emmeans package"
   * Removed dependence on **xtable** package. The `xtable` methods are now
     dynamically registered. This reduces the number of package dependencies
     from 8 to 7 (as of this version).
+  * Added alt text to all pictures in vignettes (#389). This makes
+    the materials more accessible per guidelines from the 
+    [A11Y project](https://www.a11yproject.com/).
     
 
 ## emmeans 1.8.2

@@ -109,7 +109,7 @@ We are now ready to form prediction intervals. To do so, simply call the
 predict(feedlot.rg, interval = "prediction")
 ```
 These results may also be displayed graphically:
-```{r, fig.height = 2}
+```{r, fig.height = 2, fig.alt = "Side-by-side CIs and PIs. The PIs are much wider, and have the endpoints found in the preceding predit() call"}
 plot(feedlot.rg, PIs = TRUE)
 ```
 

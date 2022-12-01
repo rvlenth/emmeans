@@ -194,7 +194,7 @@ What is better yet is to simply avoid using comparison arrows altogether and use
 
 ### Examples and tests
 Here is a constructed example with specified means and somewhat unequal SEs
-```{r, message = FALSE}
+```{r, message = FALSE, fig.alt = "Plot A: Comparison arrows for foo. These arrows overlap or not as per the P-values in pairs(foo) are greater or less than 0.05"}
 m = c(6.1, 4.5, 5.4,    6.3, 5.5, 6.7)
 se2 = c(.3, .4, .37,  .41, .23, .48)^2
 lev = list(A = c("a1","a2","a3"), B = c("b1", "b2"))
@@ -205,7 +205,7 @@ plot(foo, CIs = FALSE, comparisons = TRUE)
 This came out pretty well. But now let's keep the means and SEs the same but make them correlated. Such correlations happen, for example, in designs with subject effects.
 The function below is used to set a specified intra-class correlation, treating `A` as a within-subjects (or split-plot) factor and `B` as a between-subjects (whole-plot) factor.
 We'll start with a correlation of 0.3.
-```{r, message = FALSE}
+```{r, message = FALSE, fig.alt = "Plot B - for foo3. The arrow lengths are more diverse than in plot A, but the arrows still all work correctly"}
 mkmat <- function(V, rho = 0, indexes = list(1:3, 4:6)) {
     sd = sqrt(diag(V))
     for (i in indexes)
@@ -219,7 +219,7 @@ plot(foo3, CIs = FALSE, comparisons = TRUE)
 ```
 
 Same with intraclass correlation of 0.6:
-```{r, message = FALSE}
+```{r, message = FALSE, fig.alt = "Plot C - for foo6. Not all of the arrows work correctly and we get a warning message with details. The appearance of the arrows is pretty chaotic, with many extending in vastly unequal distances from the means"}
 foo6 = foo
 foo6@V <- mkmat(foo6@V, 0.6)
 plot(foo6, CIs = FALSE, comparisons = TRUE)
@@ -237,12 +237,12 @@ Now the solution actually leads to negative arrow lengths.
 
 What is happening here is we are continually reducing the SE of within-B comparisons 
 while keeping the others the same. These all work out if we use `B` as a `by` variable:
-```{r, message = FALSE}
+```{r, message = FALSE, fig.alt = "Plot D - foo8, separate panels for each B. This is a nicely behaved plot because we are not mixing together between-B and within-B SEs."}
 plot(foo8, CIs = FALSE, comparisons = TRUE, by = "B")
 ```
 
 Note that the lengths of the comparison arrows are relatively equal within the levels of `B`. Or, we can use `pwpp()` or `pwpm()` to show the *P* values for all comparisons among the six means:
-```{r}
+```{r fig.alt = "pwpp of foo6, providing a fairly readable display of the P-values in pairs(foo6)"}
 pwpp(foo6, sort = FALSE)
 pwpm(foo6)
 ```

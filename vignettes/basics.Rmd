@@ -48,7 +48,7 @@ the other factors.
 par(mar = .1 + c(4, 4, 1, 1))   # reduce head space
 
 ```
-```{r}
+```{r fig.alt = "Standard-graphics interaction plot showing cell means. Trends are non-parallel"}
 with(pigs, interaction.plot(percent, source, conc))
 ```
 
@@ -327,7 +327,7 @@ The results of `ref_grid()` or `emmeans()` (these are objects of class `emmGrid`
 may be plotted in two different 
 ways. One is an interaction-style plot, using `emmip()`. In the following, let's 
 use it to compare the predictions from `pigs.lm1` and `pigs.lm2`:
-```{r}
+```{r fig.alt = c("emmip plot of pigs.lm1, showing parallel piecewise-linear trends","emmip plot of pigs.lm2, showing parallel linear trends")}
 emmip(pigs.lm1, source ~ percent)
 emmip(ref_grid(pigs.lm2, cov.reduce = FALSE), source ~ percent)
 ```
@@ -345,7 +345,7 @@ an interaction, no interaction at all is evident in the plots.
 The other graphics option offered is the `plot()` method for `emmGrid` objects. In
 the following, we display the estimates and 95% confidence intervals for
 `mtcars.rg` in separate panels for each `disp`.
-```{r}
+```{r fig.alt = "Plot of side-by-side confidence intervals for cyl means, in 3 panels for disp = 100, 200, 300"}
 plot(mtcars.rg, by = "disp")
 ```
 
@@ -365,7 +365,7 @@ is fitted with the given formula and its fitted values are used as the `disp`
 values -- only one for each `cyl`. If we plot this grid, the results are 
 sensible, reflecting what the model predicts for typical cars with each 
 number of cylinders:
-```{r fig.height = 1.5}
+```{r fig.height = 1.5, fig.alt = "Side-by-side CIs for cyl marginal means"}
 plot(mtcars.rg_d.c)
 ```
 
@@ -375,7 +375,7 @@ Wizards with the **ggplot2** package can further enhance these plots if
 they like. For example, we can add the data to an interaction plot -- this
 time we opt to include confidence intervals and put the three sources 
 in separate panels:
-```{r}
+```{r fig.alt = "Enhanced interaction plot with CIs and observed data added; we have separate panels for the 3 diets, and the 4 percent conentrations in each panel"}
 require("ggplot2")
 emmip(pigs.lm1, ~ percent | source, CIs = TRUE) +
     geom_point(aes(x = percent, y = log(conc)), data = pigs, pch = 2, color = "blue")

@@ -72,7 +72,7 @@ sometimes it definitely is.
 What about this time? 
 I think a good first step is always to try to visualize the nature of the
 interactions before doing any statistical comparisons. The following plot helps.
-```{r}
+```{r fig.alt = "emmip plot of type and size, with separate panels for each side. To see the same numerical information, do emmeans(noise.lm, ~ type:size|side)"}
 emmip(noise.lm, type ~ size | side)
 ```
 
@@ -266,7 +266,7 @@ emtrends(fiber.lm, pairwise ~ machine, var = "diameter")
 We see the three slopes, but no two of them test as being statistically different.
 
 To visualize the lines themselves, you may use
-```{r fig.height = 2}
+```{r fig.height = 2, fig.alt = "Plot with three increasing lines. The one for B is highest, the one for C is lower and more-or-less parallel to it, and the one for A is steeper and crosses the other two lines near their ends"}
 emmip(fiber.lm, machine ~ diameter, cov.reduce = range)
 ```
 
@@ -296,7 +296,7 @@ separate effects are estimated for each multivariate response, so there is an
 `price1` and `price2`. (In `org.int`, there is an implied three-way
 interaction.) An interesting way to view these models is to look at how they
 predict sales of each variety at each observed values of the prices:
-```{r}
+```{r fig.alt = "Two panels with sets of curves associated with values of price2. The panel for sales1 shows a tight bundle of curves that decrease with price1. The panel for sales2 shows a looser bundle of curves that diverge as price1 increases"}
 emmip(org.quad, price2 ~ price1 | variety, mult.name = "variety", cov.reduce = FALSE)
 ```
 
