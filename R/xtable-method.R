@@ -50,13 +50,10 @@
 #' object, for which its print method is \code{print.xtable_emm} .
 #' 
 #' @method xtable emmGrid
-#' @importFrom xtable xtable
-#' @importFrom xtable xtableList
-#' @export
 #' @examples
-#' pigsint.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
-#' pigsint.emm <- emmeans(pigsint.lm, ~ percent | source)
-#' xtable::xtable(pigsint.emm, type = "response")
+#' if(requireNamespace("xtable"))
+#'     emm_example("xtable")
+#'     # Use emm_example("xtable", list = TRUE) # to just list the code
 xtable.emmGrid = function(x, caption = NULL, label = NULL, align = NULL, digits = 4, 
     display = NULL, auto = FALSE, ...) 
 {
@@ -66,7 +63,6 @@ xtable.emmGrid = function(x, caption = NULL, label = NULL, align = NULL, digits 
 
 #' @rdname xtable.emmGrid
 #' @method xtable summary_emm
-#' @export
 xtable.summary_emm = function (x, caption = NULL, label = NULL, 
           align = NULL, digits = 4, 
           display = NULL, auto = FALSE, ...) 
@@ -119,7 +115,6 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
 #' @param include.rownames Passed to \code{print.xtable}
 #' @param sanitize.message.function Passed to \code{print.xtable}
 #' @method print xtable_emm
-#' @export
 print.xtable_emm = function(x, type = getOption("xtable.type", "latex"),
                             include.rownames = FALSE, 
                             sanitize.message.function = footnotesize,

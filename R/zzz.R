@@ -83,6 +83,11 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
         register_s3_method("multcomp", "cld", "emm_list")
         register_s3_method("multcomp", "modelparm", "emmwrap")
     }
+    if(.requireNS("xtable", fail = .nothing)) {
+        register_s3_method("xtable", "xtable", "emmGrid")
+        register_s3_method("xtable", "xtable", "summary_emm")
+        register_s3_method("xtable", "print", "xtable_emm")
+    }
 }
 
 # .onAttach <- function(libname, pkgname) {

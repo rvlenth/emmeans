@@ -58,7 +58,7 @@ uses \code{\link[xtable:xtableList]{print.xtableList}}, and any \code{\dots} arg
 passed there.
 }
 \examples{
-pigsint.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
-pigsint.emm <- emmeans(pigsint.lm, ~ percent | source)
-xtable::xtable(pigsint.emm, type = "response")
+if(requireNamespace("xtable"))
+    emm_example("xtable")
+    # Use emm_example("xtable", list = TRUE) # to just list the code
 }
