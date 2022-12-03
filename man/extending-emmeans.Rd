@@ -13,7 +13,7 @@
 recover_data(object, ...)
 
 \method{recover_data}{call}(object, trms, na.action, data = NULL,
-  params = "pi", frame, ...)
+  params = "pi", frame, addl.vars, ...)
 
 emm_basis(object, trms, xlev, grid, ...)
 
@@ -56,6 +56,13 @@ and if there are no function calls, we use \code{data = frame}. This
 can be helpful because it provides a modicum of security against the
 possibility that the original data used when fitting the model has been
 altered or removed.}
+
+\item{addl.vars}{Character value or vector specifying additional predictors
+to include in the reference grid. These must be names of variables that
+exist, or you will get an error. 
+This may be useful if you need to do
+additional computations later on that depend on these variables; e.g., 
+bias adjustments for random slopes of variables not among the fixed predictors.}
 
 \item{xlev}{Named list of factor levels (\emph{excluding} ones coerced to 
 factors in the model formula)}

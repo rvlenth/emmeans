@@ -166,11 +166,26 @@ as-is since the values follow the same ordering as `cw.emm@grid`.
 ```{r}
 confint(cw.emm, type = "response", bias.adj = TRUE, sigma = sig)
 ```
-
 This example illustrates that it is possible to deal with random slopes in
 bias corrections. However it does require some fairly careful attention to
 technical details and familiarity with matrix calculations; so if you don't have
 a comfort level with those, it is best to get outside help.
+
+#### Adding variables not in fixed model {addl.vars}
+<!-- @index `addl.vars`; Random predictors!Accessing levels -->
+Consider a model like
+```
+mod <- lmer(log(response) ~ treatment + (1 + x | subject), data = mydata)
+```
+Ordinarily, the reference grid will not include the variable `x` because it
+is not part of the fixed-effects formula. However, you can include it via the
+`addl.vars` argument:
+```
+EMM <- emmeans(mod, ~ x|treatment, addl.vars = "x", at = list(x = -1:1))
+```
+We will then obtain EMMs for combinations of `treatment` and `x`. 
+(For a given `treatment`, all those means will be equal for every `x`.)
+But the bias adjustments *will* depend on `x`.
 
 
 [Back to Contents](#contents)

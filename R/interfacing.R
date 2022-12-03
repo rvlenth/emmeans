@@ -156,12 +156,21 @@ recover_data = function(object, ...) {
 #'   can be helpful because it provides a modicum of security against the
 #'   possibility that the original data used when fitting the model has been
 #'   altered or removed.
+#' @param addl.vars Character value or vector specifying additional predictors
+#'   to include in the reference grid. These must be names of variables that
+#'   exist, or you will get an error. 
+#'   This may be useful if you need to do
+#'   additional computations later on that depend on these variables; e.g., 
+#'   bias adjustments for random slopes of variables not among the fixed predictors.
 #' 
 #' @method recover_data call
 #' @export
-recover_data.call = function(object, trms, na.action, data = NULL, params = "pi", frame, ...) {
+recover_data.call = function(object, trms, na.action, data = NULL, 
+                             params = "pi", frame, addl.vars, ...) {
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
+    if(!missing(addl.vars))
+        vars = union(vars, addl.vars)
     if (!missing(frame) && is.null(data) && !.has.fcns(trms))
         data = frame
     tbl = data
@@ -229,6 +238,10 @@ recover_data.call = function(object, trms, na.action, data = NULL, params = "pi"
     attr(tbl, "call") = object # the original call
     attr(tbl, "terms") = trms
     attr(tbl, "predictors") = setdiff(.all.vars(delete.response(trms)), params)
+    if(!missing(addl.vars)) {
+        attr(tbl, "predictors") = union(attr(tbl, "predictors"), addl.vars)
+        vars = setdiff(vars, addl.vars)
+    }
     attr(tbl, "responses") = setdiff(vars, union(attr(tbl, "predictors"), params))
     tbl
 }

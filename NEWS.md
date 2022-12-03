@@ -6,6 +6,8 @@ title: "NEWS for the emmeans package"
   * Fix to logic error in `regrid()` (#287, revisited)
   * Fix to `nbasis` calculation in ordinal models (#387)
   * Bias-adjustment example added when we have random slopes
+  * New `addl.vars` argument allows including variables (say, for
+    random slopes) in the reference grid.
   * Removed dependence on **xtable** package. The `xtable` methods are now
     dynamically registered. This reduces the number of package dependencies
     from 8 to 7 (as of this version).

@@ -20,6 +20,7 @@ vignette: >
 
 
   * [`add_grouping()`](utilities.html#groups)
+  * [`addl.vars`](sophisticated.html#random-slopes)
   * `adjust`
       * [in *comparisons: pairwise*](comparisons.html#pairwise)
       * [in *confidence-intervals: adjust*](confidence-intervals.html#adjust)
@@ -529,6 +530,8 @@ vignette: >
 ### R {#r}
 
 
+  * Random predictors
+      * [Accessing levels](sophisticated.html#random-slopes)
   * Random slopes
       * [Bias adjustment](sophisticated.html#random-slopes)
   * [Rank deficiency](xplanations.html#joint_tests)
