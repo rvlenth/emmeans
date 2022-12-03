@@ -22,9 +22,7 @@
 # Code to implement transformations my way
 
 # Implementation of additional transformations, typically ones with parameters
-# Returns a list like stats::make.link, but often with an additional "param" member
-# types:
-#       glog: log(mu + param)
+# Returns a list like stats::make.link
 
 
 #' Response-transformation extensions
@@ -38,6 +36,78 @@
 #' the \code{tran} argument in \code{\link{update.emmGrid}} (when the given
 #' transformation was already applied in an existing model).
 #' 
+#'
+#' @param type The name of the transformation. See Details.
+#' @param alpha,beta Numeric parameters needed for the transformation.
+#'   See Details.
+#' @param param If non-missing, this specifies either
+#'   \code{alpha} or \code{c(alpha, beta)} (provided for backward compatibility).
+#'   Also, for the same reason, if \code{alpha} is of length more than 1,
+#'   it is taken as \code{param}.
+#' @param y,... Used only with \code{type = "scale"}. The results determine 
+#' \code{alpha} and \code{beta}.
+#'
+#'
+#' @section Details:
+#' The \code{make.tran} function returns a
+#' suitable list of functions for several popular transformations that are not 
+#' already provided elsewhere. Besides being
+#' usable with \code{update}, the user may use this list as an enclosing
+#' environment in fitting the model itself, in which case the transformation is
+#' auto-detected when the special name \code{linkfun} (the transformation
+#' itself) is used as the response transformation in the call. See the examples
+#' below.
+#' 
+#' Most of the transformations available in \code{make.tran} require parameters, 
+#' specified as \code{alpha} and \code{beta}; in the following discussion, 
+#' we use \eqn{\alpha} and \eqn{\beta} to
+#' denote \code{alpha} and \code{beta}, and \eqn{y} to denote the response variable.
+#' The \code{type} argument specifies the following transformations:
+#' \describe{
+#' \item{\code{"genlog"}}{Generalized logarithmic transformation: \eqn{\log_\beta(y +
+#'   \alpha)}, where \eqn{y > -\alpha}.
+#'   When \eqn{\beta = 0} (the default), we use \eqn{\log_e(y + \alpha)}}
+#' \item{\code{"power"}}{Power transformation: \eqn{(y-\beta)^\alpha}, where \eqn{y > \beta}.
+#'   When \eqn{\alpha = 0}, \eqn{\log(y-\beta)} is used instead.}
+#' \item{\code{"boxcox"}}{The Box-Cox transformation (unscaled by the geometric
+#'   mean): \eqn{((y - \beta)^\alpha - 1) / \alpha}, where \eqn{y > \beta}. 
+#'   When \eqn{\alpha = 0}, \eqn{\log(y - \beta)}
+#'   is used.}
+#' \item{\code{"sympower"}}{A symmetrized power transformation on the whole real
+#'   line:
+#'   \eqn{|y - \beta|^\alpha\cdot sign(y - \beta)}. There are no restrictions on \eqn{y}, but we
+#'   require \eqn{\alpha > 0} in order for the transformation to be monotone and
+#'   continuous.}
+#' \item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
+#'   \eqn{\sin^{-1}(y/\alpha)^{1/2}}. Typically, \code{alpha} will be either 1 (default) or 100.}
+#' \item{\code{"atanh"}}{Arctanh transformation:
+#'   \eqn{\tanh^{-1}(y/\alpha)}. Typically, \code{alpha} will be either 1 (default) or 100.}
+#' \item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
+#'   \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
+#'   transformation \eqn{(z^\alpha - 1) / \alpha} of the variable \eqn{z = y + (y^2+\beta^2)^{1/2}}. 
+#'   Note that this requires both parameters and that \code{beta > 0}.}
+#' \item{\code{"scale"}}{This one is a little different than the others, in that
+#'   \code{alpha} and \code{beta} are ignored; instead, they are determined by calling 
+#'   \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
+#'   model to be fitted to its scaled version.}
+#' 
+#' }
+#' 
+#' Note that with the \code{"power"}, \code{"boxcox"}, or \code{"sympower"} transformations, 
+#' the argument \code{beta} specifies a location shift. 
+#' In the \code{"genpower"} transformation, \code{beta} specifies
+#' the base of the logarithm -- however, quirkily, the default of \code{beta = 0}
+#' is taken to be the natural logarithm. For example,
+#' \code{make.tran(0.5, 10)} sets up the \eqn{\log_{10}(y + \frac12)}
+#' transformation. In the \code{"bcnPower"} transformation, \code{beta}
+#' must be specified as a positive value.
+#' 
+#' For purposes of back-transformation, the \samp{sqrt(y) + sqrt(y+1)}
+#' transformation is treated exactly the same way as \samp{2*sqrt(y)}, because
+#' both are regarded as estimates of \eqn{2\sqrt\mu}.
+#' 
+#' @section Cases where \code{make.tran} may not be needed:
+#' Often, just the name of the transformation is all that is needed.
 #' The functions \code{\link{emmeans}}, \code{\link{ref_grid}}, and related ones
 #' automatically detect response transformations that are recognized by
 #' examining the model formula. These are \code{log}, \code{log2}, \code{log10},
@@ -53,68 +123,7 @@
 #' argument in \code{\link{update.emmGrid}}: \code{"identity"},
 #' \code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"log10"}, \code{"log2"}, \code{"asin.sqrt"},
 #' and \code{"asinh.sqrt"}.
-#' 
-#' More general transformations may be provided as a list of functions and
-#' supplied as the \code{tran} argument as documented in
-#' \code{\link{update.emmGrid}}. The \code{make.tran} function returns a
-#' suitable list of functions for several popular transformations. Besides being
-#' usable with \code{update}, the user may use this list as an enclosing
-#' environment in fitting the model itself, in which case the transformation is
-#' auto-detected when the special name \code{linkfun} (the transformation
-#' itself) is used as the response transformation in the call. See the examples
-#' below.
-#' 
-#' Most of the transformations available in "make.tran" require a parameter, 
-#' specified in \code{param}; in the following discussion, we use \eqn{p} to
-#' denote this parameter, and \eqn{y} to denote the response variable.
-#' The \code{type} argument specifies the following transformations:
-#' \describe{
-#' \item{\code{"genlog"}}{Generalized logarithmic transformation: \eqn{log(y +
-#'   p)}, where \eqn{y > -p}}
-#' \item{\code{"power"}}{Power transformation: \eqn{y^p}, where \eqn{y > 0}.
-#'   When \eqn{p = 0}, \code{"log"} is used instead}
-#' \item{\code{"boxcox"}}{The Box-Cox transformation (unscaled by the geometric
-#'   mean): \eqn{(y^p - 1) / p}, where \eqn{y > 0}. When \eqn{p = 0}, \eqn{log(y)}
-#'   is used.}
-#' \item{\code{"sympower"}}{A symmetrized power transformation on the whole real
-#'   line:
-#'   \eqn{abs(y)^p * sign(y)}. There are no restrictions on \eqn{y}, but we
-#'   require \eqn{p > 0} in order for the transformation to be monotone and
-#'   continuous.}
-#' \item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
-#'   \eqn{sin^(-1)(y/p)^{1/2)}}. Typically, the parameter \eqn{p} is equal to 1 for
-#'   a fraction, or 100 for a percentage.}
-#' \item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
-#'   \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
-#'   transformation \eqn{(z^p - 1) / p} of the variable \eqn{z = y + (y^2+g^2)^(1/2)}. 
-#'   This requires \code{param} to have two elements:
-#'   the power \eqn{p} and the offset \eqn{g > 0}.}
-#' \item{\code{"scale"}}{This one is a little different than the others, in that
-#'   \code{param} is ignored; instead, \code{param} is determined by calling 
-#'   \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
-#'   model to be fitted to its scaled version.}
-#' }
-#' The user may include a second element in \code{param} to specify an
-#' alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},
-#' or \code{"sympower"} transformations. For example, \samp{type = "power",
-#' param = c(1.5, 4)} specifies the transformation \eqn{(y - 4)^1.5}.
-#' In the \code{"genpower"} transformation, a second \code{param} element may be
-#' used to specify a base other than the default natural logarithm. For example,
-#' \samp{type = "genlog", param = c(.5, 10)} specifies the \eqn{log10(y + .5)}
-#' transformation. In the \code{"bcnPower"} transformation, the second element
-#' is required and must be positive.
-#' 
-#' For purposes of back-transformation, the \samp{sqrt(y) + sqrt(y+1)}
-#' transformation is treated exactly the same way as \samp{2*sqrt(y)}, because
-#' both are regarded as estimates of \eqn{2\sqrt\mu}.
-#'
-#' @param type The name of the transformation. See Details.
-#' @param param Numeric parameter needed for the transformation. Optionally, it 
-#'   may be a vector of two numeric values; the second element specifies an
-#'   alternative base or origin for certain transformations. See Details.
-#' @param y,... Used only with \code{type = "scale"}. These parameters are
-#'   passed to \code{\link{scale}} to determine \code{param}.
-#'
+
 #' @return A \code{list} having at least the same elements as those returned by
 #'   \code{\link{make.link}}. The \code{linkfun} component is the transformation
 #'   itself.
@@ -141,17 +150,20 @@
 #' 
 #' ### Using a scaled response...
 #' # Case where it is auto-detected:
-#' fib.lm <- lm(scale(strength) ~ diameter + machine, data = fiber)
-#' ref_grid(fib.lm) 
+#' mod <- lm(scale(yield[, 1]) ~ Variety, data = MOats)
+#' emmeans(mod, "Variety", type = "response")
 #' 
 #' # Case where scaling is not auto-detected -- and what to do about it:
-#' fib.aov <- aov(scale(strength) ~ diameter + Error(machine), data = fiber)
-#' fib.rg <- suppressWarnings(ref_grid(fib.aov, at = list(diameter = c(20, 30))))
+#' copt <- options(contrasts = c("contr.sum", "contr.poly"))
+#' mod.aov <- aov(scale(yield[, 1]) ~ Variety + Error(Block), data = MOats)
+#' emm.aov <- suppressWarnings(emmeans(mod.aov, "Variety", type = "response"))
 #' 
 #' # Scaling was not retrieved, so we can do:
-#' fib.rg = update(fib.rg, tran = make.tran("scale", y = fiber$strength))
-#' emmeans(fib.rg, "diameter")
-
+#' emm.aov <- update(emm.aov, tran = make.tran("scale", y = MOats$yield[, 1]))
+#' emmeans(emm.aov, "Variety", type = "response")
+#' 
+#' options(copt)
+#'
 #' 
 #' \dontrun{
 #' ### An existing model 'mod' was fitted with a y^(2/3) transformation...
@@ -159,122 +171,135 @@
 #'   emmeans(mod, "treatment", tran = ptran)
 #' }
 make.tran = function(type = c("genlog", "power", "boxcox", "sympower", 
-                              "asin.sqrt", "bcnPower", "scale"), param = 1, y, ...) {
+                              "asin.sqrt", "atanh", "bcnPower", "scale"), 
+                              alpha = 1, beta = 0, param, y, ...) {
     type = match.arg(type)
-    origin = 0
+    # backward compat
+    if(length(alpha) > 1) param = alpha  # unnamed parem
+    if (!missing(param)) {
+        if (length(param) > 1) beta = param[2]
+        alpha = param[1]
+     }
     mu.lbl = "mu"
-    if (length(param) > 1) {
-        origin = param[2]
-        param = param[1]
-        mu.lbl = paste0("(mu - ", round(origin, 3), ")")
-    }
+    if (beta != 0)
+        mu.lbl = paste0("(mu - ", round(beta, 3), ")")
     if(type == "scale") {
         sy = scale(y, ...)
-        if(is.null(origin <- attr(sy, "scaled:center")))
-            origin = 0
-        if(is.null(param <- attr(sy, "scaled:scale")))
-            param = 1
+        if(is.null(alpha <- attr(sy, "scaled:center")))
+            alpha = 0
+        if(is.null(beta <- attr(sy, "scaled:scale")))
+            beta = 1
         remove(list = c("y", "sy")) # remove baggage from env
     }
     switch(type,
-           genlog = {
-               if((origin < 0) || (origin == 1))
+           genlog = { # beta serves in the role of the base of the log
+               if((beta < 0) || (beta == 1))
                    stop('"genlog" transformation must have a positive base != 1')
-               logbase = ifelse(origin == 0, 1, log(origin))
-               xlab = ifelse(origin == 0, "", paste0(" (base ", round(origin, 3), ")"))
-               list(linkfun = function(mu) log(pmax(mu + param, 0)) / logbase,
-                    linkinv = function(eta) pmax(exp(logbase * eta), .Machine$double.eps) - param,
+               logbase = ifelse(beta == 0, 1, log(beta))
+               xlab = ifelse(beta == 0, "", paste0(" (base ", round(beta, 3), ")"))
+               list(linkfun = function(mu) log(pmax(mu + alpha, 0)) / logbase,
+                    linkinv = function(eta) pmax(exp(logbase * eta), .Machine$double.eps) - alpha,
                     mu.eta = function(eta) logbase * pmax(exp(logbase * eta), .Machine$double.eps),
                     valideta = function(eta) TRUE,
-                    param = c(param, origin),
-                    name = paste0("log(mu + ", round(param,3), ")", xlab)
+                    alpha = alpha, logbase = logbase,
+                    name = paste0("log(mu + ", round(alpha,3), ")", xlab)
                )
            },
            power = {
-               if (param == 0) {
-                   if(origin == 0) make.link("log")
-                   else make.tran("genlog", -origin)
+               if (alpha == 0) {
+                   if(beta == 0) make.link("log")
+                   else make.tran("genlog", -beta)
                }
                else list(
-                   linkfun = function(mu) pmax(mu - origin, 0)^param,
-                   linkinv = function(eta) origin + pmax(eta, 0)^(1/param),
-                   mu.eta = function(eta) pmax(eta, 0)^(1/param - 1) / param,
+                   linkfun = function(mu) pmax(mu - beta, 0)^alpha,
+                   linkinv = function(eta) beta + pmax(eta, 0)^(1/alpha),
+                   mu.eta = function(eta) pmax(eta, 0)^(1/alpha - 1) / alpha,
                    valideta = function(eta) all(eta > 0),
-                   param = c(param, origin),
-                   name = ifelse(param > 0, 
-                                 paste0(mu.lbl, "^", round(param,3)),
-                                 paste0(mu.lbl, "^(", round(param,3), ")"))
+                   alpha = alpha, beta = beta, 
+                   name = ifelse(alpha > 0, 
+                                 paste0(mu.lbl, "^", round(alpha,3)),
+                                 paste0(mu.lbl, "^(", round(alpha,3), ")"))
                )
            },
            boxcox = {
-               if (param == 0) {
-                   result = if(origin == 0) make.link("log")
-                   else make.tran("genlog", -origin)
+               if (alpha == 0) {
+                   result = if(beta == 0) make.link("log")
+                   else make.tran("genlog", -beta)
                    return (result)
                }
-               min.eta = ifelse(param > 0, -1 / param, -Inf)
-               xlab = ifelse(origin == 0, "", paste0(" with origin at ", round(origin, 3)))
+               min.eta = ifelse(alpha > 0, -1 / alpha, -Inf)
+               xlab = ifelse(beta == 0, "", paste0(" of (y - ", round(beta, 3), ")"))
                list(
-                   linkfun = function(mu) ((mu - origin)^param - 1) / param,
-                   linkinv = function(eta) origin + (1 + param * pmax(eta, min.eta))^(1/param),
-                   mu.eta = function(eta) (1 + param * pmax(eta, min.eta))^(1/param - 1),
+                   linkfun = function(mu) ((mu - beta)^alpha - 1) / alpha,
+                   linkinv = function(eta) beta + (1 + alpha * pmax(eta, min.eta))^(1/alpha),
+                   mu.eta = function(eta) (1 + alpha * pmax(eta, min.eta))^(1/alpha - 1),
                    valideta = function(eta) all(eta > min.eta),
-                   param = c(param, origin),
-                   name = paste0("Box-Cox (lambda = ", round(param, 3), ")", xlab)
+                   alpha = alpha, beta = beta, 
+                   name = paste0("Box-Cox (lambda = ", round(alpha, 3), ")", xlab)
                )
            },
            sympower = {
-               if (param <= 0) 
-                   stop('"sympower" transformation requires positive param')
-               if (origin == 0) 
-                   mu.lbl = paste0("(", mu.lbl, ")")
+               if (alpha <= 0) 
+                   stop('"sympower" transformation requires positive alpha')
                absmu.lbl = gsub("\\(|\\)", "|", mu.lbl)
-               list(linkfun = function(mu) sign(mu - origin) * abs(mu - origin)^param,
-                    linkinv = function(eta) origin + sign(eta) * abs(eta)^(1/param),
-                    mu.eta = function(eta) (abs(eta))^(1/param - 1),
+               if (beta == 0) mu.lbl = paste0("(", mu.lbl, ")")
+               list(linkfun = function(mu) sign(mu - beta) * abs(mu - beta)^alpha,
+                    linkinv = function(eta) beta + sign(eta) * abs(eta)^(1/alpha),
+                    mu.eta = function(eta) (abs(eta))^(1/alpha - 1),
                     valideta = function(eta) all(eta > min.eta),
-                    param = c(param, origin),
-                    name = paste0(absmu.lbl, "^", round(param,3), " * sign", mu.lbl)
+                    alpha = alpha, beta = beta, 
+                    name = paste0(absmu.lbl, "^", round(alpha,3), " * sign", mu.lbl)
                )
            },
            asin.sqrt = {
-               mu.lbl = ifelse(param == 1, "mu", paste0("mu/", round(param,3)))
-               list(linkfun = function(mu) asin(sqrt(mu/param)),
-                    linkinv = function(eta) param * sin(pmax(pmin(eta, pi/2), 0))^2,
-                    mu.eta = function(eta) param * sin(2*pmax(pmin(eta, pi/2), 0)),
+               mu.lbl = ifelse(alpha == 1, "mu", paste0("mu/", round(alpha,3)))
+               list(linkfun = function(mu) asin(sqrt(mu/alpha)),
+                    linkinv = function(eta) alpha * sin(pmax(pmin(eta, pi/2), 0))^2,
+                    mu.eta = function(eta) alpha * sin(2*pmax(pmin(eta, pi/2), 0)),
                     valideta = function(eta) all(eta <= pi/2) && all(eta >= 0),
+                    alpha = alpha,
                     name = paste0("asin(sqrt(", mu.lbl, "))")
                )
            },
+           atanh = {
+               mu.lbl = ifelse(alpha == 1, "mu", paste0("mu/", round(alpha,3)))
+               list(linkfun = function(mu) atanh(mu/alpha),
+                    linkinv = function(eta) alpha * tanh(eta),
+                    mu.eta = function(eta) alpha * (1 - tanh^2(eta)),
+                    valideta = function (eta) all(is.finite(eta)) && all(eta > -1) && all(eta < 1),
+                    alpha = alpha,
+                    name = paste0("atanh(", mu.lbl, ")")
+               )
+           },
            bcnPower = {
-               if(origin <= 0)
-                   stop ("The second parameter for 'bcnPower' must be strictly positive.")
+               if(beta <= 0)
+                   stop ("The value of 'beta' must be strictly positive.")
                list(
                    linkfun = function(mu) {
-                       s = sqrt(mu^2 + origin^2)
-                       if (abs(param) < 1e-10) log(.5*(mu + s))
-                       else ((0.5 * (mu + s))^param - 1) / param  },
+                       s = sqrt(mu^2 + beta^2)
+                       if (abs(alpha) < 1e-10) log(.5*(mu + s))
+                       else ((0.5 * (mu + s))^alpha - 1) / alpha  },
                    linkinv = function(eta) {
-                       q = if (abs(param) < 1e-10) 2 * exp(eta)
-                           else 2 * (param * eta + 1) ^ (1/param)
-                       (q^2 - origin^2) / (2 * q) },
+                       q = if (abs(alpha) < 1e-10) 2 * exp(eta)
+                           else 2 * (alpha * eta + 1) ^ (1/alpha)
+                       (q^2 - beta^2) / (2 * q) },
                    mu.eta = function(eta) {
-                       if (abs(param) < 1e-10) { q = 2 * exp(eta); dq = q }
-                       else { q = 2 * (param * eta + 1) ^ (1/param)
-                           dq = 2 * (param * eta + 1)^(1/param - 1) }
-                       0.5 * (1 + (origin/q)^2) * dq },
+                       if (abs(alpha) < 1e-10) { q = 2 * exp(eta); dq = q }
+                       else { q = 2 * (alpha * eta + 1) ^ (1/alpha)
+                           dq = 2 * (alpha * eta + 1)^(1/alpha - 1) }
+                       0.5 * (1 + (beta/q)^2) * dq },
                    valideta = function(eta) all(eta > 0),
-                   param = c(param, origin),
-                   name = paste0("bcnPower(", signif(param,3), ", ", signif(origin,3), ")")
+                   alpha = alpha, beta = beta, 
+                   name = paste0("bcnPower(", signif(alpha,3), ", ", signif(beta,3), ")")
                )
            },
            scale = list(
-               linkfun = function(mu) (mu - origin) / param,
-               linkinv = function(eta) param * eta + origin,
-               mu.eta = function(eta) rep(param, length(eta)),
+               linkfun = function(mu) (mu - alpha) / beta,
+               linkinv = function(eta) beta * eta + alpha,
+               mu.eta = function(eta) rep(beta, length(eta)),
                valideta = function(eta) TRUE,
-               name = paste0("scale(", signif(origin, 3), ", ", signif(param, 3), ")"),
-               param = c(param, origin)
+               alpha = alpha, beta = beta, 
+               name = paste0("scale(", signif(alpha, 3), ", ", signif(beta, 3), ")")
            )
     )
 }

@@ -5,17 +5,21 @@
 \title{Response-transformation extensions}
 \usage{
 make.tran(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt",
-  "bcnPower", "scale"), param = 1, y, ...)
+  "atanh", "bcnPower", "scale"), alpha = 1, beta = 0, param, y, ...)
 }
 \arguments{
 \item{type}{The name of the transformation. See Details.}
 
-\item{param}{Numeric parameter needed for the transformation. Optionally, it 
-may be a vector of two numeric values; the second element specifies an
-alternative base or origin for certain transformations. See Details.}
+\item{alpha, beta}{Numeric parameters needed for the transformation.
+See Details.}
 
-\item{y, ...}{Used only with \code{type = "scale"}. These parameters are
-passed to \code{\link{scale}} to determine \code{param}.}
+\item{param}{If non-missing, this specifies either
+\code{alpha} or \code{c(alpha, beta)} (provided for backward compatibility).
+Also, for the same reason, if \code{alpha} is of length more than 1,
+it is taken as \code{param}.}
+
+\item{y, ...}{Used only with \code{type = "scale"}. The results determine 
+\code{alpha} and \code{beta}.}
 }
 \value{
 A \code{list} having at least the same elements as those returned by
@@ -32,7 +36,82 @@ The result can be used as an environment in which the model is fitted, or as
 the \code{tran} argument in \code{\link{update.emmGrid}} (when the given
 transformation was already applied in an existing model).
 }
-\details{
+\note{
+The \code{genlog} transformation is technically unneeded, because
+  a response transformation of the form \code{log(y + c)} is now auto-detected 
+  by \code{\link{ref_grid}}.
+
+We modify certain \code{\link{make.link}} results in transformations
+  where there is a restriction on valid prediction values, so that reasonable
+  inverse predictions are obtained, no matter what. For example, if a
+  \code{sqrt} transformation was used but a predicted value is negative, the
+  inverse transformation is zero rather than the square of the prediction. A
+  side effect of this is that it is possible for one or both confidence
+  limits, or even a standard error, to be zero.
+}
+\section{Details}{
+
+The \code{make.tran} function returns a
+suitable list of functions for several popular transformations that are not 
+already provided elsewhere. Besides being
+usable with \code{update}, the user may use this list as an enclosing
+environment in fitting the model itself, in which case the transformation is
+auto-detected when the special name \code{linkfun} (the transformation
+itself) is used as the response transformation in the call. See the examples
+below.
+
+Most of the transformations available in \code{make.tran} require parameters, 
+specified as \code{alpha} and \code{beta}; in the following discussion, 
+we use \eqn{\alpha} and \eqn{\beta} to
+denote \code{alpha} and \code{beta}, and \eqn{y} to denote the response variable.
+The \code{type} argument specifies the following transformations:
+\describe{
+\item{\code{"genlog"}}{Generalized logarithmic transformation: \eqn{\log_\beta(y +
+  \alpha)}, where \eqn{y > -\alpha}.
+  When \eqn{\beta = 0} (the default), we use \eqn{\log_e(y + \alpha)}}
+\item{\code{"power"}}{Power transformation: \eqn{(y-\beta)^\alpha}, where \eqn{y > \beta}.
+  When \eqn{\alpha = 0}, \eqn{\log(y-\beta)} is used instead.}
+\item{\code{"boxcox"}}{The Box-Cox transformation (unscaled by the geometric
+  mean): \eqn{((y - \beta)^\alpha - 1) / \alpha}, where \eqn{y > \beta}. 
+  When \eqn{\alpha = 0}, \eqn{\log(y - \beta)}
+  is used.}
+\item{\code{"sympower"}}{A symmetrized power transformation on the whole real
+  line:
+  \eqn{|y - \beta|^\alpha\cdot sign(y - \beta)}. There are no restrictions on \eqn{y}, but we
+  require \eqn{\alpha > 0} in order for the transformation to be monotone and
+  continuous.}
+\item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
+  \eqn{\sin^{-1}(y/\alpha)^{1/2}}. Typically, \code{alpha} will be either 1 (default) or 100.}
+\item{\code{"atanh"}}{Arctanh transformation:
+  \eqn{\tanh^{-1}(y/\alpha)}. Typically, \code{alpha} will be either 1 (default) or 100.}
+\item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
+  \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
+  transformation \eqn{(z^\alpha - 1) / \alpha} of the variable \eqn{z = y + (y^2+\beta^2)^{1/2}}. 
+  Note that this requires both parameters and that \code{beta > 0}.}
+\item{\code{"scale"}}{This one is a little different than the others, in that
+  \code{alpha} and \code{beta} are ignored; instead, they are determined by calling 
+  \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
+  model to be fitted to its scaled version.}
+
+}
+
+Note that with the \code{"power"}, \code{"boxcox"}, or \code{"sympower"} transformations, 
+the argument \code{beta} specifies a location shift. 
+In the \code{"genpower"} transformation, \code{beta} specifies
+the base of the logarithm -- however, quirkily, the default of \code{beta = 0}
+is taken to be the natural logarithm. For example,
+\code{make.tran(0.5, 10)} sets up the \eqn{\log_{10}(y + \frac12)}
+transformation. In the \code{"bcnPower"} transformation, \code{beta}
+must be specified as a positive value.
+
+For purposes of back-transformation, the \samp{sqrt(y) + sqrt(y+1)}
+transformation is treated exactly the same way as \samp{2*sqrt(y)}, because
+both are regarded as estimates of \eqn{2\sqrt\mu}.
+}
+
+\section{Cases where \code{make.tran} may not be needed}{
+
+Often, just the name of the transformation is all that is needed.
 The functions \code{\link{emmeans}}, \code{\link{ref_grid}}, and related ones
 automatically detect response transformations that are recognized by
 examining the model formula. These are \code{log}, \code{log2}, \code{log10},
@@ -48,74 +127,8 @@ A few additional character strings may be supplied as the \code{tran}
 argument in \code{\link{update.emmGrid}}: \code{"identity"},
 \code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"log10"}, \code{"log2"}, \code{"asin.sqrt"},
 and \code{"asinh.sqrt"}.
-
-More general transformations may be provided as a list of functions and
-supplied as the \code{tran} argument as documented in
-\code{\link{update.emmGrid}}. The \code{make.tran} function returns a
-suitable list of functions for several popular transformations. Besides being
-usable with \code{update}, the user may use this list as an enclosing
-environment in fitting the model itself, in which case the transformation is
-auto-detected when the special name \code{linkfun} (the transformation
-itself) is used as the response transformation in the call. See the examples
-below.
-
-Most of the transformations available in "make.tran" require a parameter, 
-specified in \code{param}; in the following discussion, we use \eqn{p} to
-denote this parameter, and \eqn{y} to denote the response variable.
-The \code{type} argument specifies the following transformations:
-\describe{
-\item{\code{"genlog"}}{Generalized logarithmic transformation: \eqn{log(y +
-  p)}, where \eqn{y > -p}}
-\item{\code{"power"}}{Power transformation: \eqn{y^p}, where \eqn{y > 0}.
-  When \eqn{p = 0}, \code{"log"} is used instead}
-\item{\code{"boxcox"}}{The Box-Cox transformation (unscaled by the geometric
-  mean): \eqn{(y^p - 1) / p}, where \eqn{y > 0}. When \eqn{p = 0}, \eqn{log(y)}
-  is used.}
-\item{\code{"sympower"}}{A symmetrized power transformation on the whole real
-  line:
-  \eqn{abs(y)^p * sign(y)}. There are no restrictions on \eqn{y}, but we
-  require \eqn{p > 0} in order for the transformation to be monotone and
-  continuous.}
-\item{\code{"asin.sqrt"}}{Arcsin-square-root transformation:
-  \eqn{sin^(-1)(y/p)^{1/2)}}. Typically, the parameter \eqn{p} is equal to 1 for
-  a fraction, or 100 for a percentage.}
-\item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
-  \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
-  transformation \eqn{(z^p - 1) / p} of the variable \eqn{z = y + (y^2+g^2)^(1/2)}. 
-  This requires \code{param} to have two elements:
-  the power \eqn{p} and the offset \eqn{g > 0}.}
-\item{\code{"scale"}}{This one is a little different than the others, in that
-  \code{param} is ignored; instead, \code{param} is determined by calling 
-  \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
-  model to be fitted to its scaled version.}
 }
-The user may include a second element in \code{param} to specify an
-alternative origin (other than zero) for the \code{"power"}, \code{"boxcox"},
-or \code{"sympower"} transformations. For example, \samp{type = "power",
-param = c(1.5, 4)} specifies the transformation \eqn{(y - 4)^1.5}.
-In the \code{"genpower"} transformation, a second \code{param} element may be
-used to specify a base other than the default natural logarithm. For example,
-\samp{type = "genlog", param = c(.5, 10)} specifies the \eqn{log10(y + .5)}
-transformation. In the \code{"bcnPower"} transformation, the second element
-is required and must be positive.
 
-For purposes of back-transformation, the \samp{sqrt(y) + sqrt(y+1)}
-transformation is treated exactly the same way as \samp{2*sqrt(y)}, because
-both are regarded as estimates of \eqn{2\sqrt\mu}.
-}
-\note{
-The \code{genlog} transformation is technically unneeded, because
-  a response transformation of the form \code{log(y + c)} is now auto-detected 
-  by \code{\link{ref_grid}}.
-
-We modify certain \code{\link{make.link}} results in transformations
-  where there is a restriction on valid prediction values, so that reasonable
-  inverse predictions are obtained, no matter what. For example, if a
-  \code{sqrt} transformation was used but a predicted value is negative, the
-  inverse transformation is zero rather than the square of the prediction. A
-  side effect of this is that it is possible for one or both confidence
-  limits, or even a standard error, to be zero.
-}
 \examples{
 # Fit a model using an oddball transformation:
 bctran <- make.tran("boxcox", 0.368)
@@ -126,16 +139,20 @@ emmeans(warp.bc, ~ tension | wool, type = "response")
 
 ### Using a scaled response...
 # Case where it is auto-detected:
-fib.lm <- lm(scale(strength) ~ diameter + machine, data = fiber)
-ref_grid(fib.lm) 
+mod <- lm(scale(yield[, 1]) ~ Variety, data = MOats)
+emmeans(mod, "Variety", type = "response")
 
 # Case where scaling is not auto-detected -- and what to do about it:
-fib.aov <- aov(scale(strength) ~ diameter + Error(machine), data = fiber)
-fib.rg <- suppressWarnings(ref_grid(fib.aov, at = list(diameter = c(20, 30))))
+copt <- options(contrasts = c("contr.sum", "contr.poly"))
+mod.aov <- aov(scale(yield[, 1]) ~ Variety + Error(Block), data = MOats)
+emm.aov <- suppressWarnings(emmeans(mod.aov, "Variety", type = "response"))
 
 # Scaling was not retrieved, so we can do:
-fib.rg = update(fib.rg, tran = make.tran("scale", y = fiber$strength))
-emmeans(fib.rg, "diameter")
+emm.aov <- update(emm.aov, tran = make.tran("scale", y = MOats$yield[, 1]))
+emmeans(emm.aov, "Variety", type = "response")
+
+options(copt)
+
 
 \dontrun{
 ### An existing model 'mod' was fitted with a y^(2/3) transformation...
