@@ -114,7 +114,8 @@
 #' \code{log1p},
 #' \code{sqrt}, \code{logit}, \code{probit}, \code{cauchit}, \code{cloglog}; as
 #' well as (for a response variable \code{y}) \code{asin(sqrt(y))},
-#' \code{asinh(sqrt(y))}, and \code{sqrt(y) + sqrt(y+1)}. In addition, any
+#' \code{asinh(sqrt(y))}, \code{atanh(y)}, and \code{sqrt(y) + sqrt(y+1)}. 
+#' In addition, any
 #' constant multiple of these (e.g., \code{2*sqrt(y)}) is auto-detected and
 #' appropriately scaled (see also the \code{tran.mult} argument in
 #' \code{\link{update.emmGrid}}).
@@ -363,6 +364,7 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
              mu.eta = function(eta) sinh(2 * eta),
              name = "asinh(sqrt(mu))"
          ),
+         atanh = make.tran("atanh"),
          exp = list(
            linkinv = function(eta) log(eta),
            mu.eta = function(eta) 1/eta,
