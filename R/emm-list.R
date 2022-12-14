@@ -31,6 +31,10 @@
 #' \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 #' for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 #' \code{specs} argument. Several methods for this class are provided, as detailed below.
+#' Typically, these methods just quietly do the same thing as their \code{EmmGrid}
+#' methods, using the first element of the list. You can specify \code{which}
+#' to select a different element, or just run the corresponding \code{emmGrid}
+#' method on \code{object[[k]]}.
 #' 
 #' @param object,x an object of class \code{emm_list}
 #' @param ... additional arguments passed to corresponding \code{emmGrid} method
@@ -45,30 +49,12 @@
 #' @order 1
 NULL
 
-#' @rdname emm_list-object
-#' @order 99
-#' 
-#' @note \code{I_bet()} provides a default value for \code{which} noisily.
-#' It is used in cases where users
-#' most likely intended to call a method for an \code{emmGrid} object
-#' rather than an \code{emm_list} object. 
-#' An informative message is displayed
-#' and then the \code{which}th element is returned. 
-#'
-#' @export
-I_bet = function(which) {
-    message("I bet you wanted to call this with just object[[", which, "]]",
-            " - use '[[]]' or which' if I'm wrong.\n", 
-            "See '? emm_list' for more information")
-    which
-}
-
 # Internal utility to noisily return one of an emm_list
 # Call with ... argument so that message is suppressed if we specify 'which'
 .chk.list = function(object, which, ...) {
     if (inherits(object, "emm_list")) {
         if (missing(which))
-            which = I_bet(1)
+            which = 1
         object = object[[which]]
     }
     object
@@ -125,7 +111,7 @@ print.emm_list = function(x, ...) {
 #' @method contrast emm_list
 #' @rdname emm_list-object
 #' @order 3
-contrast.emm_list = function(object, ... , which = I_bet(1)) {
+contrast.emm_list = function(object, ... , which = 1) {
     .lapply(object[which], contrast, ...)
 }
 
@@ -133,7 +119,7 @@ contrast.emm_list = function(object, ... , which = I_bet(1)) {
 #' @method pairs emm_list
 #' @rdname emm_list-object
 #' @order 4
-pairs.emm_list = function(x, ..., which = I_bet(1)) {
+pairs.emm_list = function(x, ..., which = 1) {
     .lapply(x[which], pairs, ...)
 }
 
@@ -157,7 +143,7 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 #' @method coef emm_list
 #' @rdname emm_list-object
 #' @order 9
-coef.emm_list = function(object, ..., which = I_bet(1)) {
+coef.emm_list = function(object, ..., which = 1) {
     .lapply(object[which], coef, ...)
 }
 
@@ -167,7 +153,7 @@ coef.emm_list = function(object, ..., which = I_bet(1)) {
 #' @rdname emm_list-object
 #' @order 8
 #' @note The \code{plot} method uses only the first element of \code{which}; the others are ignored.
-plot.emm_list = function(x, ..., which = I_bet(1)) {
+plot.emm_list = function(x, ..., which = 1) {
     plot.emmGrid(x[[which[1]]], ...)
 }
 
@@ -229,14 +215,14 @@ as.emm_list = function(object, ...) {
 ### Others we won't document
 
 update.emm_list = function(object, ...)
-    update.emmGrid(object[[I_bet(1)]])
+    update.emmGrid(object[[1]])
 
 predict.emm_list = function(object, ...)
-    predict.emmGrid(object[[I_bet(1)]], ...)
+    predict.emmGrid(object[[1]], ...)
 
 vcov.emm_list = function(object, ...)
-    vcov.emmGrid(object[[I_bet(1)]], ...)
+    vcov.emmGrid(object[[1]], ...)
 
 xtable.emm_list = function(x, ...)
-    xtable.emmGrid(x[[I_bet(1)]], ...)
+    xtable.emmGrid(x[[1]], ...)
 

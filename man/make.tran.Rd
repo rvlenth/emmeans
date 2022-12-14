@@ -2,10 +2,13 @@
 % Please edit documentation in R/transformations.R
 \name{make.tran}
 \alias{make.tran}
+\alias{inverse}
 \title{Response-transformation extensions}
 \usage{
 make.tran(type = c("genlog", "power", "boxcox", "sympower", "asin.sqrt",
   "atanh", "bcnPower", "scale"), alpha = 1, beta = 0, param, y, ...)
+
+inverse(y)
 }
 \arguments{
 \item{type}{The name of the transformation. See Details.}
@@ -18,13 +21,18 @@ See Details.}
 Also, for the same reason, if \code{alpha} is of length more than 1,
 it is taken as \code{param}.}
 
-\item{y, ...}{Used only with \code{type = "scale"}. The results determine 
+\item{y}{A response variable. With \code{type = "scale"}, the results determine 
 \code{alpha} and \code{beta}.}
+
+\item{...}{Additional arguments passed to other functions/methods}
 }
 \value{
 A \code{list} having at least the same elements as those returned by
   \code{\link{make.link}}. The \code{linkfun} component is the transformation
   itself.
+
+\code{inverse} returns the reciprocal of its argument. It allows
+  the \code{"inverse"} link to be auto-detected as a response transformation.
 }
 \description{
 The \code{make.tran} function creates the needed information to perform
@@ -160,4 +168,7 @@ options(copt)
   ptran = make.tran("power", 2/3)
   emmeans(mod, "treatment", tran = ptran)
 }
+
+pigs.lm <- lm(inverse(conc) ~ source + factor(percent), data = pigs)
+emmeans(pigs.lm, "source", type = "response")
 }

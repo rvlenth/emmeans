@@ -12,20 +12,19 @@
 \alias{summary.emm_list}
 \alias{print.emm_list}
 \alias{as.data.frame.emm_list}
-\alias{I_bet}
 \title{The \code{emm_list} class}
 \usage{
-\method{contrast}{emm_list}(object, ..., which = I_bet(1))
+\method{contrast}{emm_list}(object, ..., which = 1)
 
-\method{pairs}{emm_list}(x, ..., which = I_bet(1))
+\method{pairs}{emm_list}(x, ..., which = 1)
 
 \method{test}{emm_list}(object, ..., which = seq_along(object))
 
 \method{confint}{emm_list}(object, ..., which = seq_along(object))
 
-\method{plot}{emm_list}(x, ..., which = I_bet(1))
+\method{plot}{emm_list}(x, ..., which = 1)
 
-\method{coef}{emm_list}(object, ..., which = I_bet(1))
+\method{coef}{emm_list}(object, ..., which = 1)
 
 \method{str}{emm_list}(object, ...)
 
@@ -34,8 +33,6 @@
 \method{print}{emm_list}(x, ...)
 
 \method{as.data.frame}{emm_list}(x, ...)
-
-I_bet(which)
 }
 \arguments{
 \item{object, x}{an object of class \code{emm_list}}
@@ -58,6 +55,10 @@ An \code{emm_list} object is simply a list of
 \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 \code{specs} argument. Several methods for this class are provided, as detailed below.
+Typically, these methods just quietly do the same thing as their \code{EmmGrid}
+methods, using the first element of the list. You can specify \code{which}
+to select a different element, or just run the corresponding \code{emmGrid}
+method on \code{object[[k]]}.
 }
 \note{
 The \code{plot} method uses only the first element of \code{which}; the others are ignored.
@@ -65,11 +66,4 @@ The \code{plot} method uses only the first element of \code{which}; the others a
 No \code{export} option is provided for printing an \code{emm_list}
 (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
 must do so separately for each element in the list.
-
-\code{I_bet()} provides a default value for \code{which} noisily.
-It is used in cases where users
-most likely intended to call a method for an \code{emmGrid} object
-rather than an \code{emm_list} object. 
-An informative message is displayed
-and then the \code{which}th element is returned.
 }

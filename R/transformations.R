@@ -44,8 +44,9 @@
 #'   \code{alpha} or \code{c(alpha, beta)} (provided for backward compatibility).
 #'   Also, for the same reason, if \code{alpha} is of length more than 1,
 #'   it is taken as \code{param}.
-#' @param y,... Used only with \code{type = "scale"}. The results determine 
-#' \code{alpha} and \code{beta}.
+#' @param y A response variable. With \code{type = "scale"}, the results determine 
+#'   \code{alpha} and \code{beta}.
+#' @param ... Additional arguments passed to other functions/methods
 #'
 #'
 #' @section Details:
@@ -306,6 +307,15 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
 }
 
 
+#' @rdname make.tran
+#' @export
+#' @return \code{inverse} returns the reciprocal of its argument. It allows
+#'   the \code{"inverse"} link to be auto-detected as a response transformation.
+#' @examples
+#' 
+#' pigs.lm <- lm(inverse(conc) ~ source + factor(percent), data = pigs)
+#' emmeans(pigs.lm, "source", type = "response")
+inverse = function(y) 1/y
 
 
 ### My modification/expansion of stats:make.link()

@@ -2,6 +2,23 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.3-0999xxx
+  * Fix to `scale()` response transformation when either `center` or `scale` 
+    is `FALSE`
+  * Citation correction (#391)
+  * Removed a message about contrasting transformed objects that even confuses me!
+    (I added a topic in the FAQs vignette instead)
+  * Added new exported function `inverse` available as a response transformation
+  * I have quietly deprecated the previous `I_bet()` function, because it
+    produced a message that was confusing to inexperienced users. Instead, we
+    have tweaked some functions/methods so they seem to work the same way
+    with an `emm_list` object (using its first element) as an `emmGrid` object.
+  * We have removed the functions `convert_workspace()` and `convert_scripts()`
+    that were intended to clean up existing code and objects for the ancient
+    version of **lsmeans**. We also completely removed several old functions
+    from the codebase. Previously, we just ignored them.
+
+
 ## emmeans 1.8.3
   * Fix to logic error in `regrid()` (#287, revisited)
   * Fix to `nbasis` calculation in ordinal models (#387)

@@ -103,6 +103,7 @@ vignette: >
       * [Graphical](comparisons.html#graphical)
           * [How arrows are determined](xplanations.html#arrows)
       * [with logs](comparisons.html#logs)
+      * [Obtaining differences rather than ratios](FAQs.html#ratios)
       * [with overlapping CIs](FAQs.html#CIerror)
   * [Comparisons result in `(nothing)`](FAQs.html#nopairs)
   * [Confidence intervals](confidence-intervals.html#summary)
@@ -179,9 +180,11 @@ vignette: >
   * [`.emmc` functions](comparisons.html#linfcns)
   * **emmeans** package
       * [Exporting extensions to](xtending.html#exporting)
+      * [Quick-start guide](QuickStart.html)
   * [`emmeans()`](basics.html#emmeans)
       * [And the underlying model](FAQs.html#nowelch)
       * [Changing defaults](utilities.html#defaults)
+      * [Fastest way to get wrong answers](FAQs.html#fastest)
       * [Surprising results from](FAQs.html#transformations)
       * `weights`
           * [in *basics: weights*](basics.html#weights)
@@ -454,6 +457,7 @@ vignette: >
 
   * [Observational data](messy-data.html#issues)
   * [Odds ratios](transformations.html#oddsrats)
+      * [but I wanted differences](FAQs.html#ratios)
   * [Offsets](sophisticated.html#offsets)
   * [`opt.digits` option](utilities.html#digits)
   * [Options](utilities.html#options)
@@ -522,7 +526,7 @@ vignette: >
 
   * [`qdrg()`](FAQs.html#qdrg)
   * [Quadratic terms](basics.html#depcovs)
-  * [Quick start](FAQs.html#fastest)
+  * [Quick-start guide](QuickStart.html)
 
 
 [Back to top](#topnav)
@@ -535,6 +539,8 @@ vignette: >
   * Random slopes
       * [Bias adjustment](sophisticated.html#random-slopes)
   * [Rank deficiency](xplanations.html#joint_tests)
+  * Ratios
+      * [but I wanted differences](FAQs.html#ratios)
   * [`rbind()`](utilities.html#rbind)
   * [Re-labeling](utilities.html#relevel)
   * [Recommended practices](basics.html#recs1)

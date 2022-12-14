@@ -100,7 +100,7 @@ contrast = function(object, ...)
 #' @return \code{contrast} and \code{pairs} return an object of class
 #'   \code{emmGrid}. Its grid will correspond to the levels of the contrasts and
 #'   any \code{by} variables. The exception is that an \code{\link{emm_list}}
-#'   object is returned if \code{simple} is a list and \code{complete} is
+#'   object is returned if \code{simple} is a list and \code{combine} is
 #'   \code{FALSE}.
 #'
 #' @section Pairs method: The call \code{pairs(object)} is equivalent to
@@ -481,7 +481,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         else {
             misc$initMesg = c(misc$initMesg, 
                               paste("Note: contrasts are still on the", misc$orig.tran, "scale"))
-            message("Note: Use 'contrast(regrid(object), ...)' to obtain contrasts of back-transformed estimates")
+            ### message("Note: Use 'contrast(regrid(object), ...)' to obtain contrasts of back-transformed estimates")
             misc$tran = misc$tran.mult = misc$tran.offset = NULL
         }
     }
@@ -510,7 +510,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
 # e.g., with factors A, B, C, simple = "A" <==> by = c("B", "C")
 # Note `by` is an argument so that it can be ignored and never duplicated
 # If `simple` is a list, we run this on each element
-# If simple = "each", we run it on each factorin the grid
+# If simple = "each", we run it on each factor in the grid
 # We handle `adjust`` ourselves rather than passing it to `contrast``
 .simcon = function(object, ..., simple, by, combine = FALSE, adjust) {
     if (is.list(simple)) {

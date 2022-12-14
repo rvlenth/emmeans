@@ -14,7 +14,8 @@ meanint(x)
 symmint(ctr)
 }
 \arguments{
-\item{object}{a fitted model or an \code{emmGrid}}
+\item{object}{a fitted model, \code{emmGrid}, or \code{emm_list}. If the
+latter, its first element is used.}
 
 \item{by}{character names of \code{by} variables. Separate sets of tests are
 run for each combination of these.}

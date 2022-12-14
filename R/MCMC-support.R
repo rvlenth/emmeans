@@ -176,7 +176,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
 #' @export as.mcmc.emm_list
 #' @rdname mcmc-support
 #' @param which item in the \code{emm_list} to use
-as.mcmc.emm_list = function(x, which = I_bet(1), ...) {
+as.mcmc.emm_list = function(x, which = 1, ...) {
     as.mcmc.emmGrid(x[[which]], ...)
 }
 
@@ -195,7 +195,7 @@ as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
 #' @method as.mcmc.list emm_list
 #' @export as.mcmc.list.emm_list
 #' @rdname mcmc-support
-as.mcmc.list.emm_list = function(x, which = I_bet(1), ...) {
+as.mcmc.list.emm_list = function(x, which = 1, ...) {
     as.mcmc.list.emmGrid(x[[which]], ...)
 }
 

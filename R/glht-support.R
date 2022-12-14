@@ -182,7 +182,7 @@ as.glht.emmGrid <- function(object, ...)
 
 #' @method as.glht emm_list
 #' @export
-as.glht.emm_list <- function(object, ..., which = I_bet(1))
+as.glht.emm_list <- function(object, ..., which = 1)
     as.glht(object[[which]], ...)
 
 

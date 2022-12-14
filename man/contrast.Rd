@@ -104,7 +104,7 @@ directly via \code{\link[=update.emmGrid]{levels<-}}.}
 \code{contrast} and \code{pairs} return an object of class
   \code{emmGrid}. Its grid will correspond to the levels of the contrasts and
   any \code{by} variables. The exception is that an \code{\link{emm_list}}
-  object is returned if \code{simple} is a list and \code{complete} is
+  object is returned if \code{simple} is a list and \code{combine} is
   \code{FALSE}.
 
 \code{coef} returns a \code{data.frame} containing the object's grid, along with columns named \code{c.1, c.2, ...} containing the contrast coefficients. If

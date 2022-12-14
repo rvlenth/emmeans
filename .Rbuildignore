@@ -10,9 +10,6 @@
 # This keeps showing up lately, but I don't want it
 ^Rplots.pdf
 
-# Deprecated code is excluded
-R/deprecated.R
-
 # Issue templates etc.
 .github
 .github/*

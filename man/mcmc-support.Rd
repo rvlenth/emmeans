@@ -11,11 +11,11 @@
 \method{as.mcmc}{emmGrid}(x, names = TRUE, sep.chains = TRUE, likelihood,
   NE.include = FALSE, ...)
 
-\method{as.mcmc}{emm_list}(x, which = I_bet(1), ...)
+\method{as.mcmc}{emm_list}(x, which = 1, ...)
 
 \method{as.mcmc.list}{emmGrid}(x, names = TRUE, ...)
 
-\method{as.mcmc.list}{emm_list}(x, which = I_bet(1), ...)
+\method{as.mcmc.list}{emm_list}(x, which = 1, ...)
 }
 \arguments{
 \item{x}{An object of class \code{emmGrid}}

@@ -531,8 +531,8 @@ effect could plausibly be due to chance alone: it is *wrong* to conclude that
 there is no effect.
 
 The American Statistical Association has for some time been advocating very
-cautious use of *P* values (Wasserman *et al.* 2014) because it is
-too often misinterpreted, and too often used carelessly. Wasserman *et al.* (2019) 
+cautious use of *P* values (Wasserstein *et al.* 2014) because it is
+too often misinterpreted, and too often used carelessly. Wasserstein *et al.* (2019) 
 even goes so far as to advise against *ever* using the term "statistically significant".
 The 43 articles it accompanies in the same issue of *TAS*, recommend a
 number of alternatives. I do not agree with all that is said in the main
@@ -540,7 +540,7 @@ article, and there are portions that are too cutesy or wander off-topic.
 Further, it is quite dizzying to try to digest all the accompanying articles,
 and to reconcile their disagreeing viewpoints. 
 
-For some time I included a summary of Wasserman *et al.*'s
+For some time I included a summary of Wasserstein *et al.*'s
 recommendations and their *ATOM* paradigm (Acceptance of uncertainty, Thoughtfulness, Openness,
 Modesty). But in the meantime, I have handled a large number of user questions, and many of
 those have made it clear to me that there are more important fish to fry in  a vignette 
@@ -608,12 +608,12 @@ Many academic statistics and biostatistics departments can refer you to someone 
 [Back to Contents](#contents)
 
 ### References
- Wasserman RL, Lazar NA (2016)
+ Wasserstein RL, Lazar NA (2016)
    "The ASA's Statement on *p*-Values: Context, Process, and Purpose,"
    *The American Statistician*, **70**, 129--133,
    https://doi.org/10.1080/00031305.2016.1154108
  
- Wasserman RL, Schirm AL, Lazar, NA (2019)
+ Wasserstein RL, Schirm AL, Lazar, NA (2019)
    "Moving to a World Beyond 'p < 0.05',"
    *The American Statistician*, **73**, 1--19,
    https://doi.org/10.1080/00031305.2019.1583913

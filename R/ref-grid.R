@@ -705,12 +705,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         if(length(tran) > 0) {
             if (tran[1] == "scale") { # we'll try to set it up based on terms component
                 pv = try(attr(terms(object), "predvars"), silent = TRUE)
-                if (!inherits(pv, "try-error")) {
-                    pv = c(lapply(pv, as.character), "foo") # make sure it isn't empty
-                    scal = which(sapply(pv, function(x) x[1] == "scale"))
+                if (!inherits(pv, "try-error") && !is.null(pv)) {
+                    scal = which(sapply(c(sapply(pv, as.character), "foo"), 
+                                        function(x) x[1]) == "scale")
                     if(length(scal) > 0) {
-                        par = as.numeric(pv[[scal[1]]][3:4]) 
-                        tran = make.tran("scale", y = 0, center = par[1], scale = par[2])
+                        pv = pv[[scal]]
+                        ctr = ifelse(pv$center, pv$center, 0)
+                        scl = ifelse(pv$scale, pv$scale, 1)
+                        tran = make.tran("scale", y = 0, center = ctr, scale = scl)
                     }
                 }
                 if (is.character(tran)) { # didn't manage to find params
@@ -718,6 +720,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                     message("NOTE: Unable to recover scale() parameters. See '? make.tran'")
                 }
             }
+            else if (tran[1] %in% c("center", "centre", "standardize", "standardise")) { # datawizard support
+                dat = eval(attr(data, "call")$data)
+                if (is.null(dat)) dat = environment(trms)
+                tmp = eval(parse(text = as.character(lhs)[2]), env = dat)
+                tran = make.tran("scale", y = 0, 
+                                 center = attr(tmp, "center"), scale = attr(tmp, "scale"))
+            }
+            
             else if (tran[1] == "linkfun")
                 tran = as.list(environment(trms))[c("linkfun","linkinv","mu.eta","valideta","name")]
             else {

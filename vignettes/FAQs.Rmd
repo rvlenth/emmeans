@@ -35,6 +35,7 @@ This vignette contains answers to questions received from users or posted on dis
  8. [Why do I get `Inf` for the degrees of freedom?](#asymp)
  10. [I get exactly the same comparisons for each "by" group](#additive)
  11. [My ANOVA *F* is significant, but no pairwise comparisons are](#anova)
+ 11. [I wanted differences, but instead I got ratios (or odds ratios)](#ratios)
  12. [I asked for a Tukey adjustments, but that's not what I got](#notukey)
  12. [`emmeans()` completely ignores my P-value adjustments](#noadjust)
  13. [`emmeans()` gives me pooled *t* tests, but I expected Welch's *t*](#nowelch)
@@ -48,7 +49,7 @@ predictions on a reference grid of predictor settings, or marginal
 averages thereof. See details in [the "basics" vignette](basics.html).
 
 ## What is the fastest way to obtain EMMs and pairwise comparisons? {#fastest}
-<!-- @index Model!Importance of; Quick start; -->
+<!-- @index Model!Importance of; `emmeans()`!Fastest way to get wrong answers -->
 There are two answers to this (i.e., be careful what you wish for):
 
   1. Don't think; just fit the first model that comes to mind and run 
@@ -319,6 +320,24 @@ Another consideration is that by default, *P* values for pairwise comparisons
 are adjusted using the Tukey method, and the adjusted *P* values can be quite a
 bit larger than the unadjusted ones. (But I definitely do *not* advocate using
 no adjustment to "repair" this problem.)
+
+
+## I wanted differences, but instead I got ratios (or odds ratios) {#ratios}
+<!-- @index Comparisons!Obtaining differences rather than ratios;
+            Ratios!but I wanted differences; Odds ratios!but I wanted differences  -->
+When a transformation or link involves logs, then, unlike other transformations,
+comparisons can be back-transformed into ratios -- and that is the default
+behavior. If you really want differences and not ratios, you can re-grid the
+means first. Re-gridding starts anew with everything on the response scale,
+and no memory of the transformation.
+```r
+EMM <- emmeans(...)
+pairs(regrid(EMM))   # or contrast(regrid(EMM), ...)
+```
+PS -- A side effect is that this causes the tests to be done using SEs obtained
+by the delta method on the re-gridded scale, rather than on the link scale.
+Re-gridding can be used with any transformation, not just logs, and it has the
+same side effect.
 
 
 ## I asked for Tukey adjustments, but that's not what I got {#notukey}
