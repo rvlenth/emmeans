@@ -703,15 +703,16 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         lhs = frm[-3]
         tran = setdiff(.all.vars(lhs, functions = TRUE), c(.all.vars(lhs), "~", "cbind", "+", "-", "*", "/", "^", "%%", "%/%"))
         if(length(tran) > 0) {
-            if (tran[1] == "scale") { # we'll try to set it up based on terms component
+            # we are now supporting scale() as well as some functions from datawizard
+            if (tran[1] %in% c("scale", "center", "centre", "standardize", "standardise")) { # we'll try to set it up based on terms component
                 pv = try(attr(terms(object), "predvars"), silent = TRUE)
                 if (!inherits(pv, "try-error") && !is.null(pv)) {
                     scal = which(sapply(c(sapply(pv, as.character), "foo"), 
-                                        function(x) x[1]) == "scale")
+                                        function(x) x[1]) == tran[1])
                     if(length(scal) > 0) {
-                        pv = pv[[scal]]
-                        ctr = ifelse(pv$center, pv$center, 0)
-                        scl = ifelse(pv$scale, pv$scale, 1)
+                        pv = pv[[scal[1]]]
+                        ctr = ifelse(is.null(pv$center), 0, ifelse(pv$center, pv$center, 0))
+                        scl = ifelse(is.null(pv$scale), 1, ifelse(pv$scale, pv$scale, 1))
                         tran = make.tran("scale", y = 0, center = ctr, scale = scl)
                     }
                 }
@@ -720,14 +721,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                     message("NOTE: Unable to recover scale() parameters. See '? make.tran'")
                 }
             }
-            else if (tran[1] %in% c("center", "centre", "standardize", "standardise")) { # datawizard support
-                dat = eval(attr(data, "call")$data)
-                if (is.null(dat)) dat = environment(trms)
-                tmp = eval(parse(text = as.character(lhs)[2]), env = dat)
-                tran = make.tran("scale", y = 0, 
-                                 center = attr(tmp, "center"), scale = attr(tmp, "scale"))
-            }
-            
+ 
             else if (tran[1] == "linkfun")
                 tran = as.list(environment(trms))[c("linkfun","linkinv","mu.eta","valideta","name")]
             else {

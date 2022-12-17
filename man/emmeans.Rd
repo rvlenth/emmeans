@@ -17,7 +17,9 @@ that is supported, such as the result of a call to \code{lm} or
 \item{specs}{A \code{character} vector specifying the names of the predictors
 over which EMMs are desired. \code{specs} may also be a \code{formula}
 or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
-is described in the Overview section below.}
+is described in the Overview section below. 
+\bold{Note:} We recommend \emph{against} using two-sided formulas; see the
+note below for \code{contr}.}
 
 \item{by}{A character vector specifying the names of predictors to condition on.}
 
@@ -30,8 +32,11 @@ interpretable. NOTE: If the \code{weights} argument is non-missing,
 \code{fac.reduce} is ignored.}
 
 \item{contr}{A character value or \code{list} specifying contrasts to be
-added. See \code{\link{contrast}}. NOTE: \code{contr} is ignored when
-\code{specs} is a formula.}
+added. See \code{\link{contrast}}. \bold{Note:} \code{contr} is ignored when
+\code{specs} is a formula. \bold{Note 2:}: We recommend \emph{against} using this
+argument; obtaining means and obtaining contrasts are two different things,
+and it is best to do them in separate steps, using the \code{\link{contrast}}
+function for the contrasts.}
 
 \item{options}{If non-\code{NULL}, a named \code{list} of arguments to pass
 to \code{\link{update.emmGrid}}, just after the object is constructed.
@@ -105,8 +110,8 @@ If \code{specs} is a \code{formula}, it should be of the form \code{~ specs},
 \code{~ specs | by}, \code{contr ~ specs}, or \code{contr ~ specs | by}. The
 formula is parsed and the variables therein are used as the arguments
 \code{specs}, \code{by}, and \code{contr} as indicated. The left-hand side is
-optional, but if specified it should be the name of a contrast family (e.g.,
-\code{pairwise}). Operators like
+optional (and we don't recommend it), but if specified it should be the 
+name of a contrast family (e.g., \code{pairwise}). Operators like
 \code{*} or \code{:} are needed in the formula to delineate names, but
 otherwise are ignored.
 

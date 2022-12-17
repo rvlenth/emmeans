@@ -109,7 +109,7 @@ three or more factors as appropriate, based on how they interact and what you ne
   1. See the help files for *both* `emmeans()` and `ref_grid()` for additional
      arguments that may prove useful. Many of the most useful arguments are
      passed to `ref_grid()`.
-  2. There are a number of [vignettes](index.html) provided with the package that include
+  2. There are a number of vignettes provided with the package that include
      examples and discussions for different kinds of situations. There is also an 
      [index of vignette topics](vignette-topics.html).
 

@@ -129,7 +129,7 @@ These results all differ from either of the previous two summaries -- again,
 because the averaging is done on the `conc` scale rather than the `log(conc)` 
 scale.
 
-###### {#regrid}
+###### {#regrid2}
 <!-- @index `regrid()`!`regrid` vs. `type`; `ref_grid()`!`regrid` argument -->
 Note: For those who want to routinely back-transform before averaging,
 the `regrid` argument in `ref_grid()` simplifies this. The first two
