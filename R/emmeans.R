@@ -301,10 +301,6 @@ emmeans = function(object, specs, by = NULL,
         options $tran = tran
     }
     
-    # This was added in 1.47, but causes problems
-    # if((length(specs) == 1) && (specs == "1"))
-    #     specs = character(0)
-    
     if(is.null(nesting <- object@model.info$nesting)) 
         {
         RG = object
@@ -475,15 +471,40 @@ emmeans = function(object, specs, by = NULL,
     
 
     if(!missing(contr)) { # return a list with emmeans and contrasts
-        # NULL-out a bunch of arguments to not pass. 
-        dontpass = c("data", "avgd.over", "by.vars", "df", "initMesg", "estName", "estType",
-                     "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars", 
-                     "tran", "tran.mult", "tran.offset", "tran2", "is.new.rg")
-        args = .zap.args(object = result, method = contr, by = by, ..., omit = dontpass)
-        ctrs = do.call(contrast, args)
-        result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)
-        if(!is.null(lbl <- object@misc$methDesc))
-            names(result)[1] = lbl
+        # we're gonna try to talk you out of it, if interactive
+            skip = FALSE
+            pri.vars = result@misc$pri.vars
+        if (interactive() && (sys.parent() == 0) && is.character(contr) && length(pri.vars) > 1) {
+            message("You have asked for ", contr, " contrasts of ",
+                    paste(pri.vars, collapse = "*"), ".")
+            skip = (length(pri.vars) > 2)
+            if(skip) {
+                message("This is too big a load, so we are skipping and doing only the means.")
+                warning("Too many factors in combination, so we are skipping the contrasts.")
+            }
+            else {
+                message("This might create a lot of output that perhaps you don't even want,\n",
+                        "and you can get whatever contrasts you need later.")
+                skip = menu(c("SKIP the contrasts (and see some instructions)", "Go ahead and INCLUDE the contrasts")) <= 1
+            }
+        }
+        if (skip)
+            warning("Since your requested contrasts have been skipped,\n",
+                    "try something like 'EMM <- .Last.value'\n",
+                    "then run 'contrast(EMM, \"", spc$lhs, "\", simple = \"", pri.vars[1], "\")'\n",
+                    "See 'vignette(\"QuickStart\", \"emmeans\")' for more information.",
+                    call. = FALSE)
+        else {
+            # NULL-out a bunch of arguments to not pass. 
+            dontpass = c("data", "avgd.over", "by.vars", "df", "initMesg", "estName", "estType",
+                         "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars", 
+                         "tran", "tran.mult", "tran.offset", "tran2", "is.new.rg")
+            args = .zap.args(object = result, method = contr, by = by, ..., omit = dontpass)
+            ctrs = do.call(contrast, args)
+            result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)
+            if(!is.null(lbl <- object@misc$methDesc))
+                names(result)[1] = lbl
+        }
     }
     
     result

@@ -17,6 +17,51 @@ title: "NEWS for the emmeans package"
     that were intended to clean up existing code and objects for the ancient
     version of **lsmeans**. We also completely removed several old functions
     from the codebase. Previously, we just ignored them.
+  * We are addressing the `pairwise ~ ...` syndrome that has plagued us for years.
+    Over time, plenty of users have latched on to the idea that 
+    `emmeans(model, pairwise ~ treatment)` gives you everything you want in one 
+    call. Likely true when you have one factor, but
+    when you have three factors, say, `pairwise ~ fac1*fac2*fac3` gives you
+    every possible comparison among cell means; typically, this creates an
+    intractable amount of output (e.g., 378 comparisons in a 3x3x3 case) -- most 
+    of which are diagonal comparisons (probably unwanted).
+    
+    So now we are fighting back: If a user is in interactive mode, specifies
+    contrasts in a direct `emmeans()` call, and there is more than one primary
+    factor, we try to talk the user into skipping the contrasts. See the example
+    below. If there are three or more primary factors, we don't give the user a
+    choice; we skip the contrasts. Again, this only affects direct (not from
+    within a function) calls to `emmeans()` in interactive mode, with a named
+    contrast.
+    
+```
+> warp.lm <- lm(breaks  wool * tension, data = warpbreaks)
+> emmeans(warp.lm, pairwise ~ wool*tension)
+
+You have asked for pairwise contrasts of wool*tension.
+This might create a lot of output that perhaps you don't even want,
+and you can get whatever contrasts you need later.
+
+1: SKIP the contrasts (and see some instructions)
+2: Go ahead and INCLUDE the contrasts
+
+Selection: 1
+ wool tension emmean   SE df lower.CL upper.CL
+ A    L         44.6 3.65 48     37.2     51.9
+ B    L         28.2 3.65 48     20.9     35.6
+ A    M         24.0 3.65 48     16.7     31.3
+ B    M         28.8 3.65 48     21.4     36.1
+ A    H         24.6 3.65 48     17.2     31.9
+ B    H         18.8 3.65 48     11.4     26.1
+
+Confidence level used: 0.95 
+Warning message:
+Since your requested contrasts have been skipped,
+try something like 'EMM <- .Last.value'
+then run 'contrast(EMM, "pairwise", simple = "wool")'
+See 'vignette("QuickStart", "emmeans")' for more information. 
+```
+
 
 
 ## emmeans 1.8.3

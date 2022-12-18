@@ -88,7 +88,7 @@ interest, you would do `pairs(EMM)` without a `by` variable. But you get a lot m
 comparisons this way.
 
 #### Interaction contrasts
-Sometimes you may want to exampne *interaction contrasts*, which are contrasts of contrasts. The thing to know here is that `contrast()` or (`pairs()`) creates the same kind of object as `emmeans()`, so you can run them multiple time. For example,
+Sometimes you may want to examine *interaction contrasts*, which are contrasts of contrasts. The thing to know here is that `contrast()` or (`pairs()`) creates the same kind of object as `emmeans()`, so you can run them multiple time. For example,
 ```r
 CON <- pairs(EMM, by = "dose")
 contrast(CON, "consec", by = NULL)    # by = NULL is essential here!
@@ -115,7 +115,8 @@ three or more factors as appropriate, based on how they interact and what you ne
 
 ## Common things that can go wrong {#problems}
 
-### Only one mean is obtained -- or fewer than expected
+### Only one mean is obtained -- or fewer than expected {#covar}
+<!-- @index Only one mean; Too few means -->
 This is probably the most common issue, and it can happen when a treatment is coded as a 
 **numeric predictor** rather than a factor. Instead of getting a mean for each 
 treatment, you get a mean at the average of those numerical values. 
@@ -130,7 +131,8 @@ treatment, you get a mean at the average of those numerical values.
      useful to estimate its slope for each level of that factor. See the documentation
      for `emtrends()`
      
-### Having trouble with follow-up analyses
+### Having trouble with follow-up analyses, and the `pairwise ~ ...` syndrome {#pairwise}
+<!-- @index `pairwise ~ factors`!Why you should avoid this -->
 The basic object returned by `emmeans()` and `contrast()` is of class `emmGrid`,
 and additional `emmeans()` and `contrast()` calls can accept `emmGrid` objects.
 However, some options create *lists* of `emmGrid` objects, and that makes things 
