@@ -17,6 +17,7 @@ title: "NEWS for the emmeans package"
     that were intended to clean up existing code and objects for the ancient
     version of **lsmeans**. We also completely removed several old functions
     from the codebase. Previously, we just ignored them.
+  * More reliable dispatching of `recover_data()` and `emm_basis()` methods (#392)
   * We are addressing the `pairwise ~ ...` syndrome that has plagued us for years.
     Over time, plenty of users have latched on to the idea that 
     `emmeans(model, pairwise ~ treatment)` gives you everything you want in one 

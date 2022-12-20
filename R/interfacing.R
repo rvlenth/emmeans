@@ -95,7 +95,14 @@ recover_data = function(object, ...) {
         if(!is.null(rd))
             return(rd(object, ...))
     }
-    UseMethod("recover_data")
+    ## look for an inside method
+    for (cl in class(object)) {
+        mth = utils::getAnywhere(paste("recover_data", cl, sep = "."))
+        if (length(mth$objs) > 0)
+            return((mth$objs[[1]])(object, ...))
+    }
+    UseMethod("recover_data")  ## This call has to be here to establish recover_data as a generic
+    
 }
 
 # get classes that are OK for external code to modify
@@ -103,7 +110,7 @@ recover_data = function(object, ...) {
 # nor ones in 3rd place or later in inheritance
 .chk.cls = function(object) {
     sacred = c("call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
-    setdiff(class(object)[1:2], sacred)
+    setdiff(head(class(object), 2), sacred)
 }
 
 ### My internal method dispatch -- we prefer outside methods
@@ -347,7 +354,12 @@ emm_basis = function(object, trms, xlev, grid, ...) {
         if(!is.null(emb))
             return(emb(object, trms, xlev, grid, ...))
     }
-    UseMethod("emm_basis") # lands here only if no outside method found
+    for (cl in class(object)) {
+        mth = utils::getAnywhere(paste("emm_basis", cl, sep = "."))
+        if (length(mth$objs) > 0)
+            return((mth$objs[[1]])(object, trms, xlev, grid, ...))
+    }
+    UseMethod("emm_basis")  ## This call has to be here to establish emm_basis as a generic
 }
 
 # Hidden courtesy function that provides access to all recover_data methods
