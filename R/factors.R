@@ -24,10 +24,10 @@
 # Combine two or more factors (named in facs) into a new factor named newname
 #' Manipulate factors in a reference grid
 #' 
-#' These functions manipulate the velels of factors comprising a reference
+#' These functions manipulate the levels of factors comprising a reference
 #' grid by combining factor levels, splitting a factor's levels into 
-#' combinations of newly-defined factors, or by creating a grouping factor in which 
-#' factor(s) levels are nested.
+#' combinations of newly-defined factors, creating a grouping factor in which 
+#' factor(s) levels are nested, or permuting the order of levels of a factor
 #' 
 #' 
 #' @param object An object of class \code{emmGrid}
@@ -304,5 +304,42 @@ add_grouping = function(object, newname, refname, newlevs, ...) {
     object@model.info$nesting = nesting
     
     object
+}
+
+#' @rdname manip-factors
+#' @param perm Integer vector having the same length as that of 
+#'   \code{object@levels[[fac]]}. The value 1 should be in the position of the
+#'   desired first level, 2 for the desired 2nd level, etc.
+#' @section The \code{permute_levels} function:
+#' This function permutes the levels of \code{fac}. The returned object
+#' has the same factors, same \code{by} variables, but with the levels
+#' of \code{fac} permuted. \code{perm} should always contain some permutation
+#' of \code{1:k} where \code{k} is the number of levels of \code{fac}.
+#' The order of the columns in \code{object@grid} may be altered.
+#' 
+#' NOTE: \code{permute_levels} does not work when \code{fac} is nested in some other factor.
+#' 
+#' @examples
+#' str(v.c.g)
+#' str(permute_levels(v.c.g, "cyl", c(2,3,1)))
+#' 
+#' @export
+permute_levels = function(object, fac, perm) {
+    by.orig = object@misc$by.vars
+    newlevs = object@levels[[fac]]
+    newlevs[perm] = newlevs
+    f = facs = names(object@levels)
+    # Here's the trick: nest fac in .tmp. (one group per level)
+    obj1 = add_grouping(object, ".tmp.", fac, perm)
+    f[facs == fac] = ".tmp."
+    # Then average-out fac, leaving .tmp. w/ same means
+    obj2 = emmeans(obj1, f, by = NULL)
+    # Finally, replace the names and levels of .tmp
+    l = obj2@levels
+    l[[which(names(l) == ".tmp.")]] = newlevs
+    names(l)[names(l) == ".tmp."] = fac
+    levels(obj2) = l
+    obj2@misc$by.vars = by.orig
+    obj2
 }
 

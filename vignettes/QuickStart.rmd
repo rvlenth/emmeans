@@ -33,9 +33,19 @@ Much of what you do with the **emmeans** package involves these three basic step
      is an extremely important step because **emmeans** does not analyze your data,
      it summarizes your model. If it is a bad model, you will likely get 
      misleading results from this package -- the garbage in, garbage out principle.
-  1. Run  `EMM <- emmeans(...)` to obtain estimates of means or marginal means
+     If you're not sure whether your model is any good, this is a good times
+     to get statistical consulting help. This really *is* like rocket science, not
+     just a matter of getting programs to run.
+  1. Run  `EMM <- emmeans(...)` (see scenarios below) to obtain estimates of 
+     means or marginal means
   2. Run `contrast(EMM, ...)` or `pairs(EMM)` one or more times to obtain
      estimates of contrasts or pairwise comparisons among the means.
+
+**Note:** A lot of users have developed the habit of running something like 
+`emmeans(model, pairwise ~ factor(s))`, which conflates steps 1 and 2. We recommend
+*against* doing this because it often yields output you don't want or need -- especially
+when there is more than one factor. You are better off keeping steps 1 and 2 separate.
+What you do in step 2 depends on how many factors you have, and how they relate.
      
 ### One-factor model {#one-factor}
 If one-factor model fits well and the factor is named `treatment`, do
@@ -47,32 +57,36 @@ EMM    # display the means
 contrast(EMM, "pairwise")    # or pairs(EMM)
 ```
 You may specify other contrasts in the second argument of the `contrast()` call, e.g. `"trt.vs.ctrl", ref = 1` (compare each mean to the first),
-or `"consec"` (compare 2 vs 1, 3 vs 2, etc.), or "`"poly", max.degree = 3` (polynomial contrasts)
+or `"consec"` (compare 2 vs 1, 3 vs 2, etc.), or `"poly", max.degree = 3` (polynomial contrasts)
 
 ### Two factors, no interaction {#additive}
 If the model fits well and factors are named `treat` and `dose`, and they don't interact, follow 
-the same steps as for one factor using `treat` and then `dose` in the role of `treatment`. These analyses will yield the estimated *marginal* means for
-each factor, and comparisons/contrasts thereof.
+the same steps as for one factor at a time.
+That is, something like
+```
+(EMM1 <- emmeans(model, ~ treat))
+pairs(EMM1)
 
-If you instead follow the procedures below for a model with interaction, you will find 
-that the contrasts or comparisons, conditional on one factor, will all be the 
-same as the marginal contrasts or comparisons described here.
+(EMM2 <- emmeans(model, ~ dose))
+pairs(EMM2)
+```
+These analyses will yield the estimated *marginal* means for
+each factor, and comparisons/contrasts thereof.
 
 
 [Back to Contents](#contents)
 
 ### Two interacting factors {#interactions}
 In this case, unless the interaction effect is negligible, we usually want to 
-obtain the cell means (for combinations of the two factors), and then compare
-or contrasts them separately in each row and column of a tabular presentation
-of the means
+do "simple comparisons" of the cell means. That is, compare
+or contrast the means separately, holding one factor fixed at each level.
 ```r
 EMM <- emmeans(model, ~ treat * dose)
 EMM    # display the cell means
 
-### pairwise comparisons within each row and column
-pairs(EMM, by = "dose")    # compare treats for each dose
-pairs(EMM, by = "treat")    # compare doses for each treat
+### Simple pairwise comparisons...
+pairs(EMM, simple = "treat")    # compare treats for each dose -- "simple effects"
+pairs(EMM, simple = "dose")     # compare doses for each treat
 ```
 The default is to apply a separate Tukey adjustment to the *P* values in each
 `by` group (so if each group has just 2 means, no adjustment at all is applied).
@@ -83,7 +97,7 @@ is invalid when you have more than one set of pairwise comparisons.) For example
 test(pairs(EMM, by = "dose"), by = NULL, adjust = "mvt")
 ```
 #### Diagonal comparisons
-If the "diagonal" comparisons (not withing the same row or column) are of
+If the "diagonal" comparisons (where *both* factors differ) are of
 interest, you would do `pairs(EMM)` without a `by` variable. But you get a lot more
 comparisons this way.
 
@@ -131,16 +145,16 @@ treatment, you get a mean at the average of those numerical values.
      useful to estimate its slope for each level of that factor. See the documentation
      for `emtrends()`
      
-### Having trouble with follow-up analyses, and the `pairwise ~ ...` syndrome {#pairwise}
+### Having trouble with follow-up analyses, and the `pairwise ~ ...` recipe {#pairwise}
 <!-- @index `pairwise ~ factors`!Why you should avoid this -->
 The basic object returned by `emmeans()` and `contrast()` is of class `emmGrid`,
 and additional `emmeans()` and `contrast()` calls can accept `emmGrid` objects.
 However, some options create *lists* of `emmGrid` objects, and that makes things 
-more complicated. The most common case is using a call like 
+a bit confusing. The most common case is using a call like 
 `emmeans(model, pairwise ~ treat * dose)`, which computes the means *and* 
 all pairwise comparisons -- a list of two `emmGrid`s. If you try to obtain additional
 contrasts, say, of this result, `contrast()` makes a guess that you want to
-run it on just the first element, and issues a message that says so. 
+run it on just the first element. 
 
 This causes confusion (I know, because I get a lot of questions about it).
 I recommend that you avoid using the `pairwise ~` construct altogether: 

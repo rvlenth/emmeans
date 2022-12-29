@@ -4,6 +4,7 @@
 \alias{comb_facs}
 \alias{split_fac}
 \alias{add_grouping}
+\alias{permute_levels}
 \title{Manipulate factors in a reference grid}
 \usage{
 comb_facs(object, facs, newname = paste(facs, collapse = "."),
@@ -12,6 +13,8 @@ comb_facs(object, facs, newname = paste(facs, collapse = "."),
 split_fac(object, fac, newfacs, ...)
 
 add_grouping(object, newname, refname, newlevs, ...)
+
+permute_levels(object, fac, perm)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -44,15 +47,19 @@ values of \code{newlevs} as its levels. The order of levels in \code{newlevs}
 is the same as the order of the level combinations produced by 
 \code{\link{expand.grid}} applied to the levels of \code{refname} -- that is, the
 first factor's levels change the fastest and the last one's vary the slowest.}
+
+\item{perm}{Integer vector having the same length as that of 
+\code{object@levels[[fac]]}. The value 1 should be in the position of the
+desired first level, 2 for the desired 2nd level, etc.}
 }
 \value{
 A modified object of class \code{emmGrid}
 }
 \description{
-These functions manipulate the velels of factors comprising a reference
+These functions manipulate the levels of factors comprising a reference
 grid by combining factor levels, splitting a factor's levels into 
-combinations of newly-defined factors, or by creating a grouping factor in which 
-factor(s) levels are nested.
+combinations of newly-defined factors, creating a grouping factor in which 
+factor(s) levels are nested, or permuting the order of levels of a factor
 }
 \section{The \code{comb_facs} function}{
 
@@ -103,6 +110,17 @@ When \code{refname} specifies more than one factor, this can
   are five different tensions (L, M, H in prod 1, and L, M in prod 2).
 }
 
+\section{The \code{permute_levels} function}{
+
+This function permutes the levels of \code{fac}. The returned object
+has the same factors, same \code{by} variables, but with the levels
+of \code{fac} permuted. \code{perm} should always contain some permutation
+of \code{1:k} where \code{k} is the number of levels of \code{fac}.
+The order of the columns in \code{object@grid} may be altered.
+
+NOTE: \code{permute_levels} does not work when \code{fac} is nested in some other factor.
+}
+
 \examples{
 mtcars.lm <- lm(mpg ~ factor(vs)+factor(cyl)*factor(gear), data = mtcars)
 (v.c.g <- ref_grid(mtcars.lm))
@@ -141,5 +159,8 @@ gwrg <- add_grouping(ref_grid(warp.lm),
 emmeans(gwrg, ~ wool * tension)   # some NAs due to impossible combinations
 
 emmeans(gwrg, "prod")
+
+str(v.c.g)
+str(permute_levels(v.c.g, "cyl", c(2,3,1)))
 
 }
