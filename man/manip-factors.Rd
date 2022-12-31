@@ -14,7 +14,7 @@ split_fac(object, fac, newfacs, ...)
 
 add_grouping(object, newname, refname, newlevs, ...)
 
-permute_levels(object, fac, perm)
+permute_levels(object, fac, pos)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -48,9 +48,12 @@ is the same as the order of the level combinations produced by
 \code{\link{expand.grid}} applied to the levels of \code{refname} -- that is, the
 first factor's levels change the fastest and the last one's vary the slowest.}
 
-\item{perm}{Integer vector having the same length as that of 
-\code{object@levels[[fac]]}. The value 1 should be in the position of the
-desired first level, 2 for the desired 2nd level, etc.}
+\item{pos}{Integer vector consisting of some permutation of the sequence
+\code{1:k}, where \code{k} is the number of levels of \code{fac}.
+This determines which position each level of \code{fac} will occupy
+after the levels are permuted; thus, if the
+levels of \code{fac} are \code{A,B,C,D}, and \code{pos = c(3,1,2,4)}, 
+then the permuted levels will be \code{B,C,A,D}.}
 }
 \value{
 A modified object of class \code{emmGrid}
@@ -114,11 +117,15 @@ When \code{refname} specifies more than one factor, this can
 
 This function permutes the levels of \code{fac}. The returned object
 has the same factors, same \code{by} variables, but with the levels
-of \code{fac} permuted. \code{perm} should always contain some permutation
-of \code{1:k} where \code{k} is the number of levels of \code{fac}.
+of \code{fac} permuted. 
 The order of the columns in \code{object@grid} may be altered.
 
-NOTE: \code{permute_levels} does not work when \code{fac} is nested in some other factor.
+NOTE: \code{fac} must not be nested in another factor. \code{permute_levels} 
+throws an error when \code{fac} is nested.
+
+NOTE: Permuting the levels of a numeric predictor is tricky. For example,
+if you want to display the new ordering of levels in \code{emmip()},
+you must add the arguments \code{style = "factor"} and \code{nesting.order = TRUE}.
 }
 
 \examples{

@@ -306,31 +306,40 @@ add_grouping = function(object, newname, refname, newlevs, ...) {
     object
 }
 
+
 #' @rdname manip-factors
-#' @param perm Integer vector having the same length as that of 
-#'   \code{object@levels[[fac]]}. The value 1 should be in the position of the
-#'   desired first level, 2 for the desired 2nd level, etc.
+#' @param pos Integer vector consisting of some permutation of the sequence
+#' \code{1:k}, where \code{k} is the number of levels of \code{fac}.
+#' This determines which position each level of \code{fac} will occupy
+#' after the levels are permuted; thus, if the
+#' levels of \code{fac} are \code{A,B,C,D}, and \code{pos = c(3,1,2,4)}, 
+#' then the permuted levels will be \code{B,C,A,D}.
+#' 
 #' @section The \code{permute_levels} function:
 #' This function permutes the levels of \code{fac}. The returned object
 #' has the same factors, same \code{by} variables, but with the levels
-#' of \code{fac} permuted. \code{perm} should always contain some permutation
-#' of \code{1:k} where \code{k} is the number of levels of \code{fac}.
+#' of \code{fac} permuted. 
 #' The order of the columns in \code{object@grid} may be altered.
 #' 
-#' NOTE: \code{permute_levels} does not work when \code{fac} is nested in some other factor.
+#' NOTE: \code{fac} must not be nested in another factor. \code{permute_levels} 
+#' throws an error when \code{fac} is nested.
+#' 
+#' NOTE: Permuting the levels of a numeric predictor is tricky. For example,
+#' if you want to display the new ordering of levels in \code{emmip()},
+#' you must add the arguments \code{style = "factor"} and \code{nesting.order = TRUE}.
 #' 
 #' @examples
 #' str(v.c.g)
 #' str(permute_levels(v.c.g, "cyl", c(2,3,1)))
 #' 
 #' @export
-permute_levels = function(object, fac, perm) {
+permute_levels = function(object, fac, pos) {
     by.orig = object@misc$by.vars
     newlevs = object@levels[[fac]]
-    newlevs[perm] = newlevs
+    newlevs[pos] = newlevs
     f = facs = names(object@levels)
     # Here's the trick: nest fac in .tmp. (one group per level)
-    obj1 = add_grouping(object, ".tmp.", fac, perm)
+    obj1 = add_grouping(object, ".tmp.", fac, pos)
     f[facs == fac] = ".tmp."
     # Then average-out fac, leaving .tmp. w/ same means
     obj2 = emmeans(obj1, f, by = NULL)
