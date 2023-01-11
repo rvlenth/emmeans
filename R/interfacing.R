@@ -178,8 +178,12 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     vars = setdiff(.all.vars(trms), params)
     if(!missing(addl.vars))
         vars = union(vars, addl.vars)
-    if (!missing(frame) && is.null(data) && !.has.fcns(trms))
-        data = frame
+    .offset. = NULL
+    if (!missing(frame)) {
+        .offset. = model.offset(frame)
+        if(is.null(data) && !.has.fcns(trms))
+            data = frame
+    }
     tbl = data
     if (length(vars) == 0 || vars[1] == "1") {
         tbl = data.frame(c(1,1))
@@ -240,6 +244,12 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     else {
         tbl = tbl[, vars, drop = FALSE] # consider only the variables actually needed
         tbl = tbl[complete.cases(tbl), , drop=FALSE]
+    }
+    
+    if(!is.null(.offset.) && !all(.offset. == 0)) {
+        tbl[[".offset."]] = .offset.
+        addl.vars = if(!missing(addl.vars)) c(addl.vars, ".offset.")
+                    else                    ".offset."
     }
     
     attr(tbl, "call") = object # the original call

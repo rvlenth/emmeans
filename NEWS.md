@@ -21,6 +21,19 @@ title: "NEWS for the emmeans package"
     from the codebase. Previously, we just ignored them.
   * More reliable dispatching of `recover_data()` and `emm_basis()` methods (#392)
   * New `permute_levels()` function to change the order of levels of a factor (#393)
+  * **This may alter results of existing code for models involving offsets:**
+    A user discovered an issue whereby offsets specified in an `offset()` model
+    term are accounted for, but those specified in an `offset = ...` argument
+    are ignored. We have revised the `recover_data()` and `ref_grid()` code so
+    that offsets specified either way (or even both) are treated the same way
+    (which is to *include* them in predictions unless overridden by
+    an `offset` argument in `emmeans()` or `ref_grid()`). 
+    
+    This change creates a subtle difference in cases where you want offsets to
+    depend on other predictors: In a model with formula `y ~ trt + offset(off)`,
+    if you used to specify `cov.reduce = off ~ trt`, now you need `cov.reduce =
+    .offset. ~ trt`. The latter will work the same with the model `y ~ trt,
+    offset = off`.
   * Over time, too many users have latched on to the idea that 
     `emmeans(model, pairwise ~ treatment(s))` is *the* recipe for using `emmeans()`.
     It works okay when you have just one factor, but

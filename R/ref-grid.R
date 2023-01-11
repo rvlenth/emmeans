@@ -819,14 +819,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     }
 
     # Any offsets??? (misc$offset.mult might specify removing or reversing the offset)
+    om = ifelse(is.null(misc$offset.mult), 1, misc$offset.mult)
     if (!missing(offset)) {  # For safety, we always treat it as scalar
         if (offset[1] != 0)
             grid[[".offset."]] = offset[1]
     }
+    else if(".offset." %in% names(grid))
+        grid[[".offset."]] = om * grid[[".offset."]]
     else if(!is.null(attr(trms,"offset"))) {
-        om = 1
-        if (!is.null(misc$offset.mult))
-            om = misc$offset.mult
         if (any(om != 0))
             grid[[".offset."]] = om * .get.offset(trms, grid)
     }
