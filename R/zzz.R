@@ -100,6 +100,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 
 
 #' @rdname extending-emmeans
+#' @order 90
 #' @section Registering S3 methods for a model class:
 #' The \code{.emm_register} function is provided as a convenience to conditionally 
 #' register your

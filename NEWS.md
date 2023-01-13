@@ -34,6 +34,13 @@ title: "NEWS for the emmeans package"
     if you used to specify `cov.reduce = off ~ trt`, now you need `cov.reduce =
     .offset. ~ trt`. The latter will work the same with the model `y ~ trt,
     offset = off`.
+  * Recoded some portions of the support functions for `zeroinfl` and `hurdle`
+    objects. We now use numerical differentiation to do the delta method,
+    and this comes out a lot cleaner. 
+  * Per the improved count-model support, we are now exporting and have documented 
+    two new functions `hurdle.support()` and `zi.support()` that may be useful in
+    providing comparable support in other packages that offer zero-inflated
+    models.
   * Over time, too many users have latched on to the idea that 
     `emmeans(model, pairwise ~ treatment(s))` is *the* recipe for using `emmeans()`.
     It works okay when you have just one factor, but

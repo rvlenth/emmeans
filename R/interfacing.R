@@ -88,6 +88,7 @@
 #' @seealso \href{../doc/xtending.html}{Vignette on extending emmeans}
 #' 
 #' @export
+#' @order 1
 recover_data = function(object, ...) {
     # look for outside methods first
     for (cl in .chk.cls(object)) {
@@ -172,6 +173,7 @@ recover_data = function(object, ...) {
 #' 
 #' @method recover_data call
 #' @export
+#' @order 2
 recover_data.call = function(object, trms, na.action, data = NULL, 
                              params = "pi", frame, addl.vars, ...) {
     fcall = object # because I'm easily confused
@@ -309,6 +311,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 #--------------------------------------------------------------
 
 #' @rdname extending-emmeans
+#' @order 11
 #' @param xlev Named list of factor levels (\emph{excluding} ones coerced to 
 #'   factors in the model formula)
 #' @param grid A \code{data.frame} (provided by \code{ref_grid}) containing 
@@ -374,12 +377,14 @@ emm_basis = function(object, trms, xlev, grid, ...) {
 
 # Hidden courtesy function that provides access to all recover_data methods
 #' @rdname extending-emmeans
+#' @order 21
 #' @export
 .recover_data = function(object, ...)
     recover_data(object, ...)
 
 # Hidden courtesy function that provides access to all emm_basis methods
 #' @rdname extending-emmeans
+#' @order 22
 #' @return \code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
 #'   \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
 #'   namespace, thus providing access to all existing methods.
