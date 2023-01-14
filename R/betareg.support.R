@@ -89,7 +89,8 @@ emm_basis.betareg = function(object, trms, xlev, grid,
             bhat = mu * (1 - mu) / (1 + phi)
             dbhat.dm = (1 - 2 * mu) / (1 + phi)
             dbhat.dp = -bhat / (1 + phi)
-            delta = cbind(diag(dbhat.dm) %*% X, diag(dbhat.dp) %*% Z)
+            # delta = cbind(diag(dbhat.dm) %*% X, diag(dbhat.dp) %*% Z)
+            delta = cbind(sweep(X, 1, dbhat.dm, "*"), sweep(Z, 1, dbhat.dp, "*"))
             V = delta %*% tcrossprod(V, delta)
             misc = list()
         }

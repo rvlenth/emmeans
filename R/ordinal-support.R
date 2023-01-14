@@ -337,7 +337,8 @@ emm_basis.clm = function (object, trms, xlev, grid,
     if (!is.null(object@grid$.offset.))
         eta = eta + object@grid$.offset.
     for (j in scols) linfct[, j] = eta * linfct[, j]
-    linfct = (.diag(rsigma) %*% linfct) [, active, drop = FALSE]
+    # linfct = (.diag(rsigma) %*% linfct) [, active, drop = FALSE]
+    linfct = sweep(linfct, 1, rsigma, "*") [, active, drop = FALSE]
     list(est = eta * rsigma, V = linfct %*% tcrossprod(object@V, linfct))
 }
 

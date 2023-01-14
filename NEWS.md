@@ -41,6 +41,9 @@ title: "NEWS for the emmeans package"
     two new functions `hurdle.support()` and `zi.support()` that may be useful in
     providing comparable support in other packages that offer zero-inflated
     models.
+  * Efficiency improvements: Several places in the code where we multiply
+    a matrix by a diagonal matrix, we replace this by equivalent code using
+    the `sweep()` function.
   * Over time, too many users have latched on to the idea that 
     `emmeans(model, pairwise ~ treatment(s))` is *the* recipe for using `emmeans()`.
     It works okay when you have just one factor, but

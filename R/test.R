@@ -490,17 +490,3 @@ symmint = function(ctr) {
     return(function(x) ctr + c(-1, 1)) 
 }
 
-### Squash rows of L to best nrows of row space
-### If nrows not specified, determine via those with SVs > tol
-### ... but I guess this is no longer needed at all...
-# .squash = function(L, nbasis, tol = 1e-3, nrow) {
-#     if(!missing(nbasis))
-#         L = estimability::estble.subspace(L, nbasis)
-#     svd = try(svd(L, nu = 0), silent = TRUE)
-#     if(inherits(svd, "try-error")) return(L * 0)
-#     if (missing(nrow))
-#         nrow = sum(svd$d > tol)
-#     r = seq_len(nrow)
-#     diag(svd$d[r], nrow = nrow) %*% t(svd$v[, r, drop = FALSE])
-# }
-

@@ -1109,8 +1109,8 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         object@bhat = link$linkfun(object@bhat)
         Vee = object@V
         if(length(incl) > 0) {
-            D = .diag(1/link$mu.eta(object@bhat[incl]))
-            object@V = D %*% tcrossprod(Vee[vincl, vincl, drop = FALSE], D)
+            D = 1 / link$mu.eta(object@bhat[incl])
+            object@V = sweep(sweep(Vee[vincl, vincl, drop = FALSE], 1, D, "*"), 2, D, "*")
         }
         if (!is.na(PB[1])) {
             PB[PB <= 0] = NA

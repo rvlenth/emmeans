@@ -371,20 +371,19 @@ emmeans = function(object, specs, by = NULL,
             if (is.matrix(weights)) {
                 wtrow = 0
                 fac.reduce = function(coefs) {
-                    wtmat = .diag(weights[wtrow+1, ]) / sum(weights[wtrow+1, ])
-                    ans = apply(wtmat %*% coefs, 2, sum)
+                    wtvec = weights[wtrow+1, ] / sum(weights[wtrow+1, ])
+                    ans = apply(sweep(coefs, 1, wtvec, "*"), 2, sum)
                     wtrow <<- (1 + wtrow) %% nrow(weights)
                     ans
                 }
             }
             else if (is.numeric(weights)) {
-                wtmat = .diag(weights)
                 wtsum = sum(weights)
                 if (wtsum <= 1e-8) wtsum = NA
                 fac.reduce = function(coefs) {
-                    if (nrow(coefs) != nrow(wtmat))
+                    if (nrow(coefs) != length(weights))
                         stop("Nonconforming number of weights -- need ", nrow(coefs))
-                    apply(wtmat %*% coefs, 2, sum) / wtsum
+                    apply(sweep(coefs, 1, weights, "*"), 2, sum) / wtsum
                 }
             }
         }
@@ -402,7 +401,7 @@ emmeans = function(object, specs, by = NULL,
                 fq = RG@grid[[".wgt."]][idx]
                 if (weights == "fl")
                     fq = 0 + (fq > 0)  # fq = 1 if > 0, else 0
-                apply(.diag(fq) %*% RG@linfct[idx, , drop=FALSE], 2, sum) / sum(fq)
+                apply(sweep(RG@linfct[idx, , drop=FALSE], 1, fq, "*"), 2, sum) / sum(fq)
             })
         else
             K = apply(row.idx, use.mars, function(idx) {
