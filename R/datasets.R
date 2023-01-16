@@ -309,7 +309,7 @@
 #'   \url{http://users.stat.umn.edu/~gary/Book.html}.) Observations 7, 22, 23,
 #'   31, 33, and 35 have been omitted, creating a more notable imbalance.
 #' @examples
-#'   pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+#'   pigs.lm <- lm(inverse(conc) ~ source + factor(percent), data = pigs)
 #'   emmeans(pigs.lm, "source")
 "pigs"
 

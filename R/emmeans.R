@@ -482,7 +482,7 @@ emmeans = function(object, specs, by = NULL,
         if(!is.null(lbl <- object@misc$methDesc))
             names(result)[1] = lbl
         
-        if (warn.contr)
+        if (warn.contr && (nrow(result$contr@grid) > 21))
             warning("You may have generated more contrasts than you really wanted. In the future,\n",
                     "we suggest you avoid things like 'pairwise ~ fac1*fac2' when you have\n",
                     "more than one factor. Instead, call emmeans() with just '~ fac1*fac2' and do the\n",

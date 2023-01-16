@@ -28,7 +28,7 @@ pigs
 A two-factor experiment with some observations lost
 }
 \examples{
-  pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
+  pigs.lm <- lm(inverse(conc) ~ source + factor(percent), data = pigs)
   emmeans(pigs.lm, "source")
 }
 \keyword{datasets}

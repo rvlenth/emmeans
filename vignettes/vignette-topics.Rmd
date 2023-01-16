@@ -180,7 +180,7 @@ vignette: >
   * [`.emmc` functions](comparisons.html#linfcns)
   * **emmeans** package
       * [Exporting extensions to](xtending.html#exporting)
-      * [Quick-start guide](QuickStart.html)
+      * [Quick-start guide](AQuickStart.html)
   * [`emmeans()`](basics.html#emmeans)
       * [And the underlying model](FAQs.html#nowelch)
       * [Changing defaults](utilities.html#defaults)
@@ -459,7 +459,7 @@ vignette: >
   * [Odds ratios](transformations.html#oddsrats)
       * [but I wanted differences](FAQs.html#ratios)
   * [Offsets](sophisticated.html#offsets)
-  * [Only one mean](QuickStart.html#covar)
+  * [Only one mean](AQuickStart.html#covar)
   * [`opt.digits` option](utilities.html#digits)
   * [Options](utilities.html#options)
       * [Startup](utilities.html#startup)
@@ -482,7 +482,7 @@ vignette: >
       * [Interpreting](basics.html#pvalues)
   * [`pairs()`](comparisons.html#pairwise)
   * `pairwise ~ factors`
-      * [Why you should avoid this](QuickStart.html#pairwise)
+      * [Why you should avoid this](AQuickStart.html#pairwise)
   * [Pairwise comparisons](comparisons.html#pairwise)
       * [Matrix displays](comparisons.html#pwpm)
   * [`pairwise` contrasts](comparisons.html#contrasts)
@@ -529,7 +529,7 @@ vignette: >
 
   * [`qdrg()`](FAQs.html#qdrg)
   * [Quadratic terms](basics.html#depcovs)
-  * [Quick-start guide](QuickStart.html)
+  * [Quick-start guide](AQuickStart.html)
 
 
 [Back to top](#topnav)
@@ -652,7 +652,7 @@ vignette: >
       * [Noninferiority](confidence-intervals.html#equiv)
       * [Nonzero null](confidence-intervals.html#summary)
       * [One- and two-sided](confidence-intervals.html#summary)
-  * [Too few means](QuickStart.html#covar)
+  * [Too few means](AQuickStart.html#covar)
   * Transformations
       * [Adding after the fact](transformations.html#after)
       * [Auto-detected](transformations.html#auto)

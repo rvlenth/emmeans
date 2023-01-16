@@ -3,7 +3,7 @@ title: "Quick start guide for **emmeans**"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
-  %\VignetteIndexEntry{Basics of EMMs}
+  %\VignetteIndexEntry{Quick-start guide for emmeans}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,7 +22,8 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   5. [Three or more factors](#multi-factor)
   6. [Additional options](#options)
   7. [Common things that can go wrong](#problems)
-  
+  8. [Further reading](#more)
+
 
 ## The three basic steps {#steps}
 Much of what you do with the **emmeans** package involves these three basic steps:
@@ -162,5 +163,39 @@ Get your means in one step, and get your contrasts in separate step(s).
 The `pairwise ~` construct is generally useful if you have only one factor; 
 otherwise, it likely gives you results you don't want.
 
+## Further reading {#more}
+There are several of these vignettes that offser more details and 
+more advanced topics. [An index of all these vignette topics is available here](vignette-topics.html).
+
+The strings linked below are the names of the vignettes; i.e., they can
+also be accessed via `vignette("`*name*`", "emmeans")`
+
+  * Models that are supported in **emmeans** (there are lots of them)
+    ["models"](models.html)
+  * Basic ideas that underlie estimated marginal means (EMMs):
+    ["Basics"](Basics.html). These concepts
+    emphasize *experimental* data, as distinct from *observational* studies.
+  * Confidence intervals and tests: 
+    ["confidence-intervals"](confidence-intervals.html)
+  * Often, users want to compare or contrast EMMs: ["comparisons"](comparisons.html)
+  * Working with response transformations and link functions:
+    ["transformations"](transformations.html)
+  * Multi-factor models with interactions: ["interactions"](interactions.html)
+  * Making predictions from your model: ["predictions"](predictions.html)
+  * Examples of more sophisticated models (e.g., mixed, ordinal, MCMC)
+    ["sophisticated"](sophisticated.html)
+  * Working with messy data, counterfactuals, mediating covariates, 
+    and nested effects: 
+    ["messy-data"](messy-data.html). Here is where you may see more on
+    how **emmeans** might help with observational data.
+  * Utilities for working with `emmGrid` objects: ["utilities"](utilities.html)
+  * Adding **emmeans** support to your package: ["xtending"](xtending.html)
+  * Explanations of some unusual aspects of **emmeans**: ["xplanations"](xplanations.html)
+    and some custom variations on compact letter displays: 
+    ["re-engineering-clds"](re-engineering-clds.html)
+  * Frequently asked questions: ["FAQs"](FAQs.html)
+
+
 [Back to Contents](#contents)
 
+[Index of all vignette topics](vignette-topics.html)

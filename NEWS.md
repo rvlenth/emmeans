@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.3-0999xxx
+## emmeans 1.8.4
   * Fix to `scale()` response transformation when either `center` or `scale` 
     is `FALSE`. I also added support for `center()` and `standardize()` from
     the **datawizard** package as response transformations, though these are
@@ -45,7 +45,7 @@ title: "NEWS for the emmeans package"
     a matrix by a diagonal matrix, we replace this by equivalent code using
     the `sweep()` function.
   * Over time, too many users have latched on to the idea that 
-    `emmeans(model, pairwise ~ treatment(s))` is *the* recipe for using `emmeans()`.
+    `emmeans(model, pairwise ~ treatment(s))` as *the* recipe for using `emmeans()`.
     It works okay when you have just one factor, but
     when you have three factors, say, `pairwise ~ fac1*fac2*fac3` gives you
     every possible comparison among cell means; often, this creates an
@@ -53,11 +53,12 @@ title: "NEWS for the emmeans package"
     of which are diagonal comparisons.
     
     So now, if a user is in interactive mode, specifies contrasts in a *direct*
-    `emmeans()` call (i.e., `sys.parent() == 0`), and there is more than one
-    *primary* factor (not including `by` factors), we issue an advisory warning
-    message: "You may have generated more contrasts than you really wanted...". 
-    Because of13*12/2 the restrictions on when this warning is issued, it will not affect
-    reverse-dependent packages at all.
+    `emmeans()` call (i.e., `sys.parent() == 0`), there is more than one
+    *primary* factor (not including `by` factors), and there are more than 21
+    contrasts as a result (e.g. more than 7 levels compared pairwise), we issue
+    an advisory warning message: "You may have generated more contrasts than you
+    really wanted...". Because of the restrictions on when this warning is
+    issued, it should not affect reverse-dependent package checks at all.
     
 
 
