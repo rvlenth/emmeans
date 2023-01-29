@@ -173,7 +173,7 @@ also be accessed via `vignette("`*name*`", "emmeans")`
   * Models that are supported in **emmeans** (there are lots of them)
     ["models"](models.html)
   * Basic ideas that underlie estimated marginal means (EMMs):
-    ["Basics"](Basics.html). These concepts
+    ["basics"](basics.html). These concepts
     emphasize *experimental* data, as distinct from *observational* studies.
   * Confidence intervals and tests: 
     ["confidence-intervals"](confidence-intervals.html)

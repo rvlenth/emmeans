@@ -274,7 +274,9 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     emms$.single. = NULL   # in case we have that trick column
     attr(emms, "labs") = list(xlab = xlab, ylab = ylab, tlab = tlab)
     attr(emms, "vars") = list(byvars = byvars, tvars = setdiff(tvars, ".single."))
-
+    if (!plotit && nonlin.scale)
+        attr(emms, "scale") = .make.scale(emmo@misc)
+    
     if (!plotit || engine == "none")
         return (emms)
     
@@ -362,6 +364,9 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     
     if(!missing(col)) ### brute-force color setting
         dotarg$color = linearg$color = CIarg$color = PIarg$color = col
+    
+    if(missing(scale) && !is.null(attr(emms, "scale")))
+        scale = attr(emms, "scale")
 
     dotarg$position = pos
     linearg$mapping = ggplot2::aes_(group = ~tvar)

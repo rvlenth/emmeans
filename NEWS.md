@@ -2,6 +2,9 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.4-9xxxxx
+  * passing scale info to `emmip_ggplot()` (#397)
+
 ## emmeans 1.8.4
   * Fix to `scale()` response transformation when either `center` or `scale` 
     is `FALSE`. I also added support for `center()` and `standardize()` from

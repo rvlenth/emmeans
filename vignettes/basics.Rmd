@@ -625,6 +625,8 @@ The reader is referred to other vignettes for more details and advanced use.
 The strings linked below are the names of the vignettes; i.e., they can
 also be accessed via `vignette("`*name*`", "emmeans")`
 
+  * Quick start guide: ["AQuickStart"](AQuickStart.html)
+  * Frequently asked questions: ["FAQs"](FAQs.html)
   * Models that are supported in **emmeans** (there are lots of them)
     ["models"](models.html)
   * Confidence intervals and tests: 
@@ -638,7 +640,6 @@ also be accessed via `vignette("`*name*`", "emmeans")`
   * Examples of more sophisticated models (e.g., mixed, ordinal, MCMC)
     ["sophisticated"](sophisticated.html)
   * Utilities for working with `emmGrid` objects: ["utilities"](utilities.html)
-  * Frequently asked questions: ["FAQs"](FAQs.html)
   * Adding **emmeans** support to your package: ["xtending"](xtending.html)
 
 [Back to Contents](#contents)

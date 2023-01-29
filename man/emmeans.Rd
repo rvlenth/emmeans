@@ -188,10 +188,10 @@ varies the fastest within that hierarchy. See the examples.
   apply to the means, and which to the contrasts. When such confusion is possible,
   we suggest doing things separately 
   (a call to \code{emmeans} with no contrasts, followed by a call to 
-  \code{\link{contrast}}). We do treat
-  for \code{adjust} as a special case: it is applied to the \code{emmeans} results 
+  \code{\link{contrast}}). We treat
+  \code{adjust} as a special case: it is applied to the \code{emmeans} results 
   \emph{only} if there are
-  no contrasts specified, otherwise it is passed to \code{contrast}.
+  no contrasts specified, otherwise it is passed only to \code{contrast}.
 }
 
 \examples{
@@ -202,10 +202,9 @@ emmeans (warp.lm,  ~ wool | tension)
 # 'adjust' argument ignored in emmeans, passed to contrast part...
 emmeans (warp.lm, poly ~ tension | wool, adjust = "sidak")
 
-\dontrun{
 # 'adjust' argument NOT ignored ...
 emmeans (warp.lm, ~ tension | wool, adjust = "sidak")
-}
+
 
 \dontrun{
   ### Offsets: Consider a silly example:
