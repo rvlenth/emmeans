@@ -407,6 +407,8 @@ inverse = function(y) 1/y
     if (!requireNamespace("scales", quiet = TRUE)) 
         stop("type = \"scale\" requires the 'scales' package to be installed")
     tran = misc$tran
+    if (is.null(tran))
+        return(scales::identity_trans())
     if (is.character(tran)) {
         # is it a canned scale?
         if ((length(intersect(names(misc), c("tran.mult", "tran.offset"))) == 0) && 
