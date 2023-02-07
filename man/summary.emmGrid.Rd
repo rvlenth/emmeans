@@ -155,7 +155,11 @@ such issues.}
 \item{destroy.annotations}{Logical value. If \code{FALSE}, an object of class
 \code{summary_emm} is returned (which inherits from \code{data.frame}),
 but if displayed, details like confidence levels, P-value adjustments, 
-transformations, etc. are also shown.
+transformations, etc. are also shown. But unlike the result
+of \code{summary}, the number of digits displayed
+is obtained from \code{getOption("digits")} rather than using the
+optimal digits algorithm we usually use. Thus, it is formatted more like a 
+regular data frame, but with any annotations and groupings still intact.
 If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is 
 returned, based on \code{row.names} and \code{check.names}.}
 
@@ -201,7 +205,7 @@ hypothesis \code{linfct \%*\% bhat = null}, where \code{linfct} and
 non-estimable. It is permissible for the rows of \code{linfct} to be linearly
 dependent, as long as \code{null == 0}, in which case a reduced set of 
 contrasts is tested. Linear dependence and nonzero \code{null} cause an 
-error. The returned object has an aditional \code{"est.fcns"} attribute, which
+error. The returned object has an additional \code{"est.fcns"} attribute, which
 is a list of the linear functions associated with the joint test.
 }
 \note{

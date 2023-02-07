@@ -4,6 +4,14 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.8.4-9xxxxx
   * passing scale info to `emmip_ggplot()` (#397)
+  * Changes to `as.data.frame` behavior. It has been made more forceful in
+    preserving annotations (i.e., `summary_emm` behavior) so that users don't
+    blind themselves to potentially important information. Also, some users
+    seem to force display of the data frame in order to see more digits; so we
+    now are taking a compromise approach: showing more digits but still as a
+    `summary_emm` object with annotations also displayed.
+  * Added `Chisq` value to results of `test(..., joint = TRUE)` and `joint_tests()`
+    when `df2` is infinite (per request in #400)
 
 ## emmeans 1.8.4
   * Fix to `scale()` response transformation when either `center` or `scale` 

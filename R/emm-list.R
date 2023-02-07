@@ -63,8 +63,14 @@ NULL
 # My own lapply() function that drops when the dimension is 1
 .lapply = function(...) {
     rtn = lapply(...)
-    if (length(rtn) == 1)   rtn[[1]]
-    else                    rtn
+    if (length(rtn) == 1)   {
+        rtn = rtn[[1]]
+        class(rtn) = c("summary_emm", "data.frame")
+    }
+    else                    {
+        class(rtn) = c("summary_eml", "list")
+    }
+    rtn
 }
 
 
@@ -89,11 +95,30 @@ str.emm_list = function(object, ...) {
 #' @method summary emm_list
 #' @rdname emm_list-object
 #' @order 13
-summary.emm_list <- function(object, ..., which = seq_along(object))
-    .lapply(object[which], function(x) {
-        if (inherits(x, "summary.emmGrid"))  x
-        else summary.emmGrid(x, ...)
-    })
+summary.emm_list <- function(object, ..., which = seq_along(object)) {
+    # .lapply(object[which], function(x) {
+    #     if (inherits(x, "summary_emm"))  x
+    #     else summary.emmGrid(x, ...)
+    # })
+    if(length(which) == 1)
+        summary.emmGrid(object[[which]])
+    else
+        .lapply(object[which], summary.emmGrid)
+}
+
+#' @export
+summary.summary_eml = function(x, ...) x
+#' @export
+as.data.frame.summary_eml = function(x, ...) {
+    for (i in seq_along(x))
+        attr(x[[i]], "digits") = getOption("digits")
+    x
+}
+#' @export
+print.summary_eml = function(x, ...) {
+    attr(x, "class") = NULL
+    print(x)
+}
 
 #' @export
 #' @method print emm_list
@@ -186,6 +211,9 @@ rbind.emm_list = function(..., which, adjust = "bonferroni") {
 #' See also \code{\link{rbind.emm_list}} and \code{\link{as.data.frame.emmGrid}}
 #' @method as.data.frame emm_list
 as.data.frame.emm_list = function(x, ...) {
+    if (length(x) > 1)
+        warning("Note: 'as.data.frame' has combined your ", length(x), " sets of results into one object,\n",
+                "and this affects things like adjusted P values. Refer to the annotations.")
     as.data.frame(rbind(x, ..., check.names = FALSE))
 }
 

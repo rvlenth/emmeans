@@ -19,6 +19,10 @@
 #    <http://www.gnu.org/licenses/>.                                         #
 ##############################################################################
 
+# summary of a summary - just pass it thru
+#' @export
+summary.summary_emm = function(x, ...) x
+
 # confint and test methods
 
 # confint method
@@ -145,13 +149,15 @@ test.emmGrid = function(object, null = 0,
             if (inherits(F, "try-error"))
                 c(df1 = r, df2 = NA,  F.ratio = NA, p.value = NA, note = 1)
             else {
-                df2 = min(apply(tQ, 1, function(.) object@dffun(., object@dfargs)))
-                if (is.na(df2))
-                    p.value = suppressWarnings(pchisq(F*r, r, lower.tail = FALSE))
-                else
-                    p.value = suppressWarnings(pf(F, r, df2, lower.tail = FALSE))
+                if(is.null(df2 <- object@misc$df))
+                    df2 = min(apply(tQ, 1, function(.) object@dffun(., object@dfargs)))
+                if (is.na(df2)) 
+                    df2 = Inf
+                p.value = suppressWarnings(pf(F, r, df2, lower.tail = FALSE))
                 rtn = c(round(c(df1 = r, df2 = df2), 2), 
                         F.ratio = round(F, 3), p.value = p.value, note = rrflag)
+                # Note: Following will screw-up joint_tests if some df2's are finite and others infinite
+                if (is.infinite(df2)) rtn = c(rtn[1:3], Chisq = round(F*r, 3), rtn[4:5])
                 attr(rtn, "L") = tQ.all
                 rtn
             }
@@ -372,8 +378,9 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
                     emm = emmeans(object, these, by = by, ...)
                     tst = test(contrast(emm, interaction = use.contr[1], by = union(by, nesters)), 
                                by = by, joint = TRUE, status = TRUE)
+                    ef = attr(tst, "est.fcns") # get this before we subset the results
+                    tst = tst[names(tst) != "Chisq"]   # could have some with Chisq and some without
                     mt = paste(these, collapse = ":")
-                    ef = attr(tst, "est.fcns")
                     if (length(ef) > 1)
                         ef = list(ef)
                     names(ef) = mt
@@ -381,7 +388,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
                     ef.ord <<- c(ef.ord, k)
                     tst = cbind(ord = k, `model term` = mt, tst)
                     result = rbind(result, tst)
-                 }
+                }
             }
             last = max(match(these, facs))
         }
@@ -393,6 +400,12 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
         result
     }
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
+    if (all(is.infinite(result$df2) | is.na(result$df2))) {
+        w = which(names(result) == "F.ratio")
+        result = cbind(result[, 1:w], Chisq = result$F.ratio * result$df1, 
+                       result[, (w+1):ncol(result)])
+    }
+    
     
     ## look at as-yet-unexplained effects
     if (showconf) {

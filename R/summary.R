@@ -21,6 +21,14 @@
 
 ### This file has summary.emmGrid S3 method and related functions
 
+# as.data.frame for a summary just passes thru
+# This creates an infinite loop if we're not careful with using `as.data.frame`
+# to coerce a summary_emm object to a regular data frame.
+#' @export
+as.data.frame.summary_emm = function(x, ...) {
+    attr(x, "digits") = getOption("digits")
+    x
+}
 
 # S3 summary method
 
@@ -46,7 +54,7 @@
 #' non-estimable. It is permissible for the rows of \code{linfct} to be linearly
 #' dependent, as long as \code{null == 0}, in which case a reduced set of 
 #' contrasts is tested. Linear dependence and nonzero \code{null} cause an 
-#' error. The returned object has an aditional \code{"est.fcns"} attribute, which
+#' error. The returned object has an additional \code{"est.fcns"} attribute, which
 #' is a list of the linear functions associated with the joint test.
 #'
 #' @param object An object of class \code{"emmGrid"} (see \link{emmGrid-class})
@@ -774,7 +782,11 @@ predict.emmGrid <- function(object, type,
 #' @param destroy.annotations Logical value. If \code{FALSE}, an object of class
 #'   \code{summary_emm} is returned (which inherits from \code{data.frame}),
 #'   but if displayed, details like confidence levels, P-value adjustments, 
-#'   transformations, etc. are also shown.
+#'   transformations, etc. are also shown. But unlike the result
+#'   of \code{summary}, the number of digits displayed
+#'   is obtained from \code{getOption("digits")} rather than using the
+#'   optimal digits algorithm we usually use. Thus, it is formatted more like a 
+#'   regular data frame, but with any annotations and groupings still intact.
 #'   If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is 
 #'   returned, based on \code{row.names} and \code{check.names}.
 #' @param row.names passed to \code{\link{as.data.frame}}
@@ -787,9 +799,10 @@ predict.emmGrid <- function(object, type,
 as.data.frame.emmGrid = function(x, 
                                  row.names = NULL, optional, check.names = TRUE, 
                                  destroy.annotations = FALSE, ...) {
-    rtn = summary(x, ...)
+    rtn = summary.emmGrid(x, ...)
+    attr(rtn, "digits") = getOption("digits")
     if(destroy.annotations)
-        rtn = as.data.frame(rtn, row.names = row.names, check.names = check.names)
+        rtn = as.data.frame.data.frame(rtn, row.names = row.names, check.names = check.names)
     rtn
 }
 
@@ -804,7 +817,7 @@ as.data.frame.emmGrid = function(x,
 #' @export
 "[.summary_emm" = function(x, ..., as.df = FALSE) {
     attr(x, "by.vars") = NULL
-    rtn = as.data.frame(x)[...]
+    rtn = as.data.frame.data.frame(x)[...]
     if ((!as.df) && (!is.null(attr(rtn, "estName"))))
         class(rtn) = c("summary_emm", "data.frame")
     rtn
@@ -1263,6 +1276,9 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     estn = attr(x, "estName")
     if (is.null(estn)) # uh-oh, somebody messed it up - so Hail Mary
         return(invisible(print(data.frame(x))))
+    
+    if(!is.null(attr(x, "digits")))
+        digits = attr(x, "digits")
     
     test.stat.names = c("t.ratio", "z.ratio", "F.ratio", "T.square")  # format these w 3 dec places
     x.save = x
