@@ -12,6 +12,10 @@ title: "NEWS for the emmeans package"
     `summary_emm` object with annotations also displayed.
   * Added `Chisq` value to results of `test(..., joint = TRUE)` and `joint_tests()`
     when `df2` is infinite (per request in #400)
+  * The `basics` vignette has undergone a major revision that I hope helps
+    more in getting users oriented. It starts by discussing the fact that
+    EMMs' undepinnings are more in experiments than observational data, and
+    emphasizes more the process of first getting a good model. 
 
 ## emmeans 1.8.4
   * Fix to `scale()` response transformation when either `center` or `scale` 

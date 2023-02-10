@@ -15,7 +15,7 @@
 .github/*
 
 # Future revision of basics vignette
-vignettes/rev-basics.Rmd
+vignettes/old-basics.mdr
 
 
 # Vignette intermediate files (also in svn ignore list)

@@ -12,22 +12,10 @@ require("emmeans")
 knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 ```
 
-
 <!-- @index Vignettes!Basics -->
-
-<!-- THIS WILL REPLACE THE BASICS VIGNETTE LATER ON. LET'S PUT MORE
-     EMPHASIS ON EXPERIMENTATION AND MODELING AND CUT OUT THE
-     ARTIFICIAL STUFF.
-     THE PIGS EXAMPLE REALLY SHOULD USE AN inverse TRANSFORMATION.
-     IT HAPPENS THAT THE MARGINAL MEANS FOR percent STILL RANK DIFFERENTLY
-     THAN THE EMMS. LET'S PUT THE emmeans CALCS FIRST, THEN DEMO THAT
-     THESE REFLECT THE REF GRID NEEDED WITH THE EXPERIMENTAL FRAMEWORK
-     WHILE THE MARGINAL MEANS DO NOT.
--->
 
 ## Contents {#contents}
 
-  0. [Emphasis on experimental data](#experimentation)
   1. [Motivating example](#motivation)
   2. [EMMs defined](#EMMdef)
       a. [Reference grids](#ref_grid)
@@ -42,43 +30,9 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   3. [Objects, structures, and methods](#emmobj)
   4. [P values, "significance", and recommendations](#pvalues)
   5. [Summary](#summary)
+  6. [Further reading](#more)
   
 [Index of all vignette topics](vignette-topics.html)
-
-## Emphasis on experimental data {#experimentation}
-<!-- @index Experimental versus observational data;
-            Observational versus experimental data;  -->
-To start off with, we should emphasize that the underpinnings of estimated marginal 
-means -- and much of what the **emmeans** package offers -- relate to
-*experimental* data, as opposed to *observational* data. In observational data,
-we sample from some population, and the goal of statistical analysis is to
-characterize that population in some way. In contrast, with experimental data,
-the experimenter *controls* the environment under which test runs are conducted,
-and in which responses are observed and recorded. Thus with experimentation,
-the population is an abstract entity consisting of potential outcomes of test
-runs made under conditions we enforce, rather than a physical entity that we 
-observe without changing it.
-
-This is important because it changes even what we mean by the term "marginal
-means," a term that is part of this package's name. There is a clear theoretical
-meaning to this term when applied to a population and observational data,
-because we know what we mean by the joint distribution of the variables
-involved, and we just compute an integral or a sum. With experimental data, 
-the population, if you want to call it that, depends on what test conditions 
-we impose. So typically, it comprises a grid of values corresponding to the test
-conditions we actually choose (or chose) to use. If it is an experiment to
-test a new drug or a new fertilizer or a new manufacturing process, the population
-is something that never even existed beforehand!
-
-Correspondingly, in your typical experimental-design course or textbook, you
-spend a lot of time talking mostly about balanced experiments (equal sample
-sizes) conducted on a regular array of treatments or treatment combinations.
-And we compute marginal means by just averaging over the rows and columns
-of this nice, balanced array of data values. Experimenters are comfortable
-with that because that's what they studied. And those who don't experiment
-might find this very strange, because they don't think of "the population"
-as an abstract entity that is defined as the array of test conditions
-in the experiment.
 
 
 ## Why we need EMMs {#motivation}
@@ -88,22 +42,6 @@ Consider the `pigs` dataset provided with the package (`help("pigs")` provides
 details). These data come from an unbalanced experiment where pigs are given
 different percentages of protein (`percent`) from different sources (`source`)
 in their diet, and later we measure the concentration (`conc`) of leucine.
-The `percent` values are quantitative, but we chose those particular values
-deliberately, and (at least initially) we want separate estimates at each `percent` 
-level; that is, we want to view `percent` as a factor, not a quantitative predictor.
-
-The ["AQuickStart" vignette](AQuickStart.html) provided with this package 
-recommends that we start with a good model. Often, residual plots help with
-this process. Let's look at residuals versus predicted for an initial model
-with `conc` as the response:
-```{r fig.height = 4.5, fig.alt = "Plot of residuals vs. predicted for a model with 'conc' as the response. It shows a fair amount of hereroscedasticity in the residuals."}
-plot(lm(conc ~ source * factor(percent), data = pigs), which = 1)
-```
-The variability of residuals is considerably less for smaller predicted values
-than for larger ones. It turns out that we get much more 
-
-
-
 Here's an interaction plot showing the mean `conc` at each combination of 
 the other factors.
 ```{r, echo = FALSE}
@@ -687,6 +625,8 @@ The reader is referred to other vignettes for more details and advanced use.
 The strings linked below are the names of the vignettes; i.e., they can
 also be accessed via `vignette("`*name*`", "emmeans")`
 
+  * Quick start guide: ["AQuickStart"](AQuickStart.html)
+  * Frequently asked questions: ["FAQs"](FAQs.html)
   * Models that are supported in **emmeans** (there are lots of them)
     ["models"](models.html)
   * Confidence intervals and tests: 
@@ -700,7 +640,6 @@ also be accessed via `vignette("`*name*`", "emmeans")`
   * Examples of more sophisticated models (e.g., mixed, ordinal, MCMC)
     ["sophisticated"](sophisticated.html)
   * Utilities for working with `emmGrid` objects: ["utilities"](utilities.html)
-  * Frequently asked questions: ["FAQs"](FAQs.html)
   * Adding **emmeans** support to your package: ["xtending"](xtending.html)
 
 [Back to Contents](#contents)

@@ -3,7 +3,7 @@ title: "Quick start guide for **emmeans**"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
-  %\VignetteIndexEntry{Quick-start guide for emmeans}
+  %\VignetteIndexEntry{A quick-start guide for emmeans}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
