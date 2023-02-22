@@ -59,7 +59,7 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     
     perm = match(colnames(X), bnms)
     if (any(is.na(perm)))
-        stop ("Unable to match model terms")
+        stop ("In emm_basis.averaging: Unable to match model terms")
     bhat = bhat[perm]
     V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...)[perm, perm]
     

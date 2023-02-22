@@ -42,9 +42,9 @@ The `summary()` function has a lot of options, and the detailed documentation vi
 
 For ongoing illustrations, let's re-create some of the objects in the ["basics" vignette](basics.html) for the `pigs` example:
 ```{r}
-pigs.lm1 <- lm(log(conc) ~ source + factor(percent), data = pigs)
-pigs.rg <- ref_grid(pigs.lm1)
-pigs.emm.s <- emmeans(pigs.rg, "source")
+mod4 <- lm(inverse(conc) ~ source + factor(percent), data = pigs)
+RG <- ref_grid(mod4)
+EMM.source <- emmeans(RG, "source")
 ```
 
 Just `summary(<object>)` by itself will produce a summary that varies somewhat
@@ -63,14 +63,16 @@ show test statistics and *P* values, but not intervals (i.e., `infer = c(FALSE,
 TRUE)`). There are courtesy methods `confint()` and `test()` that just call
 `summary()` with the appropriate `infer` setting; for example,
 ```{r}
-test(pigs.emm.s)
+test(EMM.source)
 ```
 It is not particularly useful, though, to test these EMMs against the default of 
 zero -- which is why tests are not usually shown. It makes a lot more sense
 to test them against some target concentration, say 40. And suppose we want to do a one-sided test to see if the concentration is greater than 40. Remembering that the
-response is log-transformed in this model, 
+response is inverse-transformed in this model, and that the inverse transformation
+reverses the direction of comparisons, so that a *right*-tailed test on the `conc` scale
+becomes a *left*-tailed test on the `inverse(conc)` scale,
 ```{r}
-test(pigs.emm.s, null = log(40), side = ">")
+test(EMM.source, null = inverse(40), side = "<")
 ```
 It is also possible to add calculated columns to the summary, via the `calc` 
 argument. The calculations can include any columns up through `df` in the summary,
@@ -78,7 +80,7 @@ as well as any variable in the object's `grid` slot. Among the latter are
 usually weights in a column named `.wgt.`, and we can use that to include
 sample size in the summary:
 ```{r}
-confint(pigs.emm.s, calc = c(n = ~.wgt.))
+confint(EMM.source, calc = c(n = ~.wgt.))
 ```
 
 
@@ -87,18 +89,18 @@ confint(pigs.emm.s, calc = c(n = ~.wgt.))
 
 ## Back-transforming {#tran}
 <!-- @index Transformations!Back-transforming; `type`; Response scale -->
-Transformations and link functions are supported an several ways in **emmeans**,
+Transformations and link functions are supported in several ways in **emmeans**,
 making this a complex topic worthy of [its own vignette](transformations.html).
 Here, we show just the most basic approach. Namely, specifying the argument
 `type = "response"` will cause the displayed results to be back-transformed
 to the response scale, when a transformation or link function is incorporated
 in the model. For example, let's try the preceding `test()` call again:
 ```{r}
-test(pigs.emm.s, null = log(40), side = ">", type = "response")
+test(EMM.source, null = inverse(40), side = "<", type = "response")
 ```
 Note what changes and what doesn't change. In the `test()` call, we *still* use
-the log of 40 as the null value; `null` must always be specified on the
-linear-prediction scale, in this case the log. In the output, the displayed
+the 1/40 as the null value; `null` must always be specified on the
+linear-prediction scale, in this case the inverse. In the output, the displayed
 estimates, as well as the `null` value, are shown back-transformed. As well, the
 standard errors are altered (using the delta method). However, the *t* ratios
 and *P* values are identical to the preceding results. That is, the tests
@@ -107,10 +109,13 @@ output).
 
 Similar statements apply to confidence intervals on the response scale:
 ```{r}
-confint(pigs.emm.s, side = ">", level = .90, type = "response")
+confint(EMM.source, side = "<", level = .90, type = "response")
 ```
-With `side = ">"`, a *lower* confidence limit is computed on the log scale, then
-that limit is back-transformed to the response scale. (We have also illustrated 
+With `side = "<"`, an *upper* confidence limit is computed on the inverse scale,
+then that limit is back-transformed to the response scale; and since `inverse`
+reverses everything, those upper confidence limits become lower ones on the
+response scale.
+(We have also illustrated 
 how to change the confidence level.)
 
 [Back to Contents](#contents)
@@ -130,9 +135,10 @@ comparisons default to `adjust = "tukey"`, i.e., the Tukey HSD method.
 The `summary()` function sometimes *changes* `adjust` if it is inappropriate.
 For example, with
 ```{r}
-confint(pigs.emm.s, adjust = "tukey")
+confint(EMM.source, adjust = "tukey")
 ```
-the adjustment is changed to the Sidak method because the Tukey adjustment is inappropriate unless you are doing pairwise comparisons.
+the adjustment is changed to the Sidak method because the Tukey adjustment is 
+inappropriate unless you are doing pairwise comparisons.
 
 ####### {#adjmore}
 <!-- @index **mvtnorm** package; Bonferroni adjustment
@@ -150,7 +156,7 @@ For tests, `adjust` increases the *P* values over those otherwise obtained with
 `adjust = "none"`. Compare the following adjusted tests with the unadjusted ones
 previously computed.
 ```{r}
-test(pigs.emm.s, null = log(40), side = ">", adjust = "bonferroni")
+test(EMM.source, null = inverse(40), side = "<", adjust = "bonferroni")
 ```
 
 [Back to Contents](#contents)
@@ -161,7 +167,7 @@ test(pigs.emm.s, null = log(40), side = ">", adjust = "bonferroni")
 Sometimes you want to break a summary down into smaller pieces; for this
 purpose, the `by` argument in `summary()` is useful. For example,
 ```{r}
-confint(pigs.rg, by = "source")
+confint(RG, by = "source")
 ```
 If there is also an `adjust` in force when `by` variables are used, by default, the 
 adjustment is made *separately* on each `by` group; e.g., in the above, we would
@@ -171,8 +177,8 @@ There can be a `by` specification in `emmeans()` (or equivalently, a `|` in the
 formula); and if so, it is passed on to `summary()` and used unless overridden
 by another `by`. Here are examples, not run:
 ```{r eval = FALSE}
-emmeans(pigs.lm, ~ percent | source)     ### same results as above
-summary(.Last.value, by = percent)       ### grouped the other way
+emmeans(mod4, ~ percent | source)     ### same results as above
+summary(.Last.value, by = "percent")       ### grouped the other way
 ```
 Specifying `by = NULL` will remove all grouping.
 
@@ -217,9 +223,9 @@ specified variables as `by` variables. To illustrate, let's consider
 the model for `pigs` that includes the interaction (so that the levels
 of one factor compare differently at levels of the other factor).
 ```{r}
-pigsint.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
-pigsint.rg <- ref_grid(pigsint.lm)
-contrast(pigsint.rg, "consec", simple = "percent")
+mod5 <- lm(inverse(conc) ~ source * factor(percent), data = pigs)
+RG5 <- ref_grid(mod5)
+contrast(RG5, "consec", simple = "percent")
 ```
 In fact, we may do *all* one-factor comparisons by specifying `simple = "each"`.
 This typically produces a lot of output, so use it with care.
@@ -231,14 +237,14 @@ This typically produces a lot of output, so use it with care.
 <!-- @index `test()`!`joint = TRUE`; `joint`; Type III tests -->
 From the above, we already know how to test individual results. For pairwise comparisons (details in [the "comparisons" vignette](comparisons.html)), we might do
 ```{r}
-pigs.prs.s <- pairs(pigs.emm.s)
-pigs.prs.s
+PRS.source <- pairs(EMM.source)
+PRS.source
 ```
 But suppose we want an *omnibus* test that all these comparisons are zero.
 Easy enough, using the `joint` argument in `test` (note: the `joint` argument
 is *not* available in `summary()`; only in `test()`):
 ```{r}
-test(pigs.prs.s, joint = TRUE)
+test(PRS.source, joint = TRUE)
 ```
 Notice that there are three comparisons, but only 2 d.f. for the test,
 as cautioned in the message.
@@ -253,7 +259,7 @@ contrasts](interactions.html#contrasts).
 For convenience, there is also a `joint_tests()` function that performs
 joint tests of contrasts among each term in a model or `emmGrid` object.
 ```{r}
-joint_tests(pigsint.rg)
+joint_tests(RG5)
 ```
 The tests of main effects are of families of contrasts; those for interaction
 effects are for interaction contrasts. These results are essentially the same as
@@ -265,7 +271,7 @@ and they may or may not correspond to model sums of squares.)
 
 One may use `by` variables with `joint_tests`. For example:
 ```{r}
-joint_tests(pigsint.rg, by = "source")
+joint_tests(RG5, by = "source")
 ```
 In some models, it is possible to specify `submodel = "type2"`, thereby obtaining 
 something akin to a Type II analysis of variance. See the [messy-data vignette](messy-data.html#type2submodel) for an example.
@@ -284,12 +290,12 @@ to a specified threshold value `delta`.
 The help page for `summary.emmGrid` gives the details of 
 these tests.
 Suppose in the present example, we consider two sources to be equivalent if they 
-are within 25% of each other. We can test this as follows:
+are within 0.005 of each other. We can test this as follows:
 ```{r}
-test(pigs.prs.s, delta = log(1.25), adjust = "none")
+test(PRS.source, delta = 0.005, adjust = "none")
 ```
-By our 25% standard, the *P* value is quite small for comparing soy and skim, 
-providing statistical evidence that their difference is enough smaller than the
+Using the 0.005 threshold, the *P* value is quite small for comparing soy and skim, 
+providing some statistical evidence that their difference is enough smaller than the
 threshold to consider them equivalent.
 
 [Back to Contents](#contents)

@@ -14,8 +14,10 @@ title: "NEWS for the emmeans package"
     when `df2` is infinite (per request in #400)
   * The `basics` vignette has undergone a major revision that I hope helps
     more in getting users oriented. It starts by discussing the fact that
-    EMMs' undepinnings are more in experiments than observational data, and
+    EMMs' underpinnings are more in experiments than observational data, and
     emphasizes more the process of first getting a good model. 
+  * The `confidence-intervals` vignette has been updated to reflect the same 
+    example with `pigs` as is used in `basics`
 
 ## emmeans 1.8.4
   * Fix to `scale()` response transformation when either `center` or `scale` 

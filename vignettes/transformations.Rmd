@@ -34,8 +34,8 @@ This vignette covers the intricacies of transformations and link functions in **
 
 ## Overview {#overview}
 <!-- @index Transformations!Overview; Examples!`pigs` -->
-Consider the same example with the `pigs` dataset that is used in many of 
-these vignettes:
+Consider an example with the `pigs` dataset that is used in many of 
+these vignettes; but this time, we use a `log` transformation of the response:
 ```{r}
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 ```
@@ -44,16 +44,16 @@ predictors; and log-transformed `conc` as the response. Here we obtain the EMMs
 for `source`, examine its structure, and finally produce a summary, including a
 test against a null value of log(35):
 ```{r}
-pigs.emm.s <- emmeans(pigs.lm, "source")
-str(pigs.emm.s)
+emm.src <- emmeans(pigs.lm, "source")
+str(emm.src)
 ```
 ```{r}
-summary(pigs.emm.s, infer = TRUE, null = log(35))
+summary(emm.src, infer = TRUE, null = log(35))
 ```
 Now suppose that we want the EMMs expressed on the same scale as `conc`. This 
 can be done by adding `type = "response"` to the `summary()` call: 
 ```{r}
-summary(pigs.emm.s, infer = TRUE, null = log(35), type = "response")
+summary(emm.src, infer = TRUE, null = log(35), type = "response")
 ```
 
 Note: Looking ahead, this output is compared later in this vignette with a 
@@ -102,9 +102,9 @@ The tool for changing when back-transformation is performed is the `regrid()`
 function -- which, with default settings of its arguments, back-transforms an
 `emmGrid` object and adjusts everything in it appropriately. For example:
 ```{r}
-str(regrid(pigs.emm.s))
+str(regrid(emm.src))
 
-summary(regrid(pigs.emm.s), infer = TRUE, null = 35)
+summary(regrid(emm.src), infer = TRUE, null = 35)
 ```
 Notice that the structure no longer includes the transformation. That's because
 it is no longer relevant; the reference grid is on the `conc` scale, and how we got there is now forgotten. Compare this `summary()` result with the preceding one, and note the following:
@@ -116,14 +116,14 @@ it is no longer relevant; the reference grid is on the `conc` scale, and how we 
     are the ones actually used to construct the tests and intervals.
 
 Understood, right? But think carefully about how these EMMs were obtained. 
-They are back-transformed from `pigs.emm.s`, in which *the marginal averaging
+They are back-transformed from `emm.src`, in which *the marginal averaging
 was done on the log scale*. If we want to back-transform *before* doing the
 averaging, we need to call `regrid()` after the reference grid is constructed but
 before the averaging takes place:
 ```{r}
 pigs.rg <- ref_grid(pigs.lm)
-pigs.remm.s <- emmeans(regrid(pigs.rg), "source")
-summary(pigs.remm.s, infer = TRUE, null = 35)
+remm.src <- emmeans(regrid(pigs.rg), "source")
+summary(remm.src, infer = TRUE, null = 35)
 ```
 These results all differ from either of the previous two summaries -- again,
 because the averaging is done on the `conc` scale rather than the `log(conc)` 
@@ -135,7 +135,7 @@ Note: For those who want to routinely back-transform before averaging,
 the `regrid` argument in `ref_grid()` simplifies this. The first two
 steps above could have been done more easily as follows:
 ```{r eval = FALSE}
-pigs.remm.s <- emmeans(pigs.lm, "source", regrid = "response")
+remm.src <- emmeans(pigs.lm, "source", regrid = "response")
 ```
 But don't get `regrid` and `type` confused. The `regrid` argument is 
 passed to `regrid()` (as the `transform` argument) after the reference grid is constructed, whereas the `type`
@@ -144,7 +144,7 @@ call:
 ```{r eval = FALSE}
 emmeans(pigs.lm, "source", type = "response")
 ```
-will compute the results we have seen for `pigs.emm.s` -- back-transformed 
+will compute the results we have seen for `emm.src` -- back-transformed 
 *after* averaging on the log scale.
 
 Remember again: When it comes to transformations, timing is everything.
@@ -362,9 +362,9 @@ ratios instead of differences.
 Consider the `pigs` example once again, but suppose we had fitted a model with a square-root transformation instead of a log:
 ```{r}
 pigroot.lm <- lm(sqrt(conc) ~ source + factor(percent), data = pigs)
-piglog.emm.s <- regrid(emmeans(pigroot.lm, "source"), transform = "log")
-confint(piglog.emm.s, type = "response")
-pairs(piglog.emm.s, type = "response")
+logemm.src <- regrid(emmeans(pigroot.lm, "source"), transform = "log")
+confint(logemm.src, type = "response")
+pairs(logemm.src, type = "response")
 ```
 These results are not identical, but very similar to the back-transformed
 confidence intervals [above](#timing) for the EMMs and the [pairwise ratios in
@@ -374,7 +374,7 @@ actually used a log response.
 ### Faking other transformations {#faking}
 <!-- @index Transformations!faking -->
 It is possible to fake transformations other than the log. Just use the same method,
-e.g.
+e.g. (results not displayed)
 ```{r, eval = FALSE}
 regrid(emm, transform = "probit")
 ```
@@ -389,8 +389,8 @@ a standardized response transformation in this way.
 <!-- @index Transformations!Percent difference; Percentage differences; Examples!`pigs` -->
 It is possible to create a report on an alternative scale by updating the `tran` component.
 For example, suppose we want percent differences instead of ratios in the preceding example
-with the `pigs` dataset. This is possible by modifying the inverse transformation:
-since the uusual inverse transformation is a ratio of the form $r = a/b$, we have that
+with the `pigs` dataset. This is possible by modifying the reverse transformation:
+since the uusual reverse transformation is a ratio of the form $r = a/b$, we have that
 the percentage difference between $a$ and $b$ is $100(a-b)/b = 100(r-1)$. Thus,
 ```{r}
 pct.diff.tran <- list(
@@ -400,7 +400,7 @@ pct.diff.tran <- list(
     name = "log(pct.diff)"
 )
 
-update(pairs(piglog.emm.s, type = "response"), 
+update(pairs(logemm.src, type = "response"), 
        tran = pct.diff.tran, inv.lbl = "pct.diff")
 ```
 
@@ -529,7 +529,7 @@ sigma(pigs.lm)
 ```
 This estimate is used by default. The bias-adjusted EMMs for the sources are:
 ```{r}
-summary(pigs.emm.s, type = "response", bias.adj = TRUE)
+summary(emm.src, type = "response", bias.adj = TRUE)
 ```
 These estimates (and also their SEs) are slightly larger than we had without
 bias adjustment. They are estimates of the *arithmetic* mean responses, rather

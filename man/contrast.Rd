@@ -170,9 +170,12 @@ When \code{object} has a nesting structure (this can be seen via
 
 \examples{
 warp.lm <- lm(breaks ~ wool*tension, data = warpbreaks)
-warp.emm <- emmeans(warp.lm, ~ tension | wool)
+(warp.emm <- emmeans(warp.lm, ~ tension | wool))
 
 contrast(warp.emm, "poly")    # inherits 'by = "wool"' from warp.emm
+
+### Custom contrast coefs (we already have wool as 'by' thus 3 means to contrast)
+contrast(warp.emm, list(mid.vs.ends = c(-1,2,-1)/2, lo.vs.hi = c(1,0,-1)))
 
 pairs(warp.emm)
 
