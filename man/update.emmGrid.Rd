@@ -136,7 +136,7 @@ of displaying predictions in \code{\link{summary.emmGrid}},
 \code{"link"} (with synonyms \code{"lp"} and \code{"linear"}), or
 \code{"response"}.}
 
-\item{\code{bias.adjust}, \code{frequentist}}{(character) These
+\item{\code{bias.adjust}, \code{frequentist}}{(logical) These
 are used by \code{summary} if the value of these arguments are not specified.}
 
 \item{\code{estType}}{(\code{character}) is used internally to determine 

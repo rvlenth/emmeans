@@ -558,19 +558,23 @@ model the count as a Poisson variable with (by default) a log link; and
 obtain the EMMs, with and without a bias adjustment
 ```{r}
 ismod <- glm(count ~ spray, data = InsectSprays, family = poisson())
-emmeans(ismod, "spray", type = "response", bias.adj = FALSE)
+emmeans(ismod, "spray", type = "response")
+```
+The above results were computed with no bias adjustment, the default. If you try
+```{r eval = FALSE}
 emmeans(ismod, "spray", type = "response", bias.adj = TRUE)
 ```
-These are substantially different! Which is right? Well, due to the simple structure of this dataset, the estimates should be well
-in line with the simple observed mean counts:
+you will get exactly the same results, plus a warning message that says bias adjustment was disabled.
+Why? Because in an ordinary GLM like this, we are *already* modeling the mean counts,
+and the link function is not a response transformation as such, just a part of the relationship
+we are specifying between the linear predictor and the mean. Given the simple structure of this dataset, we can verify this by noting that the estimates we have correspond examply to the simple observed mean counts:
 ```{r}
 with(InsectSprays, tapply(count, spray, mean))
 ```
-This illustrates that it is the *non*-bias-adjusted results that are
-appropriate. Again, the point here is that a GLM does not have an additive error
+The point here is that a GLM does not have an additive error
 term, that the model is already formulated in terms of the mean, not some
-generalized mean. Users must be very careful with this! There is no way to
-automatically do the right thing.
+generalized mean. (You can enable the bias-adjustment computations by specifying
+a valid `sigma` value; but you should not do so.)
 
 Note that, in a generalized linear *mixed* model, including generalized estimating
 equations and such, there *are* additive random components involved, and then bias

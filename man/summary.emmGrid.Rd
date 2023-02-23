@@ -100,13 +100,14 @@ or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise,
 a logical value of \code{TRUE} will have it return a frequentist summary.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
-back-transforming (\code{type = "response"}). This requires a value of 
+back-transforming (\code{type = "response"}). This requires a valid value of 
 \code{sigma} to exist in the object or be specified.}
 
 \item{sigma}{Error SD assumed for bias correction (when 
 \code{type = "response"} and a transformation
 is in effect), or for constructing prediction intervals. If not specified,
-\code{object@misc$sigma} is used, and an error is thrown if it is not found.
+\code{object@misc$sigma} is used, and a warning is issued if it is not found
+or not valid.
 \emph{Note:} \code{sigma} may be a vector, but be careful that it correctly
 corresponds (perhaps after recycling) to the order of the reference grid.}
 
@@ -142,7 +143,9 @@ such issues.}
 \item{interval}{Type of interval desired (partial matching is allowed): 
 \code{"none"} for no intervals,
   otherwise confidence or prediction intervals with given arguments, 
-  via \code{\link{confint.emmGrid}}.}
+  via \code{\link{confint.emmGrid}}. 
+  Note: prediction intervals are not available
+  unless the model family is \code{"gaussian"}.}
 
 \item{x}{object of the given class}
 
@@ -257,13 +260,26 @@ If a data frame is needed, \code{summary}, \code{confint},
   on the scale of the linear predictor, not the inverse-transformed one.
   Similarly, confidence intervals are computed on the linear-predictor scale,
   then inverse-transformed.
-  
+}
+
+\section{Bias adjustment when back-transforming}{
+
   When \code{bias.adjust} is \code{TRUE}, then back-transformed estimates
   are adjusted by adding 
   \eqn{0.5 h''(u)\sigma^2}, where \eqn{h} is the inverse transformation and
   \eqn{u} is the linear predictor. This is based on a second-order Taylor
   expansion. There are better or exact adjustments for certain specific
   cases, and these may be incorporated in future updates.
+  
+  Note: In certain models, e.g., those with non-gaussian families,
+  \code{sigma} is initialized as \code{NA}, and so by default, bias adjustment
+  is skipped and a warning is issued. You may override this by specifying a
+  value for \code{sigma}. However, \emph{with ordinary generalized linear models,
+  bias adjustment is inappropriate} and you should not try to do it. With GEEs and GLMMs,
+  you probably should \emph{not} use \code{sigma(model)}, and instead you should create an
+  appropriate value using the estimated random effects, e.g., from \code{VarCorr(model)}.
+  An example is provided in the 
+  \href{https://cran.r-project.org/web/packages/emmeans/vignettes/transformations.html#cbpp}{vignette on transformations}.
 }
 
 \section{P-value adjustments}{

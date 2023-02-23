@@ -254,7 +254,7 @@ vcov.emmGrid = function(object, ...) {
 #' \code{"link"} (with synonyms \code{"lp"} and \code{"linear"}), or
 #' \code{"response"}.}
 #' 
-#' \item{\code{bias.adjust}, \code{frequentist}}{(character) These
+#' \item{\code{bias.adjust}, \code{frequentist}}{(logical) These
 #' are used by \code{summary} if the value of these arguments are not specified.}
 #' 
 #' \item{\code{estType}}{(\code{character}) is used internally to determine 
@@ -532,9 +532,9 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   \code{FALSE}, the system value \code{getOption("digits")} is used.}
 #' \item{\code{back.bias.adj}}{A logical value controlling whether we 
 #'   try to adjust bias when back-transforming. If \code{FALSE}, we use naive
-#'   back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
+#'   back transformation. If \code{TRUE} \emph{and \code{sigma} is available and valid}, a
 #'   second-order adjustment is applied to estimate the mean on the response
-#'   scale.}
+#'   scale. A warning is issued if no valid \code{sigma} is available}
 #' \item{\code{enable.submodel}}{A logical value. If \code{TRUE}, enables support 
 #'   for selected model classes to implement the \code{submodel} option. If
 #'   \code{FALSE}, this support is disabled. Setting this option to \code{FALSE}
@@ -892,12 +892,12 @@ emm_defaults = list (
 #'   when one specifies \code{transform = "log"} but desires summaries to be
 #'   produced by default on the response scale.
 #' @param bias.adjust Logical value for whether to adjust for bias in
-#'   back-transforming (\code{transform = "response"}). This requires a value of 
+#'   back-transforming (\code{transform = "response"}). This requires a valid value of 
 #'   \code{sigma} to exist in the object or be specified.
 #' @param sigma Error SD assumed for bias correction (when 
 #'   \code{transform = "response"} and a transformation
 #'   is in effect). If not specified,
-#'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#'   \code{object@misc$sigma} is used, and a warning is issued if it is not found.
 #' @param N.sim Integer value. If specified and \code{object} is based on a 
 #'   frequentist model (i.e., does not have a posterior sample), then a fake 
 #'   posterior sample is generated using the function \code{sim}.
@@ -1040,6 +1040,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
             if(missing(sigma))
                 sigma = object@misc$sigma
             link = .make.bias.adj.link(link, sigma)
+            #### (not needed)   bias.adjust = attr(link, "bias.adjust")
             if (!is.na(PB[1])) # special frequentist version when sigma is MCMC sample
                 flink = .make.bias.adj.link(flink, mean(sigma))
             else

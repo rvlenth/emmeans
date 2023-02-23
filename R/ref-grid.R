@@ -105,6 +105,8 @@
 #' @param sigma Numeric value to use for subsequent predictions or
 #'   back-transformation bias adjustments. If not specified, we use
 #'   \code{sigma(object)}, if available, and \code{NULL} otherwise.
+#'   Note: This applies only when the family is \code{"gaussian"}; for other families,
+#'   \code{sigma} is set to \code{NA} and cannot be overridden.
 #' @param counterfactuals,wt.counter,avg.counter \code{counterfactuals} specifies character
 #'   names of counterfactual factors. If this is non-missing, a reference grid
 #'   is created consisting of combinations of counterfactual levels and a constructed
@@ -451,12 +453,6 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (!missing(df)) {
         if(is.null(options)) options = list()
         options$df = df
-    }
-    
-    if(missing(sigma)) { # Get 'sigma(object)' if available, else NULL
-        sigma = suppressWarnings(try(stats::sigma(object), silent = TRUE))
-        if (inherits(sigma, "try-error"))
-            sigma = NULL
     }
     
     # recover the data
@@ -876,7 +872,18 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     misc$famSize = nrow(grid)
     if(is.null(misc$avgd.over))
        misc$avgd.over = character(0)
-    misc$sigma = sigma
+    
+    # emm_basis may have provided a sigma. If not, use sigma value from model or args
+    if(is.null(misc$sigma) && missing(sigma)) { # Get 'sigma(object)' if available, else NULL
+        sigma = suppressWarnings(try(stats::sigma(object), silent = TRUE))
+        if (inherits(sigma, "try-error"))
+            sigma = NULL
+        misc$sigma = sigma
+    }
+    # ... but override it only if sigma != NA
+    if(is.null(misc$sigma) || (!is.null(misc$sigma) && !is.na(misc$sigma)))
+        misc$sigma = sigma
+    
 
     post.beta = basis$post.beta
     if (is.null(post.beta))

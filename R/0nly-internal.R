@@ -47,6 +47,16 @@
     !any(is.na(nx))
 }
 
+# return TRUE if obj@misc$sigma is not NA
+.chk.predict = function(obj) {
+    sig = obj@misc$sigma
+    ok = (is.null(sig) || (!is.null(sig) && !is.na(sig)))
+    if(!ok)
+        warning("Prediction intervals are not available for this object", call. = FALSE)
+    ok
+}
+
+
 
 ## Alternative to all.vars, but keeps vars like foo$x and foo[[1]] as-is
 ##   Passes ... to all.vars

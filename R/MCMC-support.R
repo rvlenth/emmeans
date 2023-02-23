@@ -224,7 +224,7 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #'   \code{sigma} to exist in the object or be specified.
 #' @param sigma Error SD assumed for bias correction (when 
 #'   \code{type = "response"}. If not specified,
-#'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#'   \code{object@misc$sigma} is used, and a warning if it is not found or invalid.
 #'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the 
 #'   number of observations in the posterior sample.
 #' @param ... required but not used
@@ -341,6 +341,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
             if (missing(sigma))
                 sigma = object@misc@sigma
             link = .make.bias.adj.link(link, sigma)
+            bias.adjust = attr(link, "bias.adjust")
         }
         
         for (j in seq_along(mcmc[1, ]))

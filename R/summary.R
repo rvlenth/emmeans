@@ -113,12 +113,13 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise, 
 #'   a logical value of \code{TRUE} will have it return a frequentist summary.
 #' @param bias.adjust Logical value for whether to adjust for bias in
-#'   back-transforming (\code{type = "response"}). This requires a value of 
+#'   back-transforming (\code{type = "response"}). This requires a valid value of 
 #'   \code{sigma} to exist in the object or be specified.
 #' @param sigma Error SD assumed for bias correction (when 
 #'   \code{type = "response"} and a transformation
 #'   is in effect), or for constructing prediction intervals. If not specified,
-#'   \code{object@misc$sigma} is used, and an error is thrown if it is not found.
+#'   \code{object@misc$sigma} is used, and a warning is issued if it is not found
+#'   or not valid.
 #'   \emph{Note:} \code{sigma} may be a vector, but be careful that it correctly
 #'   corresponds (perhaps after recycling) to the order of the reference grid.
 #' @param ... Optional arguments such as \code{scheffe.rank} 
@@ -155,12 +156,23 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   Similarly, confidence intervals are computed on the linear-predictor scale,
 #'   then inverse-transformed.
 #'   
+#' @section Bias adjustment when back-transforming:
 #'   When \code{bias.adjust} is \code{TRUE}, then back-transformed estimates
 #'   are adjusted by adding 
 #'   \eqn{0.5 h''(u)\sigma^2}, where \eqn{h} is the inverse transformation and
 #'   \eqn{u} is the linear predictor. This is based on a second-order Taylor
 #'   expansion. There are better or exact adjustments for certain specific
 #'   cases, and these may be incorporated in future updates.
+#'   
+#'   Note: In certain models, e.g., those with non-gaussian families,
+#'   \code{sigma} is initialized as \code{NA}, and so by default, bias adjustment
+#'   is skipped and a warning is issued. You may override this by specifying a
+#'   value for \code{sigma}. However, \emph{with ordinary generalized linear models,
+#'   bias adjustment is inappropriate} and you should not try to do it. With GEEs and GLMMs,
+#'   you probably should \emph{not} use \code{sigma(model)}, and instead you should create an
+#'   appropriate value using the estimated random effects, e.g., from \code{VarCorr(model)}.
+#'   An example is provided in the 
+#'   \href{https://cran.r-project.org/web/packages/emmeans/vignettes/transformations.html#cbpp}{vignette on transformations}.
 #' 
 #' @section P-value adjustments:
 #'   The \code{adjust} argument specifies a multiplicity adjustment for tests or
@@ -536,8 +548,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         inv = FALSE
         link = NULL
     }
-    if(inv && bias.adjust && !is.null(link)) 
+    if(inv && bias.adjust && !is.null(link)) {
         link = .make.bias.adj.link(link, sigma)
+        bias.adjust = attr(link, "bias.adjust")  # disables later message if skipped
+    }
     
     # et = 1 if a prediction, 2 if a contrast (or unmatched or NULL), 3 if pairs
     et = pmatch(c(misc$estType, "c"), c("prediction", "contrast", "pairs"), nomatch = 2)[1]
@@ -722,7 +736,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
 #' @param interval Type of interval desired (partial matching is allowed): 
 #' \code{"none"} for no intervals,
 #'   otherwise confidence or prediction intervals with given arguments, 
-#'   via \code{\link{confint.emmGrid}}.
+#'   via \code{\link{confint.emmGrid}}. 
+#'   Note: prediction intervals are not available
+#'   unless the model family is \code{"gaussian"}.
 #'   
 #' @export
 #' @return \code{predict} returns a vector of predictions for each row of \code{object@grid}.
@@ -741,8 +757,11 @@ predict.emmGrid <- function(object, type,
 
     interval = match.arg(interval)
     if (interval %in% c( "confidence", "prediction")) {
-        if (interval == "prediction")
-            object@misc$.predFlag = TRUE
+        if (interval == "prediction") {
+            ok = object@misc$.predFlag = .chk.predict(object)
+            if (!ok)
+                return(NULL)
+        }
         return(confint.emmGrid(object, type = type, level = level, 
                                bias.adjust = bias.adjust, sigma = sigma, ...))
     }
@@ -924,9 +943,15 @@ as.data.frame.emmGrid = function(x,
 # patch-in alternative back-transform stuff for bias adjustment
 # Currently, we just use a 2nd-order approx for everybody:
 #   E(h(nu + E))  ~=  h(nu) + 0.5*h"(nu)*var(E)
+# We also return an attribute "bias.adjust" which is TRUE if ok, FALSE if we aborted
 .make.bias.adj.link = function(link, sigma) {
-    if (is.null(sigma))
-        stop("Must specify 'sigma' to obtain bias-adjusted back transformations", call. = FALSE)
+    if (is.null(sigma) || (!is.null(sigma) && (is.na(sigma) || (sigma < 0)))) {
+        warning("Bias adjustment skipped: No valid 'sigma' provided\n", 
+                "(And perhaps bias.adjust should NOT be used; see ? summary.emmGrid)", 
+                call. = FALSE)
+        attr(link, "bias.adjust") = FALSE
+        return(link)
+    }
     link$inv = link$linkinv
     link$der = link$mu.eta
     link$sigma22 = sigma^2 / 2
@@ -934,6 +959,7 @@ as.data.frame.emmGrid = function(x,
     link$linkinv = function(eta) with(link, inv(eta) + sigma22 * der2(eta))
     link$mu.eta = function(eta) with(link, der(eta) +
                                          1000 * sigma22 * (der2(eta + .0005) - der2(eta - .0005)))
+    attr(link, "bias.adjust") = TRUE
     link
 }
 ####!!!!! TODO: Re-think whether we are handling Scheffe adjustments correctly

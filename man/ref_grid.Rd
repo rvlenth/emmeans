@@ -78,7 +78,9 @@ relative to the offset that had been specified in the model.}
 
 \item{sigma}{Numeric value to use for subsequent predictions or
 back-transformation bias adjustments. If not specified, we use
-\code{sigma(object)}, if available, and \code{NULL} otherwise.}
+\code{sigma(object)}, if available, and \code{NULL} otherwise.
+Note: This applies only when the family is \code{"gaussian"}; for other families,
+\code{sigma} is set to \code{NA} and cannot be overridden.}
 
 \item{counterfactuals, wt.counter, avg.counter}{\code{counterfactuals} specifies character
 names of counterfactual factors. If this is non-missing, a reference grid

@@ -53,8 +53,10 @@ for Bayesian models) are added to the plot
 (works only with \code{engine = "ggplot"}).}
 
 \item{PIs}{Logical value. If \code{TRUE}, prediction intervals are added to the plot 
-(works only with \code{engine = "ggplot"}). If both \code{CIs} and
-\code{CIs} are \code{TRUE}, the prediction intervals will be somewhat
+(works only with \code{engine = "ggplot"}). This is allowed only if the
+underlying model family is \code{"gaussian"}.
+If both \code{CIs} and
+\code{PIs} are \code{TRUE}, the prediction intervals will be somewhat
 longer, lighter, and thinner than the confidence intervals. Additional
 parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed via
 \code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 

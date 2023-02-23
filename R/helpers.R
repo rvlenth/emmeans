@@ -799,7 +799,7 @@ recover_data.svyglm = function(object, data = NULL, ...) {
 }
 
 # Call this to do the standard stuff with link labels
-# Returns a modified misc
+# Returns a modified misc. Note if family != "gaussian", we also set misc$sigma = NA
 #' @export
 .std.link.labels = function(fam, misc) {
     if (is.null(fam) || !is.list(fam))
@@ -812,6 +812,8 @@ recover_data.svyglm = function(object, data = NULL, ...) {
         misc$inv.lbl = "prob"
     else if (length(grep("poisson", fam$family)) == 1)
         misc$inv.lbl = "rate"
+    if(length(grep("gaussian", fam$family)) == 0)
+        misc$sigma = NA
     misc
 }
 

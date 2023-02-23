@@ -18,6 +18,30 @@ title: "NEWS for the emmeans package"
     emphasizes more the process of first getting a good model. 
   * The `confidence-intervals` vignette has been updated to reflect the same 
     example with `pigs` as is used in `basics`
+  * Following Issue #403 on GitHub, we are taking a much stricter approach with anything involving the `sigma`
+    value in the `@misc` slot. For any models that are not in the `"gaussian"`
+    family, `sigma` is initialized to `NA` and this has some implications:
+      - *Bias adjustment*: Bias adjustment is disabled by default for all non-Gaussian
+        family models, and a warning is issued. You can enable bias adjustment by 
+        providing a valid `sigma` value; however, for generalized linear models
+        the value of `sigma(model)` *is often inappropriate for bias adjustment,
+        and in fact  anyway. *you should not do that*, and for mixed models,
+        you should calculate `sigma` based on the random effects. See the vignette
+        on transformations.
+      - *Prediction intervals*: With non-Gaussian models, `predict(..., interval = "prediction")`
+        will refuse to work, with no option to override. Same with specifying `PIs = TRUE`
+        in `plot()` or `emmip()`. The calculations done for prediction intervals
+        are only valid for Gaussian models. You may do predictions for non-Gaussian models
+        via simulating a posterior predictive distribution with Bayesian approach; see an illustration
+        in the ["sophisticated" vignette](https://cran.r-project.org/web/packages/emmeans/vignettes/sophisticated.html#predict-mcmc).
+      - The above changes will help reduce the incidence of users using the package incorrectly
+        with GLMs, GLMMs, and GEEs. But there's still the issue that Gaussian mixed models
+        will often have a *wrong* default `sigma` value associated with them, resulting in 
+        incorrect PIs and incorrect bias adjustments.
+        I have not figured out how I might help prevent that, but it probably will involve
+        making tedious modifications to these models' `emm_basis` methods. Maybe some future
+        improvements to be made.
+        
 
 ## emmeans 1.8.4
   * Fix to `scale()` response transformation when either `center` or `scale` 

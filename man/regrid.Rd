@@ -39,13 +39,13 @@ when one specifies \code{transform = "log"} but desires summaries to be
 produced by default on the response scale.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
-back-transforming (\code{transform = "response"}). This requires a value of 
+back-transforming (\code{transform = "response"}). This requires a valid value of 
 \code{sigma} to exist in the object or be specified.}
 
 \item{sigma}{Error SD assumed for bias correction (when 
 \code{transform = "response"} and a transformation
 is in effect). If not specified,
-\code{object@misc$sigma} is used, and an error is thrown if it is not found.}
+\code{object@misc$sigma} is used, and a warning is issued if it is not found.}
 
 \item{N.sim}{Integer value. If specified and \code{object} is based on a 
 frequentist model (i.e., does not have a posterior sample), then a fake 

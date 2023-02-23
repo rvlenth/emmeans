@@ -108,9 +108,9 @@ object.}
   \code{FALSE}, the system value \code{getOption("digits")} is used.}
 \item{\code{back.bias.adj}}{A logical value controlling whether we 
   try to adjust bias when back-transforming. If \code{FALSE}, we use naive
-  back transformation. If \code{TRUE} \emph{and \code{sigma} is available}, a
+  back transformation. If \code{TRUE} \emph{and \code{sigma} is available and valid}, a
   second-order adjustment is applied to estimate the mean on the response
-  scale.}
+  scale. A warning is issued if no valid \code{sigma} is available}
 \item{\code{enable.submodel}}{A logical value. If \code{TRUE}, enables support 
   for selected model classes to implement the \code{submodel} option. If
   \code{FALSE}, this support is disabled. Setting this option to \code{FALSE}

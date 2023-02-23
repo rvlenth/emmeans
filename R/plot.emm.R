@@ -67,8 +67,10 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
     }
     if (PIs) {
         prd = predict(object, interval = "pred", frequentist = frequentist, type = "lp", ...)
-        summ$lpl = prd$lower.PL
-        summ$upl = prd$upper.PL
+        if (PIs <- !is.null(prd)) {
+            summ$lpl = prd$lower.PL
+            summ$upl = prd$upper.PL
+        }
     }
     
     estName = attr(summ, "estName")

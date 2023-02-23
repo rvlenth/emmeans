@@ -30,7 +30,7 @@ back-transforming (\code{type = "response"}). This requires a value of
 
 \item{sigma}{Error SD assumed for bias correction (when 
 \code{type = "response"}. If not specified,
-\code{object@misc$sigma} is used, and an error is thrown if it is not found.
+\code{object@misc$sigma} is used, and a warning if it is not found or invalid.
 \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the 
 number of observations in the posterior sample.}
 
