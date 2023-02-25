@@ -57,9 +57,17 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     
-    perm = match(colnames(X), bnms)
-    if (any(is.na(perm)))
-        stop ("In emm_basis.averaging: Unable to match model terms")
+    # perm = match(colnames(X), bnms) # fails when order of factors differs
+    # Let's try matching by factors included
+    xlst = lapply(strsplit(colnames(X), ":"), sort)
+    blst = lapply(strsplit(bnms, ":"), sort)
+    matches = lapply(xlst, function(x) which(sapply(blst, \(y) all(x == y))))
+    perm = sapply(matches, function(x) ifelse(length(x) > 0, x[1], NA))
+    
+    missing.terms = colnames(X)[is.na(perm)]
+    if (length(missing.terms) > 0)
+        stop ("In emm_basis.averaging: Unable to match model term(s):\n",
+              paste(missing.terms, collapse = ", "), call. = FALSE)
     bhat = bhat[perm]
     V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...)[perm, perm]
     

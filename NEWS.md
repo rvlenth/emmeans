@@ -41,6 +41,7 @@ title: "NEWS for the emmeans package"
         I have not figured out how I might help prevent that, but it probably will involve
         making tedious modifications to these models' `emm_basis` methods. Maybe some future
         improvements to be made.
+  * Bug fix for matching terms in `averaging` objects (#402)
         
 
 ## emmeans 1.8.4
