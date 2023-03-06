@@ -42,6 +42,7 @@ title: "NEWS for the emmeans package"
         making tedious modifications to these models' `emm_basis` methods. Maybe some future
         improvements to be made.
   * Bug fix for matching terms in `averaging` objects (#402)
+  * Bug fix for `mira` objects when `data` is required (#406)
         
 
 ## emmeans 1.8.4

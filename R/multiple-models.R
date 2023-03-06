@@ -95,8 +95,8 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
 ### minc::mira support -----------------------------------------
 # Here we rely on the methods already in place for elements of $analyses
 
-recover_data.mira = function(object, ...) {
-    rdlist = lapply(object$analyses, recover_data, ...)
+recover_data.mira = function(object, data = NULL, ...) {
+    rdlist = lapply(object$analyses, recover_data, data = data, ...)
     rd = rdlist[[1]]
     # we'll average the numeric columns...
     numcols = which(sapply(rd, is.numeric))
@@ -106,6 +106,10 @@ recover_data.mira = function(object, ...) {
 }
 
 emm_basis.mira = function(object, trms, xlev, grid, ...) {
+    # In case our method did a "pass it on" with the data, we need to add that attribute
+    data = list(...)$misc$data
+    if(!is.null(data))
+        object$analyses = lapply(object$analyses, function(a) {attr(a, "data") = data; a})
     bas = emm_basis(object$analyses[[1]], trms, xlev, grid, ...)
     k = length(object$analyses)
     # we just average the V and bhat elements...

@@ -881,7 +881,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         misc$sigma = sigma
     }
     # ... but override it only if sigma != NA
-    if(is.null(misc$sigma) || (!is.null(misc$sigma) && !is.na(misc$sigma)))
+    if(is.null(misc$sigma) || (length(misc$sigma) == 0) || !is.na(misc$sigma))
         misc$sigma = sigma
     
 
