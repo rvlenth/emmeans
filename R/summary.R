@@ -171,8 +171,7 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   bias adjustment is inappropriate} and you should not try to do it. With GEEs and GLMMs,
 #'   you probably should \emph{not} use \code{sigma(model)}, and instead you should create an
 #'   appropriate value using the estimated random effects, e.g., from \code{VarCorr(model)}.
-#'   An example is provided in the 
-#'   \href{https://cran.r-project.org/web/packages/emmeans/vignettes/transformations.html#cbpp}{vignette on transformations}.
+#'   An example is provided in the \dQuote{transformations} vignette.
 #' 
 #' @section P-value adjustments:
 #'   The \code{adjust} argument specifies a multiplicity adjustment for tests or
@@ -945,8 +944,9 @@ as.data.frame.emmGrid = function(x,
 #   E(h(nu + E))  ~=  h(nu) + 0.5*h"(nu)*var(E)
 # We also return an attribute "bias.adjust" which is TRUE if ok, FALSE if we aborted
 .make.bias.adj.link = function(link, sigma) {
-    if (is.null(sigma) || (!is.null(sigma) && (is.na(sigma) || (sigma < 0)))) {
-        warning("Bias adjustment skipped: No valid 'sigma' provided\n", 
+    ###if (is.null(sigma) || (!is.null(sigma) && (is.na(sigma) || (sigma < 0)))) { ###old code
+    if(is.null(sigma) || (length(sigma) == 0) || is.na(sigma[1]) || (sigma[1] < 0)) {
+         warning("Bias adjustment skipped: No valid 'sigma' provided\n", 
                 "(And perhaps bias.adjust should NOT be used; see ? summary.emmGrid)", 
                 call. = FALSE)
         attr(link, "bias.adjust") = FALSE

@@ -107,7 +107,7 @@ summary.emm_list <- function(object, ..., which = seq_along(object)) {
 }
 
 #' @export
-summary.summary_eml = function(x, ...) x
+summary.summary_eml = function(object, ...) object
 #' @export
 as.data.frame.summary_eml = function(x, ...) {
     for (i in seq_along(x))

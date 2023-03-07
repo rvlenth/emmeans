@@ -21,7 +21,7 @@
 
 # summary of a summary - just pass it thru
 #' @export
-summary.summary_emm = function(x, ...) x
+summary.summary_emm = function(object, ...) object
 
 # confint and test methods
 

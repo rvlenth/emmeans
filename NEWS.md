@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.4-9xxxxx
+## emmeans 1.8.5
   * passing scale info to `emmip_ggplot()` (#397)
   * Changes to `as.data.frame` behavior. It has been made more forceful in
     preserving annotations (i.e., `summary_emm` behavior) so that users don't

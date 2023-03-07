@@ -278,8 +278,7 @@ If a data frame is needed, \code{summary}, \code{confint},
   bias adjustment is inappropriate} and you should not try to do it. With GEEs and GLMMs,
   you probably should \emph{not} use \code{sigma(model)}, and instead you should create an
   appropriate value using the estimated random effects, e.g., from \code{VarCorr(model)}.
-  An example is provided in the 
-  \href{https://cran.r-project.org/web/packages/emmeans/vignettes/transformations.html#cbpp}{vignette on transformations}.
+  An example is provided in the \dQuote{transformations} vignette.
 }
 
 \section{P-value adjustments}{
