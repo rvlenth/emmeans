@@ -411,6 +411,10 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
 
 
 ### utility to translate character keys to index keys
+#' @rdname extending-emmeans
+#' @order 43
+#' @param levs,key The \code{.num.key} function returns the numeric indices of
+#' the levels in \code{levs} to the set of all levels in \code{key}
 #' @export
 .num.key = function(levs, key) {
     if(!is.null(raw <- attr(levs, "raw")))
@@ -428,6 +432,12 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
 
 ### utility to find exclude levels from either exclude or include
 ### Also returns numeric version
+#' @rdname extending-emmeans
+#' @order 34
+#' @param exc,inc Arguments for \code{.get.excl} which is useful
+#' in writing \code{.emmc} functions for generating contrast coefficients,
+#' and supports arguments \code{exclude} or \code{include} for excluding
+#' or specifying which levels to use.
 #' @export
 .get.excl = function(levs, exc, inc) {
     if (!missing(inc)) {

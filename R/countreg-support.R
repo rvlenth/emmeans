@@ -226,10 +226,12 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 #' @rdname extending-emmeans
 #' @order 93
 #'
-#' @param cmu,zmu Vector of back-transformed estimates for the count and zero model, resp 
-#' @param cshape,zshape Shape parameter for the count and zero model, resp 
+#' @param cmu,zmu In \code{.hurdle.support} and \code{.zi.support}, 
+#'   these specify a vector of back-transformed 
+#'   estimates for the count and zero model, respectively
+#' @param cshape,zshape Shape parameter for the count and zero model, respectively 
 #' @param cp0,zp0 Function of \code{(mu, shape)} for computing Prob(Y = 0)
-#'        for the count and zero model, resp
+#'        for the count and zero model, respectively
 #' @param cmean Function of \code{(mu, shape)} for computing the mean of the
 #'        count model. Typically, this just returns \code{mu}
 #'
@@ -254,7 +256,6 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 
 #' @rdname extending-emmeans
 #' @order 94
-#' @param mu,shape,p0 See parameters \code{zmu,zshape,zp0} above
 #' @return \code{.zi.support} returns a matrix with 2 rows containing the
 #'       estimated probabilities of 0 and the differentials wrt \code{mu}.
 #'       See the section on hurdle and zero-inflated models.
@@ -280,11 +281,11 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 #'   for how these are used with models fitted by the \pkg{pscl} package.
 #' @export
 #'
-.zi.support = function(mu, shape, p0) {
-    if (is.null(shape) || is.na(shape)) shape = 1
-    pfcn = function(x) p0(x, shape)
-    result = sapply(seq_along(mu), function(i) {
-        c(pfcn(mu[i]), numDeriv::jacobian(pfcn, mu[i]))
+.zi.support = function(zmu, zshape, zp0) {
+    if (is.null(zshape) || is.na(zshape)) zshape = 1
+    pfcn = function(x) zp0(x, zshape)
+    result = sapply(seq_along(zmu), function(i) {
+        c(pfcn(zmu[i]), numDeriv::jacobian(pfcn, zmu[i]))
     })
     rownames(result) = c("p0", "dmu")
     result

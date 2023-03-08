@@ -184,6 +184,11 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
          dfargs = dfargs, misc = misc, model.matrix = mm)
 }
 
+#' @rdname extending-emmeans
+#' @order 32
+#' @param k,dfargs Arguments to \code{.aovlist.dffun}, which is made available as a 
+#'   convenience to developers providing support similar to that provided for 
+#'   \code{aovlist} objects
 #' @export
 .aovlist.dffun = function(k, dfargs) {
     if(is.matrix(k) && (nrow(k) > 1)) {

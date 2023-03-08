@@ -32,8 +32,8 @@ title: "NEWS for the emmeans package"
         will refuse to work, with no option to override. Same with specifying `PIs = TRUE`
         in `plot()` or `emmip()`. The calculations done for prediction intervals
         are only valid for Gaussian models. You may do predictions for non-Gaussian models
-        via simulating a posterior predictive distribution with Bayesian approach; see an illustration
-        in the ["sophisticated" vignette](https://cran.r-project.org/web/packages/emmeans/vignettes/sophisticated.html#predict-mcmc).
+        via simulating a posterior predictive distribution with Bayesian approach; 
+        see an illustration in the "sophisticated" vignette.
       - The above changes will help reduce the incidence of users using the package incorrectly
         with GLMs, GLMMs, and GEEs. But there's still the issue that Gaussian mixed models
         will often have a *wrong* default `sigma` value associated with them, resulting in 

@@ -788,6 +788,13 @@ recover_data.svyglm = function(object, data = NULL, ...) {
 .statsvcov = function(object, ...)
     stats::vcov(object, complete = FALSE, ...)
 
+#' @rdname extending-emmeans
+#' @order 36
+#' @param vcov. Function or matrix that returns a suitable covariance matrix.
+#' The default is \code{.statsvcov} which is \code{stats::vcov}. The \code{.my.vcov} 
+#' function should be called in place of \code{\link{vcov}}, and it supports the user 
+#' being able to specify a different matrix or function via the
+#' optional \code{vcov.} argument.
 #' @export
 .my.vcov = function(object, vcov. = .statsvcov, ...) {
     if (is.function(vcov.))
@@ -798,8 +805,12 @@ recover_data.svyglm = function(object, data = NULL, ...) {
     vcov.
 }
 
-# Call this to do the standard stuff with link labels
-# Returns a modified misc. Note if family != "gaussian", we also set misc$sigma = NA
+#' @rdname extending-emmeans
+#' @order 30
+#' @param fam Result of call to \code{family(object)}
+#' @param misc A \code{list} intended for the \code{@misc} slot of an \code{emmGrid} object
+#' @return \code{.std.link.llabels} returns a modified version of \code{misc}
+#'   with the appropriate information included corresponding to the information in \code{fam}
 #' @export
 .std.link.labels = function(fam, misc) {
     if (is.null(fam) || !is.list(fam))

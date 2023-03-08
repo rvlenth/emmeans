@@ -42,6 +42,12 @@
 # @param ... Arguments passed to \code{rmarkdown::html_document}
 #
 # @return R Markdown format used by \code{rmarkdown::render}
+#' @rdname extending-emmeans
+#' @order 51
+#' @param css,package,highlight Arguments for \code{.emm_vignette}, which is
+#' a clean and simple alternative to such as \code{html_document} for use
+#' as the output style of a Markdown file. All the vignettes in the
+#' \pkg{emmeans} package use this output style.
 #' @export
 .emm_vignette = function(css = system.file("css", "clean-simple.css", package = "emmeans"), 
                          highlight = NULL,  ...) {
@@ -100,7 +106,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 
 
 #' @rdname extending-emmeans
-#' @order 90
+#' @order 29
 #' @section Registering S3 methods for a model class:
 #' The \code{.emm_register} function is provided as a convenience to conditionally 
 #' register your

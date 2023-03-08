@@ -21,11 +21,14 @@
 
 #' Support functions for model extensions
 #' 
-#' This documents the methods that \code{\link{ref_grid}} calls. A user
+#' This documents some functions and methods that may be useful to package 
+#' developers wishing to add support for \pkg{emmeans} for their model objects.A user
 #' or package developer may add \pkg{emmeans} support for a model
 #' class by writing \code{recover_data} and \code{emm_basis} methods
 #' for that class. (Users in need for a quick way to obtain results for a model
 #' that is not supported may be better served by the \code{\link{qdrg}} function.)
+#' There are several other exported functions that may be useful. See the
+#' "xtending" vignette for more details.
 #' 
 ## #' @rdname extending-emmeans
 #' @name extending-emmeans
