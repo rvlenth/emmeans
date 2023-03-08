@@ -101,9 +101,9 @@ summary.emm_list <- function(object, ..., which = seq_along(object)) {
     #     else summary.emmGrid(x, ...)
     # })
     if(length(which) == 1)
-        summary.emmGrid(object[[which]])
+        summary.emmGrid(object[[which]], ...)
     else
-        .lapply(object[which], summary.emmGrid)
+        .lapply(object[which], \(x) summary.emmGrid(x, ...))
 }
 
 #' @export
