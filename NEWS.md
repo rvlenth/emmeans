@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.5.900***
+  * Major fix to `emm_basis.averaging` to take care of quirks in these 
+    models (#402, #409)
+
 ## emmeans 1.8.5
   * passing scale info to `emmip_ggplot()` (#397)
   * Changes to `as.data.frame` behavior. It has been made more forceful in

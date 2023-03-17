@@ -54,22 +54,33 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     bnms[bnms == "(Int)"] = "(Intercept)"
     names(bhat) = bnms
     
-    m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
-    X = model.matrix(trms, m, contrasts.arg = object$contrasts)
+    # we're gonna assemble all the main-effects model-matrix components
+    # and build the model matrix to match the names of the coefs
+    vars = .all.vars(trms)
+    mmlist = lapply(vars, \(v) {
+        frm = reformulate(c(-1, v))
+        suppressWarnings(model.matrix(frm, data = grid, xlev = xlev))
+    })
+    ME = cbind("(Intercept)" = 1, do.call(cbind, mmlist))
+    cols = strsplit(names(bhat), ":")  # the cols we need
+    ext = setdiff(unlist(cols), colnames(ME)) # extra expressions we need to compute
+    if(length(ext) > 0) {
+        xcols = sapply(ext, \(expr) eval(parse(text = expr), envir = grid))
+        ME = cbind(ME, xcols)
+    }
+    # now get the factors for each coef
+    X = sapply(cols, \(nms)
+        apply(ME[, nms, drop = FALSE], 1, prod))
+    colnames(X) = names(bhat)
+    # Now, sometimes a coefficient is duplicated, so we need to zero those out
+    srt = sapply(cols, \(nms) paste(sort(nms), collapse = ":"))
+    tmp = table(srt)
+    for (nm in names(tmp[tmp > 1])) {  # work on the dupes
+        zap = which(srt == nm)[-1]   # indices of all but the first
+        bhat[zap] = 0
+    }
     
-    # perm = match(colnames(X), bnms) # fails when order of factors differs
-    # Let's try matching by factors included
-    xlst = lapply(strsplit(colnames(X), ":"), sort)
-    blst = lapply(strsplit(bnms, ":"), sort)
-    matches = lapply(xlst, function(x) which(sapply(blst, \(y) all(x == y))))
-    perm = sapply(matches, function(x) ifelse(length(x) > 0, x[1], NA))
-    
-    missing.terms = colnames(X)[is.na(perm)]
-    if (length(missing.terms) > 0)
-        stop ("In emm_basis.averaging: Unable to match model term(s):\n",
-              paste(missing.terms, collapse = ", "), call. = FALSE)
-    bhat = bhat[perm]
-    V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...)[perm, perm]
+    V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...) ###[perm, perm]
     
     nbasis = estimability::all.estble
     ml = attr(object, "modelList")

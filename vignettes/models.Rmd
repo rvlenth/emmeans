@@ -64,7 +64,7 @@ Scroll down or follow the links to those groups for more information.
 |glmerMod     |lme4     |[G](#G)  |                                                             |
 |glmmadmb     |glmmADMB |         |No longer supported                                          |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
-|glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package (dev. version only?)        |
+|glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package                             |
 |gls          |nlme     |[K](#K)  |`mode = c("auto", "df.error", "satterthwaite", "asymptotic")`|
 |gnls         |nlme     |[A](#A)  |Supports `params` part. Requires `param = "<name>"`          |
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
@@ -76,6 +76,7 @@ Scroll down or follow the links to those groups for more information.
 |lmerMod      |lme4     |[L](#L)  |`lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
 |             |         |         |`pbkrtest.limit = 3000`,  `disable.pbkrtest = FALSE`.        |
 |             |         |         |`emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
+|logistf      |glmmTMB  |[P](#P)  |Supported in **logistf** package                             |
 |lqm,lqmm     |lqmm     |[Q](#Q)  |`tau = "0.5"` (must match an entry in `object$tau`)          |
 |             |         |         |Optional: `method`, `R`, `seed`, `startQR` (must be fully spelled-out) |
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
