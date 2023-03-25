@@ -34,7 +34,7 @@ Much of what you do with the **emmeans** package involves these three basic step
      is an extremely important step because **emmeans** does not analyze your data,
      it summarizes your model. If it is a bad model, you will likely get 
      misleading results from this package -- the garbage in, garbage out principle.
-     If you're not sure whether your model is any good, this is a good times
+     If you're not sure whether your model is any good, this is a good time
      to get statistical consulting help. This really *is* like rocket science, not
      just a matter of getting programs to run.
   1. Run  `EMM <- emmeans(...)` (see scenarios below) to obtain estimates of 
