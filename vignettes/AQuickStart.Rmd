@@ -34,7 +34,7 @@ Much of what you do with the **emmeans** package involves these three basic step
      is an extremely important step because **emmeans** does not analyze your data,
      it summarizes your model. If it is a bad model, you will likely get 
      misleading results from this package -- the garbage in, garbage out principle.
-     If you're not sure whether your model is any good, this is a good times
+     If you're not sure whether your model is any good, this is a good time
      to get statistical consulting help. This really *is* like rocket science, not
      just a matter of getting programs to run.
   1. Run  `EMM <- emmeans(...)` (see scenarios below) to obtain estimates of 
@@ -103,7 +103,7 @@ interest, you would do `pairs(EMM)` without a `by` variable. But you get a lot m
 comparisons this way.
 
 #### Interaction contrasts
-Sometimes you may want to examine *interaction contrasts*, which are contrasts of contrasts. The thing to know here is that `contrast()` or (`pairs()`) creates the same kind of object as `emmeans()`, so you can run them multiple time. For example,
+Sometimes you may want to examine *interaction contrasts*, which are contrasts of contrasts. The thing to know here is that `contrast()` or (`pairs()`) creates the same kind of object as `emmeans()`, so you can run them multiple times. For example,
 ```r
 CON <- pairs(EMM, by = "dose")
 contrast(CON, "consec", by = NULL)    # by = NULL is essential here!
