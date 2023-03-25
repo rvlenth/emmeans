@@ -103,7 +103,7 @@ interest, you would do `pairs(EMM)` without a `by` variable. But you get a lot m
 comparisons this way.
 
 #### Interaction contrasts
-Sometimes you may want to examine *interaction contrasts*, which are contrasts of contrasts. The thing to know here is that `contrast()` or (`pairs()`) creates the same kind of object as `emmeans()`, so you can run them multiple time. For example,
+Sometimes you may want to examine *interaction contrasts*, which are contrasts of contrasts. The thing to know here is that `contrast()` or (`pairs()`) creates the same kind of object as `emmeans()`, so you can run them multiple times. For example,
 ```r
 CON <- pairs(EMM, by = "dose")
 contrast(CON, "consec", by = NULL)    # by = NULL is essential here!
