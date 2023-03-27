@@ -5,6 +5,8 @@ title: "NEWS for the emmeans package"
 ## emmeans 1.8.5.900***
   * Major fix to `emm_basis.averaging` to take care of quirks in these 
     models (#402, #409)
+  * Added `decreasing` argument to `cld.emmGrid()` for compatibility with
+    `multcomp::cld.glht()` and others.
 
 ## emmeans 1.8.5
   * passing scale info to `emmip_ggplot()` (#397)

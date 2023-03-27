@@ -66,8 +66,11 @@
 #' @param alpha Numeric value giving the significance level for the comparisons
 #' @param Letters Character vector of letters to use in the display. Any strings of
 #'   length greater than 1 are expanded into individual characters
-#' @param reversed Logical value (passed to \code{multcompView::multcompLetters}.)
+#' @param reversed,decreasing Logical value (passed to \code{multcompView::multcompLetters}.)
 #'   If \code{TRUE}, the order of use of the letters is reversed.
+#'   Either \code{reversed} or \code{decreasing} may be specified, thus providing
+#'   compatibility with both \code{multcompView::multcompLetters(..., reversed, ...)} and
+#'   \code{multcomp::cld(..., decreasing, ...)}.
 #'   In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
 #'   order of results is reversed.
 #' @param signif.sets Logical value. If \code{FALSE} (and \code{delta = 0}), a 
@@ -123,7 +126,7 @@
 cld.emmGrid = function(object, details = FALSE, sort = TRUE, 
                        by, alpha = .05, 
                        Letters = c("1234567890",LETTERS,letters), 
-                       reversed=FALSE, signif.sets = FALSE, delta = 0, ...) {
+                       reversed = decreasing, decreasing = FALSE, signif.sets = FALSE, delta = 0, ...) {
     if (!is.na(object@post.beta)[1]) {
         message("NOTE: Summary and groupings are based on frequentist results")
         object@post.beta = matrix(NA)

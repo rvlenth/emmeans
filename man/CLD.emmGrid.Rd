@@ -7,7 +7,8 @@
 \usage{
 \method{cld}{emmGrid}(object, details = FALSE, sort = TRUE, by,
   alpha = 0.05, Letters = c("1234567890", LETTERS, letters),
-  reversed = FALSE, signif.sets = FALSE, delta = 0, ...)
+  reversed = decreasing, decreasing = FALSE, signif.sets = FALSE,
+  delta = 0, ...)
 
 \method{cld}{emm_list}(object, ..., which = 1)
 }
@@ -30,8 +31,11 @@ If missing, the object's \code{by.vars} setting, if any, is used.}
 \item{Letters}{Character vector of letters to use in the display. Any strings of
 length greater than 1 are expanded into individual characters}
 
-\item{reversed}{Logical value (passed to \code{multcompView::multcompLetters}.)
+\item{reversed, decreasing}{Logical value (passed to \code{multcompView::multcompLetters}.)
 If \code{TRUE}, the order of use of the letters is reversed.
+Either \code{reversed} or \code{decreasing} may be specified, thus providing
+compatibility with both \code{multcompView::multcompLetters(..., reversed, ...)} and
+\code{multcomp::cld(..., decreasing, ...)}.
 In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
 order of results is reversed.}
 
