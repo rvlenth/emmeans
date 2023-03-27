@@ -190,7 +190,8 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     # set up call for ref_grid
     # ref_grid hook -- expand grid by these increments of var
     rgargs$options = c(rgargs$options, list(var = var, delts = delts))
-    bigRG = do.call("ref_grid", c(rgargs, data = data))
+    rgargs$data = data
+    bigRG = do.call("ref_grid", rgargs)
     
     ### create var.subs -- list of indexes for each value of delts
     ## Since var was created as slowest-varying, only multivariate factors will vary slower
