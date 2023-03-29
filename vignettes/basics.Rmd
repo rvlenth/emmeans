@@ -17,7 +17,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 
 ## [Contents](#contents)
 
-  1. Foundations(#found)
+  1. [Foundations](#found)
      a. [Emphasis on experimental data](#exper)
      b. [Emphasis on models](#models)
      c. [Illustration: `pigs` experiment](#pigs)
