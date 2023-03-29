@@ -41,10 +41,10 @@ recover_data.averaging = function(object, data, ...) {
     if (is.null(data))
         data = ml[[1]]$call$data
     ### temporary patch -- $formula often excludes the intercept
-    object$formula = update(object$formula, .~.+1)
+    object$formula = update(object$formula, .~.+1)[-2]
     trms = attr(model.frame(object$formula, data = data), "terms")
     fcall = call("model.avg", formula = object$formula, data = data)
-    recover_data(fcall, delete.response(trms), na.action = NULL, ...)
+    recover_data(fcall, trms, na.action = NULL, ...)
 }
 
 emm_basis.averaging = function(object, trms, xlev, grid, ...) {
