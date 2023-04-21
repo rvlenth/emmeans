@@ -8,7 +8,8 @@ title: "NEWS for the emmeans package"
   * Added `decreasing` argument to `cld.emmGrid()` for compatibility with
     `multcomp::cld.glht()` and others.
   * Fix to bug in `emtrends()` when `data` is specified (**semTools** issue 119)
-    ... and related fix to `averaging` support (#413)
+    ... and related tune-up to `ref_grid()` to avoid issues with repeat calls (#413)
+  * Tweak to `emm_list` methods to make them more user-friendly (#417)
 
 ## emmeans 1.8.5
   * passing scale info to `emmip_ggplot()` (#397)

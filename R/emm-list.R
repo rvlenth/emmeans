@@ -31,7 +31,7 @@
 #' \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 #' for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 #' \code{specs} argument. Several methods for this class are provided, as detailed below.
-#' Typically, these methods just quietly do the same thing as their \code{EmmGrid}
+#' Typically, these methods just quietly do the same thing as their \code{emmGrid}
 #' methods, using the first element of the list. You can specify \code{which}
 #' to select a different element, or just run the corresponding \code{emmGrid}
 #' method on \code{object[[k]]}.
@@ -65,10 +65,10 @@ NULL
     rtn = lapply(...)
     if (length(rtn) == 1)   {
         rtn = rtn[[1]]
-        class(rtn) = c("summary_emm", "data.frame")
     }
     else                    {
-        class(rtn) = c("summary_eml", "list")
+        cls = ifelse(class(rtn[[1]])[1] == "emmGrid", "emm_list", "summary_eml")
+        class(rtn) = c(cls, "list")
     }
     rtn
 }
@@ -168,7 +168,7 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 #' @method coef emm_list
 #' @rdname emm_list-object
 #' @order 9
-coef.emm_list = function(object, ..., which = 1) {
+coef.emm_list = function(object, ..., which = 2) {
     .lapply(object[which], coef, ...)
 }
 

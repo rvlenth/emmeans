@@ -461,7 +461,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         if (inherits(data, "try-error"))
             stop("Perhaps a 'data' or 'params' argument is needed")
     }
-    else # attach needed attributes to given data
+    # note if options$delts non-null, we called 2nd time from emtrends and data is ok as-is
+    else if (is.null(options$delts)) # attach needed attributes to given data
         data = recover_data(object, data = as.data.frame(data), ...)
     
     if(is.character(data)) # 'data' is in fact an error message

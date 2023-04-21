@@ -105,6 +105,11 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 
 
 ### Support for mclogit::mblogit models???
+recover_data.mblogit = function (object, ...) 
+{
+    recover_data.multinom(object, ...)
+}
+
 emm_basis.mblogit = function(object, ..., vcov.) {
     object$coefficients = object$coefmat
     object$lev = levels(object$model[[1]])

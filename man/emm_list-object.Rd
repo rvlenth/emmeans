@@ -24,7 +24,7 @@
 
 \method{plot}{emm_list}(x, ..., which = 1)
 
-\method{coef}{emm_list}(object, ..., which = 1)
+\method{coef}{emm_list}(object, ..., which = 2)
 
 \method{str}{emm_list}(object, ...)
 
@@ -55,7 +55,7 @@ An \code{emm_list} object is simply a list of
 \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
 \code{specs} argument. Several methods for this class are provided, as detailed below.
-Typically, these methods just quietly do the same thing as their \code{EmmGrid}
+Typically, these methods just quietly do the same thing as their \code{emmGrid}
 methods, using the first element of the list. You can specify \code{which}
 to select a different element, or just run the corresponding \code{emmGrid}
 method on \code{object[[k]]}.
