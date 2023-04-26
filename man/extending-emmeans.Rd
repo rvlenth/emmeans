@@ -27,7 +27,7 @@
 recover_data(object, ...)
 
 \method{recover_data}{call}(object, trms, na.action, data = NULL,
-  params = "pi", frame, addl.vars, ...)
+  params = "pi", frame, weights, addl.vars, ...)
 
 emm_basis(object, trms, xlev, grid, ...)
 
@@ -98,6 +98,11 @@ and if there are no function calls, we use \code{data = frame}. This
 can be helpful because it provides a modicum of security against the
 possibility that the original data used when fitting the model has been
 altered or removed.}
+
+\item{weights}{Optional vector of prior weights. Typically, this may be obtained
+from the fitted \code{model} via \code{weights(model)}. If this is provided,
+it is used to set weights as long as it is non-\code{NULL} and the same length 
+as the number of rows of the data.}
 
 \item{addl.vars}{Character value or vector specifying additional predictors
 to include in the reference grid. These must be names of variables that

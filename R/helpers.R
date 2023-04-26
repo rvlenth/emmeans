@@ -32,7 +32,7 @@
 recover_data.lm = function(object, frame = object$model, ...) {
         fcall = object$call
     recover_data(fcall, delete.response(terms(object)), object$na.action, 
-                 frame = frame, ...)
+                 frame = frame, weights = weights(object), ...)
 }
 
 #' @export

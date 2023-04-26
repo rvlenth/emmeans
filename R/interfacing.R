@@ -167,6 +167,10 @@ recover_data = function(object, ...) {
 #'   can be helpful because it provides a modicum of security against the
 #'   possibility that the original data used when fitting the model has been
 #'   altered or removed.
+#' @param weights Optional vector of prior weights. Typically, this may be obtained
+#'   from the fitted \code{model} via \code{weights(model)}. If this is provided,
+#'   it is used to set weights as long as it is non-\code{NULL} and the same length 
+#'   as the number of rows of the data.
 #' @param addl.vars Character value or vector specifying additional predictors
 #'   to include in the reference grid. These must be names of variables that
 #'   exist, or you will get an error. 
@@ -178,11 +182,13 @@ recover_data = function(object, ...) {
 #' @export
 #' @order 2
 recover_data.call = function(object, trms, na.action, data = NULL, 
-                             params = "pi", frame, addl.vars, ...) {
+                             params = "pi", frame, weights, addl.vars, ...) {
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
-    if(!missing(addl.vars))
-        vars = union(vars, addl.vars)
+    if(missing(addl.vars))
+        addl.vars = character(0)
+    vars = union(vars, addl.vars)
+        
     .offset. = NULL
     if (!missing(frame)) {
         .offset. = model.offset(frame)
@@ -251,10 +257,18 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         tbl = tbl[complete.cases(tbl), , drop=FALSE]
     }
     
+    if(!missing(weights) && !is.null(weights)) {
+        if (length(weights) == nrow(tbl))
+            tbl[["(weights)"]] = weights
+        else
+            warning("Model has ", length(weights), " prior weights, but we recovered ",
+                    nrow(tbl), " rows of data.\nSo weights were ignored.",
+                    call. = FALSE)
+    }
+    
     if(!is.null(.offset.) && !all(.offset. == 0)) {
         tbl[[".offset."]] = .offset.
-        addl.vars = if(!missing(addl.vars)) c(addl.vars, ".offset.")
-                    else                    ".offset."
+        addl.vars = c(addl.vars, ".offset.")
     }
     
     attr(tbl, "call") = object # the original call
