@@ -106,7 +106,7 @@ recover_data.merMod = function(object, ...) {
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
     recover_data(fcall, delete.response(terms(object)), 
-                 attr(object@frame, "na.action"), frame = object@frame, ...)
+                 attr(object@frame, "na.action"), frame = object@frame, weights = weights(object), ...)
 }
 
 #' @export
@@ -504,7 +504,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
 #--------------------------------------------------------------
 ### polr objects (MASS package)
 recover_data.polr = function(object, ...)
-    recover_data.lm(object, ...)
+    recover_data.clm(object, ...)
 
 emm_basis.polr = function(object, trms, xlev, grid, 
                           mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
@@ -558,7 +558,7 @@ recover_data.survreg = function(object, ...) {
     tmp = grep("cluster\\(|frailty\\(", mod.elts)
     if (length(tmp))
         trms = trms[-tmp]
-    recover_data(fcall, trms, object$na.action, ...)
+    recover_data(fcall, trms, object$na.action, weights = weights(object), ...)
 }
 
 # Seems to work right in a little testing.

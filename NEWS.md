@@ -12,7 +12,7 @@ title: "NEWS for the emmeans package"
   * Tweak to `emm_list` methods to make them more user-friendly (#417)
   * We added a `weights` argument to `recover_data.call()`, needed because
     prior weights did not always come through. This provides a reliable way
-    of passing prior weights.
+    of passing prior weights in a `recover_data()` method
 
 ## emmeans 1.8.5
   * passing scale info to `emmip_ggplot()` (#397)

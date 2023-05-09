@@ -22,10 +22,11 @@
 ### support for the ordinal package
 
 recover_data.clm = function(object, mode = "latent", ...) {
+    wts = object$weights = object$model[["(weights)"]]
     if (mode %.pin% "scale") {  ###(!is.na(pmatch(mode, "scale"))) {
         if (is.null(trms <- object$S.terms))
             return("Specified mode=\"scale\", but no scale model is present") # ref_grid's error handler takes it from here
-        recover_data(object$call, trms, object$na.action, ...)
+        recover_data(object$call, trms, object$na.action, weights = wts, ...)
     }
     else if (is.null(object$S.terms) && is.null(object$nom.terms))
         recover_data.lm(object, ...)
@@ -33,13 +34,15 @@ recover_data.clm = function(object, mode = "latent", ...) {
         trms = delete.response(object$terms)
         x.preds = union(.all.vars(object$S.terms), .all.vars(object$nom.terms))
         x.trms = terms(update(trms, .reformulate(c(".", x.preds))))
-        recover_data(object$call, x.trms, object$na.action, ...)
+        recover_data(object$call, x.trms, object$na.action, weights = wts, ...)
     }
 }
 
 # For now at least, clmm doesn't cover scale, nominal options
-recover_data.clmm = function(object, ...)
+recover_data.clmm = function(object, ...) {
+    object$weights = object$model[["(weights)"]]
     recover_data.lm(object, ...)
+}
 
 # Note: For ALL thresholds, object$Theta has all the threshold values
 # for the different cuts (same as object$alpha when threshold=="flexible")
