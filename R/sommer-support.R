@@ -21,6 +21,7 @@
 
 # sommer package support
 
+#' @exportS3Method recover_data mmer
 recover_data.mmer = function(object, data, ...) {
     if (is.null(data))
         data = object$data
@@ -29,6 +30,7 @@ recover_data.mmer = function(object, data, ...) {
                           object$call$na.method.V, ...)
 }
 
+#' @exportS3Method emm_basis mmer         
 emm_basis.mmer = function(object, trms, xlev, grid, ...) {
     cf = object$Beta
     bhat = cf$Estimate

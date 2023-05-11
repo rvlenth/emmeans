@@ -31,11 +31,13 @@
 # 
 
 # same as recover_data.lm
+#' @exportS3Method recover_data multinom
 recover_data.multinom = function(object, ...) {
     fcall = object$call
     recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
 }
 
+#' @exportS3Method emm_basis multinom     
 emm_basis.multinom = function(object, trms, xlev, grid, 
                               mode = c("prob", "latent"), ...) {
     mode = match.arg(mode)
@@ -105,11 +107,13 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 
 
 ### Support for mclogit::mblogit models???
+#' @exportS3Method recover_data mblogit
 recover_data.mblogit = function (object, ...) 
 {
     recover_data.multinom(object, ...)
 }
 
+#' @exportS3Method emm_basis mblogit      
 emm_basis.mblogit = function(object, ..., vcov.) {
     object$coefficients = object$coefmat
     object$lev = levels(object$model[[1]])

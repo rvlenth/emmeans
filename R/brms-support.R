@@ -2,6 +2,7 @@
 ### Obviously this is way less than is needed, but it does support simpler models
 
 #xxxx' @importFrom brms parse_bf
+#' @exportS3Method recover_data brmsfit
 recover_data.brmsfit = function(object, data, ...) {
     bt = brms::parse_bf(formula(object))
     if (!inherits(bt, "brmsterms"))
@@ -11,6 +12,7 @@ recover_data.brmsfit = function(object, data, ...) {
     recover_data.call(NULL, mt, "na.omit", data = object$data, ...)
 }
 
+#' @exportS3Method emm_basis brmsfit
 emm_basis.brmsfit = function(object, trms, xlev, grid, vcov., ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     contr = lapply(object$data, function(.) attr(., "contrasts"))

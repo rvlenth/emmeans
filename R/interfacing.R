@@ -167,7 +167,7 @@ recover_data = function(object, ...) {
 #'   can be helpful because it provides a modicum of security against the
 #'   possibility that the original data used when fitting the model has been
 #'   altered or removed.
-#' @param weights Optional vector of prior weights. Typically, this may be obtained
+#' @param pwts Optional vector of prior weights. Typically, this may be obtained
 #'   from the fitted \code{model} via \code{weights(model)}. If this is provided,
 #'   it is used to set weights as long as it is non-\code{NULL} and the same length 
 #'   as the number of rows of the data.
@@ -178,11 +178,11 @@ recover_data = function(object, ...) {
 #'   additional computations later on that depend on these variables; e.g., 
 #'   bias adjustments for random slopes of variables not among the fixed predictors.
 #' 
-#' @method recover_data call
+#' @exportS3Method recover_data call
 #' @export
 #' @order 2
 recover_data.call = function(object, trms, na.action, data = NULL, 
-                             params = "pi", frame, weights, addl.vars, ...) {
+                             params = "pi", frame, pwts, addl.vars, ...) {
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
     if(missing(addl.vars))
@@ -257,12 +257,12 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         tbl = tbl[complete.cases(tbl), , drop=FALSE]
     }
     
-    if(!missing(weights) && !is.null(weights)) {
-        if (length(weights) == nrow(tbl))
-            tbl[["(weights)"]] = weights
+    if(!missing(pwts) && !is.null(pwts)) {
+        if (length(pwts) == nrow(tbl))
+            tbl[["(weights)"]] = pwts
         else
-            warning("Model has ", length(weights), " prior weights, but we recovered ",
-                    nrow(tbl), " rows of data.\nSo weights were ignored.",
+            warning("Model has ", length(pwts), " prior weights, but we recovered ",
+                    nrow(tbl), " rows of data.\nSo prior weights were ignored.",
                     call. = FALSE)
     }
     
@@ -418,11 +418,13 @@ emm_basis = function(object, trms, xlev, grid, ...) {
 # Then caller can use try() to check for other types of errors,
 # and just print this message otherwise 
 # NOT @exported
+#' @exportS3Method recover_data default
 recover_data.default = function(object, ...) {
     paste("Can't handle an object of class ", dQuote(class(object)[1]), "\n",
           paste(.show_supported(), collapse=""))
 }
 # NOT @exported
+#' @exportS3Method emm_basis default      
 emm_basis.default = function(object, trms, xlev, grid, ...) {
     stop("Can't handle an object of class", dQuote(class(object)[1]), "\n",
          .show_supported())

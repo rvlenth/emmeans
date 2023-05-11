@@ -27,8 +27,9 @@
 
 # gam::Gam objects...
 
-# We have two args:
+# We have one args:
 #   nboot   # of bootstrap reps to get variances of smooths
+#' @exportS3Method emm_basis Gam
 emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
     result = emm_basis.lm(object, trms, xlev, grid, ...)
     old.smooth = object$smooth
@@ -122,6 +123,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 
 ### for mgcv::gam objects
 ### Many thanks to Maarten Jung for help on sorting-out fixed and random effects
+#' @exportS3Method recover_data gam
 recover_data.gam = function(object, ...) {
     if (length(object$smooth) > 0) { # get rid of random terms
         fixnm = unlist(lapply(object$smooth, function(s) {
@@ -138,6 +140,7 @@ recover_data.gam = function(object, ...) {
 
 ### emm_basis method for mgcv::gam objects
 ### extra arg `unconditional` and `freq` as in `vcov.gam`
+#' @exportS3Method emm_basis gam          
 emm_basis.gam = function(object, trms, xlev, grid,
                          freq = FALSE, unconditional = FALSE,
                          what = c("location", "scale", "shape", "rate", "prob.gt.0"), 
@@ -211,6 +214,7 @@ emm_basis.gam = function(object, trms, xlev, grid,
 
 
 ### mgcv::gamm objects...
+#' @exportS3Method recover_data gamm
 recover_data.gamm = function(object, data = NULL, call = object$gam$call, ...) {
     gam = object$gam
     class(gam) = c("gam", "glm", "lm")
@@ -226,6 +230,7 @@ recover_data.gamm = function(object, data = NULL, call = object$gam$call, ...) {
     }
 }
 
+#' @exportS3Method emm_basis gamm         
 emm_basis.gamm = function(object, ...)
     emm_basis(object$gam, ...)
 
@@ -234,6 +239,7 @@ emm_basis.gamm = function(object, ...)
 # Support for gamlss objects
 # 'what' parameter mimics predict.gamlss
 
+#' @exportS3Method recover_data gamlss
 recover_data.gamlss = function(object, what = c("mu", "sigma", "nu", "tau"), ...) {
     fcall = object$call
     what = match.arg(what)
@@ -241,6 +247,7 @@ recover_data.gamlss = function(object, what = c("mu", "sigma", "nu", "tau"), ...
     recover_data(fcall, delete.response(trms), object$na.action, ...)
 }
 
+#' @exportS3Method emm_basis gamlss       
 emm_basis.gamlss = function(object, trms, xlev, grid, 
                             what = c("mu", "sigma", "nu", "tau"), vcov., ...) {
     what = match.arg(what)

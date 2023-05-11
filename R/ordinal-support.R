@@ -21,12 +21,13 @@
 
 ### support for the ordinal package
 
+#' @exportS3Method recover_data clm
 recover_data.clm = function(object, mode = "latent", ...) {
     wts = object$weights = object$model[["(weights)"]]
     if (mode %.pin% "scale") {  ###(!is.na(pmatch(mode, "scale"))) {
         if (is.null(trms <- object$S.terms))
             return("Specified mode=\"scale\", but no scale model is present") # ref_grid's error handler takes it from here
-        recover_data(object$call, trms, object$na.action, weights = wts, ...)
+        recover_data(object$call, trms, object$na.action, pwts = wts, ...)
     }
     else if (is.null(object$S.terms) && is.null(object$nom.terms))
         recover_data.lm(object, ...)
@@ -34,11 +35,12 @@ recover_data.clm = function(object, mode = "latent", ...) {
         trms = delete.response(object$terms)
         x.preds = union(.all.vars(object$S.terms), .all.vars(object$nom.terms))
         x.trms = terms(update(trms, .reformulate(c(".", x.preds))))
-        recover_data(object$call, x.trms, object$na.action, weights = wts, ...)
+        recover_data(object$call, x.trms, object$na.action, pwts = wts, ...)
     }
 }
 
 # For now at least, clmm doesn't cover scale, nominal options
+#' @exportS3Method recover_data clmm
 recover_data.clmm = function(object, ...) {
     object$weights = object$model[["(weights)"]]
     recover_data.lm(object, ...)
@@ -53,6 +55,7 @@ recover_data.clmm = function(object, ...) {
 # opt arg 'mode' - determines what goes into ref_grid
 #         'rescale' - (loc, scale) for linear transformation of latent result
 
+#' @exportS3Method emm_basis clm          
 emm_basis.clm = function (object, trms, xlev, grid, 
                           mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class", "scale"), 
                           rescale = c(0,1), ...) {
@@ -373,6 +376,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
          dffun = function(...) Inf, dfargs = list(), misc = misc)
 }
 
+#' @exportS3Method emm_basis clmm          
 emm_basis.clmm = function (object, trms, xlev, grid, ...) {
     if(is.null(object$Hessian)) {
         message("Updating the model to obtain the Hessian...")
@@ -395,12 +399,14 @@ emm_basis.clmm = function (object, trms, xlev, grid, ...) {
 ### Support for 'svyolr' objects (survey package)
 ### It appears all we have to do is pretend it is class polr
 ### and get the data via model.frame
+#' @exportS3Method recover_data svyolr
 recover_data.svyolr = function(object, data = NULL, ...) {
     if (is.null(data))
         data = get("model.frame.svyolr", asNamespace("survey"))(object)
     class(object) = "polr"
     recover_data(object, data = data, ...)
 }
+#' @exportS3Method emm_basis svyolr       
 emm_basis.svyolr = function(object, ...) {
     class(object) = "polr"
     emm_basis(object, ...)

@@ -24,6 +24,7 @@
 # mode is same as 'type' in predict.betareg, PLUS 
 # mode = "phi.link" refers to link function before back-transforming to "precision"
 
+#' @exportS3Method recover_data betareg
 recover_data.betareg = function(object, mode = c("response", "link", "precision", "phi.link", "variance", "quantile"), ...) {
     fcall = object$call
     mode = match.arg(mode)
@@ -44,6 +45,7 @@ recover_data.betareg = function(object, mode = c("response", "link", "precision"
 
 # PRELIMINARY...
 # Currently works correctly only for "resp", "link", "precision", "phi" modes
+#' @exportS3Method emm_basis betareg
 emm_basis.betareg = function(object, trms, xlev, grid, 
         mode = c("response", "link", "precision", "phi.link", "variance", "quantile"), 
         quantile = .5, ...) {

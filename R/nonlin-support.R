@@ -21,12 +21,14 @@
 
 # experimental support for nls, nlme objects
 
+#' @exportS3Method recover_data nls
 recover_data.nls = function(object, ...) {
     fcall = object$call
     trms = terms(.reformulate(names(object$dataClasses)))
     recover_data(fcall, trms, object$na.action, ...)
 }
 
+#' @exportS3Method emm_basis nls          
 emm_basis.nls = function(object, trms, xlev, grid, ...) {
     Vbeta = .my.vcov(object, ...)
     env = object$m$getEnv()
@@ -46,6 +48,7 @@ emm_basis.nls = function(object, trms, xlev, grid, ...) {
 
 ### For nlme objects, we can do stuff with the fixed part of the model
 ### Additional REQUIRED argument is 'param' - parameter name to explore
+#' @exportS3Method recover_data nlme
 recover_data.nlme = function(object, param, ...) {
     if(missing(param))
         return("'param' argument is required for nlme objects")
@@ -69,6 +72,7 @@ recover_data.nlme = function(object, param, ...) {
     recover_data(fcall, trms, object$na.action, ...)
 }
 
+#' @exportS3Method emm_basis nlme         
 emm_basis.nlme = function(object, trms, xlev, grid, param, ...) {
     idx = object$map$fmap[[param]]
     V = object$varFix[idx, idx, drop = FALSE]
@@ -89,6 +93,7 @@ emm_basis.nlme = function(object, trms, xlev, grid, param, ...) {
 
 
 # Support for gnls - contributed by Fernando Miguez <femiguez@iastate.edu>
+#' @exportS3Method recover_data gnls
 recover_data.gnls = function(object, param, data, ...) {
     fcall = object$call$params
     if (is.null(fcall))
@@ -122,6 +127,7 @@ recover_data.gnls = function(object, param, data, ...) {
     recover_data(fcall, trms, object$na.action, data = data, ...)
 }
 
+#' @exportS3Method emm_basis gnls         
 emm_basis.gnls = function(object, trms, xlev, grid, param, ...) {
     idx = object$pmap[[param]]
     V = object$varBeta[idx, idx, drop = FALSE]

@@ -38,6 +38,7 @@
 
 # ----- zeroinfl objects -----
 
+#' @exportS3Method recover_data zeroinfl
 recover_data.zeroinfl = function(object, mode = c("response", "count", "zero", "prob0"), ...) {
     fcall = object$call
     mode = match.arg(mode)
@@ -53,6 +54,7 @@ recover_data.zeroinfl = function(object, mode = c("response", "count", "zero", "
 }
 
 
+#' @exportS3Method emm_basis zeroinfl     
 emm_basis.zeroinfl = function(object, trms, xlev, grid, 
         mode = c("response", "count", "zero", "prob0"), lin.pred = FALSE, ...) 
 {
@@ -123,6 +125,7 @@ emm_basis.zeroinfl = function(object, trms, xlev, grid,
 
 #### Support for hurdle models
 
+#' @exportS3Method recover_data hurdle
 recover_data.hurdle = function(object, mode = c("response", "count", "zero", "prob0"), ...) {
     fcall = object$call
     mode = match.arg(mode)
@@ -138,6 +141,7 @@ recover_data.hurdle = function(object, mode = c("response", "count", "zero", "pr
 }
 
 # see expl notes afterward for notations in some of this
+#' @exportS3Method emm_basis hurdle       
 emm_basis.hurdle = function(object, trms, xlev, grid, 
                             mode = c("response", "count", "zero", "prob0"), 
                             lin.pred = FALSE, ...) 

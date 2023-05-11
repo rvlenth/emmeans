@@ -27,12 +27,12 @@
 ### lm objects (and also aov, rlm, others that inherit) -- but NOT aovList
 ### Recent additional arhument 'frame' should point to where the model frame 
 ###   might be available, or NULL otherwise
-#' @method recover_data lm
+#' @exportS3Method recover_data lm
 #' @export
 recover_data.lm = function(object, frame = object$model, ...) {
         fcall = object$call
     recover_data(fcall, delete.response(terms(object)), object$na.action, 
-                 frame = frame, weights = weights(object), ...)
+                 frame = frame, pwts = weights(object), ...)
 }
 
 #' @export
@@ -89,6 +89,7 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
 
 #----------------------------------------------------------
 # manova objects
+#' @exportS3Method recover_data manova
 recover_data.manova = function(object, ...) {
     fcall = match.call(aov, object$call)   # need to borrow arg matching from aov()
     recover_data(fcall, delete.response(terms(object)), object$na.action, 
@@ -106,7 +107,7 @@ recover_data.merMod = function(object, ...) {
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
     recover_data(fcall, delete.response(terms(object)), 
-                 attr(object@frame, "na.action"), frame = object@frame, weights = weights(object), ...)
+                 attr(object@frame, "na.action"), frame = object@frame, pwts = weights(object), ...)
 }
 
 #' @export
@@ -408,6 +409,7 @@ gls_grad = function(object, call, data, V) {
 }
 
 ### gls objects (nlme package)
+#' @exportS3Method recover_data gls
 recover_data.gls = function(object, data, ...) {
     fcall = object$call
     if (!is.null(wts <- fcall$weights)) {
@@ -427,6 +429,7 @@ recover_data.gls = function(object, data, ...) {
     result
 }
 
+#' @exportS3Method emm_basis gls          
 emm_basis.gls = function(object, trms, xlev, grid, 
                          mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite", "asymptotic"), 
                          extra.iter = 0, options, misc, ...) {
@@ -503,9 +506,11 @@ emm_basis.gls = function(object, trms, xlev, grid,
 
 #--------------------------------------------------------------
 ### polr objects (MASS package)
+#' @exportS3Method recover_data polr
 recover_data.polr = function(object, ...)
     recover_data.clm(object, ...)
 
+#' @exportS3Method emm_basis polr         
 emm_basis.polr = function(object, trms, xlev, grid, 
                           mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
                           rescale = c(0,1), ...) {
@@ -550,6 +555,7 @@ emm_basis.polr = function(object, trms, xlev, grid,
 
 #--------------------------------------------------------------
 ### survreg objects (survival package)
+#' @exportS3Method recover_data survreg
 recover_data.survreg = function(object, ...) {
     fcall = object$call
     trms = delete.response(terms(object))
@@ -558,12 +564,13 @@ recover_data.survreg = function(object, ...) {
     tmp = grep("cluster\\(|frailty\\(", mod.elts)
     if (length(tmp))
         trms = trms[-tmp]
-    recover_data(fcall, trms, object$na.action, weights = weights(object), ...)
+    recover_data(fcall, trms, object$na.action, pwts = weights(object), ...)
 }
 
 # Seems to work right in a little testing.
 # However, it fails sometimes if I update the model 
 # with a subset argument. Workaround: just fitting a new model
+#' @exportS3Method emm_basis survreg      
 emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     # Much of this code is adapted from predict.survreg
     bhat = object$coefficients
@@ -593,9 +600,11 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
 
 #--------------------------------------------------------------
 ###  coxph objects (survival package)
+#' @exportS3Method recover_data coxph
 recover_data.coxph = function(object, ...) 
     recover_data.survreg(object, ...)
 
+#' @exportS3Method emm_basis coxph        
 emm_basis.coxph = function (object, trms, xlev, grid, ...) 
 {
     object$dist = "doesn't matter"
@@ -624,9 +633,11 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
 #--------------------------------------------------------------
 ###  coxme objects ####
 ### Greatly revised 6-15-15 (after version 2.18)
+#' @exportS3Method recover_data coxme
 recover_data.coxme = function(object, ...) 
     recover_data.survreg(object, ...)
 
+#' @exportS3Method emm_basis coxme        
 emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     bhat = coxme::fixef(object)
     k = length(bhat)
@@ -694,17 +705,21 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
 ###  gee objects  ####
 
 
+#' @exportS3Method recover_data gee
 recover_data.gee = function(object, ...)
     recover_data.lm(object, frame = NULL, ...)
 
+#' @exportS3Method emm_basis gee          
 emm_basis.gee = function(object, trms, xlev, grid, vcov.method = "robust.variance", ...)
     .emmb.geeGP(object, trms, xlev, grid, vcov.method, 
                 valid = c("robust.variance", "naive.variance"))
 
 ###  geepack objects  ####
+#' @exportS3Method recover_data geeglm
 recover_data.geeglm = function(object, ...)
     recover_data.lm(object, ...)
 
+#' @exportS3Method emm_basis geeglm       
 emm_basis.geeglm = function(object, trms, xlev, grid, vcov.method = "vbeta", ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
@@ -726,6 +741,7 @@ emm_basis.geeglm = function(object, trms, xlev, grid, vcov.method = "vbeta", ...
 }
 
 
+#' @exportS3Method recover_data geese
 recover_data.geese = function(object, ...) {
     fcall = object$call
     # what a pain - we need to reconstruct the terms component
@@ -741,6 +757,7 @@ recover_data.geese = function(object, ...) {
     recover_data(fcall, delete.response(trms), na.action, ...)
 }
 
+#' @exportS3Method emm_basis geese        
 emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
@@ -768,6 +785,7 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
 
 ### survey pacvkage
 # svyglm class
+#' @exportS3Method recover_data svyglm
 recover_data.svyglm = function(object, data = NULL, ...) {
     if (is.null(data)) {
         env = environment(terms(object))

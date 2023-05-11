@@ -180,6 +180,7 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
     ref_grid(result, ...)
 }
 
+#' @exportS3Method recover_data qdrg
 recover_data.qdrg = function(object, ...) {
     recover_data.call(object, delete.response(terms(object$formula)), object$na.action, ...)
 }
@@ -187,6 +188,7 @@ recover_data.qdrg = function(object, ...) {
 vcov.qdrg = function(object, ...) 
     object$vcov
 
+#' @exportS3Method emm_basis qdrg         
 emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)

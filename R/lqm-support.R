@@ -21,12 +21,14 @@
 
 # lqmm and lqm support
 
+#' @exportS3Method recover_data lqmm
 recover_data.lqmm = function(object, data = object$mfArgs$data, ...) {
     fcall = object$call
     trms = delete.response(terms(eval(fcall$fixed)))
     recover_data(fcall, trms, object$mfArgs$na.action, data = data, ...)
 }
 
+#' @exportS3Method emm_basis lqmm         
 emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
     taudiff = abs(object$tau - tau)
     col = which(taudiff < 0.0001)
@@ -52,10 +54,12 @@ emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
 
 
 # Use same functions for lqm objects
+#' @exportS3Method recover_data lqm
 recover_data.lqm = function(object, ...) {
     recover_data.lm(object, frame = NULL, ...)
 }
 
+#' @exportS3Method emm_basis lqm          
 emm_basis.lqm = function(object, ...)
     emm_basis.lqmm(object, ...)
 
@@ -63,10 +67,12 @@ emm_basis.lqm = function(object, ...)
 
 #### rq objects (quantreg)
 
+#' @exportS3Method recover_data rq
 recover_data.rq = function(object, ...) {
     recover_data.lm(object, frame = object$model, ...)
 }
     
+#' @exportS3Method emm_basis rq           
 emm_basis.rq = function(object, trms, xlev, grid, tau = 0.5, ...) {
     taudiff = abs(object$tau - tau)
     col = which(taudiff < 0.0001)
@@ -98,6 +104,9 @@ emm_basis.rq = function(object, trms, xlev, grid, tau = 0.5, ...) {
 }
 
 # we just reroute rqs objects to emm_basis.rq, as pretty similar
+#' @exportS3Method recover_data rqs
 recover_data.rqs = recover_data.rq
+
+#' @exportS3Method emm_basis rqs          
 emm_basis.rqs = function(object, ...)
     emm_basis.rq(object, ...)

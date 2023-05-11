@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.5.900***
+## emmeans 1.8.6
   * Major fix to `emm_basis.averaging` to take care of quirks in these 
     models (#402, #409)
   * Added `decreasing` argument to `cld.emmGrid()` for compatibility with
@@ -10,7 +10,7 @@ title: "NEWS for the emmeans package"
   * Fix to bug in `emtrends()` when `data` is specified (**semTools** issue 119)
     ... and related tune-up to `ref_grid()` to avoid issues with repeat calls (#413)
   * Tweak to `emm_list` methods to make them more user-friendly (#417)
-  * We added a `weights` argument to `recover_data.call()`, needed because
+  * We added a `pwts` argument to `recover_data.call()`, needed because
     prior weights did not always come through. This provides a reliable way
     of passing prior weights in a `recover_data()` method
 

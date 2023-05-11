@@ -21,15 +21,17 @@
 
 # Support for objects in the *rms* package
 
+#' @exportS3Method recover_data rms
 recover_data.rms = function(object, ...) {
     fcall = object$call
     recover_data(fcall, delete.response(terms(object)), object$na.action$omit, ...)
 }
 
-# TODO: 
+# TODO: (postponed indefinitely because Harrell doesn't like emmeans anyway)
 # 1. If multivariate - like mlm method?
 # 2. orm cases?
 
+#' @exportS3Method emm_basis rms          
 emm_basis.rms = function(object, trms, xlev, grid, 
         mode = c("middle", "latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
         vcov., ...) {

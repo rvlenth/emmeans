@@ -28,6 +28,7 @@
 
 # $data is NOT a standard member, but if it's there, we'll use it
 # Otherwise, we need to provide data or its name in the call
+#' @exportS3Method recover_data averaging
 recover_data.averaging = function(object, data, ...) {
     ml = attr(object, "modelList")
     if (is.null(ml))
@@ -47,6 +48,7 @@ recover_data.averaging = function(object, data, ...) {
     recover_data(fcall, trms, na.action = NULL, ...)
 }
 
+#' @exportS3Method emm_basis averaging
 emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     bhat = coef(object, full = TRUE)
     # change names like "cond(xyz)" to "xyz"
@@ -106,6 +108,7 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
 ### minc::mira support -----------------------------------------
 # Here we rely on the methods already in place for elements of $analyses
 
+#' @exportS3Method recover_data mira
 recover_data.mira = function(object, data = NULL, ...) {
     rdlist = lapply(object$analyses, recover_data, data = data, ...)
     rd = rdlist[[1]]
@@ -116,6 +119,7 @@ recover_data.mira = function(object, data = NULL, ...) {
     rd
 }
 
+#' @exportS3Method emm_basis mira         
 emm_basis.mira = function(object, trms, xlev, grid, ...) {
     # In case our method did a "pass it on" with the data, we need to add that attribute
     data = list(...)$misc$data
