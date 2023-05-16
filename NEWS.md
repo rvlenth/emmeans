@@ -2,6 +2,15 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.6-09xxxx
+  * Correction to a bug introduced in version 1.8.4, where we tried to provide for
+    an `offset` *argument* (as opposed to an `offset()` *term* in the model formula).
+    We now provide for these both in another way, and the "subtle difference" mentioned
+    in the NEWS for 1.8.4 no longer applies. Unfortunately, that bug also caused 
+    estimates to be computed when the offset involves a nonlinear function such as 
+    `log()`, and made for whopping inconsistencies in the narrative about offsets
+    in the `"sophisticated"` vignette; I apologize for these embarrassing errors.
+
 ## emmeans 1.8.6
   * Major fix to `emm_basis.averaging` to take care of quirks in these 
     models (#402, #409)

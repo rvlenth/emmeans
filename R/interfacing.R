@@ -184,14 +184,18 @@ recover_data = function(object, ...) {
 recover_data.call = function(object, trms, na.action, data = NULL, 
                              params = "pi", frame, pwts, addl.vars, ...) {
     fcall = object # because I'm easily confused
+    # if there is a separate offset argument, incorporate it in trms
+    if(!is.null(offarg <- fcall$offset)) {
+        nt = terms(as.formula(paste0(deparse(trms), " + offset(", deparse(offarg), ")")))
+        environment(nt) = environment(trms)
+        trms = nt
+    }
     vars = setdiff(.all.vars(trms), params)
     if(missing(addl.vars))
         addl.vars = character(0)
     vars = union(vars, addl.vars)
         
-    .offset. = NULL
     if (!missing(frame)) {
-        .offset. = model.offset(frame)
         if(is.null(data) && !.has.fcns(trms))
             data = frame
     }
@@ -264,11 +268,6 @@ recover_data.call = function(object, trms, na.action, data = NULL,
             warning("Model has ", length(pwts), " prior weights, but we recovered ",
                     nrow(tbl), " rows of data.\nSo prior weights were ignored.",
                     call. = FALSE)
-    }
-    
-    if(!is.null(.offset.) && !all(.offset. == 0)) {
-        tbl[[".offset."]] = .offset.
-        addl.vars = c(addl.vars, ".offset.")
     }
     
     attr(tbl, "call") = object # the original call

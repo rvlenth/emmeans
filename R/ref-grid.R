@@ -821,13 +821,16 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         if (offset[1] != 0)
             grid[[".offset."]] = offset[1]
     }
-    else if(".offset." %in% names(grid))
-        grid[[".offset."]] = om * grid[[".offset."]]
-    else if(!is.null(attr(trms,"offset"))) {
-        if (any(om != 0))
-            grid[[".offset."]] = om * .get.offset(trms, grid)
+    else {
+        if(".offset." %in% names(grid))  # fixed offset is available
+            grid[[".offset."]] = om * grid[[".offset."]]
+        #else 
+        if(!is.null(attr(trms,"offset"))) {
+            if (any(om != 0))
+                grid[[".offset."]] = om * .get.offset(trms, grid)
+        }
     }
-
+    
     ### --- Determine weights for each grid point
     if (!hasName(data, "(weights)"))
         data[["(weights)"]] = 1

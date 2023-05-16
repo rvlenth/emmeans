@@ -215,27 +215,27 @@ First, let's look at the reference grid obtained by default:
 ```{r}
 ref_grid(ins.glm)
 ```
-Note that `n` is included in the reference grid and that its average value of
-500 is used for all predictions. Thus, if we obtain EMMs for, say, `age`, these
-are results are based on a pool of 500 cars:
+Note that `n` is included in the reference grid and that its average value of 500
+is displayed. But let's look at the EMMs:
 ```{r}
-emmeans(ins.glm, "size", type = "response")
+(EMM <- emmeans(ins.glm, "size", type = "response"))
 ```
-However, many users would like to ignore the offset for this kind of model,
-because then the estimates we obtain are rates per unit value of the (logged)
-offset. This may be accomplished by specifying an `offset` parameter in the
+We can see more explicitly what is happening by examining the internal structure of `EMM`:
+```{r}
+EMM@grid
+```
+and note that $\log(500) \approx 6.215$ is used as the offset value in calculating these estimates.
+
+All this said, many users would like to ignore that average offset for this kind of model,
+and instead use one corresponding to `n = 1`, because then the estimates we obtain are estimated rates per unit `n`. This may be accomplished by specifying an `offset` parameter in the
 call:
 ```{r}
-emmeans(ins.glm, "size", type = "response", offset = 0)
+emmeans(ins.glm, "size", type = "response", offset = log(1))
 ```
-You may verify that the above estimates are 1/500th of the previous ones.
-You may also verify that the above results are identical to those obtained
-by setting `n` equal to 1:
+An alternative way to achieve the same results is to set `n` equal to 1 in the reference grid itself (output not shown, because it is identical):
 ```{r eval = FALSE}
 emmeans(ins.glm, "size", type = "response", at = list(n = 1))
 ```
-However, those who use these types of models will be more comfortable directly
-setting the offset to zero.
 
 By the way, you may set some other reference value for the rates. For example, if you want estimates of claims per 100 cars, simply use (results not shown):
 ```{r eval = FALSE}
