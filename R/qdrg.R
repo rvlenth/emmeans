@@ -52,7 +52,7 @@
 #'       obtainable via \code{object$data}}
 #'   \item{\code{coef}: }{\code{coef(object)}}
 #'   \item{\code{vcov}: }{\code{vcov(object)}}
-#'   \item{\code{df}: }{Set to \code{Inf} if not available in \code{object$df.residual}}
+#'   \item{\code{df}: }{Set to \code{Inf} if not available in \code{df.residual(object)}}
 #'   \item{\code{mcmc}: }{\code{object$sample}}
 #'   \item{\code{subset}: }{\code{NULL} (so that all observations in \code{data} are used)}
 #'   \item{\code{contrasts}: }{\code{object$contrasts}}
@@ -139,7 +139,7 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         if (missing(vcov)) 
             result$vcov = stats::vcov(object)
         if(missing(df))
-            result$df = object$df.residual
+            result$df = df.residual(object)
         if(missing(contrasts))
             result$contrasts = object$contrasts
         if(any(is.na(result$coef)))
@@ -159,6 +159,7 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
     }
     if(is.null(result$df))
         result$df = Inf
+    if(!missing(df)) result$df = df
     if(!missing(mcmc)) result$mcmc = mcmc
     if(!missing(subset)) result$subset = subset
     if(!missing(weights)) result$weights = weights

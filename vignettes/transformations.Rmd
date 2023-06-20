@@ -401,8 +401,18 @@ pct.diff.tran <- list(
 )
 
 update(pairs(logemm.src, type = "response"), 
-       tran = pct.diff.tran, inv.lbl = "pct.diff")
+       tran = pct.diff.tran, inv.lbl = "pct.diff", adjust = "none",
+       infer = c(TRUE, TRUE))
 ```
+Another way to obtain the same estimates is to directly transform the estimated ratios to
+$100r - 100$:
+```{r}
+contrast(regrid(pairs(logemm.src)), "identity", scale = 100, offset = -100,
+         infer = c(TRUE, TRUE))
+```
+While the estimates are the same, the tests and confidence intervals are different
+because they are computed on the re-gridded scale using the standard errors shown,
+rather than on the link scale as in the first results.
 
 ## Standardized response {#stdize}
 <!-- @index Transformations!Standardizing; Transformations!`scale()`;
