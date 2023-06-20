@@ -69,6 +69,11 @@
 #' back-transformation changes the SD required to compute effect sizes. 
 #' 
 #' @note
+#' \strong{Paired data:} Be careful with paired-data situations, where Cohen's d is typically referenced to
+#' the SD of the \emph{paired differences} rather than the \emph{residual} SD.
+#' You may need to enlarge \code{sigma} by a factor of \code{sqrt(2)} to obtain
+#' comparable results with other software.
+#' @note
 #' \strong{Disclaimer:} There is substantial disagreement among practitioners on
 #' what is the appropriate \code{sigma} to use in computing effect sizes; or,
 #' indeed, whether \emph{any} effect-size measure is appropriate for some
