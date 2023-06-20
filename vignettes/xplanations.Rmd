@@ -247,6 +247,12 @@ pwpp(foo6, sort = FALSE)
 pwpm(foo6)
 ```
 
+### Related reading on comparisons
+The following reference (as well as some articles referenced therein) have been 
+suggested to me as relating to similar issues:
+
+Franz, V.H., Loftus, G.R. (2012) Standard errors and confidence intervals in within-subjects designs: Generalizing Loftus and Masson (1994) and avoiding the biases of alternative accounts. *Psychonomic Bulletin and Review* **19**, 395-–404. https://doi.org/10.3758/s13423-012-0230-1
+
 [Back to Contents](#contents)
 
 ## Confounded effects in joint tests {#joint_tests}
