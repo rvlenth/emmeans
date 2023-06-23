@@ -243,6 +243,7 @@ vignette: >
       * [`framing`](messy-data.html#mediators)
       * [Gamma regression](transformations.html#tranlink)
       * [`InsectSprays`](transformations.html#insects)
+      * [`Insurance`](xplanations.html#offsets)
       * [Insurance claims (SAS)](sophisticated.html#offsets)
       * [Logistic regression](transformations.html#links)
       * [`lqs` objects](xtending.html#lqs)
@@ -485,7 +486,9 @@ vignette: >
   * [Observational versus experimental data](basics.html#exper)
   * [Odds ratios](transformations.html#oddsrats)
       * [but I wanted differences](FAQs.html#ratios)
-  * [Offsets](sophisticated.html#offsets)
+  * Offsets
+      * [Models with offsets](sophisticated.html#offsets)
+      * [`offset()` term vs. `offset` argument in model](xplanations.html#offsets)
   * [Only one mean](AQuickStart.html#covar)
   * [`opt.digits` option](utilities.html#digits)
   * [Options](utilities.html#options)

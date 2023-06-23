@@ -10,6 +10,7 @@ vignette: >
 
 ```{r, echo = FALSE, results = "hide", message = FALSE}
 require("emmeans")
+require("MASS")
 knitr::opts_chunk$set(fig.width = 4.5, fig.height = 2.0, class.output = "ro",
                       class.message = "re", class.error = "re", class.warning = "re")
 ###knitr::opts_chunk$set(fig.width = 4.5, fig.height = 2.0)
@@ -28,6 +29,7 @@ implemented in the **emmeans** package.
   1. [Sub-models](#submodels)
   2. [Comparison arrows](#arrows)
   3. [Confounded effects in joint tests](#joint_tests)
+  4. [Intricacies of offsets](#offsets)
 
 
 
@@ -310,5 +312,82 @@ the `jt` results above. That's all there is to it!
 
 
 [Back to Contents](#contents)
+
+
+## Intricacies of offsets {#offsets}
+<!-- @index Offsets!`offset()` term vs. `offset` argument in model;
+     Examples!`Insurance`              -->
+Many model-fitting functions provide two ways of specifying model offsets: 
+in the model formula, or in a separate `offset` argument. The purpose of this section
+is to discuss how to deal with these in **emmeans**, and in particular, why
+we decided to handle them differently, even though they seem equivalent.
+
+To illustrate, consider the following two models:
+```{r}
+require(MASS)
+mod1 <- glm(Claims ~ District + Group + Age + offset(log(Holders)),
+            data = Insurance,
+            family = poisson)
+mod2 <- glm(Claims ~ District + Group + Age,
+            offset = log(Holders),
+            data = Insurance, 
+            family = poisson)
+```
+Both models specify, in different ways, an offset of `log(Holders)`; 
+and they both have the same regression coefficients and fitted values.
+
+We do not treat these two models in the same way in **emmeans**.
+In `mod1`, the offset is out there as part of the model formula, and so it
+is treated as such in making predictions: the linear prediction includes the term
+`log(Holders)`, with a regression coefficient of 1. In `mod2`, the model formula 
+does not include the variable `Holders`, so we don't use it as a predictor. Instead, 
+we regard the `offset` argument as implying that there is a covariate
+that is computed in advance of fitting the model, and constrained to have a
+regression coefficient of 1. Let's see how this plays out by looking at the reference grids:
+```{r}
+(rg1 <- ref_grid(mod1))
+(rg2 <- ref_grid(mod2))
+```
+The distinction is in the fourth predictor -- in `mod1`, it is `Holders`,
+and in `mod2`, it is a generated covariate named `.static.offset.`.
+(We call it a "static" offset because does not depend on model predictors,
+whereas `mod1` could be regarded as having a dynamic offset.)
+In either case, that fourth variable is set to its mean by default.
+
+Now let's compare some EMMs:
+```{r}
+emmeans(rg1, "Age")
+emmeans(rg2, "Age")
+```
+We don't get the same estimates. That is because in `mod1` (`rg1`),
+the offset that is added is $\log\text{Holders} = \log{364.98} \approx 5.90$,
+while in `mod2` (`rg2`), the added offset is $\text{.static.offset.} \approx 4.90$.
+Thinking through this, these offsets are the logs of the arithmetic and geometric
+means, respectively, of `Holders`; and it is the fact that the offset is logged that
+makes those EMMs differ.
+
+With Poisson models, we often want to estimate rates rather than counts; and we 
+can do that by specifying an offset of $\log 1 = 0$ to get a rate per holder:
+```{r}
+emmeans(rg1, "Age", offset = 0, type = "response")
+```
+We'd get exactly the same estimates using `rg2` because in both cases, we are 
+forcing the offset to be zero.
+
+Finally, suppose we want to use different offsets for each age group. This is
+done as follows: For `mod1`, we compute `mean(Holders)` separately for each `Age`:
+```{r}
+emmeans(mod1, "Age", cov.reduce = Holders ~ Age)
+```
+For `mod2`, `Holders` is not considered a predictor, and instead we need
+separate mean offsets:
+```{r}
+emmeans(mod2, "Age", cov.reduce = .static.offset. ~ Age)
+```
+In both models, the EMMs increase rather than decrease with age,
+reflecting larger numbers of holders as age increases.
+
+[Back to Contents](#contents)
+
 
 [Index of all vignette topics](vignette-topics.html)

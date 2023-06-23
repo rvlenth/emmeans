@@ -184,13 +184,8 @@ recover_data = function(object, ...) {
 recover_data.call = function(object, trms, na.action, data = NULL, 
                              params = "pi", frame, pwts, addl.vars, ...) {
     fcall = object # because I'm easily confused
-    # if there is a separate offset argument, incorporate it in trms
-    if(!is.null(offarg <- fcall$offset)) {
-        nt = terms(as.formula(paste0(deparse(trms), " + offset(", deparse(offarg), ")")))
-        environment(nt) = environment(trms)
-        trms = nt
-    }
     vars = setdiff(.all.vars(trms), params)
+    offarg = fcall$offset
     if(missing(addl.vars))
         addl.vars = character(0)
     vars = union(vars, addl.vars)
@@ -198,7 +193,13 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     if (!missing(frame)) {
         if(is.null(data) && !.has.fcns(trms))
             data = frame
+        if("(offset)" %in% names(data)) 
+            vars = union(vars, "(offset)")
     }
+    else if(!is.null(offarg))
+        vars = union(vars, .all.vars(reformulate(deparse(offarg))))
+    
+    
     tbl = data
     if (length(vars) == 0 || vars[1] == "1") {
         tbl = data.frame(c(1,1))
@@ -260,6 +261,20 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         tbl = tbl[, vars, drop = FALSE] # consider only the variables actually needed
         tbl = tbl[complete.cases(tbl), , drop=FALSE]
     }
+    # if there is a separate offset argument, calculate the static offset
+    if(!is.null(offarg)) {
+        if ("(offset)" %in% names(tbl)) { # don't have to calculate it
+            offval = tbl[["(offset)"]]
+            vars = setdiff(vars, "(offset)")
+        }
+        else
+            offval = eval(offarg, tbl, enclos = environment(trms))
+        if(!is.null(offval)) {
+            tbl$.static.offset. = offval
+            addl.vars = c(addl.vars, ".static.offset.")
+        }
+    }
+
     
     if(!missing(pwts) && !is.null(pwts)) {
         if (length(pwts) == nrow(tbl))

@@ -2,17 +2,20 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.6-09xxxx
+## emmeans 1.8.7
   * Correction to a bug introduced in version 1.8.4, where we tried to provide for
-    an `offset` *argument* (as opposed to an `offset()` *term* in the model formula).
-    We now provide for these both in another way, and the "subtle difference" mentioned
-    in the NEWS for 1.8.4 no longer applies. Unfortunately, that bug also caused 
+    an `offset` *argument* in the same way as an `offset()` *term* in the model formula.
+    Unfortunately, that change also caused 
     wrong estimates to be computed when the offset involves a nonlinear function such as 
     `log()`, and made for whopping inconsistencies in the narrative about offsets
     in the `"sophisticated"` vignette; I apologize for these embarrassing errors.
-    See Issue #424 on the GitHub site for a detailed explanation.
+    
+    We now provide for both kinds of offset specifications, but in different ways
+    as explained in a new section in the `"xplanations"` vignette.
+    The "subtle difference" mentioned
+    in the NEWS for 1.8.4 no longer applies. 
   * Change in `qdrg()`. If `object` is specified, default for `df` is `df.residual(object)`
-    rather than `object$dif.residual`, since `df.residual()` is a standard method.
+    rather than `object$df.residual`, since `df.residual()` is a standard method.
   * `as.mcmc()` now uses `get_emm_option("sep")` in labeling factor combinations (#425).
 
 ## emmeans 1.8.6

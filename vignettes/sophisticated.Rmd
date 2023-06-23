@@ -192,7 +192,7 @@ But the bias adjustments *will* depend on `x`.
 
 
 ## Models with offsets {#offsets}
-<!-- @index Offsets; Examples!Insurance claims (SAS); `ref_grid()`!`offset` -->
+<!-- @index Offsets!Models with offsets; Examples!Insurance claims (SAS); `ref_grid()`!`offset` -->
 If a model is fitted and its formula includes an `offset()` term, then by
 default, the offset is computed and included in the reference grid. To
 illustrate, consider a hypothetical dataset on insurance claims (used as an
@@ -241,6 +241,9 @@ By the way, you may set some other reference value for the rates. For example, i
 ```{r eval = FALSE}
 emmeans(ins.glm, "size", type = "response", offset = log(100))
 ```
+For more details on how offsets are handled, and how and why an `offset()` *model term*
+is treated differently than an `offset` *argument* in model fitting, see
+[the "xplanations" vignette](xplanations.html#offsets).
 
 [Back to Contents](#contents)
 

@@ -817,18 +817,23 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 
     # Any offsets??? (misc$offset.mult might specify removing or reversing the offset)
     om = ifelse(is.null(misc$offset.mult), 1, misc$offset.mult)
+    oval = 0
     if (!missing(offset)) {  # For safety, we always treat it as scalar
         if (offset[1] != 0)
-            grid[[".offset."]] = offset[1]
+            oval = offset[1]
     }
     else {
-        if(".offset." %in% names(grid))  # fixed offset is available
-            grid[[".offset."]] = om * grid[[".offset."]]
+        if(".static.offset." %in% names(grid)) { # static offset is available
+            oval = om * grid[[".static.offset."]]
+            # grid$.static.offset. = NULL
+        }
         #else 
         if(!is.null(attr(trms,"offset"))) {
             if (any(om != 0))
-                grid[[".offset."]] = om * .get.offset(trms, grid)
+                oval = om * (oval + .get.offset(trms, grid))
         }
+        if(any(oval != 0))
+            grid[[".offset."]] = oval
     }
     
     ### --- Determine weights for each grid point

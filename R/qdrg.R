@@ -157,9 +157,9 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         if (!missing(vcov)) result$vcov = vcov
         if(!missing(df)) result$df = df
     }
+    if(!missing(df)) result$df = df
     if(is.null(result$df))
         result$df = Inf
-    if(!missing(df)) result$df = df
     if(!missing(mcmc)) result$mcmc = mcmc
     if(!missing(subset)) result$subset = subset
     if(!missing(weights)) result$weights = weights
