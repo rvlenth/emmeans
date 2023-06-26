@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.9-09xxxxx
+  * Bug correction in `contrast` when `tran` is a `list` (#428)
+  
+
 ## emmeans 1.8.7
   * Correction to a bug introduced in version 1.8.4, where we tried to provide for
     an `offset` *argument* in the same way as an `offset()` *term* in the model formula.
