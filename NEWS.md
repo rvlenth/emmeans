@@ -4,6 +4,9 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.8.9-09xxxxx
   * Bug correction in `contrast` when `tran` is a `list` (#428)
+  * Bug correction to suppress a nuisance warning when the number of
+    prior weights is 0 (which doesn't match the number of rows of data, but
+    also isn't really an issue) (Commit d921152 for **easystats**)
   
 
 ## emmeans 1.8.7

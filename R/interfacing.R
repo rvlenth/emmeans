@@ -277,10 +277,10 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 
     
     if(!missing(pwts) && !is.null(pwts)) {
-        if (length(pwts) == nrow(tbl))
+        if ((npw <- length(pwts)) == nrow(tbl))
             tbl[["(weights)"]] = pwts
-        else
-            warning("Model has ", length(pwts), " prior weights, but we recovered ",
+        else if (npw > 0)
+            warning("Model has ", npw, " prior weights, but we recovered ",
                     nrow(tbl), " rows of data.\nSo prior weights were ignored.",
                     call. = FALSE)
     }
