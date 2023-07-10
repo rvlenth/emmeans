@@ -559,9 +559,9 @@ emm_basis.polr = function(object, trms, xlev, grid,
 recover_data.survreg = function(object, ...) {
     fcall = object$call
     trms = delete.response(terms(object))
-    # I'm gonna delete any terms involving cluster(), or frailty() -- keep strata()
+    # I'm gonna delete any terms involving cluster(), frailty(), or strata()
     mod.elts = dimnames(attr(trms, "factor"))[[2]]
-    tmp = grep("cluster\\(|frailty\\(", mod.elts)
+    tmp = grep("cluster\\(|frailty\\(|strata\\(", mod.elts)
     if (length(tmp))
         trms = trms[-tmp]
     recover_data(fcall, trms, object$na.action, pwts = weights(object), ...)
