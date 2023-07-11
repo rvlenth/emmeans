@@ -8,6 +8,7 @@ title: "NEWS for the emmeans package"
     prior weights is 0 or 1 (which indeed doesn't match the number of rows of data, but
     also isn't really an issue) (Commit d921152 for **easystats**)
   * Bug correction for `starata()` terms in **survival** models (#429)
+  * Added a risk-ratio and a probit example to the Transformations vignette.
   
 
 ## emmeans 1.8.7

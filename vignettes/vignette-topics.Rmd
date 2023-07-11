@@ -401,8 +401,11 @@ vignette: >
       * [in *models: L*](models.html#L)
       * [in *sophisticated: lmer*](sophisticated.html#lmer)
       * [System options for](sophisticated.html#lmerOpts)
+  * Logistic-like regression
+      * [Non-logit links](transformations.html#not-logit)
   * Logistic regression
       * [Odds ratios](transformations.html#oddsrats)
+      * [Risk ratios](transformations.html#riskrats)
       * [Surprising results](FAQs.html#transformations)
   * LSD
       * [protected](basics.html#recs2)
@@ -549,6 +552,8 @@ vignette: >
       * [Reference grid](predictions.html#ref-grid)
       * [Total SD](predictions.html#feedlot)
   * [`print.summary_emm()`](basics.html#emmobj)
+  * Probit regression
+      * [Odds or risk ratios](transformations.html#not-logit)
   * [`pwpm()`](comparisons.html#pwpm)
   * [`pwpp()`](comparisons.html#pwpp)
 
@@ -608,13 +613,16 @@ vignette: >
   * [Registering `recover_data` and `emm_basis` methods](xtending.html#exporting)
   * [`regrid` argument](transformations.html#stdize)
   * [`regrid()`](transformations.html#regrid)
+      * [probit or other lon-logit models](transformations.html#not-logit)
       * [`regrid` vs. `type`](transformations.html#regrid2)
+      * [to obtain risk ratios](transformations.html#riskrats)
       * [`transform = "log"`](transformations.html#logs)
   * [Residual plots](basics.html#pigs)
   * [Response scale](confidence-intervals.html#tran)
   * [Response transformations](basics.html#transf)
   * [`revpairwise` contrasts](comparisons.html#contrasts)
   * [`rg.limit` option](messy-data.html#rg.limit)
+  * [Risk ratios](transformations.html#riskrats)
   * [RMarkdown](basics.html#formatting)
   * [ROPE](sophisticated.html#bayesxtra)
   * [**rsm** package](xtending.html#rsm)
