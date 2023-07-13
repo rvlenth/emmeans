@@ -802,17 +802,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                 ref.levels[[nm]] = round(ref.levels[[nm]], 3)
             }
             # get only "legal" levels
-            at[[nm]] = at[[nm]][at[[nm]] %in% ref.levels[[nm]]]
-            # Now which of those are left out?
-            excl = setdiff(ref.levels[[nm]], at[[nm]])
-            for (x in excl)
-                incl.flags[grid[[nm]] == x] = FALSE
-            ref.levels[[nm]] = at[[nm]]
+            at[[nm]] = ref.levels[[nm]] = at[[nm]][at[[nm]] %in% ref.levels[[nm]]]
+            rows = numeric(0)
+            for(x in at[[nm]])
+                rows = c(rows, which(grid[[nm]] == x))
+            grid = grid[rows, , drop = FALSE]
+            grid[[nm]] = factor(grid[[nm]], levels = at[[nm]])
+            basis$X = basis$X[rows, , drop = FALSE]
         }
-        if (!any(incl.flags))
-            stop("Reference grid is empty due to mismatched levels in 'at'")
-        grid = grid[incl.flags, , drop=FALSE]
-        basis$X = basis$X[incl.flags, , drop=FALSE]
     }
 
     # Any offsets??? (misc$offset.mult might specify removing or reversing the offset)

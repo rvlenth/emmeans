@@ -188,23 +188,6 @@ of pain with `B` are about half that for `A`, but this finding is not
 statistically significant. (The odds that this is a made-up dataset seem quite
 high, but that finding is strictly this author's impression.)
 
-###### {#riskrats}
-<!-- @index Risk ratios; Logistic regression!Risk ratios;
-            `regrid()`!to obtain risk ratios;  -->
-Some users prefer ratios of probabilities (risk ratios) rather than odds ratios.
-These are easy to obtain. First, do
-```{r}
-log.emm <- regrid(neuralgia.emm, "log")
-```
-While each node of `neuralgia.emm` is an estimate of the logit of a probability, the corresponding 
-nodes of `log.emm` are estimates of the log of the same probability. Thus, pairwise comparisons
-are differences of logs, which are logs of ratios. The risk ratios are thus
-```{r}
-pairs(log.emm, reverse = TRUE, type = "response")
-```
-The test statistics and P values differ somewhat from those for the odds ratios because they are computed on the log scale rather than the original logit scale.
-
-
 Observe that there is a note in the output for `neuralgia.emm` that the results
 may be misleading. It is important to take it seriously, because if two factors
 interact, it may be the case that marginal averages of predictions don't reflect
@@ -213,28 +196,13 @@ look at an interaction plot of the fitted model:
 ```{r fig.alt = "Interaction-plot display of the results of emmeans(neuralgia.glm, ~ Treatment | Sex)"}
 emmip(neuralgia.glm, Sex ~ Treatment)
 ```
-
 There is no practical difference between females and males in the patterns of
 response to `Treatment`; so I think most people would be quite comfortable with
-the marginal results that are reported earlier.
+the marginal results that are reported here.
 
-###### {#not-logit}
-<!-- @index Logistic-like regression!Non-logit links; 
-   `regrid()`!probit or other lon-logit models;
-  Probit regression!Odds or risk ratios -->
-The `neuralgia.glm` example takes advantage of special properties associated with the logit link.
-If we have proportion data but some other link function is used in
-fitting the model, we don't automatically get either odds ratios or risk ratios.
-However, we can `regrid()` to the
-`"log"` scale if we want risk ratios, or to the `"logit"` scale if we want odds
-ratios. For example,
-```{r}
-neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"), 
-                     data = neuralgia)
-prb.emm <- suppressMessages(emmeans(neuralgia.prb, "Treatment"))
-pairs(regrid(prb.emm, "logit"), type = "response", reverse = TRUE)
-```
-These are vaguely comparable to the odds ratios we obtained with `neuralgia.glm`,
+Some users prefer risk ratios (ratios of probabilities) rather than odds 
+ratios. We will revisit this example [below](#riskrats) after we have discussed 
+some more tools.
 
 [Back to Contents](#contents)
 
@@ -418,6 +386,44 @@ outside of the interval $(0,1)$ will be flagged as non-estimable.
 
 The [section on standardized responses](#stdize) gives an example of reverse-engineering 
 a standardized response transformation in this way.
+
+
+### Revisiting the neuralgia example {#riskrats}
+<!-- @index Risk ratios; Logistic regression!Risk ratios;
+            `regrid()`!to obtain risk ratios;  -->
+As was mentioned before in the [`neuralgia` example](#links), some users prefer ratios of probabilities (risk ratios) rather than odds ratios.
+The additional machinery of `regrid()` makes this possible. First, do
+```{r}
+log.emm <- regrid(neuralgia.emm, "log")
+```
+While each node of `neuralgia.emm` is an estimate of the logit of a probability, the corresponding 
+nodes of `log.emm` are estimates of the log of the same probability. Thus, pairwise comparisons
+are differences of logs, which are logs of ratios. The risk ratios are thus
+obtainable by
+```{r}
+pairs(log.emm, reverse = TRUE, type = "response")
+```
+The test statistics and P values differ somewhat from those for the odds ratios because they are computed on the log scale rather than the original logit scale.
+
+
+
+###### {#not-logit}
+<!-- @index Logistic-like regression!Non-logit links; 
+   `regrid()`!probit or other lon-logit models;
+  Probit regression!Odds or risk ratios -->
+We were able to obtain both odds ratios and risk ratios for `neuralgia.glm`.
+But what if we had not used the logit link? Then the odds ratios would not
+just fall out naturally. However, we can `regrid()` to the
+`"logit"` scale if we want odds
+ratios, or to `"log"` scale if we want risk ratios. For example,
+```{r}
+neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"), 
+                     data = neuralgia)
+prb.emm <- suppressMessages(emmeans(neuralgia.prb, "Treatment"))
+pairs(regrid(prb.emm, "logit"), type = "response", reverse = TRUE)
+```
+These are vaguely comparable to the odds ratios we obtained with `neuralgia.glm`,
+Similar re-gridding for the log will give us risk ratios.
 
 
 ### Alternative scale {#altscale}

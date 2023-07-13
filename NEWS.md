@@ -9,6 +9,7 @@ title: "NEWS for the emmeans package"
     also isn't really an issue) (Commit d921152 for **easystats**)
   * Bug correction for `starata()` terms in **survival** models (#429)
   * Added a risk-ratio and a probit example to the Transformations vignette.
+  * Multivariate levels were mishandled when specified  out of order in `at` (#430)
   
 
 ## emmeans 1.8.7
