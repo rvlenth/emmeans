@@ -286,7 +286,9 @@ If a data frame is needed, \code{summary}, \code{confint},
   The \code{adjust} argument specifies a multiplicity adjustment for tests or
   confidence intervals. This adjustment always is applied \emph{separately}
   to each table or sub-table that you see in the printed output (see
-  \code{\link{rbind.emmGrid}} for how to combine tables). 
+  \code{\link{rbind.emmGrid}} for how to combine tables). If there are non-estimable
+  cases in a \code{by} group, those cases are \emph{excluded} before determining
+  the adjustment; that means there could be different adjustments in different groups.
   
   The valid values of \code{adjust} are as follows:
   \describe{

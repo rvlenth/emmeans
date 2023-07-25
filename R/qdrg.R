@@ -220,12 +220,12 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
             mm = suppressWarnings(model.frame(trms, object$data, na.action = na.pass, xlev = xlev))
             XX = model.matrix(trms, mm, contrasts.arg = object$contrasts)
             nbasis = estimability::nonest.basis(XX)
-            if (nrow(V) == length(bhat)) {
-                ii = which(!is.na(bhat))
-                V = V[ii, ii, drop = FALSE]
-            }
         }
-     }
+        if (nrow(V) == length(bhat)) {
+            ii = which(!is.na(bhat))
+            V = V[ii, ii, drop = FALSE]
+        }
+    }
     
     misc = list()
     

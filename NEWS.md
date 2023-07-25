@@ -10,6 +10,10 @@ title: "NEWS for the emmeans package"
   * Bug correction for `starata()` terms in **survival** models (#429)
   * Added a risk-ratio and a probit example to the Transformations vignette.
   * Multivariate levels were mishandled when specified  out of order in `at` (#430)
+  * Fix to flow error in qdrg where we didn't always get `V` right
+  * Change to adjustment methods when there are non-estimable cases.
+  Now we always adapt the family size to be only the estimable ones. This may
+  change some adjusted P values or confidence limits obtained in past versions.
   
 
 ## emmeans 1.8.7

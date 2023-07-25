@@ -4,12 +4,11 @@
 #xxxx' @importFrom brms parse_bf
 #' @exportS3Method recover_data brmsfit
 recover_data.brmsfit = function(object, data, ...) {
-    bt = brms::parse_bf(formula(object))
+    bt = brms::brmsterms(formula(object))
     if (!inherits(bt, "brmsterms"))
         stop("This model is currently not supported.")
     mt = attr(model.frame(bt$dpars$mu$fe, data = object$data), "terms")
-    ### we don't have a call component so I'll just put in NULL
-    recover_data.call(NULL, mt, "na.omit", data = object$data, ...)
+    recover_data(call("brms"), mt, "na.omit", data = object$data, ...)
 }
 
 #' @exportS3Method emm_basis brmsfit

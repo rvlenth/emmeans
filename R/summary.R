@@ -177,7 +177,9 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   The \code{adjust} argument specifies a multiplicity adjustment for tests or
 #'   confidence intervals. This adjustment always is applied \emph{separately}
 #'   to each table or sub-table that you see in the printed output (see
-#'   \code{\link{rbind.emmGrid}} for how to combine tables). 
+#'   \code{\link{rbind.emmGrid}} for how to combine tables). If there are non-estimable
+#'   cases in a \code{by} group, those cases are \emph{excluded} before determining
+#'   the adjustment; that means there could be different adjustments in different groups.
 #'   
 #'   The valid values of \code{adjust} are as follows:
 #'   \describe{
@@ -605,7 +607,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         linkname = link$name
     
     if(infer[1]) { # add CIs
-        acv = .adj.critval(level, result$df, adjust, fam.info, side, corrmat, by.rows, sch.rank)
+        acv = .adj.critval(result[[1]], level, result$df, adjust, fam.info, side, corrmat, by.rows, sch.rank)
         ###adjust = acv$adjust # in older versions, I forced same adj method for tests
         cv = acv$cv
         cv = switch(side + 2, cbind(-Inf, cv), cbind(-cv, cv), cbind(-cv, Inf))
@@ -987,6 +989,9 @@ as.data.frame.emmGrid = function(x,
     if ((n.contr == 1) && !(adjust %.pin% "scheffe"))  ##(pmatch(adjust, "scheffe", 0) != 1)) 
         adjust = "none"
     
+    # check if we need to adjust adaptively for only estimable cases
+    adaptive = (adjust != "none") && any(is.na(t))
+    
     # do a pmatch of the adjust method
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", p.adjust.methods)
     
@@ -999,7 +1004,8 @@ as.data.frame.emmGrid = function(x,
     if ((et != 3) && adjust == "tukey") # not pairwise
         adjust = .chg.adjust(adjust, "sidak", "only appropriate for one set of pairwise comparisons")
     
-    ragged.by = (is.character(fam.size) || adjust %in% c("mvt", p.adjust.methods))   # flag that we need to do groups separately
+    ragged.by = (is.character(fam.size) || adjust %in% c("mvt", setdiff(p.adjust.methods, "none")))   # flag that we need to do groups separately
+    ragged.by = ragged.by | adaptive   # keep it ragged if we need adaptive adj
     if (!ragged.by)
         by.rows = list(seq_along(t))       # not ragged, we can do all as one by group
     
@@ -1014,24 +1020,18 @@ as.data.frame.emmGrid = function(x,
     else
         p.unadj = pt(t, DF, lower.tail = (tail<0))
     
-#    pvals = lapply(by.rows, function(rows) {
     pval = numeric(length(t))
-    for(jj in seq_along(by.rows)) { ####(rows in by.rows) {
+    for(jj in seq_along(by.rows)) { 
         rows = by.rows[[jj]]
         unadj.p = p.unadj[rows]
         abst = abs(t[rows])
         df = DF[rows]
         if (ragged.by) {
-            n.contr = length(rows)
+            n.contr = max(sum(!is.na(unadj.p)), 1)
             fam.size = (1 + sqrt(1 + 8*n.contr)) / 2   # tukey family size - e.g., 6 pairs -> family of 4
         }
-        if (adjust %in% p.adjust.methods) {
-            if (n.contr == length(unadj.p))
-                pval[rows] = p.adjust(unadj.p, adjust, n = n.contr)
-            else # only will happen when by.rows is length 1
-                pval[rows] = as.numeric(apply(matrix(unadj.p, nrow=n.contr), 2, 
-                                        function(pp) p.adjust(pp, adjust, n=sum(!is.na(pp)))))
-        }
+        if (adjust %in% p.adjust.methods) # simple now because we forced ragged.rows
+            pval[rows] = p.adjust(unadj.p, adjust)
         else pval[rows] = switch(adjust,
                            sidak = 1 - (1 - unadj.p)^n.contr,
                            # NOTE: tukey, scheffe, dunnettx all assumed 2-sided!
@@ -1059,11 +1059,17 @@ as.data.frame.emmGrid = function(x,
     if (do.msg) {
 #         xtra = if(chk.adj < 10) paste("a family of", fam.size, "tests")
 #         else             paste(n.contr, "tests")
-        xtra = switch(adjust, 
+        xtra = if (!adaptive || (length(by.rows) == 1)) switch(adjust, 
                       tukey = paste("for comparing a family of", fam.size, "estimates"),
                       scheffe = paste("with rank", scheffe.dim),
                       paste("for", n.contr, "tests")
                 )
+        else switch(adjust, 
+                    tukey = "for varying family sizes",
+                    scheffe = "with varying rank",
+                    "for varying numbers of tests"
+        )
+        
         mesg = paste("P value adjustment:", adjust, "method", xtra)
     }
     else mesg = NULL
@@ -1075,7 +1081,7 @@ as.data.frame.emmGrid = function(x,
 # lsmeans >= 2.14: Added tail & corrmat args, dunnettx & mvt adjustments
 # emmeans > 1.3.4: Added sch.rank
 # NOTE: corrmat is NULL unless adjust == "mvt"
-.adj.critval = function(level, DF, adjust, fam.info, tail, corrmat, by.rows, sch.rank) {
+.adj.critval = function(est, level, DF, adjust, fam.info, tail, corrmat, by.rows, sch.rank) {
     mesg = NULL
     
     fam.size = fam.info[1]
@@ -1092,7 +1098,12 @@ as.data.frame.emmGrid = function(x,
         k = which(adj.meths == "bonferroni") 
     adjust = adj.meths[k]
     
-    if (!ragged.by && (adjust != "mvt") && (length(unique(DF)) == 1))
+    # do we need to adapt for different by-grouup sizes?
+    adaptive = any(is.na(est))
+    
+    ragged.by = ragged.by || adaptive || (adjust == "mvt")
+    
+    if (!ragged.by && (length(unique(DF)) == 1))
         by.rows = list(seq_along(DF))       # not ragged, we can do all as one by group
     
     if ((tail != 0) && (adjust %in% c("tukey", "scheffe", "dunnettx"))) # meth not approp for 1-sided
@@ -1118,17 +1129,6 @@ as.data.frame.emmGrid = function(x,
     do.msg = (chk.adj > 1) && ###   (nc > 1) && 
         !((fs < 3) && (chk.adj < 10)) 
     
-    if (do.msg) {
-#        xtra = if(chk.adj < 10) paste("a family of", fam.size, "estimates")
-#        else             paste(n.contr, "estimates")
-        xtra = switch(adjust, 
-                      tukey = paste("for comparing a family of", fam.size, "estimates"),
-                      scheffe = paste("with rank", scheffe.dim),
-                      paste("for", n.contr, "estimates")
-        )
-        mesg = paste("Conf-level adjustment:", adjust, "method", xtra)
-    }
-    
     adiv = ifelse(tail == 0, 2, 1) # divisor for alpha where needed
     
     ###cvs = lapply(by.rows, function(rows) {
@@ -1137,7 +1137,7 @@ as.data.frame.emmGrid = function(x,
         rows = by.rows[[jj]]
         df = DF[rows]
         if (ragged.by) {
-            n.contr = length(rows)
+            n.contr = max(1, sum(!is.na(est[rows])))
             fam.size = (1 + sqrt(1 + 8*n.contr)) / 2   # tukey family size - e.g., 6 pairs -> family of 4
         }
         cv[rows] = switch(adjust,
@@ -1150,6 +1150,23 @@ as.data.frame.emmGrid = function(x,
                mvt = .my.qmvt(level, df, corrmat[rows, rows, drop = FALSE], tail)
         )
     }
+    
+    if (do.msg) {
+        #        xtra = if(chk.adj < 10) paste("a family of", fam.size, "estimates")
+        #        else             paste(n.contr, "estimates")
+        xtra = if(!adaptive || (length(by.rows) == 1)) 
+            switch(adjust, 
+                   tukey = paste("for comparing a family of", fam.size, "estimates"),
+                   scheffe = paste("with rank", scheffe.dim),
+                   paste("for", n.contr, "estimates"))
+        else switch(adjust,
+                    tukey = "for varying family sizes",
+                    scheffe = "with varying rank",
+                    "for varying numbers of estimates")
+        
+        mesg = paste("Conf-level adjustment:", adjust, "method", xtra)
+    }
+    
     
     list(cv = cv, mesg = mesg, adjust = adjust)
 }

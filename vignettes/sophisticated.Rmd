@@ -245,6 +245,14 @@ For more details on how offsets are handled, and how and why an `offset()` *mode
 is treated differently than an `offset` *argument* in model fitting, see
 [the "xplanations" vignette](xplanations.html#offsets).
 
+An additional complication may come up in models zero-inflated or hurdle models.
+In those cases, it is somewhat ambiguous what one might mean by a "rate", but one interpretation
+would be to just go with the above techniques with estimates for just the Poisson
+component of the model. Another approach would be to estimate the response mean with
+the zero-inflation included, and divide by the appropriate offset. This can be done,
+but it is messy. An example is given on the 
+[Cross-Validated site](https://stats.stackexchange.com/questions/620842/help-interpreting-zeroinfl-results-from-emmeans/621108?noredirect=1#comment1155903_621108).
+
 [Back to Contents](#contents)
 
 
