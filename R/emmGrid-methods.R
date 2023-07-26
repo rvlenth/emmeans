@@ -123,13 +123,21 @@ print.emmGrid = function(x, ..., export = FALSE)
 #' 
 #' @param object An \code{emmGrid} object
 #' @param ... (required but not used)
+#' @param sep separator for pasting levels in creating row and column
+#'        names for \code{vcov()} results
 #' 
 #' @return The \code{vcov} method returns a symmetric matrix of variances and
 #'   covariances for \code{predict.emmGrid(object, type = "lp")}
 #'
 #' @method vcov emmGrid
 #' @export
-vcov.emmGrid = function(object, ...) {
+#' @examples
+#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+#' warp.emm <- emmeans(warp.lm, ~ tension | wool)
+#' vcov(warp.emm) |> zapsmall()
+#' 
+#' vcov(pairs(warp.emm), sep = "|") |> zapsmall()
+vcov.emmGrid = function(object, ..., sep = get_emm_option("sep")) {
     tol = get_emm_option("estble.tol")
     if (!is.null(hook <- object@misc$vcovHook)) {
         if (is.character(hook)) 
@@ -137,11 +145,17 @@ vcov.emmGrid = function(object, ...) {
         hook(object, tol = tol, ...)
     }
     else {
-        X = object@linfct
+        if(is.null(disp <- object@misc$display))
+            disp = seq_len(nrow(object@linfct))
+        X = object@linfct[disp, , drop = FALSE]
         estble = estimability::is.estble(X, object@nbasis, tol) 
         X[!estble, ] = NA
         X = X[, !is.na(object@bhat), drop = FALSE]
-        X %*% tcrossprod(object@V, X)
+        rtn = X %*% tcrossprod(object@V, X)
+        largs = as.list(object@grid[disp, seq_along(object@levels), drop = FALSE])
+        largs$sep = sep
+        rownames(rtn) = colnames(rtn) = do.call(paste, largs)
+        rtn
     }
 }
 

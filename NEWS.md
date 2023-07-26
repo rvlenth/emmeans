@@ -2,18 +2,21 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.9-09xxxxx
+## emmeans 1.8.8
   * Bug correction in `contrast` when `tran` is a `list` (#428)
   * Bug correction to suppress a nuisance warning when the number of
     prior weights is 0 or 1 (which indeed doesn't match the number of rows of data, but
     also isn't really an issue) (Commit d921152 for **easystats**)
-  * Bug correction for `starata()` terms in **survival** models (#429)
+  * Bug correction for `strata()` terms in **survival** models (#429)
   * Added a risk-ratio and a probit example to the Transformations vignette.
   * Multivariate levels were mishandled when specified  out of order in `at` (#430)
-  * Fix to flow error in qdrg where we didn't always get `V` right
+  * Fix to flow error in `qdrg()` where we didn't always get `V` right
   * Change to adjustment methods when there are non-estimable cases.
-  Now we always adapt the family size to be only the estimable ones. This may
-  change some adjusted P values or confidence limits obtained in past versions.
+    Now we always adapt the family size to include only the estimable ones. This may
+    change some adjusted P values or confidence limits obtained in past versions,
+    when the model is rank-deficient.
+  * `vcov.emmGrid()` now only returns elements where `object@misc$display == TRUE`.
+    We also label the dimensions and provide a `sep` argument for creating labels.
   
 
 ## emmeans 1.8.7

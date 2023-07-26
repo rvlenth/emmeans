@@ -565,7 +565,13 @@ pairs.emmGrid = function(x, reverse = FALSE, ...) {
 
 # coef method - returns contrast coefficients
 #' @rdname contrast 
-#' @return \code{coef} returns a \code{data.frame} containing the object's grid, along with columns named \code{c.1, c.2, ...} containing the contrast coefficients. If 
+#' @return \code{coef} returns a \code{data.frame} containing the "parent" object's grid, 
+#' along with columns named \code{c.1, c.2, ...} containing the contrast coefficients
+#' used to produce the linear functions embodied in the object. \code{coef()} only
+#' returns coefficients if \code{object} is the result of a call to \code{contrast()},
+#' and the parent object is the object that was handed to \code{contrast}. This
+#' is most useful for understanding interaction contrasts.
+#'
 #' @export
 #' @importFrom stats coef
 #' @method coef emmGrid

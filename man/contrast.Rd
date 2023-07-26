@@ -107,7 +107,12 @@ directly via \code{\link[=update.emmGrid]{levels<-}}.}
   object is returned if \code{simple} is a list and \code{combine} is
   \code{FALSE}.
 
-\code{coef} returns a \code{data.frame} containing the object's grid, along with columns named \code{c.1, c.2, ...} containing the contrast coefficients. If
+\code{coef} returns a \code{data.frame} containing the "parent" object's grid, 
+along with columns named \code{c.1, c.2, ...} containing the contrast coefficients
+used to produce the linear functions embodied in the object. \code{coef()} only
+returns coefficients if \code{object} is the result of a call to \code{contrast()},
+and the parent object is the object that was handed to \code{contrast}. This
+is most useful for understanding interaction contrasts.
 }
 \description{
 These methods provide for follow-up analyses of \code{emmGrid} objects:

@@ -10,7 +10,7 @@
 
 \method{print}{emmGrid}(x, ..., export = FALSE)
 
-\method{vcov}{emmGrid}(object, ...)
+\method{vcov}{emmGrid}(object, ..., sep = get_emm_option("sep"))
 }
 \arguments{
 \item{object}{An \code{emmGrid} object}
@@ -26,6 +26,9 @@ or displayed as the user sees fit. \code{summary} is a character matrix
 (or list of such matrices, if a \code{by} variable is in effect).
 \code{annotations} is a character vector of the annotations that would 
 have been printed below the summary or summaries.}
+
+\item{sep}{separator for pasting levels in creating row and column
+names for \code{vcov()} results}
 }
 \value{
 The \code{vcov} method returns a symmetric matrix of variances and
@@ -33,4 +36,11 @@ The \code{vcov} method returns a symmetric matrix of variances and
 }
 \description{
 Miscellaneous methods for \code{emmGrid} objects
+}
+\examples{
+warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+warp.emm <- emmeans(warp.lm, ~ tension | wool)
+vcov(warp.emm) |> zapsmall()
+
+vcov(pairs(warp.emm), sep = "|") |> zapsmall()
 }
