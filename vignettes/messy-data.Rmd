@@ -229,9 +229,9 @@ identical in that case.
      Memory usage; Large models; Models!Large -->
 Consider a situation where we have a model with 15 factors, each at 5 levels.
 Regardless of how simple or complex the model is, the reference grid consists of
-all combinations of these factors -- and there are $%^15$ of these, or over 30
+all combinations of these factors -- and there are $5^{15}$ of these, or over 30
 billion. If there are, say, 100 regression coefficients in the model, then just
-the `linfct` slot in the reference grid requires $100\times5^15\times8$ bytes of
+the `linfct` slot in the reference grid requires $100\times5^{15}\times8$ bytes of
 storage, or almost 23,000 gigabytes. Suppose in addition the model has a
 multivariate response with 5 levels. That multiplies *both* the rows and columns
 in `linfct`, increasing the storage requirements by a factor of 25. Either way,
