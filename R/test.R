@@ -329,7 +329,7 @@ test.emmGrid = function(object, null = 0,
 #' 
 joint_tests = function(object, by = NULL, show0df = FALSE, 
                        showconf = TRUE,
-                       cov.reduce = meanint, ...) {
+                       cov.reduce = make.meanint(1), ...) {
     
     # hidden defaults for contrast methods and which basis to use for all contrasts
     use.contr = (function(use.contr = c("consec", "consec"), ...) use.contr)(...)
@@ -481,25 +481,38 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 #' @rdname joint_tests
 #' @order 6
 #'
-#' @param x,ctr arguments for \code{meanint} and \code{symmint}
+#' @param delta,ctr arguments for \code{make.meanint} and \code{make.symmint}
 #'
-#' @return \code{meanint} returns \code{mean(c) + c(-1, 1)}. 
-#'         \code{symmint(ctr)} returns a function that returns \code{ctr + c(-1, 1)}.
+#' @return \code{make.meanint} returns the function 
+#' \code{function(x) mean(x) + delta * c(-1, 1)},
+#'   and \code{make.symmint(ctr, delta)} returns the function
+#' \code{function(x) ctr + delta * c(-1, 1)}
+#'         (which does not depend on \code{x}).
+#'         The cases with \code{delta = 1}, \code{meanint = make.meanint(1)} 
+#'         and \code{symmint(ctr) = function(x) ctr + c(-1,1)}
+#'         are retained for back-compatibility reasons.
 #'         These functions are available primarily for use with \code{cov.reduce}.
 #' @export
-meanint = function(x) { mean(x) + c(-1, 1) }
+make.meanint = function(delta) 
+    function(x) mean(x) + delta * c(-1, 1)
 
-# # zero pm 1
-# #' @rdname joint_tests
-# #' @order 7
-# #' @export
-# zeroint = function(x) { c(-1, 1) }
- 
+#' @rdname joint_tests
+#' @order 7
+#' @param x argument for \code{meanint} and \code{symmint}
+#' @export
+meanint = function(x) mean(x) + c(-1, 1)
+
+
 # const pm 1
 #' @rdname joint_tests
 #' @order 8
 #' @export
-symmint = function(ctr) {
-    return(function(x) ctr + c(-1, 1)) 
+make.symmint = function(ctr, delta) {
+    function(x) ctr + delta * c(-1, 1) 
 }
+
+#' @rdname joint_tests
+#' @order 9
+#' @export
+symmint = function(x) ctr + c(-1, 1)
 

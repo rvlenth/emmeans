@@ -90,6 +90,7 @@ Scroll down or follow the links to those groups for more information.
 |mixed        |afex     |[P](#P)  |Supported in **afex** package                                |
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mmer         |sommer   |[G](#G)  |                                                             |
+|mmrm         |mmrm     |[P](#P)  |Supported in the **mmrm** package                            |
 |multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |
 |             |         |         |Always include response in specs for `emmeans()`             |
 |nauf         |nauf.*xxx* |[P](#P)  |Supported in **nauf** package                              |
@@ -342,7 +343,11 @@ expressed as combinations of the named factor levels via the function
 ## N - Multinomial responses {#N}
 <!-- @index `mlm` models; Multinomial models -->
 The reference grid includes a pseudo-factor with the same name and levels as
-the multinomial response. There is an optional `mode` argument which
+the multinomial response. (If the response is an expression, the name of that pseudo-factor
+will be the first name in the expression; e.g., if the model formula is 
+`cbind(col1, col2) ~ trt`, the grid factors will be `cbind` and `trt` and the
+levels of `cbind` will be `1` and `2`.) 
+There is an optional `mode` argument which
 should match `"prob"` or `"latent"`. With `mode = "prob"`, the
 reference-grid predictions consist of the estimated multinomial
 probabilities. The `"latent"` mode returns the linear predictor,

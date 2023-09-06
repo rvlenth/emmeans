@@ -56,9 +56,11 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     misc = list(tran = "log", inv.lbl = "e^y")
     dfargs = list(df = object$edf)
     dffun = function(k, dfargs) dfargs$df
-    ylevs = list(class = object$lev)
+    if(is.null(ylevs <- object$lev))
+        ylevs = seq_len(k + 1)
+    ylevs = list(class = ylevs)
     if (is.null(ylevs)) ylevs = list(class = seq_len(k))
-    names(ylevs) = as.character.default(eval(object$call$formula, environment(trms))[[2]])
+    names(ylevs) = as.character.default(eval(object$call$formula, environment(trms))[[2]])[1]
     misc$ylevs = ylevs
     if (mode == "prob")
         misc$postGridHook = .multinom.postGrid
