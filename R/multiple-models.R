@@ -29,32 +29,59 @@
 # $data is NOT a standard member, but if it's there, we'll use it
 # Otherwise, we need to provide data or its name in the call
 #' @exportS3Method recover_data averaging
-recover_data.averaging = function(object, data, ...) {
+recover_data.averaging = function(object, data, formula = object$formula, ...) {
     ml = attr(object, "modelList")
     if (is.null(ml))
         return(paste0("emmeans support for 'averaging' models requires a 'modelList' attribute.\n",
                       "Re-fit the model from a model list or with fit = TRUE"))
-    if (is.null(object$formula)) {
+    if (is.null(formula)) {
         lhs = as.formula(paste(formula(ml[[1]])[[2]], "~."))
         rhs = sapply(ml, function(m) {f = formula(m); f[[length(f)]]})
-        object$formula = update(as.formula(paste("~", paste(rhs, collapse = "+"))), lhs)
+        formula = update(as.formula(paste("~", paste(rhs, collapse = "+"))), lhs)
     }
     if (is.null(data))
         data = ml[[1]]$call$data
     ### temporary patch -- $formula often excludes the intercept
-    object$formula = update(object$formula, .~.+1)[-2]
-    trms = attr(model.frame(object$formula, data = data), "terms")
-    fcall = call("model.avg", formula = object$formula, data = data)
+    formula = update(formula, .~.+1)[-2]
+    trms = attr(model.frame(formula, data = data), "terms")
+    fcall = call("model.avg", formula = formula, data = data)
     recover_data(fcall, trms, na.action = NULL, ...)
 }
 
+# optional argument 'subset' is named character "prefix:pfx" or "wrap:wrap"
+# or NAMED vector of indexes
 #' @exportS3Method emm_basis averaging
-emm_basis.averaging = function(object, trms, xlev, grid, ...) {
+emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
     bhat = coef(object, full = TRUE)
-    # change names like "cond(xyz)" to "xyz"
-    bnms = sub("([a-z]+\\()([0-9:_() A-Za-z]+)(\\))", "\\2", names(bhat), perl = TRUE)
-    bnms[bnms == "(Int)"] = "(Intercept)"
-    names(bhat) = bnms
+    bnms = names(bhat)
+    V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...)
+
+    # support functions for 'what' ...
+    prefixed_by = function(pfx) {  # picks elements prefixed by pfx
+        w = which(startsWith(bnms, pfx))
+        names(w) = gsub(pfx, "", bnms[w])
+        w
+    }
+    wrapped_by = function(wrp) {  # picks elements wrapped by wrp(name)
+        w = grep(paste0(wrp, "\\("), bnms)
+        names(w) = sub("([a-z]+\\()([0-9:_() A-Za-z]+)(\\))", "\\2", bnms[w], perl = TRUE)
+        w
+    }
+    if(!missing(subset)) {
+        if (is.character(subset)) {  # wrap:stg or prefix:stg
+            tmp = strsplit(subset, ":")[[1]]
+            if(tmp[[1]] == "wrap")
+                subset = wrapped_by(tmp[2])
+            else # anything else is interpreted as prefix
+                subset = prefixed_by(rev(tmp)[1])
+            if(length(subset) == 0)
+                stop("subset specification eliminates all coefficients!")
+        }
+        bhat = bhat[subset]
+        bnms = names(subset)
+        bnms[bnms == "(Int)"] = "(Intercept)"  # covers a peculiarity in glmmTMB
+        V = V[subset, subset]
+    }
     
     # we're gonna assemble all the main-effects model-matrix components
     # and build the model matrix to match the names of the coefs
@@ -64,8 +91,8 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
         suppressWarnings(model.matrix(frm, data = grid, xlev = xlev))
     })
     ME = cbind("(Intercept)" = 1, do.call(cbind, mmlist))
-    cols = strsplit(names(bhat), ":")  # the cols we need
-    ext = setdiff(unlist(cols), colnames(ME)) # extra expressions we need to compute
+    cols = strsplit(bnms, ":")  # the cols we need
+    ext = setdiff(intersect(unlist(cols), names(grid)), colnames(ME)) # extra expressions we need to compute
     if(length(ext) > 0) {
         xcols = sapply(ext, \(expr) eval(parse(text = expr), envir = grid))
         ME = cbind(ME, xcols)
@@ -73,7 +100,7 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
     # now get the factors for each coef
     X = sapply(cols, \(nms)
         apply(ME[, nms, drop = FALSE], 1, prod))
-    colnames(X) = names(bhat)
+    colnames(X) = bnms
     # Now, sometimes a coefficient is duplicated, so we need to zero those out
     srt = sapply(cols, \(nms) paste(sort(nms), collapse = ":"))
     tmp = table(srt)
@@ -82,13 +109,13 @@ emm_basis.averaging = function(object, trms, xlev, grid, ...) {
         bhat[zap] = 0
     }
     
-    V = .my.vcov(object, function(., ...) vcov(., full = TRUE), ...) ###[perm, perm]
     
     nbasis = estimability::all.estble
     ml = attr(object, "modelList")
     ml1 = ml[[1]]
     misc = list()
-    if (!is.null(fam <- family(ml1)))
+    fam <- try(family(ml1), silent = TRUE)
+    if (!inherits(fam, "try-error"))
         misc = .std.link.labels(fam, misc)
     if (!is.null(df.residual(ml1))) {
         dffun = function(k, dfargs) dfargs$df

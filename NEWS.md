@@ -8,6 +8,7 @@ title: "NEWS for the emmeans package"
     that return symmetric intervals of width `2` are retained for back-compatibility
   * Small repairs to `multinom` support so it works with a model where the
     response is a matrix of counts (#439)
+  * Enhancements/fixes for `MuMIn` support (#442)
 
 ## emmeans 1.8.8
   * Bug correction in `contrast` when `tran` is a `list` (#428)
