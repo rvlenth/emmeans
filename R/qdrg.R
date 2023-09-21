@@ -80,14 +80,17 @@
 #'     (Note: response transformations are auto-detected from \code{formula})
 #' @param qr QR decomposition of the model matrix; used only if there are \code{NA}s
 #'     in \code{coef}.
-#' @param ordinal.dim Integer number of levels in an ordinal response. If not
-#'     missing, the intercept terms are modified appropriate to predicting the latent
-#'     response (see \code{vignette("models")}, Section O, but note that the other 
-#'     modes, e.g., \code{mode = "prob"} are not provided). 
-#'     In this case, we expect
-#'     the first \code{ordinal.dim - 1} elements of \code{coef} to be the
+#' @param ordinal \code{list} with elements \code{dim} and \code{mode}.
+#'     \code{ordinal$dim} (integer) is the number of levels in an ordinal response. If 
+#'     \code{ordinal} is provided, the intercept terms are modified appropriate to predicting 
+#'     an ordinal response, as described in \code{vignette("models")}, Section O,
+#'     using \code{ordinal$mode} as the \code{mode} argument (if not
+#'     provided, \code{"latent"} is assumed).
+#'     (All modes are supported except `scale`)
+#'     For this to work, we expect
+#'     the first \code{ordinal$dim - 1} elements of \code{coef} to be the
 #'     estimated threshold parameters, followed by the coefficients for the
-#'     linear predictor.) 
+#'     linear predictor.
 #' @param ... Optional arguments passed to \code{\link{ref_grid}}
 #'
 #' @return An \code{emmGrid} object constructed from the arguments
@@ -106,7 +109,9 @@
 #' 
 #' @seealso \code{\link{emmobj}} for an alternative way to construct an \code{emmGrid}.
 #' 
-#' 
+#' @note For backwards compatibility, an argument \code{ordinal.dim} is invisibly 
+#' supported as part of \code{...}, and if present, sets 
+#' \code{ordinal = list(dim = ordinal.dim, mode = "latent")}
 #' 
 #' @export
 #' @examples
@@ -122,7 +127,14 @@
 #'     emm_example("qdrg-ordinal")
 #'
 qdrg = function(formula, data, coef, vcov, df, mcmc, object,
-                subset, weights, contrasts, link, qr, ordinal.dim, ...) {
+                subset, weights, contrasts, link, qr, ordinal, ...) {
+    # back-compatible access to old ordinal.dim arg...
+    od = (\(ordinal, ordinal.dim = NULL) {
+        if(!missing(ordinal) && is.numeric(ordinal)) ordinal.dim = ordinal
+        ordinal.dim
+    })(ordinal, ...)
+    if(!is.null(od)) ordinal = list(dim = od, mode = "latent")
+    
     result = match.call(expand.dots = FALSE)
     if (!missing(object)) {
         if (missing(formula)) 
@@ -166,14 +178,14 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
     if(!missing(contrasts)) result$contrasts = contrasts
     if(!missing(link)) result$link = link
     if(!missing(qr) && any(is.na(result$coef))) result$qr = qr
-    if(!missing(ordinal.dim)) result$ordinal.dim = ordinal.dim
+    if(!missing(ordinal)) result$ordinal = ordinal
     
     # make sure "formula" exists, has a LHS and is is 2nd element so that 
     # response transformation can be found
     if (is.null(result$formula))
         stop("No formula; cannot construct a reference grid")
     if(length(result$formula) < 3)
-        result$formula = update(result$formula, .dummy ~ .)
+        result$formula = update.formula(result$formula, response ~ .)
     fpos = grep("formula", names(result))[1]
     result = result[c(1, fpos, seq_along(result)[-c(1, fpos)])]
 
@@ -202,11 +214,32 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
         if (is.null(object$vcov)) V = cov(object$mcmc)
     }
     
+    misc = list()
+    
     # If ordinal, add extra avgd, subtracted intercepts -- for latent mode
-    if(!is.null(od <- object$ordinal.dim)) { 
-        intcpt = matrix(-1 / (od - 1), nrow = nrow(X), ncol = od - 1)
-        colnames(intcpt) = names(bhat)[1:(od-1)]
-        X = cbind(intcpt, X[, -1, drop = FALSE])
+    if(!is.null(ordinal <- object$ordinal)) {
+        if(is.null(ordinal$mode)) ordinal$mode = "latent"
+        ordinal$mode = match.arg(ordinal$mode, c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
+        if(is.null(od <- ordinal$dim)) stop ("'ordinal' MUST have a 'dim' element", call. = FALSE)
+        if(ordinal$mode == "latent") {
+            intcpt = matrix(-1 / (od - 1), nrow = nrow(X), ncol = od - 1)
+            colnames(intcpt) = names(bhat)[1:(od - 1)]
+            X = cbind(intcpt, X[, -1, drop = FALSE])
+        }
+        else {
+            levs = seq_len(od - 1)
+            misc$ylevs = list(cut = paste(levs, levs+1, sep = "|"))
+            misc$inv.lbl = "cumprob"
+            misc$offset.mult = -1
+            J = matrix(1, nrow = od - 1)
+            X = cbind(kronecker(diag(od - 1), matrix(1, nrow = nrow(X))), 
+                      kronecker(-J, X[, -1, drop = FALSE]))
+            if (ordinal$mode != "linear.predictor") {
+                misc$mode = ordinal$mode
+                misc$respName = as.character(object$formula)[2]
+                misc$postGridHook = ".clm.postGrid"
+            }
+        }
     }
     
     bhat = .impute.NAs(bhat, X) # make coefs lm-compatible
@@ -226,8 +259,6 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
             V = V[ii, ii, drop = FALSE]
         }
     }
-    
-    misc = list()
     
     # check multivariate situation
     if (is.matrix(bhat)) {

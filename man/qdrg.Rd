@@ -5,7 +5,7 @@
 \title{Quick and dirty reference grid}
 \usage{
 qdrg(formula, data, coef, vcov, df, mcmc, object, subset, weights, contrasts,
-  link, qr, ordinal.dim, ...)
+  link, qr, ordinal, ...)
 }
 \arguments{
 \item{formula}{Formula for the fixed effects}
@@ -37,14 +37,17 @@ structure to `lm` objects. See Details.}
 \item{qr}{QR decomposition of the model matrix; used only if there are \code{NA}s
 in \code{coef}.}
 
-\item{ordinal.dim}{Integer number of levels in an ordinal response. If not
-missing, the intercept terms are modified appropriate to predicting the latent
-response (see \code{vignette("models")}, Section O, but note that the other 
-modes, e.g., \code{mode = "prob"} are not provided). 
-In this case, we expect
-the first \code{ordinal.dim - 1} elements of \code{coef} to be the
+\item{ordinal}{\code{list} with elements \code{dim} and \code{mode}.
+\code{ordinal$dim} (integer) is the number of levels in an ordinal response. If 
+\code{ordinal} is provided, the intercept terms are modified appropriate to predicting 
+an ordinal response, as described in \code{vignette("models")}, Section O,
+using \code{ordinal$mode} as the \code{mode} argument (if not
+provided, \code{"latent"} is assumed).
+(All modes are supported except `scale`)
+For this to work, we expect
+the first \code{ordinal$dim - 1} elements of \code{coef} to be the
 estimated threshold parameters, followed by the coefficients for the
-linear predictor.)}
+linear predictor.}
 
 \item{...}{Optional arguments passed to \code{\link{ref_grid}}}
 }
@@ -92,6 +95,11 @@ The functions \code{\link{qdrg}} and \code{emmobj} are close cousins, in that
 they both produce \code{emmGrid} objects. When starting with summary
 statistics for an existing grid, \code{emmobj} is more useful, while
 \code{qdrg} is more useful when starting from a fitted model.
+}
+\note{
+For backwards compatibility, an argument \code{ordinal.dim} is invisibly 
+supported as part of \code{...}, and if present, sets 
+\code{ordinal = list(dim = ordinal.dim, mode = "latent")}
 }
 \section{Rank deficiencies}{
 

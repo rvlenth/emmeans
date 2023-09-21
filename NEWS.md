@@ -9,6 +9,9 @@ title: "NEWS for the emmeans package"
   * Small repairs to `multinom` support so it works with a model where the
     response is a matrix of counts (#439)
   * Enhancements/fixes for `MuMIn` support (#442)
+  * `qdrg()` has replaced its `ordinal.dim` argument with `ordinal`, a list with
+    elements `dim` and `mode` -- which now fully supports all the modes available
+    for ordinal models (#444). (`ordinal.dim` still works for backward compatibility.)
 
 ## emmeans 1.8.8
   * Bug correction in `contrast` when `tran` is a `list` (#428)
