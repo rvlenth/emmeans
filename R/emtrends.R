@@ -195,7 +195,7 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     
     ### create var.subs -- list of indexes for each value of delts
     ## Since var was created as slowest-varying, only multivariate factors will vary slower
-    gdim = nrow(bigRG@grid) / length(delts)
+    gdim = nrow(bigRG@linfct) / length(delts)
     mdim = 1
     # added code: only consider mult levels that come AFTER var (post-processing could affect sort order)
     levnms = names(bigRG@levels)
@@ -203,7 +203,7 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     for (v in bigRG@roles$multresp)
         if (which(levnms == v) > vi)
             mdim = mdim * length(bigRG@levels[[v]])
-    arr = array(seq_len(nrow(bigRG@grid)), c(gdim / mdim, length(delts), mdim))
+    arr = array(seq_len(nrow(bigRG@linfct)), c(gdim / mdim, length(delts), mdim))
     var.subs = lapply(seq_along(delts), function(i) as.numeric(arr[,i,]))
     
     RG = orig.rg = bigRG[var.subs[[idx.base]]]  # the subset that corresponds to reference values

@@ -1121,9 +1121,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     basis$misc$avgd.over = paste(length(nuis), "nuisance factors")
     RA = rep(ra, k)
     basis$X = X[RA == ".main.grid.", , drop = FALSE]
+    basis$grid = grid[RA == ".main.grid.", , drop = FALSE]
     non.nuis = setdiff(names(ref.levels), info$nuis)
     basis$ref.levels = ref.levels[non.nuis]
-    basis$grid = grid[1:n, non.nuis, drop = FALSE]
     basis
 }
 
