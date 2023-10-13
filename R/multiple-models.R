@@ -85,9 +85,9 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
     
     # we're gonna assemble all the main-effects model-matrix components
     # and build the model matrix to match the names of the coefs
-    vars = .all.vars(trms)
-    mmlist = lapply(vars, \(v) {
-        frm = reformulate(c(-1, v))
+    fcts = rownames(attr(trms, "factors"))
+    mmlist = lapply(fcts, \(f) {
+        frm = reformulate(c(-1, f))
         suppressWarnings(model.matrix(frm, data = grid, xlev = xlev))
     })
     ME = cbind("(Intercept)" = 1, do.call(cbind, mmlist))

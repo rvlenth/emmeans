@@ -13,6 +13,7 @@ title: "NEWS for the emmeans package"
     elements `dim` and `mode` -- which now fully supports all the modes available
     for ordinal models (#444). (`ordinal.dim` still works for backward compatibility.)
   * Fix to bookkeeping bug in `emtrends` (#448)
+  * Fix to `averaging` support with certain predictor function calls (#449)
 
 ## emmeans 1.8.8
   * Bug correction in `contrast` when `tran` is a `list` (#428)
