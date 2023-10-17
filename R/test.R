@@ -311,9 +311,9 @@ test.emmGrid = function(object, null = 0,
 #' ## ... then tests depend on where we center things
 #' 
 #' # Center around the mean
-#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = meanint)
+#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = make.meanint(delta = 1))
 #' # Center around zero (like SAS's results for toy.cov)
-#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = symmint(0))
+#' joint_tests(toy.cov, cov.keep = 0, cov.reduce = make.symmint(ctr = 0, delta = 1))
 #' # Center around 0.5 (like SAS's results for toy.fac)
 #' joint_tests(toy.cov, cov.keep = 0, cov.reduce = range)
 #' 
@@ -489,7 +489,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 #' \code{function(x) ctr + delta * c(-1, 1)}
 #'         (which does not depend on \code{x}).
 #'         The cases with \code{delta = 1}, \code{meanint = make.meanint(1)} 
-#'         and \code{symmint(ctr) = function(x) ctr + c(-1,1)}
+#'         and \code{symmint(ctr) = make.symmint(ctr, 1)}
 #'         are retained for back-compatibility reasons.
 #'         These functions are available primarily for use with \code{cov.reduce}.
 #' @export
@@ -514,5 +514,7 @@ make.symmint = function(ctr, delta) {
 #' @rdname joint_tests
 #' @order 9
 #' @export
-symmint = function(x) ctr + c(-1, 1)
+symmint = function(ctr) 
+    make.symmint(ctr, 1)
+
 
