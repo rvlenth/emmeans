@@ -85,12 +85,10 @@ to disable all parenthesization.}
 \item{enhance.levels}{character or logical. 
 If character, the levels of the named factors that are contrasted are enhanced 
 by appending the name of the factor; e.g., if a factor named \code{"trt"} has
-levels \code{A} and code{B}, a \code{trt} comparison is labeled \code{trtA - trtB}.
-
+levels \code{A} and \code{B}, a \code{trt} comparison is labeled \code{trtA - trtB}.
 If \code{enhance.levels} is logical, then if \code{TRUE} (the default), 
 only factors with numeric levels are enhanced; and of
 course if \code{FALSE}, no levels are enhanced.
-
 The levels of \code{by} variables are not enhanced, and any 
 names of factors that don't exist are silently ignored. 
 To enhance the labels beyond what is done here, change them

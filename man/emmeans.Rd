@@ -59,14 +59,13 @@ the result, it is subsetted or cyclically recycled.}
 
 \item{...}{When \code{object} is not already a \code{"emmGrid"}
 object, these arguments are passed to \code{\link{ref_grid}}. Common
-examples are \code{at}, \code{cov.reduce}, \code{data}, code{type}, 
+examples are \code{at}, \code{cov.reduce}, \code{data}, \code{type}, 
 \code{regrid}, \code{df}, \code{nesting}, and \code{vcov.}.
 Model-type-specific options (see
 \href{../doc/models.html}{\code{vignette("models", "emmeans")}}), commonly
 \code{mode}, may be used here as well. In addition, if the model formula
 contains references to variables that are not predictors, you must provide
 a \code{params} argument with a list of their names.
-
 These arguments may also be used in lieu of \code{options}. See the 
 \sQuote{Options} section below.}
 

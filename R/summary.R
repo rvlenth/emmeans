@@ -103,7 +103,7 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   method), non-inferiority, or non-superiority, depending on \code{side}. See
 #'   Details for how the test statistics are defined.
 #' @param side Numeric or character value specifying whether the test is
-#'   left-tailed (\code{-1}, \code{"-"}, code{"<"}, \code{"left"}, or
+#'   left-tailed (\code{-1}, \code{"-"}, \code{"<"}, \code{"left"}, or
 #'   \code{"nonsuperiority"}); right-tailed (\code{1}, \code{"+"}, \code{">"},
 #'   \code{"right"}, or \code{"noninferiority"}); or two-sided (\code{0},
 #'   \code{2}, \code{"!="}, \code{"two-sided"}, \code{"both"},

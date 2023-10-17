@@ -80,15 +80,15 @@ shown below do indeed work.
 
 The default values for the arguments are as follows:
 \itemize{
-  \item{\code{formula}: }{Required unless obtainable via \code{formula(object)}}
-  \item{\code{data}: }{Required if variables are not in \code{parent.frame()} or 
+  \item{\code{formula}: Required unless obtainable via \code{formula(object)}}
+  \item{\code{data}: Required if variables are not in \code{parent.frame()} or 
       obtainable via \code{object$data}}
-  \item{\code{coef}: }{\code{coef(object)}}
-  \item{\code{vcov}: }{\code{vcov(object)}}
-  \item{\code{df}: }{Set to \code{Inf} if not available in \code{df.residual(object)}}
-  \item{\code{mcmc}: }{\code{object$sample}}
-  \item{\code{subset}: }{\code{NULL} (so that all observations in \code{data} are used)}
-  \item{\code{contrasts}: }{\code{object$contrasts}}
+  \item{\code{coef}: \code{coef(object)}}
+  \item{\code{vcov}: \code{vcov(object)}}
+  \item{\code{df}: Set to \code{Inf} if not available in \code{df.residual(object)}}
+  \item{\code{mcmc}: \code{object$sample}}
+  \item{\code{subset}: \code{NULL} (so that all observations in \code{data} are used)}
+  \item{\code{contrasts}: \code{object$contrasts}}
 }
 
 The functions \code{\link{qdrg}} and \code{emmobj} are close cousins, in that
