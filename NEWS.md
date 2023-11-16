@@ -2,6 +2,12 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.8.9-900xxx
+  * Warning message about prior weights was sometimes unnecessary.
+    We now suppress it when all the prior weights are equal.
+  * Fix to `MuMIn` support with `subset` argument (#455)
+    
+
 ## emmeans 1.8.9
   * Added functions `make.meanint()` and `make.symmint()` that return functions
     that compute symmetric intervals. The old `meanint()` and `symmint()` functions

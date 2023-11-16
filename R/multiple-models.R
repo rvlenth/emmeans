@@ -63,8 +63,11 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
         w
     }
     wrapped_by = function(wrp) {  # picks elements wrapped by wrp(name)
-        w = grep(paste0(wrp, "\\("), bnms)
-        names(w) = sub("([a-z]+\\()([0-9:_() A-Za-z]+)(\\))", "\\2", bnms[w], perl = TRUE)
+        pat = paste0(wrp, "\\(")
+        w = grep(pat, bnms)
+        tmp = sub(pat, "", bnms[w])
+        names(w) = substr(tmp, 1, nchar(tmp) - 1)
+        ### names(w) = sub("([a-z]+\\()([0-9:_() A-Za-z]+)(\\))", "\\2", bnms[w], perl = TRUE)
         w
     }
     if(!missing(subset)) {

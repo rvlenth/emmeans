@@ -65,7 +65,8 @@ may be called independently, it is called automatically by the S3 method
   A closely related quantity is the ROPE (region of practical equivalence),
   obtainable via \code{bayestestR::rope(object, range = c(-delta, delta))}.
   Its value is approximately \code{100 * p.equiv / 0.95} if the default
-  \code{ci = 0.95} is used.
+  \code{ci = 0.95} is used. See also \pkg{bayestestR}'s 
+  \href{https://github.com/easystats/bayestestR/issues/567}{issue #567}.
   
   Finally, a Bayes factor for equivalence is obtainable by dividing 
   \code{odds.eq} by the prior odds of equivalence, assessed or elicited separately.
