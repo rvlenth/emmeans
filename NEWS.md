@@ -6,6 +6,7 @@ title: "NEWS for the emmeans package"
   * Warning message about prior weights was sometimes unnecessary.
     We now suppress it when all the prior weights are equal.
   * Fix to `MuMIn` support with `subset` argument (#455)
+  * Repair to coding error for nested models (#457)
     
 
 ## emmeans 1.8.9
