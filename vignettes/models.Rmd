@@ -62,6 +62,8 @@ Scroll down or follow the links to those groups for more information.
 |glm          |stats    |[G](#G)  |                                                             |
 |glm.nb       |MASS     |[G](#G)  |                                                             |
 |glmerMod     |lme4     |[G](#G)  |                                                             |
+|glmgee       |glmtoolbox |[E](#E)|`vcov.method = c("robust", "df-adjusted", "model",`          |
+|             |           |       |    `"bias-corrected", "jackknife")`                         |
 |glmmadmb     |glmmADMB |         |No longer supported                                          |
 |glmmPQL      |MASS     |[G](#G)  |inherits `lm` support                                        |
 |glmmTMB      |glmmTMB  |[P](#P)  |Supported in **glmmTMB** package                             |

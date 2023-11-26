@@ -783,6 +783,19 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
 }
 
 
+### glmtoolbox package -- we just pretend it's lm and it seems to work
+recover_data.glmgee = function(object, ...) {
+    recover_data.lm(object, ...)
+}
+
+emm_basis.glmgee = function(object, trms, xlev, grid, vcov.method = "robust", ...) {
+    vcov. = vcov(object, type = vcov.method, ...)
+    class(object) = c("glm", "lm") # pretend it's glm
+    emm_basis(object, trms = trms, xlev = xlev, grid = grid, vcov. = vcov., ...)
+}
+
+
+
 ### survey pacvkage
 # svyglm class
 #' @exportS3Method recover_data svyglm
