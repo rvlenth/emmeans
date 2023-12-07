@@ -26,8 +26,8 @@
 #' This function may make it possible to compute a reference grid for a model 
 #' object that is otherwise not supported.
 #' 
-#' Usually, you need to provide 
-#' \code{formula}, \code{data}, \code{coef}, and \code{vcov}, and perhaps other
+#' Usually, you need to provide either \code{object}; or
+#' \code{formula}, \code{coef}, \code{vcov}, \code{data}, and perhaps other
 #' parameters. It is usually fairly straightforward to figure out how to get
 #' these from the model \code{object}; see the documentation for the model class that
 #' was fitted. Sometimes one or more of these quantities contains extra parameters,
@@ -39,17 +39,16 @@
 #' the total number of elements of \code{coef}.)
 #' 
 #' If your model object follows fairly closely the conventions of an \code{\link[stats]{lm}}
-#' object, you may be able to get by providing the model as \code{object}, plus and (probably) \code{data},
+#' or \code{\link[stats]{glm}}object, you may be able to get by providing the model as \code{object},
 #' and perhaps some other parameters to override the defaults.
 #' When \code{object} is specified, it is used as detailed below to try to obtain the 
 #' other arguments. The user should ensure that the defaults
 #' shown below do indeed work. 
-#' 
 #' The default values for the arguments are as follows:
 #' \itemize{
-#'   \item{\code{formula}: Required unless obtainable via \code{formula(object)}}
-#'   \item{\code{data}: Required if variables are not in \code{parent.frame()} or 
-#'       obtainable via \code{object$data}}
+#'   \item{\code{formula}: \code{formula(object)}}
+#'   \item{\code{data}: \code{recover_data.lm(object)} is tried, and if an error is thrown,
+#'     we also check \code{object$data}.}
 #'   \item{\code{coef}: \code{coef(object)}}
 #'   \item{\code{vcov}: \code{vcov(object)}}
 #'   \item{\code{df}: Set to \code{Inf} if not available in \code{df.residual(object)}}
@@ -140,7 +139,9 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         if (missing(formula)) 
             result$formula = stats::formula(object)
         if (missing(data)) {
-            data = object$data
+            data = try(recover_data.lm(object), silent = TRUE)
+            if(inherits(data, "try-error"))
+                data = object$data
             if (is.null(data)) data = parent.frame()
             result$data = data
         }

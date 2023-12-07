@@ -351,7 +351,7 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   make sense, we require an assumption of exchangeability of these levels.
   
   By default, this grid is converted to the response scale (unless otherwise
-  specified in \code{regrid} and averaged over the observations in the dataset.
+  specified in \code{regrid}) and averaged over the observations in the dataset.
   Averaging can be disabled by setting \code{avg.counter = FALSE}, but
   be warned that the resulting reference grid is potentially huge -- the
   number of observations in the dataset times the number of counterfactual 

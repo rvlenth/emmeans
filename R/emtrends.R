@@ -215,6 +215,7 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     if (!is.null(fcn)) { # need a different "h" when diff wrt a function
         tmp = sapply(seq_along(delts), function(i)
             eval(parse(text = fcn), envir = bigRG@grid[var.subs[[i]], , drop = FALSE]))
+        if(!is.matrix(tmp)) tmp = matrix(tmp, nrow = 1)
         delta.var = apply(tmp, 1, function(.) mean(diff(.)))
     }
     

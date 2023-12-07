@@ -8,6 +8,8 @@ title: "NEWS for the emmeans package"
   * Fix to `MuMIn` support with `subset` argument (#455)
   * Repair to coding error for nested models (#457)
   * Added `glmtoolbox::glmgee` support (#454)
+  * `qdrg()` modified such that we often don't need to specify `data` when
+    `object` is specified.
     
 
 ## emmeans 1.8.9
