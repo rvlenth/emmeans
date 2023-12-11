@@ -73,30 +73,42 @@ recover_data.rq = function(object, ...) {
 }
     
 #' @exportS3Method emm_basis rq           
-emm_basis.rq = function(object, trms, xlev, grid, tau = 0.5, ...) {
-    taudiff = abs(object$tau - tau)
-    col = which(taudiff < 0.0001)
-    if (length(col) == 0)
-        stop("No coefficients available for tau = ", tau)
+emm_basis.rq = function(object, trms, xlev, grid, ...) {
+    tau = object$tau
+    ### Let's just throw out the tau argument altogether. We can use 'at' if we want
+    # taucols = sapply(tau, \(t) {
+    #     w = which(abs(object$tau - t) < 0.0001)
+    #     ifelse(length(w) == 1, w, NA) })
+    # tau = tau[!is.na(taucols)]
+    # taucols = taucols[!is.na(taucols)]
+    # if (length(taucols) == 0)
+    #     stop("No valid 'tau' values were specified")
     bhat = object$coefficients
     summ = summary(object, covariance = TRUE, ...)
-    if (length(taudiff) == 1) {
-        V = summ$cov
-        df = summ$rdf
-    }
-    else {
-        bhat = bhat[, col[1]]
-        V = summ[[col]] $ cov
-        df = summ[[col]] $ rdf
-    }
     nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     assign = attr(X, "assign")
     X = X[, nm, drop = FALSE]
-    bhat = as.numeric(bhat) 
+    if(is.matrix(bhat)) {
+        # bhat = bhat[, taucols, drop = FALSE]
+        k = ncol(bhat)
+        X = kronecker(diag(k), X)
+        p = nrow(bhat)
+        V = matrix(NA, nrow = length(bhat), ncol = length(bhat))
+        for(j in 1:k) {
+            jj = seq_len(p) + p*(j - 1)
+            V[jj, jj] = summ[[j]] $ cov
+        }
+        df = summ[[1]] $ rdf
+    }
+    else {
+        V = summ$cov
+        df = summ$rdf
+    }
+    bhat = as.numeric(bhat)
     nbasis = estimability::all.estble
-    misc = list()
+    misc = list(ylevs = list(tau = tau))
     dfargs = list(df = df)
     dffun = function(k, dfargs) dfargs$df
     list(X = X, bhat = bhat, nbasis = nbasis, V = V, 

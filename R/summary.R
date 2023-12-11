@@ -575,7 +575,13 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     # get vcov matrix only if needed (adjust == "mvt")
     corrmat = sch.rank = NULL
     if (adjust %.pin% "mvt") { ##(!is.na(pmatch(adjust, "mvt"))) {
-        corrmat = cov2cor(vcov(object))
+        vvv = vcov(object)
+        if(any(is.na(vvv))) {
+            warning("'mvt' adjustment not available due to missing values")
+            corrmat = .diag(rep(NA, nrow(vvv)))
+        }
+        else
+            corrmat = cov2cor(vvv)
         attr(corrmat, "by.rows") = by.rows
     }
     else if (adjust %.pin% "scheffe") {  ##(!is.na(pmatch(adjust, "scheffe"))) {

@@ -10,6 +10,9 @@ title: "NEWS for the emmeans package"
   * Added `glmtoolbox::glmgee` support (#454)
   * `qdrg()` modified such that we often don't need to specify `data` when
     `object` is specified.
+  * Support for for `rq`, `rqs` now incorporates all `tau` values in the model 
+    as a pseudofactor (#458). The `tau` argument itself is deprecated and ignored
+    if specified.
     
 
 ## emmeans 1.8.9
