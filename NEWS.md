@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.8.9-900xxx
+## emmeans 1.9.0
   * Warning message about prior weights was sometimes unnecessary.
     We now suppress it when all the prior weights are equal.
   * Fix to `MuMIn` support with `subset` argument (#455)
