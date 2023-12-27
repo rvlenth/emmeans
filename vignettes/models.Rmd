@@ -102,7 +102,8 @@ Scroll down or follow the links to those groups for more information.
 |rlm          |MASS     |[A](#A)  |inherits `lm` support                                        |
 |rms          |rms      |[O](#O)  |`mode = ("middle", "latent", "linear.predictor",`            |
 |             |         |         |`"cum.prob", "exc.prob", "prob", "mean.class")`              |
-|rq,rqs       |quantreg |[Q](#Q)  |Creates pseudo-factor `tau` with levels `object$tau`         |
+|rq,rqs       |quantreg |[Q](#Q)  |`tau = object$tau`                                           |
+|             |         |         |Creates a pseudo-factor `tau` with levels `tau`              |
 |             |         |         |Optional: `se`, `R`, `bsmethod`, etc.                        |
 |rlmerMod     |robustlmm|[P](#P)  |Supported in **robustlmm** package                           |
 |rsm          |rsm      |[P](#P)  |Supported in **rsm** package                                 |
@@ -453,7 +454,7 @@ other package's support overrides it.
 ## Q -- Quantile regression {#Q}
 
 The elements
-of `object$tau` are included in the reference grid as a pseudo-factor named
+of `tau` are included in the reference grid as a pseudo-factor named
 `tau`. In these models, the covariance matrix is obtained via the model's
 `summary()` method with `covariance = TRUE`. The user may specify one or more of
 the other arguments for `summary` (e.g., `se = "boot"`) or to be passed to the `...`
@@ -465,9 +466,10 @@ different `tau`s. Thus, a contrast involving different `tau`s can be estimated
 but its SE will be `NA`. Also, due to `NA`s in the covariance matrix, the
 `"mvt"` adjustment is unavailable.
 
-*Note:* Older versions of `this`rq` and `rqs` support required an argument `tau` 
-which is now deprecated and ignored if specified. If you want a particular
-subset of the `tau` values, use the `at` argument to `ref_grid`.
+*Note:* Older versions of this `rq` and `rqs` support *required* `tau`; now it is
+optional. Only `tau` values included in `object$tau` are allowed; others are
+silently ignored. It is more efficient (and less memory-greedy) to specify `tau` 
+than to subset them using the `at` argument to `ref_grid`.
 
 
 

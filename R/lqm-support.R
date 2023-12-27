@@ -73,16 +73,14 @@ recover_data.rq = function(object, ...) {
 }
     
 #' @exportS3Method emm_basis rq           
-emm_basis.rq = function(object, trms, xlev, grid, ...) {
-    tau = object$tau
-    ### Let's just throw out the tau argument altogether. We can use 'at' if we want
-    # taucols = sapply(tau, \(t) {
-    #     w = which(abs(object$tau - t) < 0.0001)
-    #     ifelse(length(w) == 1, w, NA) })
-    # tau = tau[!is.na(taucols)]
-    # taucols = taucols[!is.na(taucols)]
-    # if (length(taucols) == 0)
-    #     stop("No valid 'tau' values were specified")
+emm_basis.rq = function(object, trms, xlev, grid, tau = object$tau, ...) {
+    taucols = sapply(tau, \(t) {
+        w = which(abs(object$tau - t) < 0.0001)
+        ifelse(length(w) == 1, w, NA) })
+    tau = tau[!is.na(taucols)]
+    taucols = taucols[!is.na(taucols)]
+    if (length(taucols) == 0)
+        stop("No valid 'tau' values were specified")
     bhat = object$coefficients
     summ = summary(object, covariance = TRUE, ...)
     nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
@@ -91,14 +89,14 @@ emm_basis.rq = function(object, trms, xlev, grid, ...) {
     assign = attr(X, "assign")
     X = X[, nm, drop = FALSE]
     if(is.matrix(bhat)) {
-        # bhat = bhat[, taucols, drop = FALSE]
+        bhat = bhat[, taucols, drop = FALSE]
         k = ncol(bhat)
         X = kronecker(diag(k), X)
         p = nrow(bhat)
         V = matrix(NA, nrow = length(bhat), ncol = length(bhat))
         for(j in 1:k) {
             jj = seq_len(p) + p*(j - 1)
-            V[jj, jj] = summ[[j]] $ cov
+            V[jj, jj] = summ[[taucols[j]]] $ cov
         }
         df = summ[[1]] $ rdf
     }
