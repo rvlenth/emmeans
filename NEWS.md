@@ -4,6 +4,8 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.9.0-90xxxx
   * Restored `tau` argument (now optional) for rq models (#458)
+  * Fixed issue where a multivariate factor having numeric levels may
+    mismatch a level in `at` even when apparently valid (#458)
 
 ## emmeans 1.9.0
   * Warning message about prior weights was sometimes unnecessary.
