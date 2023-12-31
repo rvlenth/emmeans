@@ -439,6 +439,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         level = misc$level
     if(missing(adjust))
         adjust = misc$adjust
+    if(missing(cross.adjust) && !is.null(misc$cross.adjust))
+        cross.adjust = misc$cross.adjust
     if(missing(by))
         by = misc$by.vars
     

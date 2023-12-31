@@ -103,6 +103,9 @@ discussion in \href{../doc/basics.html#pvalues}{\code{vignette("basics", "emmean
 \item{\code{adjust}}{(\code{character)}) is the default for the \code{adjust}
 argument in \code{\link{summary.emmGrid}}.}
 
+\item{\code{cross.adjust}}{(\code{character)}) is the default for the \code{cross.adjust}
+argument in \code{\link{summary.emmGrid}} (used for adjusting between groups).}
+
 \item{\code{famSize}}{(integer) is the number of means involved in a family of
 inferences; used in Tukey adjustment}
 

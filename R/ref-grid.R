@@ -799,9 +799,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         incl.flags = rep(TRUE, nrow(grid))
         for (nm in problems) {
             if (is.numeric(ref.levels[[nm]])) {
-                at[[nm]] = round(at[[nm]], digits = 3)
-                ref.levels[[nm]] = round(ref.levels[[nm]], digits = 3)
-                grid[[nm]] = round(grid[[nm]], digits = 3)
+                dig = 3 - log10(max(abs(ref.levels[[nm]])))
+                at[[nm]] = round(at[[nm]], digits = dig)
+                ref.levels[[nm]] = round(ref.levels[[nm]], digits = dig)
+                grid[[nm]] = round(grid[[nm]], digits = dig)
             }
             # get only "legal" levels
             at[[nm]] = ref.levels[[nm]] = at[[nm]][at[[nm]] %in% ref.levels[[nm]]]

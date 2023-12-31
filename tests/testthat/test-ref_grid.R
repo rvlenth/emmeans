@@ -59,4 +59,11 @@ test_that("We can construct multivariate reference grid", {
     expect_equal(nrow(MOats.rg@grid), 72)
     expect_equal(length(MOats.rg@levels), 4)
 })
+MOats.nrg <- ref_grid (MOats.lm, mult.levs = list(nitro = c(0,.2,.4,.6)),
+                       at = list(nitro = c(0.0001, .39998, .5)))
+test_that("Fuzzy matching of numerical mult.levels works", {
+    expect_equal(length(MOats.nrg@levels$nitro), 2)
+    expect_equal(MOats.nrg@levels$nitro, c(0, .4), 0.001)
+})
+
 

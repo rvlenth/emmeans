@@ -235,6 +235,9 @@ vcov.emmGrid = function(object, ..., sep = get_emm_option("sep")) {
 #' \item{\code{adjust}}{(\code{character)}) is the default for the \code{adjust}
 #' argument in \code{\link{summary.emmGrid}}.}
 #' 
+#' \item{\code{cross.adjust}}{(\code{character)}) is the default for the \code{cross.adjust}
+#' argument in \code{\link{summary.emmGrid}} (used for adjusting between groups).}
+#' 
 #' \item{\code{famSize}}{(integer) is the number of means involved in a family of
 #' inferences; used in Tukey adjustment}
 #' 
@@ -467,7 +470,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 }
 
 ### List of valid strings to match in update() ###
-.valid.misc = c("adjust","alpha","avgd.over","bias.adjust","by.vars","calc","delta","df",
+.valid.misc = c("adjust","alpha","avgd.over","bias.adjust","by.vars","calc",
+                "cross.adjust", "delta","df",
                "initMesg","estName","estType","famSize","frequentist","infer","inv.lbl",
                "level","methDesc","nesting","null","predict.type","pri.vars",
                "side","sigma","tran","tran.mult","tran.offset","tran2","type","is.new.rg",
