@@ -7,6 +7,12 @@ assignees: ''
 
 ---
 
+## Please ensure that you are in the right place
+Some model classes have their **emmeans** support in another package -- 
+e.g., the one that defines the model class itself. If so, you should
+consider directing your question to that package, rather than to **emmeans**.
+
+
 ## Explain your question
 Tell me your concern, and illustrate it using enough code and output that I 
 can reproduce it, and enough output (including annotations and messages) 

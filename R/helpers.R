@@ -792,14 +792,20 @@ recover_data.glmgee = function(object, ...) {
 
 #' @exportS3Method emm_basis glmgee
 emm_basis.glmgee = function(object, trms, xlev, grid, vcov.method = "robust", ...) {
-    vcov. = vcov(object, type = vcov.method, ...)
+    vcov. = if(is.character(vcov.method))
+        vcov(object, type = vcov.method, ...)
+    else
+        vcov.method
     class(object) = c("glm", "lm") # pretend it's glm
-    emm_basis(object, trms = trms, xlev = xlev, grid = grid, vcov. = vcov., ...)
+    rtn = emm_basis(object, trms = trms, xlev = xlev, grid = grid, vcov. = vcov., ...)
+    rtn$misc$initMesg = paste("Covariance estimate used:",
+        ifelse(is.character(vcov.method), vcov.method, "user-supplied"))
+    rtn
 }
 
 
 
-### survey pacvkage
+### survey package
 # svyglm class
 #' @exportS3Method recover_data svyglm
 recover_data.svyglm = function(object, data = NULL, ...) {

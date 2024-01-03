@@ -7,6 +7,9 @@ title: "NEWS for the emmeans package"
   * Fixed issue where a multivariate factor having numeric levels may
     mismatch a level in `at` even when apparently valid (#458)
   * Added `cross.adjust` to legal arguments that can be passed via `misc` slot
+  * Robustified code for `cross.adjust`
+  * Fixed masking of `vcov.` in `glmgee` support (#460)
+  
 
 ## emmeans 1.9.0
   * Warning message about prior weights was sometimes unnecessary.

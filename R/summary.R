@@ -685,13 +685,14 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
             val = c("sidak", p.adjust.methods)
             w = pmatch(tolower(cross.adjust), tolower(val))
             if (!is.na(w)) {
+                bridx = unlist(by.rows)
                 cross.adjust = val[w]
-                mat = matrix(result$p.value, nrow = len)
+                mat = matrix(result$p.value[bridx], nrow = len)
                 apv = apply(mat, 1, function(p) {
                     if (w > 1)   p.adjust(p, cross.adjust)
                     else         1 - (1 - p)^ncol(mat)
                 })
-                result$p.value = as.numeric(t(apv))
+                result$p.value[bridx] = as.numeric(t(apv))
                 mesg = c(mesg, paste("Cross-group P-value adjustment:", cross.adjust))
             }
             else
