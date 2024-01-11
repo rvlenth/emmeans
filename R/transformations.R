@@ -37,30 +37,33 @@
 #' transformation was already applied in an existing model).
 #' 
 #'
-#' @param type The name of the transformation. See Details.
-#' @param alpha,beta Numeric parameters needed for the transformation.
-#'   See Details.
+#' @param type The name of a standard transformation supported by \code{stat::make.link},
+#' or of a special transformation described under Details.
+#' @param alpha,beta Numeric parameters needed for special transformations.
 #' @param param If non-missing, this specifies either
 #'   \code{alpha} or \code{c(alpha, beta)} (provided for backward compatibility).
 #'   Also, for the same reason, if \code{alpha} is of length more than 1,
 #'   it is taken as \code{param}.
-#' @param y A response variable. With \code{type = "scale"}, the results determine 
-#'   \code{alpha} and \code{beta}.
+#' @param y A numeric response variable used (\emph{and required}) with \code{type = "scale"}, 
+#'   where \code{scale(y)} determines \code{alpha} and \code{beta}.
+#' @param inner another transformation. See the section on compound transformations
 #' @param ... Additional arguments passed to other functions/methods
 #'
 #'
 #' @section Details:
 #' The \code{make.tran} function returns a
-#' suitable list of functions for several popular transformations that are not 
-#' already provided elsewhere. Besides being
+#' suitable list of functions for several popular transformations. Besides being
 #' usable with \code{update}, the user may use this list as an enclosing
 #' environment in fitting the model itself, in which case the transformation is
 #' auto-detected when the special name \code{linkfun} (the transformation
 #' itself) is used as the response transformation in the call. See the examples
 #' below.
 #' 
-#' Most of the transformations available in \code{make.tran} require parameters, 
-#' specified as \code{alpha} and \code{beta}; in the following discussion, 
+#' The primary purpose of \code{make.tran} is to support transformations that
+#' require additional parameters, specified as \code{alpha} and \code{beta};
+#' these are the onse shown in the argument-matching list. However, standard
+#' transformations supported by \code{stats::make.link} are also supported.
+#' In the following discussion of ones requiring parameters, 
 #' we use \eqn{\alpha} and \eqn{\beta} to
 #' denote \code{alpha} and \code{beta}, and \eqn{y} to denote the response variable.
 #' The \code{type} argument specifies the following transformations:
@@ -108,7 +111,8 @@
 #' both are regarded as estimates of \eqn{2\sqrt\mu}.
 #' 
 #' @section Cases where \code{make.tran} may not be needed:
-#' Often, just the name of the transformation is all that is needed.
+#' For standard transformations with no parameters, we usually don't need to use
+#' \code{make.tran}; just the name of the transformation is all that is needed.
 #' The functions \code{\link{emmeans}}, \code{\link{ref_grid}}, and related ones
 #' automatically detect response transformations that are recognized by
 #' examining the model formula. These are \code{log}, \code{log2}, \code{log10},
@@ -121,14 +125,25 @@
 #' appropriately scaled (see also the \code{tran.mult} argument in
 #' \code{\link{update.emmGrid}}).
 #' 
-#' A few additional character strings may be supplied as the \code{tran}
-#' argument in \code{\link{update.emmGrid}}: \code{"identity"},
-#' \code{"1/mu^2"}, \code{"inverse"}, \code{"reciprocal"}, \code{"log10"}, \code{"log2"}, \code{"asin.sqrt"},
-#' and \code{"asinh.sqrt"}.
-
+#' A few additional transformations may be specified as character strings and
+#' are auto-detected: \code{"identity"}, \code{"1/mu^2"},
+#' \code{"inverse"}, \code{"reciprocal"}, \code{"log10"}, \code{"log2"},
+#' \code{"asin.sqrt"}, \code{"asinh.sqrt"}, and \code{"atanh"}.
+#' 
+#'
+#' @section Compound transformations:
+#' A transformation that is a function of another function can be created by
+#' specifying \code{inner} for the other function. For example, the
+#' transformation \eqn{1/\sqrt{y}} can be created either by
+#' \code{make.tran("inverse", inner = "sqrt")} or by \code{make.tran("power",
+#' -0.5)}. In principle, transformations can be compounded to any depth.
+#' Also, if \code{type} is \code{"scale"}, \code{y} is replaced by 
+#' \code{inner$linkfun(y)}, because that will be the variable that is scaled.
+#' 
 #' @return A \code{list} having at least the same elements as those returned by
 #'   \code{\link{make.link}}. The \code{linkfun} component is the transformation
-#'   itself.
+#'   itself. Each of the functions is associated with an environment where any 
+#'   parameter values are defined.
 #' 
 #' @note The \code{genlog} transformation is technically unneeded, because
 #'   a response transformation of the form \code{log(y + c)} is now auto-detected 
@@ -160,9 +175,14 @@
 #' mod.aov <- aov(scale(yield[, 1]) ~ Variety + Error(Block), data = MOats)
 #' emm.aov <- suppressWarnings(emmeans(mod.aov, "Variety", type = "response"))
 #' 
-#' # Scaling was not retrieved, so we can do:
+#' # Scaling was not retrieved, but we can do:
 #' emm.aov <- update(emm.aov, tran = make.tran("scale", y = MOats$yield[, 1]))
 #' emmeans(emm.aov, "Variety", type = "response")
+#' 
+#' ### Compound transformations
+#' # The following amount to the same thing:
+#' t1 <- make.tran("inverse", inner = "sqrt")
+#' t2 <- make.tran("power", -0.5)
 #' 
 #' options(copt)
 #'
@@ -174,8 +194,22 @@
 #' }
 make.tran = function(type = c("genlog", "power", "boxcox", "sympower", 
                               "asin.sqrt", "atanh", "bcnPower", "scale"), 
-                              alpha = 1, beta = 0, param, y, ...) {
-    type = match.arg(type)
+                              alpha = 1, beta = 0, param, y, inner, ...) {
+    if(!missing(inner)){
+        if(type == "scale") {
+            if(is.character(inner))
+                inner = make.tran(inner)
+            y = inner$linkfun(y)
+        }
+        return(.make.compound.link(make.tran(type, alpha, beta, param, y), inner))
+    }
+    
+    txt = type
+    type = try(match.arg(type), silent = TRUE)
+    if(inherits(type, "try-error"))
+        return(.make.link(txt))
+    remove(list = "txt")
+    
     # backward compat
     if(length(alpha) > 1) param = alpha  # unnamed parem
     if (!missing(param)) {
@@ -303,6 +337,22 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
                alpha = alpha, beta = beta, 
                name = paste0("scale(", signif(alpha, 3), ", ", signif(beta, 3), ")")
            )
+    )
+}
+
+# Create a compound link function f(g(y)) where outer and inner are make.link results
+.make.compound.link = function(outer, inner, ...) {
+    if(is.character(inner))
+        inner = make.tran(inner)
+    name = outer$name
+    if(length(grep("mu", name)) == 0) name = paste0(name, "(mu)")
+    name = gsub("mu", inner$name, name)
+    list(
+        linkfun = function(mu) outer$linkfun(inner$linkfun(mu)),
+        linkinv = function(eta) inner$linkinv(outer$linkinv(eta)),
+        mu.eta = function(eta) inner$mu.eta(outer$linkinv(eta))*outer$mu.eta(eta),
+        valideta = function(eta) inner$valideta(outer$linkinv(eta)),
+        name = name
     )
 }
 

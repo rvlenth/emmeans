@@ -9,6 +9,9 @@ title: "NEWS for the emmeans package"
   * Added `cross.adjust` to legal arguments that can be passed via `misc` slot
   * Robustified code for `cross.adjust`
   * Fixed masking of `vcov.` in `glmgee` support (#460)
+  * Fixed an error in `xtable()` method for `summary_emm` objects
+  * Added `inner` argument to `make.tran()` to allow for compound transform;
+    e.g., `make.tran("inverse", inner = "sqrt")` is reciprocal sqrt (#462)
   
 
 ## emmeans 1.9.0

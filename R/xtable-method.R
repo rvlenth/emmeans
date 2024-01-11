@@ -86,7 +86,7 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
         attr(xList, "subheadings") = labs
     }
     else {
-        xList = list(as.data.frame(x))
+        xList = list(data.frame(x))
     }
     attr(xList, "message") = attr(x, "mesg")
     result = xtable::xtableList(xList, caption = caption, label = label, 
