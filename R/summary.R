@@ -1315,7 +1315,7 @@ as.data.frame.emmGrid = function(x,
     nm = dimnames(m)[[2]]
     for (j in seq_len(length(nm))) {
         if(just[nm[j]] == "L") 
-            nm[j] = format(nm[j], width = nchar(m[1,j]), just="left")
+            nm[j] = format(nm[j], width = nchar(m[1,j]), justify = "left")
     }
     dimnames(m) = list(rep("", nrow(m)), nm)
     m
