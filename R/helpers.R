@@ -340,6 +340,12 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
     #     stop()
     # }
     
+    if(is.null(data)) {
+        vars = all.vars(eval(object$call[[2]]))
+        lst = lapply(vars, get)
+        names(lst) = vars
+        data = data.frame(lst)
+    }
     A = object$apVar
     theta = attr(A, "Pars")
     V = object[[Vname]]
@@ -349,10 +355,24 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
     y = data[[yname]]
     n = length(y)
     object$call[[2]] = call
-    dat = t(replicate(2 + extra.iter + length(theta), {
-        data[[yname]] = y + sig * rnorm(n)
-        mod = update(object, data = data)
-        c(attr(mod$apVar, "Pars") - theta, as.numeric(mod[[Vname]] - V))
+    # we're gonna carefully check simulation results to make sure we didn't
+    # lose (or gain?) any params so that everything conforms
+    niter = 0
+    nsim = 2 + extra.iter + length(theta)
+    dat = t(replicate(nsim, {
+        simt = simv = numeric(0)
+        niter = niter + 1
+        while((niter < 3 * nsim) && 
+              ((length(simv) != length(V)) || (length(simt) != length(theta)))) {
+            data[[yname]] = y + sig * rnorm(n)
+            mod = update(object, data = data)
+            simt = attr(mod$apVar, "Pars")
+            simv = mod[[Vname]]
+        }
+        niter = niter + 1
+        if (niter > 3 * nsim) 
+            stop("Too many simulations due to inconsistency")
+        c(simt - theta, as.numeric(simv - V))
     }))
     dimnames(dat) = c(NULL, NULL)
     xcols = seq_along(theta)
@@ -390,11 +410,13 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
 
 ### new way to get jacobians for gls models
 gls_grad = function(object, call, data, V) {
+    if (is.null(data)) 
+        data = environment(eval(call$model))
     obj = object$modelStruct
     conLin = object
     class(conLin) = class(obj)
     X = model.matrix(eval(call$model), data = data)
-    y = data[[all.vars(call)[1]]]
+    y = eval(call$model[[2]], envir = data)
     conLin$Xy = cbind(X, y)
     conLin$fixedSigma = FALSE
     func = function(x) {
