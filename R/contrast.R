@@ -92,6 +92,13 @@ contrast = function(object, ...)
 #'   names of factors that don't exist are silently ignored. 
 #'   To enhance the labels beyond what is done here, change them
 #'   directly via \code{\link[=update.emmGrid]{levels<-}}.
+#' @param wts The \code{wts} argument for some contrast methods. You should omit
+#'   this argument unless you want unequal \code{wts}. Otherwise we recommend
+#'   specifying \code{wts = NA} which instructs that \code{wts} be obtained from
+#'   \code{object}, \emph{separately} for each \code{by} group. If numerical
+#'   \code{wts} are specified, they must
+#'   conform to the number of levels in each \code{by} group, and those same weights
+#'   are used in each group. 
 #'
 #' @param ... Additional arguments passed to other methods
 #'
@@ -199,7 +206,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
                         by, offset = NULL, scale = NULL, name = "contrast", 
                         options = get_emm_option("contrast"), 
                         type, adjust, simple, combine = FALSE, ratios = TRUE, 
-                        parens, enhance.levels = TRUE, ...) 
+                        parens, enhance.levels = TRUE, wts, ...) 
 {
     if (!missing(type))
         options = as.list(c(options, predict.type = type))
@@ -326,6 +333,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     }
     attr(levs, "raw") = rawlevs # so we can recover original levels when needed
     
+    variable.cmat = FALSE
     if (is.list(method)) {
         cmat = as.data.frame(method, optional = TRUE)
         # I have no clue why they named that argument 'optional',
@@ -338,13 +346,22 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             get(fn) 
         else 
             stop(paste("Contrast function '", fn, "' not found", sep=""))
+        if(!missing(wts) && any(is.na(wts))) {
+            variable.cmat = TRUE
+            all.wts = weights(object)
+            wts = if(!is.null(by))   rep(1, length(levs))
+                  else               all.weights
+        }
+        if(missing(wts))
+            wts = rep(1, length(levs))
     }
+
     # case like in old lsmeans, contr = list
     else if (!is.function(method))
         stop("'method' must be a list, function, or the basename of an '.emmc' function")
     
     # Get the contrasts; this should be a data.frame
-    cmat = method(levs, ...)
+    cmat = method(levs, wts = wts, ...)
     if (!is.data.frame(cmat))
         stop("Contrast function must provide a data.frame")
     else if(ncol(cmat) == 0) {
@@ -363,6 +380,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             stop("'scale' length of ", length(scale), 
                  " does not conform with ", nrow(tcmat), " contrasts", call. = FALSE)
     }
+    else
+        scale = 1
     
     # do some bookkeeping whereby we get NAs only when NA rows get nonzero weight
     NAflag = linfct[, 1] * 0
@@ -384,6 +403,16 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     # Irregular grids are handled by .nested_contrast
     else {
         tcmat = kronecker(.diag(rep(1,length(by.rows))), tcmat)
+        if(variable.cmat) { # we have to replace each block
+            rowidx = seq_len(ncol(cmat))  # note we're working with transpose
+            colidx = seq_len(nrow(cmat))
+            for(i in seq_along(by.rows)) {
+                wts = all.wts[by.rows[[i]]]
+                tcmat[rowidx, colidx] = t(method(levs, wts = wts, ...)) * scale
+                rowidx = rowidx + ncol(cmat)
+                colidx = colidx + nrow(cmat)
+            }
+        }
         linfct = tcmat %*% linfct[unlist(by.rows), , drop = FALSE]
         linfct[.NArows(tcmat, NAflag[unlist(by.rows)]), ] = NA
         tmp = expand.grid(con = names(cmat), by = seq_len(length(by.rows)), stringsAsFactors = FALSE)###unique(by.id))
@@ -391,7 +420,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         for (i in 1 + seq_along(by.rows[-1])) { 
             j = by.rows[[i]]
             if (any(all.levs[j] != levs)) {
-                cm = method(all.levs[j], ...)
+                cm = method(all.levs[j], wts = wts, ...)
                 tmp$con[seq_along(cm) + length(cm)*(i-1)] = names(cm)
             }
         }
@@ -581,5 +610,19 @@ coef.emmGrid = function(object, ...) {
     cc = as.data.frame(t(cc))
     names(cc) = paste("c", seq_len(ncol(cc)), sep = ".")
     cbind(object@misc$orig.grid, cc)
+}
+
+#' @rdname contrast
+#' @importFrom stats weights
+#' @return \code{weights} returns the weights stored for each row of \code{object},
+#'    or a vector of 1s if no weights are saved.
+#' @method weights emmGrid
+#' @export
+weights.emmGrid = function(object, ...) {
+    if(is.null(rtn <- object@grid[[".wgt."]]))
+        rtn = rep(1, nrow(object@grid))
+    if(!is.null(object@misc$display))
+        rtn = rtn[object@misc$display]
+    rtn
 }
 

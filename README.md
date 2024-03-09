@@ -86,6 +86,9 @@ remotes::install_github("rvlenth/emmeans")
 For the latest release notes on this development version, see the 
 [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS.md)
 
+## Interview with an erstwhile expert
+In February, 2024, I interviewed ChatGPT (version 3.5) about the **emmeans** package. Some things it did better than others. [Here's the conversation](https://chat.openai.com/share/fc943cdd-8a42-408e-85c0-f3e47e1b2760).
+
 ## Supersession plan
 The developer of **emmeans** continues to maintain and occasionally add new
 features. However, none of us is immortal; and neither is software. I have

@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2022 Russell V. Lenth                                #
+#    Copyright (c) 2012-2024 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -20,6 +20,7 @@
 ##############################################################################
 
 # rbind method for emmGrid objects
+# ... and some other methods
 
 #' Combine or subset \code{emmGrid} objects
 #'

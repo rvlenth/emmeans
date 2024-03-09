@@ -6,6 +6,15 @@ title: "NEWS for the emmeans package"
   * With `gls` or `lme` models, `mode = "satterthwaite"`
     and `mode =  "appx-satterthwaite"` failed when model was fitted with no
     explicit `data` argument (#465)
+  * We decided to export the `.emmc` functions, just to make it easier to
+    see and use them
+  * Added a new contrast function `wtcon.emmc(levs, wts, cmtype, ...)` which
+    generates contrasts via `multcomp::contrMat(wts, type = cmtype, ...)`
+  * `contrast()` gains a new argument `wts` which can be passed to some
+    `.emmc` functions including `eff.emmc`, `del.eff.emmc`, and `wtcon.emmc`.
+    If `wts` is left missing, we pass equal weights of `. If we specify
+    `wts = NA`, we retrieve weights from the object (potentially different in
+    each `by` group). Otherwise, the same fixed `wts` are used in each group.
    
 
 ## emmeans 1.10.0
