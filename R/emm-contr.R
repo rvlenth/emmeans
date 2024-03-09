@@ -82,6 +82,14 @@
 #' respectively, as in subtracting the overall EMM from each EMM. The default
 #' multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based
 #' method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
+#' 
+#' \code{wtcon.emmc} generates weighted contrasts based on the function 
+#' \code{\link[multcomp]{contrMat}} function in the \pkg{multcomp} package,
+#' using the provided \code{type} as documented there. If the user provides 
+#' \code{wts}, they have to conform to the length of \code{levs}; however,
+#' if \code{wts} is not specified, \code{contrast} will fill-in what is
+#' required, and usually this is safer (especially when \code{by != NULL}
+#' which usually means that the weights are different in each \code{by} group).
 #'
 #' \code{identity.emmc} simply returns the identity matrix (as a data frame),
 #' minus any columns specified in \code{exclude}. It is potentially useful in
@@ -144,6 +152,7 @@
 #' emmeans:::poly.emmc(1:6)
 #' }
 #' @name contrast-methods
+#' @export
 pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     exclude = .get.excl(levs, exclude, include)
     k = length(levs)
@@ -170,6 +179,7 @@ pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
 
 # all pairwise trt[j] - trt[i], j > i
 #' @rdname emmc-functions
+#' @export
 revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     exclude = .get.excl(levs, exclude, include)
     k = length(levs)
@@ -196,6 +206,7 @@ revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
 # pseudonym
 #' @rdname emmc-functions
 #' @param reverse Logical value to determine the direction of comparisons
+#' @export
 tukey.emmc = function(levs, reverse = FALSE, ...) {
     if (reverse)
         revpairwise.emmc(levs, ...)
@@ -207,6 +218,7 @@ tukey.emmc = function(levs, reverse = FALSE, ...) {
 # ad hoc scaling works for up to 13 levels
 #' @rdname emmc-functions
 #' @param max.degree Integer specifying the maximum degree of polynomial contrasts
+#' @export
 poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
     nm = c("linear", "quadratic", "cubic", "quartic", paste("degree",5:20))
     k = length(levs)
@@ -235,6 +247,7 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 #' @param ref Integer(s) or character(s) specifying which level(s) to use 
 #'   as the reference. Character values must exactly match elements of \code{levs}
 #'   (including any enhancements -- see examples)
+#' @export
 trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, 
                             exclude = integer(0), include, ...) {
     ref = .num.key(levs, ref)
@@ -274,18 +287,21 @@ trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE,
 
 # control is 1st level
 #' @rdname emmc-functions
+#' @export
 trt.vs.ctrl1.emmc = function(levs, ref = 1, ...) {
     trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
 
 # control is last level
 #' @rdname emmc-functions
+#' @export
 trt.vs.ctrlk.emmc = function(levs, ref = length(levs), ...) {
     trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
 
 # pseudonym for trt.vs.ctrl
 #' @rdname emmc-functions
+#' @export
 dunnett.emmc = function(levs, ref = 1, ...) {
     trt.vs.ctrl.emmc(levs, ref = ref, ...)
 }
@@ -300,6 +316,7 @@ dunnett.emmc = function(levs, ref = 1, ...) {
 #'   In the former case, weights for any excluded levels are set to zero.
 #'   \code{wts} has no impact on the results unless there are at least
 #'   three levels included in the contrast.
+#' @export
 eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(levs)), ...) {
     exclude = .get.excl(levs, exclude, include)
     if ((length(exclude) > 0) && (length(wts) == length(levs) - length(exclude))) {
@@ -328,6 +345,7 @@ eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(lev
 }
 
 #' @rdname emmc-functions
+#' @export
 del.eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(levs)), ...) {
     M = eff.emmc(levs, exclude, include, wts, ...)
     use = setdiff(seq_along(levs), .get.excl(levs, exclude, include))
@@ -340,6 +358,7 @@ del.eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length
 # Contrasts to compare consecutive levels:
 # (-1,1,0,0,...), (0,-1,1,0,...), ..., (0,...0,-1,1)
 #' @rdname emmc-functions
+#' @export
 consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...) {
     exclude = .get.excl(levs, exclude, include)
     sgn = ifelse(reverse, -1, 1)
@@ -370,6 +389,7 @@ consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...
 # Mean after minus mean before
 # e.g., (-1, 1/3,1/3,1/3), (-1/2,-1/2, 1/2,1/2), (-1/3,-1/3,-1/3, 1)
 #' @rdname emmc-functions
+#' @export
 mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...) {
     exclude = .get.excl(levs, exclude, include)
     sgn = ifelse(reverse, -1, 1)
@@ -391,6 +411,20 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, .
     attr(M, "adjust") = "mvt"
     if(length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
+    M
+}
+
+
+# weighted contrasts
+#' @rdname emmc-functions
+#' @param cmtype the \code{type} argument passed to \code{\link[multcomp]{contrMat}}
+#' @export
+wtcon.emmc = function(levs, wts, cmtype = "GrandMean", ...) {
+    if (!requireNamespace("multcomp"))
+        stop("The 'multcomp' package must be installed to use 'wtcon' contrasts", call. = FALSE)
+    
+    names(wts) = levs
+    M = data.frame(t(multcomp::contrMat(wts, type = cmtype, ...)))
     M
 }
 

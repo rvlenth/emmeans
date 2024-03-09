@@ -15,6 +15,7 @@
 \alias{del.eff.emmc}
 \alias{consec.emmc}
 \alias{mean_chg.emmc}
+\alias{wtcon.emmc}
 \alias{identity.emmc}
 \title{Contrast families}
 \usage{
@@ -44,6 +45,8 @@ del.eff.emmc(levs, exclude = integer(0), include, wts = rep(1,
 consec.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
 mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
+
+wtcon.emmc(levs, wts, cmtype = "GrandMean", ...)
 
 identity.emmc(levs, exclude = integer(0), include, ...)
 }
@@ -75,6 +78,8 @@ either the same length as \code{levs} or the length of the included levels.
 In the former case, weights for any excluded levels are set to zero.
 \code{wts} has no impact on the results unless there are at least
 three levels included in the contrast.}
+
+\item{cmtype}{the \code{type} argument passed to \code{\link[multcomp]{contrMat}}}
 }
 \value{
 A data.frame, each column containing contrast coefficients for levs.
@@ -137,6 +142,14 @@ For a set of k EMMs, \code{del.eff.emmc} gives weight 1 to one EMM and weight
 respectively, as in subtracting the overall EMM from each EMM. The default
 multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based
 method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
+
+\code{wtcon.emmc} generates weighted contrasts based on the function 
+\code{\link[multcomp]{contrMat}} function in the \pkg{multcomp} package,
+using the provided \code{type} as documented there. If the user provides 
+\code{wts}, they have to conform to the length of \code{levs}; however,
+if \code{wts} is not specified, \code{contrast} will fill-in what is
+required, and usually this is safer (especially when \code{by != NULL}
+which usually means that the weights are different in each \code{by} group).
 
 \code{identity.emmc} simply returns the identity matrix (as a data frame),
 minus any columns specified in \code{exclude}. It is potentially useful in

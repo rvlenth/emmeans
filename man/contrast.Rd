@@ -5,6 +5,7 @@
 \alias{contrast.emmGrid}
 \alias{pairs.emmGrid}
 \alias{coef.emmGrid}
+\alias{weights.emmGrid}
 \title{Contrasts and linear functions of EMMs}
 \usage{
 contrast(object, ...)
@@ -12,11 +13,14 @@ contrast(object, ...)
 \method{contrast}{emmGrid}(object, method = "eff", interaction = FALSE, by,
   offset = NULL, scale = NULL, name = "contrast",
   options = get_emm_option("contrast"), type, adjust, simple,
-  combine = FALSE, ratios = TRUE, parens, enhance.levels = TRUE, ...)
+  combine = FALSE, ratios = TRUE, parens, enhance.levels = TRUE, wts,
+  ...)
 
 \method{pairs}{emmGrid}(x, reverse = FALSE, ...)
 
 \method{coef}{emmGrid}(object, ...)
+
+\method{weights}{emmGrid}(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{emmGrid}}
@@ -94,6 +98,14 @@ names of factors that don't exist are silently ignored.
 To enhance the labels beyond what is done here, change them
 directly via \code{\link[=update.emmGrid]{levels<-}}.}
 
+\item{wts}{The \code{wts} argument for some contrast methods. You should omit
+this argument unless you want unequal \code{wts}. Otherwise we recommend
+specifying \code{wts = NA} which instructs that \code{wts} be obtained from
+\code{object}, \emph{separately} for each \code{by} group. If numerical
+\code{wts} are specified, they must
+conform to the number of levels in each \code{by} group, and those same weights
+are used in each group.}
+
 \item{x}{An \code{emmGrid} object}
 
 \item{reverse}{Logical value - determines whether to use \code{"pairwise"} (if \code{TRUE}) or \code{"revpairwise"} (if \code{FALSE}).}
@@ -111,6 +123,9 @@ used to produce the linear functions embodied in the object. \code{coef()} only
 returns coefficients if \code{object} is the result of a call to \code{contrast()},
 and the parent object is the object that was handed to \code{contrast}. This
 is most useful for understanding interaction contrasts.
+
+\code{weights} returns the weights stored for each row of \code{object},
+   or a vector of 1s if no weights are saved.
 }
 \description{
 These methods provide for follow-up analyses of \code{emmGrid} objects:
