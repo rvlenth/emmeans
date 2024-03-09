@@ -15,7 +15,10 @@ title: "NEWS for the emmeans package"
     If `wts` is left missing, we pass equal weights of `. If we specify
     `wts = NA`, we retrieve weights from the object (potentially different in
     each `by` group). Otherwise, the same fixed `wts` are used in each group.
+<<<<<<< HEAD
   * Added a `weights()` method for `emmGrid` objects
+=======
+>>>>>>> 48769cb8d141e56c73bea35bae7bd166dc4c726d
    
 
 ## emmeans 1.10.0
