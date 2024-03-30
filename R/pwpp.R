@@ -141,6 +141,9 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     args$interaction = args$simple = args$offset = NULL
     con = do.call(contrast, args)
     
+    # We allow the con call to change the by variable via options...
+    by = con@misc$by
+    
     args = list(object = emm, infer = c(FALSE, FALSE), by = by, frequentist = TRUE, ...)
     emm.summ = do.call(summary.emmGrid, args)
     
