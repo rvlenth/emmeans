@@ -18,6 +18,9 @@ title: "NEWS for the emmeans package"
   * Added a `weights()` method for `emmGrid` objects
   * Modification to `pwpp()` to play along if `contrast()` changes the
     `by` variable via `options` (#472)
+  * Surrendered, and now allow `strata()` factors to be included in the reference
+    grid for **survival** models. It is up to the user to decide what
+    is sensible. (#429, #473)
 
 
 ## emmeans 1.10.0

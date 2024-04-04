@@ -581,9 +581,9 @@ emm_basis.polr = function(object, trms, xlev, grid,
 recover_data.survreg = function(object, ...) {
     fcall = object$call
     trms = delete.response(terms(object))
-    # I'm gonna delete any terms involving cluster(), frailty(), or strata()
+    # I'm gonna delete any terms involving cluster(), frailty(); keep strata()
     mod.elts = dimnames(attr(trms, "factor"))[[2]]
-    tmp = grep("cluster\\(|frailty\\(|strata\\(", mod.elts)
+    tmp = grep("cluster\\(|frailty", mod.elts)
     if (length(tmp))
         trms = trms[-tmp]
     recover_data(fcall, trms, object$na.action, pwts = weights(object), ...)
@@ -607,7 +607,8 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     usecols = intersect(colnames(X), names(bhat))
     bhat = bhat[usecols]  # in case ref_grid code excluded some levels...
-    nbasis = estimability::nonest.basis(model.matrix(object))
+    X = X[, usecols, drop=FALSE]
+    nbasis = estimability::nonest.basis(model.matrix(object)[, usecols, drop = FALSE])
     dfargs = list(df = object$df.residual)
     dffun = function(k, dfargs) dfargs$df
     if (object$dist %in% c("exponential","weibull","loglogistic","loggaussian","lognormal")) 
@@ -635,7 +636,8 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
     nms = colnames(result$X)
     # delete columns for intercept and main effects of strata
     zaps = which(nms %in% setdiff(nms, names(result$bhat)))
-    result$X = result$X[, -zaps, drop = FALSE]
+    if(length(zaps) > 0)
+        result$X = result$X[, -zaps, drop = FALSE]
     ### result$X = result$X - rep(object$means, each = nrow(result$X))
     result$misc$tran = "log"
     result$misc$inv.lbl = "hazard"
