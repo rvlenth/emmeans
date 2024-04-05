@@ -263,11 +263,15 @@ The user may write a custom contrast function for use in `contrast()`.
 What's needed is a function having the desired name with `".emmc"` appended,
 that generates the needed coefficients as a list or data frame. The
 function should take a vector of levels as its first argument, 
-and any optional parameters as additional arguments. For example,
+and any optional parameters as additional arguments. It should also always have
+a `...` argument to allow for unspecified arguments that may occur in the
+call. 
+
+As an example,
 suppose we want to compare every third level of a treatment. 
 The following function provides for this:
 ```{r}
-skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE) {
+skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE, ...) {
     if((k <- length(levels)) < skip + 1)
         stop("Need at least ", skip + 1, " levels")
     coef <- data.frame()

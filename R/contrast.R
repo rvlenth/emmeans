@@ -350,7 +350,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             variable.cmat = TRUE
             all.wts = weights(object)
             wts = if(!is.null(by))   rep(1, length(levs))
-                  else               all.weights
+                  else               all.wts
         }
         if(missing(wts))
             wts = rep(1, length(levs))
