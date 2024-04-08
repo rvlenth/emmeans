@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.10.1.90xxx
+  * Added a startup message and `help(untidy)`
+  
+
 ## emmeans 1.10.1
   * With `gls` or `lme` models, `mode = "satterthwaite"`
     and `mode =  "appx-satterthwaite"` failed when model was fitted with no

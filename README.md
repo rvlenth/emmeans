@@ -86,8 +86,21 @@ remotes::install_github("rvlenth/emmeans")
 For the latest release notes on this development version, see the 
 [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS.md)
 
-## Interview with an erstwhile expert
-In February, 2024, I interviewed ChatGPT (version 3.5) about the **emmeans** package. Some things it did better than others. [Here's the conversation](https://chat.openai.com/share/fc943cdd-8a42-408e-85c0-f3e47e1b2760).
+## "Tidiness" is dangerous
+I see more and more users who are in a terrible hurry to get results. They develop
+a "workflow" where they plan-out several steps at once and pipe them
+together. That's useful when you don't have to think about what happens in
+those steps; but *when you're doing statistics, you should be thinking!*
+Most functions in the **emmeans** package yield results that are accompanied by 
+annotations such as transformations involved, P-value adjustments
+made, the families for those adjustments, etc. If you just pipe the results
+into some more code, *you never see those annotations*. 
+
+**Please slow down!** Look at the actual results from each **emmeans** package 
+function without any post-processing -- None. That way, you'll see the annotated 
+summaries.
+Statistics is pretty hard stuff. Don't make it harder by blindfolding yourself.
+
 
 ## Supersession plan
 The developer of **emmeans** continues to maintain and occasionally add new
