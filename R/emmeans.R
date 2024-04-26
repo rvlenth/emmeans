@@ -455,7 +455,7 @@ emmeans = function(object, specs, by = NULL,
         result = if (missing(contr))
             .update.options(result, options, ...)
         else
-            .update.options(result, options, ..., exclude = "adjust")
+            .update.options(result, options, ..., exclude.opts = "adjust")
     }
     
     else {  # handle a nested structure
