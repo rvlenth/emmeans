@@ -30,7 +30,7 @@
 #' doing this would be to obtain multiplicity-adjusted results for smaller
 #' or larger families of tests or confidence intervals. 
 #' 
-#' @param ... In \code{rbind}, object(s) of class \code{emmGrid}.
+#' @param ... In \code{rbind}, object(s) of class \code{emmGrid} or \code{summary_emm}.
 #'   In others, additional arguments passed to other methods
 #' @param deparse.level (required but not used)
 #' @param adjust Character value passed to \code{\link{update.emmGrid}}

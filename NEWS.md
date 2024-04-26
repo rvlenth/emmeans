@@ -4,6 +4,12 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.10.1.90xxx
   * Added a startup message and `help(untidy)`
+  * Added `rbind` method for `summary_emm` objects (#480). 
+    Note that `summary_emm` objects already have estimates, P-values, etc.
+    computed, so `rbind`ing them preserves those results. On the other hand,
+    `rbind`ing `emmGrid` or `emm_list` objects produce new `emmGrid` objects
+    which have *not* yet been summarized and any `adjust` methods are applied 
+    to the whole result.
   
 
 ## emmeans 1.10.1

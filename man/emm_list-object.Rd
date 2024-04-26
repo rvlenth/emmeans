@@ -12,6 +12,7 @@
 \alias{summary.emm_list}
 \alias{print.emm_list}
 \alias{as.data.frame.emm_list}
+\alias{as.data.frame.summary_eml}
 \title{The \code{emm_list} class}
 \usage{
 \method{contrast}{emm_list}(object, ..., which = 1)
@@ -33,6 +34,8 @@
 \method{print}{emm_list}(x, ...)
 
 \method{as.data.frame}{emm_list}(x, ...)
+
+\method{as.data.frame}{summary_eml}(x, which, ...)
 }
 \arguments{
 \item{object, x}{an object of class \code{emm_list}}
@@ -46,7 +49,11 @@ a \code{list} of objects returned by the corresponding \code{emmGrid}
   method (thus, often, another \code{emm_list} object). However, if
   \code{which} has length 1, the one result is not wrapped in a list.
 
-The \code{as.data.frame} method returns a single data frame via
+\code{summary.emm_list} returns an object
+of class \code{summary_eml}, which is a list of \code{summary_emm}
+objects.
+
+The \code{as.data.frame} methods return a single data frame via
 \code{as.data.frame(rbind(x))}.
 See also \code{\link{rbind.emm_list}} and \code{\link{as.data.frame.emmGrid}}
 }

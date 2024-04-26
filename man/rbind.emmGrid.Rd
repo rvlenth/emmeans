@@ -8,6 +8,7 @@
 \alias{tail.emmGrid}
 \alias{subset.emmGrid}
 \alias{rbind.emm_list}
+\alias{rbind.summary_emm}
 \alias{force_regular}
 \title{Combine or subset \code{emmGrid} objects}
 \usage{
@@ -25,10 +26,12 @@
 
 \method{rbind}{emm_list}(..., which, adjust = "bonferroni")
 
+\method{rbind}{summary_emm}(..., which)
+
 force_regular(object)
 }
 \arguments{
-\item{...}{In \code{rbind}, object(s) of class \code{emmGrid}.
+\item{...}{In \code{rbind}, object(s) of class \code{emmGrid} or \code{summary_emm}.
 In others, additional arguments passed to other methods}
 
 \item{deparse.level}{(required but not used)}
@@ -55,6 +58,13 @@ The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 
 The \code{rbind} method for \code{emm_list} objects simply combines 
 the \code{emmGrid} objects comprising the first element of \code{...}.
+Note that the returned object is not yet summarized, so any \code{adjust}
+parameters apply to the combined \code{emmGrid}.
+
+The \code{rbind} method for \code{summary_emm} objects (or a list thereof)
+returns a single \code{summary_emm} object. This combined object
+\emph{preserves} any adjusted P values or confidence limits in the
+original summaries, since those quantities have already been computed.
 
 \code{force_regular} adds extra (invisible) rows to an \code{emmGrid} object
   to make it a regular grid (all combinations of factors). This regular structure is 

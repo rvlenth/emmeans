@@ -87,12 +87,15 @@ str.emm_list = function(object, ...) {
 }
 
 
-# summary.emm_list et all take an argument which that allows doing a subset
+# summary.emm_list et al take an argument 'which' that allows doing a subset
 # Each returns a regular 'list'
 
 
 #' @export
 #' @method summary emm_list
+#' @return \code{summary.emm_list} returns an object
+#' of class \code{summary_eml}, which is a list of \code{summary_emm}
+#' objects.
 #' @rdname emm_list-object
 #' @order 13
 summary.emm_list <- function(object, ..., which = seq_along(object)) {
@@ -108,12 +111,15 @@ summary.emm_list <- function(object, ..., which = seq_along(object)) {
 
 #' @export
 summary.summary_eml = function(object, ...) object
+
 #' @export
-as.data.frame.summary_eml = function(x, ...) {
-    for (i in seq_along(x))
-        attr(x[[i]], "digits") = getOption("digits")
-    x
+#' @rdname emm_list-object
+#' @order 25
+#' @method as.data.frame summary_eml
+as.data.frame.summary_eml = function(x, which, ...) {
+    rbind(x, which = which)
 }
+
 #' @export
 print.summary_eml = function(x, ...) {
     attr(x, "class") = NULL
@@ -187,6 +193,8 @@ plot.emm_list = function(x, ..., which = 1) {
 #' @param which Integer vector of subset of elements to use; if missing, all are combined
 #' @return The \code{rbind} method for \code{emm_list} objects simply combines 
 #' the \code{emmGrid} objects comprising the first element of \code{...}.
+#' Note that the returned object is not yet summarized, so any \code{adjust}
+#' parameters apply to the combined \code{emmGrid}.
 #' @export
 #' @method rbind emm_list
 #' @examples
@@ -203,10 +211,69 @@ rbind.emm_list = function(..., which, adjust = "bonferroni") {
     update(do.call(rbind.emmGrid, elobj), adjust = adjust)
 }
 
+#' @rdname rbind.emmGrid
+#' @order 33
+#' @return The \code{rbind} method for \code{summary_emm} objects (or a list thereof)
+#' returns a single \code{summary_emm} object. This combined object
+#' \emph{preserves} any adjusted P values or confidence limits in the
+#' original summaries, since those quantities have already been computed.
+#' @export
+#' @method rbind summary_emm
+rbind.summary_emm = function(..., which) {
+    slobj = list(...)
+    if(!all(sapply(slobj, \(z) inherits(z, "summary_emm"))))
+        stop("All objects must inherit from 'summary_emm'")
+    rbind.summary_eml(slobj, which = which)
+}
+
+#' 
+#' @export
+#' @method rbind summary_eml
+rbind.summary_eml = function(..., which) {
+    x = list(...)[[1]]
+    if(!missing(which))
+        x = x[which]
+    nms.lst = lapply(x, names)
+    bys = unique(do.call(c, lapply(x, \(z) attr(z, "by.vars"))))
+    pris = unique(do.call(c, lapply(x, \(z) attr(z, "pri.vars"))))
+    if (length(x) == 1) {
+        attr(x[[1]], "pri.vars") = c(pris, bys)
+        attr(x[[1]], "by.vars") = NULL
+        return (x[[1]])
+    }
+    nms = pris = union(bys, pris)
+    for (n in nms.lst)
+        nms = union(nms, n)
+    nums = setdiff(nms, pris)  # numeric columns
+    xx = lapply(x, function(df) {
+        d = data.frame(matrix(".", nrow = nrow(df), ncol = length(nms),
+                       dimnames = list(NULL, nms)))
+        d[, nums] = NA
+        d[, names(df)] = df
+        d
+    })
+    rtn = do.call("rbind", xx)
+    row.names(rtn) = NULL
+    class(rtn) = c("summary_emm", "data.frame")
+    attr(rtn, "pri.vars") = pris
+    attr(rtn, "estName") = attr(x[[1]], "estName")
+    mesg = otr.mesg = attr(x[[1]], "mesg")
+    for (i in 2:length(x)) {
+        mesg = intersect(mesg, attr(x[[i]], "mesg"))
+        otr.mesg = union(otr.mesg, attr(x[[i]], "mesg"))
+    }
+    otr.mesg = setdiff(otr.mesg, mesg)
+    if (length(otr.mesg) > 0) 
+        mesg = c(mesg, "The following messages apply only to some rows:",
+                 paste("*", otr.mesg))
+    attr(rtn, "mesg") = mesg
+    rtn
+}
+
 #' @export
 #' @rdname emm_list-object
 #' @order 24
-#' @return The \code{as.data.frame} method returns a single data frame via
+#' @return The \code{as.data.frame} methods return a single data frame via
 #' \code{as.data.frame(rbind(x))}.
 #' See also \code{\link{rbind.emm_list}} and \code{\link{as.data.frame.emmGrid}}
 #' @method as.data.frame emm_list

@@ -4,16 +4,17 @@
 \alias{untidy}
 \title{Dare to be un-"tidy"!}
 \description{
-Users who use \pkg{emmeans} functions as part of a pipeline are likely missing
-important information. That's true also if you post-process the results in any way.
+Users who use \pkg{emmeans} functions as part of a pipeline -- or post-process 
+those results in some other way -- are likely missing some important information.
 }
 \details{
 Your best bet is to display the actual results without any post-processing.
 That's because \code{emmeans} and its relatives have their own \code{summary} 
 and \code{print} methods that display annotations that may be helpful in
 explaining what you have. If you just pipe the results into the next step,
-those annotations are stripped away. Take time to look at the actual results
-and think.
+those annotations are stripped away and you never see them. Statistical
+analysis is not just a workflow; it is a discipline that involves care in
+interpreting intermediate results, and thinking before moving on.
 }
 \examples{
 neur.glm <- glm(Pain ~ Treatment + Sex + Age, family = binomial(),
