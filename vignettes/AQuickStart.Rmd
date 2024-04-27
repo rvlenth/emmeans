@@ -21,8 +21,9 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   4. [Two interacting factors](#interactions)
   5. [Three or more factors](#multi-factor)
   6. [Additional options](#options)
-  7. [Common things that can go wrong](#problems)
-  8. [Further reading](#more)
+  7. [What you see versus what you get](#objects)
+  8. [Common things that can go wrong](#problems)
+  9. [Further reading](#more)
 
 
 ## The three basic steps {#steps}
@@ -127,6 +128,19 @@ three or more factors as appropriate, based on how they interact and what you ne
   2. There are a number of vignettes provided with the package that include
      examples and discussions for different kinds of situations. There is also an 
      [index of vignette topics](vignette-topics.html).
+
+## What you see versus what you get {#objects}
+Most non-graphical functions in the **emmeans** package produce one of two classes of objects. The functions `emmeans()`, `emtrends()`, `ref_grid()`, `contrast()`, and `pairs()` return `emmGrid` objects (or lists thereof, class `emm_list`). For example
+```
+EMM <- emmeans(mod, "Treatment")
+```
+The functions `summary()`, `confint()`, `test()`, `joint_tests()`, and others
+return `summary_emm` objects (or lists thereof, class `summary_eml`):
+```
+SEMM <- summary(EMM)
+```
+If you display `EMM` and `SEMM`, they *look* identical; that's because `emmGrid` objects are displayed using `summary()`. But they are not identical. `EMM` has all the ingredients needed to do further analysis, e.g. `contrast(EMM, "consec")` will estimate comparisons between consecutive `Treatment` means. But `SEMM` is just an annotated data frame and we can do no further analysis with it. Similarly, we can change how `EMM` is displayed via arguments to `summary()` or relatives, whil;e in `SEMM`, everything has been computed and those results are locked-in.
+
 
 ## Common things that can go wrong {#problems}
 

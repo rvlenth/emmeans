@@ -37,7 +37,7 @@
 #' neur.glm <- glm(Pain ~ Treatment + Sex + Age, family = binomial(),
 #'             data = neuralgia)
 #'             
-#' ### The actual results, including annotations:
+#' ### The actual results with annotations (e.g. ests are on logit scale):
 #' emmeans(neur.glm, "Treatment")
 #' 
 #' ### Post-processed results lose the annotations
