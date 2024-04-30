@@ -431,7 +431,7 @@ Similar re-gridding for the log will give us risk ratios.
 It is possible to create a report on an alternative scale by updating the `tran` component.
 For example, suppose we want percent differences instead of ratios in the preceding example
 with the `pigs` dataset. This is possible by modifying the reverse transformation:
-since the uusual reverse transformation is a ratio of the form $r = a/b$, we have that
+since the usual reverse transformation is a ratio of the form $r = a/b$, we have that
 the percentage difference between $a$ and $b$ is $100(a-b)/b = 100(r-1)$. Thus,
 ```{r}
 pct.diff.tran <- list(
