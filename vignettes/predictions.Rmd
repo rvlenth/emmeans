@@ -2,6 +2,8 @@
 title: "Prediction in **emmeans**"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
+pkgdown:
+    as_is: true
 vignette: >
   %\VignetteIndexEntry{Prediction in emmeans}
   %\VignetteEngine{knitr::rmarkdown}

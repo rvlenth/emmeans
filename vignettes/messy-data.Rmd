@@ -2,6 +2,8 @@
 title: "Working with messy data" 
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
+pkgdown:
+    as_is: true
 vignette: > 
   %\VignetteIndexEntry{Working with messy data} 
   %\VignetteEngine{knitr::rmarkdown} 
