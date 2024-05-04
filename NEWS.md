@@ -10,6 +10,7 @@ title: "NEWS for the emmeans package"
     `rbind`ing `emmGrid` or `emm_list` objects produce new `emmGrid` objects
     which have *not* yet been summarized and any `adjust` methods are applied 
     to the whole result.
+  * Created rudemtary [**pkgdown** site](https://rvlenth.github.io/emmeans/)
   
 
 ## emmeans 1.10.1

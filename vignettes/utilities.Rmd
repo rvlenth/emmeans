@@ -2,8 +2,6 @@
 title: "Utilities and options for emmeans"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
-pkgdown:
-    as_is: true
 vignette: >
   %\VignetteIndexEntry{Utilities and options}
   %\VignetteEngine{knitr::rmarkdown}
