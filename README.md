@@ -1,5 +1,6 @@
-R package **emmeans**: Estimated marginal means
+R package **emmeans**: Estimated marginal means <img src="man/figures/logo.png" align="right" />
 ====
+
 
 ## Features
 Estimated marginal means (EMMs, previously known as least-squares means in the
