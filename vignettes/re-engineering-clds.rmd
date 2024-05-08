@@ -59,7 +59,7 @@ Some observers of this chart might say that "`trt1` and `ctrl` are equal" and
 that "`ctrl`, `trt3`, and `trt2` are equal" -- when in fact we have merely
 failed to show they are different. And further confusion results because
 mathematical equality is transitive -- that is, these two statements of equality
-would imply that `trt` and `trt2` must be equal, seemingly contradicting the
+would imply that `trt1` and `trt2` must be equal, seemingly contradicting the
 finding that they are significantly different. Statistical nonsignificance does
 *not* have the transitivity property!
 
