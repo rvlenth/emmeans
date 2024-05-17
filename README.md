@@ -1,9 +1,10 @@
 R package **emmeans**: Estimated marginal means <img src="man/figures/logo.png" align="right" />
 ====
-
+## Website
+https://rvlenth.github.io/emmeans/
 
 ## Features
-Estimated marginal means (EMMs, previously known as least-squares means in the
+Estimated marginal means (EMMs, also known as least-squares means in the
 context of traditional regression models) are derived by using a model to make
 predictions over a regular grid of predictor combinations (called a *reference
 grid*). These predictions may possibly be averaged (typically with equal
@@ -71,7 +72,7 @@ easily produce these results, as well as various graphs of them
     may be viewed.
 
   * **GitHub** To install the latest development version from GitHub, 
-    install the newest version (definitely 2.0 or higher) of the **devtools** 
+    install the newest version of the **devtools** 
     package; then run
     
 ```r
@@ -87,7 +88,7 @@ remotes::install_github("rvlenth/emmeans")
 For the latest release notes on this development version, see the 
 [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS.md)
 
-## "Tidiness" is dangerous
+## "Tidiness" can be dangerous
 I see more and more users who are in a terrible hurry to get results. They develop
 a "workflow" where they plan-out several steps at once and pipe them
 together. That's useful when you don't have to think about what happens in

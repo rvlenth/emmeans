@@ -24,7 +24,7 @@ Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), ggplot2, latt
           xtable (>= 1.8-2)
 Enhances: CARBayes, coxme, gee, geepack, MCMCglmm, MCMCpack, mice, 
           nnet, pscl, rstanarm, sommer, survival         
-URL: https://rvlenth.github.io/emmeans/
+URL: https://rvlenth.github.io/emmeans/,https://rvlenth.github.io/emmeans/
 BugReports: https://github.com/rvlenth/emmeans/issues
 LazyData: yes
 ByteCompile: yes
@@ -37,6 +37,6 @@ Description: Obtain estimated marginal means (EMMs) for many linear, generalized
   Statistician 34(4), 216-221 <doi:10.1080/00031305.1980.10483031>.
 License: GPL-2 | GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Roxygen: list(old_usage = TRUE)
 VignetteBuilder: knitr
