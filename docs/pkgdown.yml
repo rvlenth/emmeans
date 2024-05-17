@@ -1,0 +1,25 @@
+pandoc: 3.1.1
+pkgdown: 2.0.9
+pkgdown_sha: ~
+articles:
+  AQuickStart: AQuickStart.html
+  basics: basics.html
+  comparisons: comparisons.html
+  confidence-intervals: confidence-intervals.html
+  FAQs: FAQs.html
+  interactions: interactions.html
+  messy-data: messy-data.html
+  models: models.html
+  predictions: predictions.html
+  re-engineering-clds: re-engineering-clds.html
+  sophisticated: sophisticated.html
+  transformations: transformations.html
+  utilities: utilities.html
+  vignette-topics: vignette-topics.html
+  xplanations: xplanations.html
+  xtending: xtending.html
+last_built: 2024-05-08T03:10Z
+urls:
+  reference: https://rvlenth.github.io/emmeans/reference
+  article: https://rvlenth.github.io/emmeans/articles
+
