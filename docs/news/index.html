@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.1.90003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,11 +66,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.10.1.90" id="emmeans-110190xxx">emmeans 1.10.1.90xxx<a class="anchor" aria-label="anchor" href="#emmeans-110190xxx"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.10.2" id="emmeans-1102">emmeans 1.10.2<a class="anchor" aria-label="anchor" href="#emmeans-1102"></a></h2>
+<p>This update is focused mostly on trying to clear up confusion with some users on the distinction between <code>emmGrid</code> objects and their summaries, since they display identically; and on encouraging users not to bypass important annotations.</p>
 <ul><li>Added a startup message and <code><a href="../reference/untidy.html">help(untidy)</a></code>
 </li>
 <li>Added <code>rbind</code> method for <code>summary_emm</code> objects (<a href="https://github.com/rvlenth/emmeans/issues/480" class="external-link">#480</a>). Note that <code>summary_emm</code> objects already have estimates, P-values, etc. computed, so <code>rbind</code>ing them preserves those results. On the other hand, <code>rbind</code>ing <code>emmGrid</code> or <code>emm_list</code> objects produce new <code>emmGrid</code> objects which have <em>not</em> yet been summarized and any <code>adjust</code> methods are applied to the whole result.</li>
-<li>Created rudemtary <a href="https://rvlenth.github.io/emmeans/"><strong>pkgdown</strong> site</a>
+<li>Created <a href="https://rvlenth.github.io/emmeans/"><strong>pkgdown</strong> site</a>
 </li>
 </ul></div>
     <div class="section level2">
@@ -165,7 +166,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.8.4" id="emmeans-184">emmeans 1.8.4<a class="anchor" aria-label="anchor" href="#emmeans-184"></a></h2>
-<ul><li><p>Fix to <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code> response transformation when either <code>center</code> or <code>scale</code> is <code>FALSE</code>. I also added support for <code>center()</code> and <code>standardize()</code> from the <strong>datawizard</strong> package as response transformations, though these are mapped to <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code>.</p></li>
+<ul><li><p>Fix to <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code> response transformation when either <code>center</code> or <code>scale</code> is <code>FALSE</code>. I also added support for <code>center()</code> and <code><a href="https://rdrr.io/pkg/mvtnorm/man/ltMatrices.html" class="external-link">standardize()</a></code> from the <strong>datawizard</strong> package as response transformations, though these are mapped to <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale()</a></code>.</p></li>
 <li><p>Citation correction (<a href="https://github.com/rvlenth/emmeans/issues/391" class="external-link">#391</a>)</p></li>
 <li><p>Removed a message about contrasting transformed objects that even confuses me! (I added a topic in the FAQs vignette instead)</p></li>
 <li><p>Added new exported function <code>inverse</code> available as a response transformation</p></li>

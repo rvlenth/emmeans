@@ -351,7 +351,7 @@ installed. See the example.
 \dontrun{
 #--- If your package provides recover_data and emm_grid methods for class 'mymod',
 #--- put something like this in your package code -- say in zzz.R:
-  .onLoad = function(libname, pkgname) {
+  .onLoad <- function(libname, pkgname) {
     if (requireNamespace("emmeans", quietly = TRUE))
       emmeans::.emm_register("mymod", pkgname)
   }

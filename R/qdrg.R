@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2018 Russell V. Lenth                                     #
+#    Copyright (c) 2018-2024 Russell V. Lenth                                     #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -199,6 +199,7 @@ recover_data.qdrg = function(object, ...) {
     recover_data.call(object, delete.response(terms(object$formula)), object$na.action, ...)
 }
 
+#' @exportS3Method vcov qdrg
 vcov.qdrg = function(object, ...) 
     object$vcov
 

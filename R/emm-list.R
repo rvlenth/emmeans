@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2024 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -115,8 +115,9 @@ summary.summary_eml = function(object, ...) object
 #' @export
 #' @rdname emm_list-object
 #' @order 25
+#' @param row.names,optional Required arguments of \code{as.data.frame}, ignored
 #' @method as.data.frame summary_eml
-as.data.frame.summary_eml = function(x, which, ...) {
+as.data.frame.summary_eml = function(x, row.names = NULL, optional = FALSE, which, ...) {
     rbind(x, which = which)
 }
 
@@ -308,13 +309,15 @@ as.emm_list = function(object, ...) {
 
 
 ### Others we won't document
-
+#' @exportS3Method update emm_list
 update.emm_list = function(object, ...)
     update.emmGrid(object[[1]])
 
+#' @exportS3Method predict emm_list
 predict.emm_list = function(object, ...)
     predict.emmGrid(object[[1]], ...)
 
+#' @exportS3Method vcov emm_list
 vcov.emm_list = function(object, ...)
     vcov.emmGrid(object[[1]], ...)
 

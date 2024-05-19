@@ -2,3 +2,83 @@ url: https://rvlenth.github.io/emmeans/
 template:
   bootstrap: 5
 
+reference:
+- title: Overview
+  contents:
+  - emmeans-package
+
+- title: Estimation of marginal means and trends
+  contents:
+  - ref_grid
+  - emmeans
+  - emtrends
+  - lsmeans
+  - qdrg
+
+- title: Follow-up analyses
+  contents:
+  - contrast
+  - eff_size
+  - joint_tests
+  - mvcontrast
+  - pairwise.emmc
+  
+- title: Summaries
+  contents:
+  - summary.emmGrid
+  - hpd.summary
+  - untidy
+
+- title: Modifying objects
+  contents:
+  - comb_facs
+  - rbind.emmGrid
+  - regrid
+  - update.emmGrid
+
+- title: Displays
+  contents:
+  - cld.emmGrid
+  - emmip
+  - plot.emmGrid
+  - pwpm
+  - pwpp
+
+- title: Data sets
+  contents:
+  - auto.noise
+  - feedlot
+  - fiber
+  - MOats
+  - neuralgia
+  - nutrition
+  - oranges
+  - pigs
+  - ubds
+  
+- title: Structures
+  contents:
+  - emmGrid-class
+  - emmobj
+  - emm_list
+  
+- title: Utilities
+  contents:
+  - emm
+  - emm_example
+  - emm_options
+  - make.tran
+  - str.emmGrid
+  
+- title: Convert to outside formats
+  contents:
+  - as.list.emmGrid
+  - as.mcmc.list.emmGrid
+  - xtable.emmGrid
+  
+- title: Models and extending
+  contents:
+  - models
+  - recover_data
+
+

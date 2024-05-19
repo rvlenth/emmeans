@@ -85,22 +85,11 @@ vignette: >
 
   * [Causal inference](messy-data.html#counterfact)
   * [`cld()`](comparisons.html#CLD)
-  * CLDs
-      * [Alternative](re-engineering-clds.html#alt-CLDs)
-      * [For equivalence sets](re-engineering-clds.html#equiv-CLDs)
-      * [For significance sets](re-engineering-clds.html#signif-CLDs)
-      * [**multcompView** package](re-engineering-clds.html#CLDs)
-      * [Principles](re-engineering-clds.html#CLDs)
-      * [Re-engineered](re-engineering-clds.html#alt-CLDs)
-      * [References](re-engineering-clds.html#refs)
-      * [Relation to underlining](re-engineering-clds.html#underlining)
-      * [Simulated example](re-engineering-clds.html#CLD-example)
   * [`clm` models](models.html#O)
   * [**coda** package](sophisticated.html#bayesxtra)
   * [`coef()`](comparisons.html#contrasts)
   * [Cohen's *d*](comparisons.html#pwpm)
   * [Compact letter displays](comparisons.html#CLD)
-  * [Compact letter displays (CLDs)](re-engineering-clds.html)
   * Comparison arrows
       * [Derivation](xplanations.html#arrows)
   * Comparisons
@@ -216,7 +205,6 @@ vignette: >
   * `emtrends()`
       * [in *interactions: covariates*](interactions.html#covariates)
       * [in *interactions: oranges*](interactions.html#oranges)
-  * [Equivalence sets (with CLDs)](re-engineering-clds.html#equiv-CLDs)
   * [`estHook`](xtending.html#hooks)
   * [Estimability](messy-data.html#nonestex)
   * [Estimability issues](FAQs.html#NAs)
@@ -234,7 +222,6 @@ vignette: >
           * [in *sophisticated: mcmc*](sophisticated.html#mcmc)
           * [in *transformations: cbpp*](transformations.html#cbpp)
       * [`ChickWeight`](sophisticated.html#random-slopes)
-      * [CLDs (simulated)](re-engineering-clds.html#CLD-example)
       * [`cows`](messy-data.html#cows)
       * [`feedlot`](predictions.html#feedlot)
       * `fiber`
@@ -645,7 +632,6 @@ vignette: >
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * Significance
       * [Assessing](basics.html#pvalues)
-  * [Significance sets (with CLDs)](re-engineering-clds.html#signif-CLDs)
   * [`simple = "each"`](confidence-intervals.html#simple)
   * Simple comparisons
       * [in *confidence-intervals: simple*](confidence-intervals.html#simple)
@@ -739,7 +725,6 @@ vignette: >
 
 
   * [Unadjusted tests](confidence-intervals.html#adjmore)
-  * [Underlining, grouping by](re-engineering-clds.html#underlining)
   * [`update()`](utilities.html#update)
       * [`tran`](transformations.html#after)
   * [Using results](utilities.html#data)
@@ -763,7 +748,6 @@ vignette: >
       * [Messy data](messy-data.html)
       * [Models](models.html)
       * [Predictions](predictions.html)
-      * [Re-engineering CLDs](re-engineering-clds.html)
       * [Sophisticated models](sophisticated.html)
       * [Transformations and link functions](transformations.html)
       * [Utilities and options](utilities.html)

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.1.90003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a></h2>
       
       
 
@@ -77,20 +77,57 @@
 
       <dl><dt>
           
-          <code><a href="as.emmGrid.html">as.list(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="as.emmGrid.html">as.emm_list()</a></code> <code><a href="as.emmGrid.html">as.emmGrid()</a></code> 
+          <code><a href="emmeans-package.html">emmeans-package</a></code> 
         </dt>
-        <dd>Convert to and from <code>emmGrid</code> objects</dd>
+        <dd>Estimated marginal means (aka Least-squares means)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="estimation-of-marginal-means-and-trends">Estimation of marginal means and trends<a class="anchor" aria-label="anchor" href="#estimation-of-marginal-means-and-trends"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ref_grid.html">ref_grid()</a></code> 
+        </dt>
+        <dd>Create a reference grid from a fitted model</dd>
       </dl><dl><dt>
           
-          <code><a href="auto.noise.html">auto.noise</a></code> 
+          <code><a href="emmeans.html">emmeans()</a></code> 
         </dt>
-        <dd>Auto Pollution Filter Noise</dd>
+        <dd>Estimated marginal means (Least-squares means)</dd>
       </dl><dl><dt>
           
-          <code><a href="CLD.emmGrid.html">cld(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="CLD.emmGrid.html">cld(<i>&lt;emm_list&gt;</i>)</a></code> 
+          <code><a href="emtrends.html">emtrends()</a></code> 
         </dt>
-        <dd>Compact letter displays</dd>
+        <dd>Estimated marginal means of linear trends</dd>
       </dl><dl><dt>
+          
+          <code><a href="wrappers.html">lsmeans()</a></code> <code><a href="wrappers.html">lstrends()</a></code> <code><a href="wrappers.html">lsmip()</a></code> <code><a href="wrappers.html">lsm()</a></code> <code><a href="wrappers.html">lsmobj()</a></code> <code><a href="wrappers.html">lsm.options()</a></code> <code><a href="wrappers.html">get.lsm.option()</a></code> 
+        </dt>
+        <dd>Wrappers for alternative naming of EMMs</dd>
+      </dl><dl><dt>
+          
+          <code><a href="qdrg.html">qdrg()</a></code> 
+        </dt>
+        <dd>Quick and dirty reference grid</dd>
+      </dl></div><div class="section level2">
+      <h2 id="follow-up-analyses">Follow-up analyses<a class="anchor" aria-label="anchor" href="#follow-up-analyses"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="contrast.html">contrast()</a></code> <code><a href="contrast.html">pairs(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="contrast.html">coef(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="contrast.html">weights(<i>&lt;emmGrid&gt;</i>)</a></code> 
         </dt>
@@ -102,29 +139,92 @@
         <dd>Calculate effect sizes and confidence bounds thereof</dd>
       </dl><dl><dt>
           
+          <code><a href="joint_tests.html">joint_tests()</a></code> <code><a href="joint_tests.html">make.meanint()</a></code> <code><a href="joint_tests.html">meanint()</a></code> <code><a href="joint_tests.html">make.symmint()</a></code> <code><a href="joint_tests.html">symmint()</a></code> 
+        </dt>
+        <dd>Compute joint tests of the terms in a model</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mvcontrast.html">mvcontrast()</a></code> 
+        </dt>
+        <dd>Multivariate contrasts</dd>
+      </dl><dl><dt>
+          
           <code><a href="emmc-functions.html">pairwise.emmc()</a></code> <code><a href="emmc-functions.html">revpairwise.emmc()</a></code> <code><a href="emmc-functions.html">tukey.emmc()</a></code> <code><a href="emmc-functions.html">poly.emmc()</a></code> <code><a href="emmc-functions.html">trt.vs.ctrl.emmc()</a></code> <code><a href="emmc-functions.html">trt.vs.ctrl1.emmc()</a></code> <code><a href="emmc-functions.html">trt.vs.ctrlk.emmc()</a></code> <code><a href="emmc-functions.html">dunnett.emmc()</a></code> <code><a href="emmc-functions.html">eff.emmc()</a></code> <code><a href="emmc-functions.html">del.eff.emmc()</a></code> <code><a href="emmc-functions.html">consec.emmc()</a></code> <code><a href="emmc-functions.html">mean_chg.emmc()</a></code> <code><a href="emmc-functions.html">wtcon.emmc()</a></code> <code><a href="emmc-functions.html">identity.emmc()</a></code> 
         </dt>
         <dd>Contrast families</dd>
+      </dl></div><div class="section level2">
+      <h2 id="summaries">Summaries<a class="anchor" aria-label="anchor" href="#summaries"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="summary.emmGrid.html">summary(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">confint(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">test()</a></code> <code><a href="summary.emmGrid.html">predict(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">as.data.frame(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">`[`(<i>&lt;summary_emm&gt;</i>)</a></code> 
+        </dt>
+        <dd>Summaries, predictions, intervals, and tests for <code>emmGrid</code> objects</dd>
       </dl><dl><dt>
           
-          <code><a href="emmeans-package.html">emmeans-package</a></code> 
+          <code><a href="hpd.summary.html">hpd.summary()</a></code> 
         </dt>
-        <dd>Estimated marginal means (aka Least-squares means)</dd>
+        <dd>Summarize an emmGrid from a Bayesian model</dd>
       </dl><dl><dt>
           
-          <code><a href="emmeans.html">emmeans()</a></code> 
+          <code><a href="untidy.html">untidy</a></code> 
         </dt>
-        <dd>Estimated marginal means (Least-squares means)</dd>
+        <dd>Dare to be un-"tidy"!</dd>
+      </dl></div><div class="section level2">
+      <h2 id="modifying-objects">Modifying objects<a class="anchor" aria-label="anchor" href="#modifying-objects"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="manip-factors.html">comb_facs()</a></code> <code><a href="manip-factors.html">split_fac()</a></code> <code><a href="manip-factors.html">add_grouping()</a></code> <code><a href="manip-factors.html">permute_levels()</a></code> 
+        </dt>
+        <dd>Manipulate factors in a reference grid</dd>
       </dl><dl><dt>
           
-          <code><a href="emmGrid-class.html">emmGrid-class</a></code> 
+          <code><a href="rbind.emmGrid.html">rbind(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">`+`(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">`[`(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">head(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">tail(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">subset(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">rbind(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">rbind(<i>&lt;summary_emm&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">force_regular()</a></code> 
         </dt>
-        <dd>The <code>emmGrid</code> class</dd>
+        <dd>Combine or subset <code>emmGrid</code> objects</dd>
       </dl><dl><dt>
           
-          <code><a href="emmGrid-methods.html">str(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="emmGrid-methods.html">print(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="emmGrid-methods.html">vcov(<i>&lt;emmGrid&gt;</i>)</a></code> 
+          <code><a href="regrid.html">regrid()</a></code> 
         </dt>
-        <dd>Miscellaneous methods for <code>emmGrid</code> objects</dd>
+        <dd>Reconstruct a reference grid with a new transformation or simulations</dd>
+      </dl><dl><dt>
+          
+          <code><a href="update.emmGrid.html">update(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="update.emmGrid.html">`levels&lt;-`(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="update.emmGrid.html">update(<i>&lt;summary_emm&gt;</i>)</a></code> 
+        </dt>
+        <dd>Update an <code>emmGrid</code> object</dd>
+      </dl></div><div class="section level2">
+      <h2 id="displays">Displays<a class="anchor" aria-label="anchor" href="#displays"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="CLD.emmGrid.html">cld(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="CLD.emmGrid.html">cld(<i>&lt;emm_list&gt;</i>)</a></code> 
+        </dt>
+        <dd>Compact letter displays</dd>
       </dl><dl><dt>
           
           <code><a href="emmip.html">emmip()</a></code> <code><a href="emmip.html">emmip_ggplot()</a></code> <code><a href="emmip.html">emmip_lattice()</a></code> 
@@ -132,34 +232,35 @@
         <dd>Interaction-style plots for estimated marginal means</dd>
       </dl><dl><dt>
           
-          <code><a href="emmobj.html">emmobj()</a></code> 
+          <code><a href="plot.html">plot(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="plot.html">plot(<i>&lt;summary_emm&gt;</i>)</a></code> 
         </dt>
-        <dd>Construct an <code>emmGrid</code> object from scratch</dd>
+        <dd>Plot an <code>emmGrid</code> or <code>summary_emm</code> object</dd>
       </dl><dl><dt>
           
-          <code><a href="emm_example.html">emm_example()</a></code> 
+          <code><a href="pwpm.html">pwpm()</a></code> 
         </dt>
-        <dd>Run or list additional examples</dd>
+        <dd>Pairwise P-value matrix (plus other statistics)</dd>
       </dl><dl><dt>
           
-          <code><a href="emm_list-object.html">contrast(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">pairs(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">test(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">confint(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">plot(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">coef(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">str(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">summary(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">print(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">as.data.frame(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">as.data.frame(<i>&lt;summary_eml&gt;</i>)</a></code> 
+          <code><a href="pwpp.html">pwpp()</a></code> 
         </dt>
-        <dd>The <code>emm_list</code> class</dd>
-      </dl><dl><dt>
+        <dd>Pairwise P-value plot</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-sets">Data sets<a class="anchor" aria-label="anchor" href="#data-sets"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
-          <code><a href="emm_options.html">emm_options()</a></code> <code><a href="emm_options.html">get_emm_option()</a></code> <code><a href="emm_options.html">emm_defaults</a></code> 
+          <code><a href="auto.noise.html">auto.noise</a></code> 
         </dt>
-        <dd>Set or change emmeans options</dd>
-      </dl><dl><dt>
-          
-          <code><a href="emtrends.html">emtrends()</a></code> 
-        </dt>
-        <dd>Estimated marginal means of linear trends</dd>
-      </dl><dl><dt>
-          
-          <code><a href="extending-emmeans.html">recover_data()</a></code> <code><a href="extending-emmeans.html">emm_basis()</a></code> <code><a href="extending-emmeans.html">.recover_data()</a></code> <code><a href="extending-emmeans.html">.emm_basis()</a></code> <code><a href="extending-emmeans.html">.emm_register()</a></code> <code><a href="extending-emmeans.html">.std.link.labels()</a></code> <code><a href="extending-emmeans.html">.combine.terms()</a></code> <code><a href="extending-emmeans.html">.aovlist.dffun()</a></code> <code><a href="extending-emmeans.html">.cmpMM()</a></code> <code><a href="extending-emmeans.html">.get.excl()</a></code> <code><a href="extending-emmeans.html">.get.offset()</a></code> <code><a href="extending-emmeans.html">.my.vcov()</a></code> <code><a href="extending-emmeans.html">.all.vars()</a></code> <code><a href="extending-emmeans.html">.diag()</a></code> <code><a href="extending-emmeans.html">.num.key()</a></code> <code><a href="extending-emmeans.html">.emm_vignette()</a></code> <code><a href="extending-emmeans.html">.hurdle.support()</a></code> <code><a href="extending-emmeans.html">.zi.support()</a></code> 
-        </dt>
-        <dd>Support functions for model extensions</dd>
+        <dd>Auto Pollution Filter Noise</dd>
       </dl><dl><dt>
           
           <code><a href="feedlot.html">feedlot</a></code> 
@@ -172,49 +273,9 @@
         <dd>Fiber data</dd>
       </dl><dl><dt>
           
-          <code><a href="glht-support.html">emm()</a></code> <code><a href="glht-support.html">as.glht()</a></code> 
-        </dt>
-        <dd>Support for <code><a href="https://rdrr.io/pkg/multcomp/man/glht.html" class="external-link">multcomp::glht</a></code></dd>
-      </dl><dl><dt>
-          
-          <code><a href="hpd.summary.html">hpd.summary()</a></code> 
-        </dt>
-        <dd>Summarize an emmGrid from a Bayesian model</dd>
-      </dl><dl><dt>
-          
-          <code><a href="joint_tests.html">joint_tests()</a></code> <code><a href="joint_tests.html">make.meanint()</a></code> <code><a href="joint_tests.html">meanint()</a></code> <code><a href="joint_tests.html">make.symmint()</a></code> <code><a href="joint_tests.html">symmint()</a></code> 
-        </dt>
-        <dd>Compute joint tests of the terms in a model</dd>
-      </dl><dl><dt>
-          
-          <code><a href="make.tran.html">make.tran()</a></code> <code><a href="make.tran.html">inverse()</a></code> 
-        </dt>
-        <dd>Response-transformation extensions</dd>
-      </dl><dl><dt>
-          
-          <code><a href="manip-factors.html">comb_facs()</a></code> <code><a href="manip-factors.html">split_fac()</a></code> <code><a href="manip-factors.html">add_grouping()</a></code> <code><a href="manip-factors.html">permute_levels()</a></code> 
-        </dt>
-        <dd>Manipulate factors in a reference grid</dd>
-      </dl><dl><dt>
-          
-          <code><a href="mcmc-support.html">as.mcmc(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="mcmc-support.html">as.mcmc(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="mcmc-support.html">as.mcmc.list(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="mcmc-support.html">as.mcmc.list(<i>&lt;emm_list&gt;</i>)</a></code> 
-        </dt>
-        <dd>Support for MCMC-based estimation</dd>
-      </dl><dl><dt>
-          
           <code><a href="MOats.html">MOats</a></code> 
         </dt>
         <dd>Oats data in multivariate form</dd>
-      </dl><dl><dt>
-          
-          <code><a href="models.html">models</a></code> 
-        </dt>
-        <dd>Models supported in <span class="pkg">emmeans</span></dd>
-      </dl><dl><dt>
-          
-          <code><a href="mvcontrast.html">mvcontrast()</a></code> 
-        </dt>
-        <dd>Multivariate contrasts</dd>
       </dl><dl><dt>
           
           <code><a href="neuralgia.html">neuralgia</a></code> 
@@ -237,71 +298,121 @@
         <dd>Effects of dietary protein on free plasma leucine concentration in pigs</dd>
       </dl><dl><dt>
           
-          <code><a href="plot.html">plot(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="plot.html">plot(<i>&lt;summary_emm&gt;</i>)</a></code> 
-        </dt>
-        <dd>Plot an <code>emmGrid</code> or <code>summary_emm</code> object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="pwpm.html">pwpm()</a></code> 
-        </dt>
-        <dd>Pairwise P-value matrix (plus other statistics)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="pwpp.html">pwpp()</a></code> 
-        </dt>
-        <dd>Pairwise P-value plot</dd>
-      </dl><dl><dt>
-          
-          <code><a href="qdrg.html">qdrg()</a></code> 
-        </dt>
-        <dd>Quick and dirty reference grid</dd>
-      </dl><dl><dt>
-          
-          <code><a href="rbind.emmGrid.html">rbind(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">`+`(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">`[`(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">head(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">tail(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">subset(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">rbind(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">rbind(<i>&lt;summary_emm&gt;</i>)</a></code> <code><a href="rbind.emmGrid.html">force_regular()</a></code> 
-        </dt>
-        <dd>Combine or subset <code>emmGrid</code> objects</dd>
-      </dl><dl><dt>
-          
-          <code><a href="ref_grid.html">ref_grid()</a></code> 
-        </dt>
-        <dd>Create a reference grid from a fitted model</dd>
-      </dl><dl><dt>
-          
-          <code><a href="regrid.html">regrid()</a></code> 
-        </dt>
-        <dd>Reconstruct a reference grid with a new transformation or simulations</dd>
-      </dl><dl><dt>
-          
-          <code><a href="summary.emmGrid.html">summary(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">confint(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">test()</a></code> <code><a href="summary.emmGrid.html">predict(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">as.data.frame(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="summary.emmGrid.html">`[`(<i>&lt;summary_emm&gt;</i>)</a></code> 
-        </dt>
-        <dd>Summaries, predictions, intervals, and tests for <code>emmGrid</code> objects</dd>
-      </dl><dl><dt>
-          
           <code><a href="ubds.html">ubds</a></code> 
         </dt>
         <dd>Unbalanced dataset</dd>
+      </dl></div><div class="section level2">
+      <h2 id="structures">Structures<a class="anchor" aria-label="anchor" href="#structures"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="emmGrid-class.html">emmGrid-class</a></code> 
+        </dt>
+        <dd>The <code>emmGrid</code> class</dd>
       </dl><dl><dt>
           
-          <code><a href="untidy.html">untidy</a></code> 
+          <code><a href="emmobj.html">emmobj()</a></code> 
         </dt>
-        <dd>Dare to be un-"tidy"!</dd>
+        <dd>Construct an <code>emmGrid</code> object from scratch</dd>
       </dl><dl><dt>
           
-          <code><a href="update.emmGrid.html">update(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="update.emmGrid.html">`levels&lt;-`(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="update.emmGrid.html">update(<i>&lt;summary_emm&gt;</i>)</a></code> 
+          <code><a href="emm_list-object.html">contrast(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">pairs(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">test(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">confint(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">plot(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">coef(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">str(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">summary(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">print(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">as.data.frame(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="emm_list-object.html">as.data.frame(<i>&lt;summary_eml&gt;</i>)</a></code> 
         </dt>
-        <dd>Update an <code>emmGrid</code> object</dd>
+        <dd>The <code>emm_list</code> class</dd>
+      </dl></div><div class="section level2">
+      <h2 id="utilities">Utilities<a class="anchor" aria-label="anchor" href="#utilities"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="glht-support.html">emm()</a></code> <code><a href="glht-support.html">as.glht()</a></code> 
+        </dt>
+        <dd>Support for <code><a href="https://rdrr.io/pkg/multcomp/man/glht.html" class="external-link">multcomp::glht</a></code></dd>
       </dl><dl><dt>
           
-          <code><a href="wrappers.html">lsmeans()</a></code> <code><a href="wrappers.html">lstrends()</a></code> <code><a href="wrappers.html">lsmip()</a></code> <code><a href="wrappers.html">lsm()</a></code> <code><a href="wrappers.html">lsmobj()</a></code> <code><a href="wrappers.html">lsm.options()</a></code> <code><a href="wrappers.html">get.lsm.option()</a></code> 
+          <code><a href="emm_example.html">emm_example()</a></code> 
         </dt>
-        <dd>Wrappers for alternative naming of EMMs</dd>
+        <dd>Run or list additional examples</dd>
+      </dl><dl><dt>
+          
+          <code><a href="emm_options.html">emm_options()</a></code> <code><a href="emm_options.html">get_emm_option()</a></code> <code><a href="emm_options.html">emm_defaults</a></code> 
+        </dt>
+        <dd>Set or change emmeans options</dd>
+      </dl><dl><dt>
+          
+          <code><a href="make.tran.html">make.tran()</a></code> <code><a href="make.tran.html">inverse()</a></code> 
+        </dt>
+        <dd>Response-transformation extensions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="emmGrid-methods.html">str(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="emmGrid-methods.html">print(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="emmGrid-methods.html">vcov(<i>&lt;emmGrid&gt;</i>)</a></code> 
+        </dt>
+        <dd>Miscellaneous methods for <code>emmGrid</code> objects</dd>
+      </dl></div><div class="section level2">
+      <h2 id="convert-to-outside-formats">Convert to outside formats<a class="anchor" aria-label="anchor" href="#convert-to-outside-formats"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="as.emmGrid.html">as.list(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="as.emmGrid.html">as.emm_list()</a></code> <code><a href="as.emmGrid.html">as.emmGrid()</a></code> 
+        </dt>
+        <dd>Convert to and from <code>emmGrid</code> objects</dd>
+      </dl><dl><dt>
+          
+          <code><a href="mcmc-support.html">as.mcmc(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="mcmc-support.html">as.mcmc(<i>&lt;emm_list&gt;</i>)</a></code> <code><a href="mcmc-support.html">as.mcmc.list(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="mcmc-support.html">as.mcmc.list(<i>&lt;emm_list&gt;</i>)</a></code> 
+        </dt>
+        <dd>Support for MCMC-based estimation</dd>
       </dl><dl><dt>
           
           <code><a href="xtable.emmGrid.html">xtable(<i>&lt;emmGrid&gt;</i>)</a></code> <code><a href="xtable.emmGrid.html">xtable(<i>&lt;summary_emm&gt;</i>)</a></code> <code><a href="xtable.emmGrid.html">print(<i>&lt;xtable_emm&gt;</i>)</a></code> 
         </dt>
         <dd>Using <code>xtable</code> for EMMs</dd>
+      </dl></div><div class="section level2">
+      <h2 id="models-and-extending">Models and extending<a class="anchor" aria-label="anchor" href="#models-and-extending"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="models.html">models</a></code> 
+        </dt>
+        <dd>Models supported in <span class="pkg">emmeans</span></dd>
+      </dl><dl><dt>
+          
+          <code><a href="extending-emmeans.html">recover_data()</a></code> <code><a href="extending-emmeans.html">emm_basis()</a></code> <code><a href="extending-emmeans.html">.recover_data()</a></code> <code><a href="extending-emmeans.html">.emm_basis()</a></code> <code><a href="extending-emmeans.html">.emm_register()</a></code> <code><a href="extending-emmeans.html">.std.link.labels()</a></code> <code><a href="extending-emmeans.html">.combine.terms()</a></code> <code><a href="extending-emmeans.html">.aovlist.dffun()</a></code> <code><a href="extending-emmeans.html">.cmpMM()</a></code> <code><a href="extending-emmeans.html">.get.excl()</a></code> <code><a href="extending-emmeans.html">.get.offset()</a></code> <code><a href="extending-emmeans.html">.my.vcov()</a></code> <code><a href="extending-emmeans.html">.all.vars()</a></code> <code><a href="extending-emmeans.html">.diag()</a></code> <code><a href="extending-emmeans.html">.num.key()</a></code> <code><a href="extending-emmeans.html">.emm_vignette()</a></code> <code><a href="extending-emmeans.html">.hurdle.support()</a></code> <code><a href="extending-emmeans.html">.zi.support()</a></code> 
+        </dt>
+        <dd>Support functions for model extensions</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

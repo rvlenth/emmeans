@@ -35,7 +35,8 @@
 
 \method{as.data.frame}{emm_list}(x, ...)
 
-\method{as.data.frame}{summary_eml}(x, which, ...)
+\method{as.data.frame}{summary_eml}(x, row.names = NULL, optional = FALSE,
+  which, ...)
 }
 \arguments{
 \item{object, x}{an object of class \code{emm_list}}
@@ -43,6 +44,8 @@
 \item{...}{additional arguments passed to corresponding \code{emmGrid} method}
 
 \item{which}{integer vector specifying which elements to select.}
+
+\item{row.names, optional}{Required arguments of \code{as.data.frame}, ignored}
 }
 \value{
 a \code{list} of objects returned by the corresponding \code{emmGrid}

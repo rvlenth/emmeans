@@ -41,8 +41,9 @@
 #' emmeans(neur.glm, "Treatment")
 #' 
 #' ### Post-processed results lose the annotations
-#' if(requireNamespace("tibble"))
+#' if(requireNamespace("tibble")) {
 #'     emmeans(neur.glm, "Treatment") |> tibble::as_tibble()
+#' }
 #' 
 #' @name untidy
 NULL

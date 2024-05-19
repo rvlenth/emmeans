@@ -2,7 +2,12 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.10.1.90xxx
+## emmeans 1.10.2
+This update is focused mostly on trying to clear up confusion with some users
+on the distinction between `emmGrid` objects and their summaries, since they
+display identically; and on encouraging users not to bypass important
+annotations.
+
   * Added a startup message and `help(untidy)`
   * Added `rbind` method for `summary_emm` objects (#480). 
     Note that `summary_emm` objects already have estimates, P-values, etc.
@@ -10,7 +15,7 @@ title: "NEWS for the emmeans package"
     `rbind`ing `emmGrid` or `emm_list` objects produce new `emmGrid` objects
     which have *not* yet been summarized and any `adjust` methods are applied 
     to the whole result.
-  * Created rudemtary [**pkgdown** site](https://rvlenth.github.io/emmeans/)
+  * Created [**pkgdown** site](https://rvlenth.github.io/emmeans/)
   
 
 ## emmeans 1.10.1
