@@ -222,8 +222,11 @@ rbind.emm_list = function(..., which, adjust = "bonferroni") {
 #' @method rbind summary_emm
 rbind.summary_emm = function(..., which) {
     slobj = list(...)
-    if(!all(sapply(slobj, \(z) inherits(z, "summary_emm"))))
-        stop("All objects must inherit from 'summary_emm'")
+    if(!all(sapply(slobj, \(z) inherits(z, "data.frame")))) {
+        # workaround to make tern.gee::lsmeans() work
+        slobj = lapply(slobj, \(z) if(inherits(z, "data.frame")) data.frame(z) else z)
+       return(do.call("rbind", slobj))
+    }
     rbind.summary_eml(slobj, which = which)
 }
 
