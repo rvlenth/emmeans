@@ -1,0 +1,36 @@
+^\.Rproj\.user$
+^.*\.Rproj$
+^\.svn$
+^\.gitignore$
+^\.travis\.yml$
+
+# For now we are including tests in the build
+## ^tests/*
+
+# This keeps showing up lately, but I don't want it
+^Rplots.pdf
+
+# Issue templates etc.
+.github
+.github/*
+
+# Future revision of basics vignette
+vignettes/old-basics.mdr
+
+
+# Vignette intermediate files (also in svn ignore list)
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.aux
+vignettes/*.log
+vignettes/*.gz
+vignettes/*.idx
+vignettes/*.blg
+vignettes/*.ilg
+vignettes/*.ind
+vignettes/extending.rnw   # we substituted an Rmd vignette
+
+
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
