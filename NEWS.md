@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.10.2-09xxxxx
+ * Updated `mice::mira` support to use Barnard-Rubin adjusted d.f. (#494)
+ 
+
 ## emmeans 1.10.2
 This update is focused mostly on trying to clear up confusion with some users
 on the distinction between `emmGrid` objects and their summaries, since they

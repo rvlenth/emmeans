@@ -167,6 +167,20 @@ emm_basis.mira = function(object, trms, xlev, grid, ...) {
     }
     bas$bhat = apply(allb, 1, mean)  # averaged coef
     notna = which(!is.na(bas$bhat))
-    bas$V = V + (k + 1)/k * cov(t(allb[notna, , drop = FALSE]))   # pooled via Rubin's rules
+    bas$dfargs$m = k
+    bas$dfargs$df1 = bas$dffun  # this is the dffun for the 1st analysis
+    bas$dfargs$B = cov(t(allb[notna, , drop = FALSE]))
+    bas$V = bas$dfargs$T = V + (k + 1)/k * bas$dfargs$B   # pooled via Rubin's rules
+    bas$dffun = function(a, dfargs) { # pretty much copied from mice:::barnard.rubin
+        dfcom = dfargs$df1(a, dfargs)
+        with(dfargs, { 
+             b = sum(a * (B %*% a))
+             t = sum(a * (T %*% a))
+             lambda = (1 + 1/m) * b / t
+             dfold = (m - 1)/lambda*2
+             dfobs = (dfcom + 1)/(dfcom + 3) * dfcom * (1 - lambda)
+             ifelse(is.infinite(dfcom), dfold, 
+                    dfold * dfobs/(dfold + dfobs))
+        }) }
     bas
 }

@@ -234,7 +234,9 @@ a smoothing method like `pb()`.
 These objects are the results of fitting several models with different predictor
 subsets or imputed values. The `bhat` and `V` slots are obtained via averaging
 and, in the case of multiple imputation, adding a multiple of the between-imputation 
-covariance per Rubin's rules. In the case of `mira` models with model classes not
+covariance per Rubin's rules, along with an associated degrees-of-freedom
+adjustment (Barnard & Rubin 1999).
+In the case of `mira` models with model classes not
 supported by **emmeans**, [GitHub issue #446](https://github.com/rvlenth/emmeans/issues/446) 
 includes a function `pool_estimates_for_qdrg()` that may be useful for obtaining
 results via `qdrg()`.
