@@ -177,7 +177,7 @@ emm_basis.mira = function(object, trms, xlev, grid, ...) {
              b = sum(a * (B %*% a))
              t = sum(a * (T %*% a))
              lambda = (1 + 1/m) * b / t
-             dfold = (m - 1)/lambda*2
+             dfold = (m - 1)/lambda^2
              dfobs = (dfcom + 1)/(dfcom + 3) * dfcom * (1 - lambda)
              ifelse(is.infinite(dfcom), dfold, 
                     dfold * dfobs/(dfold + dfobs))
