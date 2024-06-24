@@ -509,9 +509,9 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
         }
         else {
             misc$initMesg = c(misc$initMesg, 
-                              paste("Note: contrasts are still on the", misc$orig.tran, "scale"))
-            ### message("Note: Use 'contrast(regrid(object), ...)' to obtain contrasts of back-transformed estimates")
-            misc$tran = misc$tran.mult = misc$tran.offset = NULL
+                              paste("Note: contrasts are still on the", misc$orig.tran, "scale. Consider using\n",
+                              "     regrid() if you want contrasts of back-transformed estimates."))
+             misc$tran = misc$tran.mult = misc$tran.offset = NULL
         }
     }
     

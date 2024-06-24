@@ -42,7 +42,7 @@ recover_data.averaging = function(object, data, formula = object$formula, ...) {
     if (is.null(data))
         data = ml[[1]]$call$data
     ### temporary patch -- $formula often excludes the intercept
-    formula = update(formula, .~.+1)[-2]
+    formula = update(formula, .~.+1) ####[-2]
     trms = attr(model.frame(formula, data = data), "terms")
     fcall = call("model.avg", formula = formula, data = data)
     recover_data(fcall, trms, na.action = NULL, ...)
