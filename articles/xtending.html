@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2.090002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2.090003</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>For developers: Extending **emmeans**</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.2.90002</h4>
+package, Version 1.10.2.90003</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/HEAD/vignettes/xtending.Rmd" class="external-link"><code>vignettes/xtending.Rmd</code></a></small>
@@ -235,7 +235,7 @@ method. Look at the one for <code>lm</code> objects:</p>
 <span><span class="co">##     recover_data(fcall, delete.response(terms(object)), object$na.action, </span></span>
 <span><span class="co">##         frame = frame, pwts = weights(object), ...)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x562018335120&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55f99e2bc0b0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:emmeans&gt;</span></span></code></pre>
 <p>Note that all it does is obtain the <code>call</code> component and
 call the method for class <code>call</code>, with additional arguments
@@ -354,7 +354,7 @@ Following this advice, let’s take a look at it:</p>
 <span><span class="co">##     X &lt;- model.matrix(Terms, m, contrasts.arg = object$contrasts)</span></span>
 <span><span class="co">##     drop(X %*% object$coefficients)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x562019786d58&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55f99f711b00&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:MASS&gt;</span></span></code></pre>
 <div class="section level6">
 <h6 id="eblqs"></h6>
@@ -635,7 +635,7 @@ make <code>recover_data</code> a lot fancier! Here it is:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">recover_data.rsm</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">data</span>, <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"asis"</span>, <span class="st">"coded"</span>, <span class="st">"decoded"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">mode</span><span class="op">)</span></span>
-<span>    <span class="va">cod</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rsm/man/coded.data.html" class="external-link">codings</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
+<span>    <span class="va">cod</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">codings</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
 <span>    <span class="va">fcall</span> <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">call</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>                                                 <span class="co"># 5</span></span>
 <span>        <span class="va">data</span> <span class="op">=</span> <span class="fu">emmeans</span><span class="fu">::</span><span class="fu"><a href="../reference/extending-emmeans.html">recover_data</a></span><span class="op">(</span><span class="va">fcall</span>, </span>
@@ -644,7 +644,7 @@ make <code>recover_data</code> a lot fancier! Here it is:</p>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">cod</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">(</span><span class="va">mode</span> <span class="op">==</span> <span class="st">"decoded"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">pred</span> <span class="op">=</span> <span class="va">cpred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"predictors"</span><span class="op">)</span></span>
 <span>        <span class="va">trms</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"terms"</span><span class="op">)</span>                                    <span class="co">#10</span></span>
-<span>        <span class="va">data</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rsm/man/coded.data.html" class="external-link">decode.data</a></span><span class="op">(</span><span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rsm/man/coded.data.html" class="external-link">as.coded.data</a></span><span class="op">(</span><span class="va">data</span>, formulas <span class="op">=</span> <span class="va">cod</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="va">data</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">decode.data</a></span><span class="op">(</span><span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">as.coded.data</a></span><span class="op">(</span><span class="va">data</span>, formulas <span class="op">=</span> <span class="va">cod</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="kw">for</span> <span class="op">(</span><span class="va">form</span> <span class="kw">in</span> <span class="va">cod</span><span class="op">)</span> <span class="op">{</span></span>
 <span>            <span class="va">vn</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars</a></span><span class="op">(</span><span class="va">form</span><span class="op">)</span></span>
 <span>            <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="va">vn</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> </span>
@@ -715,7 +715,7 @@ the grid is defined. It is listed below:</p>
 <span>    <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">mode</span><span class="op">)</span></span>
 <span>    <span class="va">cod</span> <span class="op">=</span> <span class="va">misc</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">cod</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">mode</span> <span class="op">==</span> <span class="st">"decoded"</span><span class="op">)</span> <span class="op">{</span>                          <span class="co"># 5</span></span>
-<span>        <span class="va">grid</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rsm/man/coded.data.html" class="external-link">coded.data</a></span><span class="op">(</span><span class="va">grid</span>, formulas <span class="op">=</span> <span class="va">cod</span><span class="op">)</span></span>
+<span>        <span class="va">grid</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">coded.data</a></span><span class="op">(</span><span class="va">grid</span>, formulas <span class="op">=</span> <span class="va">cod</span><span class="op">)</span></span>
 <span>        <span class="va">trms</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">trms</span>, <span class="st">"orig"</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    </span>
@@ -753,7 +753,7 @@ standard example for <code>rsm</code> fits a second-order model
 <code>CR.rs2</code> to a dataset organized in two blocks and with two
 coded predictors.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"rsm"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/rvlenth/rsm" class="external-link">"rsm"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/example.html" class="external-link">example</a></span><span class="op">(</span><span class="st">"rsm"</span><span class="op">)</span>   <span class="co">### (output is not shown) ###</span></span></code></pre></div>
 <p>First, let’s look at some results on the coded scale—which are the
 same as for an ordinary <code>lm</code> object.</p>
@@ -774,7 +774,7 @@ same as for an ordinary <code>lm</code> object.</p>
 derived from these coding formulas for predictors <code>Time</code> and
 <code>Temp</code>:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/rsm/man/coded.data.html" class="external-link">codings</a></span><span class="op">(</span><span class="va">CR.rs1</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">codings</a></span><span class="op">(</span><span class="va">CR.rs1</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $x1</span></span>
 <span><span class="co">## x1 ~ (Time - 85)/5</span></span>
 <span><span class="co">## </span></span>
