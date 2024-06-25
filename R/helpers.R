@@ -416,7 +416,7 @@ gls_grad = function(object, call, data, V) {
     conLin = object
     class(conLin) = class(obj)
     X = model.matrix(eval(call$model), data = data)
-    y = eval(call$model[[2]], envir = data)
+    y = eval(eval(call$model)[[2]], envir = data)
     conLin$Xy = cbind(X, y)
     conLin$fixedSigma = FALSE
     func = function(x) {
