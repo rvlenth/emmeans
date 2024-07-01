@@ -7,7 +7,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-<!-- @index Vignettes!Models -->
 
 Here we document what model objects may be used with **emmeans**, and some
 special features of some of them that may be accessed by passing additional
@@ -19,6 +18,11 @@ construct `emmGrid` objects, including `ref_grid()`,
 "*arguments*" are mentioned in the subsequent quick reference and
 object-by-object documentation, we are talking about arguments in these
 constructors.
+
+Some options cause transformations and links to be resolved at the time the
+reference grid is created, thus performing a kind of implied re-gridding
+at the very start. Such options are marked in the table with a "twiddle" (e.g., `"prob"~`). 
+For those options, no links or transformations are passed along. 
 
 If a model type is not included here, users may be able to obtain
 usable results via the `qdrg()` function; see its help page.
@@ -36,17 +40,17 @@ the arguments that apply. Detailed documentation follows, with objects
 grouped by the code in the "Group" column. 
 Scroll down or follow the links to those groups for more information.
 
-|Object.class |Package  |Group    |Arguments / notes                                            |
+|Object.class |Package  |Group    |Arguments / notes (Suffix of `~` indicates re-gridding)       |
 |:------------|:--------|:-------:|:------------------------------------------------------------|
 |aov          |stats    |[A](#A)  |                                                             |
 |aovList      |stats    |[V](#V)  |Best with balanced designs, orthogonal coding                |
 |averaging    |MuMIn    |[I](#I)  |`formula`, `subset` (see details)                            |
 |betareg      |betareg  |[B](#B)  |`mode = c("link", "precision", "phi.link",`                  |
-|             |         |         |`  "variance", "quantile")`                                  |
+|             |         |         |`  "variance"~, "quantile"~)`                                |
 |brmsfit      |brms     |[P](#P)  |Supported in **brms** package                                |
 |carbayes     |CARBayes |[S](#S)  |`data` is required                                           |
-|clm          |ordinal  |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
-|             |         |         |`  "exc.prob", "prob", "mean.class", "scale")`               |
+|clm          |ordinal  |[O](#O)  |`mode = c("latent"~, "linear.predictor", "cum.prob"~,`       |
+|             |         |         |`  "exc.prob"~, "prob"~, "mean.class"~, "scale")`            |
 |clmm         |ordinal  |[O](#O)  |Like `clm` but no `"scale"` mode                             |
 |coxme        |coxme    |[G](#G)  |                                                             |
 |coxph        |survival |[G](#G)  |                                                             |
@@ -70,7 +74,7 @@ Scroll down or follow the links to those groups for more information.
 |gls          |nlme     |[K](#K)  |`mode = c("auto", "df.error", "satterthwaite", "asymptotic")`|
 |gnls         |nlme     |[A](#A)  |Supports `params` part. Requires `param = "<name>"`          |
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
-|             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
+|             |         |         |`lin.pred = c(FALSE~, TRUE)`                                 |
 |lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
 |lme          |nlme     |[K](#K)  |`sigmaAdjust = c(TRUE, FALSE),`                              |
 |             |         |         |`mode = c("auto", containment", "satterthwaite", "asymptotic"),`|
@@ -83,8 +87,8 @@ Scroll down or follow the links to those groups for more information.
 |             |         |         |Optional: `method`, `R`, `seed`, `startQR` (must be fully spelled-out) |
 |manova       |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |maov         |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
-|mblogit      |mclogit  |[N](#N)  |`mode = c("prob", "latent")`                                 |
-|             |         |         |Always include response in specs for `emmeans()`
+|mblogit      |mclogit  |[N](#N)  |`mode = c("prob"~, "latent")`                                |
+|             |         |         |Always include response in specs for `emmeans()`             |
 |mcmc         |mcmc     |[S](#S)  |May require `formula`, `data`                                |
 |MCMCglmm     |MCMCglmm |[S](#S)  |(see also [M](#M#))  `mult.name`, `mult.levs`, `trait`,      |
 |             |         |         |`mode = c("default", "multinomial")`; `data` is required     |
@@ -93,15 +97,15 @@ Scroll down or follow the links to those groups for more information.
 |mlm          |stats    |[M](#M)  |`mult.name`, `mult.levs`                                     |
 |mmer         |sommer   |[G](#G)  |                                                             |
 |mmrm         |mmrm     |[P](#P)  |Supported in the **mmrm** package                            |
-|multinom     |nnet     |[N](#N)  |`mode = c("prob", "latent")`                                 |
+|multinom     |nnet     |[N](#N)  |`mode = c("prob"~, "latent")`                                |
 |             |         |         |Always include response in specs for `emmeans()`             |
 |nauf         |nauf.*xxx* |[P](#P)  |Supported in **nauf** package                              |
 |nlme         |nlme     |[A](#A)  |Supports fixed part. Requires `param = "<name>"`             |
-|polr         |MASS     |[O](#O)  |`mode = c("latent", "linear.predictor", "cum.prob",`         |
-|             |         |         |`"exc.prob", "prob", "mean.class")`                          |
+|polr         |MASS     |[O](#O)  |`mode = c("latent"~, "linear.predictor", "cum.prob"~,`       |
+|             |         |         |`"exc.prob"~, "prob"~, "mean.class"~)`                       |
 |rlm          |MASS     |[A](#A)  |inherits `lm` support                                        |
-|rms          |rms      |[O](#O)  |`mode = ("middle", "latent", "linear.predictor",`            |
-|             |         |         |`"cum.prob", "exc.prob", "prob", "mean.class")`              |
+|rms          |rms      |[O](#O)  |`mode = ("middle"~, "latent"~, "linear.predictor",`          |
+|             |         |         |`"cum.prob"~, "exc.prob"~, "prob"~, "mean.class"~)`          |
 |rq,rqs       |quantreg |[Q](#Q)  |`tau = object$tau`                                           |
 |             |         |         |Creates a pseudo-factor `tau` with levels `tau`              |
 |             |         |         |Optional: `se`, `R`, `bsmethod`, etc.                        |
@@ -112,7 +116,7 @@ Scroll down or follow the links to those groups for more information.
 |svyglm       |survey   |[A](#A)  |                                                             |
 |svyolr       |survey   |[O](#O)  |Piggybacks on `polr` support                                 |
 |zeroinfl     |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0")`,            |
-|             |         |         |`lin.pred = c(FALSE, TRUE)`                                  |
+|             |         |         |`lin.pred = c(FALSE~, TRUE)`                                  |
 
 
 ## Group A -- "Standard" or minimally supported models {#A}
@@ -122,7 +126,7 @@ need special support; hence no extra arguments are needed.
 Some may require `data` in the call.
 
 
-## B -- Beta regression {#B}
+## Group B -- Beta regression {#B}
 <!-- @index Beta regression; `betareg` models -->
 
 The additional `mode` argument for `betareg` objects has possible
@@ -135,6 +139,7 @@ the additional argument `quantile` (a numeric scalar or vector)
 specifies which quantile(s) to compute; the default is 0.5 (the median). Also
 in `"quantile"` mode, an additional variable `quantile` is added to
 the reference grid, and its levels are the values supplied.
+Modes `"variance"` and `"quantile"` cause an implied re-grid.
 
 [Back to quick reference](#quickref)
 
@@ -150,7 +155,7 @@ With `lin.pred = FALSE`, the results are comparable to those returned by
 `predict(..., type = "response")`, `predict(..., type = "count")`,
 `predict(..., type = "zero")`, or `predict(..., type = "prob")[,
 1]`. See the documentation for `predict.hurdle` and
-`predict.zeroinfl`.
+`predict.zeroinfl`. Note that specifying `lin.pred = FALSE` causes re-gridding to take place.
 
 The option `lin.pred = TRUE` only applies to `mode = "count"` and
 `mode = "zero"`. The results returned are on the linear-predictor scale,
@@ -366,7 +371,8 @@ multinomial response via the `mult.resp` argument.)
 There is an optional `mode` argument which
 should match `"prob"` or `"latent"`. With `mode = "prob"`, the
 reference-grid predictions consist of the estimated multinomial
-probabilities. The `"latent"` mode returns the linear predictor,
+probabilities -- and this implies a re-gridding so no
+link functions are passed on. The `"latent"` mode returns the linear predictor,
 recentered so that it averages to zero over the levels of the response
 variable (similar to sum-to-zero contrasts). Thus each latent variable can be
 regarded as the log probability at that level minus the average log
@@ -396,6 +402,7 @@ There are two optional arguments: `mode` (a character string) and
 one of `"latent"` (the default), `"linear.predictor"`, 
 `"cum.prob"`, `"exc.prob"`, `"prob"`, `"mean.class"`, or
 `"scale"` -- see the quick reference and note which are supported.
+With the exception of `"linear.predictor"`, all of these modes do an implied regrid.
 
 With `mode = "latent"`, the reference-grid predictions are made on the
 scale of the latent variable implied by the model. The scale and location of
@@ -405,7 +412,9 @@ Keep in mind that the scaling is related to the link function used
 in the model; for example, changing from a probit link to a logistic link
 will inflate the latent values by around $\pi/\sqrt{3}$, all
 other things being equal. `rescale` has no effect for other values of
-`mode`.
+`mode`. Even though the latent means comprise a re-scaling of the linear predictor,
+we regard this as a re-gridding, and the cumulative link function is 
+not included in the reference grid.
 
 With `mode = "linear.predictor"`, `mode = "cum.prob"`, and
 `mode = "exc.prob"`, the boundaries between categories (i.e.,
@@ -444,7 +453,7 @@ together.
 
 [Back to quick reference](#quickref)
 
-## P -- Other packages {#P}
+## Group P -- Other packages {#P}
 
 Models in this group have their **emmeans** support provided by the package
 that implements the model-fitting procedure. Users should refer to the
@@ -453,7 +462,7 @@ package's models may have been supported here in **emmeans**; if so, the
 other package's support overrides it.
 
 
-## Q -- Quantile regression {#Q}
+## Group Q -- Quantile regression {#Q}
 
 The elements
 of `tau` are included in the reference grid as a pseudo-factor named
@@ -475,7 +484,7 @@ than to subset them using the `at` argument to `ref_grid`.
 
 
 
-## S -- Sampling (MCMC) methods {#S}
+## Group S -- Sampling (MCMC) methods {#S}
 <!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `brmsfit` objects
   `as.mcmc()`; `summary()`!Bayesian models -->
 Models fitted using MCMC methods contain a sample from the posterior

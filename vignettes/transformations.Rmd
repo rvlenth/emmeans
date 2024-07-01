@@ -149,6 +149,31 @@ will compute the results we have seen for `emm.src` -- back-transformed
 
 Remember again: When it comes to transformations, timing is everything.
 
+### Implied regridding with certain modes {#regrid3}
+<!-- @index Transformations|Special modes; 
+             `mode` argument!implied re-gridding; 
+             Transformations|Implied re-gridding;
+             Re-gridding!Implied-->
+Some model classes provide special argument(s) (typically `mode`) that may cause
+transformations or links to be handled early. For example, cumulative link
+models for ordinal data allow for a `"prob"` mode that produces estimates of
+probabilities for each ordinal level. The reference grid comprises estimates on
+a probability scale, and whatever link was used (say, probit) has already been
+accounted for, so is not "remembered" for possible later back-transformation. In
+that sense, when we use `mode = "prob"`, it is sort of like an implied call to
+`regrid()` that takes place *at the time the reference grid is constructed*,
+preempting any timing choices you might otherwise have made about handling the
+transformation. If there are one or more factors that are averaged over in
+estimating marginal means will be averages of the probabilities in the reference
+grid; so they will be different than what you would have obtained by keeping
+things on the link scale and then computing the probabilities after averaging on
+the link scale.
+
+Similar things happen with certain options with multinomial models, 
+zero-inflated, or hurdle models. Those special modes are a great convenience
+for getting estimates on a scale that is desired, but they also force
+you to obtain marginal means of measurements already on that scale.
+
 
 [Back to Contents](#contents)
 

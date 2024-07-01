@@ -2,10 +2,16 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.10.2-09xxxxx
- * Updated `mice::mira` support to use Barnard-Rubin adjusted d.f. (#494)
- * Fix to MuMIn support so a response transformation is auto-detected
- * Bug fix in `gls` support code (#495)
+## emmeans 1.10.3
+  * Updated `mice::mira` support to use Barnard-Rubin adjusted d.f. (#494)
+  * Fix to MuMIn support so a response transformation is auto-detected
+  * Bug fix in `gls` support code (#495)
+  * I am trying to be clearer that some model-support
+    modes cause implied re-gridding, making the link function no longer operable. 
+    A new subsection discussing this was added to the "Transformations" vignette, 
+    and I also added indications of this to the "models" vignette.
+  * Don't think too hard about which recent updates (since 1.8.9) are more 
+    major than others. I'll try to be more rational about this going forward.
  
 
 ## emmeans 1.10.2
