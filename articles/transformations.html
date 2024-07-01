@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2.090004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Transformations and link functions in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.2.90004</h4>
+package, Version 1.10.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/HEAD/vignettes/transformations.Rmd" class="external-link"><code>vignettes/transformations.Rmd</code></a></small>
@@ -298,6 +298,36 @@ and used by <code><a href="https://rdrr.io/r/base/summary.html" class="external-
 back-transformed <em>after</em> averaging on the log scale.</p>
 <p>Remember again: When it comes to transformations, timing is
 everything.</p>
+</div>
+<div class="section level3">
+<h3 id="regrid3">Implied regridding with certain modes<a class="anchor" aria-label="anchor" href="#regrid3"></a>
+</h3>
+<!-- @index Transformations|Special modes; 
+             `mode` argument!implied re-gridding; 
+             Transformations|Implied re-gridding;
+             Re-gridding!Implied-->
+<p>Some model classes provide special argument(s) (typically
+<code>mode</code>) that may cause transformations or links to be handled
+early. For example, cumulative link models for ordinal data allow for a
+<code>"prob"</code> mode that produces estimates of probabilities for
+each ordinal level. The reference grid comprises estimates on a
+probability scale, and whatever link was used (say, probit) has already
+been accounted for, so is not “remembered” for possible later
+back-transformation. In that sense, when we use
+<code>mode = "prob"</code>, it is sort of like an implied call to
+<code><a href="../reference/regrid.html">regrid()</a></code> that takes place <em>at the time the reference
+grid is constructed</em>, preempting any timing choices you might
+otherwise have made about handling the transformation. If there are one
+or more factors that are averaged over in estimating marginal means will
+be averages of the probabilities in the reference grid; so they will be
+different than what you would have obtained by keeping things on the
+link scale and then computing the probabilities after averaging on the
+link scale.</p>
+<p>Similar things happen with certain options with multinomial models,
+zero-inflated, or hurdle models. Those special modes are a great
+convenience for getting estimates on a scale that is desired, but they
+also force you to obtain marginal means of measurements already on that
+scale.</p>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 </div>

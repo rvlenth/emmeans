@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2.090004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Models supported by emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.2.90004</h4>
+package, Version 1.10.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/HEAD/vignettes/models.Rmd" class="external-link"><code>vignettes/models.Rmd</code></a></small>
@@ -104,7 +104,6 @@ package, Version 1.10.2.90004</h4>
 
     
     
-<!-- @index Vignettes!Models -->
 <p>Here we document what model objects may be used with
 <strong>emmeans</strong>, and some special features of some of them that
 may be accessed by passing additional arguments through
@@ -116,6 +115,11 @@ construct <code>emmGrid</code> objects, including
 “<em>arguments</em>” are mentioned in the subsequent quick reference and
 object-by-object documentation, we are talking about arguments in these
 constructors.</p>
+<p>Some options cause transformations and links to be resolved at the
+time the reference grid is created, thus performing a kind of implied
+re-gridding at the very start. Such options are marked in the table with
+a “twiddle” (e.g., <code>"prob"~</code>). For those options, no links or
+transformations are passed along.</p>
 <p>If a model type is not included here, users may be able to obtain
 usable results via the <code><a href="../reference/qdrg.html">qdrg()</a></code> function; see its help page.
 Package developers may support their models by writing appropriate
@@ -142,7 +146,8 @@ links to those groups for more information.</p>
 <th align="left">Object.class</th>
 <th align="left">Package</th>
 <th align="center">Group</th>
-<th align="left">Arguments / notes</th>
+<th align="left">Arguments / notes (Suffix of <code>~</code> indicates
+re-gridding)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -175,7 +180,7 @@ details)</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="center"></td>
-<td align="left"><code>"variance", "quantile")</code></td>
+<td align="left"><code>"variance"~, "quantile"~)</code></td>
 </tr>
 <tr class="even">
 <td align="left">brmsfit</td>
@@ -194,13 +199,13 @@ details)</td>
 <td align="left">clm</td>
 <td align="left">ordinal</td>
 <td align="center"><a href="#O">O</a></td>
-<td align="left"><code>mode = c("latent", "linear.predictor", "cum.prob",</code></td>
+<td align="left"><code>mode = c("latent"~, "linear.predictor", "cum.prob"~,</code></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
 <td align="left"></td>
 <td align="center"></td>
-<td align="left"><code>"exc.prob", "prob", "mean.class", "scale")</code></td>
+<td align="left"><code>"exc.prob"~, "prob"~, "mean.class"~, "scale")</code></td>
 </tr>
 <tr class="even">
 <td align="left">clmm</td>
@@ -352,7 +357,7 @@ matrix</td>
 <td align="left"></td>
 <td align="left"></td>
 <td align="center"></td>
-<td align="left"><code>lin.pred = c(FALSE, TRUE)</code></td>
+<td align="left"><code>lin.pred = c(FALSE~, TRUE)</code></td>
 </tr>
 <tr class="even">
 <td align="left">lm</td>
@@ -441,7 +446,7 @@ supported</td>
 <td align="left">mblogit</td>
 <td align="left">mclogit</td>
 <td align="center"><a href="#N">N</a></td>
-<td align="left"><code>mode = c("prob", "latent")</code></td>
+<td align="left"><code>mode = c("prob"~, "latent")</code></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
@@ -511,7 +516,7 @@ elements</td>
 <td align="left">multinom</td>
 <td align="left">nnet</td>
 <td align="center"><a href="#N">N</a></td>
-<td align="left"><code>mode = c("prob", "latent")</code></td>
+<td align="left"><code>mode = c("prob"~, "latent")</code></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
@@ -540,13 +545,13 @@ elements</td>
 <td align="left">polr</td>
 <td align="left">MASS</td>
 <td align="center"><a href="#O">O</a></td>
-<td align="left"><code>mode = c("latent", "linear.predictor", "cum.prob",</code></td>
+<td align="left"><code>mode = c("latent"~, "linear.predictor", "cum.prob"~,</code></td>
 </tr>
 <tr class="odd">
 <td align="left"></td>
 <td align="left"></td>
 <td align="center"></td>
-<td align="left"><code>"exc.prob", "prob", "mean.class")</code></td>
+<td align="left"><code>"exc.prob"~, "prob"~, "mean.class"~)</code></td>
 </tr>
 <tr class="even">
 <td align="left">rlm</td>
@@ -558,13 +563,13 @@ elements</td>
 <td align="left">rms</td>
 <td align="left">rms</td>
 <td align="center"><a href="#O">O</a></td>
-<td align="left"><code>mode = ("middle", "latent", "linear.predictor",</code></td>
+<td align="left"><code>mode = ("middle"~, "latent"~, "linear.predictor",</code></td>
 </tr>
 <tr class="even">
 <td align="left"></td>
 <td align="left"></td>
 <td align="center"></td>
-<td align="left"><code>"cum.prob", "exc.prob", "prob", "mean.class")</code></td>
+<td align="left"><code>"cum.prob"~, "exc.prob"~, "prob"~, "mean.class"~)</code></td>
 </tr>
 <tr class="odd">
 <td align="left">rq,rqs</td>
@@ -636,7 +641,7 @@ those for <em>xxx</em>
 <td align="left"></td>
 <td align="left"></td>
 <td align="center"></td>
-<td align="left"><code>lin.pred = c(FALSE, TRUE)</code></td>
+<td align="left"><code>lin.pred = c(FALSE~, TRUE)</code></td>
 </tr>
 </tbody>
 </table>
@@ -649,7 +654,7 @@ features that need special support; hence no extra arguments are needed.
 Some may require <code>data</code> in the call.</p>
 </div>
 <div class="section level2">
-<h2 id="B">B – Beta regression<a class="anchor" aria-label="anchor" href="#B"></a>
+<h2 id="B">Group B – Beta regression<a class="anchor" aria-label="anchor" href="#B"></a>
 </h2>
 <!-- @index Beta regression; `betareg` models -->
 <p>The additional <code>mode</code> argument for <code>betareg</code>
@@ -664,7 +669,8 @@ specified, the additional argument <code>quantile</code> (a numeric
 scalar or vector) specifies which quantile(s) to compute; the default is
 0.5 (the median). Also in <code>"quantile"</code> mode, an additional
 variable <code>quantile</code> is added to the reference grid, and its
-levels are the values supplied.</p>
+levels are the values supplied. Modes <code>"variance"</code> and
+<code>"quantile"</code> cause an implied re-grid.</p>
 <p><a href="#quickref">Back to quick reference</a></p>
 </div>
 <div class="section level2">
@@ -681,7 +687,9 @@ those returned by <code>predict(..., type = "response")</code>,
 <code>predict(..., type = "count")</code>,
 <code>predict(..., type = "zero")</code>, or
 <code>predict(..., type = "prob")[, 1]</code>. See the documentation for
-<code>predict.hurdle</code> and <code>predict.zeroinfl</code>.</p>
+<code>predict.hurdle</code> and <code>predict.zeroinfl</code>. Note that
+specifying <code>lin.pred = FALSE</code> causes re-gridding to take
+place.</p>
 <p>The option <code>lin.pred = TRUE</code> only applies to
 <code>mode = "count"</code> and <code>mode = "zero"</code>. The results
 returned are on the linear-predictor scale, with the same transformation
@@ -947,7 +955,8 @@ levels of <code>cbind</code> will be <code>1</code> and <code>2</code>.)
 <p>There is an optional <code>mode</code> argument which should match
 <code>"prob"</code> or <code>"latent"</code>. With
 <code>mode = "prob"</code>, the reference-grid predictions consist of
-the estimated multinomial probabilities. The <code>"latent"</code> mode
+the estimated multinomial probabilities – and this implies a re-gridding
+so no link functions are passed on. The <code>"latent"</code> mode
 returns the linear predictor, recentered so that it averages to zero
 over the levels of the response variable (similar to sum-to-zero
 contrasts). Thus each latent variable can be regarded as the log
@@ -978,7 +987,8 @@ arguments: <code>mode</code> (a character string) and
 default), <code>"linear.predictor"</code>, <code>"cum.prob"</code>,
 <code>"exc.prob"</code>, <code>"prob"</code>, <code>"mean.class"</code>,
 or <code>"scale"</code> – see the quick reference and note which are
-supported.</p>
+supported. With the exception of <code>"linear.predictor"</code>, all of
+these modes do an implied regrid.</p>
 <p>With <code>mode = "latent"</code>, the reference-grid predictions are
 made on the scale of the latent variable implied by the model. The scale
 and location of this latent variable are arbitrary, and may be altered
@@ -988,7 +998,9 @@ mind that the scaling is related to the link function used in the model;
 for example, changing from a probit link to a logistic link will inflate
 the latent values by around <span class="math inline">\(\pi/\sqrt{3}\)</span>, all other things being
 equal. <code>rescale</code> has no effect for other values of
-<code>mode</code>.</p>
+<code>mode</code>. Even though the latent means comprise a re-scaling of
+the linear predictor, we regard this as a re-gridding, and the
+cumulative link function is not included in the reference grid.</p>
 <p>With <code>mode = "linear.predictor"</code>,
 <code>mode = "cum.prob"</code>, and <code>mode = "exc.prob"</code>, the
 boundaries between categories (i.e., thresholds) in the ordinal response
@@ -1023,7 +1035,7 @@ intercepts are averaged together.</p>
 <p><a href="#quickref">Back to quick reference</a></p>
 </div>
 <div class="section level2">
-<h2 id="P">P – Other packages<a class="anchor" aria-label="anchor" href="#P"></a>
+<h2 id="P">Group P – Other packages<a class="anchor" aria-label="anchor" href="#P"></a>
 </h2>
 <p>Models in this group have their <strong>emmeans</strong> support
 provided by the package that implements the model-fitting procedure.
@@ -1033,7 +1045,7 @@ have been supported here in <strong>emmeans</strong>; if so, the other
 package’s support overrides it.</p>
 </div>
 <div class="section level2">
-<h2 id="Q">Q – Quantile regression<a class="anchor" aria-label="anchor" href="#Q"></a>
+<h2 id="Q">Group Q – Quantile regression<a class="anchor" aria-label="anchor" href="#Q"></a>
 </h2>
 <p>The elements of <code>tau</code> are included in the reference grid
 as a pseudo-factor named <code>tau</code>. In these models, the
@@ -1057,7 +1069,7 @@ to subset them using the <code>at</code> argument to
 <code>ref_grid</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="S">S – Sampling (MCMC) methods<a class="anchor" aria-label="anchor" href="#S"></a>
+<h2 id="S">Group S – Sampling (MCMC) methods<a class="anchor" aria-label="anchor" href="#S"></a>
 </h2>
 <!-- @index Bayesian models; `mcmc` objects; `stanreg` objects; `brmsfit` objects
   `as.mcmc()`; `summary()`!Bayesian models -->

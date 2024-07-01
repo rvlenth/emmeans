@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.2.090004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,10 +66,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.10.2-09" id="emmeans-1102-09xxxxx">emmeans 1.10.2-09xxxxx<a class="anchor" aria-label="anchor" href="#emmeans-1102-09xxxxx"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.10.3" id="emmeans-1103">emmeans 1.10.3<a class="anchor" aria-label="anchor" href="#emmeans-1103"></a></h2>
 <ul><li>Updated <code><a href="https://amices.org/mice/reference/mira-class.html" class="external-link">mice::mira</a></code> support to use Barnard-Rubin adjusted d.f. (<a href="https://github.com/rvlenth/emmeans/issues/494" class="external-link">#494</a>)</li>
 <li>Fix to MuMIn support so a response transformation is auto-detected</li>
 <li>Bug fix in <code>gls</code> support code (<a href="https://github.com/rvlenth/emmeans/issues/495" class="external-link">#495</a>)</li>
+<li>I am trying to be clearer that some model-support modes cause implied re-gridding, making the link function no longer operable. A new subsection discussing this was added to the “Transformations” vignette, and I also added indications of this to the “models” vignette.</li>
+<li>Don’t think too hard about which recent updates (since 1.8.9) are more major than others. I’ll try to be more rational about this going forward.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.10.2" id="emmeans-1102">emmeans 1.10.2<a class="anchor" aria-label="anchor" href="#emmeans-1102"></a></h2><p class="text-muted">CRAN release: 2024-05-20</p>
