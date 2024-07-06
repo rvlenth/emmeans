@@ -76,11 +76,10 @@ easily produce these results, as well as various graphs of them
     package; then run
     
 ```r
-remotes::install_github("rvlenth/emmeans", dependencies = TRUE, build_opts = "")
-
-### To install without vignettes (faster):
-remotes::install_github("rvlenth/emmeans")
+remotes::install_github("rvlenth/emmeans", dependencies = TRUE, build_vignettes = TRUE)
 ```
+Omitting the `build_vignettes` argument can save some time if you don't want the vignettes. They can always be found on the (emmeans pkgdown site)[https://rvlenth.github.io/emmeans/].
+
 *Note:* If you are a Windows user, you should also first download and
       install the latest version of
       [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).

@@ -2,6 +2,12 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.10.3-090xxxx
+  * Refinements in tracking static offsets
+  * Made d.f. consistent for `geeglm` and `glmgee` (#496)
+  * Fixed suggestion for installing from GitHub (#497)
+
+
 ## emmeans 1.10.3
   * Updated `mice::mira` support to use Barnard-Rubin adjusted d.f. (#494)
   * Fix to MuMIn support so a response transformation is auto-detected

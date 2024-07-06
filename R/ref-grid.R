@@ -821,20 +821,22 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (!missing(offset)) {  # For safety, we always treat it as scalar
         if (offset[1] != 0)
             oval = offset[1]
+        if(".static.offset." %in% names(grid))
+            grid$.static.offset. = ref.levels$.static.offset. = oval
     }
     else {
         if(".static.offset." %in% names(grid)) { # static offset is available
             oval = om * grid[[".static.offset."]]
-            # grid$.static.offset. = NULL
         }
-        #else 
+        #else implied
         if(!is.null(attr(trms,"offset"))) {
             if (any(om != 0))
                 oval = om * (oval + .get.offset(trms, grid))
         }
-        if(any(oval != 0))
-            grid[[".offset."]] = oval
     }
+    if(any(oval != 0))
+        grid[[".offset."]] = oval
+    
     
     ### --- Determine weights for each grid point
     if (!hasName(data, "(weights)"))

@@ -759,8 +759,8 @@ emm_basis.geeglm = function(object, trms, xlev, grid, vcov.method = "vbeta", ...
     
     misc = .std.link.labels(object$family, list())
     misc$initMesg = attr(V, "methMesg")
-    dffun = function(k, dfargs) Inf
-    dfargs = list()
+    dffun = function(k, dfargs) dfargs$df
+    dfargs = list(df = df.residual(object))
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
 }
 
