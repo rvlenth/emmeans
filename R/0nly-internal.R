@@ -56,6 +56,14 @@
     ok
 }
 
+### Internal function to implement 'allow.na.levs' option
+.chk.fac = function(x) {
+    if(get_emm_option("allow.na.levs"))
+        x
+    else
+        factor(x)
+}
+
 
 
 ## Alternative to all.vars, but keeps vars like foo$x and foo[[1]] as-is

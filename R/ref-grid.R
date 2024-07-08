@@ -548,8 +548,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         
         # Save the original levels of factors, no matter what
         if (is.factor(x) && !(nm %in% coerced$covariates))
-            xlev[[nm]] = levels(factor(x))
-            # (applying factor drops any unused levels)
+            xlev[[nm]] = levels(.chk.fac(x))
+            # (drops any used levels unless allow.na.levs option is TRUE)
         else if (is.character(x)) # just like a factor
             xlev[[nm]] = sort(unique(x))
     
@@ -559,7 +559,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
             ref.levels[[nm]] = at[[nm]]
         # factors not in 'at'
         else if (is.factor(x) && !(nm %in% coerced$covariates))
-            ref.levels[[nm]] = levels(factor(x))
+            ref.levels[[nm]] = levels(.chk.fac(x))
         else if (is.character(x) || is.logical(x))
             ref.levels[[nm]] = chrlev[[nm]] = sort.unique(x)
         # matrices

@@ -72,17 +72,20 @@ easily produce these results, as well as various graphs of them
     may be viewed.
 
   * **GitHub** To install the latest development version from GitHub, 
-    install the newest version of the **devtools** 
-    package; then run
+    install the newest version of the **remotes** 
+    package. If you are a Windows user, you should also first download and
+      install the latest version of
+      [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
+      Then run
     
 ```r
 remotes::install_github("rvlenth/emmeans", dependencies = TRUE, build_vignettes = TRUE)
 ```
-Omitting the `build_vignettes` argument can save some time if you don't want the vignettes. They can always be found on the (emmeans pkgdown site)[https://rvlenth.github.io/emmeans/].
+Omitting the `build_vignettes` argument can save some time if you don't want the vignettes. 
+They can always be found [for the latest CRAN version](https://cran.r-project.org/package=emmeans) or 
+-- perhaps more up-to-date -- the [emmeans site](https://rvlenth.github.io/emmeans/).
 
-*Note:* If you are a Windows user, you should also first download and
-      install the latest version of
-      [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
+*Note:* 
 
 For the latest release notes on this development version, see the 
 [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS.md)

@@ -1364,7 +1364,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
         x[[estn]] = format(est, digits=digits)
         x[[estn]][is.na(est)] = "nonEst"
     }
-    xc = as.matrix(format.data.frame(x, digits=digits, na.encode=FALSE))
+    xc = as.matrix(format.data.frame(x, digits=digits, na.encode=TRUE))
     m = apply(rbind(just, names(x), xc), 2, function(x) {
         w = max(sapply(x, nchar))
         if (x[1] == "R") format(x[-seq_len(2)], width = w, justify="right")

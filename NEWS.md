@@ -6,6 +6,9 @@ title: "NEWS for the emmeans package"
   * Refinements in tracking static offsets
   * Made d.f. consistent for `geeglm` and `glmgee` (#496)
   * Fixed suggestion for installing from GitHub (#497)
+  * Change that allows factors to have `NA` levels (#500). This
+    was previously not allowed, and we added an `"allow.na.levs"` option
+    (defaults to `TRUE`) just in case we broke anything that used to work.
 
 
 ## emmeans 1.10.3

@@ -7,7 +7,7 @@
 \alias{emm_defaults}
 \title{Set or change emmeans options}
 \format{
-An object of class \code{list} of length 21.
+An object of class \code{list} of length 22.
 }
 \usage{
 emm_options(..., disable)
@@ -63,6 +63,10 @@ object.}
   \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{test.emmGrid}},
   \code{\link{confint.emmGrid}}, and \code{\link{emmip}}. The only option that can
   affect the latter four is \code{"predict.method"}.}
+\item{\code{allow.na.levs}}{A logical value that if \code{TRUE} (the default), allows
+  \code{NA} to be among the levels of a factor. Older versions of \pkg{emmeans} did not
+  allow this. So if problems come up (say in a messy dataset that includes incomplete cases), 
+  try setting this to \code{FALSE}.}
 \item{\code{sep}}{A character value to use as a separator in labeling factor combinations.
   Such labels are potentially used in several places such as \code{\link{contrast}} and 
   \code{\link{plot.emmGrid}} when combinations of factors are compared or plotted.
