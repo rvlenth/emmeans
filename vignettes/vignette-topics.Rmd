@@ -11,20 +11,14 @@ vignette: >
 
 
 
-### Jump to:  [#](##) [[](#[) [<](#<) [A](#a) [B](#b) [C](#c) [D](#d) [E](#e) [F](#f) [G](#g) [H](#h) [I](#i) [J](#j) [K](#k) [L](#l) [M](#m) [N](#n) [O](#o) [P](#p) [Q](#q) [R](#r) [S](#s) [T](#t) [U](#u) [V](#v) [W](#w) [X](#x) [Y](#y) [Z](#z)  {#topnav}
+### Jump to:  [A](#a) [B](#b) [C](#c) [D](#d) [E](#e) [F](#f) [G](#g) [H](#h) [I](#i) [J](#j) [K](#k) [L](#l) [M](#m) [N](#n) [O](#o) [P](#p) [Q](#q) [R](#r) [S](#s) [T](#t) [U](#u) [V](#v) [W](#w) [X](#x) [Z](#z)  {#topnav}
 
 
-  * [## Link functions {#links}](transformations.html#regrid3)
-  * [[Back to Contents](#contents)](transformations.html#regrid3)
-  * <
-      * [-- ](transformations.html#regrid3)
 
 
-### # {##}
+### A {#a}
 
 
-  * [a probability scale, and whatever link was used (say, probit) has already been](transformations.html#regrid3)
-  * [accounted for, so is not "remembered" for possible later back-transformation. In](transformations.html#regrid3)
   * [`add_grouping()`](utilities.html#groups)
   * [`addl.vars`](sophisticated.html#random-slopes)
   * `adjust`
@@ -55,7 +49,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### [ {#[}
+### B {#b}
 
 
   * [Back-transforming](basics.html#transf)
@@ -86,7 +80,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### < {#<}
+### C {#c}
 
 
   * [Causal inference](messy-data.html#counterfact)
@@ -153,7 +147,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### A {#a}
+### D {#d}
 
 
   * [Degrees of freedom](sophisticated.html#dfoptions)
@@ -166,7 +160,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### B {#b}
+### E {#e}
 
 
   * [`eff` contrasts](comparisons.html#contrasts)
@@ -221,7 +215,6 @@ vignette: >
       * [Manually computed](basics.html#refgrid)
       * [Reference grid](basics.html#emms)
       * [vs. ordinary marginal means](basics.html#emms)
-  * [estimating marginal means will be averages of the probabilities in the reference](transformations.html#regrid3)
   * Examples
       * [`auto.noise`](interactions.html#factors)
       * [Bayesian model](sophisticated.html#mcmc)
@@ -239,9 +232,7 @@ vignette: >
       * [`InsectSprays`](transformations.html#insects)
       * [`Insurance`](xplanations.html#offsets)
       * [Insurance claims (SAS)](sophisticated.html#offsets)
-      * Logistic regression
-          * [in *transformations: links*](transformations.html#links)
-          * [in *transformations: regrid3*](transformations.html#regrid3)
+      * [Logistic regression](transformations.html#links)
       * [`lqs` objects](xtending.html#lqs)
       * [`MOats`](basics.html#multiv)
       * `mtcars`
@@ -252,7 +243,6 @@ vignette: >
       * `neuralgia`
           * [`counterfactuals`](messy-data.html#neuralgia)
           * [in *transformations: links*](transformations.html#links)
-          * [in *transformations: regrid3*](transformations.html#regrid3)
           * [in *transformations: trangraph*](transformations.html#trangraph)
       * [`nutrition`](messy-data.html#nutrex)
           * [`submodel`](messy-data.html#submodels)
@@ -290,7 +280,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### C {#c}
+### F {#f}
 
 
   * *F* test
@@ -298,7 +288,6 @@ vignette: >
       * [Role in *post hoc* tests](basics.html#recs1)
   * Factors
       * [Mediating](messy-data.html#weights)
-  * [for getting estimates on a scale that is desired, but they also force](transformations.html#regrid3)
   * [Formatting results](basics.html#formatting)
   * [Foundations of EMMs](basics.html#found)
   * [Frequently asked questions](FAQs.html)
@@ -306,7 +295,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### D {#d}
+### G {#g}
 
 
   * [G-Computation](messy-data.html#counterfact)
@@ -325,14 +314,13 @@ vignette: >
   * [`glm`*xxx* models](models.html#G)
   * [`gls` models](models.html#K)
   * [Graphical displays](basics.html#plots)
-  * [grid](transformations.html#regrid3)
   * [Grouping factors](utilities.html#groups)
   * [Grouping into separate sets](confidence-intervals.html#byvars)
 
 
 [Back to top](#topnav)
 
-### E {#e}
+### H {#h}
 
 
   * [Hook functions](xtending.html#hooks)
@@ -343,7 +331,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### F {#f}
+### I {#i}
 
 
   * [Indicator variables](basics.html#RG)
@@ -361,7 +349,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### G {#g}
+### J {#j}
 
 
   * [`joint`](confidence-intervals.html#joint)
@@ -374,7 +362,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### H {#h}
+### K {#k}
 
 
   * [`kable`](basics.html#formatting)
@@ -383,7 +371,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### I {#i}
+### L {#l}
 
 
   * Labels
@@ -412,7 +400,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### J {#j}
+### M {#m}
 
 
   * [`make.tran()`](transformations.html#special)
@@ -446,7 +434,6 @@ vignette: >
       * [Large](messy-data.html#nuisance)
       * [Quick reference](models.html#quickref)
       * [Unsupported](FAQs.html#qdrg)
-  * [models for ordinal data allow for a `"prob"` mode that produces estimates of](transformations.html#regrid3)
   * [Multi-factor studies](FAQs.html#interactions)
   * [Multinomial models](models.html#N)
   * [Multiple imputation](models.html#I)
@@ -464,14 +451,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### K {#k}
-
-
-
-
-[Back to top](#topnav)
-
-### X {#x}
+### N {#n}
 
 
   * [`NA`s in the output](FAQs.html#NAs)
@@ -489,7 +469,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### L {#l}
+### O {#o}
 
 
   * Observational data
@@ -515,7 +495,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### M {#m}
+### P {#p}
 
 
   * *P* values
@@ -560,9 +540,7 @@ vignette: >
       * [Posterior predictive distribution](sophisticated.html#predict-mcmc)
       * [Reference grid](predictions.html#ref-grid)
       * [Total SD](predictions.html#feedlot)
-  * [preempting any timing choices you might otherwise have made about handling the](transformations.html#regrid3)
   * [`print.summary_emm()`](basics.html#emmobj)
-  * [probabilities for each ordinal level. The reference grid comprises estimates on](transformations.html#regrid3)
   * Probit regression
       * [Odds or risk ratios](transformations.html#not-logit)
   * [`pwpm()`](comparisons.html#pwpm)
@@ -571,7 +549,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### N {#n}
+### Q {#q}
 
 
   * [`qdrg()`](FAQs.html#qdrg)
@@ -581,7 +559,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### O {#o}
+### R {#r}
 
 
   * [R-squared](basics.html#pigs)
@@ -630,7 +608,6 @@ vignette: >
       * [`regrid` vs. `type`](transformations.html#regrid2)
       * [to obtain risk ratios](transformations.html#riskrats)
       * [`transform = "log"`](transformations.html#logs)
-  * [`regrid()` that takes place *at the time the reference grid is constructed*,](transformations.html#regrid3)
   * [Residual plots](basics.html#pigs)
   * [Response scale](confidence-intervals.html#tran)
   * [Response transformations](basics.html#transf)
@@ -645,7 +622,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### P {#p}
+### S {#s}
 
 
   * [Sample size, displaying](confidence-intervals.html#summary)
@@ -659,15 +636,12 @@ vignette: >
   * [Sidak adjustment](confidence-intervals.html#adjust)
   * Significance
       * [Assessing](basics.html#pvalues)
-  * [Similar things happen with certain options with multinomial models,](transformations.html#regrid3)
   * [`simple = "each"`](confidence-intervals.html#simple)
   * Simple comparisons
       * [in *confidence-intervals: simple*](confidence-intervals.html#simple)
       * [in *FAQs: interactions*](FAQs.html#interactions)
       * [in *interactions: simple*](interactions.html#simple)
   * [Simpson's paradox](basics.html#emms)
-  * [so they will be different than what you would have obtained by keeping](transformations.html#regrid3)
-  * [Some model classes provide special argument(s) (typically `mode`) that may cause](transformations.html#regrid3)
   * `specs`
       * [Formula](comparisons.html#formulas)
   * [Standardized response](transformations.html#stdize)
@@ -704,7 +678,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### Q {#q}
+### T {#t}
 
 
   * [*t* tests vs. *z* tests](FAQs.html#asymp)
@@ -716,11 +690,7 @@ vignette: >
       * [Noninferiority](confidence-intervals.html#equiv)
       * [Nonzero null](confidence-intervals.html#summary)
       * [One- and two-sided](confidence-intervals.html#summary)
-  * [that sense, when we use `mode = "prob"`, it is sort of like an implied call to](transformations.html#regrid3)
-  * [the link scale.](transformations.html#regrid3)
-  * [things on the link scale and then computing the probabilities after averaging on](transformations.html#regrid3)
   * [Too few means](AQuickStart.html#covar)
-  * [transformation. If there are one or more factors that are averaged over in](transformations.html#regrid3)
   * [Transformations](basics.html#transf)
       * [Adding after the fact](transformations.html#after)
       * [Auto-detected](transformations.html#auto)
@@ -739,7 +709,6 @@ vignette: >
       * [`scale()`](transformations.html#stdize)
       * [Standardizing](transformations.html#stdize)
       * [Timing is everything](transformations.html#timing)
-  * [transformations or links to be handled early. For example, cumulative link](transformations.html#regrid3)
   * [Transformations|Implied re-gridding](transformations.html#regrid3)
   * [Transformations|Special modes](transformations.html#regrid3)
   * Trends
@@ -758,7 +727,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### R {#r}
+### U {#u}
 
 
   * [Unadjusted tests](confidence-intervals.html#adjmore)
@@ -769,7 +738,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### S {#s}
+### V {#v}
 
 
   * [Variables that are not predictors](basics.html#params)
@@ -783,7 +752,6 @@ vignette: >
       * [FAQS](FAQs.html)
       * [Interactions](interactions.html)
       * [Messy data](messy-data.html)
-      * [Models](models.html)
       * [Predictions](predictions.html)
       * [Sophisticated models](sophisticated.html)
       * [Transformations and link functions](transformations.html)
@@ -792,7 +760,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### T {#t}
+### W {#w}
 
 
   * Weighting
@@ -805,7 +773,7 @@ vignette: >
 
 [Back to top](#topnav)
 
-### U {#u}
+### X {#x}
 
 
   * [`xtable` method](basics.html#formatting)
@@ -813,20 +781,11 @@ vignette: >
 
 [Back to top](#topnav)
 
-### V {#v}
-
-
-  * [you to obtain marginal means of measurements already on that scale.](transformations.html#regrid3)
-
-
-[Back to top](#topnav)
-
-### W {#w}
+### Z {#z}
 
 
   * [*z* tests](sophisticated.html#dfoptions)
       * [vs. *t* tests](FAQs.html#asymp)
-  * [zero-inflated, or hurdle models. Those special modes are a great convenience](transformations.html#regrid3)
   * [`zeroinfl` models](models.html#C)
 
 

@@ -153,7 +153,7 @@ Remember again: When it comes to transformations, timing is everything.
 <!-- @index Transformations|Special modes; 
              `mode` argument!implied re-gridding; 
              Transformations|Implied re-gridding;
-             Re-gridding!Implied-->
+             Re-gridding!Implied  -->
 Some model classes provide special argument(s) (typically `mode`) that may cause
 transformations or links to be handled early. For example, cumulative link
 models for ordinal data allow for a `"prob"` mode that produces estimates of
