@@ -153,12 +153,12 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
             result$vcov = stats::vcov(object)
         if(missing(df))
             result$df = df.residual(object)
-        if(missing(contrasts))
-            result$contrasts = object$contrasts
+        if(missing(contrasts)) 
+            contrasts = object$contrasts
         if(any(is.na(result$coef)))
             result$qr = object$qr
     }
-    else {
+    else { # missing(object) == TRUE
         if(missing(formula))
             stop("When 'object' is missing, must at least provide 'formula'")
         result$formula = formula
@@ -169,6 +169,8 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         if (!missing(coef)) result$coef = coef
         if (!missing(vcov)) result$vcov = vcov
         if(!missing(df)) result$df = df
+        if(missing(contrasts))
+            contrasts = attr(model.matrix(result$formula, data = data[1:2, ]), "contrasts")
     }
     if(!missing(df)) result$df = df
     if(is.null(result$df))

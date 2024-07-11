@@ -9,6 +9,7 @@ title: "NEWS for the emmeans package"
   * Change that allows factors to have `NA` levels (#500). This
     was previously not allowed, and we added an `"allow.na.levs"` option
     (defaults to `TRUE`) just in case we broke anything that used to work.
+  * Better default contrasts in `qdrg()` (#501)
 
 
 ## emmeans 1.10.3
