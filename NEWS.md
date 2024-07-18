@@ -10,6 +10,7 @@ title: "NEWS for the emmeans package"
     was previously not allowed, and we added an `"allow.na.levs"` option
     (defaults to `TRUE`) just in case we broke anything that used to work.
   * Better default contrasts in `qdrg()` (#501)
+  * Bug fix for nuisance factors when we have a multivariate response (#503)
 
 
 ## emmeans 1.10.3
