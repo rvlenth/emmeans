@@ -695,7 +695,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # next stmt assumes that model formula is 1st argument (2nd element) in call.
     # if not, we probably get an error or something that isn't a formula
     # and it is silently ignored
-    frm = try(formula(eval(attr(data, "call")[[2]])), silent = TRUE)
+    frm = try(formula(eval(attr(data, "call")[[2]], environment(trms))), silent = TRUE)
     if (inherits(frm, "formula")) { # response may be transformed
         lhs = if(length(frm) == 2) NULL
               else frm[-3]

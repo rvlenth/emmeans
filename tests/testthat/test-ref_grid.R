@@ -66,4 +66,9 @@ test_that("Fuzzy matching of numerical mult.levels works", {
     expect_equal(MOats.nrg@levels$nitro, c(0, .4), 0.001)
 })
 
-
+### Nuisance factors
+MOats.rgn = ref_grid(MOats.lm, nuisance = "Block")
+MOats.emm = emmeans(MOats.lm, ~ Variety * rep.meas)
+test_that("We get same predictions with and without nuisance specs", {
+    expect_equal(predict(MOats.rgn), predict(MOats.emm), 0.001)
+})
