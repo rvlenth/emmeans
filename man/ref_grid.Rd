@@ -101,7 +101,10 @@ equal or proportional weights as specified in \code{wt.nuis} (see the
 \code{nuisance} must not interact with other factors, not even other
 nuisance factors. Specifying nuisance factors can save considerable
 storage and computation time, and help avoid exceeding the maximum
-reference-grid size (\code{get_emm_option("rg.limit")}).}
+reference-grid size (\code{get_emm_option("rg.limit")}). 
+(\emph{Note:} For certain models where the \code{emm_basis} method returns a
+re-gridded parameterization, nuisance factors cannot be used, and an error
+is thrown.)}
 
 \item{rg.limit}{Integer limit on the number of reference-grid rows to allow
 (checked before any multivariate responses are included).}

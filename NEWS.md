@@ -12,6 +12,7 @@ title: "NEWS for the emmeans package"
   * Better default contrasts in `qdrg()` (#501)
   * Bug fix for nuisance factors when we have a multivariate response (#503)
   * Improved auto-detection of response transformation (#504)
+  * Bug fix for detecting cases where we can't use `nuisance` (#503)
 
 
 ## emmeans 1.10.3

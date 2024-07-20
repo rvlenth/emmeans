@@ -26,6 +26,7 @@ you are probably better off trying to use the `qdrg()` function.
   4. [Supporting `lqs` objects](#lqs)
   5. [Communication between methods](#communic)
   5. [Hook functions](#hooks)
+  6. [Re-gridded basis](#regridded)
   6. [Exported methods from **emmeans**](#exported)
   7. [Existing support for `rsm` objects](#rsm)
   7. [Dispatching and restrictions](#dispatch)
@@ -233,6 +234,20 @@ simply incorporate it as `attr(data, "misc")` where `data` is the dataset return
 Most linear models supported by **emmeans** have straightforward structure: Regression coefficients, their covariance matrix, and a set of linear functions that define the reference grid. However, a few are more complex. An example is the `clm` class in the **ordinal** package, which allows a scale model in addition to the location model. When a scale model is used, the scale parameters are included in the model matrix, regression coefficients, and covariance matrix, and we can't just use the usual matrix operations to obtain estimates and standard errors. To facilitate using custom routines for these tasks, the `emm_basis.clm` function function provided in **emmeans** includes, in its `misc` part, the names (as character constants) of two "hook" functions: `misc$estHook` has the name of the function to call when computing estimates, standard errors, and degrees of freedom (for the `summary` method); and `misc$vcovHook` has the name of the function to call to obtain the covariance matrix of the grid values (used by the `vcov` method). These functions are called in lieu of the usual built-in routines for these purposes, and return the appropriately sized matrices. 
 
 In addition, you may want to apply some form of special post-processing after the reference grid is constructed. To provide for this, give the name of your function to post-process the object in `misc$postGridHook`. Again, `clm` objects (as well as `polr` in the **MASS** package) serve as an example. They allow a `mode` specification that in two cases, calls for post-processing. The `"cum.prob"` mode uses the `regrid` function to transform the linear predictor to the cumulative-probability scale. And the `"prob"` mode performs this, as well as applying the contrasts necessary to convert the cumulative probabilities into the class probabilities.
+
+## Re-gridded basis {#regridded}
+<!-- @index `emm_basis()`!Re-gridded; `misc$regrid.flag`; `regrid.flag` -->
+Sometimes your `emm_basis` method may essentially create a re-gridded basis, where
+`X` and `bhat` are not actually a model matrix and regression coefficients, 
+but instead, `X` is the identity, `bhat` comprises the predictions at each grid point, 
+and `V` is the covariance matrix of those predictions. In those cases, we recommend also
+setting `misc$regrid.flag = TRUE`. Currently, this flag is used only for checking
+whether the `nuisance` argument can be used in `ref_grid()`, and it is not 
+absolutely necessary because we also check to see if `X` is the identity. But
+it provides a more efficient and reliable check. The code for nuisamce factors relies
+on the structure of model matrices where columns are associated with model terms.
+So it is not possible to process nuisance factors with a re-gridded basis.
+
 
 [Back to Contents](#contents)
 

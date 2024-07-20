@@ -1017,6 +1017,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         object@V = vcov(object)[estble, estble, drop = FALSE]
         object@bhat = est[[1]]
         object@linfct = diag(1, length(estble))
+        object@misc$regrid.flag = TRUE
         pargs = object@grid[names(object@levels)]
         lbls = do.call(paste, c(pargs, sep = "."))
         if (!is.null(disp <- object@misc$display)) {  # fix up for the bookkeeping in nested models
@@ -1092,6 +1093,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
                 L[i, ] = apply(X[idx[i,], , drop = FALSE], 2, wmn)
             object@V = L %*% tcrossprod(object@V, L)
             object@linfct = diag(1, nrow(L))
+            object@misc$regrid.flag = TRUE
             if(!is.na(PB[1])) {
                 pb = matrix(0, ncol = nrow(L), nrow = nrow(PB))
                 for (i in seq_len(nrow(idx)))
