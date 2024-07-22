@@ -13,7 +13,7 @@ mvcontrast(object, method = "eff", mult.name = object@roles$multresp,
 
 \item{method}{A contrast method, per \code{\link{contrast.emmGrid}}}
 
-\item{mult.name}{Character vector of nNames of the factors whose levels
+\item{mult.name}{Character vector of names of the factors whose levels
 define the multivariate means to contrast. If the model itself has a
 multivariate response, that is what is used. Otherwise, \code{mult.name}
 \emph{must} be specified.}

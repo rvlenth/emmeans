@@ -34,6 +34,7 @@ reference:
   - comb_facs
   - rbind.emmGrid
   - regrid
+  - mvregrid
   - update.emmGrid
 
 - title: Displays

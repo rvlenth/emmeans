@@ -13,6 +13,8 @@ title: "NEWS for the emmeans package"
   * Bug fix for nuisance factors when we have a multivariate response (#503)
   * Improved auto-detection of response transformation (#504)
   * Bug fix for detecting cases where we can't use `nuisance` (#503)
+  * New `mvregrid()` function for multivariate response transformations
+    such as a compositional response.
 
 
 ## emmeans 1.10.3

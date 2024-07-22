@@ -33,7 +33,7 @@
 #' 
 #' @param object An object of class \code{emmGrid}
 #' @param method A contrast method, per \code{\link{contrast.emmGrid}}
-#' @param mult.name Character vector of nNames of the factors whose levels
+#' @param mult.name Character vector of names of the factors whose levels
 #'   define the multivariate means to contrast. If the model itself has a
 #'   multivariate response, that is what is used. Otherwise, \code{mult.name}
 #'   \emph{must} be specified.
@@ -146,4 +146,84 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
         list(estimates = con, tests = result)
     else
         result
+}
+
+
+
+
+#' Multivariate regridding
+#' 
+#' This function is similar to \code{\link{regrid}} except it performs a
+#' multivariate transformation. This is useful, for instance, in multivariate
+#' models that have a compositional response.
+#' 
+#' If a multivariate response transformation was used in fitting the model,
+#' its name is auto-detected, and in that case we need not specify \code{fcn}
+#' as long as its inverse can be found in the namespace of the \pkg{compositions}
+#' package. (That package need not be installed unless \code{fcn} is a character 
+#' value.) For some such models, auto-detection process throws a
+#' warning message, especially if \code{cbind} is also present in the model
+#' formula.
+#' 
+#' Currently, no bias-adjustment option is available.
+#'
+#' @param object An \code{emmGrid} object
+#' @param newname The name to give to the newly created multivariate factor
+#' @param newlevs Character levels of the newly created factor (must conform to
+#' the number of columns created by \code{fcn})
+#' @param mult.name The name of the multivariate factor to be transformed.
+#'   By default, we use the last factor
+#' @param fcn The multivariate function to apply. If character, we look for it 
+#'   in the namespace of the \pkg{compositions} package.
+#' @param ... Additional arguments passed to \code{fcn}
+#'
+#' @return A new \code{emmGrid} object with the newly created factor as its last factor
+#' @export
+#' 
+#' @examples
+#' if(requireNamespace("compositions"))
+#'     emm_example("mvregrid")
+#'     # Use emm_example("mvregrid", list = TRUE) # to see just the code
+#' 
+mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy)), 
+                    mult.name = names(levels)[length(levels)], 
+                    fcn = paste0(tran, "Inv"), ...) {
+    levels = levels(object)
+    tran = object@misc$tran
+    if (mult.name != names(levels)[length(levels)]) {
+        idx = which(names(levels) == mult.name)
+        if(length(idx) == 0) 
+            stop("we don't have a factor named '", mult.name, "'")
+        levels = c(levels[-idx], levels[idx])
+    }
+    ord = .std.order(object@grid, levels)
+    if(any(ord != seq_along(ord)))
+        object[ord]
+    
+    yhat = matrix(predict(object), ncol = length(levels[[mult.name]]))
+    if(is.character(fcn)) {
+        if(!requireNamespace("compositions"))
+            stop("The 'compositions' package must be installed to proceed")
+        fcn = get(fcn, envir = asNamespace("compositions"))
+    }
+    newy = fcn(yhat, ...)
+    if(length(newlevs) != (k <- ncol(newy)))
+        stop("Nonconforming 'newlevs': Must be of length ", k)
+    Jac = numDeriv::jacobian(\(x) as.numeric(fcn(x)), yhat)
+    object@V = Jac %*% vcov(object) %*% t(Jac)
+    object@bhat = as.numeric(newy)
+    object@linfct = diag(length(object@bhat))
+    names(levels)[length(levels)] = object@roles$multresp = newname
+    levels[[newname]] = newlevs
+    object@levels = levels
+    wgt = object@grid[[".wgt."]]
+    offs = object@grid[[".offset."]]
+    object@grid = do.call(expand.grid, levels)
+    if(!is.null(wgt))
+        object@grid[[".wgt."]] = rep(wgt[seq_len(nrow(newy))], k)
+    if(!is.null(offs))
+        object@grid[[".offset."]] = rep(offs[seq_len(nrow(newy))], k)
+    object@misc$tran = object@misc$by = NULL
+    
+    object
 }
