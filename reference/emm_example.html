@@ -13,7 +13,7 @@ or otherwise just list it on the console (list = TRUE)."><meta property="og:imag
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3-090006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3099</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,7 +120,17 @@ or otherwise just list it on the console (<code>list = TRUE</code>).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; rg1 &lt;- qdrg(log(conc) ~ source + factor(percent), </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> +     data = pigs, coef = coef(bigmod), vcov = vcov(bigmod), df = bigmod$df.residual)</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in `contrasts&lt;-`(`*tmp*`, value = contr.funs[1 + isOF[nn]]):</span> contrasts can be applied only to factors with 2 or more levels</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; emmeans(rg1, "source", type = "response")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  source response   SE  df asymp.LCL asymp.UCL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fish       29.8 1.09 Inf      27.7      32.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  soy        39.1 1.47 Inf      36.4      42.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  skim       44.6 1.75 Inf      41.2      48.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: percent </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Intervals are back-transformed from the log scale </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

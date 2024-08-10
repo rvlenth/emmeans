@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3-090006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3099</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Models supported by emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.3.90006</h4>
+package, Version 1.10.3099</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/models.Rmd" class="external-link"><code>vignettes/models.Rmd</code></a></small>
@@ -720,6 +720,14 @@ be <code>Inf</code>.</p>
 <p>Some objects in this group may require that the original or reference
 dataset be provided when calling <code><a href="../reference/ref_grid.html">ref_grid()</a></code> or
 <code><a href="../reference/emmeans.html">emmeans()</a></code>.</p>
+<p>For <code>coxph</code> objects, the estimates we obtain are
+comparable to running <code>predict.coxph()</code> with
+<code>reference = "zero"</code>; that is, no covariate centering is
+done. The user may use <code>at</code> to specify adjusted covariate
+values. For example, the default reference grid sets each covariate to
+its mean, so estimates comparable to
+<code>predict.coxph(..., reference = "sample")</code> would be obtained
+by specifying <code>at = list(x = 0)</code>.</p>
 <p>In the case of <code><a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">mgcv::gam</a></code> objects, there are optional
 <code>freq</code> and <code>unconditional</code> arguments as is
 detailed in the documentation for <code><a href="https://rdrr.io/pkg/mgcv/man/vcov.gam.html" class="external-link">mgcv::vcov.gam()</a></code>. Both

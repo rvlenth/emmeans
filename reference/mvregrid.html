@@ -11,7 +11,7 @@ models that have a compositional response."><meta property="og:image" content="h
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3-090006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.3099</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,6 +120,42 @@ formula.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"compositions"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="emm_example.html">emm_example</a></span><span class="op">(</span><span class="st">"mvregrid"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: compositions</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> --- Running code from 'system.file("extexamples", "mvregrid.R", package = "emmeans")'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; data(AnimalVegetation, package = "compositions")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AV &lt;- as.data.frame(AnimalVegetation)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVmod &lt;- lm(compositions::ilr(cbind(disc, spick, din, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     spin)) ~ regA, data = AV)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVRG &lt;- suppressWarnings(ref_grid(AVmod))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVRG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     regA = 0, 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     rep.meas = multivariate response levels: 1, 2, 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Transformation: “::.compositions.ilr” </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; confint(mvregrid(AVRG, newname = "comp", newlevs = c("disc", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     "spick", "din", "spin"), fcn = "ilrInv"), by = "regA")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> regA = 0:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  newname prediction     SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  disc         0.349 0.0228 98    0.304    0.394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  spick        0.229 0.0123 98    0.205    0.254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  din          0.184 0.0155 98    0.153    0.214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  spin         0.238 0.0122 98    0.214    0.262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> regA = 1:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  newname prediction     SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  disc         0.322 0.0217 98    0.279    0.365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  spick        0.260 0.0134 98    0.233    0.286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  din          0.183 0.0152 98    0.153    0.213</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  spin         0.235 0.0122 98    0.211    0.260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span>    <span class="co"># Use emm_example("mvregrid", list = TRUE) # to see just the code</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
