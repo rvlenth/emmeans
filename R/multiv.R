@@ -190,6 +190,9 @@ mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy))
                     fcn = paste0(tran, "Inv"), ...) {
     levels = levels(object)
     tran = object@misc$tran
+    if(is.character(tran))
+        tran = rev(strsplit(tran, "\\.")[[1]])[1]
+    by = object@misc$by.vars
     if (mult.name != names(levels)[length(levels)]) {
         idx = which(names(levels) == mult.name)
         if(length(idx) == 0) 
@@ -198,32 +201,41 @@ mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy))
     }
     ord = .std.order(object@grid, levels)
     if(any(ord != seq_along(ord)))
-        object[ord]
+        object = object[ord] |> update(by.vars = by)
     
-    yhat = matrix(predict(object), ncol = length(levels[[mult.name]]))
+    yhat = matrix(predict(object), ncol = (p <- length(levels[[mult.name]])))
     if(is.character(fcn)) {
-        if(!requireNamespace("compositions"))
+        if(requireNamespace("compositions"))
+            fcn = get(fcn, envir = asNamespace("compositions"))
+        else
             stop("The 'compositions' package must be installed to proceed")
-        fcn = get(fcn, envir = asNamespace("compositions"))
     }
     newy = fcn(yhat, ...)
     if(length(newlevs) != (k <- ncol(newy)))
         stop("Nonconforming 'newlevs': Must be of length ", k)
+    if(!is.na(object@post.beta)) {
+        pb = apply(object@linfct %*% t(object@post.beta), 2, function(y) {
+            as.numeric(fcn(matrix(y, ncol = p), ...))
+        })
+        object@post.beta = t(pb)
+    }
     Jac = numDeriv::jacobian(\(x) as.numeric(fcn(x)), yhat)
     object@V = Jac %*% vcov(object) %*% t(Jac)
     object@bhat = as.numeric(newy)
     object@linfct = diag(length(object@bhat))
     names(levels)[length(levels)] = object@roles$multresp = newname
+    object@roles$predictors = setdiff(object@roles$predictors, mult.name)
     levels[[newname]] = newlevs
     object@levels = levels
     wgt = object@grid[[".wgt."]]
-    offs = object@grid[[".offset."]]
-    object@grid = do.call(expand.grid, levels)
+    g = object@grid = object@grid[seq_len(n <- nrow(newy)), setdiff(names(object@grid), c(mult.name, ".wgt.", ".offset.")), drop = FALSE]
+    for (i in seq_len(k - 1)) object@grid = rbind(object@grid, g)
+    object@grid[["newname"]] = rep(newlevs, each = n)
     if(!is.null(wgt))
-        object@grid[[".wgt."]] = rep(wgt[seq_len(nrow(newy))], k)
-    if(!is.null(offs))
-        object@grid[[".offset."]] = rep(offs[seq_len(nrow(newy))], k)
-    object@misc$tran = object@misc$by = NULL
+        object@grid[[".wgt."]] = rep(wgt[seq_len(n)], k)
+    object@misc$tran = object@misc$inv.lbl = object@misc$sigma = NULL
+    object@misc$pri.vars = setdiff(names(object@grid), c(object@misc$by.vars, ".wgt'"))
+    object@misc$methDesc = "mvregrid"
     
     object
 }

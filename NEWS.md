@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.10.3-090xxxx
+## emmeans 1.10.4
   * Refinements in tracking static offsets
   * Made d.f. consistent for `geeglm` and `glmgee` (#496)
   * Fixed suggestion for installing from GitHub (#497)

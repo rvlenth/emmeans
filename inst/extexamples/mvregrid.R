@@ -1,11 +1,13 @@
-data(AnimalVegetation)
+data(AnimalVegetation, package = "compositions")
 AV <- as.data.frame(AnimalVegetation)
 
-AVmod <- lm(ilr(cbind(disc,spick,din,spin)) ~ regA, data = AV)
+AVmod <- lm(compositions::ilr(cbind(disc,spick,din,spin)) ~ regA, data = AV)
 
 AVRG <- ref_grid(AVmod)   |> suppressWarnings()
-AVrg
+AVRG
 
-mvregrid(AVRG, newname = "comp", newlevs = c("disc","spick","din","spin")) |>
+mvregrid(AVRG, newname = "comp", 
+         newlevs = c("disc","spick","din","spin"),
+         fcn = "ilrInv") |>
     confint(by = "regA")
      

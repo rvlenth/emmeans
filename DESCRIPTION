@@ -1,8 +1,8 @@
 Package: emmeans
 Type: Package
 Title: Estimated Margin2l Means, aka Least-Squares Means
-Version: 1.10.3-090006
-Date: 2024-07-22
+Version: 1.10.3099
+Date: 2024-08-10
 Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cre", "cph"), 
     email = "russell-lenth@uiowa.edu"),
     person("Ben", "Bolker", role = "ctb"),
@@ -18,8 +18,8 @@ Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cre", "cph"),
 Depends: R (>= 4.1.0)
 Imports: estimability (>= 1.4.1), graphics, methods, numDeriv, stats, utils,
          mvtnorm
-Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), ggplot2, lattice, 
-          logspline, mediation, mgcv, multcomp, multcompView, nlme,
+Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), compositions,
+          ggplot2, lattice, logspline, mediation, mgcv, multcomp, multcompView, nlme,
           ordinal (>= 2014.11-12), pbkrtest (>= 0.4-1), lme4, lmerTest (>= 2.0.32), 
           MASS, MuMIn, rsm, knitr, rmarkdown, sandwich, scales, splines, testthat, 
           tibble, xtable (>= 1.8-2)

@@ -170,7 +170,7 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         if (!missing(vcov)) result$vcov = vcov
         if(!missing(df)) result$df = df
         if(missing(contrasts))
-            contrasts = attr(model.matrix(result$formula, data = data[1:2, ]), "contrasts")
+            contrasts = attr(model.matrix(result$formula, data = data), "contrasts")
     }
     if(!missing(df)) result$df = df
     if(is.null(result$df))

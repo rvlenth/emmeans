@@ -53,7 +53,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     X = kronecker(pat, X)
     nbasis = estimability::all.estble
     nbasis = kronecker(rep(1,k), nbasis)
-    misc = list(tran = "log", inv.lbl = "e^y")
+    misc = list(tran = "clr")   ### misc = list(tran = "log", inv.lbl = "e^y")
     dfargs = list(df = object$edf)
     dffun = function(k, dfargs) dfargs$df
     if(is.null(ylevs <- object$lev))
@@ -70,6 +70,8 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 
 # post-processing of ref_grid for "prob" mode
 # also allows simulated outcomes
+## Note - now that we have mvregrid, we could just pass the latent grid
+## through with the clrInv transform. But this works so I'm just leaving it here
 .multinom.postGrid = function(object, N.sim, ...) {
     linfct = object@linfct
     misc = object@misc

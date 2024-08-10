@@ -259,7 +259,11 @@ If a data frame is needed, \code{summary}, \code{confint},
   \samp{object@misc$inv.lbl}. Any \eqn{t} or \eqn{z} tests are still performed
   on the scale of the linear predictor, not the inverse-transformed one.
   Similarly, confidence intervals are computed on the linear-predictor scale,
-  then inverse-transformed.
+  then inverse-transformed. 
+  
+  Be aware that only univariate transformations and links are
+  supported in this way. Some multivariate transformations are supported by 
+  \code{\link{mvregrid}}.
 }
 
 \section{Bias adjustment when back-transforming}{

@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2018 Russell V. Lenth                                #
+#    Copyright (c) 2012-2024 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -154,7 +154,11 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   \samp{object@misc$inv.lbl}. Any \eqn{t} or \eqn{z} tests are still performed
 #'   on the scale of the linear predictor, not the inverse-transformed one.
 #'   Similarly, confidence intervals are computed on the linear-predictor scale,
-#'   then inverse-transformed.
+#'   then inverse-transformed. 
+#'   
+#'   Be aware that only univariate transformations and links are
+#'   supported in this way. Some multivariate transformations are supported by 
+#'   \code{\link{mvregrid}}.
 #'   
 #' @section Bias adjustment when back-transforming:
 #'   When \code{bias.adjust} is \code{TRUE}, then back-transformed estimates
@@ -466,6 +470,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     }
     else
         two.trans = FALSE
+    # Check if we have a log-ratio transformation. At least then we can guess the problem.
+    if ((type == "response") && is.character(object@misc$tran) && endsWith(object@misc$tran, "lr"))
+        warning("It looks like you have a multivariate transformation -- not handled by type = 'response'.\n",
+                "Perhaps instead you wanted to use 'mvregrid()'?")
     
 
     

@@ -202,6 +202,13 @@ typically the tests and confidence intervals are asymptotic. Thus the
 Some objects in this group may require that the original or reference dataset 
 be provided when calling `ref_grid()` or `emmeans()`.
 
+For `coxph` objects, the estimates we obtain are comparable to running 
+`predict.coxph()` with `reference = "zero"`; that is, no covariate centering is done.
+The user may use `at` to specify adjusted covariate values. For example, the 
+default reference grid sets each covariate to its mean, so estimates comparable
+to `predict.coxph(..., reference = "sample")` would be obtained by specifying
+`at = list(x = 0)`.
+
 In the case of `mgcv::gam` objects, there are optional `freq` and
 `unconditional` arguments as is detailed in the documentation for
 `mgcv::vcov.gam()`. Both default to `FALSE`. The value of `unconditional` 
