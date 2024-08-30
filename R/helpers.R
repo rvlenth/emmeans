@@ -241,7 +241,7 @@ emm_basis.merMod = function(object, trms, xlev, grid,
 #' @export
 recover_data.lme = function(object, data, ...) {
     fcall = object$call
-    if (!is.null(eval(fcall$weights))) {  # painful -- we only get weights for complete cases
+    if (!is.null(eval(fcall$weights, environment(terms(object)), parent.frame()))) {  # painful -- we only get weights for complete cases
         if (!is.null(object$na.action)) {
             w = nlme::varWeights(object$modelStruct)
             wts = rep(0, length(w) + length(object$na.action))

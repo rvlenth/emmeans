@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.10.4.90xxxx
+  * Fix for long-standing `weights` bug in `lme()` (#356)
+  
+
 ## emmeans 1.10.4
   * Refinements in tracking static offsets
   * Made d.f. consistent for `geeglm` and `glmgee` (#496)
