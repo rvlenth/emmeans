@@ -205,12 +205,10 @@ part, we actually rescale the absolute values and keep track of the signs.</p>
 <span class="r-in"><span><span class="op">}</span>, spaced <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: nlme</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   Oats.lme &lt;- lme(yield ~ Variety + factor(nitro), </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +                   random = ~ 1 | Block / Variety,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +                   data = Oats)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; Oats.lme &lt;- lme(yield ~ Variety + factor(nitro), random = ~1 | Block/Variety, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     data = Oats)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   # Combine variance estimates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   VarCorr(Oats.lme)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; VarCorr(Oats.lme)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Variance     StdDev  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Block =     pdLogChol(1)         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 214.4722     14.64487</span>
@@ -218,13 +216,12 @@ part, we actually rescale the absolute values and keep track of the signs.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 109.6928     10.47343</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Residual    162.5591     12.74987</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   (totSD &lt;- sqrt(214.4724 + 109.6931 + 162.5590))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; (totSD &lt;- sqrt(214.4724 + 109.6931 + 162.559))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 22.06183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   # I figure edf is somewhere between 5 (Blocks df) and 51 (Resid df)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   emmV &lt;- emmeans(Oats.lme, ~ Variety)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; emmV &lt;- emmeans(Oats.lme, ~Variety)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   eff_size(emmV, sigma = totSD, edf = 5)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; eff_size(emmV, sigma = totSD, edf = 5)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast                 effect.size    SE df lower.CL upper.CL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Golden Rain - Marvellous      -0.240 0.330  5   -1.087    0.608</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Golden Rain - Victory          0.312 0.336  5   -0.551    1.174</span>
@@ -235,7 +232,7 @@ part, we actually rescale the absolute values and keep track of the signs.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Degrees-of-freedom method: inherited from containment when re-gridding </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt;   eff_size(emmV, sigma = totSD, edf = 51)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; eff_size(emmV, sigma = totSD, edf = 51)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast                 effect.size    SE df lower.CL upper.CL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Golden Rain - Marvellous      -0.240 0.322  5   -1.067    0.587</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Golden Rain - Victory          0.312 0.322  5   -0.517    1.140</span>
@@ -270,7 +267,7 @@ part, we actually rescale the absolute values and keep track of the signs.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
