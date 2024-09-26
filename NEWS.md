@@ -4,6 +4,7 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.10.4.90xxxx
   * Fix for long-standing `weights` bug in `lme()` (#356)
+  * Fix for inconsistent contrasts in case of missing levels (#508)
   
 
 ## emmeans 1.10.4
