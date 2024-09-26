@@ -72,3 +72,13 @@ MOats.emm = emmeans(MOats.lm, ~ Variety * rep.meas)
 test_that("We get same predictions with and without nuisance specs", {
     expect_equal(predict(MOats.rgn), predict(MOats.emm), 0.001)
 })
+
+# Missing and NA levels
+miss.df = data.frame(x = factor(c("a", "a", "b", NA), levels = c("a", "b", "c", NA)), y = 1:4)
+miss.lm = lm(y ~ x, data = miss.df)
+miss.rg1 = ref_grid(miss.lm)
+miss.rg2 = ref_grid(miss.lm, data = miss.df)
+test_that("Reference grid handles missing values", {
+    expect_equal(length(miss.rg1@levels$x), 2)
+    expect_equal(length(miss.rg2@levels$x), 2)
+})

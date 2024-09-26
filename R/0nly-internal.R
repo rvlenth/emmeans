@@ -59,7 +59,7 @@
 ### Internal function to implement 'allow.na.levs' option
 .chk.fac = function(x) {
     if(get_emm_option("allow.na.levs"))
-        x
+        factor(x, exclude = NULL)
     else
         factor(x)
 }
