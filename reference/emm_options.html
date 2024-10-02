@@ -11,7 +11,7 @@ which emmGrid objects are created, in a named list of option lists."><meta prope
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,8 @@ which <code>emmGrid</code> objects are created, in a named list of option lists.
 <span></span>
 <span><span class="fu">get_emm_option</span><span class="op">(</span><span class="va">x</span>, default <span class="op">=</span> <span class="va">emm_defaults</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">with_emm_options</span><span class="op">(</span><span class="va">...</span>, <span class="va">expr</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">emm_defaults</span></span></code></pre></div>
     </div>
 
@@ -97,6 +99,10 @@ on reproducible bugs. When <code>disable</code> is specified, the other argument
 <dt id="arg-default">default<a class="anchor" aria-label="anchor" href="#arg-default"></a></dt>
 <dd><p>Value to return if <code>x</code> is not found</p></dd>
 
+
+<dt id="arg-expr">expr<a class="anchor" aria-label="anchor" href="#arg-expr"></a></dt>
+<dd><p>Expression to evaluate. If missing, the last element of <code>...</code> is used.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -104,6 +110,8 @@ on reproducible bugs. When <code>disable</code> is specified, the other argument
   of <samp>getOption("emmeans")</samp>) – invisibly, unless called with no arguments.</p>
 <p><code>get_emm_option</code> returns the currently stored option for <code>x</code>,
   or its default value if not found.</p>
+<p><code>with_emm_options()</code> temporarily sets the options in <code>...</code>, then
+  evaluates <code>expr</code> and returns the result.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -290,6 +298,26 @@ all options, use <code>options(emmeans = NULL)</code></p>
 <span class="r-in"><span><span class="co"># restore options that had existed previously</span></span></span>
 <span class="r-in"><span><span class="fu">emm_options</span><span class="op">(</span>disable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Illustration of how 'opt.digits' affects the results of print()</span></span></span>
+<span class="r-in"><span><span class="co"># Note that the returned value is printed with the default setting (opt.digits = TRUE)</span></span></span>
+<span class="r-in"><span><span class="va">pigs.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="make.tran.html">inverse</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">with_emm_options</span><span class="op">(</span>opt.digits <span class="op">=</span> <span class="cn">FALSE</span>, <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigs.lm</span>, <span class="st">"source"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  source     emmean          SE df   lower.CL   upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fish   0.03331687 0.001293718 26 0.03065759 0.03597614</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  soy    0.02632333 0.001293718 26 0.02366405 0.02898260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  skim   0.02372024 0.001363698 26 0.02091712 0.02652336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the inverse (not the response) scale. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  source emmean      SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fish   0.0333 0.00129 26   0.0307   0.0360</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  soy    0.0263 0.00129 26   0.0237   0.0290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  skim   0.0237 0.00136 26   0.0209   0.0265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the inverse (not the response) scale. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
