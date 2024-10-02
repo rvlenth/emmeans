@@ -676,6 +676,34 @@ get_emm_option = function(x, default = emm_defaults[[x]]) {
         default
 }
 
+#' @rdname emm_options
+#' @param expr Expression to evaluate. If missing, the last element of \code{...} is used.
+#' @return \code{with_emm_options()} temporarily sets the options in \code{...}, then 
+#'   evaluates \code{try(expr)} and returns the result.
+#' @export
+#' @examples
+#' 
+#' # Illustration of how 'opt.digits' affects the results of print()
+#' # Note that the returned value is printed with the default setting (opt.digits = TRUE)
+#' pigs.lm <- lm(inverse(conc) ~ source, data = pigs)
+#' with_emm_options(opt.digits = FALSE, print(emmeans(pigs.lm, "source")))
+#' 
+with_emm_options = function(..., expr) {
+    cl = match.call()
+    if(missing(expr)) {
+        expr = cl[[length(cl)]]
+        cl = cl[-length(cl)]
+    }
+    cl[[1]] = as.name("emm_options")
+    oldopts = getOption("emmeans")
+    eval(cl, parent.frame())
+    result = try(eval(expr, parent.frame()))
+    options(emmeans = oldopts)
+    result
+}
+
+
+
 ### Exported defaults for certain options
 #' @rdname emm_options
 #' @export
@@ -746,116 +774,6 @@ emm_defaults = list (
 "levels<-.emmGrid" = function(x, value) {
     update.emmGrid(x, levels = value)
 }
-
-# ### transform method (I decided to ditch this completely in favor of levels<-)
-# #' Modify variable names and/or levels in a reference grid
-# #'
-# #' @param `_data` An object of class \code{emmGrid}
-# #' @param ... Specifications for changes to be made. See Specifications section
-# #' @param `_par` named \code{list} containing any additional parameters needed
-# #' in evaluating expressions
-# #' 
-# #' @section Specifications:
-# #' Each specification can be of one of the following forms:
-# #' \itemize{
-# #'   \item{\code{name = <replacement levels>  } (replace levels only)}
-# #'   \item{\code{name = newname ~ <replacement levels>  } (replace levels and rename)}
-# #'   \item{\code{name = ~ <expression>  } (calculate new levels)}
-# #'   \item{\code{name = newname ~ <expression>  } (calculate new levels and rename)}
-# #'   \item{\code{newame ~ name  } (rename with levels unchanged)}
-# #'   \item{\code{newname ~ <expression>  } (calculate new levels for variable 
-# #'          in expression, and rename)}
-# #' }
-# #' Here, \code{name} must be the name of an existing predictor in the grid,
-# #' and \code{<replacement levels>} is a character of numeric vector of length
-# #' exactly equal to the number of levels of \code{name}. The type of the replacement levels
-# #' does not need to match the type of the existing levels; however, any factor in the grid
-# #' remains a factor, with its levels changed.
-# #' 
-# #' Expressions must be supplied via a formula, and must be evaluable in the context 
-# #' of \code{envir} and the existing levels of \code{name}.
-# #' If a formula has a left-hand side, it is used as
-# #' a replacement name for that variable.
-# #'
-# #' @return a modified \code{emmGrid} object
-# #' @export
-# #' 
-# #' @note
-# #' An alternative way to use this is to supply a list of arguments as the \code{morph}
-# #' option in \code{\link{update.emmGrid}}.
-# #'
-# #' @examples
-# #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-# #' (warp.rg <- ref_grid(warp.lm))
-# #' transform(warp.rg, tension = 1:3,  wool = texture ~ c("soft", "coarse"))
-# #' 
-# #' # Standardized predictor
-# #' z <- scale(fiber$diameter)
-# #' fiber.lm <- lm(strength ~ z + machine, data = fiber)
-# #' 
-# #' ### Mean predictions at 1-SD intervals:
-# #' (fiber.emm <- emmeans(fiber.lm, "z", at = list(z = -1:1)))
-# #' 
-# #' ### Same predictions labeled with actual diameter values:
-# #' transform(fiber.emm, diameter ~ `scaled:center` + `scaled:scale` * z,
-# #'     `_par` = attributes(z))
-# #' 
-# #' 
-# 
-# transform.emmGrid <- function(`_data`, ..., `_par` = list()) {
-#     specs = list(...)
-#     nms = names(c(`_dummy_` = 0, specs))[-1]  # keeps this from being NULL
-#     for (i in which(nms == "")) { # get name from formula rhs
-#         if (!inherits(spc <- specs[[i]], "formula") 
-#             || (inherits(spc, "formula") && (length(spc) < 3)))
-#             stop("Unnamed specifications must be two-sided formulas")
-#         nms[i] = names(specs)[i] = c(intersect(all.vars(spc[-2]),
-#                         names(`_data`@levels)), "(absent)")[1]
-#     }
-#     for (var in nms) {
-#         oldlev = `_data`@levels[[var]]
-#         if (is.null(oldlev))
-#             stop("No variable named '", var, "' in this object.")
-#         newlev = specs[[var]]
-#         if(inherits(newlev, "formula") && length(newlev) > 2) {
-#             newname = as.character(newlev)[2]
-#             newlev = newlev[-2]
-#         }
-#         else
-#             newname = ""
-#         if ((is.numeric(newlev) || is.character(newlev)) 
-#             && length(newlev) != length(oldlev))
-#             stop("Must provide exactly ", length(oldlev), " levels for '", var, "'")
-#         else if (inherits(newlev, "formula"))
-#             newlev = eval(str2expression(as.character(newlev)[2]), 
-#                           envir = c(`_data`@levels[var], `_par`))
-#         # so at this point we have conforming numbers of levels.
-#         `_data`@levels[[var]] = newlev
-#         v = newv = `_data`@grid[[var]]
-#         if (inherits(v, "factor"))
-#             levels(newv) = newlev
-#         else for (i in seq_along(oldlev)) 
-#             newv[v == oldlev[[i]]] = newlev[[i]]
-#         `_data`@grid[[var]] = newv
-#         if (newname != "") {
-#             i = which(names(`_data`@levels) == var)
-#             names(`_data`@levels)[i] = newname
-#             i = which(names(`_data`@grid) == var)
-#             names(`_data`@grid)[i] = newname
-#             i = which(`_data`@roles$predictors == var)
-#             if (length(i) > 0) 
-#                 `_data`@roles$predictors[i] = newname
-#             nst = `_data`@model.info$nesting
-#             if (!is.null(nst)) {
-#                 names(nst)[names(nst) == var] = newname
-#                 nst = lapply(nst, function(x) { x[x == var] = newname; x })
-#                 `_data`@model.info$nesting = nst
-#             }
-#         }
-#     }
-#     `_data`
-# }
-
 
 
 ### Utility to change the internal structure of an emmGrid object

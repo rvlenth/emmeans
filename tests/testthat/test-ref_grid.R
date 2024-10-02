@@ -88,8 +88,7 @@ test_that("Reference grid handles missing values", {
     expect_equal(length(miss.rg2@levels$x), 2)
     expect_equal(length(miss.rg1a@levels$x), 3)
     expect_equal(length(miss.rg2a@levels$x), 3)
-    emm_options(allow.na.levs = FALSE)
-    expect_error(ref_grid(miss.lma))
-    emm_options(allow.na.levs = NULL) # revert to default
+    expect_equal(inherits(with_emm_options(allow.na.levs = FALSE, ref_grid(miss.lma)), 
+                 "try-error"), TRUE)
 })
 

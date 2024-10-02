@@ -6,6 +6,8 @@ title: "NEWS for the emmeans package"
   * Fix for long-standing `weights` bug in `lme()` (#356)
   * Fix for inconsistent contrasts in case of missing levels (#508, #509)
   * Fix for using nuisance variables with proportional weights (#510)
+  * New function `with_emm_options()` to run code with options temporarily set
+  
   
 
 ## emmeans 1.10.4

@@ -4,6 +4,7 @@
 \name{emm_options}
 \alias{emm_options}
 \alias{get_emm_option}
+\alias{with_emm_options}
 \alias{emm_defaults}
 \title{Set or change emmeans options}
 \format{
@@ -13,6 +14,8 @@ An object of class \code{list} of length 22.
 emm_options(..., disable)
 
 get_emm_option(x, default = emm_defaults[[x]])
+
+with_emm_options(..., expr)
 
 emm_defaults
 }
@@ -28,6 +31,8 @@ on reproducible bugs. When \code{disable} is specified, the other arguments are 
 \item{x}{Character value - the name of an option to be queried}
 
 \item{default}{Value to return if \code{x} is not found}
+
+\item{expr}{Expression to evaluate. If missing, the last element of \code{...} is used.}
 }
 \value{
 \code{emm_options} returns the current options (same as the result 
@@ -35,6 +40,9 @@ on reproducible bugs. When \code{disable} is specified, the other arguments are 
 
 \code{get_emm_option} returns the currently stored option for \code{x}, 
   or its default value if not found.
+
+\code{with_emm_options()} temporarily sets the options in \code{...}, then 
+  evaluates \code{expr} and returns the result.
 }
 \description{
 Use \code{emm_options} to set or change various options that are used in
@@ -183,6 +191,12 @@ emm_options(disable = TRUE)
 # restore options that had existed previously
 emm_options(disable = FALSE)
 }
+
+
+# Illustration of how 'opt.digits' affects the results of print()
+# Note that the returned value is printed with the default setting (opt.digits = TRUE)
+pigs.lm <- lm(inverse(conc) ~ source, data = pigs)
+with_emm_options(opt.digits = FALSE, print(emmeans(pigs.lm, "source")))
 
 }
 \seealso{

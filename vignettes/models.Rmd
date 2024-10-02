@@ -251,7 +251,8 @@ adjustment (Barnard & Rubin 1999).
 In the case of `mira` models with model classes not
 supported by **emmeans**, [GitHub issue #446](https://github.com/rvlenth/emmeans/issues/446) 
 includes a function `pool_estimates_for_qdrg()` that may be useful for obtaining
-results via `qdrg()`.
+results via `qdrg()`. Another useful link may be a page that shows [how to pool several `emmeans`
+results](https://github.com/adrianolszewski/Useful-R-codes/blob/main/Pooling%20emmeans%20objects.md); that is, instead of pooling the models and then running `emmeans()`, we do just the reverse.
 
 Support for `MuMIn::averaging` objects may be somewhat dodgy, as it is not clear
 that all supported model classes will work. The object *must* have a
