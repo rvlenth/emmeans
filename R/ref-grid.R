@@ -1103,11 +1103,11 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 # bottom part, and substitute those averages in the required columns in the top part 
 # of the model matrix.
 .basis.nuis = function(basis, info, wt, levs, data, grid, ref.levels) {
-  X = basis$X
-  if(!is.null(basis$misc$regrid.flag) || all(apply(X, 1, \(x) sum(x != 0)) == 1))   # each row has 1 nonzero element
-      stop("Sorry, 'nuisance' specs are not allowed for this situation.",
-           " Revise the call accordingly.", call. = FALSE)
-  ra = info$row.assign
+    X = basis$X
+    if(!is.null(basis$misc$regrid.flag) || all(apply(X, 1, \(x) sum(x != 0)) == 1))   # each row has 1 nonzero element
+        stop("Sorry, 'nuisance' specs are not allowed for this situation.",
+             " Revise the call accordingly.", call. = FALSE)
+    ra = info$row.assign
     r. = rep(".", length(ra))  # fillers
     n = sum(ra == ".main.grid.")
     k = nrow(X) / length(ra)   # multivariate dimension
@@ -1139,9 +1139,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     basis$misc$avgd.over = paste(length(nuis), "nuisance factors")
     RA = rep(ra, k)
     basis$X = X[RA == ".main.grid.", , drop = FALSE]
-    basis$grid = grid[ra == ".main.grid.", , drop = FALSE]
     non.nuis = setdiff(names(ref.levels), info$nuis)
     basis$ref.levels = ref.levels[non.nuis]
+    basis$grid = grid[ra == ".main.grid.", non.nuis, drop = FALSE]
     basis
 }
 
