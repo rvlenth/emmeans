@@ -351,7 +351,7 @@ recovering/overriding model information.</p>
   effects. If a function, must return a suitable matrix when it is called
   with arguments <code>(object, ...)</code>. Be careful with possible
   unintended conflicts with arguments in <code>...</code>; for example,
-  <code><a href="https://rdrr.io/pkg/sandwich/man/vcovHAC.html" class="external-link">sandwich::vcovHAC()</a></code> has optional arguments <code>adjust</code> and <code>weights</code>
+  <code><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHAC.html" class="external-link">sandwich::vcovHAC()</a></code> has optional arguments <code>adjust</code> and <code>weights</code>
   that may be intended for <code><a href="emmeans.html">emmeans()</a></code> but will also be passed to <code>vcov.()</code>.</p>
 <p><b>Nested factors.</b> Having a nesting structure affects marginal
   averaging in <code>emmeans</code> in that it is done separately for each level
@@ -494,7 +494,7 @@ recovering/overriding model information.</p>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># We could substitute the sandwich estimator vcovHAC(fiber.lm)</span></span></span>
 <span class="r-in"><span><span class="co"># as follows:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">fiber.lm</span>, vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/sandwich/man/vcovHAC.html" class="external-link">vcovHAC</a></span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">fiber.lm</span>, vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHAC.html" class="external-link">vcovHAC</a></span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If we thought that the machines affect the diameters</span></span></span>
