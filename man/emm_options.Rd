@@ -42,7 +42,7 @@ on reproducible bugs. When \code{disable} is specified, the other arguments are 
   or its default value if not found.
 
 \code{with_emm_options()} temporarily sets the options in \code{...}, then 
-  evaluates \code{expr} and returns the result.
+  evaluates \code{try(expr)} and returns the result.
 }
 \description{
 Use \code{emm_options} to set or change various options that are used in

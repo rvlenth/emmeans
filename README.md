@@ -90,6 +90,13 @@ They can always be found [for the latest CRAN version](https://cran.r-project.or
 For the latest release notes on this development version, see the 
 [NEWS file](https://github.com/rvlenth/emmeans/blob/master/NEWS.md)
 
+## Rounding
+For its summary output, **emmeans** uses an optimal-digits algorithm that rounds
+results to about the number of digits that are useful, relative to estimates' 
+confidence limits. This avoids cluttering the output, but it is unlike other R
+results, which are typically less round. If this is annoying to you, there is an 
+option (`opt.digits = FALSE`) that disables the optimal-digits routine.
+
 ## "Tidiness" can be dangerous
 I see more and more users who are in a terrible hurry to get results. They develop
 a "workflow" where they plan-out several steps at once and pipe them

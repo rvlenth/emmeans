@@ -39,6 +39,8 @@ This vignette contains answers to questions received from users or posted on dis
  12. [I asked for a Tukey adjustments, but that's not what I got](#notukey)
  12. [`emmeans()` completely ignores my P-value adjustments](#noadjust)
  13. [`emmeans()` gives me pooled *t* tests, but I expected Welch's *t*](#nowelch)
+ 14. [I want to see more digits](#rounding)
+
 
 [Index of all vignette topics](vignette-topics.html)
 
@@ -418,6 +420,13 @@ you will obtain incorrect results. Get the model right *first*.
 
 
 [Back to Contents](#contents)
+
+## I want to see more digits {#rounding}
+The summary display of `emmeans()` and other functions uses an optimal-digits
+routine that shows only relevant digits. If you temporarily want to see more
+digits, add `|> as.data.frame()` to the code line. In addition, piping
+`|> data.frame()` will disable formatting of test statistics and P values (but 
+unfortunately will also suppress messages below the tabular output).
 
 [Index of all vignette topics](vignette-topics.html)
 

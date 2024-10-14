@@ -1360,6 +1360,8 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
 
     est = x[[estn]]
     if (get_emm_option("opt.digits") && is.null(digits)) {
+        if (!is.null(x$SE))
+            x$SE = signif(x$SE, 3)
         if (!is.null(x[["SE"]]))
             tmp = est + x[["SE"]] * cbind(rep(-2, nrow(x)), 0, 2)
         else if (!is.null(x[["lower.HPD"]]))
