@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -119,6 +119,11 @@
 <p>Omitting the <code>build_vignettes</code> argument can save some time if you don’t want the vignettes. They can always be found <a href="https://cran.r-project.org/package=emmeans" class="external-link">for the latest CRAN version</a> or – perhaps more up-to-date – the <a href="https://rvlenth.github.io/emmeans/">emmeans site</a>.</p>
 <p><em>Note:</em></p>
 <p>For the latest release notes on this development version, see the <a href="https://github.com/rvlenth/emmeans/blob/master/NEWS.md" class="external-link">NEWS file</a></p>
+</div>
+<div class="section level2">
+<h2 id="rounding">Rounding<a class="anchor" aria-label="anchor" href="#rounding"></a>
+</h2>
+<p>For its summary output, <strong>emmeans</strong> uses an optimal-digits algorithm that rounds results to about the number of digits that are useful, relative to estimates’ confidence limits. This avoids cluttering the output, but it is unlike other R results, which are typically less round. If this is annoying to you, there is an option (<code>opt.digits = FALSE</code>) that disables the optimal-digits routine.</p>
 </div>
 <div class="section level2">
 <h2 id="tidiness-can-be-dangerous">“Tidiness” can be dangerous<a class="anchor" aria-label="anchor" href="#tidiness-can-be-dangerous"></a>

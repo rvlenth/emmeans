@@ -11,7 +11,7 @@ also be used to compute arbitrary linear functions of predictions or EMMs."><met
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -397,7 +397,7 @@ is most useful for understanding interaction contrasts.</p>
 <span class="r-in"><span><span class="va">tw.emm</span>          <span class="co"># see the estimates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  tension_poly wool_consec estimate    SE df t.ratio p.value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  linear       B - A           10.6  7.29 48   1.447  0.1543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic    B - A          -31.7 12.63 48  -2.507  0.0156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic    B - A          -31.7 12.60 48  -2.507  0.0156</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">tw.emm</span><span class="op">)</span>    <span class="co"># see the contrast coefficients</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   tension wool c.1 c.2</span>
@@ -423,9 +423,9 @@ is most useful for understanding interaction contrasts.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="fu">contrast</span><span class="op">(</span><span class="va">emm</span>, <span class="st">"identity"</span>, scale <span class="op">=</span> <span class="fl">9</span><span class="op">/</span><span class="fl">5</span>, offset <span class="op">=</span> <span class="fl">32</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast     estimate    SE df lower.CL upper.CL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss10     65.9 0.833 18     64.1     67.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss20     72.1 1.015 18     70.0     74.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss30     76.8 1.163 18     74.4     79.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss40     80.0 1.724 18     76.4     83.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss20     72.1 1.020 18     70.0     74.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss30     76.8 1.160 18     74.4     79.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  stack.loss40     80.0 1.720 18     76.4     83.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-in"><span></span></span>

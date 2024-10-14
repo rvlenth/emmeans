@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Comparisons and contrasts in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.4.900003</h4>
+package, Version 1.10.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/comparisons.Rmd" class="external-link"><code>vignettes/comparisons.Rmd</code></a></small>
@@ -351,9 +351,9 @@ orthogonal polynomial contrasts:</p>
 <span><span class="va">ply</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">pigs.emm.p</span>, <span class="st">"poly"</span><span class="op">)</span></span>
 <span><span class="va">ply</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast  estimate     SE df t.ratio p.value</span></span>
-<span><span class="co">##  linear      0.9374 0.2106 23   4.452  0.0002</span></span>
+<span><span class="co">##  linear      0.9374 0.2110 23   4.452  0.0002</span></span>
 <span><span class="co">##  quadratic  -0.0971 0.0883 23  -1.099  0.2830</span></span>
-<span><span class="co">##  cubic       0.1863 0.1877 23   0.992  0.3313</span></span>
+<span><span class="co">##  cubic       0.1863 0.1880 23   0.992  0.3313</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: source </span></span>
 <span><span class="co">## Results are given on the log (not the response) scale.</span></span></code></pre>
@@ -511,7 +511,7 @@ coefficients in a list, and the added constants in the
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">LF</span>, adjust <span class="op">=</span> <span class="st">"bonferroni"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast estimate     SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  lambda1      3.73 0.0827 23     3.53     3.93</span></span>
-<span><span class="co">##  lambda2      4.41 0.1341 23     4.09     4.73</span></span>
+<span><span class="co">##  lambda2      4.41 0.1340 23     4.09     4.73</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: percent </span></span>
 <span><span class="co">## Note: contrasts are still on the log scale. Consider using</span></span>

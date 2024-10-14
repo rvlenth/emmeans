@@ -11,7 +11,7 @@ all the information needed to calculate EMMs and make inferences on them."><meta
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -351,7 +351,7 @@ recovering/overriding model information.</p>
   effects. If a function, must return a suitable matrix when it is called
   with arguments <code>(object, ...)</code>. Be careful with possible
   unintended conflicts with arguments in <code>...</code>; for example,
-  <code><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHAC.html" class="external-link">sandwich::vcovHAC()</a></code> has optional arguments <code>adjust</code> and <code>weights</code>
+  <code><a href="https://rdrr.io/pkg/sandwich/man/vcovHAC.html" class="external-link">sandwich::vcovHAC()</a></code> has optional arguments <code>adjust</code> and <code>weights</code>
   that may be intended for <code><a href="emmeans.html">emmeans()</a></code> but will also be passed to <code>vcov.()</code>.</p>
 <p><b>Nested factors.</b> Having a nesting structure affects marginal
   averaging in <code>emmeans</code> in that it is done separately for each level
@@ -483,18 +483,18 @@ recovering/overriding model information.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">fiber.lm</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>diameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  machine diameter prediction    SE df</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A             15       30.1 2.113  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B             15       33.8 2.573  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C             15       30.6 1.492  9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A             15       30.1 2.110  9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B             15       33.8 2.570  9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  C             15       30.6 1.490  9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  A             25       41.2 0.750  9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  B             25       42.3 0.782  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C             25       39.3 1.089  9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  C             25       39.3 1.090  9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># We could substitute the sandwich estimator vcovHAC(fiber.lm)</span></span></span>
 <span class="r-in"><span><span class="co"># as follows:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">fiber.lm</span>, vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHAC.html" class="external-link">vcovHAC</a></span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">fiber.lm</span>, vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/sandwich/man/vcovHAC.html" class="external-link">vcovHAC</a></span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If we thought that the machines affect the diameters</span></span></span>
@@ -593,24 +593,24 @@ recovering/overriding model information.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     0           61.4  9.05 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     0           67.8  9.05 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     0          103.1  9.05 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain 0.2         84.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain 0.2         80.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain 0.2         97.9 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain 0.2         93.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain 0.2        107.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain 0.2        127.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  0.2         94.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  0.2         90.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  0.2        107.9 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  0.2        103.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  0.2        117.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  0.2        137.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     0.2         75.8 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     0.2         71.4 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     0.2         89.1 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     0.2         84.4 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     0.2         98.4 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     0.2        118.8 10.78 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain 0.2         84.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain 0.2         80.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain 0.2         97.9 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain 0.2         93.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain 0.2        107.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain 0.2        127.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  0.2         94.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  0.2         90.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  0.2        107.9 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  0.2        103.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  0.2        117.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  0.2        137.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     0.2         75.8 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     0.2         71.4 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     0.2         89.1 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     0.2         84.4 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     0.2         98.4 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     0.2        118.8 10.80 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain 0.4        108.1 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain 0.4        101.4 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain 0.4        111.4 14.20 10</span>
@@ -629,24 +629,24 @@ recovering/overriding model information.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     0.4        102.3 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     0.4        111.3 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     0.4        141.9 14.20 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain 0.6        114.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain 0.6        115.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain 0.6        103.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain 0.6        125.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain 0.6        132.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain 0.6        158.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  0.6        116.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  0.6        117.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  0.6        105.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  0.6        127.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  0.6        134.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  0.6        160.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     0.6        107.8 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     0.6        108.8 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     0.6         97.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     0.6        119.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     0.6        126.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     0.6        152.1 11.93 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain 0.6        114.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain 0.6        115.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain 0.6        103.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain 0.6        125.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain 0.6        132.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain 0.6        158.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  0.6        116.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  0.6        117.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  0.6        105.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  0.6        127.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  0.6        134.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  0.6        160.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     0.6        107.8 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     0.6        108.8 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     0.6         97.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     0.6        119.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     0.6        126.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     0.6        152.1 11.90 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># Silly illustration of how to use 'mult.levs' to make comb's of two factors</span></span></span>
 <span class="r-in"><span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">MOats.lm</span>, mult.levs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>T<span class="op">=</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, U<span class="op">=</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -669,24 +669,24 @@ recovering/overriding model information.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     A a       61.4  9.05 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     A a       67.8  9.05 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     A a      103.1  9.05 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain B a       84.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain B a       80.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain B a       97.9 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain B a       93.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain B a      107.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain B a      127.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  B a       94.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  B a       90.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  B a      107.9 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  B a      103.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  B a      117.3 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  B a      137.6 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     B a       75.8 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     B a       71.4 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     B a       89.1 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     B a       84.4 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     B a       98.4 10.78 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     B a      118.8 10.78 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain B a       84.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain B a       80.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain B a       97.9 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain B a       93.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain B a      107.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain B a      127.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  B a       94.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  B a       90.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  B a      107.9 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  B a      103.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  B a      117.3 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  B a      137.6 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     B a       75.8 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     B a       71.4 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     B a       89.1 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     B a       84.4 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     B a       98.4 10.80 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     B a      118.8 10.80 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain A b      108.1 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain A b      101.4 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain A b      111.4 14.20 10</span>
@@ -705,24 +705,24 @@ recovering/overriding model information.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     A b      102.3 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     A b      111.3 14.20 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     A b      141.9 14.20 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain B b      114.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain B b      115.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain B b      103.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain B b      125.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain B b      132.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain B b      158.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  B b      116.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  B b      117.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  B b      105.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  B b      127.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  B b      134.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  B b      160.4 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     B b      107.8 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     B b      108.8 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     B b       97.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     B b      119.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     B b      126.1 11.93 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     B b      152.1 11.93 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Golden Rain B b      114.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Golden Rain B b      115.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Golden Rain B b      103.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Golden Rain B b      125.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Golden Rain B b      132.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Golden Rain B b      158.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Marvellous  B b      116.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Marvellous  B b      117.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Marvellous  B b      105.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Marvellous  B b      127.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Marvellous  B b      134.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Marvellous  B b      160.4 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  VI    Victory     B b      107.8 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  V     Victory     B b      108.8 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  III   Victory     B b       97.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  IV    Victory     B b      119.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  II    Victory     B b      126.1 11.90 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  I     Victory     B b      152.1 11.90 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Comparing estimates with and without counterfactuals</span></span></span>
@@ -730,7 +730,7 @@ recovering/overriding model information.</p>
 <span class="r-in"><span>                     family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">neuralgia</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="st">"Treatment"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Treatment  prob     SE  df asymp.LCL asymp.UCL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A         0.196 0.1055 Inf    0.0617     0.475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A         0.196 0.1050 Inf    0.0617     0.475</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  B         0.126 0.0822 Inf    0.0323     0.384</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  P         0.855 0.0852 Inf    0.6053     0.958</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -756,8 +756,8 @@ recovering/overriding model information.</p>
 <span class="r-in"><span><span class="co">## my.knots is not a predictor, so need to name it in 'params'</span></span></span>
 <span class="r-in"><span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">mod</span>, params <span class="op">=</span> <span class="st">"my.knots"</span><span class="op">)</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Species    Sepal.Width prediction     SE  df</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  setosa            3.06       4.71 0.1098 135</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  versicolor        3.06       6.30 0.1074 135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  setosa            3.06       4.71 0.1100 135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  versicolor        3.06       6.30 0.1070 135</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  virginica         3.06       6.73 0.0909 135</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

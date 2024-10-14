@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Working with messy data</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.4.900003</h4>
+package, Version 1.10.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/messy-data.Rmd" class="external-link"><code>vignettes/messy-data.Rmd</code></a></small>
@@ -594,11 +594,11 @@ covariance estimate in the <strong>sandwich</strong> package.</p>
 <code class="sourceCode R"><span><span class="va">neuralgia.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Pain</span> <span class="op">~</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="va">Duration</span> <span class="op">+</span> <span class="va">Treatment</span>,</span>
 <span>                     data <span class="op">=</span> <span class="va">neuralgia</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="st">"Treatment"</span>, counterfactuals <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
-<span>        vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html" class="external-link">vcovHC</a></span><span class="op">)</span></span></code></pre></div>
+<span>        vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/sandwich/man/vcovHC.html" class="external-link">vcovHC</a></span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Treatment  prob     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  A         0.283 0.0792 Inf    0.1280     0.439</span></span>
 <span><span class="co">##  B         0.221 0.0669 Inf    0.0894     0.352</span></span>
-<span><span class="co">##  P         0.754 0.1041 Inf    0.5500     0.958</span></span>
+<span><span class="co">##  P         0.754 0.1040 Inf    0.5500     0.958</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: .obs.no. </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
@@ -608,7 +608,7 @@ using counterfactuals (i.e., predicting at each covariate average):</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="st">"Treatment"</span>, weights <span class="op">=</span> <span class="st">"prop"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Treatment  prob     SE  df asymp.LCL asymp.UCL</span></span>
-<span><span class="co">##  A         0.196 0.1055 Inf    0.0617     0.475</span></span>
+<span><span class="co">##  A         0.196 0.1050 Inf    0.0617     0.475</span></span>
 <span><span class="co">##  B         0.126 0.0822 Inf    0.0323     0.384</span></span>
 <span><span class="co">##  P         0.855 0.0852 Inf    0.6053     0.958</span></span>
 <span><span class="co">## </span></span>
@@ -642,12 +642,12 @@ after removing interactions involving <code>age</code>:</p>
 <span><span class="co">## because "tukey" is only appropriate for one set of pairwise comparisons</span></span></code></pre>
 <pre class="ro"><code><span><span class="co">## $emmeans</span></span>
 <span><span class="co">##  group      race     emmean    SE df lower.CL upper.CL</span></span>
-<span><span class="co">##  FoodStamps Black      4.91 2.061 92    0.817    9.003</span></span>
-<span><span class="co">##  NoAid      Black     -3.01 1.581 92   -6.148    0.133</span></span>
-<span><span class="co">##  FoodStamps Hispanic  -1.18 5.413 92  -11.935    9.567</span></span>
-<span><span class="co">##  NoAid      Hispanic   1.32 3.876 92   -6.382    9.014</span></span>
+<span><span class="co">##  FoodStamps Black      4.91 2.060 92    0.817    9.003</span></span>
+<span><span class="co">##  NoAid      Black     -3.01 1.580 92   -6.148    0.133</span></span>
+<span><span class="co">##  FoodStamps Hispanic  -1.18 5.410 92  -11.935    9.567</span></span>
+<span><span class="co">##  NoAid      Hispanic   1.32 3.880 92   -6.382    9.014</span></span>
 <span><span class="co">##  FoodStamps White      4.10 0.901 92    2.308    5.886</span></span>
-<span><span class="co">##  NoAid      White     -1.44 1.114 92   -3.654    0.771</span></span>
+<span><span class="co">##  NoAid      White     -1.44 1.110 92   -3.654    0.771</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: age </span></span>
 <span><span class="co">## submodel: ~ age + group + race + group:race </span></span>
@@ -681,9 +681,9 @@ submodel with only the active factors:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">nutr.lm</span>, <span class="op">~</span> <span class="va">group</span> <span class="op">*</span> <span class="va">race</span>, submodel <span class="op">=</span> <span class="st">"minimal"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  group      race     emmean    SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  FoodStamps Black     5.000 2.020 92    0.988    9.012</span></span>
-<span><span class="co">##  NoAid      Black    -1.929 1.428 92   -4.765    0.908</span></span>
-<span><span class="co">##  FoodStamps Hispanic  0.000 5.344 92  -10.614   10.614</span></span>
-<span><span class="co">##  NoAid      Hispanic  2.500 3.779 92   -5.005   10.005</span></span>
+<span><span class="co">##  NoAid      Black    -1.929 1.430 92   -4.765    0.908</span></span>
+<span><span class="co">##  FoodStamps Hispanic  0.000 5.340 92  -10.614   10.614</span></span>
+<span><span class="co">##  NoAid      Hispanic  2.500 3.780 92   -5.005   10.005</span></span>
 <span><span class="co">##  FoodStamps White     4.769 0.741 92    3.297    6.241</span></span>
 <span><span class="co">##  NoAid      White    -0.516 0.960 92   -2.422    1.390</span></span>
 <span><span class="co">## </span></span>
@@ -786,13 +786,13 @@ nested in:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">drug.emm</span>, by <span class="op">=</span> <span class="st">"route"</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## route = injection:</span></span>
 <span><span class="co">##  contrast                    estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  Charloisazepam - Bovineumab     9.17 1.182  9   7.757  &lt;.0001</span></span>
+<span><span class="co">##  Charloisazepam - Bovineumab     9.17 1.180  9   7.757  &lt;.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## route = oral:</span></span>
 <span><span class="co">##  contrast                    estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  Herefordmycin - Angustatin     -8.75 1.121  9  -7.805  0.0001</span></span>
+<span><span class="co">##  Herefordmycin - Angustatin     -8.75 1.120  9  -7.805  0.0001</span></span>
 <span><span class="co">##  Mollycoddle - Angustatin       -9.92 0.989  9 -10.030  &lt;.0001</span></span>
-<span><span class="co">##  Mollycoddle - Herefordmycin    -1.17 1.182  9  -0.987  0.6026</span></span>
+<span><span class="co">##  Mollycoddle - Herefordmycin    -1.17 1.180  9  -0.987  0.6026</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: tukey method for comparing a family of 3 estimates</span></span></code></pre>
 <p>In the latter result, the contrast itself becomes a nested factor in

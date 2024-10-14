@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>FAQs for emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.4.900003</h4>
+package, Version 1.10.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/FAQs.Rmd" class="external-link"><code>vignettes/FAQs.Rmd</code></a></small>
@@ -131,6 +131,7 @@ what I got</a></li>
 P-value adjustments</a></li>
 <li><a href="#nowelch"><code>emmeans()</code> gives me pooled <em>t</em>
 tests, but I expected Welch’s <em>t</em></a></li>
+<li><a href="#rounding">I want to see more digits</a></li>
 </ol>
 <p><a href="vignette-topics.html">Index of all vignette topics</a></p>
 </div>
@@ -577,6 +578,17 @@ you give <code><a href="../reference/emmeans.html">emmeans()</a></code> a good m
 results; if you give it a bad model, you will obtain incorrect results.
 Get the model right <em>first</em>.</p>
 <p><a href="#contents">Back to Contents</a></p>
+</div>
+<div class="section level2">
+<h2 id="rounding">I want to see more digits<a class="anchor" aria-label="anchor" href="#rounding"></a>
+</h2>
+<p>The summary display of <code><a href="../reference/emmeans.html">emmeans()</a></code> and other functions
+uses an optimal-digits routine that shows only relevant digits. If you
+temporarily want to see more digits, add
+<code>|&gt; as.data.frame()</code> to the code line. In addition, piping
+<code>|&gt; data.frame()</code> will disable formatting of test
+statistics and P values (but unfortunately will also suppress messages
+below the tabular output).</p>
 <p><a href="vignette-topics.html">Index of all vignette topics</a></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

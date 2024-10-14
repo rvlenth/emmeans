@@ -19,7 +19,7 @@ some of the predictors in the grid."><meta property="og:image" content="https://
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.4.900003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -253,20 +253,20 @@ transformation of those slopes, making the predicted trends vary depending on
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">emt</span>, infer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> percent =  9.0:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  degree    percent.trend     SE df lower.CL upper.CL t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  linear          2.39923 3.6504 25   -5.119    9.917   0.657  0.5170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic      -0.22674 1.1026 25   -2.498    2.044  -0.206  0.8387</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  linear          2.39923 3.6500 25   -5.119    9.917   0.657  0.5170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic      -0.22674 1.1000 25   -2.498    2.044  -0.206  0.8387</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  cubic           0.00548 0.0825 25   -0.164    0.175   0.066  0.9475</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> percent = 13.5:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  degree    percent.trend     SE df lower.CL upper.CL t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  linear          0.69212 1.5636 25   -2.528    3.912   0.443  0.6618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic      -0.15277 0.1747 25   -0.513    0.207  -0.874  0.3903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  linear          0.69212 1.5600 25   -2.528    3.912   0.443  0.6618</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic      -0.15277 0.1750 25   -0.513    0.207  -0.874  0.3903</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  cubic           0.00548 0.0825 25   -0.164    0.175   0.066  0.9475</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> percent = 18.0:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  degree    percent.trend     SE df lower.CL upper.CL t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  linear         -0.34928 4.1176 25   -8.830    8.131  -0.085  0.9331</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic      -0.07880 1.1505 25   -2.448    2.291  -0.068  0.9459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  linear         -0.34928 4.1200 25   -8.830    8.131  -0.085  0.9331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic      -0.07880 1.1500 25   -2.448    2.291  -0.068  0.9459</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  cubic           0.00548 0.0825 25   -0.164    0.175   0.066  0.9475</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
@@ -277,9 +277,9 @@ transformation of those slopes, making the predicted trends vary depending on
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm</span>, <span class="st">"poly"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast  estimate    SE df t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  linear      23.837 14.74 25   1.617  0.1184</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  linear      23.837 14.70 25   1.617  0.1184</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  quadratic   -5.500  6.29 25  -0.874  0.3903</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  cubic        0.888 13.36 25   0.066  0.9475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  cubic        0.888 13.40 25   0.066  0.9475</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># Some P values are comparable, some aren't! See Note in documentation</span></span></span>
 </code></pre></div>
