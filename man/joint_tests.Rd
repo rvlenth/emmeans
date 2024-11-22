@@ -58,7 +58,8 @@ a \code{summary_emm} object (same as is produced by
   preceding rows.
   
   The returned object also includes an \code{"est.fcns"} attribute, which is a
-  named list containing the linear functions associated with each joint test. 
+  named list containing the linear functions associated with each joint test.
+  Each row of these is standardized to have length 1. 
   No estimable functions are included for confounded effects.
 
 \code{make.meanint} returns the function 

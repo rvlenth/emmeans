@@ -75,6 +75,7 @@ Scroll down or follow the links to those groups for more information.
 |gnls         |nlme     |[A](#A)  |Supports `params` part. Requires `param = "<name>"`          |
 |hurdle       |pscl     |[C](#C)  |`mode = c("response", "count", "zero", "prob0"),`            |
 |             |         |         |`lin.pred = c(FALSE~, TRUE)`                                 |
+|lavaan       |lavaan    |[P](#P)  |Supported by the **semTools** package (see `? lavaan2emmeans`) |
 |lm           |stats    |[A](#A)  |Several other classes inherit from this and may be supported |
 |lme          |nlme     |[K](#K)  |`sigmaAdjust = c(TRUE, FALSE),`                              |
 |             |         |         |`mode = c("auto", containment", "satterthwaite", "asymptotic"),`|
@@ -463,8 +464,8 @@ together.
 
 ## Group P -- Other packages {#P}
 
-Models in this group have their **emmeans** support provided by the package
-that implements the model-fitting procedure. Users should refer to the
+Models in this group have their **emmeans** support provided by another package
+(usually the one that implements the model-fitting procedure). Users should refer to the
 package documentation for details on **emmeans** support. In some cases, a
 package's models may have been supported here in **emmeans**; if so, the 
 other package's support overrides it.

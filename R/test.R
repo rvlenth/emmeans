@@ -241,7 +241,8 @@ test.emmGrid = function(object, null = 0,
 #'   preceding rows.
 #'   
 #'   The returned object also includes an \code{"est.fcns"} attribute, which is a
-#'   named list containing the linear functions associated with each joint test. 
+#'   named list containing the linear functions associated with each joint test.
+#'   Each row of these is standardized to have length 1. 
 #'   No estimable functions are included for confounded effects.
 #'   
 #' @section Dealing with covariates:

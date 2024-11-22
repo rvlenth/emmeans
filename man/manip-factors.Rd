@@ -4,6 +4,7 @@
 \alias{comb_facs}
 \alias{split_fac}
 \alias{add_grouping}
+\alias{add_submodels}
 \alias{permute_levels}
 \title{Manipulate factors in a reference grid}
 \usage{
@@ -13,6 +14,8 @@ comb_facs(object, facs, newname = paste(facs, collapse = "."),
 split_fac(object, fac, newfacs, ...)
 
 add_grouping(object, newname, refname, newlevs, ...)
+
+add_submodels(object, ..., newname = "model")
 
 permute_levels(object, fac, pos)
 }
@@ -113,6 +116,16 @@ When \code{refname} specifies more than one factor, this can
   are five different tensions (L, M, H in prod 1, and L, M in prod 2).
 }
 
+\section{The \code{add_submodels} function}{
+
+This function updates \code{object} with a named list of submodels specified in 
+\code{...}. These are \code{rbind}ed together and the corresponding rows
+for each submodel are assigned a factor named \code{newname} with levels 
+equal to the names in \code{...}. This facilitates comparing estimates obtained
+from different submodels. For this to work, the underlying model object must be of
+a class supported by the \code{submodel} argument of \code{\link{update.emmGrid}}.
+}
+
 \section{The \code{permute_levels} function}{
 
 This function permutes the levels of \code{fac}. The returned object
@@ -166,6 +179,10 @@ gwrg <- add_grouping(ref_grid(warp.lm),
 emmeans(gwrg, ~ wool * tension)   # some NAs due to impossible combinations
 
 emmeans(gwrg, "prod")
+
+## Using 'add_submodels' to compare adjusted and unadjusted means
+fibs <- add_submodels(frg, adj = ~ ., unadj = ~ machine)
+emmeans(fibs, consec ~ model | machine)
 
 str(v.c.g)
 str(permute_levels(v.c.g, "cyl", c(2,3,1)))

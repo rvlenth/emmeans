@@ -103,7 +103,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
     names(obj@levels) = gnms
     obj@roles$predictors = setdiff(names(obj@levels), obj@roles$multresp)
     obj@misc$con.coef = obj@misc$orig.grid = obj@misc$.pairby = NULL
-    update(obj, pri.vars = gnms, by.vars = NULL, adjust = adjust,
+    update(obj, pri.vars = gnms, by.vars = NULL, adjust = adjust, initMesg = NULL,
            estType = "rbind",
            famSize = n,   # instead of round((1 + sqrt(1 + 8*n)) / 2, 3),
            avgd.over = avgd.over)
