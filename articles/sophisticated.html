@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sophisticated models in emmeans">
 </head>
 <body>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5-0900001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sophisticated models in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.5</h4>
+package, Version 1.10.5.900001</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/sophisticated.Rmd" class="external-link"><code>vignettes/sophisticated.Rmd</code></a></small>
@@ -752,7 +752,7 @@ example:</p>
 <span><span class="co">##   For precise Bayes factors, sampling at least 40,000 posterior samples is recommended.</span></span></code></pre>
 <pre class="ro"><code><span><span class="co">## Bayes Factor (Savage-Dickey density ratio)</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Parameter         |    BF</span></span>
+<span><span class="co">## contrast          |    BF</span></span>
 <span><span class="co">## -------------------------</span></span>
 <span><span class="co">## period1 - period2 |  3.02</span></span>
 <span><span class="co">## period1 - period3 |  5.13</span></span>
@@ -766,7 +766,7 @@ example:</p>
 <code class="sourceCode R"><span><span class="fu">bayestestR</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/bayestestR/reference/p_rope.html" class="external-link">p_rope</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">cbpp.rg</span><span class="op">)</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## Proportion of samples inside the ROPE [-0.25, 0.25]</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Parameter         | p (ROPE)</span></span>
+<span><span class="co">## contrast          | p (ROPE)</span></span>
 <span><span class="co">## ----------------------------</span></span>
 <span><span class="co">## period1 - period2 |    0.021</span></span>
 <span><span class="co">## period1 - period3 |    0.015</span></span>
