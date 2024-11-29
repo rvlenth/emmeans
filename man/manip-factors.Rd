@@ -181,9 +181,12 @@ emmeans(gwrg, ~ wool * tension)   # some NAs due to impossible combinations
 emmeans(gwrg, "prod")
 
 ## Using 'add_submodels' to compare adjusted and unadjusted means
-fibs <- add_submodels(frg, adj = ~ ., unadj = ~ machine)
-emmeans(fibs, consec ~ model | machine)
+fibint.lm <- lm(strength ~ machine * diameter, data = fiber)
+fibsub <- add_submodels(emmeans(fibint.lm, "machine"), 
+    full = ~ ., additive = ~ . - machine:diameter, unadj = ~ machine)
+emmeans(fibsub, pairwise ~ model | machine, adjust = "none")
 
+# Permuting factor levels...
 str(v.c.g)
 str(permute_levels(v.c.g, "cyl", c(2,3,1)))
 

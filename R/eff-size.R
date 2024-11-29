@@ -1,7 +1,7 @@
 # Cohen's effect sizes
 
 
-#' Calculate effect sizes and confidence bounds thereof
+#' Calculate Cohen effect sizes and confidence bounds thereof
 #' 
 #' Standardized effect sizes are typically calculated using pairwise differences of estimates,
 #' divided by the SD of the population providing the context for those effects.
@@ -73,12 +73,16 @@
 #' the SD of the \emph{paired differences} rather than the \emph{residual} SD.
 #' You may need to enlarge \code{sigma} by a factor of \code{sqrt(2)} to obtain
 #' comparable results with other software.
+#' 
 #' @note
 #' \strong{Disclaimer:} There is substantial disagreement among practitioners on
 #' what is the appropriate \code{sigma} to use in computing effect sizes; or,
 #' indeed, whether \emph{any} effect-size measure is appropriate for some
 #' situations. The user is completely responsible for specifying 
 #' appropriate parameters (or for failing to do so).
+#' 
+#' Cohen effect sizes do not even exist for generalized linear models or other
+#' models lacking an additive residual error term. 
 #' 
 #' @export
 #' @note 
@@ -108,12 +112,15 @@
 #'   eff_size(emmV, sigma = totSD, edf = 51)
 #' }, spaced = TRUE)
 #' 
-#' # Multivariate model for the same data:
-#'  MOats.lm <- lm(yield ~ Variety, data = MOats)
-#'  eff_size(emmeans(MOats.lm, "Variety"), 
-#'           sigma = sqrt(mean(sigma(MOats.lm)^2)),   # RMS of sigma()
-#'           edf = df.residual(MOats.lm))
+#' 
+
 eff_size = function(object, sigma, edf, method = "pairwise", ...) {
+    ### Lame attempt to warn if unsuitable...
+    # obj.sig = object@misc$sigma
+    # if(is.null(obj.sig) || is.na(obj.sig[1]))
+    #     warning("'eff_size()' results are highly suspect for many models.\n",
+    #             " Cohen effect sizes are not even defined for generalized linear models.\n",
+    #             " See documentation notes.", call. = FALSE)
     if (inherits(object, "emm_list") && ("contrasts" %in% names(object))) {
         message("Since 'object' is a list, we are using the contrasts already present.")
         object = object$contrasts

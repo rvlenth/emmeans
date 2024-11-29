@@ -2,7 +2,7 @@
 % Please edit documentation in R/eff-size.R
 \name{eff_size}
 \alias{eff_size}
-\title{Calculate effect sizes and confidence bounds thereof}
+\title{Calculate Cohen effect sizes and confidence bounds thereof}
 \usage{
 eff_size(object, sigma, edf, method = "pairwise", ...)
 }
@@ -78,6 +78,9 @@ indeed, whether \emph{any} effect-size measure is appropriate for some
 situations. The user is completely responsible for specifying 
 appropriate parameters (or for failing to do so).
 
+Cohen effect sizes do not even exist for generalized linear models or other
+models lacking an additive residual error term.
+
 The examples here illustrate a sobering message that effect sizes are often not nearly as accurate as you may think.
 }
 \section{Computation}{
@@ -117,9 +120,5 @@ if (require(nlme)) withAutoprint({
   eff_size(emmV, sigma = totSD, edf = 51)
 }, spaced = TRUE)
 
-# Multivariate model for the same data:
- MOats.lm <- lm(yield ~ Variety, data = MOats)
- eff_size(emmeans(MOats.lm, "Variety"), 
-          sigma = sqrt(mean(sigma(MOats.lm)^2)),   # RMS of sigma()
-          edf = df.residual(MOats.lm))
+
 }

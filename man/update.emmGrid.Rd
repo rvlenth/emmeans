@@ -200,6 +200,11 @@ and all effects not containing it are orthogonalized-out. Thus, in a purely line
 situation such as an \code{lm} model, the joint test
 of the modified object is in essence a type-2 test as in \code{car::Anova}.
 
+Please note that it is possible (or even likely) that there will be disparity
+between the \code{grid} and \code{linfct} slots when a submodel is used. This is
+because \code{grid} contains the \emph{claimed} values of the predictors and
+\code{linfct} contains \emph{aliases} of them computed from the submodel.
+
 For some objects such as generalized linear models, specifying \code{submodel}
 will typically not produce the same estimates or type-2 tests as would be
 obtained by actually fitting a separate model with those specifications.
