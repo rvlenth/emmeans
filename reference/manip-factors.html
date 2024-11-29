@@ -13,7 +13,7 @@ factor(s) levels are nested, or permuting the order of levels of a factor"><meta
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5-0900001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5-0900003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -378,41 +378,54 @@ you must add the arguments <code>style = "factor"</code> and <code>nesting.order
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Using 'add_submodels' to compare adjusted and unadjusted means</span></span></span>
-<span class="r-in"><span><span class="va">fibs</span> <span class="op">&lt;-</span> <span class="fu">add_submodels</span><span class="op">(</span><span class="va">frg</span>, adj <span class="op">=</span> <span class="op">~</span> <span class="va">.</span>, unadj <span class="op">=</span> <span class="op">~</span> <span class="va">machine</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fibs</span>, <span class="va">consec</span> <span class="op">~</span> <span class="va">model</span> <span class="op">|</span> <span class="va">machine</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fibint.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">strength</span> <span class="op">~</span> <span class="va">machine</span> <span class="op">*</span> <span class="va">diameter</span>, data <span class="op">=</span> <span class="va">fiber</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fibsub</span> <span class="op">&lt;-</span> <span class="fu">add_submodels</span><span class="op">(</span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fibint.lm</span>, <span class="st">"machine"</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>    full <span class="op">=</span> <span class="op">~</span> <span class="va">.</span>, additive <span class="op">=</span> <span class="op">~</span> <span class="va">.</span> <span class="op">-</span> <span class="va">machine</span><span class="op">:</span><span class="va">diameter</span>, unadj <span class="op">=</span> <span class="op">~</span> <span class="va">machine</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: Results may be misleading due to involvement in interactions</span>
+<span class="r-in"><span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fibsub</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">model</span> <span class="op">|</span> <span class="va">machine</span>, adjust <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $emmeans</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> machine = A:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  model emmean    SE df lower.CL upper.CL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  adj     40.4 0.724 11     38.8     42.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj   41.4 0.713 11     39.8     43.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  model    emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full       40.2 0.777  9     38.5     42.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  additive   40.4 0.760  9     38.7     42.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj      41.4 0.749  9     39.7     43.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> machine = B:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  model emmean    SE df lower.CL upper.CL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  adj     41.4 0.744 11     39.8     43.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj   43.2 0.713 11     41.6     44.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  model    emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full       41.6 0.858  9     39.7     43.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  additive   41.4 0.782  9     39.7     43.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj      43.2 0.749  9     41.5     44.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> machine = C:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  model emmean    SE df lower.CL upper.CL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  adj     38.8 0.788 11     37.1     40.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj   36.0 0.713 11     34.4     37.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  model    emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full       38.5 0.966  9     36.3     40.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  additive   38.8 0.827  9     36.9     40.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj      36.0 0.749  9     34.3     37.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $contrasts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> machine = A:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast    estimate    SE df t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj - adj     1.02 0.122 11   8.365  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast         estimate    SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full - additive    -0.160 0.162  9  -0.987  0.3492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full - unadj       -1.178 0.207  9  -5.702  0.0003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  additive - unadj   -1.018 0.128  9  -7.966  &lt;.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> machine = B:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast    estimate    SE df t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj - adj     1.78 0.213 11   8.365  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast         estimate    SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full - additive     0.181 0.353  9   0.512  0.6209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full - unadj       -1.600 0.418  9  -3.830  0.0040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  additive - unadj   -1.781 0.224  9  -7.966  &lt;.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> machine = C:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast    estimate    SE df t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  unadj - adj    -2.80 0.335 11  -8.365  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast         estimate    SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full - additive    -0.263 0.499  9  -0.528  0.6105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  full - unadj        2.535 0.610  9   4.153  0.0025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  additive - unadj    2.798 0.351  9   7.966  &lt;.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Permuting factor levels...</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">v.c.g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     vs = 0, 1</span>

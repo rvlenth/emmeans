@@ -13,7 +13,7 @@ by direct modification of its slots."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5-0900001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.5-0900003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -327,6 +327,10 @@ is taken to be the one only involving the surviving factors in <code>object</cod
 and all effects not containing it are orthogonalized-out. Thus, in a purely linear
 situation such as an <code>lm</code> model, the joint test
 of the modified object is in essence a type-2 test as in <code><a href="https://rdrr.io/pkg/car/man/Anova.html" class="external-link">car::Anova</a></code>.</p>
+<p>Please note that it is possible (or even likely) that there will be disparity
+between the <code>grid</code> and <code>linfct</code> slots when a submodel is used. This is
+because <code>grid</code> contains the <em>claimed</em> values of the predictors and
+<code>linfct</code> contains <em>aliases</em> of them computed from the submodel.</p>
 <p>For some objects such as generalized linear models, specifying <code>submodel</code>
 will typically not produce the same estimates or type-2 tests as would be
 obtained by actually fitting a separate model with those specifications.
