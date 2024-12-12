@@ -2,10 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.10.5-090xxx
+## emmeans 1.10.6
   * Added new `add_submodels()` function that allows for comparison od estimates
     from different submodels (when supported)
-  * Additional notes for `eff_size()`. Also, an questionable example was deleted.
+  * Additional notes for `eff_size()`. Also, a questionable example was deleted.
     It is so easy to misuse this function, and I don't even buy into the idea
     of standardized effect sizes except in the simplest of cases. So I am
     considering deprecating `eff_size()` and letting some other package
