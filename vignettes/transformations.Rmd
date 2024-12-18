@@ -434,7 +434,7 @@ The test statistics and P values differ somewhat from those for the odds ratios 
 
 ###### {#not-logit}
 <!-- @index Logistic-like regression!Non-logit links; 
-   `regrid()`!probit or other lon-logit models;
+   `regrid()`!probit or other non-logit models;
   Probit regression!Odds or risk ratios -->
 We were able to obtain both odds ratios and risk ratios for `neuralgia.glm`.
 But what if we had not used the logit link? Then the odds ratios would not
@@ -643,7 +643,7 @@ emmeans(ismod, "spray", type = "response", bias.adj = TRUE)
 you will get exactly the same results, plus a warning message that says bias adjustment was disabled.
 Why? Because in an ordinary GLM like this, we are *already* modeling the mean counts,
 and the link function is not a response transformation as such, just a part of the relationship
-we are specifying between the linear predictor and the mean. Given the simple structure of this dataset, we can verify this by noting that the estimates we have correspond examply to the simple observed mean counts:
+we are specifying between the linear predictor and the mean. Given the simple structure of this dataset, we can verify this by noting that the estimates we have correspond exactly to the simple observed mean counts:
 ```{r}
 with(InsectSprays, tapply(count, spray, mean))
 ```

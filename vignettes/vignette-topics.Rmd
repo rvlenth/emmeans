@@ -606,7 +606,7 @@ vignette: >
   * [Registering `recover_data` and `emm_basis` methods](xtending.html#exporting)
   * [`regrid` argument](transformations.html#stdize)
   * [`regrid()`](transformations.html#regrid)
-      * [probit or other lon-logit models](transformations.html#not-logit)
+      * [probit or other non-logit models](transformations.html#not-logit)
       * [`regrid` vs. `type`](transformations.html#regrid2)
       * [to obtain risk ratios](transformations.html#riskrats)
       * [`transform = "log"`](transformations.html#logs)
@@ -690,7 +690,7 @@ vignette: >
       * [`joint = TRUE`](confidence-intervals.html#joint)
   * Tests
       * [Equivalence](confidence-intervals.html#equiv)
-      * [Noninferiority](confidence-intervals.html#equiv)
+      * [Non-inferiority](confidence-intervals.html#equiv)
       * [Nonzero null](confidence-intervals.html#summary)
       * [One- and two-sided](confidence-intervals.html#summary)
   * [Too few means](AQuickStart.html#covar)

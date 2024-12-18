@@ -240,7 +240,7 @@ ref_grid(mod5)
 The reference grid for `mod5` is different from that for `mod4` because in those models, `percent` is a factor in `mod4` and a covariate in `mod5`.
 
 It is possible to modify the reference grid. In the context of the present example,
-it might be inetersting to compare EMMs based on `mod4` and `mod5`, and we can put
+it might be interesting to compare EMMs based on `mod4` and `mod5`, and we can put
 them on an equal footing by using the same `percent` values as reference levels:
 ```{r}
 (RG5 <- ref_grid(mod5, at = list(percent = c(9, 12, 15, 18))))

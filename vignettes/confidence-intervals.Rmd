@@ -281,10 +281,10 @@ something akin to a Type II analysis of variance. See the [messy-data vignette](
 
 
 ## Testing equivalence, noninferiority, and nonsuperiority {#equiv}
-<!-- @index Tests!Equivalence; Tests!Noninferiority; `test()`!`delta` -->
+<!-- @index Tests!Equivalence; Tests!Non-inferiority; `test()`!`delta` -->
 The `delta` argument in `summary()` or `test()` allows the user to
-specify a threshold value to use in a test of equivalence, noninferiority, 
-or nonsuperiority. An equivalence test is kind of a backwards significance 
+specify a threshold value to use in a test of equivalence, non-inferiority, 
+or non-superiority. An equivalence test is kind of a backwards significance 
 test, where small *P* values are associated with small differences relative 
 to a specified threshold value `delta`.
 The help page for `summary.emmGrid` gives the details of 

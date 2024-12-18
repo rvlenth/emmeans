@@ -50,7 +50,7 @@ when there is more than one factor. You are better off keeping steps 1 and 2 sep
 What you do in step 2 depends on how many factors you have, and how they relate.
      
 ### One-factor model {#one-factor}
-If one-factor model fits well and the factor is named `treatment`, do
+If a one-factor model fits well and the factor is named `treatment`, do
 ```r
 EMM <- emmeans(model, "treatment")   # or emmeans(model, ~ treatment)
 EMM    # display the means
@@ -139,7 +139,7 @@ return `summary_emm` objects (or lists thereof, class `summary_eml`):
 ```
 SEMM <- summary(EMM)
 ```
-If you display `EMM` and `SEMM`, they *look* identical; that's because `emmGrid` objects are displayed using `summary()`. But they are not identical. `EMM` has all the ingredients needed to do further analysis, e.g. `contrast(EMM, "consec")` will estimate comparisons between consecutive `Treatment` means. But `SEMM` is just an annotated data frame and we can do no further analysis with it. Similarly, we can change how `EMM` is displayed via arguments to `summary()` or relatives, whil;e in `SEMM`, everything has been computed and those results are locked-in.
+If you display `EMM` and `SEMM`, they *look* identical; that's because `emmGrid` objects are displayed using `summary()`. But they are not identical. `EMM` has all the ingredients needed to do further analysis, e.g. `contrast(EMM, "consec")` will estimate comparisons between consecutive `Treatment` means. But `SEMM` is just an annotated data frame and we can do no further analysis with it. Similarly, we can change how `EMM` is displayed via arguments to `summary()` or relatives, while in `SEMM`, everything has been computed and those results are locked-in.
 
 
 ## Common things that can go wrong {#problems}
@@ -178,7 +178,7 @@ The `pairwise ~` construct is generally useful if you have only one factor;
 otherwise, it likely gives you results you don't want.
 
 ## Further reading {#more}
-There are several of these vignettes that offser more details and 
+There are several of these vignettes that offer more details and 
 more advanced topics. [An index of all these vignette topics is available here](vignette-topics.html).
 
 The strings linked below are the names of the vignettes; i.e., they can

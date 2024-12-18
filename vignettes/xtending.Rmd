@@ -244,7 +244,7 @@ and `V` is the covariance matrix of those predictions. In those cases, we recomm
 setting `misc$regrid.flag = TRUE`. Currently, this flag is used only for checking
 whether the `nuisance` argument can be used in `ref_grid()`, and it is not 
 absolutely necessary because we also check to see if `X` is the identity. But
-it provides a more efficient and reliable check. The code for nuisamce factors relies
+it provides a more efficient and reliable check. The code for nuisance factors relies
 on the structure of model matrices where columns are associated with model terms.
 So it is not possible to process nuisance factors with a re-gridded basis.
 

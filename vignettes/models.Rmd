@@ -382,7 +382,7 @@ should match `"prob"` or `"latent"`. With `mode = "prob"`, the
 reference-grid predictions consist of the estimated multinomial
 probabilities -- and this implies a re-gridding so no
 link functions are passed on. The `"latent"` mode returns the linear predictor,
-recentered so that it averages to zero over the levels of the response
+re-centered so that it averages to zero over the levels of the response
 variable (similar to sum-to-zero contrasts). Thus each latent variable can be
 regarded as the log probability at that level minus the average log
 probability over all levels.

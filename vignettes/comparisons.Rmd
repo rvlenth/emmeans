@@ -65,14 +65,14 @@ and the differences in the lower triangle. Options exist to switch off any one o
 and to switch which triangle is used for the latter two. Also, optional
 arguments are passed. For instance, we can reverse the direction of the comparisons,
 suppress the display of EMMs, swap where the $P$ values go,
-and perform noninferiority tests with a threshold of 0.05 as follows:
+and perform non-inferiority tests with a threshold of 0.05 as follows:
 ```{r}
 pwpm(pigs.emm.s, means = FALSE, flip = TRUE,     # args for pwpm()
      reverse = TRUE,                             # args for pairs()
      side = ">", delta = 0.05, adjust = "none")  # args for test()
 ```
 With all three *P* values so small, we have fish, soy, and skim in increasing order of
-noninferiority based on the given threshold.
+non-inferiority based on the given threshold.
 
 When more than one factor is present, an existing or newly specified `by` variables()
 can split the results into l list of matrices.
