@@ -453,6 +453,8 @@ unequal SEs</p>
 <span><span class="va">lev</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a1"</span>,<span class="st">"a2"</span>,<span class="st">"a3"</span><span class="op">)</span>, B <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b1"</span>, <span class="st">"b2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">foo</span> <span class="op">=</span> <span class="fu"><a href="../reference/emmobj.html">emmobj</a></span><span class="op">(</span><span class="va">m</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">se2</span><span class="op">)</span>, levels <span class="op">=</span> <span class="va">lev</span>, linfct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">foo</span>, CIs <span class="op">=</span> <span class="cn">FALSE</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
 <p><img src="xplanations_files/figure-html/unnamed-chunk-2-1.png" alt="Plot A: Comparison arrows for foo. These arrows overlap or not as per the P-values in pairs(foo) are greater or less than 0.05" width="432"></p>
 <p>This came out pretty well. But now let’s keep the means and SEs the
 same but make them correlated. Such correlations happen, for example, in
@@ -461,7 +463,7 @@ specified intra-class correlation, treating <code>A</code> as a
 within-subjects (or split-plot) factor and <code>B</code> as a
 between-subjects (whole-plot) factor. We’ll start with a correlation of
 0.3.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mkmat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">V</span>, <span class="va">rho</span> <span class="op">=</span> <span class="fl">0</span>, <span class="va">indexes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">sd</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">indexes</span><span class="op">)</span></span>
@@ -474,7 +476,7 @@ between-subjects (whole-plot) factor. We’ll start with a correlation of
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">foo3</span>, CIs <span class="op">=</span> <span class="cn">FALSE</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="xplanations_files/figure-html/unnamed-chunk-3-1.png" alt="Plot B - for foo3. The arrow lengths are more diverse than in plot A, but the arrows still all work correctly" width="432"></p>
 <p>Same with intraclass correlation of 0.6:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">foo6</span> <span class="op">=</span> <span class="va">foo</span></span>
 <span><span class="va">foo6</span><span class="op">@</span><span class="va">V</span> <span class="op">&lt;-</span> <span class="fu">mkmat</span><span class="op">(</span><span class="va">foo6</span><span class="op">@</span><span class="va">V</span>, <span class="fl">0.6</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">foo6</span>, CIs <span class="op">=</span> <span class="cn">FALSE</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -483,7 +485,7 @@ between-subjects (whole-plot) factor. We’ll start with a correlation of
 <p><img src="xplanations_files/figure-html/unnamed-chunk-4-1.png" alt="Plot C - for foo6. Not all of the arrows work correctly and we get a warning message with details. The appearance of the arrows is pretty chaotic, with many extending in vastly unequal distances from the means" width="432"></p>
 <p>Now we have a warning that some arrows don’t overlap, but should. We
 can make it even worse by upping the correlation to 0.8:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">foo8</span> <span class="op">=</span> <span class="va">foo</span></span>
 <span><span class="va">foo8</span><span class="op">@</span><span class="va">V</span> <span class="op">&lt;-</span> <span class="fu">mkmat</span><span class="op">(</span><span class="va">foo8</span><span class="op">@</span><span class="va">V</span>, <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">foo8</span>, CIs <span class="op">=</span> <span class="cn">FALSE</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -493,17 +495,17 @@ can make it even worse by upping the correlation to 0.8:</p>
 <p>What is happening here is we are continually reducing the SE of
 within-B comparisons while keeping the others the same. These all work
 out if we use <code>B</code> as a <code>by</code> variable:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">foo8</span>, CIs <span class="op">=</span> <span class="cn">FALSE</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span>, by <span class="op">=</span> <span class="st">"B"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="xplanations_files/figure-html/unnamed-chunk-6-1.png" alt="Plot D - foo8, separate panels for each B. This is a nicely behaved plot because we are not mixing together between-B and within-B SEs." width="432"></p>
 <p>Note that the lengths of the comparison arrows are relatively equal
 within the levels of <code>B</code>. Or, we can use <code><a href="../reference/pwpp.html">pwpp()</a></code>
 or <code><a href="../reference/pwpm.html">pwpm()</a></code> to show the <em>P</em> values for all comparisons
 among the six means:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pwpp.html">pwpp</a></span><span class="op">(</span><span class="va">foo6</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="xplanations_files/figure-html/unnamed-chunk-7-1.png" alt="pwpp of foo6, providing a fairly readable display of the P-values in pairs(foo6)" width="432"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pwpm.html">pwpm</a></span><span class="op">(</span><span class="va">foo6</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##       a1 b1  a2 b1  a3 b1  a1 b2  a2 b2  a3 b2</span></span>
 <span><span class="co">## a1 b1 [6.1] &lt;.0001 0.1993 0.9988 0.6070 0.8972</span></span>
@@ -543,7 +545,7 @@ these lost effects are pooled together into a set of contrasts labeled
 <code>(confounded)</code> in the output (as long as
 <code>showconf = TRUE</code>). Here is a simple illustration based on
 the <code>warpbreaks</code> dataset with the last cell removed.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>contrasts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"contr.treatment"</span>, <span class="st">"contr.poly"</span><span class="op">)</span><span class="op">)</span>   <span class="co">## ensure system default</span></span>
 <span><span class="va">w</span> <span class="op">&lt;-</span> <span class="va">warpbreaks</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, <span class="op">]</span>   <span class="co">### no data for (wool = B, tension = H)</span></span>
 <span><span class="va">w.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">breaks</span> <span class="op">~</span> <span class="va">wool</span> <span class="op">*</span> <span class="va">tension</span>, data <span class="op">=</span> <span class="va">w</span><span class="op">)</span></span>
@@ -565,7 +567,7 @@ interaction effects.</p>
 <p>How do we obtain these extra 2 d.f.? Well, first of all, it is easy
 to obtain a joint test of <em>all</em> comparisons among the cell
 means</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">test.all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summary.emmGrid.html">test</a></span><span class="op">(</span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">w.rg</span>, <span class="st">"consec"</span><span class="op">)</span>, joint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  df1 df2 F.ratio p.value note</span></span>
 <span><span class="co">##    4  35   4.332  0.0060    e</span></span>
@@ -574,7 +576,7 @@ means</p>
 <p>What we do is simply pool together all the contrasts that were tested
 in <code>jt</code>, and compare them with the above. To do this, we
 obtain the estimable functions associated with <code>jt</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">jt</span>, <span class="st">"est.fcns"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $tension</span></span>
 <span><span class="co">##      (Intercept) woolB  tensionM tensionH woolB:tensionM woolB:tensionH</span></span>
@@ -585,7 +587,7 @@ obtain the estimable functions associated with <code>jt</code>:</p>
 <span><span class="co">## [1,]           0     0        0        0              1              0</span></span></code></pre>
 <p>Then we can get a joint test of all these together via some
 trickery:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="va">w.rg</span></span>
 <span><span class="va">tmp</span><span class="op">@</span><span class="va">linfct</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">ef</span><span class="op">)</span>      <span class="co"># combine EFs into a matrix</span></span>
 <span><span class="va">tmp</span><span class="op">@</span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="va">tmp</span><span class="op">@</span><span class="va">grid</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span>           <span class="co"># replace the @linfct and @grid slots</span></span>
@@ -599,7 +601,7 @@ which are not necessarily independent.) So now we have
 cells, and <code>test.ef</code> with just the effects in the top part of
 the <code>jt</code> table. We can get the unexplained part of
 <code>test.all</code> by d.f.-weighted subtraction:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">test.all</span><span class="op">$</span><span class="va">df1</span> <span class="op">*</span> <span class="va">test.all</span><span class="op">$</span><span class="va">F.ratio</span>  <span class="op">-</span>  <span class="va">test.ef</span><span class="op">$</span><span class="va">df1</span> <span class="op">*</span> <span class="va">test.ef</span><span class="op">$</span><span class="va">F.ratio</span><span class="op">)</span> <span class="op">/</span></span>
 <span>    <span class="op">(</span><span class="va">test.all</span><span class="op">$</span><span class="va">df1</span> <span class="op">-</span> <span class="va">test.ef</span><span class="op">$</span><span class="va">df1</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 2.266</span></span></code></pre>
@@ -619,7 +621,7 @@ argument. The purpose of this section is to discuss how to deal with
 these in <strong>emmeans</strong>, and in particular, why we decided to
 handle them differently, even though they seem equivalent.</p>
 <p>To illustrate, consider the following two models:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Claims</span> <span class="op">~</span> <span class="va">District</span> <span class="op">+</span> <span class="va">Group</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html" class="external-link">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">Holders</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            data <span class="op">=</span> <span class="va">Insurance</span>,</span>
@@ -642,7 +644,7 @@ regard the <code>offset</code> argument as implying that there is a
 covariate that is computed in advance of fitting the model, and
 constrained to have a regression coefficient of 1. Let’s see how this
 plays out by looking at the reference grids:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">rg1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     District = 1, 2, 3, 4</span></span>
@@ -650,7 +652,7 @@ plays out by looking at the reference grids:</p>
 <span><span class="co">##     Age = &lt;25, 25-29, 30-35, &gt;35</span></span>
 <span><span class="co">##     Holders = 364.98</span></span>
 <span><span class="co">## Transformation: "log"</span></span></code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">rg2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mod2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     District = 1, 2, 3, 4</span></span>
@@ -665,7 +667,7 @@ offset because does not depend on model predictors, whereas
 <code>mod1</code> could be regarded as having a dynamic offset.) In
 either case, that fourth variable is set to its mean by default.</p>
 <p>Now let’s compare some EMMs:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg1</span>, <span class="st">"Age"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Age   emmean     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  &lt;25     4.43 0.0686 Inf      4.30      4.57</span></span>
@@ -676,7 +678,7 @@ either case, that fourth variable is set to its mean by default.</p>
 <span><span class="co">## Results are averaged over the levels of: District, Group </span></span>
 <span><span class="co">## Results are given on the log (not the response) scale. </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg2</span>, <span class="st">"Age"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Age   emmean     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  &lt;25     3.44 0.0686 Inf      3.30      3.57</span></span>
@@ -699,7 +701,7 @@ fact that the offset is logged that makes those EMMs differ.</p>
 counts; and we can do that by specifying an offset of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mn>1</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\log 1 = 0</annotation></semantics></math>
 to get a rate per holder:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg1</span>, <span class="st">"Age"</span>, offset <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Age    rate      SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  &lt;25   0.230 0.01580 Inf     0.201     0.264</span></span>
@@ -715,7 +717,7 @@ both cases, we are forcing the offset to be zero.</p>
 <p>Finally, suppose we want to use different offsets for each age group.
 This is done as follows: For <code>mod1</code>, we compute
 <code>mean(Holders)</code> separately for each <code>Age</code>:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod1</span>, <span class="st">"Age"</span>, cov.reduce <span class="op">=</span> <span class="va">Holders</span> <span class="op">~</span> <span class="va">Age</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Age   emmean     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  &lt;25     2.80 0.0686 Inf      2.66      2.93</span></span>
@@ -728,7 +730,7 @@ This is done as follows: For <code>mod1</code>, we compute
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>For <code>mod2</code>, <code>Holders</code> is not considered a
 predictor, and instead we need separate mean offsets:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod2</span>, <span class="st">"Age"</span>, cov.reduce <span class="op">=</span> <span class="va">.static.offset.</span> <span class="op">~</span> <span class="va">Age</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Age   emmean     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  &lt;25     2.15 0.0686 Inf      2.02      2.29</span></span>

@@ -167,7 +167,7 @@ triangle is used for the latter two. Also, optional arguments are
 passed. For instance, we can reverse the direction of the comparisons,
 suppress the display of EMMs, swap where the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>
-values go, and perform noninferiority tests with a threshold of 0.05 as
+values go, and perform non-inferiority tests with a threshold of 0.05 as
 follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pwpm.html">pwpm</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>, means <span class="op">=</span> <span class="cn">FALSE</span>, flip <span class="op">=</span> <span class="cn">TRUE</span>,     <span class="co"># args for pwpm()</span></span>
@@ -182,7 +182,7 @@ follows:</p>
 <span><span class="co">## Lower triangle: P values   side = "&gt;"  delta = 0.05</span></span>
 <span><span class="co">## Upper triangle: Comparisons (estimate)   later vs. earlier</span></span></code></pre>
 <p>With all three <em>P</em> values so small, we have fish, soy, and
-skim in increasing order of noninferiority based on the given
+skim in increasing order of non-inferiority based on the given
 threshold.</p>
 <p>When more than one factor is present, an existing or newly specified
 <code>by</code> variables() can split the results into l list of
@@ -240,6 +240,8 @@ pairwise differences again; e.g.,</p>
 <code>comparisons</code> argument in <code>plot.emm()</code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
 <p><img src="comparisons_files/figure-html/unnamed-chunk-8-1.png" alt="side-by-side CIs with comparison arrows added" width="432"></p>
 <p>The blue bars are confidence intervals for the EMMs, and the red
 arrows are for the comparisons among them. If an arrow from one mean
@@ -265,7 +267,7 @@ look at them individually.</p>
 <p>In trying to develop an alternative to compact letter displays (see
 next subsection), we devised the “pairwise <em>P</em>-value plot”
 displaying all the <em>P</em> values in pairwise comparisons:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pwpp.html">pwpp</a></span><span class="op">(</span><span class="va">pigs.emm.s</span><span class="op">)</span></span></code></pre></div>
 <p><img src="comparisons_files/figure-html/unnamed-chunk-9-1.png" alt="Pairwise P-value plot that shows, for each pair of means, a vertical line segment whose horizontal position is the Tukey-adjusted P-value for that comparison. The endpoints of the line segments align with the vertical scale showing the soy levels and their means. This particular plot shows that skim-fish and soy-fish are highyly significant, while skim-soy has a P-value just over 0.05" width="432"></p>
 <p>Each comparison is associated with a vertical line segment that joins
@@ -274,7 +276,7 @@ position is determined by the <em>P</em> value of that comparison.</p>
 <p>This kind of plot can get quite “busy” as the number of means being
 compared goes up. For example, suppose we include the interactions in
 the model for the pigs data, and compare all 12 cell means:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pigs.lmint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span>
 <span><span class="va">pigs.cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigs.lmint</span>, <span class="op">~</span> <span class="va">source</span> <span class="op">*</span> <span class="va">percent</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pwpp.html">pwpp</a></span><span class="op">(</span><span class="va">pigs.cells</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
@@ -288,7 +290,7 @@ means.</p>
 <p>If we are willing to forgo the diagonal comparisons (where neither
 factor has a common level), we can make this a lot less cluttered via a
 <code>by</code> specification:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pwpp.html">pwpp</a></span><span class="op">(</span><span class="va">pigs.cells</span>, by <span class="op">=</span> <span class="st">"source"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="comparisons_files/figure-html/unnamed-chunk-11-1.png" alt="pwpp presented in separate panels for each source. Each panel has just 6 P-value bars, making it much less cluttered than the previous figure" width="576"></p>
 <p>In this latter plot we can see that the comparisons with
@@ -326,7 +328,7 @@ ones that are very close.</p>
 <p>Pairwise comparisons are an example of linear functions of EMMs. You
 may use <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> to see the coefficients of these linear
 functions:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">pigs.emm.s</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##      source c.1 c.2 c.3</span></span>
 <span><span class="co">## fish   fish   1   1   0</span></span>
@@ -346,7 +348,7 @@ name of the built-in method. Consider, for example, the factor
 as a factor in the model, but it corresponds to equally-spaced values of
 a numeric variable. In such cases, users often want to compute
 orthogonal polynomial contrasts:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pigs.emm.p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigs.lm</span>, <span class="st">"percent"</span><span class="op">)</span></span>
 <span><span class="va">ply</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">pigs.emm.p</span>, <span class="st">"poly"</span><span class="op">)</span></span>
 <span><span class="va">ply</span></span></code></pre></div>
@@ -357,7 +359,7 @@ orthogonal polynomial contrasts:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: source </span></span>
 <span><span class="co">## Results are given on the log (not the response) scale.</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ply</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##           percent c.1 c.2 c.3</span></span>
 <span><span class="co">## percent9        9  -3   1  -1</span></span>
@@ -391,7 +393,7 @@ same as <code>Pairs()</code> and
 as the left-hand side of the formula in its second argument. For
 example, with the <code>oranges</code> dataset provided in the
 package,</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">org.aov</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aov.html" class="external-link">aov</a></span><span class="op">(</span><span class="va">sales1</span> <span class="op">~</span> <span class="va">day</span> <span class="op">+</span> <span class="fu">Error</span><span class="op">(</span><span class="va">store</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">oranges</span>,</span>
 <span>               contrasts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>day <span class="op">=</span> <span class="st">"contr.sum"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">org.emml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">org.aov</span>, <span class="va">consec</span> <span class="op">~</span> <span class="va">day</span><span class="op">)</span></span>
@@ -448,7 +450,7 @@ argument to allow for unspecified arguments that may occur in the
 call.</p>
 <p>As an example, suppose we want to compare every third level of a
 treatment. The following function provides for this:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">skip_comp.emmc</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">levels</span>, <span class="va">skip</span> <span class="op">=</span> <span class="fl">1</span>, <span class="va">reverse</span> <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="op">(</span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">levels</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">skip</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Need at least "</span>, <span class="va">skip</span> <span class="op">+</span> <span class="fl">1</span>, <span class="st">" levels"</span><span class="op">)</span></span>
@@ -463,7 +465,7 @@ treatment. The following function provides for this:</p>
 <span>    <span class="va">coef</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>To test it, try 5 levels:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">skip_comp.emmc</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##   1 - 3 2 - 4 3 - 5</span></span>
 <span><span class="co">## 1     1     0     0</span></span>
@@ -471,7 +473,7 @@ treatment. The following function provides for this:</p>
 <span><span class="co">## 3    -1     0     1</span></span>
 <span><span class="co">## 4     0    -1     0</span></span>
 <span><span class="co">## 5     0     0    -1</span></span></code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">skip_comp.emmc</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, skip <span class="op">=</span> <span class="fl">0</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##   2 - 1 3 - 2 4 - 3 5 - 4</span></span>
 <span><span class="co">## 1    -1     0     0     0</span></span>
@@ -481,7 +483,7 @@ treatment. The following function provides for this:</p>
 <span><span class="co">## 5     0     0     0     1</span></span></code></pre>
 <p>(The latter is the same as <code>"consec"</code> contrasts.) Now try
 it with the <code>oranges</code> example we had previously:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">org.emml</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"skip_comp"</span>, skip <span class="op">=</span> <span class="fl">2</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast estimate   SE df t.ratio p.value</span></span>
 <span><span class="co">##  4 - 1        0.17 3.78 25   0.045  0.9645</span></span>
@@ -504,7 +506,7 @@ are the population values of the <code>source</code> EMMs in the
 <code>pigs</code> example. This may be done by providing the
 coefficients in a list, and the added constants in the
 <code>offset</code> argument:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">LF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>, </span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lambda1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, lambda2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">7</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
@@ -548,7 +550,7 @@ Accordingly, when <code><a href="../reference/contrast.html">contrast()</a></cod
 notices that the response is on the log scale, it back-transforms
 contrasts to ratios when results are to be of <code>response</code>
 type. For example:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>, type <span class="op">=</span> <span class="st">"lp"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    estimate     SE df t.ratio p.value</span></span>
 <span><span class="co">##  fish - soy    -0.273 0.0529 23  -5.153  0.0001</span></span>
@@ -558,7 +560,7 @@ type. For example:</p>
 <span><span class="co">## Results are averaged over the levels of: percent </span></span>
 <span><span class="co">## Results are given on the log (not the response) scale. </span></span>
 <span><span class="co">## P value adjustment: tukey method for comparing a family of 3 estimates</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    ratio     SE df null t.ratio p.value</span></span>
 <span><span class="co">##  fish / soy  0.761 0.0403 23    1  -5.153  0.0001</span></span>

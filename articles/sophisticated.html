@@ -133,8 +133,11 @@ illustration, we will exclude a few observations.</p>
 <span>                        data <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/nlme/man/Oats.html" class="external-link">Oats</a></span>, subset <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">5</span>,<span class="fl">8</span>,<span class="fl">13</span>,<span class="fl">21</span>,<span class="fl">34</span>,<span class="fl">55</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Let’s look at the EMMs for <code>nitro</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Oats.emm.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">Oats.lmer</span>, <span class="st">"nitro"</span><span class="op">)</span></span>
-<span><span class="va">Oats.emm.n</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">Oats.emm.n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">Oats.lmer</span>, <span class="st">"nitro"</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Oats.emm.n</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  nitro emmean   SE   df lower.CL upper.CL</span></span>
 <span><span class="co">##    0.0   78.9 7.29 7.78     62.0     95.8</span></span>
 <span><span class="co">##    0.2   97.0 7.14 7.19     80.3    113.8</span></span>
@@ -152,7 +155,7 @@ you see a message about the <strong>pbkrtest</strong> package being
 loaded, as it implements that method. We may specify a different
 degrees-of-freedom method via the optional argument
 <code>lmer.df</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">Oats.lmer</span>, <span class="st">"nitro"</span>, lmer.df <span class="op">=</span> <span class="st">"satterthwaite"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  nitro emmean   SE   df lower.CL upper.CL</span></span>
 <span><span class="co">##    0.0   78.9 7.28 7.28     61.8       96</span></span>
@@ -173,7 +176,7 @@ so are the standard errors. That is because the Kenward-Roger method
 also entails making a bias adjustment to the covariance matrix of the
 fixed effects; that is the principal difference between the methods. A
 third possibility is <code>"asymptotic"</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">Oats.lmer</span>, <span class="st">"nitro"</span>, lmer.df <span class="op">=</span> <span class="st">"asymptotic"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  nitro emmean   SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##    0.0   78.9 7.28 Inf      64.6      93.2</span></span>
@@ -193,7 +196,7 @@ as obtained using the Satterthwaite method.</p>
 <p>Comparisons and contrasts are pretty much the same as with other
 models. As <code>nitro</code> has quantitative levels, we might want to
 test polynomial contrasts:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">Oats.emm.n</span>, <span class="st">"poly"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast  estimate    SE   df t.ratio p.value</span></span>
 <span><span class="co">##  linear      152.69 15.60 43.2   9.802  &lt;.0001</span></span>
@@ -208,7 +211,7 @@ larger than they are for the EMMs. The reason is because
 little role in estimating contrasts among <code>nitro</code> levels. On
 the other hand, <code>Variety</code> is a whole-plot factor, and there
 is not much of a bump in degrees of freedom for comparisons:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">Oats.lmer</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">Variety</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emmeans</span></span>
 <span><span class="co">##  Variety     emmean   SE   df lower.CL upper.CL</span></span>
@@ -271,12 +274,12 @@ are randomized to different diets. Our model fits a trend in the square
 root of weight for each diet, with random intercepts and slopes for each
 chick (this is likely not the best model, but it’s not totally stupid
 and it serves an an illustration).</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cw.lmer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">weight</span><span class="op">)</span> <span class="op">~</span> <span class="va">Time</span><span class="op">*</span><span class="va">Diet</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">+</span><span class="va">Time</span><span class="op">|</span><span class="va">Chick</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">ChickWeight</span><span class="op">)</span></span></code></pre></div>
 <p>Our goal is to use this model to estimate the mean
 <code>weight</code> at times 5, 10, 15, and 20, for each diet.
 Accordingly, let’s get the estimates needed:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cw.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">cw.lmer</span>, <span class="op">~</span> <span class="va">Time</span><span class="op">|</span><span class="va">Diet</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>If we just summarize this with `type = “response”, we will
 under-estimate the mean weights. We need to apply a bias adjustment; but
@@ -301,7 +304,7 @@ for each
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.</p>
 <p>The first step is to obtain an estimated covariance matrix for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mo>,</mo><mi>C</mi><mo>,</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(E, C, S)</annotation></semantics></math>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">V</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E"</span>,<span class="st">"C"</span>,<span class="st">"S"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E"</span>,<span class="st">"C"</span>,<span class="st">"S"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">V</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sigma.html" class="external-link">sigma</a></span><span class="op">(</span><span class="va">cw.lmer</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>              <span class="co"># Var(E)</span></span>
 <span><span class="va">V</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/VarCorr.html" class="external-link">VarCorr</a></span><span class="op">(</span><span class="va">cw.lmer</span><span class="op">)</span><span class="op">$</span><span class="va">Chick</span>    <span class="co"># Cov(C, S)</span></span>
@@ -317,7 +320,7 @@ for
 and a given vector
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
 we can obtain the needed SDs:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span>, <span class="fl">20</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="va">t</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">a</span> <span class="op">*</span> <span class="va">V</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">a</span><span class="op">)</span><span class="op">)</span></span>
@@ -329,7 +332,7 @@ we can obtain the needed SDs:</p>
 Finally, we obtain the bias-adjusted estimated weights. We can use
 <code>sigma = sig</code> as-is since the values follow the same ordering
 as <code>cw.emm@grid</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">cw.emm</span>, type <span class="op">=</span> <span class="st">"response"</span>, bias.adj <span class="op">=</span> <span class="cn">TRUE</span>, sigma <span class="op">=</span> <span class="va">sig</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## Diet = 1:</span></span>
 <span><span class="co">##  Time response    SE   df lower.CL upper.CL</span></span>
@@ -401,7 +404,7 @@ fit a Poisson model to <code>claims</code> as a function of
 <code>size</code> and <code>age</code>. An offset of <code>log(n)</code>
 is included so that <code>n</code> functions as an “exposure”
 variable.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1200</span>, <span class="fl">100</span>, <span class="fl">400</span>, <span class="fl">500</span>, <span class="fl">300</span><span class="op">)</span>,</span>
 <span>    size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>,<span class="st">"M"</span>,<span class="st">"L"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -410,7 +413,7 @@ variable.</p>
 <span><span class="va">ins.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">claims</span> <span class="op">~</span> <span class="va">size</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html" class="external-link">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>               data <span class="op">=</span> <span class="va">ins</span>, family <span class="op">=</span> <span class="st">"poisson"</span><span class="op">)</span></span></code></pre></div>
 <p>First, let’s look at the reference grid obtained by default:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">ins.glm</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     size = S, M, L</span></span>
@@ -419,7 +422,7 @@ variable.</p>
 <span><span class="co">## Transformation: "log"</span></span></code></pre>
 <p>Note that <code>n</code> is included in the reference grid and that
 its average value of 500 is displayed. But let’s look at the EMMs:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">EMM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">ins.glm</span>, <span class="st">"size"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  size rate   SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  S    69.3 6.25 Inf     58.03      82.7</span></span>
@@ -431,7 +434,7 @@ its average value of 500 is displayed. But let’s look at the EMMs:</p>
 <span><span class="co">## Intervals are back-transformed from the log scale</span></span></code></pre>
 <p>We can see more explicitly what is happening by examining the
 internal structure of <code>EMM</code>:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EMM</span><span class="op">@</span><span class="va">grid</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##   size .offset. .wgt.</span></span>
 <span><span class="co">## 1    S 6.214608     2</span></span>
@@ -445,7 +448,7 @@ for this kind of model, and instead use one corresponding to
 <code>n = 1</code>, because then the estimates we obtain are estimated
 rates per unit <code>n</code>. This may be accomplished by specifying an
 <code>offset</code> parameter in the call:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">ins.glm</span>, <span class="st">"size"</span>, type <span class="op">=</span> <span class="st">"response"</span>, offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  size   rate      SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  S    0.1385 0.01250 Inf    0.1161    0.1653</span></span>
@@ -458,12 +461,12 @@ rates per unit <code>n</code>. This may be accomplished by specifying an
 <p>An alternative way to achieve the same results is to set
 <code>n</code> equal to 1 in the reference grid itself (output not
 shown, because it is identical):</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">ins.glm</span>, <span class="st">"size"</span>, type <span class="op">=</span> <span class="st">"response"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>By the way, you may set some other reference value for the rates. For
 example, if you want estimates of claims per 100 cars, simply use
 (results not shown):</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">ins.glm</span>, <span class="st">"size"</span>, type <span class="op">=</span> <span class="st">"response"</span>, offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>For more details on how offsets are handled, and how and why an
 <code><a href="https://rdrr.io/r/stats/offset.html" class="external-link">offset()</a></code> <em>model term</em> is treated differently than an
@@ -490,15 +493,15 @@ response is a rating of bitterness on a five-point scale. we will
 consider a probit model in two factors during fermentation:
 <code>temp</code> (temperature) and <code>contact</code> (contact with
 grape skins), with the judge making the rating as a scale predictor:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/runehaubo/ordinal" class="external-link">"ordinal"</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: ordinal</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wine.clm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ordinal/man/clm.html" class="external-link">clm</a></span><span class="op">(</span><span class="va">rating</span> <span class="op">~</span> <span class="va">temp</span> <span class="op">+</span> <span class="va">contact</span>, scale <span class="op">=</span> <span class="op">~</span> <span class="va">judge</span>,</span>
 <span>                data <span class="op">=</span> <span class="va">wine</span>, link <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span></span></code></pre></div>
 <p>(in earlier modeling, we found little interaction between the
 factors.) Here are the EMMs for each factor using default options:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">wine.clm</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pairwise</span> <span class="op">~</span> <span class="va">temp</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">contact</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $`emmeans of temp`</span></span>
 <span><span class="co">##  temp emmean    SE  df asymp.LCL asymp.UCL</span></span>
@@ -545,7 +548,7 @@ be the same.</p>
 ordinary probit model but with different intercepts for each cut point.
 We can get detailed information for this model by specifying
 <code>mode = "linear.predictor"</code>:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">wine.clm</span>, mode <span class="op">=</span> <span class="st">"lin"</span><span class="op">)</span></span>
 <span><span class="va">tmp</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
@@ -558,7 +561,7 @@ We can get detailed information for this model by specifying
 predictor named <code>cut</code> that accounts for the different
 intercepts in the model. Let’s obtain EMMs for <code>temp</code> on the
 linear-predictor scale:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="st">"temp"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  temp emmean    SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  cold  0.884 0.290 Inf     0.316     1.452</span></span>
@@ -577,7 +580,7 @@ model but are cumbersome to use for describing results. When they can
 become useful is when you want to work in terms of a particular cut
 point. Let’s look at <code>temp</code> again in terms of the probability
 that the rating will be at least 4:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">wine.clm</span>, <span class="op">~</span> <span class="va">temp</span>, mode <span class="op">=</span> <span class="st">"exc.prob"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cut <span class="op">=</span> <span class="st">"3|4"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  temp exc.prob     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  cold   0.0748 0.0318 Inf    0.0124     0.137</span></span>
@@ -595,7 +598,7 @@ grid includes a factor with the same name as the model response – in
 this case <code>rating</code>. We usually want to use that as the
 primary factor, and the factors of interest as <code>by</code>
 variables:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">wine.clm</span>, <span class="op">~</span> <span class="va">rating</span> <span class="op">|</span> <span class="va">temp</span>, mode <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## temp = cold:</span></span>
 <span><span class="co">##  rating   prob     SE  df asymp.LCL asymp.UCL</span></span>
@@ -617,7 +620,7 @@ variables:</p>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>Using <code>mode = "mean.class"</code> obtains the average of these
 probability distributions as probabilities of the integers 1–5:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">wine.clm</span>, <span class="st">"temp"</span>, mode <span class="op">=</span> <span class="st">"mean.class"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  temp mean.class    SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  cold       2.35 0.144 Inf      2.06      2.63</span></span>
@@ -628,7 +631,7 @@ probability distributions as probabilities of the integers 1–5:</p>
 <p>And there is a mode for the scale model too. In this example, the
 scale model involves only judges, and that is the only factor in the
 grid:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">wine.clm</span>, mode <span class="op">=</span> <span class="st">"scale"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  judge response    SE  df</span></span>
 <span><span class="co">##  1        1.000 0.000 Inf</span></span>
@@ -665,7 +668,7 @@ of this vignette.) We subsequently obtain the reference grids for these
 models in the usual way. For later use, we also fit the same model with
 just the prior information.
 <!--- I'm faking this; I actually saved the ref_grid in a system file ---></p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cbpp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="fu">lme4</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/lme4/man/cbpp.html" class="external-link">cbpp</a></span>, unit <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">56</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://easystats.github.io/bayestestR/" class="external-link">"bayestestR"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>contrasts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"contr.bayes"</span>, <span class="st">"contr.poly"</span><span class="op">)</span><span class="op">)</span></span>
@@ -679,13 +682,13 @@ just the prior information.
 <span><span class="va">cbpp_prior.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">cbpp_prior.rstan</span><span class="op">)</span></span></code></pre></div>
 <!--- here's the system file with the ref_grid --->
 <p>Here is the structure of the reference grid:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cbpp.rg</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     period = 1, 2, 3, 4</span></span>
 <span><span class="co">## Transformation: "logit"</span></span></code></pre>
 <p>So here are the EMMs (no averaging needed in this simple model):</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cbpp.rg</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  period prediction lower.HPD upper.HPD</span></span>
 <span><span class="co">##  1           -1.60     -2.26    -0.987</span></span>
@@ -711,10 +714,10 @@ function.</p>
 for <code>emmGrid</code> objects. This gives us an object of class
 <code>mcmc</code> (defined in the <strong>coda</strong> package), which
 can be summarized and explored as we please.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"coda"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: coda</span></span></code></pre>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">as.mcmc</a></span><span class="op">(</span><span class="va">cbpp.rg</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## </span></span>
 <span><span class="co">## Iterations = 1:500</span></span>
@@ -746,7 +749,7 @@ summary.</p>
 <p>The <strong>bayestestR</strong> package provides <code>emmGrid</code>
 methods for most of its description and testing functions. For
 example:</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bayestestR</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/bayestestR/reference/bayesfactor_parameters.html" class="external-link">bayesfactor_parameters</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">cbpp.rg</span><span class="op">)</span>, prior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">cbpp_prior.rg</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: Bayes factors might not be precise.</span></span>
 <span><span class="co">##   For precise Bayes factors, sampling at least 40,000 posterior samples is recommended.</span></span></code></pre>
@@ -762,7 +765,7 @@ example:</p>
 <span><span class="co">## period3 - period4 | 0.221</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## * Evidence Against The Null: 0</span></span></code></pre>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bayestestR</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/bayestestR/reference/p_rope.html" class="external-link">p_rope</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">cbpp.rg</span><span class="op">)</span>, range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">0.25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## Proportion of samples inside the ROPE [-0.25, 0.25]</span></span>
 <span><span class="co">## </span></span>
@@ -794,10 +797,10 @@ for the posterior SDs of the two random effects. (I used the
 <code>colnames</code> function to find that they are in the 78th and
 79th columns.)
 <!-- We already read this in earlier, and here's the faked code --></p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cbpp.sigma</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">cbpp.rstan</span><span class="op">$</span><span class="va">stanfit</span><span class="op">)</span><span class="op">[</span>, <span class="fl">78</span><span class="op">:</span><span class="fl">79</span><span class="op">]</span></span></code></pre></div>
 <p>Here are the first few:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cbpp.sigma</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##           parameters</span></span>
 <span><span class="co">## iterations Sigma[unit:(Intercept),(Intercept)] Sigma[herd:(Intercept),(Intercept)]</span></span>
@@ -809,7 +812,7 @@ for the posterior SDs of the two random effects. (I used the
 <span><span class="co">##       [6,]                            1.412277                         0.070334431</span></span></code></pre>
 <p>So to obtain bias-adjusted marginal probabilities, obtain the
 resultant SD and regrid with bias correction:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">totSD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">cbpp.sigma</span><span class="op">^</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cbpp.rgrd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="va">cbpp.rg</span>, bias.adjust <span class="op">=</span> <span class="cn">TRUE</span>, sigma <span class="op">=</span> <span class="va">totSD</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cbpp.rgrd</span><span class="op">)</span></span></code></pre></div>
@@ -823,12 +826,12 @@ resultant SD and regrid with bias correction:</p>
 <span><span class="co">## HPD interval probability: 0.95</span></span></code></pre>
 <p>Here is a plot of the posterior incidence probabilities,
 back-transformed:</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">as.mcmc</a></span><span class="op">(</span><span class="va">cbpp.rgrd</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="sophisticated_files/figure-html/unnamed-chunk-37-1.png" alt="kernel denity estimates for each of the 4 periods. Their medians and spreads decrease with period, and period 1 is especially different. See the previous summary table for the numerical values of the estimated means" width="432"></p>
 <p>… and here are intervals for each period compared with its
 neighbor:</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">cbpp.rgrd</span>, <span class="st">"consec"</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast          estimate lower.HPD upper.HPD</span></span>
 <span><span class="co">##  period1 - period2  0.13283    0.0280     0.235</span></span>
@@ -850,7 +853,7 @@ neighbor:</p>
 causes the function to simulate data from the posterior predictive
 distribution. For example, if we want to predict the CBPP incidence in
 future herds of 25 cattle, we can do:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2019.0605</span><span class="op">)</span></span>
 <span><span class="va">cbpp.preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">as.mcmc</a></span><span class="op">(</span><span class="va">cbpp.rgrd</span>, likelihood <span class="op">=</span> <span class="st">"binomial"</span>, trials <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
 <span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist</a></span><span class="op">(</span><span class="va">cbpp.preds</span>, binwidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>

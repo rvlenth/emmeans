@@ -168,8 +168,11 @@ in a mixed model:</p>
 <code class="sourceCode R"><span><span class="va">feedlot</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">feedlot</span>, adj.ewt <span class="op">=</span> <span class="va">ewt</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">ewt</span> <span class="op">~</span> <span class="va">herd</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span>
 <span><span class="va">feedlot.lmer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="va">swt</span> <span class="op">~</span> <span class="va">adj.ewt</span> <span class="op">+</span> <span class="va">diet</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">herd</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">feedlot</span><span class="op">)</span></span>
-<span><span class="va">feedlot.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">feedlot.lmer</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adj.ewt <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">feedlot.rg</span><span class="op">)</span>  <span class="co">## point predictions</span></span></code></pre></div>
+<span><span class="va">feedlot.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">feedlot.lmer</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adj.ewt <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">feedlot.rg</span><span class="op">)</span>  <span class="co">## point predictions</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  adj.ewt diet   prediction   SE   df</span></span>
 <span><span class="co">##        0 Low          1029 25.5 12.0</span></span>
 <span><span class="co">##        0 Medium        998 26.4 13.7</span></span>
@@ -177,12 +180,12 @@ in a mixed model:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Degrees-of-freedom method: kenward-roger</span></span></code></pre>
 <p>Now, as advised, let’s look at the SDs involved in this model:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/VarCorr.html" class="external-link">VarCorr</a></span><span class="op">(</span><span class="va">feedlot.lmer</span><span class="op">)</span>  <span class="co">## for the model</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Groups   Name        Std.Dev.</span></span>
 <span><span class="co">##  herd     (Intercept) 77.087  </span></span>
 <span><span class="co">##  Residual             57.832</span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">feedlot.rg</span><span class="op">@</span><span class="va">misc</span><span class="op">$</span><span class="va">sigma</span>  <span class="co">## default in the ref. grid</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 57.83221</span></span></code></pre>
 <p>So the residual SD will be assumed in our prediction intervals if we
@@ -193,12 +196,12 @@ herds too, which is seen to be considerable. The two SDs reported by
 <code><a href="https://rdrr.io/pkg/nlme/man/VarCorr.html" class="external-link">VarCorr()</a></code> are assumed to represent independent sources of
 variation, so they may be combined into a total SD using the Pythagorean
 Theorem. We will update the reference grid with the new value:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">feedlot.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">feedlot.rg</span>, sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">77.087</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">57.832</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We are now ready to form prediction intervals. To do so, simply call
 the <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> function with an <code>interval</code>
 argument:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">feedlot.rg</span>, interval <span class="op">=</span> <span class="st">"prediction"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  adj.ewt diet   prediction    SE   df lower.PL upper.PL</span></span>
 <span><span class="co">##        0 Low          1029  99.7 12.0      812     1247</span></span>
@@ -209,7 +212,7 @@ argument:</p>
 <span><span class="co">## Prediction intervals and SEs are based on an error SD of 96.369 </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>These results may also be displayed graphically:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">feedlot.rg</span>, PIs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="predictions_files/figure-html/unnamed-chunk-7-1.png" alt="Side-by-side CIs and PIs. The PIs are much wider, and have the endpoints found in the preceding predit() call" width="432"></p>
 <p>The inner intervals are confidence intervals, and the outer ones are
@@ -218,7 +221,7 @@ the prediction intervals.</p>
 SEs for estimation in the original summary of <code>feedlot.rg</code>.
 Also, as a sanity check, observe that these prediction intervals cover
 about the same ground as the original data:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">feedlot</span><span class="op">$</span><span class="va">swt</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1]  816 1248</span></span></code></pre>
 <p>By the way, we could have specified the desired <code>sigma</code>
@@ -239,11 +242,11 @@ herds.</p>
 we are really regarding <code>herd</code> as a fixed effect of interest;
 so the expedient thing to do is to fit a different model where
 <code>herd</code> is a fixed effect:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">feedlot.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">swt</span> <span class="op">~</span> <span class="va">adj.ewt</span> <span class="op">+</span> <span class="va">diet</span> <span class="op">+</span> <span class="va">herd</span>, data <span class="op">=</span> <span class="va">feedlot</span><span class="op">)</span></span></code></pre></div>
 <p>So to predict slaughter weight for herds <code>9</code> and
 <code>19</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newrg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">feedlot.lm</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adj.ewt <span class="op">=</span> <span class="fl">0</span>, herd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"9"</span>, <span class="st">"19"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">newrg</span>, interval <span class="op">=</span> <span class="st">"prediction"</span>, by <span class="op">=</span> <span class="st">"herd"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## herd = 9:</span></span>

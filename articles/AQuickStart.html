@@ -136,7 +136,7 @@ relate.</p>
 <div class="section level3">
 <h3 id="one-factor">One-factor model<a class="anchor" aria-label="anchor" href="#one-factor"></a>
 </h3>
-<p>If one-factor model fits well and the factor is named
+<p>If a one-factor model fits well and the factor is named
 <code>treatment</code>, do</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EMM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">model</span>, <span class="st">"treatment"</span><span class="op">)</span>   <span class="co"># or emmeans(model, ~ treatment)</span></span>
@@ -259,7 +259,7 @@ e.g. <code>contrast(EMM, "consec")</code> will estimate comparisons
 between consecutive <code>Treatment</code> means. But <code>SEMM</code>
 is just an annotated data frame and we can do no further analysis with
 it. Similarly, we can change how <code>EMM</code> is displayed via
-arguments to <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> or relatives, whil;e in
+arguments to <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> or relatives, while in
 <code>SEMM</code>, everything has been computed and those results are
 locked-in.</p>
 </div>
@@ -316,9 +316,9 @@ results you don’t want.</p>
 <div class="section level2">
 <h2 id="more">Further reading<a class="anchor" aria-label="anchor" href="#more"></a>
 </h2>
-<p>There are several of these vignettes that offser more details and
-more advanced topics. <a href="vignette-topics.html">An index of all
-these vignette topics is available here</a>.</p>
+<p>There are several of these vignettes that offer more details and more
+advanced topics. <a href="vignette-topics.html">An index of all these
+vignette topics is available here</a>.</p>
 <p>The strings linked below are the names of the vignettes; i.e., they
 can also be accessed via
 <code>vignette("</code><em>name</em><code>", "emmeans")</code></p>

@@ -177,6 +177,8 @@ visualize the nature of the interactions before doing any statistical
 comparisons. The following plot helps.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">type</span> <span class="op">~</span> <span class="va">size</span> <span class="op">|</span> <span class="va">side</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
 <p><img src="interactions_files/figure-html/unnamed-chunk-4-1.png" alt="emmip plot of type and size, with separate panels for each side. To see the same numerical information, do emmeans(noise.lm, ~ type:size|side)" width="432"></p>
 <p>Examining this plot, we see that the “medium” mean is not always
 higher; so the marginal means, and the way they compare, does not
@@ -185,10 +187,10 @@ is that the peak for medium-size cars occurs for only one of the two
 filter types. So it seems more useful to do the comparisons of size
 separately for each filter type. This is easily done, simply by
 conditioning on <code>type</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">emm_s.t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">size</span> <span class="op">|</span> <span class="va">type</span><span class="op">)</span></span></code></pre></div>
 <pre class="re"><code><span><span class="co">## NOTE: Results may be misleading due to involvement in interactions</span></span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">emm_s.t</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emmeans</span></span>
 <span><span class="co">## type = Std:</span></span>
@@ -251,7 +253,7 @@ through the use of the <code>simple</code> argument to
 <code><a href="../reference/contrast.html">contrast()</a></code> or <code><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs()</a></code>, which amounts to
 specifying which factors are <em>not</em> used as <code>by</code>
 variables. For example, consider:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">noise.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">noise.lm</span>, <span class="op">~</span> <span class="va">size</span> <span class="op">*</span> <span class="va">side</span> <span class="op">*</span> <span class="va">type</span><span class="op">)</span></span></code></pre></div>
 <p>Then <code>pairs(noise.emm, simple = "size")</code> is the same as
 <code>pairs(noise.emm, by = c("side", "type"))</code>.</p>
@@ -269,7 +271,7 @@ same as obtained using
 <code>"each"</code>), a list of contrast sets is returned. However, if
 the additional argument <code>combine</code> is set to
 <code>TRUE</code>, they are all combined into one family:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"consec"</span>, simple <span class="op">=</span> <span class="st">"each"</span>, combine <span class="op">=</span> <span class="cn">TRUE</span>, adjust <span class="op">=</span> <span class="st">"mvt"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  side type  size contrast    estimate    SE df t.ratio p.value</span></span>
 <span><span class="co">##  L    Std   .    M - S          1.500 0.312 24   4.811  0.0011</span></span>
@@ -312,7 +314,7 @@ multiplicity-adjusted (a total of 16 different tables).</p>
 the auto-noise example, we may want to obtain the linear and quadratic
 contrasts of <code>size</code> separately for each <code>type</code>,
 and compare them. Here are estimates of those contrasts:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm_s.t</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"poly"</span><span class="op">)</span>   <span class="co">## 'by = "type"' already in previous result </span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## type = Std:</span></span>
 <span><span class="co">##  contrast  estimate    SE df t.ratio p.value</span></span>
@@ -328,7 +330,7 @@ and compare them. Here are estimates of those contrasts:</p>
 <p>The comparison of these contrasts may be done using the
 <code>interaction</code> argument in <code><a href="../reference/contrast.html">contrast()</a></code> as
 follows:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IC_st</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm_s.t</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, interaction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"poly"</span>, <span class="st">"consec"</span><span class="op">)</span>, by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="va">IC_st</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  size_poly type_consec estimate    SE df t.ratio p.value</span></span>
@@ -344,7 +346,7 @@ quadratic trends are negative, so in fact it is the standard filters
 that have more pronounced <em>downward</em> curvature, as is seen in the
 plot.) In case you need to understand more clearly what contrasts are
 being estimated, the <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> method helps:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">IC_st</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##   size  type c.1 c.2</span></span>
 <span><span class="co">## 1    S   Std   1  -1</span></span>
@@ -357,7 +359,7 @@ being estimated, the <code><a href="https://rdrr.io/r/stats/coef.html" class="ex
 of the 1st through 3rd – thus a comparison of two contrasts.</p>
 <p>By the way, “type III” tests of interaction effects can be obtained
 via interaction contrasts:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summary.emmGrid.html">test</a></span><span class="op">(</span><span class="va">IC_st</span>, joint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  df1 df2 F.ratio p.value</span></span>
 <span><span class="co">##    2  24  27.571  &lt;.0001</span></span></code></pre>
@@ -365,7 +367,7 @@ via interaction contrasts:</p>
 <code>size:type</code> in the <code>anova</code> output.</p>
 <p>The three-way interaction may be explored via interaction contrasts
 too:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">noise.lm</span>, <span class="op">~</span> <span class="va">size</span><span class="op">*</span><span class="va">type</span><span class="op">*</span><span class="va">side</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span>interaction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"poly"</span>, <span class="st">"consec"</span>, <span class="st">"consec"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  size_poly type_consec side_consec estimate    SE df t.ratio p.value</span></span>
@@ -382,7 +384,7 @@ in the left panel versus the interaction in the right panel.</p>
 <code><a href="../reference/joint_tests.html">joint_tests()</a></code> function that obtains and tests the
 interaction contrasts for all effects in the model and compiles them in
 one Type-III-ANOVA-like table:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">noise.lm</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  model term     df1 df2 F.ratio p.value</span></span>
 <span><span class="co">##  size             2  24 893.190  &lt;.0001</span></span>
@@ -394,7 +396,7 @@ one Type-III-ANOVA-like table:</p>
 <span><span class="co">##  size:type:side   2  24  10.333  0.0006</span></span></code></pre>
 <p>You may even add <code>by</code> variable(s) to obtain separate ANOVA
 tables for the remaining factors:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">noise.lm</span>, by <span class="op">=</span> <span class="st">"side"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## side = L:</span></span>
 <span><span class="co">##  model term df1 df2 F.ratio p.value</span></span>
@@ -426,7 +428,7 @@ means. Such multivariate comparisons can be done via the <em>Mahalanobis
 distance</em> (a kind of standardized distance measure) between one set
 of four means and another. This is facilitated by the
 <code><a href="../reference/mvcontrast.html">mvcontrast()</a></code> function:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"pairwise"</span>, mult.name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"type"</span>, <span class="st">"side"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast T.square df1 df2 F.ratio p.value</span></span>
 <span><span class="co">##  S - M      88.857   4  21  19.438  &lt;.0001</span></span>
@@ -446,7 +448,7 @@ are statistically most different from the other sizes.</p>
 <p>We may still break things down using <code>by</code> variables.
 Suppose, for example, we wish to compare the two filter types for each
 size of car, without regard to which side:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"consec"</span>, mult.name <span class="op">=</span> <span class="st">"side"</span>, by <span class="op">=</span> <span class="st">"size"</span><span class="op">)</span>, </span>
 <span>       by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    size T.square df1 df2 F.ratio p.value</span></span>
@@ -459,7 +461,7 @@ size of car, without regard to which side:</p>
 complete sense, all the factors involved must interact. Suppose we were
 to repeat the initial multivariate comparison after removing all
 interactions:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">noise.emm</span>, submodel <span class="op">=</span> <span class="op">~</span> <span class="va">side</span> <span class="op">+</span> <span class="va">size</span> <span class="op">+</span> <span class="va">type</span><span class="op">)</span>, </span>
 <span>           <span class="st">"pairwise"</span>, mult.name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"type"</span>, <span class="st">"side"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast T.square df1 df2  F.ratio p.value</span></span>
@@ -490,13 +492,13 @@ trend for each level of the factor. As a simple example, consider the
 <code>fiber</code> dataset, and fit a model including the interaction
 between <code>diameter</code> (a covariate) and <code>machine</code> (a
 factor):</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fiber.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">strength</span> <span class="op">~</span> <span class="va">diameter</span><span class="op">*</span><span class="va">machine</span>, data <span class="op">=</span> <span class="va">fiber</span><span class="op">)</span></span></code></pre></div>
 <p>This model comprises fitting, for each machine, a separate linear
 trend for <code>strength</code> versus <code>diameter</code>.
 Accordingly, we can estimate and compare the slopes of those lines via
 the <code><a href="../reference/emtrends.html">emtrends()</a></code> function:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">machine</span>, var <span class="op">=</span> <span class="st">"diameter"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emtrends</span></span>
 <span><span class="co">##  machine diameter.trend    SE df lower.CL upper.CL</span></span>
@@ -516,7 +518,7 @@ the <code><a href="../reference/emtrends.html">emtrends()</a></code> function:</
 <p>We see the three slopes, but no two of them test as being
 statistically different.</p>
 <p>To visualize the lines themselves, you may use</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="va">machine</span> <span class="op">~</span> <span class="va">diameter</span>, cov.reduce <span class="op">=</span> <span class="va">range</span><span class="op">)</span></span></code></pre></div>
 <p><img src="interactions_files/figure-html/unnamed-chunk-20-1.png" alt="Plot with three increasing lines. The one for B is highest, the one for C is lower and more-or-less parallel to it, and the one for A is steeper and crosses the other two lines near their ends" width="432"></p>
 <p>The <code>cov.reduce = range</code> argument is passed to
@@ -535,7 +537,7 @@ different days, and the responses <code>sales1</code> and
 <code>sales2</code> were observed. Let’s consider three multivariate
 models for these data, with additive effects for days and stores, and
 different levels of fitting on the prices:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">org.quad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">sales1</span>, <span class="va">sales2</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">price1</span>, <span class="va">price2</span>, degree <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>                                       <span class="op">+</span> <span class="va">day</span> <span class="op">+</span> <span class="va">store</span>, data <span class="op">=</span> <span class="va">oranges</span><span class="op">)</span></span>
 <span><span class="va">org.int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">sales1</span>, <span class="va">sales2</span><span class="op">)</span> <span class="op">~</span> <span class="va">price1</span> <span class="op">*</span> <span class="va">price2</span> <span class="op">+</span> <span class="va">day</span> <span class="op">+</span> <span class="va">store</span>, data <span class="op">=</span> <span class="va">oranges</span><span class="op">)</span></span>
@@ -549,7 +551,7 @@ between <code>variety</code> and each of the predictors involving
 there is an implied three-way interaction.) An interesting way to view
 these models is to look at how they predict sales of each variety at
 each observed values of the prices:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">org.quad</span>, <span class="va">price2</span> <span class="op">~</span> <span class="va">price1</span> <span class="op">|</span> <span class="va">variety</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span>, cov.reduce <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: The shape palette can deal with a maximum of 6 discrete values because more</span></span>
 <span><span class="co">## than 6 becomes difficult to discriminate</span></span>
@@ -570,7 +572,7 @@ though, there are implied <code>price1:variety</code> and
 regression coefficients for the two responses.</p>
 <p>Which model should we use? They are nested models, so they can be
 compared by <code><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova()</a></code>:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">org.quad</span>, <span class="va">org.int</span>, <span class="va">org.add</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
@@ -597,7 +599,7 @@ for exactly this kind of purpose. It uses a difference quotient to
 estimate the slope of a line fitted to a given variable. It works just
 like <code><a href="../reference/emmeans.html">emmeans()</a></code> except for requiring the variable to use in
 the difference quotient. Using the <code>org.int</code> model:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">org.int</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">variety</span>, var <span class="op">=</span> <span class="st">"price1"</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emtrends</span></span>
 <span><span class="co">##  variety price1.trend    SE df lower.CL upper.CL</span></span>
@@ -627,7 +629,7 @@ depend somewhat on the setting for <code>price1</code>. The graph above
 gives an indication of the nature of those changes.</p>
 <p>Similar results hold when we analyze the trends for
 <code>price2</code>:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">org.int</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">variety</span>, var <span class="op">=</span> <span class="st">"price2"</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emtrends</span></span>
 <span><span class="co">##  variety price2.trend    SE df lower.CL upper.CL</span></span>

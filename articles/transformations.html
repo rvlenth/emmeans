@@ -377,6 +377,8 @@ happening at any level of the factors being averaged over. To find out,
 look at an interaction plot of the fitted model:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="va">Sex</span> <span class="op">~</span> <span class="va">Treatment</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
 <p><img src="transformations_files/figure-html/unnamed-chunk-12-1.png" alt="Interaction-plot display of the results of emmeans(neuralgia.glm, ~ Treatment | Sex)" width="432">
 There is no practical difference between females and males in the
 patterns of response to <code>Treatment</code>; so I think most people
@@ -399,11 +401,11 @@ in displaying a tabular summary. Following through with the
 <code>neuralgia</code> example, let us display the marginal
 <code>Treatment</code> EMMs on both the link scale and the response
 scale (we are opting to do the averaging on the link scale):</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">neur.Trt.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="st">"Treatment"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">neur.Trt.emm</span><span class="op">)</span>   <span class="co"># Link scale by default</span></span></code></pre></div>
 <p><img src="transformations_files/figure-html/unnamed-chunk-13-1.png" alt="Plot A: Display of the results of confint(neur.Trt.emm)" width="432"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">neur.Trt.emm</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <p>&lt;img
 src=“/home/runner/work/emmeans/emmeans/docs/articles/transformations_files/figure-html/unnamed-chunk-13-2.png”
@@ -417,7 +419,7 @@ currently only with the “ggplot” engine), there is also the option of
 specifying <code>type = "scale"</code>, which causes the response values
 to be calculated but plotted on a nonlinear scale corresponding to the
 transformation or link:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">neur.Trt.emm</span>, type <span class="op">=</span> <span class="st">"scale"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="transformations_files/figure-html/unnamed-chunk-14-1.png" alt="Plot C: On the inside, this plot looks exactly like Plot A above, but the scale is transformed to show the values in Plot B. However, there are not enough tick marks." width="432"></p>
 <p>Notice that the interior part of this plot is identical to the plot
@@ -430,7 +432,7 @@ it is very often true that you will want to display more scale
 divisions, and even add minor ones. This is done via adding arguments
 for the function <code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">ggplot2::scale_x_continuous()</a></code> (see its
 documentation):</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">neur.Trt.emm</span>, type <span class="op">=</span> <span class="st">"scale"</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.10</span>, <span class="fl">0.90</span>, by <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span>,</span>
 <span>     minor_breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.95</span>, by <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="transformations_files/figure-html/unnamed-chunk-15-1.png" alt="Plot D: Same as Plot C except there are more tick marks so we can discern the values better" width="432"></p>
@@ -439,7 +441,7 @@ option of using <strong>ggplot2</strong> to incorporate a transformed
 scale – and it doesn’t even have to be the same as the transformation
 used in the model. For example, here we display the same results on an
 arcsin-square-root scale.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">neur.Trt.emm</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/transform_asn.html" class="external-link">asn_trans</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>                              breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.10</span>, <span class="fl">0.90</span>, by <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -460,7 +462,7 @@ function<a class="anchor" aria-label="anchor" href="#tranlink"></a>
 <p>It is possible to have a generalized linear model with a non-identity
 link <em>and</em> a response transformation. Here is an example, with
 the built-in <code>wapbreaks</code> dataset:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">warp.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">breaks</span><span class="op">)</span> <span class="op">~</span> <span class="va">wool</span><span class="op">*</span><span class="va">tension</span>, family <span class="op">=</span> <span class="va">Gamma</span>, data <span class="op">=</span> <span class="va">warpbreaks</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">warp.glm</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
@@ -472,7 +474,7 @@ the built-in <code>wapbreaks</code> dataset:</p>
 and there is the square-root response transformation besides. If we
 choose <code>type = "response"</code> in summarizing, we undo
 <em>both</em> transformations:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">warp.glm</span>, <span class="op">~</span> <span class="va">tension</span> <span class="op">|</span> <span class="va">wool</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## wool = A:</span></span>
 <span><span class="co">##  tension response   SE df lower.CL upper.CL</span></span>
@@ -492,7 +494,7 @@ choose <code>type = "response"</code> in summarizing, we undo
 from the link scale (inverse); then the squares were obtained to
 back-transform the rest of the way. It is possible to undo the link, and
 not the response transformation:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">warp.glm</span>, <span class="op">~</span> <span class="va">tension</span> <span class="op">|</span> <span class="va">wool</span>, type <span class="op">=</span> <span class="st">"unlink"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## wool = A:</span></span>
 <span><span class="co">##  tension response    SE df lower.CL upper.CL</span></span>
@@ -539,7 +541,7 @@ response variable is a percentage and we want to use the response
 transformation
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mo>sin</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><msqrt><mrow><mi>y</mi><mi>/</mi><mn>100</mn></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sin^{-1}\sqrt{y/100}</annotation></semantics></math>.
 Then proceed like this:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tran</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.tran.html">make.tran</a></span><span class="op">(</span><span class="st">"asin.sqrt"</span>, <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">my.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">tran</span>, </span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="fu">linkfun</span><span class="op">(</span><span class="va">percent</span><span class="op">)</span> <span class="op">~</span> <span class="va">treatment</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">Block</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -556,13 +558,13 @@ using a Box-Cox transformation.</p>
 <!-- @index Transformations!Adding after the fact; `update()`!`tran` -->
 <p>It is not at all uncommon to fit a model using statements like the
 following:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">mydata</span>, logy.5 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">yield</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">my.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="va">logy.5</span> <span class="op">~</span> <span class="va">treatment</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">Block</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span></code></pre></div>
 <p>In this case, there is no way for <code><a href="../reference/ref_grid.html">ref_grid()</a></code> to figure
 out that a response transformation was used. What can be done is to
 update the reference grid with the required information:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">my.model</span><span class="op">)</span>, tran <span class="op">=</span> <span class="fu"><a href="../reference/make.tran.html">make.tran</a></span><span class="op">(</span><span class="st">"genlog"</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Subsequently, use <code>my.rg</code> in place of
 <code>my.model</code> in any <code><a href="../reference/emmeans.html">emmeans()</a></code> analyses, and the
@@ -570,7 +572,7 @@ transformation information will be there.</p>
 <p>For standard transformations (those in
 <code><a href="https://rdrr.io/r/stats/make.link.html" class="external-link">stats::make.link()</a></code>), just give the name of the
 transformation; e.g.,</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>, tran <span class="op">=</span> <span class="st">"sqrt"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -585,7 +587,7 @@ on the model object. In fact, scaling and shifting is supported too; so
 the preceding example with <code>my.model</code> could have been done
 more easily by specifying the transformation directly in the model
 formula:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my.better.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">yield</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">~</span> <span class="va">treatment</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">Block</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span></code></pre></div>
 <p>The transformation would be auto-detected, saving you the trouble of
 adding it later. Similarly, a response transformation of
@@ -607,7 +609,7 @@ transformation of the response. Why would you want to do this? So that
 you can make comparisons using ratios instead of differences.</p>
 <p>Consider the <code>pigs</code> example once again, but suppose we had
 fitted a model with a square-root transformation instead of a log:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pigroot.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span>
 <span><span class="va">logemm.src</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigroot.lm</span>, <span class="st">"source"</span><span class="op">)</span>, transform <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">logemm.src</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
@@ -619,7 +621,7 @@ fitted a model with a square-root transformation instead of a log:</p>
 <span><span class="co">## Results are averaged over the levels of: percent </span></span>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## Intervals are back-transformed from the log scale</span></span></code></pre>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">logemm.src</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    ratio     SE df null t.ratio p.value</span></span>
 <span><span class="co">##  fish / soy  0.760 0.0454 23    1  -4.591  0.0004</span></span>
@@ -640,7 +642,7 @@ response.</p>
 <!-- @index Transformations!faking -->
 <p>It is possible to fake transformations other than the log. Just use
 the same method, e.g. (results not displayed)</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="va">emm</span>, transform <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span></span></code></pre></div>
 <p>would re-grid the existing <code>emm</code> to the probit scale. Note
 that any estimates in <code>emm</code> outside of the interval
@@ -659,14 +661,14 @@ this way.</p>
 ratios of probabilities (risk ratios) rather than odds ratios. The
 additional machinery of <code><a href="../reference/regrid.html">regrid()</a></code> makes this possible.
 First, do</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">log.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="va">neuralgia.emm</span>, <span class="st">"log"</span><span class="op">)</span></span></code></pre></div>
 <p>While each node of <code>neuralgia.emm</code> is an estimate of the
 logit of a probability, the corresponding nodes of <code>log.emm</code>
 are estimates of the log of the same probability. Thus, pairwise
 comparisons are differences of logs, which are logs of ratios. The risk
 ratios are thus obtainable by</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">log.emm</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast ratio    SE  df null z.ratio p.value</span></span>
 <span><span class="co">##  B / A    0.572 0.484 Inf    1  -0.661  0.7863</span></span>
@@ -682,7 +684,7 @@ original logit scale.</p>
 <div class="section level6">
 <h6 id="not-logit"></h6>
 <!-- @index Logistic-like regression!Non-logit links; 
-   `regrid()`!probit or other lon-logit models;
+   `regrid()`!probit or other non-logit models;
   Probit regression!Odds or risk ratios -->
 <p>We were able to obtain both odds ratios and risk ratios for
 <code>neuralgia.glm</code>. But what if we had not used the logit link?
@@ -690,7 +692,7 @@ Then the odds ratios would not just fall out naturally. However, we can
 <code><a href="../reference/regrid.html">regrid()</a></code> to the <code>"logit"</code> scale if we want odds
 ratios, or to <code>"log"</code> scale if we want risk ratios. For
 example,</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">neuralgia.prb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Pain</span> <span class="op">~</span> <span class="va">Treatment</span> <span class="op">*</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Age</span>, family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span>, </span>
 <span>                     data <span class="op">=</span> <span class="va">neuralgia</span><span class="op">)</span></span>
 <span><span class="va">prb.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.prb</span>, <span class="st">"Treatment"</span><span class="op">)</span><span class="op">)</span></span>
@@ -726,7 +728,7 @@ and
 is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>−</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mi>b</mi><mo>=</mo><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">100(a-b)/b = 100(r-1)</annotation></semantics></math>.
 Thus,</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pct.diff.tran</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    linkfun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">mu</span><span class="op">/</span><span class="fl">100</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    linkinv <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">eta</span><span class="op">)</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">eta</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,</span>
@@ -749,7 +751,7 @@ Thus,</p>
 <p>Another way to obtain the same estimates is to directly transform the
 estimated ratios to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mi>r</mi><mo>−</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">100r - 100</annotation></semantics></math>:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">logemm.src</span><span class="op">)</span><span class="op">)</span>, <span class="st">"identity"</span>, scale <span class="op">=</span> <span class="fl">100</span>, offset <span class="op">=</span> <span class="op">-</span><span class="fl">100</span>,</span>
 <span>         infer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    estimate   SE df lower.CL upper.CL t.ratio p.value</span></span>
@@ -778,7 +780,7 @@ more complicated than, say, <code>sqrt(y)</code>, because
 to determine the centering and scaling parameters. The
 <code><a href="../reference/ref_grid.html">ref_grid()</a></code> function (called by `emmeans() and others) tries
 to detect the scaling parameters. To illustrate:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fiber.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">strength</span><span class="op">)</span> <span class="op">~</span> <span class="va">machine</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">diameter</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">fiber</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="st">"machine"</span><span class="op">)</span>   <span class="co"># on the standardized scale</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  machine   emmean    SE df lower.CL upper.CL</span></span>
@@ -788,7 +790,7 @@ to detect the scaling parameters. To illustrate:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are given on the scale(40.2, 4.97) (not the response) scale. </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="st">"machine"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>   <span class="co"># strength scale</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  machine response    SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  A           40.2 0.777  9     38.5     42.0</span></span>
@@ -799,7 +801,7 @@ to detect the scaling parameters. To illustrate:</p>
 <span><span class="co">## Intervals are back-transformed from the scale(40.2, 4.97) scale</span></span></code></pre>
 <p>More interesting (and complex) is what happens with
 <code><a href="../reference/emtrends.html">emtrends()</a></code>. Without anything fancy added, we have</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="st">"machine"</span>, var <span class="op">=</span> <span class="st">"diameter"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  machine diameter.trend     SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  A                0.222 0.0389  9   0.1339    0.310</span></span>
@@ -815,7 +817,7 @@ specified, <code>diameter</code>. To get (change in
 undo the response transformation, and that is done via
 <code>regrid</code> (which invokes <code><a href="../reference/regrid.html">regrid()</a></code> after the
 reference grid is constructed):</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="st">"machine"</span>, var <span class="op">=</span> <span class="st">"diameter"</span>, regrid <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  machine diameter.trend    SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  A                1.104 0.194  9    0.666     1.54</span></span>
@@ -827,11 +829,11 @@ reference grid is constructed):</p>
 (change in <code>scale(diameter)</code>)? This can be done, but it is
 necessary to manually specify the scaling parameters for
 <code>diameter</code>.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">fiber</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">diameter</span><span class="op">)</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">diameter</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##      mean        sd </span></span>
 <span><span class="co">## 24.133333  4.323799</span></span></code></pre>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="st">"machine"</span>, var <span class="op">=</span> <span class="st">"scale(diameter, 24.133, 4.324)"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  machine scale(diameter, 24.133, 4.324).trend    SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  A                                      0.960 0.168  9    0.579     1.34</span></span>
@@ -841,7 +843,7 @@ necessary to manually specify the scaling parameters for
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>This result is the one most directly related to the regression
 coefficients:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fiber.lm</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##          scale(diameter) machineB:scale(diameter) machineC:scale(diameter) </span></span>
 <span><span class="co">##                0.9598846               -0.2148202               -0.2086880</span></span></code></pre>
@@ -861,13 +863,13 @@ the code but not the results for a hypothetical example.</p>
 information later. In this example, <code>some.fcn</code> is a
 model-fitting function which for some reason doesn’t allow the scaling
 information to be detected.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">some.fcn</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">RT</span><span class="op">)</span> <span class="op">~</span> <span class="va">group</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">subject</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"group"</span>, type <span class="op">=</span> <span class="st">"response"</span>,</span>
 <span>        tran <span class="op">=</span> <span class="fu"><a href="../reference/make.tran.html">make.tran</a></span><span class="op">(</span><span class="st">"scale"</span>, y <span class="op">=</span> <span class="va">mydata</span><span class="op">$</span><span class="va">RT</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The other, equivalent, method is to create the transformation object
 first and use it in fitting the model:</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="../reference/make.tran.html">make.tran</a></span><span class="op">(</span><span class="st">"scale"</span>, y <span class="op">=</span> <span class="va">mydata</span><span class="op">$</span><span class="va">RT</span><span class="op">)</span>,</span>
 <span>            <span class="fu">some.fcn</span><span class="op">(</span><span class="fu">linkfun</span><span class="op">(</span><span class="va">RT</span><span class="op">)</span> <span class="op">~</span> <span class="va">group</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">subject</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, <span class="st">"group"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
@@ -879,7 +881,7 @@ first and use it in fitting the model:</p>
 fitted the model <em>without</em> the standardized response, but we want
 to know what the results would be if we had standardized. Here we
 reverse-engineer the <code>fiber.lm</code> example above:</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fib.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">strength</span> <span class="op">~</span> <span class="va">machine</span> <span class="op">*</span> <span class="va">diameter</span>, data <span class="op">=</span> <span class="va">fiber</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># On raw scale:</span></span>
@@ -890,7 +892,7 @@ reverse-engineer the <code>fiber.lm</code> example above:</p>
 <span><span class="co">##  C         38.5 0.966  9     36.3     40.7</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># On standardized scale:</span></span>
 <span><span class="va">tran</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.tran.html">make.tran</a></span><span class="op">(</span><span class="st">"scale"</span>, y <span class="op">=</span> <span class="va">fiber</span><span class="op">$</span><span class="va">strength</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fib.lm</span>, <span class="st">"machine"</span>, regrid <span class="op">=</span> <span class="va">tran</span><span class="op">)</span></span></code></pre></div>
@@ -959,12 +961,12 @@ updates may incorporate some of those.</p>
 <p>Let us compare the estimates in <a href="#overview">the overview</a>
 after we apply a bias adjustment. First, note that an estimate of the
 residual SD is available via the <code><a href="https://rdrr.io/r/stats/sigma.html" class="external-link">sigma()</a></code> function:</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/sigma.html" class="external-link">sigma</a></span><span class="op">(</span><span class="va">pigs.lm</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 0.115128</span></span></code></pre>
 <p>This estimate is used by default. The bias-adjusted EMMs for the
 sources are:</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">emm.src</span>, type <span class="op">=</span> <span class="st">"response"</span>, bias.adj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  source response   SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  fish       30.0 1.10 23     27.8     32.4</span></span>
@@ -1005,7 +1007,7 @@ the <strong>datasets</strong> package. The response variable is a count,
 and there is one treatment, the spray that is used. Let us model the
 count as a Poisson variable with (by default) a log link; and obtain the
 EMMs, with and without a bias adjustment</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ismod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">count</span> <span class="op">~</span> <span class="va">spray</span>, data <span class="op">=</span> <span class="va">InsectSprays</span>, family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">ismod</span>, <span class="st">"spray"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  spray  rate    SE  df asymp.LCL asymp.UCL</span></span>
@@ -1020,7 +1022,7 @@ EMMs, with and without a bias adjustment</p>
 <span><span class="co">## Intervals are back-transformed from the log scale</span></span></code></pre>
 <p>The above results were computed with no bias adjustment, the default.
 If you try</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">ismod</span>, <span class="st">"spray"</span>, type <span class="op">=</span> <span class="st">"response"</span>, bias.adj <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>you will get exactly the same results, plus a warning message that
 says bias adjustment was disabled. Why? Because in an ordinary GLM like
@@ -1028,9 +1030,9 @@ this, we are <em>already</em> modeling the mean counts, and the link
 function is not a response transformation as such, just a part of the
 relationship we are specifying between the linear predictor and the
 mean. Given the simple structure of this dataset, we can verify this by
-noting that the estimates we have correspond examply to the simple
+noting that the estimates we have correspond exactly to the simple
 observed mean counts:</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">InsectSprays</span>, <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">count</span>, <span class="va">spray</span>, <span class="va">mean</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##         A         B         C         D         E         F </span></span>
 <span><span class="co">## 14.500000 15.333333  2.083333  4.916667  3.500000 16.666667</span></span></code></pre>
@@ -1054,7 +1056,7 @@ disease in African cattle, and the dataset contains data on incidence of
 CBPP in several herds of cattle over four time periods. We will fit a
 mixed model that accounts for herd variations as well as overdispersion
 (variations larger than expected with a simple binomial model):</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span>
 <span><span class="va">cbpp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">cbpp</span>, unit <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">cbpp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cbpp.glmer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/glmer.html" class="external-link">glmer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">incidence</span>, <span class="va">size</span> <span class="op">-</span> <span class="va">incidence</span><span class="op">)</span> <span class="op">~</span> <span class="va">period</span> <span class="op">+</span> </span>
@@ -1074,7 +1076,7 @@ mixed model that accounts for herd variations as well as overdispersion
 <p>The above summary reflects the back-transformed estimates, with no
 bias adjustment. However, the model estimates two independent sources of
 random variation that probably should be taken into account:</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/VarCorr.html" class="external-link">VarCorr</a></span><span class="op">(</span><span class="va">cbpp.glmer</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Groups Name        Std.Dev.</span></span>
 <span><span class="co">##  unit   (Intercept) 0.89107 </span></span>
@@ -1084,11 +1086,11 @@ SD. Suppose we want to estimate the marginal probabilities of CBPP
 incidence, averaged over herds and over-dispersion variations. For this
 purpose, we need the combined effect of these variations; so we compute
 the overall SD via the Pythagorean theorem:</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total.SD</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">0.89107</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fl">0.18396</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p>Accordingly, here are the bias-adjusted estimates of the marginal
 probabilities:</p>
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">emm</span>, type <span class="op">=</span> <span class="st">"response"</span>, bias.adjust <span class="op">=</span> <span class="cn">TRUE</span>, sigma <span class="op">=</span> <span class="va">total.SD</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  period   prob     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  1      0.2216 0.0462 Inf    0.1426     0.321</span></span>
@@ -1105,7 +1107,7 @@ downward). These adjusted estimates are more appropriate for describing
 the marginal incidence of CBPP for all herds. In fact, these estimates
 are fairly close to those obtained directly from the incidences in the
 data:</p>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">cbpp</span>, <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">incidence</span>, <span class="va">period</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">trials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">cbpp</span>, <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">size</span>, <span class="va">period</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cases</span> <span class="op">/</span> <span class="va">trials</span></span></code></pre></div>
