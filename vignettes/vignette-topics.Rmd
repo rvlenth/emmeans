@@ -207,7 +207,7 @@ vignette: >
       * [in *interactions: covariates*](interactions.html#covariates)
       * [in *interactions: oranges*](interactions.html#oranges)
   * [`estHook`](xtending.html#hooks)
-  * [Estimability](messy-data.html#nonestex)
+  * [Estimability](messy-data.html#nonest)
   * [Estimability issues](FAQs.html#NAs)
   * [Estimable functions](xplanations.html#joint_tests)
   * Estimated marginal means
@@ -461,7 +461,7 @@ vignette: >
       * [Auto-detection](messy-data.html#nest-trap)
   * Nesting factors
       * [Creating](utilities.html#groups)
-  * [Non-estimability](messy-data.html#nonestex)
+  * [Non-estimability](messy-data.html#nonest)
   * [`non.nuisance`](messy-data.html#nuisance)
   * [`NonEst` values](FAQs.html#NAs)
   * [`(nothing)` in output](FAQs.html#nopairs)

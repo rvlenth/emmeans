@@ -63,7 +63,7 @@ those two factors, along with their counts:
 emmeans(nutr.lm, ~ group * race, calc = c(n = ".wgt."))
 ```
 
-####### {#nonestex}
+####### {#nonest}
 <!-- @index Non-estimability; Estimability -->
 Hmmmm. The EMMs
 when `race` is "Hispanic" are not given; instead they are flagged as 

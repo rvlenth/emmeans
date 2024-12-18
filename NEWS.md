@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.10-6-090xxx
+  * Spelling changes in several vignettes
+  
+
 ## emmeans 1.10.6
   * Added new `add_submodels()` function that allows for comparison od estimates
     from different submodels (when supported)
