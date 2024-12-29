@@ -11,7 +11,7 @@ contrasts among them. EMMs are also known as least-squares means."><meta propert
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -244,6 +244,23 @@ values are the cell means, cell weights will yield the raw averages of the
 data for the factors involved. Using <code>"flat"</code> is similar to
 <code>"cells"</code>, except nonempty cells are weighted equally and empty cells
 are ignored.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="counterfactuals">Counterfactuals<a class="anchor" aria-label="anchor" href="#counterfactuals"></a></h2>
+
+
+<p>Counterfactual reference grids (see the documentation for <code><a href="ref_grid.html">ref_grid</a></code>)
+contain pairs of imputed and actual factor levels, and are handled in a special way.
+For starters, the <code>weights</code> argument is ignored and we always use
+<code>"cells"</code> weights.
+Our understanding is that if factors <code>A, B</code> are specified as counterfactuals,
+the marginal means for <code>A</code> should still be the same as if <code>A</code> were the only
+counterfactual. Accordingly, in computing these marginal means, we
+exclude all cases where <code>B != actual_B</code>, because if <code>A</code> were the only
+counterfactual, <code>B</code> will stay at its actual level.
+We also take special pains to "remember" information about actual and
+imputed levels of counterfactuals so that appropriate results are obtained when
+<code>emmeans</code> is applied to a previous <code>emmeans</code> result.</p>
     </div>
     <div class="section level2">
     <h2 id="offsets">Offsets<a class="anchor" aria-label="anchor" href="#offsets"></a></h2>

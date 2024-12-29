@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>FAQs for emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.10.6.90001</h4>
+package, Version 1.10.6.90002</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/FAQs.Rmd" class="external-link"><code>vignettes/FAQs.Rmd</code></a></small>
@@ -132,6 +132,8 @@ P-value adjustments</a></li>
 <li><a href="#nowelch"><code>emmeans()</code> gives me pooled <em>t</em>
 tests, but I expected Welch’s <em>t</em></a></li>
 <li><a href="#rounding">I want to see more digits</a></li>
+<li><a href="#stata">I want to reproduce results from Stata’s
+<code>margins</code> command</a></li>
 </ol>
 <p><a href="vignette-topics.html">Index of all vignette topics</a></p>
 </div>
@@ -589,6 +591,20 @@ temporarily want to see more digits, add
 <code>|&gt; data.frame()</code> will disable formatting of test
 statistics and P values (but unfortunately will also suppress messages
 below the tabular output).</p>
+</div>
+<div class="section level2">
+<h2 id="stata">I want to reproduce results from Stata’s <code>margins</code>
+command<a class="anchor" aria-label="anchor" href="#stata"></a>
+</h2>
+<p><strong>Stata</strong> is oriented towards observational data, and
+its <code>margins</code> command takes a counterfactuals approach. Thus,
+try adding a <code>counterfactuals</code> argument (see help for
+<code>ref_grid</code>). For example, to reproduce the results in Stata’s
+Example 6 for <code>margins</code>, do:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">margex</span> <span class="op">&lt;-</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/read_dta.html" class="external-link">read_dta</a></span><span class="op">(</span><span class="st">"https://www.stata-press.com/data/r18/margex.dta"</span><span class="op">)</span></span>
+<span><span class="va">margex.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">outcome</span> <span class="op">~</span> <span class="va">sex</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">+</span> <span class="va">age</span>, data <span class="op">=</span> <span class="va">margex</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">margex.glm</span>, <span class="st">"sex"</span>, counterfactuals <span class="op">=</span> <span class="st">"sex"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="vignette-topics.html">Index of all vignette topics</a></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

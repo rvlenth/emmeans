@@ -11,7 +11,7 @@ all the information needed to calculate EMMs and make inferences on them."><meta
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,9 +66,8 @@ all the information needed to calculate EMMs and make inferences on them.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ref_grid</span><span class="op">(</span><span class="va">object</span>, <span class="va">at</span>, cov.reduce <span class="op">=</span> <span class="va">mean</span>,</span>
 <span>  cov.keep <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"cov.keep"</span><span class="op">)</span>, <span class="va">mult.names</span>, <span class="va">mult.levs</span>,</span>
 <span>  options <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"ref_grid"</span><span class="op">)</span>, <span class="va">data</span>, <span class="va">df</span>, <span class="va">type</span>, <span class="va">regrid</span>, <span class="va">nesting</span>,</span>
-<span>  <span class="va">offset</span>, <span class="va">sigma</span>, <span class="va">counterfactuals</span>, <span class="va">wt.counter</span>, avg.counter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  nuisance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, <span class="va">non.nuisance</span>, wt.nuis <span class="op">=</span> <span class="st">"equal"</span>,</span>
-<span>  rg.limit <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"rg.limit"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">offset</span>, <span class="va">sigma</span>, <span class="va">counterfactuals</span>, nuisance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, <span class="va">non.nuisance</span>,</span>
+<span>  wt.nuis <span class="op">=</span> <span class="st">"equal"</span>, rg.limit <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"rg.limit"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -173,17 +172,14 @@ Note: This applies only when the family is <code>"gaussian"</code>; for other fa
 <code>sigma</code> is set to <code>NA</code> and cannot be overridden.</p></dd>
 
 
-<dt id="arg-counterfactuals-wt-counter-avg-counter">counterfactuals, wt.counter, avg.counter<a class="anchor" aria-label="anchor" href="#arg-counterfactuals-wt-counter-avg-counter"></a></dt>
+<dt id="arg-counterfactuals">counterfactuals<a class="anchor" aria-label="anchor" href="#arg-counterfactuals"></a></dt>
 <dd><p><code>counterfactuals</code> specifies character
 names of counterfactual factors. If this is non-missing, a reference grid
-is created consisting of combinations of counterfactual levels and a constructed
-factor <code>.obs.no.</code> having a level for each observation in the dataset.
-By default, this grid is re-gridded with the response transformation
-and averaged over <code>.obs.no.</code> (by default, with equal weights, but
-a vector of weights may be specified in <code>wt.counter</code>; it must be
-of length equal to the number of observations in the dataset).
-If <code>avg.counter</code> is set to <code>FALSE</code>, this averaging is disabled.
-See the section below on counterfactuals.</p></dd>
+is created consisting of combinations of counterfactual levels
+and the actual levels of those same factors.
+This grid is always converted to the response transformation scale
+and averaged over the actual factor levels. See the section below
+on counterfactuals.</p></dd>
 
 
 <dt id="arg-nuisance-non-nuisance-wt-nuis">nuisance, non.nuisance, wt.nuis<a class="anchor" aria-label="anchor" href="#arg-nuisance-non-nuisance-wt-nuis"></a></dt>
@@ -432,21 +428,27 @@ recovering/overriding model information.</p>
 
 
 <p>If <code>counterfactuals</code> is specified, the rows of the entire dataset
-  become a factor in the reference grid, and the other reference levels are
+  become part of the reference grid, and the other reference levels are
   confined to those named in <code>counterfactuals</code>. In this type of analysis
-  (called G-computation), we substitute each combination of counterfactual
+  (called G-computation), we substitute (or impute) each combination of counterfactual
   levels into the entire dataset. Thus, predictions from this grid are those
   of each observation under each of the counterfactual levels. For this to
   make sense, we require an assumption of exchangeability of these levels.</p>
-<p>By default, this grid is converted to the response scale (unless otherwise
-  specified in <code>regrid</code>) and averaged over the observations in the dataset.
-  Averaging can be disabled by setting <code>avg.counter = FALSE</code>, but
-  be warned that the resulting reference grid is potentially huge – the
-  number of observations in the dataset times the number of counterfactual
-  combinations, times the number of multivariate levels.</p>
-<p>The counterfactuals code is still fairly rudimentary and we can't guarantee
-  it will always work, such as in cases of nested models. Sometimes, an error
-  can be averted by specifying <code>avg.counter = FALSE</code>.</p>
+<p>This grid is always converted to the response scale, as G-computation on
+  the linear-predictor scale produces the same results as ordinary weighted EMMs.
+  If we have counterfactual factors <code>A, B</code>, the reference grid also includes
+  factors <code>actual_A, actual_B</code> which are used to track which observations
+  originally had the <code>A, B</code> levels before they were changed by the
+  counterfactuals code. We average the response-scale predictions for each
+  combination of actual levels and imputed levels (and multivariate levels,
+  if any). See additional discussion of how <code><a href="emmeans.html">emmeans</a></code> handles
+  counterfactuals under that documentation.</p>
+<p>Currently, counterfactuals are not supported when the reference grid
+  requires post-processing (e.g., ordinal models with <code>mode = "prob"</code>).
+  Cases where we have nested factor levels can be complicated if mixed-in with counterfactuals,
+  and we make no guarantees.
+  Note that past implementations included arguments <code>wt.counter</code> and <code>avg.counter</code>,
+  which are now deprecated and are just ignored if specified.</p>
     </div>
     <div class="section level2">
     <h2 id="optional-side-effect">Optional side effect<a class="anchor" aria-label="anchor" href="#optional-side-effect"></a></h2>
@@ -744,7 +746,7 @@ recovering/overriding model information.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  B         0.221 0.0710 Inf    0.0813     0.360</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  P         0.754 0.0814 Inf    0.5944     0.914</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: .obs.no. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: actual_Treatment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
