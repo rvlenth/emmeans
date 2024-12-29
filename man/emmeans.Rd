@@ -158,6 +158,22 @@ data for the factors involved. Using \code{"flat"} is similar to
 are ignored.
 }
 
+\section{Counterfactuals}{
+
+Counterfactual reference grids (see the documentation for \code{\link{ref_grid}})
+contain pairs of imputed and actual factor levels, and are handled in a special way.
+For starters, the \code{weights} argument is ignored and we always use 
+\code{"cells"} weights.
+Our understanding is that if factors \code{A, B} are specified as counterfactuals, 
+the marginal means for \code{A} should still be the same as if \code{A} were the only 
+counterfactual. Accordingly, in computing these marginal means, we
+exclude all cases where \code{B != actual_B}, because if \code{A} were the only
+counterfactual, \code{B} will stay at its actual level.
+We also take special pains to "remember" information about actual and 
+imputed levels of counterfactuals so that appropriate results are obtained when
+\code{emmeans} is applied to a previous \code{emmeans} result.
+}
+
 \section{Offsets}{
 
 Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values

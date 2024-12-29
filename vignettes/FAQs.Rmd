@@ -40,6 +40,7 @@ This vignette contains answers to questions received from users or posted on dis
  12. [`emmeans()` completely ignores my P-value adjustments](#noadjust)
  13. [`emmeans()` gives me pooled *t* tests, but I expected Welch's *t*](#nowelch)
  14. [I want to see more digits](#rounding)
+ 15. [I want to reproduce results from Stata's `margins` command](#stata)
 
 
 [Index of all vignette topics](vignette-topics.html)
@@ -427,6 +428,19 @@ routine that shows only relevant digits. If you temporarily want to see more
 digits, add `|> as.data.frame()` to the code line. In addition, piping
 `|> data.frame()` will disable formatting of test statistics and P values (but 
 unfortunately will also suppress messages below the tabular output).
+
+
+## I want to reproduce results from Stata's `margins` command {#stata}
+**Stata** is oriented towards observational data, and its `margins` command
+takes a counterfactuals approach. Thus, try adding a `counterfactuals`
+argument (see help for `ref_grid`). For example, to reproduce the results
+in Stata's Example 6 for `margins`, do:
+```r
+margex <- haven::read_dta("https://www.stata-press.com/data/r18/margex.dta")
+margex.glm <- glm(outcome ~ sex * factor(group) + age, data = margex)
+emmeans(margex.glm, "sex", counterfactuals = "sex")
+```
+
 
 [Index of all vignette topics](vignette-topics.html)
 

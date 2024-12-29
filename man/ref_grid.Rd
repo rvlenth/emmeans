@@ -7,9 +7,8 @@
 ref_grid(object, at, cov.reduce = mean,
   cov.keep = get_emm_option("cov.keep"), mult.names, mult.levs,
   options = get_emm_option("ref_grid"), data, df, type, regrid, nesting,
-  offset, sigma, counterfactuals, wt.counter, avg.counter = TRUE,
-  nuisance = character(0), non.nuisance, wt.nuis = "equal",
-  rg.limit = get_emm_option("rg.limit"), ...)
+  offset, sigma, counterfactuals, nuisance = character(0), non.nuisance,
+  wt.nuis = "equal", rg.limit = get_emm_option("rg.limit"), ...)
 }
 \arguments{
 \item{object}{An object produced by a supported model-fitting function, such
@@ -82,16 +81,13 @@ back-transformation bias adjustments. If not specified, we use
 Note: This applies only when the family is \code{"gaussian"}; for other families,
 \code{sigma} is set to \code{NA} and cannot be overridden.}
 
-\item{counterfactuals, wt.counter, avg.counter}{\code{counterfactuals} specifies character
+\item{counterfactuals}{\code{counterfactuals} specifies character
 names of counterfactual factors. If this is non-missing, a reference grid
-is created consisting of combinations of counterfactual levels and a constructed
-factor \code{.obs.no.} having a level for each observation in the dataset.
-By default, this grid is re-gridded with the response transformation
-and averaged over \code{.obs.no.} (by default, with equal weights, but
-a vector of weights may be specified in \code{wt.counter}; it must be
-of length equal to the number of observations in the dataset).
-If \code{avg.counter} is set to \code{FALSE}, this averaging is disabled.
-See the section below on counterfactuals.}
+is created consisting of combinations of counterfactual levels 
+and the actual levels of those same factors.
+This grid is always converted to the response transformation scale
+and averaged over the actual factor levels. See the section below 
+on counterfactuals.}
 
 \item{nuisance, non.nuisance, wt.nuis}{If \code{nuisance} is a vector of predictor names,
 those predictors are omitted from the reference grid. Instead, the result 
@@ -346,23 +342,29 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
 \section{Counterfactuals}{
 
   If \code{counterfactuals} is specified, the rows of the entire dataset
-  become a factor in the reference grid, and the other reference levels are
+  become part of the reference grid, and the other reference levels are
   confined to those named in \code{counterfactuals}. In this type of analysis
-  (called G-computation), we substitute each combination of counterfactual
+  (called G-computation), we substitute (or impute) each combination of counterfactual
   levels into the entire dataset. Thus, predictions from this grid are those
   of each observation under each of the counterfactual levels. For this to
   make sense, we require an assumption of exchangeability of these levels.
   
-  By default, this grid is converted to the response scale (unless otherwise
-  specified in \code{regrid}) and averaged over the observations in the dataset.
-  Averaging can be disabled by setting \code{avg.counter = FALSE}, but
-  be warned that the resulting reference grid is potentially huge -- the
-  number of observations in the dataset times the number of counterfactual 
-  combinations, times the number of multivariate levels.
+  This grid is always converted to the response scale, as G-computation on
+  the linear-predictor scale produces the same results as ordinary weighted EMMs.
+  If we have counterfactual factors \code{A, B}, the reference grid also includes
+  factors \code{actual_A, actual_B} which are used to track which observations
+  originally had the \code{A, B} levels before they were changed by the 
+  counterfactuals code. We average the response-scale predictions for each
+  combination of actual levels and imputed levels (and multivariate levels, 
+  if any). See additional discussion of how \code{\link{emmeans}} handles
+  counterfactuals under that documentation.
   
-  The counterfactuals code is still fairly rudimentary and we can't guarantee
-  it will always work, such as in cases of nested models. Sometimes, an error
-  can be averted by specifying \code{avg.counter = FALSE}.
+  Currently, counterfactuals are not supported when the reference grid
+  requires post-processing (e.g., ordinal models with \code{mode = "prob"}).
+  Cases where we have nested factor levels can be complicated if mixed-in with counterfactuals, 
+  and we make no guarantees. 
+  Note that past implementations included arguments \code{wt.counter} and \code{avg.counter},
+  which are now deprecated and are just ignored if specified.
 }
 
 \section{Optional side effect}{

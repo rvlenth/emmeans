@@ -85,6 +85,11 @@ str.emmGrid <- function(object, ...) {
         cat(paste(tmp, collapse = ", "))
         cat("\n")
     }
+    if (length(cf <- object@roles$counterfactuals) > 0) {
+        cat("Counterfactuals\n    ")
+        cat(paste(cf, collapse = ", "))
+        cat("\n")
+    }
     if(!is.null(object@model.info$nesting)) {
         cat("Nesting structure:  ")
         cat(.fmt.nest(object@model.info$nesting))

@@ -4,6 +4,16 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 1.10-6-090xxx
   * Spelling changes in several vignettes
+  * We have completely revamped the design of reference grids involving
+    counterfactuals. Now, if we specify counterfactuals `A` and `B`, the
+    reference grid comprises combinations of `A`, `B`, `actual_A`, and `actual_B`
+    the latter two used to track the original settings of `A` and `B` in the dataset.
+    We always average over combinations of these factors. The previous code was
+    a memory hog, and we have made it much more efficient for large datasets.
+  * `emmeans()` has also been revised to do special handling of counterfactual
+    reference grids. Whenever we average over a counterfactual `B`, we only
+    use the cases where `B == actual_B`, thus obtaining the same results as 
+    would be obtained when `B` is not regarded as a counterfactual.
   
 
 ## emmeans 1.10.6

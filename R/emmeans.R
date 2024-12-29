@@ -211,6 +211,20 @@ emmeans.list = function(object, specs, ...) {
 #' \code{"cells"}, except nonempty cells are weighted equally and empty cells
 #' are ignored.
 #' 
+#' @section Counterfactuals:
+#' Counterfactual reference grids (see the documentation for \code{\link{ref_grid}})
+#' contain pairs of imputed and actual factor levels, and are handled in a special way.
+#' For starters, the \code{weights} argument is ignored and we always use 
+#' \code{"cells"} weights.
+#' Our understanding is that if factors \code{A, B} are specified as counterfactuals, 
+#' the marginal means for \code{A} should still be the same as if \code{A} were the only 
+#' counterfactual. Accordingly, in computing these marginal means, we
+#' exclude all cases where \code{B != actual_B}, because if \code{A} were the only
+#' counterfactual, \code{B} will stay at its actual level.
+#' We also take special pains to "remember" information about actual and 
+#' imputed levels of counterfactuals so that appropriate results are obtained when
+#' \code{emmeans} is applied to a previous \code{emmeans} result.
+#' 
 #' 
 #' @section Offsets:
 #' Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values
@@ -313,6 +327,32 @@ emmeans = function(object, specs, by = NULL,
         if (!is.null(RG@misc$display)) {
             RG@misc$display = NULL
             warning("emmeans() results may be corrupted by removal of a nesting structure")
+        }
+        
+        ## Handle counterfactuals...
+        # cf.grid is either NULL, logical, or a "parent" grid that should replace RG
+        if(!is.null(cf.grid <- RG@misc$cf.grid)) {
+            weights = "cells"  # always use cells weights with counterfactuals
+            if (inherits(cf.grid, "emmGrid"))
+                RG = cf.grid
+            # which counterfactuals do we average over?
+            cf.ao = intersect(setdiff(names(RG@levels), facs), RG@roles$counterfactuals)
+            # zero-out weights for any cases where cf.ao levels differ from actual levels
+            for(f in cf.ao) {
+                fc = paste0("actual_", f)
+                excl = (RG@grid[ , f] != RG@grid[, fc])
+                RG@grid[excl, ".wgt."] = 0
+            }
+            # Fix up the returned grid to play along
+            cf.surv = intersect(facs, RG@roles$counterfactuals)
+            if(length(cf.surv) == 0) # no cfs remain
+                RG@misc$cf.grid = RG@roles$counterfactuals = NULL
+            else {
+                if(length(intersect(facs, paste0("actual_", cf.surv))) == length(cf.surv))
+                    RG@misc$cf.grid = TRUE
+                else
+                    RG@misc$cf.grid = RG   # save this as "parent" grid
+            }
         }
         
         # Ensure object is in standard order
@@ -445,8 +485,10 @@ emmeans = function(object, specs, by = NULL,
         RG@misc$by.vars = by
         RG@misc$avgd.over = union(RG@misc$avgd.over, avgd.over)
         RG@misc$methDesc = "emmeans"
-        RG@roles$predictors = names(levs)
-### Pass up 'new' as we're not changing its class  result = new("emmGrid", RG, linfct = linfct, levels = levs, grid = combs)
+        RG@roles$predictors = setdiff(names(levs), RG@roles$multresp)
+        if ((length(RG@roles$multresp) > 0) && !(RG@roles$multresp %in% names(levs))) 
+            RG@roles$multresp = character(0)
+
         result = as.emmGrid(RG)
         result@linfct = linfct
         result@levels = levs
