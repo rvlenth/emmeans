@@ -607,17 +607,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 
     # Now create the reference grid
     if(no.nuis <- (length(nuisance) == 0)) {
-        # if (!missing(counterfactuals)) {
-        #     cfac = intersect(counterfactuals, names(ref.levels))
-        #     ref.levels = ref.levels[cfac]
-        #     ref.levels$.obs.no. = seq_len(nrow(data))
-        #     .check.grid(ref.levels, rg.limit)
-        #     grid = .setup.cf(ref.levels, data)
-        # }
-        # ## else {
         .check.grid(ref.levels, rg.limit)
         grid = do.call(expand.grid, ref.levels)
-        ##}
     }
     else {
         nuis.info = .setup.nuis(nuisance, ref.levels, trms, rg.limit)
@@ -688,13 +679,6 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
              call. = TRUE)
     
     collapse = NULL
-    # if (!missing(counterfactuals)) {
-    #     grid = do.call(expand.grid, ref.levels)
-    #     if (missing(regrid)) 
-    #         regrid = "response"
-    #     if (avg.counter) collapse = ".obs.no."
-    # }
-    
     if(!no.nuis) {
         basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data, grid, ref.levels)
         grid = basis$grid

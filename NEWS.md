@@ -14,6 +14,8 @@ title: "NEWS for the emmeans package"
     reference grids. Whenever we average over a counterfactual `B`, we only
     use the cases where `B == actual_B`, thus obtaining the same results as 
     would be obtained when `B` is not regarded as a counterfactual.
+  * Tweaks to `regrid()` to create `@post.beta` slot correctly when there are 
+    non-estimable cases.
   
 
 ## emmeans 1.10.6

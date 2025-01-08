@@ -437,7 +437,8 @@ argument (see help for `ref_grid`). For example, to reproduce the results
 in Stata's Example 6 for `margins`, do:
 ```r
 margex <- haven::read_dta("https://www.stata-press.com/data/r18/margex.dta")
-margex.glm <- glm(outcome ~ sex * factor(group) + age, data = margex)
+margex.glm <- glm(outcome ~ sex * factor(group) + age, data = margex,
+                  family = binomial)
 emmeans(margex.glm, "sex", counterfactuals = "sex")
 ```
 
