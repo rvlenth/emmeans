@@ -57,6 +57,7 @@
 <li>
 <code><a href="../reference/emmeans.html">emmeans()</a></code> has also been revised to do special handling of counterfactual reference grids. Whenever we average over a counterfactual <code>B</code>, we only use the cases where <code>B == actual_B</code>, thus obtaining the same results as would be obtained when <code>B</code> is not regarded as a counterfactual.</li>
 <li>Tweaks to <code><a href="../reference/regrid.html">regrid()</a></code> to create <code>@post.beta</code> slot correctly when there are non-estimable cases.</li>
+<li>Bug fix for scoping in <code><a href="../reference/rbind.emmGrid.html">subset.emmGrid()</a></code> (<a href="https://github.com/rvlenth/emmeans/issues/518" class="external-link">#518</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.10.6" id="emmeans-1106">emmeans 1.10.6<a class="anchor" aria-label="anchor" href="#emmeans-1106"></a></h2><p class="text-muted">CRAN release: 2024-12-12</p>
