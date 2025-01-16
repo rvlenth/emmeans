@@ -16,6 +16,7 @@ title: "NEWS for the emmeans package"
     would be obtained when `B` is not regarded as a counterfactual.
   * Tweaks to `regrid()` to create `@post.beta` slot correctly when there are 
     non-estimable cases.
+  * Bug fix for scoping in `subset.emmGrid()` (#518)
   
 
 ## emmeans 1.10.6

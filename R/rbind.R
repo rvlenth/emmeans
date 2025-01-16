@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2024 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -163,7 +163,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' subset(warp.rg, wool == "A")  ## or warp.rg |> subset(wool == "A")
 #' 
 subset.emmGrid = function(x, subset, ...) {
-    sel = eval(substitute(subset), envir = x@grid)
+    sel = eval(substitute(subset), envir = x@grid, enclos = parent.frame())
     x[sel, ...]
 }
 
