@@ -486,9 +486,11 @@ emmeans = function(object, specs, by = NULL,
         RG@misc$avgd.over = union(RG@misc$avgd.over, avgd.over)
         RG@misc$methDesc = "emmeans"
         RG@roles$predictors = setdiff(names(levs), RG@roles$multresp)
-        if ((length(RG@roles$multresp) > 0) && !(RG@roles$multresp %in% names(levs))) 
-            RG@roles$multresp = character(0)
-
+        # if ((length(RG@roles$multresp) > 0) && !(RG@roles$multresp %in% names(levs))) 
+        #     RG@roles$multresp = character(0)
+        # REPLACED BY:
+        RG@roles$multresp = intersect(RG@roles$multresp, names(levs))
+        
         result = as.emmGrid(RG)
         result@linfct = linfct
         result@levels = levs

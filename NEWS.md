@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.10-6-090xxx
+## emmeans 1.10-7
   * Spelling changes in several vignettes
   * We have completely revamped the design of reference grids involving
     counterfactuals. Now, if we specify counterfactuals `A` and `B`, the
@@ -17,6 +17,9 @@ title: "NEWS for the emmeans package"
   * Tweaks to `regrid()` to create `@post.beta` slot correctly when there are 
     non-estimable cases.
   * Bug fix for scoping in `subset.emmGrid()` (#518)
+  * Changed `print.emmGrid()` so that it calls `show()` unless `export = TRUE`.
+    This change was made because I noticed that **pkgdown** uses `print()` rather 
+    than `show()` to display example results.
   
 
 ## emmeans 1.10.6

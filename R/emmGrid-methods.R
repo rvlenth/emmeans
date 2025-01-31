@@ -118,9 +118,16 @@ str.emmGrid <- function(object, ...) {
 #' @method print emmGrid
 #' @param x An \code{emmGrid} object
 #' @export
-print.emmGrid = function(x, ..., export = FALSE)
-    print(summary.emmGrid(x, ...), export = export)
+print.emmGrid = function(x, ..., export = FALSE) {
+    if(export) 
+        print(summary.emmGrid(x, ...), export = export)
+    else
+        show(x)
+}
 
+### Former print method which I changed to work around a bug in pkgdown
+# print.emmGrid = function(x, ..., export = FALSE)
+#     print(summary.emmGrid(x, ...), export = export)
 
 # vcov method
 #' Miscellaneous methods for \code{emmGrid} objects

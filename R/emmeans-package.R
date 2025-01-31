@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2024 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -117,7 +117,7 @@
 #' @import mvtnorm
 #' @import stats
 #' @importFrom graphics pairs plot
-#' @importFrom methods as is new slot slot<- slotNames 
+#' @importFrom methods as is new show slot slot<- slotNames 
 #' @importFrom utils getS3method hasName installed.packages methods str
 #' @name emmeans-package
 NULL

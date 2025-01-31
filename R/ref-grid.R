@@ -678,7 +678,6 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
              " Non-conformable elements in reference grid.",
              call. = TRUE)
     
-    collapse = NULL
     if(!no.nuis) {
         basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data, grid, ref.levels)
         grid = basis$grid
@@ -957,10 +956,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     }
     if(!missing(regrid)) {
         # if(missing(wt.counter)) wt.counter = 1
-        result = regrid(result, transform = regrid, sigma = sigma, 
-                        .collapse = collapse, wt.counter = wt.counter, ...)
-        if(!is.null(collapse))
-            result@misc$avgd.over = collapse
+        result = regrid(result, transform = regrid, sigma = sigma, ...)
     }
     
     .save.ref_grid(result)
@@ -1143,11 +1139,20 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 .cf.refgrid = function(object, counterfactuals, data, options = list(), ...) {
     if(missing(data))
         data = recover_data(object, ...)
+    if(!hasName(data, "(weights)"))
+        pwts = rep(1, nrow(data))
+    else
+        pwts = data[["(weights)"]]
+    
     # Start with just the ordinary reference grid
     rg = ref_grid(object, data = data, ...)
     cfac = intersect(counterfactuals, names(rg@levels))
     clevs = rg@levels[cfac]
     cgrid = do.call(expand.grid, clevs)
+    # handle nasty fact that character predictors don't act like factors
+    for (j in cfac)
+        if(is.character(data[[cfac]])) 
+            cgrid[[cfac]] = as.character(cgrid[[cfac]])
     
     # Get the stuff we need for each main dataset step
     link = .get.link(rg@misc)
@@ -1167,15 +1172,24 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                 flag = flag & data[[cfac[col]]] == x[col]
         which(flag)
     }, simplify = FALSE)
+    
+    # special case for covariates with no matches
+    if(all(sapply(cidx, length) == 0))
+        cidx = list(seq_len(nrow(data)))
+    
     # account for any NAs in bhat
     nonNA = !is.na(rg@bhat)
     # ensure we include all levels of cfacs with data
     all.active = sort(unlist(cidx))
     deadrows = sapply(cidx, function(x) x[1])
     offset = c(offset, rep(mean(offset), length(deadrows)))
+    pwts = c(pwts, rep(mean(pwts), length(deadrows)))
     data = rbind(data, data[deadrows, ])
     n = nrow(data)
     mymean = function(x) ifelse(is.null(x), NA, mean(x))
+    
+    # get means of groups of prior weights
+    mpwt = sapply(cidx, \(i) mean(pwts[i]))
     
     ## Compile the averaged results for delta method
     DL = matrix(nrow = 0, ncol = sum(nonNA))
@@ -1183,20 +1197,20 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     for (i in seq_len(nrow(cgrid))) {
         g = data
         for(j in cfac)
-            g[all.active, j] = cgrid[i, j]
+            g[all.active, j] = cgrid[i,j]
         bas = emm_basis(object, trms, xlev, g, ...)
         if(!is.null(bas$misc$postGridHook))
             stop("Sorry, we do not support counterfactuals for this situation.")
         X = bas$X[, nonNA, drop = FALSE]
         eta = X %*% bas$bhat[nonNA]
         yhat = link$linkinv(eta + offset)
-        d = link$mu.eta(eta)
+        d = link$mu.eta(eta) * rep(pwts, k)   # includes prior weights
         X = sweep(X, 1, d, "*")
         
         pos = 0
         XX = matrix(nrow = 0, ncol = ncol(X))
         for(I in 1:k) {
-            XX = sapply(cidx, \(i) apply(X[pos + i, , drop = FALSE], 2, mymean))
+            XX = sapply(cidx, \(i) apply(X[pos + i, , drop = FALSE], 2, mymean)) / mpwt
             DL = rbind(DL, t(XX))
             yy = sapply(cidx, \(i) ifelse(length(i) == 0, NA, mean(yhat[i + pos])))
             bh = c(bh, yy)
@@ -1216,7 +1230,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (k > 1)
         levs = c(levs, rg@levels[length(rg@levels)])
     RG@levels = levs
-    wts = sapply(cidx, length)
+    wts = sapply(cidx, length) * mpwt
     RG@grid = do.call("expand.grid", levs)
     RG@grid$.wgt. = rep(wts, length(bh)/length(wts))
     misc = rg@misc
