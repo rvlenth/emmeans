@@ -13,7 +13,7 @@ by direct modification of its slots."><meta property="og:image" content="https:/
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.6-090003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -421,65 +421,27 @@ by changing the by variables or the annotations.</p>
 <span class="r-in"><span><span class="va">newrg</span> <span class="op">&lt;-</span> <span class="va">pigs.rg</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">newrg</span><span class="op">)</span><span class="op">$</span><span class="va">source</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span></span>
 <span class="r-in"><span><span class="va">newrg</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  source percent response   SE df n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1       9     25.7 2.11 17 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2       9     34.4 2.31 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       3       9     35.2 2.36 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1      12     30.9 2.07 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2      12     39.6 2.66 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       3      12     43.2 2.90 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1      15     31.0 2.55 17 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2      15     39.2 2.63 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       3      15     49.6 4.08 17 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1      18     32.3 2.17 17 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2      18     42.9 4.99 17 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       3      18     59.8 6.95 17 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     source = 1, 2, 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     percent =  9, 12, 15, 18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Transformation: “log” </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Unraveling a previously standardized covariate</span></span></span>
 <span class="r-in"><span><span class="va">zd</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">fiber</span><span class="op">$</span><span class="va">diameter</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fibz.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">strength</span> <span class="op">~</span> <span class="va">machine</span> <span class="op">*</span> <span class="va">zd</span>, data <span class="op">=</span> <span class="va">fiber</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">fibz.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">fibz.lm</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zd <span class="op">=</span> <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co">### 2*SD range</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  machine zd prediction    SE df</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A       -2       30.7 2.020  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B       -2       34.2 2.470  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C       -2       31.1 1.410  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A       -1       35.4 1.280  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B       -1       37.9 1.580  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C       -1       34.8 0.803  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A        0       40.2 0.777  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B        0       41.6 0.858  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C        0       38.5 0.966  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A        1       45.0 0.979  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B        1       45.3 0.929  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C        1       42.3 1.690  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A        2       49.8 1.650  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B        2       49.0 1.690  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C        2       46.0 2.520  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     machine = A, B, C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     zd = -2, -1,  0,  1,  2</span>
 <span class="r-in"><span><span class="va">lev</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">fibz.rg</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">fibz.rg</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span> <span class="op">(</span></span></span>
 <span class="r-in"><span>    machine <span class="op">=</span> <span class="va">lev</span><span class="op">$</span><span class="va">machine</span>,</span></span>
 <span class="r-in"><span>    diameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">zd</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>                    <span class="va">`scaled:center`</span> <span class="op">+</span> <span class="va">`scaled:scale`</span> <span class="op">*</span> <span class="va">lev</span><span class="op">$</span><span class="va">zd</span><span class="op">)</span> <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fibz.rg</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  machine diameter prediction    SE df</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A           15.5       30.7 2.020  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B           15.5       34.2 2.470  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C           15.5       31.1 1.410  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A           19.8       35.4 1.280  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B           19.8       37.9 1.580  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C           19.8       34.8 0.803  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A           24.1       40.2 0.777  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B           24.1       41.6 0.858  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C           24.1       38.5 0.966  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A           28.5       45.0 0.979  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B           28.5       45.3 0.929  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C           28.5       42.3 1.690  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  A           32.8       49.8 1.650  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B           32.8       49.0 1.690  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  C           32.8       46.0 2.520  9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     machine = A, B, C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     diameter = 15.486, 19.810, 24.133, 28.457, 32.781</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Compactify results with a by variable</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="fu"><a href="joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">pigs.rg</span>, by <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span>, by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
