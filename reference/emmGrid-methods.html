@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,12 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, export <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'emmGrid'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, sep <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"sep"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, sep <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"sep"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">linfct</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Default S3 method</span></span>
+<span><span class="fu">linfct</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -102,6 +107,7 @@ names for <code><a href="https://rdrr.io/r/stats/vcov.html" class="external-link
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The <code>vcov</code> method returns a symmetric matrix of variances and
   covariances for <code>predict.emmGrid(object, type = "lp")</code></p>
+<p>The <code>linfct</code> function and method returns the <code>linfct</code> slot of <code>object</code>.</p>
     </div>
 
     <div class="section level2">

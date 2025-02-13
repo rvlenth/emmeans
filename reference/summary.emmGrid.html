@@ -21,7 +21,7 @@ hpd.summary."><meta property="og:image" content="https://rvlenth.github.io/emmea
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -236,7 +236,7 @@ In <code>confint.emmGrid</code>,
 <dd><p>Logical value. If <code>FALSE</code>, the arguments are passed to
 <code>summary.emmGrid</code> with <code>infer=c(FALSE, TRUE)</code>. If <code>joint =
 TRUE</code>, a joint test of the hypothesis L beta = null is performed, where L
-is <code>object@linfct</code> and beta is the vector of fixed effects estimated
+is <code>linfct(object)</code> and beta is the vector of fixed effects estimated
 by <code>object@betahat</code>. This will be either an <em>F</em> test or a
 chi-square (Wald) test depending on whether degrees of freedom are
 available. See also <code><a href="joint_tests.html">joint_tests</a></code>.</p></dd>
@@ -427,7 +427,7 @@ is a list of the linear functions associated with the joint test.</p>
     \(\sqrt{rF(\alpha; r, d)}\), where \(d\) is
     the error degrees of freedom and \(r\) is the rank of the set of linear
     functions under consideration. By default, the value of <code>r</code> is
-    computed from <code>object@linfct</code> for each by group; however, if the
+    computed from <code>linfct(object)</code> for each by group; however, if the
     user specifies an argument matching <code>scheffe.rank</code>, its value will
     be used instead. Ordinarily, if there are \(k\) means involved, then
     \(r = k - 1\) for a full set of contrasts involving all \(k\) means, and

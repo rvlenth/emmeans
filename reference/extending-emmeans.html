@@ -21,7 +21,7 @@ There are several other exported functions that may be useful. See the
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -416,7 +416,7 @@ is retrieved using <code><a href="https://rdrr.io/r/base/get.html" class="extern
 <code>tol</code> is the tolerance for assessing estimability. It should return a
 matrix with 3 columns: the estimates, standard errors (<code>NA</code> when
 <code>do.se==FALSE</code>), and degrees of freedom (<code>NA</code> for asymptotic). The
-number of rows should be the same as <samp>object@linfct</samp>. The
+number of rows should equal <samp>nrow(linfct(object)</samp>. The
 <code>vcovHook</code> function should have arguments <samp>(object, tol, ...)</samp> as
 described. It should return the covariance matrix for the estimates. Finally,
 <code>postGridHook</code>, if present, is called at the very end of
