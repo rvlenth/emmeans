@@ -4,6 +4,8 @@
 \alias{str.emmGrid}
 \alias{print.emmGrid}
 \alias{vcov.emmGrid}
+\alias{linfct}
+\alias{linfct.default}
 \title{Miscellaneous methods for \code{emmGrid} objects}
 \usage{
 \method{str}{emmGrid}(object, ...)
@@ -11,6 +13,10 @@
 \method{print}{emmGrid}(x, ..., export = FALSE)
 
 \method{vcov}{emmGrid}(object, ..., sep = get_emm_option("sep"))
+
+linfct(object, ...)
+
+\method{linfct}{default}(object, ...)
 }
 \arguments{
 \item{object}{An \code{emmGrid} object}
@@ -33,6 +39,8 @@ names for \code{vcov()} results}
 \value{
 The \code{vcov} method returns a symmetric matrix of variances and
   covariances for \code{predict.emmGrid(object, type = "lp")}
+
+The \code{linfct} function and method returns the \code{linfct} slot of \code{object}.
 }
 \description{
 Miscellaneous methods for \code{emmGrid} objects

@@ -123,7 +123,7 @@ In \code{confint.emmGrid},
 \item{joint}{Logical value. If \code{FALSE}, the arguments are passed to 
 \code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
 TRUE}, a joint test of the hypothesis L beta = null is performed, where L 
-is \code{object@linfct} and beta is the vector of fixed effects estimated 
+is \code{linfct(object)} and beta is the vector of fixed effects estimated 
 by \code{object@betahat}. This will be either an \emph{F} test or a 
 chi-square (Wald) test depending on whether degrees of freedom are 
 available. See also \code{\link{joint_tests}}.}
@@ -303,7 +303,7 @@ If a data frame is needed, \code{summary}, \code{confint},
     \eqn{\sqrt{rF(\alpha; r, d)}}{sqrt[r*qf(alpha, r, d)]}, where \eqn{d} is
     the error degrees of freedom and \eqn{r} is the rank of the set of linear
     functions under consideration. By default, the value of \code{r} is
-    computed from \code{object@linfct} for each by group; however, if the
+    computed from \code{linfct(object)} for each by group; however, if the
     user specifies an argument matching \code{scheffe.rank}, its value will
     be used instead. Ordinarily, if there are \eqn{k} means involved, then
     \eqn{r = k - 1} for a full set of contrasts involving all \eqn{k} means, and

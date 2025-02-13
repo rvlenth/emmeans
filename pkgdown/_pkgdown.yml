@@ -68,6 +68,7 @@ reference:
   - emm
   - emm_example
   - emm_options
+  - linfct
   - make.tran
   - str.emmGrid
   

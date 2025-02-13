@@ -385,7 +385,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 #' \code{tol} is the tolerance for assessing estimability. It should return a
 #' matrix with 3 columns: the estimates, standard errors (\code{NA} when
 #' \code{do.se==FALSE}), and degrees of freedom (\code{NA} for asymptotic). The
-#' number of rows should be the same as \samp{object@linfct}. The
+#' number of rows should equal \samp{nrow(linfct(object)}. The
 #' \code{vcovHook} function should have arguments \samp{(object, tol, ...)} as
 #' described. It should return the covariance matrix for the estimates. Finally,
 #' \code{postGridHook}, if present, is called at the very end of

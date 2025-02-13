@@ -47,7 +47,7 @@ test = function(object, null, ...) {
 #' @param joint Logical value. If \code{FALSE}, the arguments are passed to 
 #'   \code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
 #'   TRUE}, a joint test of the hypothesis L beta = null is performed, where L 
-#'   is \code{object@linfct} and beta is the vector of fixed effects estimated 
+#'   is \code{linfct(object)} and beta is the vector of fixed effects estimated 
 #'   by \code{object@betahat}. This will be either an \emph{F} test or a 
 #'   chi-square (Wald) test depending on whether degrees of freedom are 
 #'   available. See also \code{\link{joint_tests}}.

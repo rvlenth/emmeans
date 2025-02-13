@@ -172,6 +172,18 @@ vcov.emmGrid = function(object, ..., sep = get_emm_option("sep")) {
 }
 
 
+#' @rdname emmGrid-methods
+#'
+#' @returns The \code{linfct} function and method returns the \code{linfct} slot of \code{object}.
+#' @export
+linfct = function(object, ...)
+    UseMethod("linfct")
+
+#' @rdname emmGrid-methods
+#' @export
+linfct.default = function(object, ...) {
+    attr(object, "linfct")
+}
 
 
 # Method to alter contents of misc slot

@@ -1,6 +1,9 @@
 ---
 title: "NEWS for the emmeans package"
 ---
+## emmeans 1.10.7-100xxx
+  * Added a `linfct()` generic and default method that returns `object@linfct`
+
 
 ## emmeans 1.10-7
   * Spelling changes in several vignettes

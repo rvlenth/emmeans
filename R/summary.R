@@ -194,7 +194,7 @@ as.data.frame.summary_emm = function(x, ...) {
 #'     \eqn{\sqrt{rF(\alpha; r, d)}}{sqrt[r*qf(alpha, r, d)]}, where \eqn{d} is
 #'     the error degrees of freedom and \eqn{r} is the rank of the set of linear
 #'     functions under consideration. By default, the value of \code{r} is
-#'     computed from \code{object@linfct} for each by group; however, if the
+#'     computed from \code{linfct(object)} for each by group; however, if the
 #'     user specifies an argument matching \code{scheffe.rank}, its value will
 #'     be used instead. Ordinarily, if there are \eqn{k} means involved, then
 #'     \eqn{r = k - 1} for a full set of contrasts involving all \eqn{k} means, and
