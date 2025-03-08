@@ -124,6 +124,51 @@
     list(lhs = lhs, rhs = rhs, by = by)
 }
 
+### Check specs for 'all' and if there, create a list of specs
+# Return the specs as they were, or if 'all' is specified, return revised list of specs
+# with 'form.rtn' attribute
+.parse.specs.for.all = function(object, specs, by) {
+    all.key = ".all."  # The key to use to request all sets of means
+    if(is.list(specs))
+        return(specs)
+    rtn = NULL
+    if (inherits(specs, "formula")) {
+        rtn = .parse.by.formula(specs)
+        if ((length(rtn$rhs) == 0) || (rtn$rhs[1] != all.key))
+            return(specs)
+        specs = rtn$rhs
+        rtn$by = setdiff(rtn$by, specs)
+        if(length(rtn$by) > 0)
+            by = rtn$by
+    }
+    # now we have is.character(specs) ...
+    if ((length(specs) != 1) || (specs[1] != all.key))
+        return(specs)
+    # hack the object to bypass estimability checking. 
+    # Doesn't matter what stats are as we use only the labels
+    if(any(is.na(object@bhat))) {
+        k = ncol(object@linfct)
+        object@bhat = seq_len(k)
+        object@V = diag(k)
+        object@nbasis = estimability::all.estble
+    }
+    stgs = unique(setdiff(joint_tests(object, by = by)[, "model term"], "(confounded)"))
+    # I think we need to add nested factors that involve 'by'
+    if ((length(by) > 0) && !is.null(nst <- object@model.info$nesting)) {
+        for (fac in names(nst))
+            if (all(by %in% nst[[fac]]))
+                stgs = c(stgs, fac)
+        stgs = unique(stgs)
+    }
+    if(length(stgs) == 0)
+        stop("'", all.key, "' specification yielded no terms", call. = FALSE)
+    
+    result = strsplit(stgs, ":")
+    if(!is.null(rtn))
+        attr(result, "form.rtn") = rtn
+    result
+}
+
 
 # Utility to pick out the args that can be passed to a function
 .args.for.fcn = function(fcn, args) {

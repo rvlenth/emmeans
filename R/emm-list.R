@@ -66,7 +66,7 @@ NULL
     if (length(rtn) == 1)   {
         rtn = rtn[[1]]
     }
-    else                    {
+    else if(length(rtn) != 0)                   {
         cls = ifelse(class(rtn[[1]])[1] == "emmGrid", "emm_list", "summary_eml")
         class(rtn) = c(cls, "list")
     }

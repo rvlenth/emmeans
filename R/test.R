@@ -210,7 +210,7 @@ test.emmGrid = function(object, null = 0,
 #' handled in constructing the reference grid. See the section on covariates
 #' below. The point that one must always remember is that \code{joint_tests}
 #' always tests contrasts among EMMs, in the context of the reference grid,
-#' whereas type III tests are tests of model coefficients -- which may or may
+#' whereas SAS's type III tests are tests of model coefficients -- which may or may
 #' not have anything to do with EMMs or contrasts.
 #' 
 #' @param object a fitted model, \code{emmGrid}, or \code{emm_list}. If the
@@ -267,6 +267,9 @@ test.emmGrid = function(object, null = 0,
 #' 
 #' See the examples below with the \code{toy} dataset.
 #' 
+#' @note \code{joint_tests} is flaky with models having nested fixed effects. In
+#' some cases, terms that could be relevant are not identified, or confounded
+#' with unidentifiable terms.
 #' 
 #' @seealso \code{\link{test}}
 #' @order 1
@@ -341,6 +344,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
         object = do.call(ref_grid, args)
     }
     facs = setdiff(names(object@levels), c(by, "1"))
+
     if(length(facs) == 0)
         stop("There are no factors to test")
     
@@ -370,11 +374,11 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
         if ((k <- length(these)) > 0) {
             if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) { # term is in model
                 nesters = NULL
-                if (!is.null(nesting)) {
-                    nst = intersect(these, names(nesting))
-                    if (length(nst) > 0) 
-                        nesters = unlist(nesting[nst]) # proceed only if these includes all nesters
-                }
+                # if (!is.null(nesting)) {
+                #     nst = intersect(these, names(nesting))
+                #     if (length(nst) > 0) 
+                #         nesters = unlist(nesting[nst]) # proceed only if these includes all nesters
+                # }
                 if (is.null(nesting) || length(setdiff(nesters, these)) == 0) {   
                     emm = emmeans(object, these, by = by, ...)
                     tst = test(contrast(emm, interaction = use.contr[1], by = union(by, nesters)), 
@@ -401,7 +405,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
         result
     }
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
-    if (all(is.infinite(result$df2) | is.na(result$df2))) {
+    if (!is.null(result) && all(is.infinite(result$df2) | is.na(result$df2))) {
         w = which(names(result) == "F.ratio")
         result = cbind(result[, 1:w], Chisq = result$F.ratio * result$df1, 
                        result[, (w+1):ncol(result)])

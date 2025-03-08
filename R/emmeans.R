@@ -93,6 +93,9 @@ emmeans.list = function(object, specs, ...) {
 #'   over which EMMs are desired. \code{specs} may also be a \code{formula}
 #'   or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
 #'   is described in the Overview section below. 
+#'   Specifying \code{.all.} as the only factor name
+#'   creates a list of specifications for all model terms.
+#'   
 #'   \bold{Note:} We recommend \emph{against} using two-sided formulas; see the
 #'   note below for \code{contr}.
 #' @param by A character vector specifying the names of predictors to condition on.
@@ -169,6 +172,14 @@ emmeans.list = function(object, specs, ...) {
 #' name of a contrast family (e.g., \code{pairwise}). Operators like
 #' \code{*} or \code{:} are needed in the formula to delineate names, but
 #' otherwise are ignored.
+#' 
+#' We now also allow using \code{.all.} in \code{specs}. If this is done, we run
+#' \code{\link{joint_tests}} on the side to determine all relevant model terms,
+#' then replace \code{specs} with a corresponding list of specifications. This is
+#' a convenience, but it can create a sizeable \code{emm_list} object and it is
+#' coded rather inefficiently. While it is permissible to include contrasts
+#' via a \code{contr} argument or formula left-hand-side, we recommend instead
+#' doing this in a follow-up test with \code{\link{contrast.emm_list}}.
 #' 
 #' In the special case where the mean (or weighted mean) of all the predictions
 #' is desired, specify \code{specs} as \code{~ 1} or \code{"1"}.
@@ -274,6 +285,10 @@ emmeans.list = function(object, specs, ...) {
 #' # 'adjust' argument NOT ignored ...
 #' emmeans (warp.lm, ~ tension | wool, adjust = "sidak")
 #' 
+#' # Get all sets of EMMs for this model
+#' ( allsets <- emmeans(warp.lm, ".all.") )
+#' contrast(allsets, "eff", which = -99)    # all effects
+#' 
 #' 
 #' \dontrun{
 #'   ### Offsets: Consider a silly example:
@@ -295,6 +310,16 @@ emmeans = function(object, specs, by = NULL,
             args$wt.nuis = ifelse(!missing(weights) && is.character(weights), weights, "equal")
         object = do.call(ref_grid, args)
     }
+    
+    # Check to see if we want all sets of means
+    specs = .parse.specs.for.all(object, specs, by)
+    if(!is.null(rtn <- attr(specs, "form.rtn"))) {
+        if(length(rtn$by) > 0)
+            by = rtn$by
+        if(length(rtn$lhs) > 0) 
+            contr = rtn$lhs
+    }
+    
     if (is.list(specs)) {
         return (emmeans.list(object, specs, by = by, 
                              contr = contr, weights = weights, 
@@ -512,6 +537,9 @@ emmeans = function(object, specs, by = NULL,
     
 
     if(!missing(contr)) { # return a list with emmeans and contrasts
+        # # skip doing contrasts when we have no primary factor
+        # if(length(result@misc$pri.vars) == 0) 
+        #     return(result)
         warn.contr = interactive() && (sys.parent() == 0) && is.character(contr) && 
             (length(result@misc$pri.vars) > 1)
         # NULL-out a bunch of arguments to not pass. 

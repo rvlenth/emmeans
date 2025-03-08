@@ -90,8 +90,13 @@ they interact with factors, the results depend on how the covariate is
 handled in constructing the reference grid. See the section on covariates
 below. The point that one must always remember is that \code{joint_tests}
 always tests contrasts among EMMs, in the context of the reference grid,
-whereas type III tests are tests of model coefficients -- which may or may
+whereas SAS's type III tests are tests of model coefficients -- which may or may
 not have anything to do with EMMs or contrasts.
+}
+\note{
+\code{joint_tests} is flaky with models having nested fixed effects. In
+some cases, terms that could be relevant are not identified, or confounded
+with unidentifiable terms.
 }
 \section{Dealing with covariates}{
 
