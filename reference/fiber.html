@@ -9,7 +9,7 @@ simple analysis-of-covariance example."><meta property="og:image" content="https
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,9 +94,11 @@ concomitant variable to improve precision of the estimates.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fiber.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">strength</span> <span class="op">~</span> <span class="va">diameter</span> <span class="op">+</span> <span class="va">machine</span>, data<span class="op">=</span><span class="va">fiber</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">fiber.lm</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     diameter = 24.133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     machine = A, B, C</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  diameter machine prediction    SE df</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      24.1 A             40.4 0.724 11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      24.1 B             41.4 0.744 11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      24.1 C             38.8 0.788 11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Covariate-adjusted means and comparisons</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">machine</span><span class="op">)</span></span></span>

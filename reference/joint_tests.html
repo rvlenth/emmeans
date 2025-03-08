@@ -21,7 +21,7 @@ each combination of them."><meta property="og:image" content="https://rvlenth.gi
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -170,8 +170,14 @@ they interact with factors, the results depend on how the covariate is
 handled in constructing the reference grid. See the section on covariates
 below. The point that one must always remember is that <code>joint_tests</code>
 always tests contrasts among EMMs, in the context of the reference grid,
-whereas type III tests are tests of model coefficients – which may or may
+whereas SAS's type III tests are tests of model coefficients – which may or may
 not have anything to do with EMMs or contrasts.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p><code>joint_tests</code> is flaky with models having nested fixed effects. In
+some cases, terms that could be relevant are not identified, or confounded
+with unidentifiable terms.</p>
     </div>
     <div class="section level2">
     <h2 id="dealing-with-covariates">Dealing with covariates<a class="anchor" aria-label="anchor" href="#dealing-with-covariates"></a></h2>

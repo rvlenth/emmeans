@@ -11,7 +11,7 @@ contrasts among them. EMMs are also known as least-squares means."><meta propert
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,9 @@ that is supported, such as the result of a call to <code>lm</code> or
 over which EMMs are desired. <code>specs</code> may also be a <code>formula</code>
 or a <code>list</code> (optionally named) of valid <code>spec</code>s. Use of formulas
 is described in the Overview section below.
-<b>Note:</b> We recommend <em>against</em> using two-sided formulas; see the
+Specifying <code>.all.</code> as the only factor name
+creates a list of specifications for all model terms.</p>
+<p><b>Note:</b> We recommend <em>against</em> using two-sided formulas; see the
 note below for <code>contr</code>.</p></dd>
 
 
@@ -193,6 +195,13 @@ optional (and we don't recommend it), but if specified it should be the
 name of a contrast family (e.g., <code>pairwise</code>). Operators like
 <code>*</code> or <code>:</code> are needed in the formula to delineate names, but
 otherwise are ignored.</p>
+<p>We now also allow using <code>.all.</code> in <code>specs</code>. If this is done, we run
+<code><a href="joint_tests.html">joint_tests</a></code> on the side to determine all relevant model terms,
+then replace <code>specs</code> with a corresponding list of specifications. This is
+a convenience, but it can create a sizeable <code>emm_list</code> object and it is
+coded rather inefficiently. While it is permissible to include contrasts
+via a <code>contr</code> argument or formula left-hand-side, we recommend instead
+doing this in a follow-up test with <code><a href="emm_list-object.html">contrast.emm_list</a></code>.</p>
 <p>In the special case where the mean (or weighted mean) of all the predictions
 is desired, specify <code>specs</code> as <code>~ 1</code> or <code>"1"</code>.</p>
 <p>A number of standard contrast families are provided. They can be identified
@@ -372,6 +381,68 @@ varies the fastest within that hierarchy. See the examples.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Conf-level adjustment: sidak method for 3 estimates </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get all sets of EMMs for this model</span></span></span>
+<span class="r-in"><span><span class="op">(</span> <span class="va">allsets</span> <span class="op">&lt;-</span> <span class="fu">emmeans</span><span class="op">(</span><span class="va">warp.lm</span>, <span class="st">".all."</span><span class="op">)</span> <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: Results may be misleading due to involvement in interactions</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: Results may be misleading due to involvement in interactions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`emmeans of wool`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  wool emmean   SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A      31.0 2.11 48     26.8     35.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B      25.3 2.11 48     21.0     29.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: tension </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`emmeans of tension`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tension emmean   SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  L         36.4 2.58 48     31.2     41.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  M         26.4 2.58 48     21.2     31.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H         21.7 2.58 48     16.5     26.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: wool </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`emmeans of wool, tension`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  wool tension emmean   SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A    L         44.6 3.65 48     37.2     51.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B    L         28.2 3.65 48     20.9     35.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A    M         24.0 3.65 48     16.7     31.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B    M         28.8 3.65 48     21.4     36.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A    H         24.6 3.65 48     17.2     31.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B    H         18.8 3.65 48     11.4     26.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="va">allsets</span>, <span class="st">"eff"</span>, which <span class="op">=</span> <span class="op">-</span><span class="fl">99</span><span class="op">)</span>    <span class="co"># all effects</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`emmeans of wool`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast estimate   SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A effect     2.89 1.49 48   1.940  0.0582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B effect    -2.89 1.49 48  -1.940  0.0582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: tension </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: fdr method for 2 tests </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`emmeans of tension`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast estimate   SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  L effect     8.24 2.11 48   3.914  0.0009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  M effect    -1.76 2.11 48  -0.836  0.4075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H effect    -6.48 2.11 48  -3.078  0.0052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: wool </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: fdr method for 3 tests </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`emmeans of wool, tension`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast   estimate   SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A L effect  16.4074 3.33 48   4.929  0.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B L effect   0.0741 3.33 48   0.022  0.9823</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A M effect  -4.1481 3.33 48  -1.246  0.4289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B M effect   0.6296 3.33 48   0.189  0.9823</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A H effect  -3.5926 3.33 48  -1.079  0.4289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B H effect  -9.3704 3.33 48  -2.815  0.0212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: fdr method for 6 tests </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
