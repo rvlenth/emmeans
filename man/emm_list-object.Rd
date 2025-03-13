@@ -15,9 +15,9 @@
 \alias{as.data.frame.summary_eml}
 \title{The \code{emm_list} class}
 \usage{
-\method{contrast}{emm_list}(object, ..., which = 1)
+\method{contrast}{emm_list}(object, ..., which = NULL)
 
-\method{pairs}{emm_list}(x, ..., which = 1)
+\method{pairs}{emm_list}(x, ..., which = NULL)
 
 \method{test}{emm_list}(object, ..., which = seq_along(object))
 
@@ -25,7 +25,7 @@
 
 \method{plot}{emm_list}(x, ..., which = 1)
 
-\method{coef}{emm_list}(object, ..., which = 2)
+\method{coef}{emm_list}(object, ..., which = NULL)
 
 \method{str}{emm_list}(object, ...)
 
@@ -43,7 +43,12 @@
 
 \item{...}{additional arguments passed to corresponding \code{emmGrid} method}
 
-\item{which}{integer vector specifying which elements to select.}
+\item{which}{integer vector specifying which elements to select;
+if \code{NULL},
+we try to guess which elements make sense. Usually, this is all elements having 
+names that start with \sQuote{em} or \sQuote{ls},
+or the first element if no matches are found. However, in \code{coef.emm_list},
+these are the ones we \emph{exclude}.}
 
 \item{row.names, optional}{Required arguments of \code{as.data.frame}, ignored}
 }

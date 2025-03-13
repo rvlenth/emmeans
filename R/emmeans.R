@@ -93,7 +93,7 @@ emmeans.list = function(object, specs, ...) {
 #'   over which EMMs are desired. \code{specs} may also be a \code{formula}
 #'   or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
 #'   is described in the Overview section below. 
-#'   Specifying \code{.all.} as the only factor name
+#'   Specifying \code{.} as the only factor name
 #'   creates a list of specifications for all model terms.
 #'   
 #'   \bold{Note:} We recommend \emph{against} using two-sided formulas; see the
@@ -173,7 +173,7 @@ emmeans.list = function(object, specs, ...) {
 #' \code{*} or \code{:} are needed in the formula to delineate names, but
 #' otherwise are ignored.
 #' 
-#' We now also allow using \code{.all.} in \code{specs}. If this is done, we run
+#' We now also allow using \code{.} in \code{specs}. If this is done, we run
 #' \code{\link{joint_tests}} on the side to determine all relevant model terms,
 #' then replace \code{specs} with a corresponding list of specifications. This is
 #' a convenience, but it can create a sizeable \code{emm_list} object and it is
@@ -286,8 +286,8 @@ emmeans.list = function(object, specs, ...) {
 #' emmeans (warp.lm, ~ tension | wool, adjust = "sidak")
 #' 
 #' # Get all sets of EMMs for this model
-#' ( allsets <- emmeans(warp.lm, ".all.") )
-#' contrast(allsets, "eff", which = -99)    # all effects
+#' ( allsets <- emmeans(warp.lm, ".") )
+#' contrast(allsets, "eff")    # all effects
 #' 
 #' 
 #' \dontrun{

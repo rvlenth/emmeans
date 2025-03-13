@@ -49,7 +49,8 @@ the returned object is updated to hold only the predictor levels that actually o
 
 \item{subset}{logical expression indicating which rows of the grid to keep}
 
-\item{which}{Integer vector of subset of elements to use; if missing, all are combined}
+\item{which}{Integer vector of subset of elements to use;
+if missing, we use all elements.}
 }
 \value{
 A revised object of class \code{emmGrid}

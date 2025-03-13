@@ -128,7 +128,7 @@
 # Return the specs as they were, or if 'all' is specified, return revised list of specs
 # with 'form.rtn' attribute
 .parse.specs.for.all = function(object, specs, by) {
-    all.key = ".all."  # The key to use to request all sets of means
+    all.key = "."  # The key to use to request all sets of means
     if(is.list(specs))
         return(specs)
     rtn = NULL

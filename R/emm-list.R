@@ -38,7 +38,12 @@
 #' 
 #' @param object,x an object of class \code{emm_list}
 #' @param ... additional arguments passed to corresponding \code{emmGrid} method
-#' @param which integer vector specifying which elements to select.
+#' @param which integer vector specifying which elements to select;
+#' if \code{NULL},
+#' we try to guess which elements make sense. Usually, this is all elements having 
+#' names that start with \sQuote{em} or \sQuote{ls},
+#' or the first element if no matches are found. However, in \code{coef.emm_list},
+#' these are the ones we \emph{exclude}.
 #' 
 #' @return a \code{list} of objects returned by the corresponding \code{emmGrid}
 #'   method (thus, often, another \code{emm_list} object). However, if
@@ -139,20 +144,37 @@ print.emm_list = function(x, ...) {
     print(summary(x, ...))
 }
 
+### Utility fcn to identify which elements' names start with "em" or "lm"
+### this only operates if which == NULL
+.guess.which = guess.which = function(object, which) {
+    if(!is.null(which))
+        return(which)
+    rtn = which(substr(paste0(names(object), "xx"), 1, 2) %in% c("em", "ls"))
+    if(length(rtn) == 0)
+        rtn = 1
+    rtn
+}
+
 #' @export
 #' @method contrast emm_list
 #' @rdname emm_list-object
 #' @order 3
-contrast.emm_list = function(object, ... , which = 1) {
-    .lapply(object[which], contrast, ...)
+contrast.emm_list = function(object, ... , which = NULL) {
+    which = .guess.which(object, which)
+    rtn = .lapply(object[which], contrast, ...)
+    names(rtn) = paste("contrasts of", names(rtn))
+    rtn
 }
 
 #' @export
 #' @method pairs emm_list
 #' @rdname emm_list-object
 #' @order 4
-pairs.emm_list = function(x, ..., which = 1) {
-    .lapply(x[which], pairs, ...)
+pairs.emm_list = function(x, ..., which = NULL) {
+    which = .guess.which(x, which)
+    rtn = .lapply(x[which], pairs, ...)
+    names(rtn) = paste("comparisons of", names(rtn))
+    rtn
 }
 
 #' @export
@@ -160,6 +182,7 @@ pairs.emm_list = function(x, ..., which = 1) {
 #' @rdname emm_list-object
 #' @order 6
 test.emm_list = function(object, ..., which = seq_along(object)) {
+    which = .guess.which(object, which)
     .lapply(object[which], test, ...)
 }
 
@@ -168,6 +191,7 @@ test.emm_list = function(object, ..., which = seq_along(object)) {
 #' @rdname emm_list-object
 #' @order 7
 confint.emm_list = function(object, ..., which = seq_along(object)) {
+    which = .guess.which(object, which)
     .lapply(object[which], confint, ...)
 }
 
@@ -175,7 +199,8 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 #' @method coef emm_list
 #' @rdname emm_list-object
 #' @order 9
-coef.emm_list = function(object, ..., which = 2) {
+coef.emm_list = function(object, ..., which = NULL) {
+    which = - .guess.which(object, which)
     .lapply(object[which], coef, ...)
 }
 
@@ -186,12 +211,14 @@ coef.emm_list = function(object, ..., which = 2) {
 #' @order 8
 #' @note The \code{plot} method uses only the first element of \code{which}; the others are ignored.
 plot.emm_list = function(x, ..., which = 1) {
+    which = .guess.which(object, which)
     plot.emmGrid(x[[which[1]]], ...)
 }
 
 #' @rdname rbind.emmGrid
 #' @order 23
-#' @param which Integer vector of subset of elements to use; if missing, all are combined
+#' @param which Integer vector of subset of elements to use;
+#' if missing, we use all elements. 
 #' @return The \code{rbind} method for \code{emm_list} objects simply combines 
 #' the \code{emmGrid} objects comprising the first element of \code{...}.
 #' Note that the returned object is not yet summarized, so any \code{adjust}
@@ -207,7 +234,7 @@ plot.emm_list = function(x, ..., which = 1) {
 rbind.emm_list = function(..., which, adjust = "bonferroni") {
     elobj = list(...)[[1]]
     if(!missing(which))
-        elobj = elobj[which]
+         elobj = elobj[which]
     class(elobj) = c("emm_list", "list")
     update(do.call(rbind.emmGrid, elobj), adjust = adjust)
 }

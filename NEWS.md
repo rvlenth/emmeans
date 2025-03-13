@@ -5,11 +5,13 @@ title: "NEWS for the emmeans package"
   * Added a `linfct()` generic and default method that returns `object@linfct`
   * Removed some code in `joint_tests()` that prevented some terms from
     being tested in nested models. Alas, this is still not perfect.
-  * Added the possibility of specifying `.all.` in the `specs` argument of
-    `emmeans()` -- e.g., `emmeans(mod, ".all.")`, `emmeans(mod, pairwise ~ .all. | drug)`.
+  * Added the possibility of specifying `.` in the `specs` argument of
+    `emmeans()` -- e.g., `emmeans(mod, ".")`, `emmeans(mod, pairwise ~ . | drug)`.
     (#522).
     This creates a list of all sets of means (and contrasts), thus creating 
     an `emm_list` object. This also works in `emtrends()`.
+  * In certain `emm_list` methods, ee changed the default for `which` from
+    `1` to to `NULL`
 
 ## emmeans 1.10-7
   * Spelling changes in several vignettes
