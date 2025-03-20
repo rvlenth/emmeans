@@ -27,6 +27,7 @@
 #' @export
 as.data.frame.summary_emm = function(x, ...) {
     attr(x, "digits") = getOption("digits")
+    oldClass(x) = setdiff(oldClass(x), "summary_emm")
     x
 }
 
