@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.10.7-100003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.10.7-100" id="emmeans-1107-100xxx">emmeans 1.10.7-100xxx<a class="anchor" aria-label="anchor" href="#emmeans-1107-100xxx"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110">emmeans 1.11.0<a class="anchor" aria-label="anchor" href="#emmeans-1110"></a></h2>
 <ul><li>Added a <code><a href="../reference/emmGrid-methods.html">linfct()</a></code> generic and default method that returns <code>object@linfct</code>
 </li>
 <li>Removed some code in <code><a href="../reference/joint_tests.html">joint_tests()</a></code> that prevented some terms from being tested in nested models. Alas, this is still not perfect.</li>
@@ -60,7 +60,7 @@
 </li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.10-7" id="emmeans-110-7">emmeans 1.10-7<a class="anchor" aria-label="anchor" href="#emmeans-110-7"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.10.7" id="emmeans-1107">emmeans 1.10.7<a class="anchor" aria-label="anchor" href="#emmeans-1107"></a></h2><p class="text-muted">CRAN release: 2025-01-31</p>
 <ul><li>Spelling changes in several vignettes</li>
 <li>We have completely revamped the design of reference grids involving counterfactuals. Now, if we specify counterfactuals <code>A</code> and <code>B</code>, the reference grid comprises combinations of <code>A</code>, <code>B</code>, <code>actual_A</code>, and <code>actual_B</code> the latter two used to track the original settings of <code>A</code> and <code>B</code> in the dataset. We always average over combinations of these factors. The previous code was a memory hog, and we have made it much more efficient for large datasets.</li>
 <li>
