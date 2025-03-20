@@ -211,7 +211,7 @@ coef.emm_list = function(object, ..., which = NULL) {
 #' @order 8
 #' @note The \code{plot} method uses only the first element of \code{which}; the others are ignored.
 plot.emm_list = function(x, ..., which = 1) {
-    which = .guess.which(object, which)
+    which = .guess.which(x, which)
     plot.emmGrid(x[[which[1]]], ...)
 }
 

@@ -1,7 +1,7 @@
 ---
 title: "NEWS for the emmeans package"
 ---
-## emmeans 1.10.7-100xxx
+## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`
   * Removed some code in `joint_tests()` that prevented some terms from
     being tested in nested models. Alas, this is still not perfect.
@@ -13,7 +13,7 @@ title: "NEWS for the emmeans package"
   * In certain `emm_list` methods, ee changed the default for `which` from
     `1` to to `NULL`
 
-## emmeans 1.10-7
+## emmeans 1.10.7
   * Spelling changes in several vignettes
   * We have completely revamped the design of reference grids involving
     counterfactuals. Now, if we specify counterfactuals `A` and `B`, the
