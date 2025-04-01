@@ -11,7 +11,7 @@ all the information needed to calculate EMMs and make inferences on them."><meta
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -225,11 +225,22 @@ its arguments are in effect arguments of <code><a href="emmeans.html">emmeans</a
 functions, in that those functions pass their <code>...</code> arguments to
 <code>ref_grid</code>.</p>
 <p>The reference grid consists of combinations of independent variables over
-which predictions are made. Estimated marginal means are defined as these
+which predictions are made.
+Estimated marginal means are defined as these
 predictions, or marginal averages thereof. The grid is determined by first
 reconstructing the data used in fitting the model (see
 <code><a href="extending-emmeans.html">recover_data</a></code>), or by using the <code>data.frame</code> provided in
-<code>data</code>. The default reference grid is determined by the observed levels
+<code>data</code>.</p>
+<p>By “independent variables,” we mean (in most cases) the results of
+<code><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars()</a></code> applied to the fixed-effects part of the right-hand side of
+the model formula. Any random effects are excluded. Thus, if the model
+formula in an <code><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lme4::lmer</a></code> call is <code>yield ~ fert +
+seed*density + log(rain) + (1|block/plot)</code>, the independent variables are
+<code>fert</code>, <code>seed</code>, <code>density</code>, and <code>rain</code> (not
+<code>log(rain)</code>). In multivariate models, the dimension of the multivariate
+response is also considered an independent variable.</p>
+
+<p>The default reference grid is determined by the observed levels
 of any factors, the ordered unique values of character-valued predictors, and
 the results of <code>cov.reduce</code> for numeric predictors. These may be
 overridden using <code>at</code>. See also the section below on

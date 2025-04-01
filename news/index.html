@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +51,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110">emmeans 1.11.0<a class="anchor" aria-label="anchor" href="#emmeans-1110"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110-xxx">emmeans 1.11.0-xxx<a class="anchor" aria-label="anchor" href="#emmeans-1110-xxx"></a></h2><p class="text-muted">CRAN release: 2025-03-20</p>
+<ul><li>Modified <code>as.data.frame.summary_emm</code> so it can’t loop infinitely (<a href="https://github.com/rvlenth/emmeans/issues/525" class="external-link">#525</a>)</li>
+<li>Added documentation to <code>ref_grid</code> and <code>FAQs</code> vignette to clarify how we use <code><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars()</a></code> to identify predictors, e.g. if a model formula contains <code>log(dose)</code>, the covariate is <code>dose</code>, not <code>log(dose)</code> (<a href="https://github.com/rvlenth/emmeans/issues/523" class="external-link">#523</a>)</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110">emmeans 1.11.0<a class="anchor" aria-label="anchor" href="#emmeans-1110"></a></h2><p class="text-muted">CRAN release: 2025-03-20</p>
 <ul><li>Added a <code><a href="../reference/emmGrid-methods.html">linfct()</a></code> generic and default method that returns <code>object@linfct</code>
 </li>
 <li>Removed some code in <code><a href="../reference/joint_tests.html">joint_tests()</a></code> that prevented some terms from being tested in nested models. Alas, this is still not perfect.</li>
 <li>Added the possibility of specifying <code>.</code> in the <code>specs</code> argument of <code><a href="../reference/emmeans.html">emmeans()</a></code> – e.g., <code>emmeans(mod, ".")</code>, <code>emmeans(mod, pairwise ~ . | drug)</code>. (<a href="https://github.com/rvlenth/emmeans/issues/522" class="external-link">#522</a>). This creates a list of all sets of means (and contrasts), thus creating an <code>emm_list</code> object. This also works in <code><a href="../reference/emtrends.html">emtrends()</a></code>.</li>
-<li>In certain <code>emm_list</code> methods, ee changed the default for <code>which</code> from <code>1</code> to to <code>NULL</code>
+<li>In certain <code>emm_list</code> methods, we changed the default for <code>which</code> from <code>1</code> to to <code>NULL</code>
 </li>
 </ul></div>
     <div class="section level2">
