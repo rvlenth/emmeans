@@ -1,5 +1,6 @@
 ---
 title: "NEWS for the emmeans package"
+---
 
 ## emmeans 1.11.0-xxx
   * Modified `as.data.frame.summary_emm` so it can't loop infinitely (#525)
@@ -7,7 +8,6 @@ title: "NEWS for the emmeans package"
     use `all.vars()` to identify predictors, e.g. if a model formula contains 
     `log(dose)`, the covariate is `dose`, not `log(dose)` (#523)
   
----
 ## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`
   * Removed some code in `joint_tests()` that prevented some terms from
