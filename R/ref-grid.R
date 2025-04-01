@@ -40,11 +40,24 @@
 #' \code{ref_grid}.
 #'
 #' The reference grid consists of combinations of independent variables over
-#' which predictions are made. Estimated marginal means are defined as these
+#' which predictions are made. 
+#' Estimated marginal means are defined as these
 #' predictions, or marginal averages thereof. The grid is determined by first
 #' reconstructing the data used in fitting the model (see
 #' \code{\link{recover_data}}), or by using the \code{data.frame} provided in
-#' \code{data}. The default reference grid is determined by the observed levels
+#' \code{data}. 
+#' 
+#' By \dQuote{independent variables,} we mean (in most cases) the results of
+#' \code{all.vars()} applied to the fixed-effects part of the right-hand side of
+#' the model formula. Any random effects are excluded. Thus, if the model
+#' formula in an \code{lme4::lmer} call is \code{yield ~ fert +
+#' seed*density + log(rain) + (1|block/plot)}, the independent variables are
+#' \code{fert}, \code{seed}, \code{density}, and \code{rain} (not
+#' \code{log(rain)}). In multivariate models, the dimension of the multivariate
+#' response is also considered an independent variable.
+#' 
+#' 
+#' The default reference grid is determined by the observed levels
 #' of any factors, the ordered unique values of character-valued predictors, and
 #' the results of \code{cov.reduce} for numeric predictors. These may be
 #' overridden using \code{at}. See also the section below on

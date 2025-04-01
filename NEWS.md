@@ -1,5 +1,12 @@
 ---
 title: "NEWS for the emmeans package"
+
+## emmeans 1.11.0-xxx
+  * Modified `as.data.frame.summary_emm` so it can't loop infinitely (#525)
+  * Added documentation to `ref_grid` and `FAQs` vignette to clarify how we
+    use `all.vars()` to identify predictors, e.g. if a model formula contains 
+    `log(dose)`, the covariate is `dose`, not `log(dose)` (#523)
+  
 ---
 ## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`
@@ -10,7 +17,7 @@ title: "NEWS for the emmeans package"
     (#522).
     This creates a list of all sets of means (and contrasts), thus creating 
     an `emm_list` object. This also works in `emtrends()`.
-  * In certain `emm_list` methods, ee changed the default for `which` from
+  * In certain `emm_list` methods, we changed the default for `which` from
     `1` to to `NULL`
 
 ## emmeans 1.10.7

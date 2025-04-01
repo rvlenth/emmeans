@@ -21,12 +21,16 @@
 
 ### This file has summary.emmGrid S3 method and related functions
 
-# as.data.frame for a summary just passes thru
-# This creates an infinite loop if we're not careful with using `as.data.frame`
-# to coerce a summary_emm object to a regular data frame.
+# `as.data.frame` for a summary - just passes thru
+# A former version created an infinite loop if not careful with using `as.data.frame`
+# to coerce a summary_emm object to a regular data frame. Now we cave to insistent
+# repeat calls and remove the `summary_emm` class the second time.
 #' @export
 as.data.frame.summary_emm = function(x, ...) {
-    attr(x, "digits") = getOption("digits")
+    if(!is.null(attr(x, "digits")))
+        oldClass(x) = "data.frame"
+    else
+        attr(x, "digits") = getOption("digits")
     x
 }
 
