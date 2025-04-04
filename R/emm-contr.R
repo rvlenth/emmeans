@@ -47,12 +47,15 @@
 #' The default multiplicity adjustment method is \code{"tukey"}, which is only
 #' approximate when the standard errors differ.
 #'
-#' \code{poly.emmc} generates orthogonal polynomial contrasts, assuming
-#' equally-spaced factor levels. These are derived from the
+#' \code{poly.emmc} and \code{opoly.emmc} generate orthogonal polynomial contrasts.
+#' \code{poly.emmc} uses equally-spaced factor levels; coefficients are derived from the
 #' \code{\link[stats]{poly}} function, but an \emph{ad hoc} algorithm is used to
 #' scale them to integer coefficients that are (usually) the same as in
-#' published tables of orthogonal polynomial contrasts. The default multiplicity
-#' adjustment method is \code{"none"}.
+#' published tables of orthogonal polynomial contrasts. On the other hand, 
+#' \code{opoly.emmc}'s coefficients are always normalized (sum of squares equals 1),
+#' but allows the user to choose alternate reference points in \code{scores}, as in the
+#' \code{\link{contr.poly}} function.
+#' In both cases, the default multiplicity adjustment method is \code{"none"}.
 #'
 #' \code{trt.vs.ctrl.emmc} and its relatives generate contrasts for comparing
 #' one level (or the average over specified levels) with each of the other
@@ -240,6 +243,26 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
     attr(M, "adjust") = "none"
     M
 }
+
+# Orthonormal poly contrasts - not rescaled
+#' @rdname emmc-functions
+#' @param scores Set of values of length \code{length(levs)} over which
+#'   orthogonal polynomials are computed
+#' @export
+opoly.emmc = function(levs, max.degree = min(6, k-1), scores = seq_along(levs), ...) {
+    nm = c("linear", "quadratic", "cubic", "quartic", paste("degree",5:20))
+    k = length(levs)
+    if (length(scores) != k)
+        stop("In opoly.emmc: Lengths of 'scores' and 'levs' must match", call. = FALSE)
+    M = contr.poly(k, contrasts = TRUE, scores = scores, sparse = FALSE)
+    M = as.data.frame(M[, seq_len(min(k-1, max.degree)), drop = FALSE])
+    row.names(M) = levs
+    names(M) = nm[seq_len(ncol(M))]
+    attr(M, "desc") = "normalized polynomial contrasts"
+    attr(M, "adjust") = "none"
+    M
+}
+
 
 # All comparisons with a control; ref = index of control group
 # New version -- allows more than one control group (ref is a vector)

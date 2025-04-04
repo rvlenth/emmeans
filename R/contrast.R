@@ -608,6 +608,7 @@ coef.emmGrid = function(object, ...) {
         return (NULL)
     }
     cc = as.data.frame(t(cc))
+    rownames(cc) = NULL
     names(cc) = paste("c", seq_len(ncol(cc)), sep = ".")
     cbind(object@misc$orig.grid, cc)
 }

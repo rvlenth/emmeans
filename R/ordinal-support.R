@@ -207,7 +207,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
                         lambda = env$lambda)
         }
         misc$tran = link
-        misc$inv.lbl = "cumprob"
+        misc$inv.lbl = "cum.prob"
         misc$offset.mult = -1
         if (!is.null(S))
             X = cbind(X, S)

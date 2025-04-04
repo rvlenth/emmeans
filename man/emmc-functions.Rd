@@ -7,6 +7,7 @@
 \alias{revpairwise.emmc}
 \alias{tukey.emmc}
 \alias{poly.emmc}
+\alias{opoly.emmc}
 \alias{trt.vs.ctrl.emmc}
 \alias{trt.vs.ctrl1.emmc}
 \alias{trt.vs.ctrlk.emmc}
@@ -26,6 +27,8 @@ revpairwise.emmc(levs, exclude = integer(0), include, ...)
 tukey.emmc(levs, reverse = FALSE, ...)
 
 poly.emmc(levs, max.degree = min(6, k - 1), ...)
+
+opoly.emmc(levs, max.degree = min(6, k - 1), scores = seq_along(levs), ...)
 
 trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE, exclude = integer(0),
   include, ...)
@@ -67,6 +70,9 @@ both \code{exclude} and \code{include}.}
 
 \item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
 
+\item{scores}{Set of values of length \code{length(levs)} over which
+orthogonal polynomials are computed}
+
 \item{ref}{Integer(s) or character(s) specifying which level(s) to use 
 as the reference. Character values must exactly match elements of \code{levs}
 (including any enhancements -- see examples)}
@@ -107,12 +113,15 @@ B-A, C-A, C-B, D-A, D-B, and D-C. \code{tukey.emmc} invokes
 The default multiplicity adjustment method is \code{"tukey"}, which is only
 approximate when the standard errors differ.
 
-\code{poly.emmc} generates orthogonal polynomial contrasts, assuming
-equally-spaced factor levels. These are derived from the
+\code{poly.emmc} and \code{opoly.emmc} generate orthogonal polynomial contrasts.
+\code{poly.emmc} uses equally-spaced factor levels; coefficients are derived from the
 \code{\link[stats]{poly}} function, but an \emph{ad hoc} algorithm is used to
 scale them to integer coefficients that are (usually) the same as in
-published tables of orthogonal polynomial contrasts. The default multiplicity
-adjustment method is \code{"none"}.
+published tables of orthogonal polynomial contrasts. On the other hand, 
+\code{opoly.emmc}'s coefficients are always normalized (sum of squares equals 1),
+but allows the user to choose alternate reference points in \code{scores}, as in the
+\code{\link{contr.poly}} function.
+In both cases, the default multiplicity adjustment method is \code{"none"}.
 
 \code{trt.vs.ctrl.emmc} and its relatives generate contrasts for comparing
 one level (or the average over specified levels) with each of the other

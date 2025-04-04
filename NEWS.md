@@ -7,6 +7,11 @@ title: "NEWS for the emmeans package"
   * Added documentation to `ref_grid` and `FAQs` vignette to clarify how we
     use `all.vars()` to identify predictors, e.g. if a model formula contains 
     `log(dose)`, the covariate is `dose`, not `log(dose)` (#523)
+  * In ordinal-model support, changed all estimator names to match mode names
+    (this was true for `"prob"` and `"exc.prob"`, but not `"cum.prob"`).
+  * Added a contrast function `opoly.emmc()` that does not rescale the coefficients
+    to integers, and allows unequally-spaced levels to be specified as `scores` 
+    (#527)
   
 ## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`
