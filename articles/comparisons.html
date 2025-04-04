@@ -328,10 +328,10 @@ may use <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">
 functions:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">pigs.emm.s</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre class="ro"><code><span><span class="co">##      source c.1 c.2 c.3</span></span>
-<span><span class="co">## fish   fish   1   1   0</span></span>
-<span><span class="co">## soy     soy  -1   0   1</span></span>
-<span><span class="co">## skim   skim   0  -1  -1</span></span></code></pre>
+<pre class="ro"><code><span><span class="co">##   source c.1 c.2 c.3</span></span>
+<span><span class="co">## 1   fish   1   1   0</span></span>
+<span><span class="co">## 2    soy  -1   0   1</span></span>
+<span><span class="co">## 3   skim   0  -1  -1</span></span></code></pre>
 <p>The pairwise comparisons correspond to columns of the above results.
 For example, the first pairwise comparison, <code>fish - soy</code>,
 gives coefficients of 1, -1, and 0 to fish, soy, and skim, respectively.
@@ -359,11 +359,11 @@ orthogonal polynomial contrasts:</p>
 <span><span class="co">## Results are given on the log (not the response) scale.</span></span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ply</span><span class="op">)</span></span></code></pre></div>
-<pre class="ro"><code><span><span class="co">##           percent c.1 c.2 c.3</span></span>
-<span><span class="co">## percent9        9  -3   1  -1</span></span>
-<span><span class="co">## percent12      12  -1  -1   3</span></span>
-<span><span class="co">## percent15      15   1  -1  -3</span></span>
-<span><span class="co">## percent18      18   3   1   1</span></span></code></pre>
+<pre class="ro"><code><span><span class="co">##   percent c.1 c.2 c.3</span></span>
+<span><span class="co">## 1       9  -3   1  -1</span></span>
+<span><span class="co">## 2      12  -1  -1   3</span></span>
+<span><span class="co">## 3      15   1  -1  -3</span></span>
+<span><span class="co">## 4      18   3   1   1</span></span></code></pre>
 <p>We obtain tests for the linear, quadratic, and cubic trends. The
 coefficients are those that can be found in tables in many
 experimental-design texts. It is important to understand that the

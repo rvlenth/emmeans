@@ -54,6 +54,8 @@
 <h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110-xxx">emmeans 1.11.0-xxx<a class="anchor" aria-label="anchor" href="#emmeans-1110-xxx"></a></h2><p class="text-muted">CRAN release: 2025-03-20</p>
 <ul><li>Modified <code>as.data.frame.summary_emm</code> so it can’t loop infinitely (<a href="https://github.com/rvlenth/emmeans/issues/525" class="external-link">#525</a>)</li>
 <li>Added documentation to <code>ref_grid</code> and <code>FAQs</code> vignette to clarify how we use <code><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars()</a></code> to identify predictors, e.g. if a model formula contains <code>log(dose)</code>, the covariate is <code>dose</code>, not <code>log(dose)</code> (<a href="https://github.com/rvlenth/emmeans/issues/523" class="external-link">#523</a>)</li>
+<li>In ordinal-model support, changed all estimator names to match mode names (this was true for <code>"prob"</code> and <code>"exc.prob"</code>, but not <code>"cum.prob"</code>).</li>
+<li>Added a contrast function <code><a href="../reference/emmc-functions.html">opoly.emmc()</a></code> that does not rescale the coefficients to integers, and allows unequally-spaced levels to be specified as <code>scores</code> (<a href="https://github.com/rvlenth/emmeans/issues/527" class="external-link">#527</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110">emmeans 1.11.0<a class="anchor" aria-label="anchor" href="#emmeans-1110"></a></h2><p class="text-muted">CRAN release: 2025-03-20</p>

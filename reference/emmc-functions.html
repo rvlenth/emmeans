@@ -71,6 +71,8 @@ may write such a function.</p>
 <span></span>
 <span><span class="fu">poly.emmc</span><span class="op">(</span><span class="va">levs</span>, max.degree <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">6</span>, <span class="va">k</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">opoly.emmc</span><span class="op">(</span><span class="va">levs</span>, max.degree <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">6</span>, <span class="va">k</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, scores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">levs</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">trt.vs.ctrl.emmc</span><span class="op">(</span><span class="va">levs</span>, ref <span class="op">=</span> <span class="fl">1</span>, reverse <span class="op">=</span> <span class="cn">FALSE</span>, exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="va">include</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -127,6 +129,11 @@ both <code>exclude</code> and <code>include</code>.</p></dd>
 <dd><p>Integer specifying the maximum degree of polynomial contrasts</p></dd>
 
 
+<dt id="arg-scores">scores<a class="anchor" aria-label="anchor" href="#arg-scores"></a></dt>
+<dd><p>Set of values of length <code>length(levs)</code> over which
+orthogonal polynomials are computed</p></dd>
+
+
 <dt id="arg-ref">ref<a class="anchor" aria-label="anchor" href="#arg-ref"></a></dt>
 <dd><p>Integer(s) or character(s) specifying which level(s) to use
 as the reference. Character values must exactly match elements of <code>levs</code>
@@ -168,12 +175,15 @@ B-A, C-A, C-B, D-A, D-B, and D-C. <code>tukey.emmc</code> invokes
 <code>pairwise.emmc</code> or <code>revpairwise.emmc</code> depending on <code>reverse</code>.
 The default multiplicity adjustment method is <code>"tukey"</code>, which is only
 approximate when the standard errors differ.</p>
-<p><code>poly.emmc</code> generates orthogonal polynomial contrasts, assuming
-equally-spaced factor levels. These are derived from the
+<p><code>poly.emmc</code> and <code>opoly.emmc</code> generate orthogonal polynomial contrasts.
+<code>poly.emmc</code> uses equally-spaced factor levels; coefficients are derived from the
 <code><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></code> function, but an <em>ad hoc</em> algorithm is used to
 scale them to integer coefficients that are (usually) the same as in
-published tables of orthogonal polynomial contrasts. The default multiplicity
-adjustment method is <code>"none"</code>.</p>
+published tables of orthogonal polynomial contrasts. On the other hand,
+<code>opoly.emmc</code>'s coefficients are always normalized (sum of squares equals 1),
+but allows the user to choose alternate reference points in <code>scores</code>, as in the
+<code><a href="https://rdrr.io/r/stats/contrast.html" class="external-link">contr.poly</a></code> function.
+In both cases, the default multiplicity adjustment method is <code>"none"</code>.</p>
 <p><code>trt.vs.ctrl.emmc</code> and its relatives generate contrasts for comparing
 one level (or the average over specified levels) with each of the other
 levels. The argument <code>ref</code> should be the index(es) (not the labels) of
