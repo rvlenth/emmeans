@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Re-engineering CLDs">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Re-engineering CLDs">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Re-engineering CLDs</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/re-engineering-clds.rmd" class="external-link"><code>vignettes/re-engineering-clds.rmd</code></a></small>
@@ -266,17 +266,12 @@ value <code>TRUE</code> for any pair that is statistically different
 such Boolean matrix</li>
 <li>There is such a thing as <em>equivalence testing</em>, by which we
 can establish with specified confidence that two means <em>do not</em>
-differ by more than a specified threshold
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math>.
-One simple way to do this is to conduct <em>two one-sided tests</em>
-(TOST) whereby we can conclude that two means are equivalent if we show
-both that the difference exceeds
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mi>δ</mi></mrow><annotation encoding="application/x-tex">-\delta</annotation></semantics></math>
-and is less than
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mi>δ</mi></mrow><annotation encoding="application/x-tex">+\delta</annotation></semantics></math>.
-We can use this TOST method to set each Boolean pair to
-<code>FALSE</code> is they are shown to be equivalent and
-<code>TRUE</code> if not shown to be equivalent.</li>
+differ by more than a specified threshold <span class="math inline">\(\delta\)</span>. One simple way to do this is to
+conduct <em>two one-sided tests</em> (TOST) whereby we can conclude that
+two means are equivalent if we show both that the difference exceeds
+<span class="math inline">\(-\delta\)</span> and is less than <span class="math inline">\(+\delta\)</span>. We can use this TOST method to
+set each Boolean pair to <code>FALSE</code> is they are shown to be
+equivalent and <code>TRUE</code> if not shown to be equivalent.</li>
 </ol>
 <div class="section level4">
 <h4 id="equiv-CLDs">Equivalence sets<a class="anchor" aria-label="anchor" href="#equiv-CLDs"></a>
@@ -358,13 +353,12 @@ CLD #1.</p>
 results. In such tests, we have strong conclusions or <em>findings</em>
 – those that have small <em>P</em> values, and weak conclusions or
 <em>non-findings</em> – those where the <em>P</em> value is not less
-than some
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>.
-When we create visual flags such as grouping lines or symbols, those
-come across visually as findings, and the problem with standard CLDs is
-that those are the non-findings. We show two simple ways to use software
-that creates CLDs so that actual findings are flagged with symbols. It
-is hoped that people will find these modifications useful in visually
+than some <span class="math inline">\(\alpha\)</span>. When we create
+visual flags such as grouping lines or symbols, those come across
+visually as findings, and the problem with standard CLDs is that those
+are the non-findings. We show two simple ways to use software that
+creates CLDs so that actual findings are flagged with symbols. It is
+hoped that people will find these modifications useful in visually
 displaying comparisons among means.</p>
 </div>
 <div class="section level3">

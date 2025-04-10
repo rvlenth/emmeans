@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Models supported by emmeans">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Models supported by emmeans">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Models supported by emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/models.Rmd" class="external-link"><code>vignettes/models.Rmd</code></a></small>
@@ -998,13 +998,11 @@ via <code>rescale</code>. The predictions are multiplied by
 <code>rescale[2]</code>, then added to <code>rescale[1]</code>. Keep in
 mind that the scaling is related to the link function used in the model;
 for example, changing from a probit link to a logistic link will inflate
-the latent values by around
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mi>/</mi><msqrt><mn>3</mn></msqrt></mrow><annotation encoding="application/x-tex">\pi/\sqrt{3}</annotation></semantics></math>,
-all other things being equal. <code>rescale</code> has no effect for
-other values of <code>mode</code>. Even though the latent means comprise
-a re-scaling of the linear predictor, we regard this as a re-gridding,
-and the cumulative link function is not included in the reference
-grid.</p>
+the latent values by around <span class="math inline">\(\pi/\sqrt{3}\)</span>, all other things being
+equal. <code>rescale</code> has no effect for other values of
+<code>mode</code>. Even though the latent means comprise a re-scaling of
+the linear predictor, we regard this as a re-gridding, and the
+cumulative link function is not included in the reference grid.</p>
 <p>With <code>mode = "linear.predictor"</code>,
 <code>mode = "cum.prob"</code>, and <code>mode = "exc.prob"</code>, the
 boundaries between categories (i.e., thresholds) in the ordinal response

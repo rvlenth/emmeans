@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Working with messy data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Working with messy data">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Working with messy data</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/messy-data.Rmd" class="external-link"><code>vignettes/messy-data.Rmd</code></a></small>
@@ -362,32 +362,26 @@ in that case.</p>
      Memory usage; Large models; Models!Large -->
 <p>Consider a situation where we have a model with 15 factors, each at 5
 levels. Regardless of how simple or complex the model is, the reference
-grid consists of all combinations of these factors – and there are
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>5</mn><mn>15</mn></msup><annotation encoding="application/x-tex">5^{15}</annotation></semantics></math>
-of these, or over 30 billion. If there are, say, 100 regression
-coefficients in the model, then just the <code>linfct</code> slot in the
-reference grid requires
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><msup><mn>5</mn><mn>15</mn></msup><mo>×</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">100\times5^{15}\times8</annotation></semantics></math>
-bytes of storage, or almost 23,000 gigabytes. Suppose in addition the
-model has a multivariate response with 5 levels. That multiplies
-<em>both</em> the rows and columns in <code>linfct</code>, increasing
-the storage requirements by a factor of 25. Either way, your computer
-can’t store that much – so this definitely qualifies as a messy
-situation!</p>
+grid consists of all combinations of these factors – and there are <span class="math inline">\(5^{15}\)</span> of these, or over 30 billion. If
+there are, say, 100 regression coefficients in the model, then just the
+<code>linfct</code> slot in the reference grid requires <span class="math inline">\(100\times5^{15}\times8\)</span> bytes of storage,
+or almost 23,000 gigabytes. Suppose in addition the model has a
+multivariate response with 5 levels. That multiplies <em>both</em> the
+rows and columns in <code>linfct</code>, increasing the storage
+requirements by a factor of 25. Either way, your computer can’t store
+that much – so this definitely qualifies as a messy situation!</p>
 <p>The <code><a href="../reference/ref_grid.html">ref_grid()</a></code> function now provides some relief, in the
 way of specifying some of the factors as “nuisance” factors. The
 reference grid is then constructed with those factors already
 averaged-out. So, for example with the same scenario, if only three of
 those 15 factors are of primary interest, and we specify the other 12 as
-nuisance factors to be averaged, that leaves us with only
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>3</mn><mn>5</mn></msup><mo>=</mo><mn>125</mn></mrow><annotation encoding="application/x-tex">3^5=125</annotation></semantics></math>
-rows in the reference grid, and hence
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>125</mn><mo>×</mo><mn>100</mn><mo>×</mo><mn>8</mn><mo>=</mo><mn>10</mn><mo>,</mo><mn>000</mn></mrow><annotation encoding="application/x-tex">125\times100\times8=10,000</annotation></semantics></math>
+nuisance factors to be averaged, that leaves us with only <span class="math inline">\(3^5=125\)</span> rows in the reference grid, and
+hence <span class="math inline">\(125\times100\times8=10,000\)</span>
 bytes of storage required for <code>linfct</code>. If there is a 5-level
 multivariate response, we’ll have 625 rows in the reference grid and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>25</mn><mo>×</mo><mn>1000</mn><mo>=</mo><mn>250</mn><mo>,</mo><mn>000</mn></mrow><annotation encoding="application/x-tex">25\times1000=250,000</annotation></semantics></math>
-bytes in <code>linfct</code>. Suddenly a horribly unmanageable situation
-becomes quite manageable!</p>
+<span class="math inline">\(25\times1000=250,000\)</span> bytes in
+<code>linfct</code>. Suddenly a horribly unmanageable situation becomes
+quite manageable!</p>
 <p>But of course, there is a restriction: nuisance factors must not
 interact with any other factors – not even other nuisance factors. And a
 multivariate response (or an implied multivariate response, e.g., in an

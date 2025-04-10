@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Basics of estimated marginal means">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Basics of estimated marginal means">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Basics of estimated marginal means</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/basics.Rmd" class="external-link"><code>vignettes/basics.Rmd</code></a></small>
@@ -216,10 +216,8 @@ them:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">conc</span> <span class="op">~</span> <span class="va">source</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span>
 <span><span class="va">mod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">mod1</span>, <span class="va">.</span> <span class="op">~</span> <span class="va">source</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span><span class="op">)</span>   <span class="co"># no interaction</span></span></code></pre></div>
-<p>These models have
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>
-values of 0.808 and 0.700, and adjusted
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>
+<p>These models have <span class="math inline">\(R^2\)</span> values of
+0.808 and 0.700, and adjusted <span class="math inline">\(R^2\)</span>
 values of 0.684 and 0.634. <code>mod1</code> is preferable to
 <code>mod2</code>, suggesting we need the interaction term. However, a
 residual-vs-predicted plot of <code>mod2</code> has a classic “horn”
@@ -239,14 +237,9 @@ concentrations, i.e., amounts <em>per</em> unit volume.)</p>
 variable, but <strong>emmeans</strong> provides an equivalent
 <code><a href="../reference/make.tran.html">inverse()</a></code> function that will prove more advantageous
 later.) The residual plots for these models look a lot more like a
-random scatter of points (and that is good). The
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>
-values for these models are 0.818, 0.787, and 0.749, respectively; and
-the adjusted
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>s
-are 0.700, 0.740, and 0.719. <code>mod4</code> has the best adjusted
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>
-and will be our choice.</p>
+random scatter of points (and that is good). The <span class="math inline">\(R^2\)</span> values for these models are 0.818,
+0.787, and 0.749, respectively; and the adjusted <span class="math inline">\(R^2\)</span>s are 0.700, 0.740, and 0.719.
+<code>mod4</code> has the best adjusted <span class="math inline">\(R^2\)</span> and will be our choice.</p>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 <div class="section level3">
@@ -940,14 +933,8 @@ all that is said in the main article, and there are portions that are
 too cutesy or wander off-topic. Further, it is quite dizzying to try to
 digest all the accompanying articles, and to reconcile their disagreeing
 viewpoints. I do agree with one frequent point: that there is really no
-substantive difference between
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>.051</mn></mrow><annotation encoding="application/x-tex">P=.051</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>.049</mn></mrow><annotation encoding="application/x-tex">P=.049</annotation></semantics></math>,
-and that one should avoid making sweeping statements based on a hard
-cutoff at
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">P=.05</annotation></semantics></math>
-or some other value.</p>
+substantive difference between <span class="math inline">\(P=.051\)</span> and <span class="math inline">\(P=.049\)</span>, and that one should avoid making
+sweeping statements based on a hard cutoff at <span class="math inline">\(P=.05\)</span> or some other value.</p>
 <p>For some time I included a summary of Wasserstein <em>et al.</em>’s
 recommendations and their <em>ATOM</em> paradigm (Acceptance of
 uncertainty, Thoughtfulness, Openness, Modesty). But in the meantime, I
@@ -985,12 +972,10 @@ as a prerequisite to doing comparisons or contrasts<a class="anchor" aria-label=
 <!-- @index LSD!protected; Model!Get it right first -->
 <p>… as long as an appropriate adjustment is used. There do exist rules
 such as the “protected LSD” by which one is given license to do
-unadjusted comparisons provided the
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
-statistic is “significant.” However, this is a very weak form of
-protection for which the justification is, basically, “if
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
-is significant, you can say absolutely anything you want.”</p>
+unadjusted comparisons provided the <span class="math inline">\(F\)</span> statistic is “significant.” However,
+this is a very weak form of protection for which the justification is,
+basically, “if <span class="math inline">\(F\)</span> is significant,
+you can say absolutely anything you want.”</p>
 </div>
 <div class="section level4">
 <h4 id="get-the-model-right-first">Get the model right first<a class="anchor" aria-label="anchor" href="#get-the-model-right-first"></a>

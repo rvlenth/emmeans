@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sophisticated models in emmeans">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sophisticated models in emmeans">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sophisticated models in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/sophisticated.Rmd" class="external-link"><code>vignettes/sophisticated.Rmd</code></a></small>
@@ -282,25 +282,14 @@ Accordingly, let’s get the estimates needed:</p>
 under-estimate the mean weights. We need to apply a bias adjustment; but
 that involves providing an estimate of the SD of each transformed
 response. The problem is that since random slopes are involved, that SD
-depends on time. In particular, the model states that at time
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><msqrt><mi>Y</mi></msqrt><mi>t</mi></msub><mo>=</mo><msub><mi>μ</mi><mi>t</mi></msub><mo>+</mo><mi>E</mi><mo>+</mo><mi>C</mi><mo>+</mo><mi>S</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex"> \sqrt Y_t = \mu_t + E + C + S\times t </annotation></semantics></math>
-where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>t</mi></msub><annotation encoding="application/x-tex">\mu_t</annotation></semantics></math>
-is the mean at time
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math>
-is the residual error,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
-is the random intercept for chicks, and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics></math>
+depends on time. In particular, the model states that at time <span class="math inline">\(t\)</span>, <span class="math display">\[ \sqrt
+Y_t = \mu_t + E + C + S\times t \]</span> where <span class="math inline">\(\mu_t\)</span> is the mean at time <span class="math inline">\(t\)</span>, <span class="math inline">\(E\)</span>
+is the residual error, <span class="math inline">\(C\)</span> is the
+random intercept for chicks, and <span class="math inline">\(S\)</span>
 is the random slope for chicks. For purposes of bias correction, we need
-an estimate of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>D</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mo>+</mo><mi>C</mi><mo>+</mo><mi>S</mi><mo>×</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">SD(E + C + S\times t)</annotation></semantics></math>
-for each
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.</p>
-<p>The first step is to obtain an estimated covariance matrix for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mo>,</mo><mi>C</mi><mo>,</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(E, C, S)</annotation></semantics></math>:</p>
+an estimate of <span class="math inline">\(SD(E + C + S\times
+t)\)</span> for each <span class="math inline">\(t\)</span>.</p>
+<p>The first step is to obtain an estimated covariance matrix for <span class="math inline">\((E, C, S)\)</span>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">V</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E"</span>,<span class="st">"C"</span>,<span class="st">"S"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E"</span>,<span class="st">"C"</span>,<span class="st">"S"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">V</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sigma.html" class="external-link">sigma</a></span><span class="op">(</span><span class="va">cw.lmer</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span>              <span class="co"># Var(E)</span></span>
@@ -310,13 +299,7 @@ for each
 <span><span class="co">## E 0.1867732  0.00000000  0.00000000</span></span>
 <span><span class="co">## C 0.0000000  0.15918129 -0.03977984</span></span>
 <span><span class="co">## S 0.0000000 -0.03977984  0.01513793</span></span></code></pre>
-<p>Now, using the matrix expression
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi>a</mi><mi>r</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mi>′</mi><mi>X</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>a</mi><mi>′</mi><mi>V</mi><mi>a</mi></mrow><annotation encoding="application/x-tex">Var(a'X) = a'Va</annotation></semantics></math>
-for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mi>c</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mo>,</mo><mi>C</mi><mo>,</mo><mi>S</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">X=c(E,C,S)</annotation></semantics></math>
-and a given vector
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
-we can obtain the needed SDs:</p>
+<p>Now, using the matrix expression <span class="math inline">\(Var(a'X) = a'Va\)</span> for <span class="math inline">\(X=c(E,C,S)\)</span> and a given vector <span class="math inline">\(a\)</span>, we can obtain the needed SDs:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span>, <span class="fl">20</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="va">t</span><span class="op">)</span></span>
@@ -324,11 +307,9 @@ we can obtain the needed SDs:</p>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="va">sig</span>  </span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 0.5714931 1.0315769 1.5995606 2.1931561</span></span></code></pre>
-<p>As expected, these values increase with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.
-Finally, we obtain the bias-adjusted estimated weights. We can use
-<code>sigma = sig</code> as-is since the values follow the same ordering
-as <code>cw.emm@grid</code>.</p>
+<p>As expected, these values increase with <span class="math inline">\(t\)</span>. Finally, we obtain the bias-adjusted
+estimated weights. We can use <code>sigma = sig</code> as-is since the
+values follow the same ordering as <code>cw.emm@grid</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">cw.emm</span>, type <span class="op">=</span> <span class="st">"response"</span>, bias.adj <span class="op">=</span> <span class="cn">TRUE</span>, sigma <span class="op">=</span> <span class="va">sig</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## Diet = 1:</span></span>
@@ -437,9 +418,9 @@ internal structure of <code>EMM</code>:</p>
 <span><span class="co">## 1    S 6.214608     2</span></span>
 <span><span class="co">## 2    M 6.214608     2</span></span>
 <span><span class="co">## 3    L 6.214608     2</span></span></code></pre>
-<p>and note that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>500</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>≈</mo><mn>6.215</mn></mrow><annotation encoding="application/x-tex">\log(500) \approx 6.215</annotation></semantics></math>
-is used as the offset value in calculating these estimates.</p>
+<p>and note that <span class="math inline">\(\log(500) \approx
+6.215\)</span> is used as the offset value in calculating these
+estimates.</p>
 <p>All this said, many users would like to ignore that average offset
 for this kind of model, and instead use one corresponding to
 <code>n = 1</code>, because then the estimates we obtain are estimated

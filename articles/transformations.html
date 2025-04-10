@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Transformations and link functions in emmeans">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Transformations and link functions in emmeans">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Transformations and link functions in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/transformations.Rmd" class="external-link"><code>vignettes/transformations.Rmd</code></a></small>
@@ -536,9 +536,8 @@ first obtain the <code><a href="../reference/make.tran.html">make.tran()</a></co
 the enclosing environment for fitting the model, with
 <code>linkfun</code> as the transformation. For example, suppose the
 response variable is a percentage and we want to use the response
-transformation
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mo>sin</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><msqrt><mrow><mi>y</mi><mi>/</mi><mn>100</mn></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sin^{-1}\sqrt{y/100}</annotation></semantics></math>.
-Then proceed like this:</p>
+transformation <span class="math inline">\(\sin^{-1}\sqrt{y/100}\)</span>. Then proceed like
+this:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tran</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make.tran.html">make.tran</a></span><span class="op">(</span><span class="st">"asin.sqrt"</span>, <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">my.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">tran</span>, </span>
@@ -643,9 +642,8 @@ the same method, e.g. (results not displayed)</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="va">emm</span>, transform <span class="op">=</span> <span class="st">"probit"</span><span class="op">)</span></span></code></pre></div>
 <p>would re-grid the existing <code>emm</code> to the probit scale. Note
-that any estimates in <code>emm</code> outside of the interval
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math>
-will be flagged as non-estimable.</p>
+that any estimates in <code>emm</code> outside of the interval <span class="math inline">\((0,1)\)</span> will be flagged as
+non-estimable.</p>
 <p>The <a href="#stdize">section on standardized responses</a> gives an
 example of reverse-engineering a standardized response transformation in
 this way.</p>
@@ -717,15 +715,9 @@ the <code>tran</code> component. For example, suppose we want percent
 differences instead of ratios in the preceding example with the
 <code>pigs</code> dataset. This is possible by modifying the reverse
 transformation: since the usual reverse transformation is a ratio of the
-form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mi>a</mi><mi>/</mi><mi>b</mi></mrow><annotation encoding="application/x-tex">r = a/b</annotation></semantics></math>,
-we have that the percentage difference between
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
-is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>−</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mi>b</mi><mo>=</mo><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">100(a-b)/b = 100(r-1)</annotation></semantics></math>.
-Thus,</p>
+form <span class="math inline">\(r = a/b\)</span>, we have that the
+percentage difference between <span class="math inline">\(a\)</span> and
+<span class="math inline">\(b\)</span> is <span class="math inline">\(100(a-b)/b = 100(r-1)\)</span>. Thus,</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pct.diff.tran</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    linkfun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">mu</span><span class="op">/</span><span class="fl">100</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>,</span>
@@ -747,8 +739,7 @@ Thus,</p>
 <span><span class="co">## Intervals are back-transformed from the log(pct.diff) scale </span></span>
 <span><span class="co">## Tests are performed on the log(pct.diff) scale</span></span></code></pre>
 <p>Another way to obtain the same estimates is to directly transform the
-estimated ratios to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mi>r</mi><mo>−</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">100r - 100</annotation></semantics></math>:</p>
+estimated ratios to <span class="math inline">\(100r - 100\)</span>:</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="fu"><a href="../reference/regrid.html">regrid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">logemm.src</span><span class="op">)</span><span class="op">)</span>, <span class="st">"identity"</span>, scale <span class="op">=</span> <span class="fl">100</span>, offset <span class="op">=</span> <span class="op">-</span><span class="fl">100</span>,</span>
 <span>         infer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -928,30 +919,20 @@ want to make financial projections in those same units.</p>
 <p>In such settings, we need to make a bias adjustment when we
 back-transform, because any nonlinear transformation biases the expected
 values of statistical quantities. More specifically, suppose that we
-have a response
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics></math>
-and the transformed response is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>.
-To back-transform, we use
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y = h(U)</annotation></semantics></math>;
-and using a Taylor approximation,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>≈</mo><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>h</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo>−</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>h</mi><mi>″</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo>−</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">Y \approx h(\eta) + h'(\eta)(U-\eta) +
-\frac12h''(\eta)(U-\eta)^2</annotation></semantics></math>, so
-that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≈</mo><mi>h</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>h</mi><mi>″</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>V</mi><mi>a</mi><mi>r</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">E(Y) \approx h(\eta) + \frac12h''(\eta)Var(U)</annotation></semantics></math>.
-This shows that the amount of needed bias adjustment is approximately
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>h</mi><mi>″</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>η</mi><mo stretchy="true" form="postfix">)</mo></mrow><msup><mi>σ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\frac12h''(\eta)\sigma^2</annotation></semantics></math>
-where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
-is the error SD in the model for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>U</mi><annotation encoding="application/x-tex">U</annotation></semantics></math>.
-It depends on
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>,
-and the larger this is, the greater the bias adjustment is needed. This
-second-order bias adjustment is what is currently used in the
-<strong>emmeans</strong> package when bias-adjustment is requested.
-There are better or exact adjustments for certain cases, and future
-updates may incorporate some of those.</p>
+have a response <span class="math inline">\(Y\)</span> and the
+transformed response is <span class="math inline">\(U\)</span>. To
+back-transform, we use <span class="math inline">\(Y = h(U)\)</span>;
+and using a Taylor approximation, <span class="math inline">\(Y \approx
+h(\eta) + h'(\eta)(U-\eta) +
+\frac12h''(\eta)(U-\eta)^2\)</span>, so that <span class="math inline">\(E(Y) \approx h(\eta) +
+\frac12h''(\eta)Var(U)\)</span>. This shows that the amount of
+needed bias adjustment is approximately <span class="math inline">\(\frac12h''(\eta)\sigma^2\)</span> where
+<span class="math inline">\(\sigma\)</span> is the error SD in the model
+for <span class="math inline">\(U\)</span>. It depends on <span class="math inline">\(\sigma\)</span>, and the larger this is, the
+greater the bias adjustment is needed. This second-order bias adjustment
+is what is currently used in the <strong>emmeans</strong> package when
+bias-adjustment is requested. There are better or exact adjustments for
+certain cases, and future updates may incorporate some of those.</p>
 <div class="section level3">
 <h3 id="pigs-biasadj">Pigs example revisited<a class="anchor" aria-label="anchor" href="#pigs-biasadj"></a>
 </h3>
@@ -992,10 +973,9 @@ focuses on <em>response</em> transformations, as opposed to link
 functions used in generalized linear models (GLMs). In an ordinary GLM,
 no bias adjustment is needed, nor is it appropriate, because the link
 function is just used to define a nonlinear relationship between the
-actual response mean
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
-and the linear predictor. That is, the back-transformed parameter is
-already the mean.</p>
+actual response mean <span class="math inline">\(\eta\)</span> and the
+linear predictor. That is, the back-transformed parameter is already the
+mean.</p>
 <div class="section level4">
 <h4 id="insects">InsectSprays example<a class="anchor" aria-label="anchor" href="#insects"></a>
 </h4>

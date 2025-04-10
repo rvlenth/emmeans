@@ -16,7 +16,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Interaction analysis in emmeans">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="../deps/MathJax-3.2.2/tex-chtml.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Interaction analysis in emmeans">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Interaction analysis in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.0.1</h4>
+package, Version 1.11.0.3</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/interactions.Rmd" class="external-link"><code>vignettes/interactions.Rmd</code></a></small>
@@ -435,14 +435,14 @@ of four means and another. This is facilitated by the
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: sidak</span></span></code></pre>
 <p>In this output, the <code>T.square</code> values are Hotelling’s
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>T</mi><mn>2</mn></msup><annotation encoding="application/x-tex">T^2</annotation></semantics></math>
-statistics, which are the squared Mahalanobis distances among the sets
-of four means. These results thus accomplish a similar objective as the
-initial comparisons presented in this vignette, but are not complicated
-by the issue that the factors interact. (Instead, we lose the
-directionality of the comparisons.) While all comparisons are
-“significant,” the <code>T.square</code> values indicate that large cars
-are statistically most different from the other sizes.</p>
+<span class="math inline">\(T^2\)</span> statistics, which are the
+squared Mahalanobis distances among the sets of four means. These
+results thus accomplish a similar objective as the initial comparisons
+presented in this vignette, but are not complicated by the issue that
+the factors interact. (Instead, we lose the directionality of the
+comparisons.) While all comparisons are “significant,” the
+<code>T.square</code> values indicate that large cars are statistically
+most different from the other sizes.</p>
 <p>We may still break things down using <code>by</code> variables.
 Suppose, for example, we wish to compare the two filter types for each
 size of car, without regard to which side:</p>
@@ -469,15 +469,12 @@ interactions:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: sidak </span></span>
 <span><span class="co">## NOTE: Some or all d.f. are reduced due to singularities</span></span></code></pre>
-<p>Note that each
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
-ratio now has 1 d.f. Also, note that <code>T.square = F.ratio</code>,
-and you can verify that these values are equal to the squares of the
-<code>t.ratio</code>s in the initial example in this vignette
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><mn>6.147</mn><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>=</mo><mn>37.786</mn></mrow><annotation encoding="application/x-tex">(-6.147)^2 = 37.786</annotation></semantics></math>,
-etc.). That is, if we ignore all interactions, the multivariate tests
-are exactly equivalent to the univariate tests of the marginal
-means.</p>
+<p>Note that each <span class="math inline">\(F\)</span> ratio now has 1
+d.f. Also, note that <code>T.square = F.ratio</code>, and you can verify
+that these values are equal to the squares of the <code>t.ratio</code>s
+in the initial example in this vignette (<span class="math inline">\((-6.147)^2 = 37.786\)</span>, etc.). That is, if
+we ignore all interactions, the multivariate tests are exactly
+equivalent to the univariate tests of the marginal means.</p>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 <div class="section level2">
