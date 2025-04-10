@@ -1,6 +1,7 @@
 url: https://rvlenth.github.io/emmeans/
 template:
   bootstrap: 5
+  math-rendering: mathjax
 
 reference:
 - title: Overview

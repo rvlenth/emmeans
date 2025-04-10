@@ -342,8 +342,8 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     }
     else if (is.character(method)) {
         fn = paste(method, "emmc", sep=".")
-        method = if (exists(fn, mode="function")) 
-            get(fn) 
+        method = if (exists(fn, mode="function", envir = parent.frame())) 
+            get(fn, envir = parent.frame()) 
         else 
             stop(paste("Contrast function '", fn, "' not found", sep=""))
         if(!missing(wts) && any(is.na(wts))) {

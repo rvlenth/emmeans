@@ -225,6 +225,20 @@ There are a number of other named contrast methods, for example `"trt.vs.ctrl"`,
 `"eff"`, and `"consec"`. The `"pairwise"` and `"revpairwise"` methods in `contrast()` are the same as `Pairs()` and `pairs(..., reverse = TRUE)`. See
 `help("contrast-methods")` for details.
 
+### Normalized contrasts {#nrmlze}
+<!-- @index Normalized contrasts; `nrmlz.emmc`; Contrasts!Normalized -->
+Sometimes users like contrast coefficients to be normalized -- i.e., the sum of 
+the squares of each set of contrast coefficients is equal to 1. This is possible with
+any contrast family by specifying `"nrmlz"` as the method and the desired contrast family
+as the `family` argument. For example,
+```{r}
+nrmlz.emmc(1:4, family = "helmert")
+contrast(pigs.emm.s, "nrmlz", family = "pairwise")
+```
+Note that the above estimates and SEs differ from those in the example at [the
+beginning of this vignette](#pairwise), but the the *t* ratios and *P* values
+are the same, because all we have done is rescale those comparisons.
+
 [Back to Contents](#contents)
 
 

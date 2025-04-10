@@ -16,6 +16,8 @@
 \alias{del.eff.emmc}
 \alias{consec.emmc}
 \alias{mean_chg.emmc}
+\alias{helmert.emmc}
+\alias{nrmlz.emmc}
 \alias{wtcon.emmc}
 \alias{identity.emmc}
 \title{Contrast families}
@@ -28,7 +30,8 @@ tukey.emmc(levs, reverse = FALSE, ...)
 
 poly.emmc(levs, max.degree = min(6, k - 1), ...)
 
-opoly.emmc(levs, max.degree = min(6, k - 1), scores = seq_along(levs), ...)
+opoly.emmc(levs, max.degree = min(6, k - 1), scores, exclude = integer(0),
+  include, ...)
 
 trt.vs.ctrl.emmc(levs, ref = 1, reverse = FALSE, exclude = integer(0),
   include, ...)
@@ -49,7 +52,11 @@ consec.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
 mean_chg.emmc(levs, reverse = FALSE, exclude = integer(0), include, ...)
 
-wtcon.emmc(levs, wts, cmtype = "GrandMean", ...)
+helmert.emmc(levs, exclude = integer(0), include, ...)
+
+nrmlz.emmc(levs, family, ...)
+
+wtcon.emmc(levs, wts = rep(1, length(levs)), cmtype = "GrandMean", ...)
 
 identity.emmc(levs, exclude = integer(0), include, ...)
 }
@@ -71,7 +78,11 @@ both \code{exclude} and \code{include}.}
 \item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
 
 \item{scores}{Set of values of length \code{length(levs)} over which
-orthogonal polynomials are computed}
+orthogonal polynomials are computed. The default scores are the 
+consecutive integers \code{seq_along(levs)}.
+(If \code{exclude} or \code{include}
+are used, the default scores are subsetted accordingly; and if \code{scores} 
+is specified, its length must be the same as that of the subsetted \code{levs}).}
 
 \item{ref}{Integer(s) or character(s) specifying which level(s) to use 
 as the reference. Character values must exactly match elements of \code{levs}
@@ -84,6 +95,8 @@ either the same length as \code{levs} or the length of the included levels.
 In the former case, weights for any excluded levels are set to zero.
 \code{wts} has no impact on the results unless there are at least
 three levels included in the contrast.}
+
+\item{family}{name of contrast family to use}
 
 \item{cmtype}{the \code{type} argument passed to \code{\link[multcomp]{contrMat}}}
 }
@@ -152,6 +165,11 @@ respectively, as in subtracting the overall EMM from each EMM. The default
 multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based
 method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
 
+\code{nrmlz.emmc} is a wrapper that can be used with any other \code{.emmc} 
+function that will normalize the contrast coefficients so that the sum of its 
+squares equals 1. Just provide the root name of the function in \code{family},
+along with any other arguments to pass to it.
+
 \code{wtcon.emmc} generates weighted contrasts based on the function 
 \code{\link[multcomp]{contrMat}} function in the \pkg{multcomp} package,
 using the provided \code{type} as documented there. If the user provides 
@@ -194,14 +212,18 @@ contrast(warp.emm, "eff", wts = c(2, 5, 3))
 pairs(warp.emm, exclude = 2)
 # (same results using exclude = "M" or include = c("L","H") or include = c(1,3))
 
+# Same contrasts as above but with normalized contrast coefficients
+contrast(warp.emm, "nrmlz", family = "pairwise", include = c(1, 3))
+
 ### Setting up a custom contrast function
-helmert.emmc <- function(levs, ...) {
-    M <- as.data.frame(contr.helmert(levs))
-    names(M) <- paste(levs[-1],"vs earlier")
-    attr(M, "desc") <- "Helmert contrasts"
+revhelmert.emmc <- function(levs, ...) {
+    M <- as.data.frame(contr.helmert(levs)[rev(seq_along(levs)), ])
+    names(M) <- paste(rev(levs)[-1],"vs later")
+    attr(M, "desc") <- "reverse Helmert contrasts"
     M
 }
-contrast(warp.emm, "helmert")
+contrast(warp.emm, "revhelmert")
+
 \dontrun{
 # See what is used for polynomial contrasts with 6 levels
 emmeans:::poly.emmc(1:6)

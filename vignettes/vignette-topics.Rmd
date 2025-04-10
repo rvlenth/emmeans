@@ -125,6 +125,7 @@ vignette: >
       * [Custom](comparisons.html#linfcns)
       * [Formula](comparisons.html#formulas)
       * [Multivariate](interactions.html#multiv)
+      * [Normalized](comparisons.html#nrmlze)
       * [Pairwise](comparisons.html#pairwise)
       * [Polynomial](comparisons.html#contrasts)
       * Tests of
@@ -464,7 +465,9 @@ vignette: >
   * [Non-estimability](messy-data.html#nonest)
   * [`non.nuisance`](messy-data.html#nuisance)
   * [`NonEst` values](FAQs.html#NAs)
+  * [Normalized contrasts](comparisons.html#nrmlze)
   * [`(nothing)` in output](FAQs.html#nopairs)
+  * [`nrmlz.emmc`](comparisons.html#nrmlze)
   * [`nuisance`](messy-data.html#nuisance)
   * [Nuisance factors](messy-data.html#nuisance)
 

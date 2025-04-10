@@ -86,6 +86,11 @@
 #' multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based
 #' method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
 #' 
+#' \code{nrmlz.emmc} is a wrapper that can be used with any other \code{.emmc} 
+#' function that will normalize the contrast coefficients so that the sum of its 
+#' squares equals 1. Just provide the root name of the function in \code{family},
+#' along with any other arguments to pass to it.
+#' 
 #' \code{wtcon.emmc} generates weighted contrasts based on the function 
 #' \code{\link[multcomp]{contrMat}} function in the \pkg{multcomp} package,
 #' using the provided \code{type} as documented there. If the user provides 
@@ -142,14 +147,18 @@
 #' pairs(warp.emm, exclude = 2)
 #' # (same results using exclude = "M" or include = c("L","H") or include = c(1,3))
 #'
+#'# Same contrasts as above but with normalized contrast coefficients
+#'contrast(warp.emm, "nrmlz", family = "pairwise", include = c(1, 3))
+#'
 #' ### Setting up a custom contrast function
-#' helmert.emmc <- function(levs, ...) {
-#'     M <- as.data.frame(contr.helmert(levs))
-#'     names(M) <- paste(levs[-1],"vs earlier")
-#'     attr(M, "desc") <- "Helmert contrasts"
+#' revhelmert.emmc <- function(levs, ...) {
+#'     M <- as.data.frame(contr.helmert(levs)[rev(seq_along(levs)), ])
+#'     names(M) <- paste(rev(levs)[-1],"vs later")
+#'     attr(M, "desc") <- "reverse Helmert contrasts"
 #'     M
 #' }
-#' contrast(warp.emm, "helmert")
+#' contrast(warp.emm, "revhelmert")
+#' 
 #' \dontrun{
 #' # See what is used for polynomial contrasts with 6 levels
 #' emmeans:::poly.emmc(1:6)
@@ -247,14 +256,34 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 # Orthonormal poly contrasts - not rescaled
 #' @rdname emmc-functions
 #' @param scores Set of values of length \code{length(levs)} over which
-#'   orthogonal polynomials are computed
+#'   orthogonal polynomials are computed. The default scores are the 
+#'   consecutive integers \code{seq_along(levs)}.
+#'   (If \code{exclude} or \code{include}
+#'   are used, the default scores are subsetted accordingly; and if \code{scores} 
+#'   is specified, its length must be the same as that of the subsetted \code{levs}).
 #' @export
-opoly.emmc = function(levs, max.degree = min(6, k-1), scores = seq_along(levs), ...) {
+opoly.emmc = function(levs, max.degree = min(6, k-1), scores, 
+                      exclude = integer(0), include, ...) {
+    if (MS <- missing(scores))
+        scores = seq_along(levs)
+    exclude = .get.excl(levs, exclude, include)
+    if(length(exclude) > 0) {
+        oldlevs = levs
+        if (MS)
+            scores = scores[-exclude]
+        levs = levs[-exclude]
+    }
     nm = c("linear", "quadratic", "cubic", "quartic", paste("degree",5:20))
     k = length(levs)
     if (length(scores) != k)
-        stop("In opoly.emmc: Lengths of 'scores' and 'levs' must match", call. = FALSE)
+        stop("In opoly.emmc: Lengths of 'scores' must equal ", length(levs), call. = FALSE)
     M = contr.poly(k, contrasts = TRUE, scores = scores, sparse = FALSE)
+    if(length(exclude) > 0) {
+        MM = M
+        levs = oldlevs
+        M = matrix(0, nrow = length(oldlevs), ncol = ncol(MM))
+        M[-exclude, ] = MM
+    }
     M = as.data.frame(M[, seq_len(min(k-1, max.degree)), drop = FALSE])
     row.names(M) = levs
     names(M) = nm[seq_len(ncol(M))]
@@ -437,12 +466,44 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, .
     M
 }
 
+#' @rdname emmc-functions
+#' @export
+helmert.emmc <- function(levs, exclude = integer(0), include, ...) {
+    exclude = .get.excl(levs, exclude, include)
+    k = length(levs) - length(exclude)
+    M = contr.helmert(k)
+    if (length(exclude) > 0) {
+        M = matrix(0, nrow = length(levs), ncol = k-1)
+        M[-exclude, ] = contr.helmert(k)
+        lbl = levs[-exclude]
+    }
+    else
+        lbl = levs
+    M <- as.data.frame(M)
+    names(M) <- paste(lbl[-1],"vs earlier")
+    attr(M, "desc") <- "Helmert contrasts"
+    attr(M, "adjust") = "none"
+    if(length(exclude) > 0)
+        attr(M, "famSize") = k
+    M
+}
+
+#' @rdname emmc-functions
+#' @param family name of contrast family to use
+#' @export
+nrmlz.emmc = function(levs, family, ...) {
+    M = get(paste0(family, ".emmc"))(levs, ...)
+    for (i in seq_len(ncol(M)))
+        M[, i] = M[, i] / sqrt(sum(M[, i]^2))
+    attr(M, "desc") = paste("Normalized", attr(M, "desc"))
+    M
+}
 
 # weighted contrasts
 #' @rdname emmc-functions
 #' @param cmtype the \code{type} argument passed to \code{\link[multcomp]{contrMat}}
 #' @export
-wtcon.emmc = function(levs, wts, cmtype = "GrandMean", ...) {
+wtcon.emmc = function(levs, wts = rep(1, length(levs)), cmtype = "GrandMean", ...) {
     if (!requireNamespace("multcomp"))
         stop("The 'multcomp' package must be installed to use 'wtcon' contrasts", call. = FALSE)
     
@@ -451,8 +512,11 @@ wtcon.emmc = function(levs, wts, cmtype = "GrandMean", ...) {
     M
 }
 
+
+
 # Non-contrasts -- just pass thru, possibly excluding some levels
 #' @rdname emmc-functions
+#' @export
 identity.emmc = function(levs, exclude = integer(0), include, ...) {
     exclude = .get.excl(levs, exclude, include)
     k = length(levs) - length(exclude)
@@ -465,6 +529,7 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
     attr(M, "adjust") = "none"
     M
 }
+
 
 
 ### utility to translate character keys to index keys

@@ -11,7 +11,14 @@ title: "NEWS for the emmeans package"
     (this was true for `"prob"` and `"exc.prob"`, but not `"cum.prob"`).
   * Added a contrast function `opoly.emmc()` that does not rescale the coefficients
     to integers, and allows unequally-spaced levels to be specified as `scores` 
-    (#527)
+    (#527). In addition, unlike `poly.emmc`, `opoly.emmc` supports the
+    `exclude` and `include` arguments.
+  * Also added contrast functions `helmert.emmc` and `nrmlz.emmc`. The latter is
+    a wrapper that can be used to normalize the contrast coefficients from any
+    other `.emmc` function.
+  * Fixed a scoping issue in `contrast.emmGrid` to make a custom `.emmc` function
+    easier to find. This bug prevented some examples from being rendered correctly
+    in all contexts.
   
 ## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`
