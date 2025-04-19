@@ -11,11 +11,11 @@
 joint_tests(object, by = NULL, show0df = FALSE, showconf = TRUE,
   cov.reduce = make.meanint(1), ...)
 
-make.meanint(delta)
+make.meanint(delta = 1, npts = 2)
 
 meanint(x)
 
-make.symmint(ctr, delta)
+make.symmint(ctr, delta = 1, npts = 2)
 
 symmint(ctr)
 }
@@ -45,7 +45,11 @@ respectively. Se the section below on covariates.}
 
 \item{...}{additional arguments passed to \code{ref_grid} and \code{emmeans}}
 
-\item{delta, ctr}{arguments for \code{make.meanint} and \code{make.symmint}}
+\item{delta, }{ctr arguments for \code{make.meanint} and \code{make.symmint}.
+\code{delta} sets the distance each side of the center, so that the
+width of the interval is \code{2*delta}.}
+
+\item{npts}{number of points to include in the interval}
 
 \item{x}{argument for \code{meanint} and \code{symmint}}
 }
@@ -67,10 +71,10 @@ a \code{summary_emm} object (same as is produced by
   and \code{make.symmint(ctr, delta)} returns the function
 \code{function(x) ctr + delta * c(-1, 1)}
         (which does not depend on \code{x}).
-        The cases with \code{delta = 1}, \code{meanint = make.meanint(1)} 
-        and \code{symmint(ctr) = make.symmint(ctr, 1)}
-        are retained for back-compatibility reasons.
-        These functions are available primarily for use with \code{cov.reduce}.
+The cases with \code{delta = 1}, \code{meanint = make.meanint(1)} and
+\code{symmint(ctr) = make.symmint(ctr, 1)} are retained for
+back-compatibility reasons. These functions are available primarily for use
+with \code{cov.reduce}.
 }
 \description{
 This function produces an analysis-of-variance-like table based on linear
@@ -106,6 +110,14 @@ Therefore, when \code{object} is a model, we default to \code{cov.reduce = meani
 which sets each covariate at a symmetric interval about its mean. But
 when \code{object} is an existing reference grid, it often has only one value 
 for covariates, in which case they are excluded from the joint tests.
+
+While having two points is sufficient when the covariate term has a linear trend,
+you need more than two when some kind of curved trend (polynomial, spline, etc.)
+is present -- else \code{joint_tests()} will not show enough degrees of freedom 
+for terms involving the covariate. You may specify these points manually using \code{at},
+or by including an \code{npts} argument in \code{cov.reduce}, via \code{make.meanint}
+or \code{make.symmint()}. With some kinds of curved trends, the joint tests of
+covariate terms may become somewhat meaningless.
 
 Covariates present further complications in that their values in the
 reference grid can affect the joint tests of \emph{other} effects. When

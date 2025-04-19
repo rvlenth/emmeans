@@ -157,13 +157,21 @@ test.emmGrid = function(object, null = 0,
                 rtn = c(round(c(df1 = r, df2 = df2), 2), 
                         F.ratio = round(F, 3), p.value = p.value, note = rrflag)
                 # Note: Following will screw-up joint_tests if some df2's are finite and others infinite
-                if (is.infinite(df2)) rtn = c(rtn[1:3], Chisq = round(F*r, 3), rtn[4:5])
+                if (is.infinite(df2)) {
+                    rtn = c(rtn[1:3], Chisq = round(F*r, 3), rtn[4:5])
+                }
                 attr(rtn, "L") = tQ.all
                 rtn
             }
         })
         
         ef = lapply(result, function(r) attr(r, "L"))
+        if (length(unique(sapply(result, length)) > 1)) # some results don't have chisq
+            result = lapply(result, \(x) {
+                if (length(x) == 5) 
+                    x = c(x[1:3], Chisq = NA, x[4:5])
+                x
+            })
         result = as.data.frame(t(as.data.frame(result)))
         if (!missing(by)) {
             fbr = sapply(by.rows, "[", 1)
@@ -252,6 +260,14 @@ test.emmGrid = function(object, null = 0,
 #' which sets each covariate at a symmetric interval about its mean. But
 #' when \code{object} is an existing reference grid, it often has only one value 
 #' for covariates, in which case they are excluded from the joint tests.
+#' 
+#' While having two points is sufficient when the covariate term has a linear trend,
+#' you need more than two when some kind of curved trend (polynomial, spline, etc.)
+#' is present -- else \code{joint_tests()} will not show enough degrees of freedom 
+#' for terms involving the covariate. You may specify these points manually using \code{at},
+#' or by including an \code{npts} argument in \code{cov.reduce}, via \code{make.meanint}
+#' or \code{make.symmint()}. With some kinds of curved trends, the joint tests of
+#' covariate terms may become somewhat meaningless.
 #' 
 #' Covariates present further complications in that their values in the
 #' reference grid can affect the joint tests of \emph{other} effects. When
@@ -374,11 +390,11 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
         if ((k <- length(these)) > 0) {
             if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) { # term is in model
                 nesters = NULL
-                # if (!is.null(nesting)) {
-                #     nst = intersect(these, names(nesting))
-                #     if (length(nst) > 0) 
-                #         nesters = unlist(nesting[nst]) # proceed only if these includes all nesters
-                # }
+                if (!is.null(nesting)) {
+                    nst = intersect(these, names(nesting))
+                    if (length(nst) > 0)
+                        nesters = unlist(nesting[nst]) # proceed only if these includes all nesters
+                }
                 if (is.null(nesting) || length(setdiff(nesters, these)) == 0) {   
                     emm = emmeans(object, these, by = by, ...)
                     tst = test(contrast(emm, interaction = use.contr[1], by = union(by, nesters)), 
@@ -482,24 +498,27 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     result
 }
 
-# mean pm 1
+
 #' @rdname joint_tests
 #' @order 6
 #'
-#' @param delta,ctr arguments for \code{make.meanint} and \code{make.symmint}
+#' @param delta, ctr arguments for \code{make.meanint} and \code{make.symmint}.
+#'   \code{delta} sets the distance each side of the center, so that the
+#'   width of the interval is \code{2*delta}.
+#' @param npts  number of points to include in the interval
 #'
 #' @return \code{make.meanint} returns the function 
 #' \code{function(x) mean(x) + delta * c(-1, 1)},
 #'   and \code{make.symmint(ctr, delta)} returns the function
 #' \code{function(x) ctr + delta * c(-1, 1)}
 #'         (which does not depend on \code{x}).
-#'         The cases with \code{delta = 1}, \code{meanint = make.meanint(1)} 
-#'         and \code{symmint(ctr) = make.symmint(ctr, 1)}
-#'         are retained for back-compatibility reasons.
-#'         These functions are available primarily for use with \code{cov.reduce}.
+#' The cases with \code{delta = 1}, \code{meanint = make.meanint(1)} and
+#' \code{symmint(ctr) = make.symmint(ctr, 1)} are retained for
+#' back-compatibility reasons. These functions are available primarily for use
+#' with \code{cov.reduce}.
 #' @export
-make.meanint = function(delta) 
-    function(x) mean(x) + delta * c(-1, 1)
+make.meanint = function(delta = 1, npts = 2) 
+    function(x) mean(x) + delta * seq(-1, 1, length.out = npts)
 
 #' @rdname joint_tests
 #' @order 7
@@ -512,8 +531,8 @@ meanint = function(x) mean(x) + c(-1, 1)
 #' @rdname joint_tests
 #' @order 8
 #' @export
-make.symmint = function(ctr, delta) {
-    function(x) ctr + delta * c(-1, 1) 
+make.symmint = function(ctr, delta = 1, npts = 2) {
+    function(x) ctr + delta * seq(-1, 1, length.out = npts) 
 }
 
 #' @rdname joint_tests

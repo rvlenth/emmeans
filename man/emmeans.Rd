@@ -123,7 +123,10 @@ then replace \code{specs} with a corresponding list of specifications. This is
 a convenience, but it can create a sizeable \code{emm_list} object and it is
 coded rather inefficiently. While it is permissible to include contrasts
 via a \code{contr} argument or formula left-hand-side, we recommend instead
-doing this in a follow-up test with \code{\link{contrast.emm_list}}.
+doing this in a follow-up test with \code{\link{contrast.emm_list}}. \emph{Caution}:
+In models with nested fixed effects, using \code{.} creates results where
+nested factors interact with nesting factors; in those cases, any contrasts 
+you specify will go across nests, which is likely not what is desired.
 
 In the special case where the mean (or weighted mean) of all the predictions
 is desired, specify \code{specs} as \code{~ 1} or \code{"1"}.
