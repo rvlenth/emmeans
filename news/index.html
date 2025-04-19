@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-004</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,9 @@
 <li>Added a contrast function <code><a href="../reference/emmc-functions.html">opoly.emmc()</a></code> that does not rescale the coefficients to integers, and allows unequally-spaced levels to be specified as <code>scores</code> (<a href="https://github.com/rvlenth/emmeans/issues/527" class="external-link">#527</a>). In addition, unlike <code>poly.emmc</code>, <code>opoly.emmc</code> supports the <code>exclude</code> and <code>include</code> arguments.</li>
 <li>Also added contrast functions <code>helmert.emmc</code> and <code>nrmlz.emmc</code>. The latter is a wrapper that can be used to normalize the contrast coefficients from any other <code>.emmc</code> function.</li>
 <li>Fixed a scoping issue in <code>contrast.emmGrid</code> to make a custom <code>.emmc</code> function easier to find. This bug prevented some examples from being rendered correctly in all contexts.</li>
+<li>Restored the <code><a href="../reference/joint_tests.html">joint_tests()</a></code> code that was omitted in 1.11.0 because apparently it was right the first time. (<a href="https://github.com/rvlenth/emmeans/issues/528" class="external-link">#528</a>)</li>
+<li>Added an argument <code>npts</code> to <code><a href="../reference/joint_tests.html">make.meanint()</a></code> and <code><a href="../reference/joint_tests.html">make.symmint()</a></code> to facilitate generating an interval with more than two points.</li>
+<li>Fix to <code><a href="../reference/summary.emmGrid.html">test()</a></code> for situations with non-estimability and infinite df (<a href="https://github.com/rvlenth/emmeans/issues/528" class="external-link">#528</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110">emmeans 1.11.0<a class="anchor" aria-label="anchor" href="#emmeans-1110"></a></h2><p class="text-muted">CRAN release: 2025-03-20</p>

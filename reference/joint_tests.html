@@ -21,7 +21,7 @@ each combination of them."><meta property="og:image" content="https://rvlenth.gi
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-004</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,11 +81,11 @@ each combination of them.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">object</span>, by <span class="op">=</span> <span class="cn">NULL</span>, show0df <span class="op">=</span> <span class="cn">FALSE</span>, showconf <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cov.reduce <span class="op">=</span> <span class="fu">make.meanint</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">make.meanint</span><span class="op">(</span><span class="va">delta</span><span class="op">)</span></span>
+<span><span class="fu">make.meanint</span><span class="op">(</span>delta <span class="op">=</span> <span class="fl">1</span>, npts <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">meanint</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">make.symmint</span><span class="op">(</span><span class="va">ctr</span>, <span class="va">delta</span><span class="op">)</span></span>
+<span><span class="fu">make.symmint</span><span class="op">(</span><span class="va">ctr</span>, delta <span class="op">=</span> <span class="fl">1</span>, npts <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">symmint</span><span class="op">(</span><span class="va">ctr</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -131,8 +131,14 @@ respectively. Se the section below on covariates.</p></dd>
 <dd><p>additional arguments passed to <code>ref_grid</code> and <code>emmeans</code></p></dd>
 
 
-<dt id="arg-delta-ctr">delta, ctr<a class="anchor" aria-label="anchor" href="#arg-delta-ctr"></a></dt>
-<dd><p>arguments for <code>make.meanint</code> and <code>make.symmint</code></p></dd>
+<dt id="arg-delta-">delta, <a class="anchor" aria-label="anchor" href="#arg-delta-"></a></dt>
+<dd><p>ctr arguments for <code>make.meanint</code> and <code>make.symmint</code>.
+<code>delta</code> sets the distance each side of the center, so that the
+width of the interval is <code>2*delta</code>.</p></dd>
+
+
+<dt id="arg-npts">npts<a class="anchor" aria-label="anchor" href="#arg-npts"></a></dt>
+<dd><p>number of points to include in the interval</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -156,10 +162,10 @@ respectively. Se the section below on covariates.</p></dd>
   and <code>make.symmint(ctr, delta)</code> returns the function
 <code>function(x) ctr + delta * c(-1, 1)</code>
         (which does not depend on <code>x</code>).
-        The cases with <code>delta = 1</code>, <code>meanint = make.meanint(1)</code>
-        and <code>symmint(ctr) = make.symmint(ctr, 1)</code>
-        are retained for back-compatibility reasons.
-        These functions are available primarily for use with <code>cov.reduce</code>.</p>
+The cases with <code>delta = 1</code>, <code>meanint = make.meanint(1)</code> and
+<code>symmint(ctr) = make.symmint(ctr, 1)</code> are retained for
+back-compatibility reasons. These functions are available primarily for use
+with <code>cov.reduce</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -189,6 +195,13 @@ Therefore, when <code>object</code> is a model, we default to <code>cov.reduce =
 which sets each covariate at a symmetric interval about its mean. But
 when <code>object</code> is an existing reference grid, it often has only one value
 for covariates, in which case they are excluded from the joint tests.</p>
+<p>While having two points is sufficient when the covariate term has a linear trend,
+you need more than two when some kind of curved trend (polynomial, spline, etc.)
+is present – else <code>joint_tests()</code> will not show enough degrees of freedom
+for terms involving the covariate. You may specify these points manually using <code>at</code>,
+or by including an <code>npts</code> argument in <code>cov.reduce</code>, via <code>make.meanint</code>
+or <code>make.symmint()</code>. With some kinds of curved trends, the joint tests of
+covariate terms may become somewhat meaningless.</p>
 <p>Covariates present further complications in that their values in the
 reference grid can affect the joint tests of <em>other</em> effects. When
 covariates are centered around their means (the default), then the tests we

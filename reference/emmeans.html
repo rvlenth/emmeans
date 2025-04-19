@@ -11,7 +11,7 @@ contrasts among them. EMMs are also known as least-squares means."><meta propert
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-004</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -201,7 +201,10 @@ then replace <code>specs</code> with a corresponding list of specifications. Thi
 a convenience, but it can create a sizeable <code>emm_list</code> object and it is
 coded rather inefficiently. While it is permissible to include contrasts
 via a <code>contr</code> argument or formula left-hand-side, we recommend instead
-doing this in a follow-up test with <code><a href="emm_list-object.html">contrast.emm_list</a></code>.</p>
+doing this in a follow-up test with <code><a href="emm_list-object.html">contrast.emm_list</a></code>. <em>Caution</em>:
+In models with nested fixed effects, using <code>.</code> creates results where
+nested factors interact with nesting factors; in those cases, any contrasts
+you specify will go across nests, which is likely not what is desired.</p>
 <p>In the special case where the mean (or weighted mean) of all the predictions
 is desired, specify <code>specs</code> as <code>~ 1</code> or <code>"1"</code>.</p>
 <p>A number of standard contrast families are provided. They can be identified
