@@ -18,7 +18,6 @@ Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cre", "cph"),
     person("Henrik", "Singmann", role = "ctb"))
 Depends: R (>= 4.1.0)
 Imports: estimability (>= 1.4.1), graphics, methods, mvtnorm, numDeriv, stats, utils
-         
 Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), compositions,
           ggplot2, knitr, lattice, lme4, lmerTest (>= 2.0.32), logspline, MASS, 
           mediation, mgcv, multcomp, multcompView, MuMIn, nlme,

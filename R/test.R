@@ -166,12 +166,13 @@ test.emmGrid = function(object, null = 0,
         })
         
         ef = lapply(result, function(r) attr(r, "L"))
-        if (length(unique(sapply(result, length)) > 1)) # some results don't have chisq
+        if (length(unique(sapply(result, length))) > 1) { # some results don't have chisq
             result = lapply(result, \(x) {
                 if (length(x) == 5) 
                     x = c(x[1:3], Chisq = NA, x[4:5])
                 x
             })
+        }
         result = as.data.frame(t(as.data.frame(result)))
         if (!missing(by)) {
             fbr = sapply(by.rows, "[", 1)
