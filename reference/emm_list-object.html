@@ -97,6 +97,9 @@ method on <code>object[[k]]</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, which <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'emm_list'</span></span>
+<span><span class="fu"><a href="emmGrid-methods.html">linfct</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, which <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'emm_list'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'emm_list'</span></span>
@@ -122,7 +125,12 @@ method on <code>object[[k]]</code>.</p>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments passed to corresponding <code>emmGrid</code> method</p></dd>
+<dd><p>additional arguments passed to corresponding <code>emmGrid</code>
+method. In addition, the user may include a logical argument <code>drop</code>
+that is akin to <code><a href="https://rdrr.io/r/base/drop.html" class="external-link">drop</a></code> and the argument of the same name in
+subscripting matrices and data frames. When <code>drop</code> is <code>TRUE</code> (the
+default), then when the result is a <code>list</code> of length 1, the
+<code>list</code> structure is removed.</p></dd>
 
 
 <dt id="arg-which">which<a class="anchor" aria-label="anchor" href="#arg-which"></a></dt>
@@ -158,6 +166,59 @@ See also <code><a href="rbind.emmGrid.html">rbind.emm_list</a></code> and <code>
 must do so separately for each element in the list.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">conc</span> <span class="op">~</span> <span class="va">source</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigs.lm</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">source</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="emmGrid-methods.html">linfct</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $emmeans</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      (Intercept) sourcesoy sourceskim factor(percent)12 factor(percent)15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]           1         0          0              0.25              0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]           1         1          0              0.25              0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]           1         0          1              0.25              0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      factor(percent)18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]              0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]              0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]              0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $contrasts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      (Intercept) sourcesoy sourceskim factor(percent)12 factor(percent)15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]           0        -1          0                 0                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]           0         0         -1                 0                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]           0         1         -1                 0                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      factor(percent)18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]                 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span>     <span class="co"># done only for the contrasts</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   source c.1 c.2 c.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   fish   1   1   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    soy  -1   0   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   skim   0  -1  -1</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="va">obj</span>, <span class="st">"consec"</span><span class="op">)</span>  <span class="co"># done only for the means</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast   estimate     SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  soy - fish    0.273 0.0529 23   5.153  0.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  skim - soy    0.130 0.0530 23   2.442  0.0420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: percent </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the log (not the response) scale. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: mvt method for 2 tests </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="va">obj</span>, <span class="st">"eff"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>   <span class="co"># kept as a list</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast    estimate     SE df t.ratio p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fish effect  -0.2250 0.0310 23  -7.255  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  soy effect    0.0478 0.0304 23   1.573  0.1295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  skim effect   0.1773 0.0311 23   5.704  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: percent </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the log (not the response) scale. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: fdr method for 3 tests </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

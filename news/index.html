@@ -61,6 +61,9 @@
 <li>Restored the <code><a href="../reference/joint_tests.html">joint_tests()</a></code> code that was omitted in 1.11.0 because apparently it was right the first time. (<a href="https://github.com/rvlenth/emmeans/issues/528" class="external-link">#528</a>)</li>
 <li>Added an argument <code>npts</code> to <code><a href="../reference/joint_tests.html">make.meanint()</a></code> and <code><a href="../reference/joint_tests.html">make.symmint()</a></code> to facilitate generating an interval with more than two points.</li>
 <li>Fix to <code><a href="../reference/summary.emmGrid.html">test()</a></code> for situations with non-estimability and infinite df (<a href="https://github.com/rvlenth/emmeans/issues/528" class="external-link">#528</a>)</li>
+<li>Added <code>linfct.emm_list())</code> method</li>
+<li>Made <code><a href="../reference/emmobj.html">emmobj()</a></code> less rigid (so that <code>as.emmGrid(as.list(obj))</code> more faithfully reproduces <code>obj</code>)</li>
+<li>Added an optional <code>drop</code> argument (<code>TRUE</code> by default) to the <code>emm_list</code> methods.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.0" id="emmeans-1110">emmeans 1.11.0<a class="anchor" aria-label="anchor" href="#emmeans-1110"></a></h2><p class="text-muted">CRAN release: 2025-03-20</p>
