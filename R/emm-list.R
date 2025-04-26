@@ -37,13 +37,18 @@
 #' method on \code{object[[k]]}.
 #' 
 #' @param object,x an object of class \code{emm_list}
-#' @param ... additional arguments passed to corresponding \code{emmGrid} method
+#' @param ... additional arguments passed to corresponding \code{emmGrid}
+#'   method. In addition, the user may include a logical argument \code{drop}
+#'   that is akin to \code{\link{drop}} and the argument of the same name in
+#'   subscripting matrices and data frames. When \code{drop} is \code{TRUE} (the
+#'   default), then when the result is a \code{list} of length 1, the
+#'   \code{list} structure is removed.
 #' @param which integer vector specifying which elements to select;
-#' if \code{NULL},
-#' we try to guess which elements make sense. Usually, this is all elements having 
-#' names that start with \sQuote{em} or \sQuote{ls},
-#' or the first element if no matches are found. However, in \code{coef.emm_list},
-#' these are the ones we \emph{exclude}.
+#'   if \code{NULL},
+#'   we try to guess which elements make sense. Usually, this is all elements having 
+#'   names that start with \sQuote{em} or \sQuote{ls},
+#'   or the first element if no matches are found. However, in \code{coef.emm_list},
+#'   these are the ones we \emph{exclude}.
 #' 
 #' @return a \code{list} of objects returned by the corresponding \code{emmGrid}
 #'   method (thus, often, another \code{emm_list} object). However, if
@@ -52,6 +57,17 @@
 #' @rdname emm_list-object
 #' @name emm_list
 #' @order 1
+#' @examples
+#' mod <- lm(conc ~ source, data = pigs)
+#' obj <- emmeans(pigs.lm, pairwise ~ source)
+#' 
+#' linfct(obj)
+#' 
+#' coef(obj)     # done only for the contrasts
+#' 
+#' contrast(obj, "consec")  # done only for the means
+#' 
+#' contrast(obj, "eff", drop = FALSE)   # kept as a list
 NULL
 
 # Internal utility to noisily return one of an emm_list
@@ -66,9 +82,10 @@ NULL
 }
 
 # My own lapply() function that drops when the dimension is 1
-.lapply = function(...) {
-    rtn = lapply(...)
-    if (length(rtn) == 1)   {
+.lapply = function(X, ..., drop = TRUE) {
+    oldClass(X) = "list"
+    rtn = lapply(X, ...)
+    if (drop && (length(rtn) == 1))   {
         rtn = rtn[[1]]
     }
     else if(length(rtn) != 0)                   {
@@ -162,7 +179,8 @@ print.emm_list = function(x, ...) {
 contrast.emm_list = function(object, ... , which = NULL) {
     which = .guess.which(object, which)
     rtn = .lapply(object[which], contrast, ...)
-    names(rtn) = paste("contrasts of", names(rtn))
+    if(is.list(rtn))
+        names(rtn) = paste("contrasts of", names(rtn))
     rtn
 }
 
@@ -202,6 +220,14 @@ confint.emm_list = function(object, ..., which = seq_along(object)) {
 coef.emm_list = function(object, ..., which = NULL) {
     which = - .guess.which(object, which)
     .lapply(object[which], coef, ...)
+}
+
+#' @export
+#' @method linfct emm_list
+#' @rdname emm_list-object
+#' @order 11
+linfct.emm_list = function(object, ..., which = seq_along(object)) {
+    .lapply(object[which], \(x) attr(x, "linfct"), ...)
 }
 
 

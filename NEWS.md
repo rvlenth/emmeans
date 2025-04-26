@@ -24,6 +24,10 @@ title: "NEWS for the emmeans package"
   * Added an argument `npts` to `make.meanint()` and `make.symmint()` to facilitate
     generating an interval with more than two points. 
   * Fix to `test()` for situations with non-estimability and infinite df (#528)
+  * Added `linfct.emm_list())` method
+  * Made `emmobj()` less rigid (so that `as.emmGrid(as.list(obj))` more faithfully
+    reproduces `obj`)
+  * Added an optional `drop` argument (`TRUE` by default) to the `emm_list` methods.
   
 ## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`

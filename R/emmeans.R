@@ -631,13 +631,13 @@ emmeans = function(object, specs, by = NULL,
 #' Satt.df <- function(x, dfargs)
 #'     sum(x * dfargs$v)^2 / sum((x * dfargs$v)^2 / (dfargs$n - 1))
 #'     
-#' expt.rg <- emmobj(bhat = ybar, V = diag(se2),
+#' expt.emm <- emmobj(bhat = ybar, V = diag(se2),
 #'     levels = levels, linfct = diag(c(1, 1, 1, 1)),
 #'     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
-#' plot(expt.rg)
+#' plot(expt.emm)
 #' 
-#' ( trt.emm <- emmeans(expt.rg, "trt") )
-#' ( dose.emm <- emmeans(expt.rg, "dose") )
+#' ( trt.emm <- emmeans(expt.emm, "trt") )
+#' ( dose.emm <- emmeans(expt.emm, "dose") )
 #' 
 #' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
 emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(), 
@@ -668,10 +668,19 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
         dffun = function(x, dfargs) dfargs$df
         dfargs = list(df = df)
     }
-    misc = list(estName = "estimate", estType = "prediction", infer = c(TRUE,FALSE), level = .95,
-                adjust = "none", famSize = nrow(linfct), 
+    ### let's not be so brute-force about what's needed in misc
+    # misc = list(estName = "estimate", estType = "prediction", infer = c(TRUE,FALSE), level = .95,
+    #             adjust = "none", famSize = nrow(linfct), 
+    #             avgd.over = character(0), pri.vars = pri.vars,
+    #             methDesc = "emmobj", display = dotargs$display, .pairby = dotargs$.pairby)
+    dflt = list(estName = "estimate", estType = "prediction", infer = c(TRUE,FALSE), level = .95,
+                adjust = "none", famSize = nrow(linfct),
                 avgd.over = character(0), pri.vars = pri.vars,
-                methDesc = "emmobj", display = dotargs$display)
+                methDesc = "emmobj")
+    misc = dflt[setdiff(names(dflt), names(dotargs))]  # use defaults when not specified
+    nm = setdiff(names(dotargs), c(names(misc), "extras", "model.info")) # otherwise use dots
+    misc = c(misc, dotargs[nm])
+    
     result = new("emmGrid", model.info=model.info, roles=roles, grid=grid,
                  levels = levels, matlevs=list(),
                  linfct=linfct, bhat=bhat, nbasis=all.estble, V=V,

@@ -8,6 +8,7 @@
 \alias{confint.emm_list}
 \alias{plot.emm_list}
 \alias{coef.emm_list}
+\alias{linfct.emm_list}
 \alias{str.emm_list}
 \alias{summary.emm_list}
 \alias{print.emm_list}
@@ -27,6 +28,8 @@
 
 \method{coef}{emm_list}(object, ..., which = NULL)
 
+\method{linfct}{emm_list}(object, ..., which = seq_along(object))
+
 \method{str}{emm_list}(object, ...)
 
 \method{summary}{emm_list}(object, ..., which = seq_along(object))
@@ -41,7 +44,12 @@
 \arguments{
 \item{object, x}{an object of class \code{emm_list}}
 
-\item{...}{additional arguments passed to corresponding \code{emmGrid} method}
+\item{...}{additional arguments passed to corresponding \code{emmGrid}
+method. In addition, the user may include a logical argument \code{drop}
+that is akin to \code{\link{drop}} and the argument of the same name in
+subscripting matrices and data frames. When \code{drop} is \code{TRUE} (the
+default), then when the result is a \code{list} of length 1, the
+\code{list} structure is removed.}
 
 \item{which}{integer vector specifying which elements to select;
 if \code{NULL},
@@ -81,4 +89,16 @@ The \code{plot} method uses only the first element of \code{which}; the others a
 No \code{export} option is provided for printing an \code{emm_list}
 (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
 must do so separately for each element in the list.
+}
+\examples{
+mod <- lm(conc ~ source, data = pigs)
+obj <- emmeans(pigs.lm, pairwise ~ source)
+
+linfct(obj)
+
+coef(obj)     # done only for the contrasts
+
+contrast(obj, "consec")  # done only for the means
+
+contrast(obj, "eff", drop = FALSE)   # kept as a list
 }

@@ -74,13 +74,13 @@ se2 = s^2 / n
 Satt.df <- function(x, dfargs)
     sum(x * dfargs$v)^2 / sum((x * dfargs$v)^2 / (dfargs$n - 1))
     
-expt.rg <- emmobj(bhat = ybar, V = diag(se2),
+expt.emm <- emmobj(bhat = ybar, V = diag(se2),
     levels = levels, linfct = diag(c(1, 1, 1, 1)),
     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
-plot(expt.rg)
+plot(expt.emm)
 
-( trt.emm <- emmeans(expt.rg, "trt") )
-( dose.emm <- emmeans(expt.rg, "dose") )
+( trt.emm <- emmeans(expt.emm, "trt") )
+( dose.emm <- emmeans(expt.emm, "dose") )
 
 rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
 }
