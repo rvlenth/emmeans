@@ -28,6 +28,7 @@ title: "NEWS for the emmeans package"
   * Made `emmobj()` less rigid (so that `as.emmGrid(as.list(obj))` more faithfully
     reproduces `obj`)
   * Added an optional `drop` argument (`TRUE` by default) to the `emm_list` methods.
+  * Added optional arguments `se.bhat` and `se.diff` to `emmobj()` (#529)
   
 ## emmeans 1.11.0
   * Added a `linfct()` generic and default method that returns `object@linfct`

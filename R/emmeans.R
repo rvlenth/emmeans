@@ -611,6 +611,12 @@ emmeans = function(object, specs, by = NULL,
 #'   such a sample is unavailable.
 #' @param nesting Nesting specification as in \code{\link{ref_grid}}. This is
 #'   ignored if \code{model.info} is supplied.
+#' @param se.bhat,se.diff Alternative way of specifying \code{V}. If \code{se.bhat}
+#'   is specified, \code{V} is constructed using \code{se.bhat}, the standard errors of \code{bhat},
+#'   and \code{se.diffs}, the standard errors of its pairwise differences. \code{se.diff}
+#'   should be a vector of length \code{k*(k-1)/2} where \code{k} is the length
+#'   of \code{se.bhat}, and its elements should be in the order \code{12,13,...,1k,23,...2k,...}.
+#'   If \code{se.diff} is missing, \code{V} is computed as if the \code{bhat} are independent.
 #' @param ... Arguments passed to \code{\link{update.emmGrid}}
 #' 
 #' @seealso \code{\link{qdrg}}, an alternative that is useful when starting 
@@ -640,8 +646,28 @@ emmeans = function(object, specs, by = NULL,
 #' ( dose.emm <- emmeans(expt.emm, "dose") )
 #' 
 #' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
+#' 
+#' ### Create an emmobj from means and SEs
+#' ### (This illustration reproduces the MOats example for Variety = "Victory")
+#' means = c(71.50000,  89.66667, 110.83333, 118.50000)
+#' semeans = c(5.540591, 6.602048, 8.695358, 7.303221)
+#' sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
+#' foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
+#'              levels = list(nitro = seq(0, .6, by = .2)), df = 10)
+#' \dontrun{
+#' plot(foo, comparisons = TRUE)}
+#' 
 emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(), 
-                  post.beta = matrix(NA), nesting = NULL, ...) {
+                  post.beta = matrix(NA), nesting = NULL, 
+                  se.bhat, se.diff, ...) {
+    if (!missing(se.bhat)) {
+        V = D = diag(vb <- se.bhat^2)
+        if (!missing(se.diff)) {
+            V[lower.tri(V)] = se.diff^2
+            V = (-V - t(V) + sweep(D, 1, vb, "+") + + sweep(D, 2, vb, "+"))/2
+            diag(V) = vb
+        }
+    }
     if ((nrow(V) != ncol(V)) || (nrow(V) != ncol(linfct)) || (length(bhat) != ncol(linfct)))
         stop("bhat, V, and linfct are incompatible")
     if (!is.list(levels))

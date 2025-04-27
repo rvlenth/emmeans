@@ -5,7 +5,8 @@
 \title{Construct an \code{emmGrid} object from scratch}
 \usage{
 emmobj(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun,
-  dfargs = list(), post.beta = matrix(NA), nesting = NULL, ...)
+  dfargs = list(), post.beta = matrix(NA), nesting = NULL, se.bhat,
+  se.diff, ...)
 }
 \arguments{
 \item{bhat}{Numeric. Vector of regression coefficients}
@@ -37,6 +38,13 @@ such a sample is unavailable.}
 
 \item{nesting}{Nesting specification as in \code{\link{ref_grid}}. This is
 ignored if \code{model.info} is supplied.}
+
+\item{se.bhat, se.diff}{Alternative way of specifying \code{V}. If \code{se.bhat}
+is specified, \code{V} is constructed using \code{se.bhat}, the standard errors of \code{bhat},
+and \code{se.diffs}, the standard errors of its pairwise differences. \code{se.diff}
+should be a vector of length \code{k*(k-1)/2} where \code{k} is the length
+of \code{se.bhat}, and its elements should be in the order \code{12,13,...,1k,23,...2k,...}.
+If \code{se.diff} is missing, \code{V} is computed as if the \code{bhat} are independent.}
 
 \item{...}{Arguments passed to \code{\link{update.emmGrid}}}
 }
@@ -83,6 +91,17 @@ plot(expt.emm)
 ( dose.emm <- emmeans(expt.emm, "dose") )
 
 rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
+
+### Create an emmobj from means and SEs
+### (This illustration reproduces the MOats example for Variety = "Victory")
+means = c(71.50000,  89.66667, 110.83333, 118.50000)
+semeans = c(5.540591, 6.602048, 8.695358, 7.303221)
+sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
+foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
+             levels = list(nitro = seq(0, .6, by = .2)), df = 10)
+\dontrun{
+plot(foo, comparisons = TRUE)}
+
 }
 \seealso{
 \code{\link{qdrg}}, an alternative that is useful when starting 
