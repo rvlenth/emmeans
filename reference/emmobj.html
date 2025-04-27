@@ -11,7 +11,7 @@ to perform related follow-up analyses."><meta property="og:image" content="https
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.0-005</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,8 @@ to perform related follow-up analyses.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emmobj</span><span class="op">(</span><span class="va">bhat</span>, <span class="va">V</span>, <span class="va">levels</span>, linfct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">bhat</span><span class="op">)</span><span class="op">)</span>, df <span class="op">=</span> <span class="cn">NA</span>, <span class="va">dffun</span>,</span>
-<span>  dfargs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, post.beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>, nesting <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  dfargs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, post.beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>, nesting <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">se.bhat</span>,</span>
+<span>  <span class="va">se.diff</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -117,6 +118,15 @@ such a sample is unavailable.</p></dd>
 <dt id="arg-nesting">nesting<a class="anchor" aria-label="anchor" href="#arg-nesting"></a></dt>
 <dd><p>Nesting specification as in <code><a href="ref_grid.html">ref_grid</a></code>. This is
 ignored if <code>model.info</code> is supplied.</p></dd>
+
+
+<dt id="arg-se-bhat-se-diff">se.bhat, se.diff<a class="anchor" aria-label="anchor" href="#arg-se-bhat-se-diff"></a></dt>
+<dd><p>Alternative way of specifying <code>V</code>. If <code>se.bhat</code>
+is specified, <code>V</code> is constructed using <code>se.bhat</code>, the standard errors of <code>bhat</code>,
+and <code>se.diffs</code>, the standard errors of its pairwise differences. <code>se.diff</code>
+should be a vector of length <code>k*(k-1)/2</code> where <code>k</code> is the length
+of <code>se.bhat</code>, and its elements should be in the order <code>12,13,...,1k,23,...2k,...</code>.
+If <code>se.diff</code> is missing, <code>V</code> is computed as if the <code>bhat</code> are independent.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -188,6 +198,17 @@ statistics for an existing grid, <code>emmobj</code> is more useful, while
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over some or all of the levels of: dose, trt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: mvt method for 2 tests </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Create an emmobj from means and SEs</span></span></span>
+<span class="r-in"><span><span class="co">### (This illustration reproduces the MOats example for Variety = "Victory")</span></span></span>
+<span class="r-in"><span><span class="va">means</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">71.50000</span>,  <span class="fl">89.66667</span>, <span class="fl">110.83333</span>, <span class="fl">118.50000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">semeans</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.540591</span>, <span class="fl">6.602048</span>, <span class="fl">8.695358</span>, <span class="fl">7.303221</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sediffs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7.310571</span>,  <span class="fl">9.894724</span>,  <span class="fl">7.463615</span>, <span class="fl">10.248306</span>,  <span class="fl">4.935698</span>,  <span class="fl">8.694507</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">foo</span> <span class="op">=</span> <span class="fu">emmobj</span><span class="op">(</span>bhat <span class="op">=</span> <span class="va">means</span>, se.bhat <span class="op">=</span> <span class="va">semeans</span>, se.diff <span class="op">=</span> <span class="va">sediffs</span>, </span></span>
+<span class="r-in"><span>             levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nitro <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.6</span>, by <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span><span class="op">)</span>, df <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">foo</span>, comparisons <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
