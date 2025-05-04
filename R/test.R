@@ -503,7 +503,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 #' @rdname joint_tests
 #' @order 6
 #'
-#' @param delta, ctr arguments for \code{make.meanint} and \code{make.symmint}.
+#' @param delta,ctr arguments for \code{make.meanint} and \code{make.symmint}.
 #'   \code{delta} sets the distance each side of the center, so that the
 #'   width of the interval is \code{2*delta}.
 #' @param npts  number of points to include in the interval

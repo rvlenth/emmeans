@@ -640,7 +640,6 @@ emmeans = function(object, specs, by = NULL,
 #' expt.emm <- emmobj(bhat = ybar, V = diag(se2),
 #'     levels = levels, linfct = diag(c(1, 1, 1, 1)),
 #'     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
-#' plot(expt.emm)
 #' 
 #' ( trt.emm <- emmeans(expt.emm, "trt") )
 #' ( dose.emm <- emmeans(expt.emm, "dose") )
@@ -654,8 +653,7 @@ emmeans = function(object, specs, by = NULL,
 #' sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
 #' foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
 #'              levels = list(nitro = seq(0, .6, by = .2)), df = 10)
-#' \dontrun{
-#' plot(foo, comparisons = TRUE)}
+#' plot(foo, comparisons = TRUE)
 #' 
 emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(), 
                   post.beta = matrix(NA), nesting = NULL, 

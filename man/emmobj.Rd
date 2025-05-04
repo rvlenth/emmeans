@@ -85,7 +85,6 @@ Satt.df <- function(x, dfargs)
 expt.emm <- emmobj(bhat = ybar, V = diag(se2),
     levels = levels, linfct = diag(c(1, 1, 1, 1)),
     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
-plot(expt.emm)
 
 ( trt.emm <- emmeans(expt.emm, "trt") )
 ( dose.emm <- emmeans(expt.emm, "dose") )
@@ -99,8 +98,7 @@ semeans = c(5.540591, 6.602048, 8.695358, 7.303221)
 sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
 foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
              levels = list(nitro = seq(0, .6, by = .2)), df = 10)
-\dontrun{
-plot(foo, comparisons = TRUE)}
+plot(foo, comparisons = TRUE)
 
 }
 \seealso{

@@ -45,7 +45,7 @@ respectively. Se the section below on covariates.}
 
 \item{...}{additional arguments passed to \code{ref_grid} and \code{emmeans}}
 
-\item{delta, }{ctr arguments for \code{make.meanint} and \code{make.symmint}.
+\item{delta, ctr}{arguments for \code{make.meanint} and \code{make.symmint}.
 \code{delta} sets the distance each side of the center, so that the
 width of the interval is \code{2*delta}.}
 

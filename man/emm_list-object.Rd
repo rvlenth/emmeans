@@ -92,7 +92,7 @@ must do so separately for each element in the list.
 }
 \examples{
 mod <- lm(conc ~ source, data = pigs)
-obj <- emmeans(pigs.lm, pairwise ~ source)
+obj <- emmeans(mod, pairwise ~ source)
 
 linfct(obj)
 

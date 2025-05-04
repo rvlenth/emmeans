@@ -2,13 +2,19 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.11.0-xxx
+## emmeans 1.11.1-00xxx
+  * In ordinal-model support, changed all estimator names to match mode names
+    (this was true for `"prob"` and `"exc.prob"`, but not `"cum.prob"`)
+    (postponed from CRAN version 1.11.1 to allow time for other package(s) to adapt)
+
+## emmeans 1.11.1
   * Modified `as.data.frame.summary_emm` so it can't loop infinitely (#525)
   * Added documentation to `ref_grid` and `FAQs` vignette to clarify how we
     use `all.vars()` to identify predictors, e.g. if a model formula contains 
     `log(dose)`, the covariate is `dose`, not `log(dose)` (#523)
-  * In ordinal-model support, changed all estimator names to match mode names
+  * **UPCOMING:** In ordinal-model support, changed all estimator names to match mode names
     (this was true for `"prob"` and `"exc.prob"`, but not `"cum.prob"`).
+    [This change is on hold as it breaks another package.]
   * Added a contrast function `opoly.emmc()` that does not rescale the coefficients
     to integers, and allows unequally-spaced levels to be specified as `scores` 
     (#527). In addition, unlike `poly.emmc`, `opoly.emmc` supports the
