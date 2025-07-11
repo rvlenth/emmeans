@@ -1164,8 +1164,8 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     cgrid = do.call(expand.grid, clevs)
     # handle nasty fact that character predictors don't act like factors
     for (j in cfac)
-        if(is.character(data[[cfac]])) 
-            cgrid[[cfac]] = as.character(cgrid[[cfac]])
+        if(is.character(data[[j]])) 
+            cgrid[[j]] = as.character(cgrid[[j]])
     
     # Get the stuff we need for each main dataset step
     link = .get.link(rg@misc)
@@ -1178,14 +1178,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     k = ifelse(length(mr <- rg@roles$multresp) == 0, 1, length(rg@levels[[mr]])) # grid expansion factor
     
     # Index sets for combinations of factors
-    cidx = apply(cgrid, 1, function(x) {
-        flag = data[[cfac[1]]] == x[1]
-        if(length(x) > 1)
-            for (col in 2:length(x))
-                flag = flag & data[[cfac[col]]] == x[col]
-        which(flag)
-    }, simplify = FALSE)
-    
+    pg = apply(cgrid, 1, paste, collapse = ".")
+    pd = apply(data[cfac], 1, paste, collapse = ".")
+    cidx = lapply(pg, \(x) which(pd == x))
+
     # special case for covariates with no matches
     if(all(sapply(cidx, length) == 0))
         cidx = list(seq_len(nrow(data)))

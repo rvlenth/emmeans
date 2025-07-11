@@ -2,10 +2,12 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.11.1-00xxx
+## emmeans 1.11.2
   * In ordinal-model support, changed all estimator names to match mode names
     (this was true for `"prob"` and `"exc.prob"`, but not `"cum.prob"`)
     (postponed from CRAN version 1.11.1 to allow time for other package(s) to adapt)
+  * Fix to coding errors that prevented more than one counterfactual factor
+    from being used.
 
 ## emmeans 1.11.1
   * Modified `as.data.frame.summary_emm` so it can't loop infinitely (#525)
