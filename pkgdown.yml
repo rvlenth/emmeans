@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   AQuickStart: AQuickStart.html
@@ -18,7 +18,7 @@ articles:
   vignette-topics: vignette-topics.html
   xplanations: xplanations.html
   xtending: xtending.html
-last_built: 2025-05-04T18:17Z
+last_built: 2025-07-11T15:32Z
 urls:
   reference: https://rvlenth.github.io/emmeans/reference
   article: https://rvlenth.github.io/emmeans/articles
