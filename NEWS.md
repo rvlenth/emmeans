@@ -2,6 +2,11 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.11.2-0xxxx
+  * Correction in `summary.emmGrid` to calculation of adjustment factors when
+    'by` variables are nested (#536)
+    
+
 ## emmeans 1.11.2
   * In ordinal-model support, changed all estimator names to match mode names
     (this was true for `"prob"` and `"exc.prob"`, but not `"cum.prob"`)

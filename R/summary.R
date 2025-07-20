@@ -577,8 +577,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         if (length(unique(sapply(by.rows, length))) > 1) {
             by.size = misc$famSize = "(varies)"
         }
-        else for (nm in by)
-            by.size = by.size / length(unique(object@levels[[nm]]))
+        else
+            by.size = by.size / length(by.rows)
+        # else for (nm in by)
+        #     by.size = by.size / length(unique(object@levels[[nm]]))
     }
     fam.info = c(misc$famSize, by.size, et)
     cnm = NULL
