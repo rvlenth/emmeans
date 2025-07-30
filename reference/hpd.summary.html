@@ -5,11 +5,11 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Summarize an emmGrid from a Bayesian model — hpd.summary"><meta name="description" content="This function computes point estimates and HPD intervals for each
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Summarize an emmGrid from a Bayesian model — hpd.summary"><meta name="description" content="This function computes point estimates and HPD (or quantile) intervals for each
 factor combination in object@emmGrid. While this function
 may be called independently, it is called automatically by the S3 method
 summary.emmGrid when the object is based on a Bayesian model.
-(Note: the level argument, or its default, is passed as prob)."><meta property="og:description" content="This function computes point estimates and HPD intervals for each
+(Note: the level argument, or its default, is passed as prob)."><meta property="og:description" content="This function computes point estimates and HPD (or quantile) intervals for each
 factor combination in object@emmGrid. While this function
 may be called independently, it is called automatically by the S3 method
 summary.emmGrid when the object is based on a Bayesian model.
@@ -21,7 +21,7 @@ summary.emmGrid when the object is based on a Bayesian model.
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-00001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-00002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@ summary.emmGrid when the object is based on a Bayesian model.
     </div>
 
     <div class="ref-description section level2">
-    <p>This function computes point estimates and HPD intervals for each
+    <p>This function computes point estimates and HPD (or quantile) intervals for each
 factor combination in <code>object@emmGrid</code>. While this function
 may be called independently, it is called automatically by the S3 method
 <code><a href="summary.emmGrid.html">summary.emmGrid</a></code> when the object is based on a Bayesian model.
@@ -75,7 +75,8 @@ may be called independently, it is called automatically by the S3 method
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hpd.summary</span><span class="op">(</span><span class="va">object</span>, <span class="va">prob</span>, <span class="va">by</span>, <span class="va">type</span>, point.est <span class="op">=</span> <span class="va">median</span>, <span class="va">delta</span>,</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hpd.summary</span><span class="op">(</span><span class="va">object</span>, <span class="va">prob</span>, <span class="va">by</span>, <span class="va">type</span>, point.est <span class="op">=</span> <span class="va">median</span>,</span>
+<span>  ci.method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HPD"</span>, <span class="st">"quantile"</span><span class="op">)</span>, <span class="va">delta</span>,</span>
 <span>  bias.adjust <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"back.bias.adj"</span><span class="op">)</span>, <span class="va">sigma</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -105,6 +106,13 @@ the current <code>level</code> option is used; see <code><a href="emm_options.ht
 posterior sample for each grid point</p></dd>
 
 
+<dt id="arg-ci-method">ci.method<a class="anchor" aria-label="anchor" href="#arg-ci-method"></a></dt>
+<dd><p>character value matching <code>"HPD"</code> (default) or <code>"quantile"</code>.
+The default is to use HPD intervals (which are the shortest possible intervals).
+Alternatively, choosing <code>"quantile"</code> uses the quantiles of the posterior
+having equal tail probabilities.</p></dd>
+
+
 <dt id="arg-delta">delta<a class="anchor" aria-label="anchor" href="#arg-delta"></a></dt>
 <dd><p>Numeric equivalence threshold (on the linear predictor scale
 regardless of <code>type</code>).
@@ -132,6 +140,12 @@ number of observations in the posterior sample.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>an object of class <code>summary_emm</code></p>
+    </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>HPD intervals require the <span class="pkg">coda</span> package to be installed on your system;
+otherwise an error is thrown. (So one way to sidestep that error is to specify
+<code>ci.method = "quantile"</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="equivalence-testing-note">Equivalence testing note<a class="anchor" aria-label="anchor" href="#equivalence-testing-note"></a></h2>

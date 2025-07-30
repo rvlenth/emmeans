@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-00001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-00002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Confidence intervals and tests in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.2.1</h4>
+package, Version 1.11.2.2</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/confidence-intervals.Rmd" class="external-link"><code>vignettes/confidence-intervals.Rmd</code></a></small>
@@ -427,7 +427,7 @@ of within-group adjusted <em>P</em> values:</p>
 <span><span class="co">##  M - H      10.000 5.16 48   1.939  0.2777</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: tukey method for comparing a family of 3 estimates </span></span>
-<span><span class="co">## Cross-group P-value adjustment: bonferroni</span></span></code></pre>
+<span><span class="co">## Cross-group P-value adjustment: bonferroni method for 2 tests</span></span></code></pre>
 <p>These adjustments are less conservative than the previous result, but
 it is still a conservative adjustment to the set of 6 tests. Had we also
 specified <code>adjust = "bonferroni"</code>, we would have obtained the
