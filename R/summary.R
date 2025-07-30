@@ -579,8 +579,6 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         }
         else
             by.size = by.size / length(by.rows)
-        # else for (nm in by)
-        #     by.size = by.size / length(unique(object@levels[[nm]]))
     }
     fam.info = c(misc$famSize, by.size, et)
     cnm = NULL
@@ -707,7 +705,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
                     else         1 - (1 - p)^ncol(mat)
                 })
                 result$p.value[bridx] = as.numeric(t(apv))
-                mesg = c(mesg, paste("Cross-group P-value adjustment:", cross.adjust))
+                mesg = c(mesg, paste("Cross-group P-value adjustment:", cross.adjust, 
+                                     "method for", ncol(mat), "tests"))
             }
             else
                 message("Invalid cross-adjustment method: '", cross.adjust, "'")
@@ -1366,12 +1365,18 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
 
     est = x[[estn]]
     if (get_emm_option("opt.digits") && is.null(digits)) {
+        qnms = names(x)
         if (!is.null(x$SE))
             x$SE = signif(x$SE, 3)
         if (!is.null(x[["SE"]]))
             tmp = est + x[["SE"]] * cbind(rep(-2, nrow(x)), 0, 2)
-        else if (!is.null(x[["lower.HPD"]]))
-            tmp = x[, c("lower.HPD", estn, "upper.HPD"), drop = FALSE]
+        # else if (!is.null(x[["lower.HPD"]]))
+        #     tmp = x[, c("lower.HPD", estn, "upper.HPD"), drop = FALSE]
+        else if (any(startsWith(names(x), "lower."))) {
+            lwr = qnms[startsWith(qnms, "lower.")]
+            upr = qnms[startsWith(qnms, "upper.")]
+            tmp = x[, c(lwr, estn, upr), drop = FALSE]
+        }
         else tmp = NULL
         if (!is.null(tmp))
             digits = max(apply(tmp, 1, .opt.dig))

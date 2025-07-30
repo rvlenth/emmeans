@@ -204,7 +204,7 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 
 #' Summarize an emmGrid from a Bayesian model
 #' 
-#' This function computes point estimates and HPD intervals for each
+#' This function computes point estimates and HPD (or quantile) intervals for each
 #' factor combination in \code{object@emmGrid}. While this function
 #' may be called independently, it is called automatically by the S3 method
 #' \code{\link{summary.emmGrid}} when the object is based on a Bayesian model.
@@ -217,6 +217,10 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #' @param type prediction type as in \code{\link{summary.emmGrid}}
 #' @param point.est function to use to compute the point estimates from the 
 #'   posterior sample for each grid point
+#' @param ci.method character value matching \code{"HPD"} (default) or \code{"quantile"}.
+#'   The default is to use HPD intervals (which are the shortest possible intervals). 
+#'   Alternatively, choosing \code{"quantile"} uses the quantiles of the posterior
+#'   having equal tail probabilities.
 #' @param delta Numeric equivalence threshold (on the linear predictor scale 
 #'   regardless of \code{type}).
 #'   See the section below on equivalence testing.
@@ -256,7 +260,10 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #'   Finally, a Bayes factor for equivalence is obtainable by dividing 
 #'   \code{odds.eq} by the prior odds of equivalence, assessed or elicited separately.
 #'   
-#' 
+#' @note
+#' HPD intervals require the \pkg{coda} package to be installed on your system;
+#' otherwise an error is thrown. (So one way to sidestep that error is to specify 
+#' \code{ci.method = "quantile"}).
 #' 
 #' @seealso summary.emmGrid
 #' 
@@ -268,6 +275,7 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #'     # Use emm_example("hpd.summary-coda", list = TRUE) # to see just the code
 #' 
 hpd.summary = function(object, prob, by, type, point.est = median, 
+                       ci.method = c("HPD", "quantile"),
                        delta,
                        bias.adjust = get_emm_option("back.bias.adj"), sigma, 
                        ...) {
@@ -275,8 +283,10 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         stop("Prediction intervals for MCMC models should be done using 'frequentist = TRUE'\n",
              "or using 'as.mcmc(object, ..., likelihood = ...)'")
     
-    .requireNS("coda", "Bayesian summary requires the 'coda' package")
-    ### require("coda") ### Nope this is a CRAN no-no
+    ci.method = match.arg(ci.method)
+    
+    if (ci.method == "HPD")
+        .requireNS("coda", "Bayesian summary requires the 'coda' package")
     
     # Steal some init code from summary.emmGrid:
     opt = get_emm_option("summary")
@@ -358,11 +368,19 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     
     est = !is.na(mcmc[1, ])
     mcmc[, !est] = 0 # temp so we don't get errors
-    mesg = c(mesg, paste("HPD interval probability:", prob))
     pt.est = data.frame(apply(mcmc, 2, point.est))
     names(pt.est) = object@misc$estName
-    summ = as.data.frame(coda::HPDinterval(mcmc, prob = prob))[c("lower","upper")]
-    names(summ) = cnm = paste0(names(summ), ".HPD")
+    if (ci.method == "HPD") {
+        summ = as.data.frame(coda::HPDinterval(mcmc, prob = prob))[c("lower","upper")]
+        names(summ) = cnm = paste0(names(summ), ".HPD")
+        mesg = c(mesg, paste("HPD interval probability:", prob))
+    }
+    else {
+        al = (1 - prob)/2
+        summ = as.data.frame(t(apply(mcmc, 2, quantile, c(al, 1-al))))
+        names(summ) = cnm = c("lower.QL", "upper.QL")
+        mesg = c(mesg, paste("quantile interval probability:", prob))
+    }
     lblnms = setdiff(names(grid), 
                      c(object@roles$responses, ".offset.", ".wgt."))
     lbls = grid[lblnms]

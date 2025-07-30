@@ -5,6 +5,9 @@ title: "NEWS for the emmeans package"
 ## emmeans 1.11.2-0xxxx
   * Correction in `summary.emmGrid` to calculation of adjustment factors when
     'by` variables are nested (#536)
+  * More detailed annotations for cross-group adjustments (#536)
+  * Added `ci.method` argument to `hpd.summary()` to allow option of
+    producing quantile-based intervals (#538)
     
 
 ## emmeans 1.11.2

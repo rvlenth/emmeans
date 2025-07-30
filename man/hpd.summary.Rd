@@ -4,7 +4,8 @@
 \alias{hpd.summary}
 \title{Summarize an emmGrid from a Bayesian model}
 \usage{
-hpd.summary(object, prob, by, type, point.est = median, delta,
+hpd.summary(object, prob, by, type, point.est = median,
+  ci.method = c("HPD", "quantile"), delta,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 }
 \arguments{
@@ -19,6 +20,11 @@ the current \code{level} option is used; see \code{\link{emm_options}})}
 
 \item{point.est}{function to use to compute the point estimates from the 
 posterior sample for each grid point}
+
+\item{ci.method}{character value matching \code{"HPD"} (default) or \code{"quantile"}.
+The default is to use HPD intervals (which are the shortest possible intervals). 
+Alternatively, choosing \code{"quantile"} uses the quantiles of the posterior
+having equal tail probabilities.}
 
 \item{delta}{Numeric equivalence threshold (on the linear predictor scale 
 regardless of \code{type}).
@@ -40,11 +46,16 @@ number of observations in the posterior sample.}
 an object of class \code{summary_emm}
 }
 \description{
-This function computes point estimates and HPD intervals for each
+This function computes point estimates and HPD (or quantile) intervals for each
 factor combination in \code{object@emmGrid}. While this function
 may be called independently, it is called automatically by the S3 method
 \code{\link{summary.emmGrid}} when the object is based on a Bayesian model.
 (Note: the \code{level} argument, or its default, is passed as \code{prob}).
+}
+\note{
+HPD intervals require the \pkg{coda} package to be installed on your system;
+otherwise an error is thrown. (So one way to sidestep that error is to specify 
+\code{ci.method = "quantile"}).
 }
 \section{Equivalence testing note}{
 
