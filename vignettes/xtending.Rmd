@@ -258,9 +258,12 @@ for `recover_data` and/or `emm_basis`---use `methods("recover_data")` and
 `methods("emm_basis")` to discover which ones. It may be that all you need is to
 invoke one of those methods and perhaps make some small changes---especially if
 your model-fitting algorithm makes heavy use of an existing model type supported
-by **emmeans**. For those methods that are not exported, use `recover_data()`
+by **emmeans**. 
+<!-- 
+For those methods that are not exported, use `.recover_data()`
 and `.emm_basis()`, which run in **emmeans**'s namespace, thus providing access
-to all available methods..
+to all available methods.
+-->
 
 A few additional functions are exported because they may be useful to developers. They are as follows:
 

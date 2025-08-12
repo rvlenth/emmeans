@@ -6,8 +6,6 @@
 \alias{recover_data}
 \alias{recover_data.call}
 \alias{emm_basis}
-\alias{.recover_data}
-\alias{.emm_basis}
 \alias{.emm_register}
 \alias{.std.link.labels}
 \alias{.combine.terms}
@@ -30,10 +28,6 @@ recover_data(object, ...)
   params = "pi", frame, pwts, addl.vars, ...)
 
 emm_basis(object, trms, xlev, grid, ...)
-
-.recover_data(object, ...)
-
-.emm_basis(object, trms, xlev, grid, ...)
 
 .emm_register(classes, pkgname)
 
@@ -203,10 +197,6 @@ The \code{emm_basis} method should return a \code{list} with the
 \item{dfargs}{A \code{list} containing additional arguments needed for
   \code{dffun}}.
 } %%% end of describe
-
-\code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
-  \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
-  namespace, thus providing access to all existing methods.
 
 \code{.std.link.llabels} returns a modified version of \code{misc}
   with the appropriate information included corresponding to the information in \code{fam}

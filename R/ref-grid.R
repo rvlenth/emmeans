@@ -1203,11 +1203,12 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     ## Compile the averaged results for delta method
     DL = matrix(nrow = 0, ncol = sum(nonNA))
     bh = numeric(0)
+    embmeth = .find_method(object, "emm_basis")
     for (i in seq_len(nrow(cgrid))) {
         g = data
         for(j in cfac)
             g[all.active, j] = cgrid[i,j]
-        bas = emm_basis(object, trms, xlev, g, ...)
+        bas = embmeth(object, trms, xlev, g, ...)
         if(!is.null(bas$misc$postGridHook))
             stop("Sorry, we do not support counterfactuals for this situation.")
         X = bas$X[, nonNA, drop = FALSE]

@@ -93,18 +93,9 @@
 #' @export
 #' @order 1
 recover_data = function(object, ...) {
-    # look for outside methods first
-    for (cl in .chk.cls(object)) {
-        rd <- .get.outside.method("recover_data", cl)
-        if(!is.null(rd))
-            return(rd(object, ...))
-    }
-    ## look for an inside method
-    for (cl in class(object)) {
-        mth = utils::getAnywhere(paste("recover_data", cl, sep = "."))
-        if (length(mth$objs) > 0)
-            return((mth$objs[[1]])(object, ...))
-    }
+    mth = .find_method(object, "recover_data")
+    if(!is.null(mth))
+        return(mth(object, ...))
     UseMethod("recover_data")  ## This call has to be here to establish recover_data as a generic
     
 }
@@ -113,9 +104,28 @@ recover_data = function(object, ...) {
 # We don't allow overriding certain anchor classes, 
 # nor ones in 3rd place or later in inheritance
 .chk.cls = function(object) {
-    sacred = c("call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
+    sacred = c("default", "call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
     setdiff(head(class(object), 2), sacred)
 }
+
+# Private utility to find a method
+.find_method = function(object, generic) {
+    for (cl in .chk.cls(object)) {
+        mth <- .get.outside.method(generic, cl)
+        if(!is.null(mth))
+            return(mth)
+    }
+    for (cl in class(object)) {
+        # mth = utils::getAnywhere(paste(generic, cl, sep = "."))
+        # if (length(mth$objs) > 0)
+        #     return(mth$objs[[1]])
+        mth = getS3method(generic, cl, optional = TRUE)
+        if(!is.null(mth))
+            return(mth)
+    }
+    NULL
+}
+
 
 ### My internal method dispatch -- we prefer outside methods
 .get.outside.method = function(generic, cls) {
@@ -393,36 +403,30 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 #' should return a suitably modified \code{emmGrid} object.
 emm_basis = function(object, trms, xlev, grid, ...) {
     # look for outside methods first
-    for (cl in .chk.cls(object)) {
-        emb <- .get.outside.method("emm_basis", cl)
-        if(!is.null(emb))
-            return(emb(object, trms, xlev, grid, ...))
-    }
-    for (cl in class(object)) {
-        mth = utils::getAnywhere(paste("emm_basis", cl, sep = "."))
-        if (length(mth$objs) > 0)
-            return((mth$objs[[1]])(object, trms, xlev, grid, ...))
-    }
+    mth = .find_method(object, "emm_basis")
+    if(!is.null(mth))
+        return(mth(object, trms, xlev, grid, ...))
     UseMethod("emm_basis")  ## This call has to be here to establish emm_basis as a generic
 }
 
-# Hidden courtesy function that provides access to all recover_data methods
-#' @rdname extending-emmeans
-#' @order 21
-#' @export
-.recover_data = function(object, ...)
-    recover_data(object, ...)
+# Courtesy function that provides access to all recover_data methods
+# I don't think we really need this...
+# #' @  rdname extending-emmeans
+# #' @ order 21
+# #' @ export
+# .recover_data = function(object, ...)
+#     recover_data(object, ...)
 
 # Hidden courtesy function that provides access to all emm_basis methods
-#' @rdname extending-emmeans
-#' @order 22
-#' @return \code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
-#'   \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
-#'   namespace, thus providing access to all existing methods.
-#' @export
-.emm_basis = function(object, trms, xlev, grid, ...)
-    emm_basis(object, trms, xlev, grid, ...)
-
+# #' @rdname extending-emmeans
+# #' @order 22
+# #' @return \code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
+# #'   \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
+# #'   namespace, thus providing access to all existing methods.
+# #' @export
+# .emm_basis = function(object, trms, xlev, grid, ...)
+#     emm_basis(object, trms, xlev, grid, ...)
+ 
 
 
 

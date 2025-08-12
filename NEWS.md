@@ -2,13 +2,15 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.11.2-0xxxx
+## emmeans 1.11.2-8
   * Correction in `summary.emmGrid` to calculation of adjustment factors when
     'by` variables are nested (#536)
   * More detailed annotations for cross-group adjustments (#536)
   * Added `ci.method` argument to `hpd.summary()` to allow option of
     producing quantile-based intervals (#538)
-    
+  * Efficiency improvements in method dispatching
+  * Fix to `.make.scale()` to play nice with new R requirements
+  
 
 ## emmeans 1.11.2
   * In ordinal-model support, changed all estimator names to match mode names

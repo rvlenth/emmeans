@@ -454,7 +454,7 @@ inverse = function(y) 1/y
 
 ### Internal routine to make a scales::trans object
 .make.scale = function(misc) {
-    if (!requireNamespace("scales", quiet = TRUE)) 
+    if (!requireNamespace("scales", quietly = TRUE)) 
         stop("type = \"scale\" requires the 'scales' package to be installed")
     tran = misc$tran
     if (is.null(tran))
