@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-00002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,10 +57,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.11.2-0" id="emmeans-1112-0xxxx">emmeans 1.11.2-0xxxx<a class="anchor" aria-label="anchor" href="#emmeans-1112-0xxxx"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.11.2-8" id="emmeans-1112-8">emmeans 1.11.2-8<a class="anchor" aria-label="anchor" href="#emmeans-1112-8"></a></h2>
 <ul><li>Correction in <code>summary.emmGrid</code> to calculation of adjustment factors when ’by` variables are nested (<a href="https://github.com/rvlenth/emmeans/issues/536" class="external-link">#536</a>)</li>
 <li>More detailed annotations for cross-group adjustments (<a href="https://github.com/rvlenth/emmeans/issues/536" class="external-link">#536</a>)</li>
 <li>Added <code>ci.method</code> argument to <code><a href="../reference/hpd.summary.html">hpd.summary()</a></code> to allow option of producing quantile-based intervals (<a href="https://github.com/rvlenth/emmeans/issues/538" class="external-link">#538</a>)</li>
+<li>Efficiency improvements in method dispatching</li>
+<li>Fix to <code>.make.scale()</code> to play nice with new R requirements</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.2" id="emmeans-1112">emmeans 1.11.2<a class="anchor" aria-label="anchor" href="#emmeans-1112"></a></h2><p class="text-muted">CRAN release: 2025-07-11</p>
@@ -740,7 +742,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.0" id="emmeans-130">emmeans 1.3.0<a class="anchor" aria-label="anchor" href="#emmeans-130"></a></h2><p class="text-muted">CRAN release: 2018-10-26</p>
 <ul><li>Deprecated functions like <code>ref.grid()</code> put to final rest, and we no longer support packages that provide <code>recover.data</code> or <code>lsm.basis</code> methods</li>
-<li>Courtesy exports <code><a href="../reference/extending-emmeans.html">.recover_data()</a></code> and <code><a href="../reference/extending-emmeans.html">.emm_basis()</a></code> to provide access for extension developers to all available methods</li>
+<li>Courtesy exports <code>.recover_data()</code> and <code>.emm_basis()</code> to provide access for extension developers to all available methods</li>
 <li>Streamlining of a stored example in <code>inst/extdata</code>
 </li>
 <li>Fix to <code><a href="../reference/extending-emmeans.html">.all.vars()</a></code> that could cause errors when response variable has a function call with character constants.</li>

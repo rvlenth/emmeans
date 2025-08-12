@@ -27,7 +27,7 @@ There are several other exported functions that may be useful. See the
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-00002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,10 +91,6 @@ There are several other exported functions that may be useful. See the
 <span>  params <span class="op">=</span> <span class="st">"pi"</span>, <span class="va">frame</span>, <span class="va">pwts</span>, <span class="va">addl.vars</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">emm_basis</span><span class="op">(</span><span class="va">object</span>, <span class="va">trms</span>, <span class="va">xlev</span>, <span class="va">grid</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">.recover_data</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">.emm_basis</span><span class="op">(</span><span class="va">object</span>, <span class="va">trms</span>, <span class="va">xlev</span>, <span class="va">grid</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.emm_register</span><span class="op">(</span><span class="va">classes</span>, <span class="va">pkgname</span><span class="op">)</span></span>
 <span></span>
@@ -335,9 +331,6 @@ count model. Typically, this just returns <code>mu</code></p></dd>
 .
 
 </dl><p><!-- %%% end of describe --></p>
-<p><code>.recover_data</code> and <code>.emm_basis</code> are hidden exported versions of
-  <code>recover_data</code> and <code>emm_basis</code>, respectively. They run in <span class="pkg">emmeans</span>'s
-  namespace, thus providing access to all existing methods.</p>
 <p><code>.std.link.llabels</code> returns a modified version of <code>misc</code>
   with the appropriate information included corresponding to the information in <code>fam</code></p>
 <p><code>combine.terms</code> returns a <code>terms</code> object resulting
