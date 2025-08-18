@@ -760,7 +760,9 @@ emm_defaults = list (
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling K-R
     disable.lmerTest = FALSE, # whether to bypass lmerTest routines for lmerMod
-    lmerTest.limit = 3000     # limit on N for enabling Satterthwaite
+    lmerTest.limit = 3000,     # limit on N for enabling Satterthwaite
+    post.ci.method = "HPD"    #  set CI method for Bayesian methods
+
 )
 
 
