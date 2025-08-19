@@ -275,7 +275,7 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #'     # Use emm_example("hpd.summary-coda", list = TRUE) # to see just the code
 #' 
 hpd.summary = function(object, prob, by, type, point.est = median, 
-                       ci.method = get_emm_option("post.ci.method"), #c("HPD", "quantile"),
+                       ci.method = get_emm_option("post.ci.method"), 
                        delta,
                        bias.adjust = get_emm_option("back.bias.adj"), sigma, 
                        ...) {
