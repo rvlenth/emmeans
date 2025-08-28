@@ -534,7 +534,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' \item{\code{summary}}{A named \code{list} of defaults used by the methods
 #'   \code{\link{summary.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{test.emmGrid}},
 #'   \code{\link{confint.emmGrid}}, and \code{\link{emmip}}. The only option that can
-#'   affect the latter four is \code{"predict.method"}.}
+#'   affect the latter four is \code{"predict.type"}.}
 #' \item{\code{allow.na.levs}}{A logical value that if \code{TRUE} (the default), allows
 #'   \code{NA} to be among the levels of a factor. Older versions of \pkg{emmeans} did not
 #'   allow this. So if problems come up (say in a messy dataset that includes incomplete cases), 
@@ -634,6 +634,13 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' \code{options(emmeans = get_emm_option("saved.opts"))}. To completely erase
 #' all options, use \code{options(emmeans = NULL)}
 #' 
+#' @section Startup options:
+#' \pkg{emmeans}'s options are kept in the system options in a list names \code{emmeans}.
+#' Thus, if the user wants certain options set on startup, this can be arranged by
+#' setting the \code{emmeans} option in one's startup script. For example,
+#' the user's \code{.Rprofile} file could contain:
+#' \preformatted{    options(emmeans = list(summary = list(predict.type = "response"), 
+#'                            lmer.df = "satterthwaite"))}
 #' 
 #' 
 #' @seealso \code{\link{update.emmGrid}}
@@ -713,10 +720,11 @@ get_emm_option = function(x, default = emm_defaults[[x]]) {
 #' @export
 #' @examples
 #' 
-#' # Illustration of how 'opt.digits' affects the results of print()
-#' # Note that the returned value is printed with the default setting (opt.digits = TRUE)
-#' pigs.lm <- lm(inverse(conc) ~ source, data = pigs)
-#' with_emm_options(opt.digits = FALSE, print(emmeans(pigs.lm, "source")))
+#' # Temporarily alter the formatting of labels in an interaction contrast:
+#' pigs.lm <- lm(inverse(conc) ~ source * factor(percent), data = pigs)
+#' with_emm_options(parens = c("\\-", "<", ">"), sep = ": ",
+#'     contrast(contrast(ref_grid(pigs.lm), "consec", by = "percent"),
+#'         "consec", by = NULL))
 #' 
 with_emm_options = function(..., expr) {
     cl = match.call()
