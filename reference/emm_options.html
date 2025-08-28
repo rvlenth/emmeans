@@ -145,7 +145,7 @@ object.</p></dd>
 <dd><p>A named <code>list</code> of defaults used by the methods
   <code><a href="summary.emmGrid.html">summary.emmGrid</a></code>, <code><a href="summary.emmGrid.html">predict.emmGrid</a></code>, <code><a href="summary.emmGrid.html">test.emmGrid</a></code>,
   <code><a href="summary.emmGrid.html">confint.emmGrid</a></code>, and <code><a href="emmip.html">emmip</a></code>. The only option that can
-  affect the latter four is <code>"predict.method"</code>.</p></dd>
+  affect the latter four is <code>"predict.type"</code>.</p></dd>
 
 <dt><code>allow.na.levs</code></dt>
 <dd><p>A logical value that if <code>TRUE</code> (the default), allows
@@ -269,6 +269,17 @@ is equivalent to <code>emm_options(saved.opts = emm_options())</code> and
 all options, use <code>options(emmeans = NULL)</code></p>
     </div>
     <div class="section level2">
+    <h2 id="startup-options">Startup options<a class="anchor" aria-label="anchor" href="#startup-options"></a></h2>
+
+
+<p><span class="pkg">emmeans</span>'s options are kept in the system options in a list names <code>emmeans</code>.
+Thus, if the user wants certain options set on startup, this can be arranged by
+setting the <code>emmeans</code> option in one's startup script. For example,
+the user's <code>.Rprofile</code> file could contain:</p><div class="sourceCode"><pre><code><span>    <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>emmeans <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>summary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>predict.type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>,</span>
+<span>                           lmer.df <span class="op">=</span> <span class="st">"satterthwaite"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="update.emmGrid.html">update.emmGrid</a></code></p></div>
     </div>
@@ -306,24 +317,29 @@ all options, use <code>options(emmeans = NULL)</code></p>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Illustration of how 'opt.digits' affects the results of print()</span></span></span>
-<span class="r-in"><span><span class="co"># Note that the returned value is printed with the default setting (opt.digits = TRUE)</span></span></span>
-<span class="r-in"><span><span class="va">pigs.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="make.tran.html">inverse</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">with_emm_options</span><span class="op">(</span>opt.digits <span class="op">=</span> <span class="cn">FALSE</span>, <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigs.lm</span>, <span class="st">"source"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  source     emmean          SE df   lower.CL   upper.CL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fish   0.03331687 0.001293718 26 0.03065759 0.03597614</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  soy    0.02632333 0.001293718 26 0.02366405 0.02898260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  skim   0.02372024 0.001363698 26 0.02091712 0.02652336</span>
+<span class="r-in"><span><span class="co"># Temporarily alter the formatting of labels in an interaction contrast:</span></span></span>
+<span class="r-in"><span><span class="va">pigs.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="make.tran.html">inverse</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">with_emm_options</span><span class="op">(</span>parens <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"\\-"</span>, <span class="st">"&lt;"</span>, <span class="st">"&gt;"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">": "</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">pigs.lm</span><span class="op">)</span>, <span class="st">"consec"</span>, by <span class="op">=</span> <span class="st">"percent"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="st">"consec"</span>, by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  contrast                                          estimate      SE df t.ratio</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;skim - soy: percent9&gt; - &lt;soy - fish: percent9&gt;    0.00919 0.00460 17   1.997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;soy - fish: percent12&gt; - &lt;skim - soy: percent9&gt;  -0.00656 0.00361 17  -1.817</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;skim - soy: percent12&gt; - &lt;soy - fish: percent12&gt;  0.00531 0.00442 17   1.201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;soy - fish: percent15&gt; - &lt;skim - soy: percent12&gt; -0.00498 0.00383 17  -1.301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;skim - soy: percent15&gt; - &lt;soy - fish: percent15&gt;  0.00186 0.00477 17   0.391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;soy - fish: percent18&gt; - &lt;skim - soy: percent15&gt; -0.00265 0.00460 17  -0.577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  &lt;skim - soy: percent18&gt; - &lt;soy - fish: percent18&gt;  0.00108 0.00722 17   0.150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  p.value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.2827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.3713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.7520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.6892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.9983</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.9866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the inverse (not the response) scale. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  source emmean      SE df lower.CL upper.CL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fish   0.0333 0.00129 26   0.0307   0.0360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  soy    0.0263 0.00129 26   0.0237   0.0290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  skim   0.0237 0.00136 26   0.0209   0.0265</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the inverse (not the response) scale. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: mvt method for 7 tests </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
