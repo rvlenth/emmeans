@@ -607,6 +607,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' options affect how degrees of freedom are computed for \code{lmerMod} objects
 #' produced by the \pkg{lme4} package). See that section of the "models" vignette
 #' for details.}
+#' \item{\code{post.ci.method}}{method for estimating confidence intervals for Bayesian models. 
+#' Options are \code{"HPD"} (default) or \code{"quantile"}.} 
 #' } %%%%%% end \describe
 #'
 #' @param ... Option names and values (see Details)
@@ -760,7 +762,9 @@ emm_defaults = list (
     disable.pbkrtest = FALSE, # whether to bypass pbkrtest routines for lmerMod
     pbkrtest.limit = 3000,    # limit on N for enabling K-R
     disable.lmerTest = FALSE, # whether to bypass lmerTest routines for lmerMod
-    lmerTest.limit = 3000     # limit on N for enabling Satterthwaite
+    lmerTest.limit = 3000,     # limit on N for enabling Satterthwaite
+    post.ci.method = "HPD"    #  set CI method for Bayesian methods
+
 )
 
 
