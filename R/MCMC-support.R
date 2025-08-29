@@ -217,7 +217,8 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #' @param type prediction type as in \code{\link{summary.emmGrid}}
 #' @param point.est function to use to compute the point estimates from the 
 #'   posterior sample for each grid point
-#' @param ci.method character value matching \code{"HPD"} (default) or \code{"quantile"}.
+#' @param ci.method character value matching \code{"HPD"} (default) or \code{"quantile"}
+#'   (but actually not case-sensitive).
 #'   The default is to use HPD intervals (which are the shortest possible intervals). 
 #'   Alternatively, choosing \code{"quantile"} uses the quantiles of the posterior
 #'   having equal tail probabilities.
@@ -283,7 +284,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         stop("Prediction intervals for MCMC models should be done using 'frequentist = TRUE'\n",
              "or using 'as.mcmc(object, ..., likelihood = ...)'")
     
-    ci.method = match.arg(ci.method)
+    ci.method = match.arg(tolower(ci.method), choices = c("hpd", "quantile"))
     
     if (ci.method == "HPD")
         .requireNS("coda", "Bayesian summary requires the 'coda' package")
@@ -370,7 +371,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     mcmc[, !est] = 0 # temp so we don't get errors
     pt.est = data.frame(apply(mcmc, 2, point.est))
     names(pt.est) = object@misc$estName
-    if (ci.method == "HPD") {
+    if (ci.method == "hpd") {
         summ = as.data.frame(coda::HPDinterval(mcmc, prob = prob))[c("lower","upper")]
         names(summ) = cnm = paste0(names(summ), ".HPD")
         mesg = c(mesg, paste("HPD interval probability:", prob))
