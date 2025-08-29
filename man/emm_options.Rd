@@ -8,7 +8,7 @@
 \alias{emm_defaults}
 \title{Set or change emmeans options}
 \format{
-An object of class \code{list} of length 22.
+An object of class \code{list} of length 23.
 }
 \usage{
 emm_options(..., disable)
@@ -143,6 +143,8 @@ and \code{lmerTest.limit}
 options affect how degrees of freedom are computed for \code{lmerMod} objects
 produced by the \pkg{lme4} package). See that section of the "models" vignette
 for details.}
+\item{\code{post.ci.method}}{method for estimating confidence intervals for Bayesian models. 
+Options are \code{"HPD"} (default) or \code{"quantile"}.} 
 } %%%%%% end \describe
 }
 \section{Reproducible bugs}{

@@ -5,7 +5,7 @@
 \title{Summarize an emmGrid from a Bayesian model}
 \usage{
 hpd.summary(object, prob, by, type, point.est = median,
-  ci.method = c("HPD", "quantile"), delta,
+  ci.method = get_emm_option("post.ci.method"), delta,
   bias.adjust = get_emm_option("back.bias.adj"), sigma, ...)
 }
 \arguments{
@@ -21,7 +21,8 @@ the current \code{level} option is used; see \code{\link{emm_options}})}
 \item{point.est}{function to use to compute the point estimates from the 
 posterior sample for each grid point}
 
-\item{ci.method}{character value matching \code{"HPD"} (default) or \code{"quantile"}.
+\item{ci.method}{character value matching \code{"HPD"} (default) or \code{"quantile"}
+(but actually not case-sensitive).
 The default is to use HPD intervals (which are the shortest possible intervals). 
 Alternatively, choosing \code{"quantile"} uses the quantiles of the posterior
 having equal tail probabilities.}

@@ -2,6 +2,11 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 1.11.2-80xxx
+  * Added a new `post.ci.method` option to set the default for `ci.method`
+    in `hpd.summary()` (#538)
+  
+
 ## emmeans 1.11.2-8
   * Correction in `summary.emmGrid` to calculation of adjustment factors when
     'by` variables are nested (#536)
