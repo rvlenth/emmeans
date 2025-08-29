@@ -21,7 +21,7 @@ summary.emmGrid when the object is based on a Bayesian model.
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,7 @@ may be called independently, it is called automatically by the S3 method
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hpd.summary</span><span class="op">(</span><span class="va">object</span>, <span class="va">prob</span>, <span class="va">by</span>, <span class="va">type</span>, point.est <span class="op">=</span> <span class="va">median</span>,</span>
-<span>  ci.method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HPD"</span>, <span class="st">"quantile"</span><span class="op">)</span>, <span class="va">delta</span>,</span>
+<span>  ci.method <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"post.ci.method"</span><span class="op">)</span>, <span class="va">delta</span>,</span>
 <span>  bias.adjust <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"back.bias.adj"</span><span class="op">)</span>, <span class="va">sigma</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -107,7 +107,8 @@ posterior sample for each grid point</p></dd>
 
 
 <dt id="arg-ci-method">ci.method<a class="anchor" aria-label="anchor" href="#arg-ci-method"></a></dt>
-<dd><p>character value matching <code>"HPD"</code> (default) or <code>"quantile"</code>.
+<dd><p>character value matching <code>"HPD"</code> (default) or <code>"quantile"</code>
+(but actually not case-sensitive).
 The default is to use HPD intervals (which are the shortest possible intervals).
 Alternatively, choosing <code>"quantile"</code> uses the quantiles of the posterior
 having equal tail probabilities.</p></dd>
