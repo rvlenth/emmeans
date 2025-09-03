@@ -137,6 +137,9 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 #'   \code{emm_basis.foo} for each class \code{foo} listed in \code{classes}.
 #' @param pkgname Character name of package providing the methods (usually
 #'    should be the second argument of \code{.onLoad})
+#' @param qdrg Logical value. If \code{FALSE}, the \code{recover_data} and
+#'     \code{emm_basis} methods are registered. If \code{TRUE}, the \code{qdrg}
+#'     method for each class is registered instead.
 #'
 #' @export
 #'
@@ -149,11 +152,15 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 #'       emmeans::.emm_register("mymod", pkgname)
 #'   }
 #' }
-.emm_register = function(classes, pkgname) {
+.emm_register = function(classes, pkgname, qdrg = FALSE) {
     envir = asNamespace(pkgname)
     for (class in classes) {
-        register_s3_method("emmeans", "recover_data", class, envir)
-        register_s3_method("emmeans", "emm_basis", class, envir)
+        if(qdrg) 
+            register_s3_method("emmeans", "recover_data", class, envir)
+        else {
+            register_s3_method("emmeans", "recover_data", class, envir)
+            register_s3_method("emmeans", "emm_basis", class, envir)
+        }
     }
 }
 

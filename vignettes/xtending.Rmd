@@ -23,6 +23,7 @@ you are probably better off trying to use the `qdrg()` function.
   1. [Introduction](#intro)
   2. [Data example](#dataex)
   3. [Supporting `rlm` objects](#rlm)
+  3. [Quick and dirty support](#qdrg)
   4. [Supporting `lqs` objects](#lqs)
   5. [Communication between methods](#communic)
   5. [Hook functions](#hooks)
@@ -79,6 +80,50 @@ The first lesson to learn about extending **emmeans** is that sometimes, it alre
 
 [Back to Contents](#contents)
 
+
+## [Quick and dirty support {#qdrg}
+<!-- @index `qdrg()`!S3 methods; **robmixglm** example; -->
+Later, we will talk about how to fully support a model object in **emmeans**.
+But it is often very easy to provide *partial* support via the `qdrg()` ("quick and dirty reference grid") function. `qdrg()` creates a reference grid for a model, and that 
+reference grid can subsequently be used in a call to `emmeans()` or many other
+functions (but not `emtrends()`). In the past, `qdrg()` was just a standalone function;
+but now, it can dispath S3 methods based on the class of its `object` argument.
+Consider for example a model fitted in the **robmixglm** package:
+```{r}
+require(robmixglm, quietly = TRUE)
+require(MASS)
+fmx <- robmixglm(formula = 100 * log10(pres) ~ bp, data = forbes, cores = 1)
+```
+Examining the model object `fmx`, it is not at all obvious how to get the needed 
+parameters for `qdrg()`; but they are buried in there. Here is an S3 method
+that supports this model class:
+```{r}
+qdrg.robmixglm <- function(object, data = NULL, ...) {
+    coef <- coef(object)
+    idx <- seq_along(coef)
+    qdrg(formula = formula(object), data = object$model, coef = coef,
+         vcov = object$fit@vcov[idx, idx, drop = FALSE], ...)
+}
+```
+In this method, the `vcov` matrix includes covariances for some extra parameters
+besides the regression coefficients, so we have to use a subset of that matrix.
+Let's get the reference grid for a selection of `bp` values:
+```{r}
+rg <- qdrg(object = fmx, at = list(bp = c(175, 200, 225)))
+confint(rg, type = "response")
+```
+Be careful when using these methods; since `object` is not the first argument of
+the generic `qdrg()` function, we need to explicitly specify `object =` in the
+call to this method; otherwise, so hard-to-decipher error messages will be
+thrown.
+
+Package developers may provide "cheap" emmeans support by providing a `qdrg`
+method like this. If you do this in your package, you should [export and
+register the method](#exporting), and add `emmeans (>=1.12` and
+`estimability` to the package's `Suggests` list.
+
+
+[Back to Contents](#contents)
 
 ## Supporting `lqs` objects {#lqs}
 <!-- @index Examples!`lqs` objects -->
@@ -448,9 +493,10 @@ methods for, there are no restrictions on them.
 
 
 ## Exporting and registering your methods {#exporting}
-<!-- @index **emmeans** package!Exporting extensions to 
-     Registering `recover_data` and `emm_basis` methods -->
-To make the methods available to users of your package, the methods must be exported.
+<!-- @index **emmeans** package!Exporting extensions to;
+     Registering `recover_data` and `emm_basis` methods;
+     Registering `qdrg` methods; -->
+To make your methods available to users of your package, the methods must be exported.
 R and CRAN are evolving in a way that having S3 methods in the registry is
 increasingly important; so it is a good idea to provide for that.
 The problem is not all of your package users will have **emmeans** installed.
@@ -471,6 +517,10 @@ Then to register these methods, add or modify the
 ```
 You should also add `emmeans (>= 1.4)` and `estimability` (which is required by **emmeans**)
 to the `Suggests` field of your `DESCRIPTION` file.
+
+When registering a `qdrg` method, do the same as shown above, but add the
+argument `qdrg = TRUE` to the `.emm_register()` call, and in `Suggests`, use
+`emmeans (>= 1.12)` as well as `estimability`.
 
 
 [Back to Contents](#contents)

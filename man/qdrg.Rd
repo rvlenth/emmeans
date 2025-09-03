@@ -2,10 +2,18 @@
 % Please edit documentation in R/qdrg.R
 \name{qdrg}
 \alias{qdrg}
+\alias{qdrg.default}
 \title{Quick and dirty reference grid}
 \usage{
 qdrg(formula, data, coef, vcov, df, mcmc, object, subset, weights, contrasts,
   link, qr, ordinal, ...)
+
+\method{qdrg}{default}(object, formula = stats::formula(object),
+  data = try(recover_data.lm(object), silent = TRUE),
+  coef = stats::coef(object), vcov = stats::vcov(object),
+  df = stats::df.residual(object), mcmc, subset,
+  weights = stats::weights(object), contrasts = object$contrasts,
+  link = object$family$link, qr = object$qr, ordinal, ...)
 }
 \arguments{
 \item{formula}{Formula for the fixed effects}
@@ -61,7 +69,7 @@ object that is otherwise not supported.
 \details{
 Usually, you need to provide either \code{object}; or
 \code{formula}, \code{coef}, \code{vcov}, \code{data}, and perhaps other
-parameters. It is usually fairly straightforward to figure out how to get
+parameters. It is often fairly straightforward to figure out how to get
 these from the model \code{object}; see the documentation for the model class that
 was fitted. Sometimes one or more of these quantities contains extra parameters,
 and if so, you may need to subset them to make everything conformable. For a given \code{formula} and \code{data},
@@ -71,24 +79,16 @@ to replace \code{(Intercept)}. And for a multivariate model, we expect \code{coe
 to be a matrix with these row names, and \code{vcov} to have as many rows and columns as
 the total number of elements of \code{coef}.)
 
-If your model object follows fairly closely the conventions of an \code{\link[stats]{lm}}
-or \code{\link[stats]{glm}}object, you may be able to get by providing the model as \code{object},
-and perhaps some other parameters to override the defaults.
-When \code{object} is specified, it is used as detailed below to try to obtain the 
-other arguments. The user should ensure that the defaults
-shown below do indeed work. 
-The default values for the arguments are as follows:
-\itemize{
-  \item{\code{formula}: \code{formula(object)}}
-  \item{\code{data}: \code{recover_data.lm(object)} is tried, and if an error is thrown,
-    we also check \code{object$data}.}
-  \item{\code{coef}: \code{coef(object)}}
-  \item{\code{vcov}: \code{vcov(object)}}
-  \item{\code{df}: Set to \code{Inf} if not available in \code{df.residual(object)}}
-  \item{\code{mcmc}: \code{object$sample}}
-  \item{\code{subset}: \code{NULL} (so that all observations in \code{data} are used)}
-  \item{\code{contrasts}: \code{object$contrasts}}
-}
+If \code{object} is specified, this function serves as a generic for dispatching
+a method for \code{object}'s class. See the arguments for \code{qdrg.default} to
+see how the arguments are determined by default. For many \code{lm}- or \code{glm}-like
+models, it may suffice override just one or two of these
+defaults. The possibility of a custom \code{qdrg} method also provides a
+minimal way for package developers to provide \pkg{emmeans} support: it doesn't
+allow directly applying \code{emmeans()} on the model, but at least the user
+can obtain a reference grid, and then go from there. Note that when using a `qdrg` 
+method, it is important for the user to specify `object =` explicitly in the
+call, since `object` is not the first argument of `qdrg()`.
 
 The functions \code{\link{qdrg}} and \code{emmobj} are close cousins, in that
 they both produce \code{emmGrid} objects. When starting with summary

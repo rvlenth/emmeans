@@ -2,9 +2,12 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.11.2-80xxx
+## emmeans 1.11.2-80xxx ## NEXT version should be at least 1.12.0
   * Added a new `post.ci.method` option to set the default for `ci.method`
     in `hpd.summary()` (#538)
+  * Extended `qdrg()` so that it is a generic that can dispatch S3 methods
+    based on the class of `object`. This allows a "budget" option for
+    package developers who want to provide rudimentary **emmeans** support.
   
 
 ## emmeans 1.11.2-8
