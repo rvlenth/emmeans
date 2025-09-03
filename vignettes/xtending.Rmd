@@ -91,17 +91,17 @@ but now, it can dispath S3 methods based on the class of its `object` argument.
 Consider for example a model fitted in the **robmixglm** package:
 ```{r}
 require(robmixglm, quietly = TRUE)
-require(MASS)
-fmx <- robmixglm(formula = 100 * log10(pres) ~ bp, data = forbes, cores = 1)
+fit <- robmixglm(inverse(conc) ~ source + factor(percent), family = "gamma",
+                 data = pigs, cores = 1)
 ```
 Examining the model object `fmx`, it is not at all obvious how to get the needed 
 parameters for `qdrg()`; but they are buried in there. Here is an S3 method
 that supports this model class:
 ```{r}
-qdrg.robmixglm <- function(object, data = NULL, ...) {
+qdrg.robmixglm <- function(object, data = eval(object$call$data), ...) {
     coef <- coef(object)
     idx <- seq_along(coef)
-    qdrg(formula = formula(object), data = object$model, coef = coef,
+    qdrg(formula = formula(object), data = data, coef = coef,
          vcov = object$fit@vcov[idx, idx, drop = FALSE], ...)
 }
 ```
@@ -109,15 +109,19 @@ In this method, the `vcov` matrix includes covariances for some extra parameters
 besides the regression coefficients, so we have to use a subset of that matrix.
 Let's get the reference grid for a selection of `bp` values:
 ```{r}
-rg <- qdrg(object = fmx, at = list(bp = c(175, 200, 225)))
-confint(rg, type = "response")
+rg <- qdrg(object = fit, link = "log")
+emmeans(rg, ~ ., type = "response")
 ```
+Here, the `link` argument got passed via `...` to `qdrg()`; It was needed since
+I don't immediately see how to get the link function from the object, though I
+imagine there is a way.
+
 Be careful when using these methods; since `object` is not the first argument of
 the generic `qdrg()` function, we need to explicitly specify `object =` in the
 call to this method; otherwise, so hard-to-decipher error messages will be
 thrown.
 
-Package developers may provide "cheap" emmeans support by providing a `qdrg`
+Package developers may provide minimal emmeans support by providing a `qdrg`
 method like this. If you do this in your package, you should [export and
 register the method](#exporting), and add `emmeans (>=1.12` and
 `estimability` to the package's `Suggests` list.
