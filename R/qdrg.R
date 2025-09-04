@@ -46,8 +46,9 @@
 #' minimal way for package developers to provide \pkg{emmeans} support: it doesn't
 #' allow directly applying \code{emmeans()} on the model, but at least the user
 #' can obtain a reference grid, and then go from there. Note that when using a `qdrg` 
-#' method, it is important for the user to specify `object =` explicitly in the
-#' call, since `object` is not the first argument of `qdrg()`.
+#' method, it is best for the user to specify `object =` explicitly in the
+#' call, since `object` is not the first argument of `qdrg()`. However, if the
+#' first argument is not a formula, the function is retried with it as \code{object}.
 #' 
 #' The functions \code{\link{qdrg}} and \code{emmobj} are close cousins, in that
 #' they both produce \code{emmGrid} objects. When starting with summary
@@ -123,7 +124,14 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
     if (!missing(object)) {
         UseMethod("qdrg", object = object)
     }
-    else { # missing(object) == TRUE
+    else { 
+        if(!inherits(formula, "formula")) {
+            cl = match.call()
+            cl$object = formula
+            cl$formula = NULL
+            ### message("Retrying with first argument taken as 'object'...")
+            return(eval(cl))
+        }
         # back-compatible access to old ordinal.dim arg...
         od = (\(ordinal, ordinal.dim = NULL, ...) {
             if(!missing(ordinal) && is.numeric(ordinal)) ordinal.dim = ordinal
@@ -194,7 +202,7 @@ qdrg.default = function(object,
     if(missing(mcmc)) mcmc = NULL   # for some weird reason, this is needed
     if(missing(subset)) subset = NULL
     if(missing(ordinal)) ordinal = NULL
-    qdrg(formula = formula, frame = data, coef = coef, vcov = vcov, df = df, mcmc = mcmc,
+    qdrg(formula = formula, data = data, coef = coef, vcov = vcov, df = df, mcmc = mcmc,
          subset = subset, weights = weights, contrasts = contrasts, link = link,
          qr = qr, ordinal = ordinal, ...)
 }

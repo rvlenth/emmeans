@@ -87,8 +87,9 @@ defaults. The possibility of a custom \code{qdrg} method also provides a
 minimal way for package developers to provide \pkg{emmeans} support: it doesn't
 allow directly applying \code{emmeans()} on the model, but at least the user
 can obtain a reference grid, and then go from there. Note that when using a `qdrg` 
-method, it is important for the user to specify `object =` explicitly in the
-call, since `object` is not the first argument of `qdrg()`.
+method, it is best for the user to specify `object =` explicitly in the
+call, since `object` is not the first argument of `qdrg()`. However, if the
+first argument is not a formula, the function is retried with it as \code{object}.
 
 The functions \code{\link{qdrg}} and \code{emmobj} are close cousins, in that
 they both produce \code{emmGrid} objects. When starting with summary

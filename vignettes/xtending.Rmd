@@ -117,9 +117,8 @@ I don't immediately see how to get the link function from the object, though I
 imagine there is a way.
 
 Be careful when using these methods; since `object` is not the first argument of
-the generic `qdrg()` function, we need to explicitly specify `object =` in the
-call to this method; otherwise, so hard-to-decipher error messages will be
-thrown.
+the generic `qdrg()` function, it is best to specify `object =` in the
+call to this method, though the code tries to work around this.
 
 Package developers may provide minimal emmeans support by providing a `qdrg`
 method like this. If you do this in your package, you should [export and
