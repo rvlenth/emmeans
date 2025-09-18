@@ -424,8 +424,15 @@ predictions can be compared using interaction-style plots via the
 <code><a href="../reference/emmip.html">emmip()</a></code> function</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">RG4</span>, <span class="va">source</span> <span class="op">~</span> <span class="va">percent</span>, style <span class="op">=</span> <span class="st">"factor"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: `aes_()` was deprecated in ggplot2 3.0.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">emmeans</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/rvlenth/emmeans/issues&gt;</span>.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <p><img src="basics_files/figure-html/unnamed-chunk-13-1.png" alt="interaction-style plots of 'RG4' and 'RG5'. These show parallel trends along 'percent' for each 'source'. The one for 'RG5' consists of parallel straigt lines. The values plotted here can be obtained via 'summary(RG4)' and 'summary(RG5)'" width="432"></p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">RG5</span>, <span class="va">source</span> <span class="op">~</span> <span class="va">percent</span>, style <span class="op">=</span> <span class="st">"factor"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="basics_files/figure-html/unnamed-chunk-13-2.png" alt="interaction-style plots of 'RG4' and 'RG5'. These show parallel trends along 'percent' for each 'source'. The one for 'RG5' consists of parallel straigt lines. The values plotted here can be obtained via 'summary(RG4)' and 'summary(RG5)'" width="432">
 Both plots show three parallel trends, because neither model includes an
@@ -447,7 +454,7 @@ including <code><a href="../reference/emmeans.html">emmeans()</a></code> and <co
 either a model object or a reference-grid object as their first
 argument. Thus we can obtain EMMs for <code>mod5</code> directly from
 <code>RG5</code>, e.g.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">RG5</span>, <span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  source emmean       SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  fish   0.0336 0.000958 25   0.0316   0.0355</span></span>
@@ -464,7 +471,7 @@ which it is; and if it is a model object, it constructs the reference
 grid. When it does that, it passes its arguments to
 <code><a href="../reference/ref_grid.html">ref_grid()</a></code> in case they are needed. For instance, the above
 EMMs could have been obtained using</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod5</span>, <span class="st">"source"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>percent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span>, <span class="fl">12</span>, <span class="fl">15</span>, <span class="fl">18</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## (same results as above)</span></span></code></pre></div>
 <p>It is a great convenience to be able to pass arguments to
@@ -493,7 +500,7 @@ because <code><a href="../reference/make.tran.html">inverse()</a></code> is a na
 <code><a href="../reference/emmeans.html">emmeans()</a></code> can work with.] We can back-transform the results
 by specifying <code>type = "response"</code> in any function call where
 it makes sense. For instance,</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">RG4</span>, <span class="st">"source"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  source response    SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  fish       29.7 0.816 23     28.1     31.5</span></span>
@@ -503,8 +510,10 @@ it makes sense. For instance,</p>
 <span><span class="co">## Results are averaged over the levels of: percent </span></span>
 <span><span class="co">## Confidence level used: 0.95 </span></span>
 <span><span class="co">## Intervals are back-transformed from the inverse scale</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">RG4</span>, <span class="va">source</span> <span class="op">~</span> <span class="va">percent</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"source"</span></span></span></code></pre>
 <p>&lt;img
 src=“/home/runner/work/emmeans/emmeans/docs/articles/basics_files/figure-html/unnamed-chunk-16-1.png”
 alt=“interaction-style plots for ‘RG4’ after back-transforming. Compared
@@ -533,14 +542,14 @@ suppose we want to predict <code>mpg</code> using <code>cyl</code>
 (number of cylinders) as a factor <code>disp</code> (displacement) as a
 covariate, and include a quadratic term for <code>disp</code>. Here are
 two equivalent models:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mcmod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">disp</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="va">mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, </span>
 <span>                    dispsq <span class="op">=</span> <span class="va">disp</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">mcmod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">+</span> <span class="va">dispsq</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
 <p>These two models have exactly the same predicted values. But look at
 the EMMs:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mcmod1</span>, <span class="st">"cyl"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  cyl emmean   SE df lower.CL upper.CL</span></span>
 <span><span class="co">##    4   19.3 2.66 27     13.9     24.8</span></span>
@@ -548,7 +557,7 @@ the EMMs:</p>
 <span><span class="co">##    8   18.8 1.47 27     15.7     21.8</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mcmod2</span>, <span class="st">"cyl"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  cyl emmean   SE df lower.CL upper.CL</span></span>
 <span><span class="co">##    4   20.8 2.05 27     16.6     25.0</span></span>
@@ -559,12 +568,12 @@ the EMMs:</p>
 <p>Wow! Those are really different results – even though the models are
 equivalent. Why is this – and which (if either) is right? To understand,
 look at the reference grids:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mcmod1</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     cyl = 4, 6, 8</span></span>
 <span><span class="co">##     disp = 230.72</span></span></code></pre>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mcmod2</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     cyl = 4, 6, 8</span></span>
@@ -577,7 +586,7 @@ right, because it is impossible to have <code>disp</code> equal to
 230.72 and its square equal to 68113 at the same time! If we use
 consistent values of <code>disp</code> and<code>dispsq</code>, we get
 the same results as for <code>mcmod1</code>:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mcmod2</span>, <span class="st">"cyl"</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>disp <span class="op">=</span> <span class="fl">230.72</span>, dispsq <span class="op">=</span> <span class="fl">230.72</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  cyl emmean   SE df lower.CL upper.CL</span></span>
 <span><span class="co">##    4   19.3 2.66 27     13.9     24.8</span></span>
@@ -599,7 +608,7 @@ reference grid so that the dependency among covariates is correct.</p>
 <p>Reference grids are derived using the variables in the right-hand
 side of the model formula. But sometimes, these variables are not
 actually predictors. For example:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">deg</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">x</span>, degree <span class="op">=</span> <span class="va">deg</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span></code></pre></div>
 <p>If we call <code><a href="../reference/ref_grid.html">ref_grid()</a></code> or <code><a href="../reference/emmeans.html">emmeans()</a></code> with
@@ -608,7 +617,7 @@ this model, it will try to construct a grid of values of
 error because <code>deg</code> is not a predictor in this model. To get
 things to work correctly, you need to name <code>deg</code> in a
 <code>params</code> argument, e.g.,</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod</span>, <span class="op">~</span> <span class="va">treat</span> <span class="op">|</span> <span class="va">x</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, params <span class="op">=</span> <span class="st">"deg"</span><span class="op">)</span></span></code></pre></div>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
@@ -633,12 +642,12 @@ used to define the different curves) on the left.</p>
 for <code>emmGrid</code> objects. Let’s consider a different model for
 the <code>mtcars</code> data with both <code>cyl</code> and
 <code>disp</code> as covariates</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mcmod3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">disp</span> <span class="op">*</span> <span class="va">cyl</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
 <p>In the following, we display the estimates and 95% confidence
 intervals for <code>RG4</code> in separate panels for each
 <code>source</code>.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EMM3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mcmod3</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">|</span> <span class="va">disp</span>, </span>
 <span>                at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">6</span>,<span class="fl">8</span><span class="op">)</span>, disp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">200</span>,<span class="fl">300</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">EMM3</span><span class="op">)</span></span></code></pre></div>
@@ -650,7 +659,7 @@ give us a clue that we are extrapolating. A better idea is to
 acknowledge that displacement largely depends on the number of
 cylinders. So here is yet another way to use <code>cov.reduce</code> to
 modify the reference grid:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mcrg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mcmod3</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">6</span>,<span class="fl">8</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                         cov.reduce <span class="op">=</span> <span class="va">disp</span> <span class="op">~</span> <span class="va">cyl</span><span class="op">)</span></span>
 <span><span class="va">mcrg</span> <span class="op">@</span> <span class="va">grid</span></span></code></pre></div>
@@ -664,7 +673,7 @@ formula and its fitted values are used as the <code>disp</code> values –
 only one for each <code>cyl</code>. If we plot this grid, the results
 are sensible, reflecting what the model predicts for typical cars with
 each number of cylinders:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mcrg</span><span class="op">)</span></span></code></pre></div>
 <p><img src="basics_files/figure-html/unnamed-chunk-26-1.png" alt="Side-by-side CIs for cyl marginal means. The values plotted are obtainable via 'summary(mcrg)'" width="432"></p>
 </div>
@@ -675,7 +684,7 @@ each number of cylinders:</p>
 these plots if they like. For example, we can add the data to an
 interaction plot – this time we opt to include confidence intervals and
 put the three sources in separate panels:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org" class="external-link">"ggplot2"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">mod4</span>, <span class="op">~</span> <span class="va">percent</span> <span class="op">|</span> <span class="va">source</span>, CIs <span class="op">=</span> <span class="cn">TRUE</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">percent</span>, y <span class="op">=</span> <span class="va">conc</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span>, pch <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
@@ -699,7 +708,7 @@ method allows the user to save exactly what is seen in the printed
 output as text, to be saved or formatted as the user likes (see the
 documentation for <code>print.emmGrid</code> for details). Here is an
 example using one of the objects above:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">mcrg</span>, level <span class="op">=</span> <span class="fl">0.90</span>, adjust <span class="op">=</span> <span class="st">"scheffe"</span><span class="op">)</span></span>
 <span><span class="va">xport</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ci</span>, export <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&lt;font color = 'blue'&gt;\n"</span><span class="op">)</span></span>
@@ -768,7 +777,7 @@ example, using <code>weights = "cells"</code> in the call will weight
 the predictions according to their cell frequencies (recall this
 information is retained in the reference grid). This produces results
 comparable to ordinary marginal means:</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod4</span>, <span class="st">"percent"</span>, weights <span class="op">=</span> <span class="st">"cells"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  percent emmean       SE df lower.CL upper.CL</span></span>
 <span><span class="co">##        9 0.0315 0.001030 23   0.0293   0.0336</span></span>
@@ -784,7 +793,7 @@ the highest estimate is for <code>percent = 15</code> rather than
 <code>percent = 18</code>. It is interesting to compare this with the
 results for a model that includes only <code>percent</code> as a
 predictor.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="../reference/make.tran.html">inverse</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod6</span>, <span class="st">"percent"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  percent emmean      SE df lower.CL upper.CL</span></span>
@@ -817,7 +826,7 @@ the <code>MOats</code> dataset provided in the package has predictors
 <code>Block</code> and <code>Variety</code>, and a four-dimensional
 response <code>yield</code> giving yields observed with varying amounts
 of nitrogen added to the soil. Here is a model and reference grid:</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MOats.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span> <span class="op">(</span><span class="va">yield</span> <span class="op">~</span> <span class="va">Block</span> <span class="op">+</span> <span class="va">Variety</span>, data <span class="op">=</span> <span class="va">MOats</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span> <span class="op">(</span><span class="va">MOats.lm</span>, mult.name <span class="op">=</span> <span class="st">"nitro"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
@@ -842,25 +851,25 @@ excluded, the multivariate levels would have been named
 introduced previously. These functions, and a few related ones, return
 an object of class <code>emmGrid</code>. From previously defined
 objects:</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">RG4</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] "emmGrid"</span></span>
 <span><span class="co">## attr(,"package")</span></span>
 <span><span class="co">## [1] "emmeans"</span></span></code></pre>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">EMM.source</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] "emmGrid"</span></span>
 <span><span class="co">## attr(,"package")</span></span>
 <span><span class="co">## [1] "emmeans"</span></span></code></pre>
 <p>If you simply show these objects, you get different-looking
 results:</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">RG4</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     source = fish, soy, skim</span></span>
 <span><span class="co">##     percent =  9, 12, 15, 18</span></span>
 <span><span class="co">## Transformation: "inverse"</span></span></code></pre>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EMM.source</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  source emmean       SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  fish   0.0337 0.000926 23   0.0318   0.0356</span></span>
@@ -873,7 +882,7 @@ results:</p>
 <p>This is based on guessing what users most need to see when displaying
 the object. You can override these defaults; for example to just see a
 quick summary of what is there, do</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">EMM.source</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
 <span><span class="co">##     source = fish, soy, skim</span></span>
@@ -885,7 +894,7 @@ quick summary of what is there, do</p>
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> may also be specified within most functions that
 produce <code>these kinds of results.</code>emmGrid` objects. For
 example:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># equivalent to summary(emmeans(mod4, "percent"), level = 0.90, infer = TRUE))</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mod4</span>, <span class="st">"percent"</span>, level <span class="op">=</span> <span class="fl">0.90</span>, infer <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  percent emmean       SE df lower.CL upper.CL t.ratio p.value</span></span>
@@ -900,7 +909,7 @@ example:</p>
 <p>This <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method for <code>emmGrid</code> objects)
 actually produces a <code>data.frame</code>, but with extra bells and
 whistles:</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">EMM.source</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] "summary_emm" "data.frame"</span></span></code></pre>
 <p>This can be useful to know because if you want to actually
