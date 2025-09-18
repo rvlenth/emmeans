@@ -15,7 +15,7 @@ object that is otherwise not supported."><meta property="og:image" content="http
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,15 @@ object that is otherwise not supported.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qdrg</span><span class="op">(</span><span class="va">formula</span>, <span class="va">data</span>, <span class="va">coef</span>, <span class="va">vcov</span>, <span class="va">df</span>, <span class="va">mcmc</span>, <span class="va">object</span>, <span class="va">subset</span>, <span class="va">weights</span>, <span class="va">contrasts</span>,</span>
-<span>  <span class="va">link</span>, <span class="va">qr</span>, <span class="va">ordinal</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">link</span>, <span class="va">qr</span>, <span class="va">ordinal</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Default S3 method</span></span>
+<span><span class="fu">qdrg</span><span class="op">(</span><span class="va">object</span>, formula <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">formula</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>,</span>
+<span>  data <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">recover_data.lm</span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  coef <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, vcov <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>,</span>
+<span>  df <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, <span class="va">mcmc</span>, <span class="va">subset</span>,</span>
+<span>  weights <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, contrasts <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">contrasts</span>,</span>
+<span>  link <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">family</span><span class="op">$</span><span class="va">link</span>, qr <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">qr</span>, <span class="va">ordinal</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -153,7 +161,7 @@ linear predictor.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Usually, you need to provide either <code>object</code>; or
 <code>formula</code>, <code>coef</code>, <code>vcov</code>, <code>data</code>, and perhaps other
-parameters. It is usually fairly straightforward to figure out how to get
+parameters. It is often fairly straightforward to figure out how to get
 these from the model <code>object</code>; see the documentation for the model class that
 was fitted. Sometimes one or more of these quantities contains extra parameters,
 and if so, you may need to subset them to make everything conformable. For a given <code>formula</code> and <code>data</code>,
@@ -162,22 +170,18 @@ you can find out what is needed via <code>colnames(model.matrix(formula, data))<
 to replace <code>(Intercept)</code>. And for a multivariate model, we expect <code>coef</code>
 to be a matrix with these row names, and <code>vcov</code> to have as many rows and columns as
 the total number of elements of <code>coef</code>.)</p>
-<p>If your model object follows fairly closely the conventions of an <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code>
-or <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code>object, you may be able to get by providing the model as <code>object</code>,
-and perhaps some other parameters to override the defaults.
-When <code>object</code> is specified, it is used as detailed below to try to obtain the
-other arguments. The user should ensure that the defaults
-shown below do indeed work.
-The default values for the arguments are as follows:</p><ul><li><p><code>formula</code>: <code>formula(object)</code></p></li>
-<li><p><code>data</code>: <code>recover_data.lm(object)</code> is tried, and if an error is thrown,
-    we also check <code>object$data</code>.</p></li>
-<li><p><code>coef</code>: <code>coef(object)</code></p></li>
-<li><p><code>vcov</code>: <code>vcov(object)</code></p></li>
-<li><p><code>df</code>: Set to <code>Inf</code> if not available in <code>df.residual(object)</code></p></li>
-<li><p><code>mcmc</code>: <code>object$sample</code></p></li>
-<li><p><code>subset</code>: <code>NULL</code> (so that all observations in <code>data</code> are used)</p></li>
-<li><p><code>contrasts</code>: <code>object$contrasts</code></p></li>
-</ul><p>The functions <code>qdrg</code> and <code>emmobj</code> are close cousins, in that
+<p>If <code>object</code> is specified, this function serves as a generic for dispatching
+a method for <code>object</code>'s class. See the arguments for <code>qdrg.default</code> to
+see how the arguments are determined by default. For many <code>lm</code>- or <code>glm</code>-like
+models, it may suffice override just one or two of these
+defaults. The possibility of a custom <code>qdrg</code> method also provides a
+minimal way for package developers to provide <span class="pkg">emmeans</span> support: it doesn't
+allow directly applying <code><a href="emmeans.html">emmeans()</a></code> on the model, but at least the user
+can obtain a reference grid, and then go from there. Note that when using a `qdrg`
+method, it is best for the user to specify `object =` explicitly in the
+call, since `object` is not the first argument of `qdrg()`. However, if the
+first argument is not a formula, the function is retried with it as <code>object</code>.</p>
+<p>The functions <code>qdrg</code> and <code>emmobj</code> are close cousins, in that
 they both produce <code>emmGrid</code> objects. When starting with summary
 statistics for an existing grid, <code>emmobj</code> is more useful, while
 <code>qdrg</code> is more useful when starting from a fitted model.</p>

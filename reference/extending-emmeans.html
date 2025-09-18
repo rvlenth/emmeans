@@ -27,7 +27,7 @@ There are several other exported functions that may be useful. See the
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@ There are several other exported functions that may be useful. See the
 <span></span>
 <span><span class="fu">emm_basis</span><span class="op">(</span><span class="va">object</span>, <span class="va">trms</span>, <span class="va">xlev</span>, <span class="va">grid</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.emm_register</span><span class="op">(</span><span class="va">classes</span>, <span class="va">pkgname</span><span class="op">)</span></span>
+<span><span class="fu">.emm_register</span><span class="op">(</span><span class="va">classes</span>, <span class="va">pkgname</span>, qdrg <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.std.link.labels</span><span class="op">(</span><span class="va">fam</span>, <span class="va">misc</span><span class="op">)</span></span>
 <span></span>
@@ -209,6 +209,12 @@ The package must contain the functions <code>recover_data.foo</code> and
 <dt id="arg-pkgname">pkgname<a class="anchor" aria-label="anchor" href="#arg-pkgname"></a></dt>
 <dd><p>Character name of package providing the methods (usually
 should be the second argument of <code>.onLoad</code>)</p></dd>
+
+
+<dt id="arg-qdrg">qdrg<a class="anchor" aria-label="anchor" href="#arg-qdrg"></a></dt>
+<dd><p>Logical value. If <code>FALSE</code>, the <code>recover_data</code> and
+<code>emm_basis</code> methods are registered. If <code>TRUE</code>, the <code>qdrg</code>
+method for each class is registered instead.</p></dd>
 
 
 <dt id="arg-fam">fam<a class="anchor" aria-label="anchor" href="#arg-fam"></a></dt>

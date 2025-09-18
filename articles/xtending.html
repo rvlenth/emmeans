@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>For developers: Extending **emmeans**</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 1.11.2.80001</h4>
+package, Version 1.11.2.80003</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/xtending.Rmd" class="external-link"><code>vignettes/xtending.Rmd</code></a></small>
@@ -105,6 +105,7 @@ function.</p>
 <li><a href="#intro">Introduction</a></li>
 <li><a href="#dataex">Data example</a></li>
 <li><a href="#rlm">Supporting <code>rlm</code> objects</a></li>
+<li><a href="#qdrg">Quick and dirty support</a></li>
 <li><a href="#lqs">Supporting <code>lqs</code> objects</a></li>
 <li><a href="#communic">Communication between methods</a></li>
 <li><a href="#hooks">Hook functions</a></li>
@@ -198,6 +199,77 @@ enough different to create any problems.</p>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 <div class="section level2">
+<h2 id="qdrg">[Quick and dirty support<a class="anchor" aria-label="anchor" href="#qdrg"></a>
+</h2>
+<!-- @index `qdrg()`!S3 methods; **robmixglm** example; -->
+<p>Later, we will talk about how to fully support a model object in
+<strong>emmeans</strong>. But it is often very easy to provide
+<em>partial</em> support via the <code><a href="../reference/qdrg.html">qdrg()</a></code> (“quick and dirty
+reference grid”) function. <code><a href="../reference/qdrg.html">qdrg()</a></code> creates a reference grid
+for a model, and that reference grid can subsequently be used in a call
+to <code><a href="../reference/emmeans.html">emmeans()</a></code> or many other functions (but not
+<code><a href="../reference/emtrends.html">emtrends()</a></code>). In the past, <code><a href="../reference/qdrg.html">qdrg()</a></code> was just a
+standalone function; but now, it can dispath S3 methods based on the
+class of its <code>object</code> argument. Consider for example a model
+fitted in the <strong>robmixglm</strong> package:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va">robmixglm</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/robmixglm/man/robmixglm.html" class="external-link">robmixglm</a></span><span class="op">(</span><span class="fu"><a href="../reference/make.tran.html">inverse</a></span><span class="op">(</span><span class="va">conc</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, family <span class="op">=</span> <span class="st">"gamma"</span>,</span>
+<span>                 data <span class="op">=</span> <span class="va">pigs</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p>Examining the model object <code>fmx</code>, it is not at all obvious
+how to get the needed parameters for <code><a href="../reference/qdrg.html">qdrg()</a></code>; but they are
+buried in there. Here is an S3 method that supports this model
+class:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">qdrg.robmixglm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">call</span><span class="op">$</span><span class="va">data</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
+<span>    <span class="va">idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/qdrg.html">qdrg</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">formula</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">data</span>, coef <span class="op">=</span> <span class="va">coef</span>,</span>
+<span>         vcov <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">fit</span><span class="op">@</span><span class="va">vcov</span><span class="op">[</span><span class="va">idx</span>, <span class="va">idx</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>In this method, the <code>vcov</code> matrix includes covariances for
+some extra parameters besides the regression coefficients, so we have to
+use a subset of that matrix. Let’s get the reference grid for a
+selection of <code>bp</code> values:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qdrg.html">qdrg</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit</span>, link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg</span>, <span class="op">~</span> <span class="va">.</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
+<pre class="ro"><code><span><span class="co">## $`emmeans of source`</span></span>
+<span><span class="co">##  source response    SE  df asymp.LCL asymp.UCL</span></span>
+<span><span class="co">##  fish       29.7 0.964 Inf      27.9      31.7</span></span>
+<span><span class="co">##  soy        39.0 1.290 Inf      36.6      41.7</span></span>
+<span><span class="co">##  skim       44.1 1.550 Inf      41.1      47.2</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results are averaged over the levels of: percent </span></span>
+<span><span class="co">## Confidence level used: 0.95 </span></span>
+<span><span class="co">## Intervals are back-transformed from the inverse[log] scale </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $`emmeans of percent`</span></span>
+<span><span class="co">##  percent response   SE  df asymp.LCL asymp.UCL</span></span>
+<span><span class="co">##        9     31.2 1.13 Inf      29.0      33.4</span></span>
+<span><span class="co">##       12     37.4 1.27 Inf      35.0      40.0</span></span>
+<span><span class="co">##       15     38.7 1.50 Inf      35.9      41.7</span></span>
+<span><span class="co">##       18     42.1 1.98 Inf      38.4      46.2</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results are averaged over the levels of: source </span></span>
+<span><span class="co">## Confidence level used: 0.95 </span></span>
+<span><span class="co">## Intervals are back-transformed from the inverse[log] scale</span></span></code></pre>
+<p>Here, the <code>link</code> argument got passed via <code>...</code>
+to <code><a href="../reference/qdrg.html">qdrg()</a></code>; It was needed since I don’t immediately see how
+to get the link function from the object, though I imagine there is a
+way.</p>
+<p>Be careful when using these methods; since <code>object</code> is not
+the first argument of the generic <code><a href="../reference/qdrg.html">qdrg()</a></code> function, it is
+best to specify <code>object =</code> in the call to this method, though
+the code tries to work around this.</p>
+<p>Package developers may provide minimal emmeans support by providing a
+<code>qdrg</code> method like this. If you do this in your package, you
+should <a href="#exporting">export and register the method</a>, and add
+<code>emmeans (&gt;=1.12</code> and <code>estimability</code> to the
+package’s <code>Suggests</code> list.</p>
+<p><a href="#contents">Back to Contents</a></p>
+</div>
+<div class="section level2">
 <h2 id="lqs">Supporting <code>lqs</code> objects<a class="anchor" aria-label="anchor" href="#lqs"></a>
 </h2>
 <!-- @index Examples!`lqs` objects -->
@@ -208,7 +280,7 @@ not extensions of any other class, and have other issues, including not
 even having a <code>vcov</code> method. So for these, we really do need
 to write new methods for <code>lqs</code> objects. First, let’s fit a
 model.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fake.lts</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/lqs.html" class="external-link">ltsreg</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">A</span> <span class="op">*</span> <span class="va">B</span>, data <span class="op">=</span> <span class="va">fake</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="rd-lqs">The <code>recover_data</code> method<a class="anchor" aria-label="anchor" href="#rd-lqs"></a>
@@ -216,7 +288,7 @@ model.</p>
 <!-- @index `recover_data()!for `lqs` objects@lqs -->
 <p>It is usually an easy matter to write a <code>recover_data</code>
 method. Look at the one for <code>lm</code> objects:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">emmeans</span><span class="fu">:::</span><span class="va">recover_data.lm</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## function (object, frame = object$model, ...) </span></span>
 <span><span class="co">## {</span></span>
@@ -224,17 +296,17 @@ method. Look at the one for <code>lm</code> objects:</p>
 <span><span class="co">##     recover_data(fcall, delete.response(terms(object)), object$na.action, </span></span>
 <span><span class="co">##         frame = frame, pwts = weights(object), ...)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55e1cdd28f90&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x561006869c20&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:emmeans&gt;</span></span></code></pre>
 <p>Note that all it does is obtain the <code>call</code> component and
 call the method for class <code>call</code>, with additional arguments
 for its <code>terms</code> component and <code>na.action</code>. It
 happens that we can access these attributes in exactly the same way as
 for <code>lm</code> objects; so:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">recover_data.lqs</span> <span class="op">=</span> <span class="fu">emmeans</span><span class="fu">:::</span><span class="va">recover_data.lm</span></span></code></pre></div>
 <p>Let’s test it:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rec.fake</span> <span class="op">=</span> <span class="fu"><a href="../reference/extending-emmeans.html">recover_data</a></span><span class="op">(</span><span class="va">fake.lts</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rec.fake</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##    A  B</span></span>
@@ -304,7 +376,7 @@ message.</p>
 </h3>
 <!-- @index `emm_basis()`!Arguments and returned value -->
 <p>The <code>emm_basis</code> method has four required arguments:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/args.html" class="external-link">args</a></span><span class="op">(</span><span class="fu">emmeans</span><span class="fu">:::</span><span class="va">emm_basis.lm</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## function (object, trms, xlev, grid, ...) </span></span>
 <span><span class="co">## NULL</span></span></code></pre>
@@ -330,7 +402,7 @@ the existing methods can help; but the best resource is the
 carefully to see what it does to predict values for a new set of
 predictors (e.g., <code>newdata</code> in <code>predict.lm</code>).
 Following this advice, let’s take a look at it:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">MASS</span><span class="fu">:::</span><span class="va"><a href="https://rdrr.io/pkg/MASS/man/predict.lqs.html" class="external-link">predict.lqs</a></span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## function (object, newdata, na.action = na.pass, ...) </span></span>
 <span><span class="co">## {</span></span>
@@ -343,14 +415,14 @@ Following this advice, let’s take a look at it:</p>
 <span><span class="co">##     X &lt;- model.matrix(Terms, m, contrasts.arg = object$contrasts)</span></span>
 <span><span class="co">##     drop(X %*% object$coefficients)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55e1cf391910&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x561007794cb0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:MASS&gt;</span></span></code></pre>
 <div class="section level6">
 <h6 id="eblqs"></h6>
 <!-- @index `emm_basis()`!for `lqs` objects@lqs -->
 <p>Based on this, here is a listing of an <code>emm_basis</code> method
 for <code>lqs</code> objects:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">emm_basis.lqs</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">trms</span>, <span class="va">xlev</span>, <span class="va">grid</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span> </span>
 <span>    <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></span><span class="op">(</span><span class="va">trms</span>, <span class="va">grid</span>, na.action <span class="op">=</span> <span class="va">na.pass</span>, xlev <span class="op">=</span> <span class="va">xlev</span><span class="op">)</span></span>
 <span>    <span class="va">X</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="va">trms</span>, <span class="va">m</span>, contrasts.arg <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">contrasts</span><span class="op">)</span> </span>
@@ -364,19 +436,19 @@ for <code>lqs</code> objects:</p>
 <span>         dffun <span class="op">=</span> <span class="va">dffun</span>, dfargs <span class="op">=</span> <span class="va">dfargs</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Before explaining it, let’s verify that it works:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fake.lts</span>, <span class="op">~</span> <span class="va">B</span> <span class="op">|</span> <span class="va">A</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## A = a1:</span></span>
 <span><span class="co">##  B  emmean    SE df lower.CL upper.CL</span></span>
-<span><span class="co">##  b1   11.9 0.228 24     11.4     12.3</span></span>
-<span><span class="co">##  b2   23.1 0.228 24     22.6     23.6</span></span>
-<span><span class="co">##  b3   17.8 0.228 24     17.3     18.2</span></span>
+<span><span class="co">##  b1   11.9 0.238 24     11.5     12.4</span></span>
+<span><span class="co">##  b2   23.2 0.238 24     22.7     23.7</span></span>
+<span><span class="co">##  b3   17.8 0.238 24     17.4     18.3</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## A = a2:</span></span>
 <span><span class="co">##  B  emmean    SE df lower.CL upper.CL</span></span>
-<span><span class="co">##  b1   13.9 0.228 24     13.4     14.4</span></span>
-<span><span class="co">##  b2   24.1 0.228 24     23.6     24.5</span></span>
-<span><span class="co">##  b3   20.5 0.228 24     20.0     21.0</span></span>
+<span><span class="co">##  b1   14.3 0.238 24     13.8     14.8</span></span>
+<span><span class="co">##  b2   24.0 0.238 24     23.5     24.5</span></span>
+<span><span class="co">##  b3   20.8 0.238 24     20.3     21.3</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>Hooray! Note the results are comparable to those we had for
@@ -641,7 +713,7 @@ supported by the <strong>emmeans</strong> infrastructure). So, to handle
 the <code>"decode"</code> mode, we will need to actually decode the
 predictors used to construct he reference grid. That means we need to
 make <code>recover_data</code> a lot fancier! Here it is:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">recover_data.rsm</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">data</span>, <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"asis"</span>, <span class="st">"coded"</span>, <span class="st">"decoded"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">mode</span><span class="op">)</span></span>
 <span>    <span class="va">cod</span> <span class="op">=</span> <span class="fu">rsm</span><span class="fu">::</span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">codings</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
@@ -718,7 +790,7 @@ to be accessed later by <code><a href="../reference/extending-emmeans.html">emm_
 <!-- @index `emm_basis()`!for `rsm` objects@rsm -->
 <p>Now comes the <code>emm_basis</code> method that will be called after
 the grid is defined. It is listed below:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">emm_basis.rsm</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">trms</span>, <span class="va">xlev</span>, <span class="va">grid</span>, </span>
 <span>                         <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"asis"</span>, <span class="st">"coded"</span>, <span class="st">"decoded"</span><span class="op">)</span>, <span class="va">misc</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg</a></span><span class="op">(</span><span class="va">mode</span><span class="op">)</span></span>
@@ -761,12 +833,12 @@ possibility that the model is rank-deficient.</p>
 standard example for <code>rsm</code> fits a second-order model
 <code>CR.rs2</code> to a dataset organized in two blocks and with two
 coded predictors.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/rvlenth/rsm" class="external-link">"rsm"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/example.html" class="external-link">example</a></span><span class="op">(</span><span class="st">"rsm"</span><span class="op">)</span>   <span class="co">### (output is not shown) ###</span></span></code></pre></div>
 <p>First, let’s look at some results on the coded scale—which are the
 same as for an ordinary <code>lm</code> object.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">CR.rs2</span>, <span class="op">~</span> <span class="va">x1</span> <span class="op">*</span> <span class="va">x2</span>, mode <span class="op">=</span> <span class="st">"coded"</span>, </span>
 <span>        at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  x1 x2 emmean    SE df lower.CL upper.CL</span></span>
@@ -782,7 +854,7 @@ same as for an ordinary <code>lm</code> object.</p>
 <p>Now, the coded variables <code>x1</code> and <code>x2</code> are
 derived from these coding formulas for predictors <code>Time</code> and
 <code>Temp</code>:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://github.com/rvlenth/rsm/reference/coded.data.html" class="external-link">codings</a></span><span class="op">(</span><span class="va">CR.rs1</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $x1</span></span>
 <span><span class="co">## x1 ~ (Time - 85)/5</span></span>
@@ -793,7 +865,7 @@ derived from these coding formulas for predictors <code>Time</code> and
 to a time of 85 + 1 x 5 = 90. Here are some results working with decoded
 predictors. Note that the <code>at</code> list must now be given in
 terms of <code>Time</code> and <code>Temp</code>:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">CR.rs2</span>, <span class="op">~</span> <span class="va">Time</span> <span class="op">*</span> <span class="va">Temp</span>, mode <span class="op">=</span> <span class="st">"decoded"</span>, </span>
 <span>        at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">85</span>, <span class="fl">90</span><span class="op">)</span>, Temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">165</span>, <span class="fl">185</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Time Temp emmean    SE df lower.CL upper.CL</span></span>
@@ -838,9 +910,10 @@ provide methods for, there are no restrictions on them.</p>
 <div class="section level2">
 <h2 id="exporting">Exporting and registering your methods<a class="anchor" aria-label="anchor" href="#exporting"></a>
 </h2>
-<!-- @index **emmeans** package!Exporting extensions to 
-     Registering `recover_data` and `emm_basis` methods -->
-<p>To make the methods available to users of your package, the methods
+<!-- @index **emmeans** package!Exporting extensions to;
+     Registering `recover_data` and `emm_basis` methods;
+     Registering `qdrg` methods; -->
+<p>To make your methods available to users of your package, the methods
 must be exported. R and CRAN are evolving in a way that having S3
 methods in the registry is increasingly important; so it is a good idea
 to provide for that. The problem is not all of your package users will
@@ -854,7 +927,7 @@ Suppose that your package offers two model classes <code>foo</code> and
 register these methods, add or modify the <code>.onLoad</code> function
 in your package (traditionally saved in the source file
 <code>zzz.R</code>):</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">.onLoad</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">libname</span>, <span class="va">pkgname</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"emmeans"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="fu">emmeans</span><span class="fu">::</span><span class="fu"><a href="../reference/extending-emmeans.html">.emm_register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"foo"</span>, <span class="st">"bar"</span><span class="op">)</span>, <span class="va">pkgname</span><span class="op">)</span></span>
@@ -863,6 +936,11 @@ in your package (traditionally saved in the source file
 <code>estimability</code> (which is required by
 <strong>emmeans</strong>) to the <code>Suggests</code> field of your
 <code>DESCRIPTION</code> file.</p>
+<p>When registering a <code>qdrg</code> method, do the same as shown
+above, but add the argument <code>qdrg = TRUE</code> to the
+<code><a href="../reference/extending-emmeans.html">.emm_register()</a></code> call, and in <code>Suggests</code>, use
+<code>emmeans (&gt;= 1.12)</code> as well as
+<code>estimability</code>.</p>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 <div class="section level2">

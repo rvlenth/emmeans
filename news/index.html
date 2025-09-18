@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,8 +57,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.11.2-80" id="emmeans-1112-80xxx">emmeans 1.11.2-80xxx<a class="anchor" aria-label="anchor" href="#emmeans-1112-80xxx"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.11.2-80" id="emmeans-1112-80xxx--next-version-should-be-at-least-1120">emmeans 1.11.2-80xxx ## NEXT version should be at least 1.12.0<a class="anchor" aria-label="anchor" href="#emmeans-1112-80xxx--next-version-should-be-at-least-1120"></a></h2>
 <ul><li>Added a new <code>post.ci.method</code> option to set the default for <code>ci.method</code> in <code><a href="../reference/hpd.summary.html">hpd.summary()</a></code> (<a href="https://github.com/rvlenth/emmeans/issues/538" class="external-link">#538</a>)</li>
+<li>Extended <code><a href="../reference/qdrg.html">qdrg()</a></code> so that it is a generic that can dispatch S3 methods based on the class of <code>object</code>. This allows a “budget” option for package developers who want to provide rudimentary <strong>emmeans</strong> support.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.2-8" id="emmeans-1112-8">emmeans 1.11.2-8<a class="anchor" aria-label="anchor" href="#emmeans-1112-8"></a></h2><p class="text-muted">CRAN release: 2025-08-27</p>
