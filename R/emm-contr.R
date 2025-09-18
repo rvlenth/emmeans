@@ -71,7 +71,7 @@
 #' an error is thrown.
 #'
 #' \code{consec.emmc} and \code{mean_chg.emmc} are useful for contrasting
-#' treatments that occur in sequence. For a factor with levels A, B, C, D, E,
+#' treatments that occur in sequence. For a factor with levels A, B, C, D,
 #' \code{consec.emmc} generates the comparisons B-A, C-B, and D-C, while
 #' \code{mean_chg.emmc} generates the contrasts (B+C+D)/3 - A, (C+D)/2 -
 #' (A+B)/2, and D - (A+B+C)/3. With \code{reverse = TRUE}, these differences go
