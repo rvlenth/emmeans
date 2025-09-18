@@ -29,7 +29,7 @@ recover_data(object, ...)
 
 emm_basis(object, trms, xlev, grid, ...)
 
-.emm_register(classes, pkgname)
+.emm_register(classes, pkgname, qdrg = FALSE)
 
 .std.link.labels(fam, misc)
 
@@ -117,6 +117,10 @@ The package must contain the functions \code{recover_data.foo} and
 
 \item{pkgname}{Character name of package providing the methods (usually
 should be the second argument of \code{.onLoad})}
+
+\item{qdrg}{Logical value. If \code{FALSE}, the \code{recover_data} and
+\code{emm_basis} methods are registered. If \code{TRUE}, the \code{qdrg}
+method for each class is registered instead.}
 
 \item{fam}{Result of call to \code{family(object)}}
 
