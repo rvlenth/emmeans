@@ -373,11 +373,11 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         scale = attr(emms, "scale")
 
     dotarg$position = pos
-    linearg$mapping = ggplot2::aes_(group = ~tvar)
+    linearg$mapping = ggplot2::aes(group = .data$tvar)
     linearg$position = pos
     if (length(vars$tvars) > 0) {
-        grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar, 
-                    color = ~tvar, linetype = ~tvar, shape = ~tvar, group = ~tvar))
+        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
+                    color = .data$tvar, linetype = .data$tvar, shape = .data$tvar, group = .data$tvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg)
         grobj = grobj +
@@ -385,7 +385,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
             ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab)
     }
     else { # just one trace per plot
-        grobj = ggplot2::ggplot(emms, ggplot2::aes_(x = ~xvar, y = ~yvar))
+        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
         # if (style == "factor")
         #     grobj = grobj + do.call(ggplot2::geom_point, dotarg)
         grobj = grobj +
@@ -394,13 +394,13 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         
     }
     if (PIs) {
-        PIarg$mapping = ggplot2::aes_(ymin = ~LPL, ymax = ~UPL)
+        PIarg$mapping = ggplot2::aes(ymin = .data$LPL, ymax = .data$UPL)
         PIarg$position = pos
         if(is.null(PIarg$linetype))  PIarg$linetype = "solid"
         grobj = grobj + do.call(ggplot2::geom_linerange, PIarg)
     }
     if (CIs) {
-        CIarg$mapping = ggplot2::aes_(ymin = ~LCL, ymax = ~UCL)
+        CIarg$mapping = ggplot2::aes(ymin = .data$LCL, ymax = .data$UCL)
         CIarg$position = pos
         if(is.null(CIarg$linetype))  CIarg$linetype = "solid"
         grobj = grobj + do.call(ggplot2::geom_linerange, CIarg)
