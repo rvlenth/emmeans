@@ -517,27 +517,27 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         summ$ucl = ucl
 
         # construct horizontal plot - flip coords later if necessary
-        grobj = ggplot2::ggplot(summ, ggplot2::aes_(x = ~the.emmean, y = ~pri.fac)) +
+        grobj = ggplot2::ggplot(summ, ggplot2::aes(x = .data$the.emmean, y = .data$pri.fac)) +
             ggplot2::geom_point(color = CI.col, alpha = .0) 
             # invisible points to get grouping order right
         if (PIs) 
-            grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lpl, xend = ~upl, 
-                                y = ~pri.fac, yend = ~pri.fac), 
+            grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lpl, xend = .data$upl, 
+                                y = .data$pri.fac, yend = .data$pri.fac), 
                                 color = PI.col, lwd = 2.5, alpha = .15)
         if (CIs) 
-            grobj = grobj + ggplot2::geom_segment(ggplot2::aes_(x = ~lcl, xend = ~ucl, 
-                                y = ~pri.fac, yend = ~pri.fac), 
+            grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lcl, xend = .data$ucl, 
+                                y = .data$pri.fac, yend = .data$pri.fac), 
                                 color = CI.col, lwd = 4, alpha = .25)
 
         if (!is.null(extra)) {
             grobj = grobj + 
-                ggplot2::geom_segment(ggplot2::aes_(x = ~the.emmean, 
-                        xend = ~lcmpl, y = ~pri.fac, yend = ~pri.fac), 
+                ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, 
+                        xend = .data$lcmpl, y = .data$pri.fac, yend = .data$pri.fac), 
                         arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
                             type = "closed"), color = comp.col, 
                         data = summ[!is.na(summ$lcmpl), ]) +
-                ggplot2::geom_segment(ggplot2::aes_(x = ~the.emmean, 
-                    xend = ~rcmpl, y = ~pri.fac, yend = ~pri.fac), 
+                ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, 
+                    xend = .data$rcmpl, y = .data$pri.fac, yend = .data$pri.fac), 
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
                             type = "closed"), color = comp.col,
                     data = summ[!is.na(summ$rcmpl), ])

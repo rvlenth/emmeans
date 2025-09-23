@@ -39,6 +39,6 @@ Description: Obtain estimated marginal means (EMMs) for many linear, generalized
   Statistician 34(4), 216-221 <doi:10.1080/00031305.1980.10483031>.
 License: GPL-2 | GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Roxygen: list(old_usage = TRUE)
 VignetteBuilder: knitr
