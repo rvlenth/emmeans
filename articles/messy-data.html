@@ -250,13 +250,6 @@ set them at their means and use those means for purposes of predictions
 and EMMs. These adjusted means are shown in the following plot.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">framing.glm</span>, <span class="va">treat</span> <span class="op">~</span> <span class="va">educ</span> <span class="op">|</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## Warning: `aes_()` was deprecated in ggplot2 3.0.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">emmeans</span> package.</span></span>
-<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/rvlenth/emmeans/issues&gt;</span>.</span></span>
-<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-7-1.png" alt="Two panels, each showing a decreasing trend with educ except they increase again with educ=Coll+. In the male panel, the curve for treat 1 is higher than that for treat 2, while the reverse is true in the female panel" width="432"></p>
 <p>This plot gives the impression that the effect of <code>treat</code>
 is reversed between male and female subjects; and also that the effect
@@ -273,7 +266,7 @@ independently of <code>treat</code> as was done to obtain the EMMs shown
 above. Instead, let <code>emo</code> depend on <code>treat</code> and
 the other predictors – easily done using <code>cov.reduce</code> – and
 we obtain an entirely different impression:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">framing.glm</span>, <span class="va">treat</span> <span class="op">~</span> <span class="va">educ</span> <span class="op">|</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"response"</span>, </span>
 <span>    cov.reduce <span class="op">=</span> <span class="va">emo</span> <span class="op">~</span> <span class="va">treat</span><span class="op">*</span><span class="va">gender</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">income</span><span class="op">)</span></span></code></pre></div>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-8-1.png" alt="Similar to previous figure but now the curves flatten out with &gt;HS about the same as Coll+. For the maile panel, we still have the trace for treat 1 higher than for treat 0; but in the female panel, they are about the same as each other, and a bit lower than treat 0 for males. To see these results in numerical form, call emmeans() with the same arguments *except* replace the second argument with ~treat*educ|gender" width="432"></p>
@@ -289,14 +282,14 @@ story. Also, the effect of <code>educ</code> is now nearly monotone.</p>
 <!-- @index Covariates!Adjusted -->
 <p>By the way, the results in this plot are the same is what you would
 obtain by refitting the model with an adjusted covariate</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">emo.adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">emo</span> <span class="op">~</span> <span class="va">treat</span><span class="op">*</span><span class="va">gender</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">income</span>, data <span class="op">=</span> <span class="va">framing</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>… and then using ordinary covariate-adjusted means at the means of
 <code>emo.adj</code>. This is a technique that is often recommended.</p>
 <p>If there is more than one mediating covariate, their settings may be
 defined in sequence; for example, if <code>x1</code>, <code>x2</code>,
 and <code>x3</code> are all mediating covariates, we might use</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">...</span>, cov.reduce <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">x1</span> <span class="op">~</span> <span class="va">trt</span>, <span class="va">x2</span> <span class="op">~</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">x1</span>, <span class="va">x3</span> <span class="op">~</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>(or possibly with some interactions included as well).</p>
 <p><a href="#contents">Back to Contents</a></p>
@@ -339,7 +332,7 @@ the product of these for each combination of <code>B</code> and
 in a chi-square test for independence. Put another way, outer weighting
 is the same as proportional weighting applied one factor at a time; the
 following two would yield the same results:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">model</span>, <span class="st">"A"</span>, weights <span class="op">=</span> <span class="st">"outer"</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">model</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, weights <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span>weights <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span> </span></code></pre></div>
 <p>Using <code>"cells"</code> weights gives each prediction the same
@@ -354,7 +347,7 @@ linearly dependent with factors, we may still encounter non-estimable
 cases.)</p>
 <p>Here is a comparison of predictions for <code>nutr.lm</code> defined
 <a href="#issues">above</a>, using different weighting schemes:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"equal"</span>, <span class="st">"prop"</span>, <span class="st">"outer"</span>, <span class="st">"cells"</span>, <span class="st">"flat"</span><span class="op">)</span>, \<span class="op">(</span><span class="va">w</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">nutr.lm</span>, <span class="op">~</span> <span class="va">race</span>, weights <span class="op">=</span> <span class="va">w</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##         equal     prop    outer     cells      flat</span></span>
@@ -414,11 +407,11 @@ from the nuisance list.</p>
 <!-- @index Examples!`mtcars` -->
 <p>Time for an example. Consider the <code>mtcars</code> dataset
 standard in R, and the model</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">am</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">drat</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">wt</span><span class="op">)</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> </span>
 <span>                  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">gear</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">carb</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
 <p>And let’s construct two different reference grids:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rg.usual</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mtcars.lm</span><span class="op">)</span></span>
 <span><span class="va">rg.usual</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
@@ -431,10 +424,10 @@ standard in R, and the model</p>
 <span><span class="co">##     vs = 0, 1</span></span>
 <span><span class="co">##     gear = 3, 4, 5</span></span>
 <span><span class="co">##     carb = 1, 2, 3, 4, 6, 8</span></span></code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmGrid-methods.html">linfct</a></span><span class="op">(</span><span class="va">rg.usual</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 216</span></span></code></pre>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rg.nuis</span> <span class="op">=</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mtcars.lm</span>, non.nuisance <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span></span>
 <span><span class="va">rg.nuis</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
@@ -442,7 +435,7 @@ standard in R, and the model</p>
 <span><span class="co">##     am = 0, 1</span></span>
 <span><span class="co">## Nuisance factors that have been collapsed by averaging:</span></span>
 <span><span class="co">##     disp(1), hp(1), drat(1), wt(1), vs(2), gear(3), carb(6)</span></span></code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmGrid-methods.html">linfct</a></span><span class="op">(</span><span class="va">rg.nuis</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 6</span></span></code></pre>
 <p>Notice that we left <code>am</code> out of <code>non.nuisance</code>
@@ -451,7 +444,7 @@ with <code>cyl</code>, so it was not allowed as a nuisance factor. But
 <code>rg.nuis</code> requires 1/36 as much storage. There’s really
 nothing else to show, other than to demonstrate that we get the same
 EMMs either way, with slightly different annotations:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg.usual</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">*</span> <span class="va">am</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  cyl am emmean   SE df lower.CL upper.CL</span></span>
 <span><span class="co">##    4  0   19.0 4.29 14    9.823     28.2</span></span>
@@ -463,7 +456,7 @@ EMMs either way, with slightly different annotations:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: vs, gear, carb </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg.nuis</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">*</span> <span class="va">am</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  cyl am emmean   SE df lower.CL upper.CL</span></span>
 <span><span class="co">##    4  0   19.0 4.29 14    9.823     28.2</span></span>
@@ -481,11 +474,11 @@ specify <code>wt.nuis</code> as anything other than
 above, this really amounts to <code>"outer"</code> weights since they
 are averaged separately. Let’s try it to see how the estimates
 differ:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mtcars.lm</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">*</span> <span class="va">am</span>, non.nuis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"am"</span><span class="op">)</span>, </span>
 <span>                wt.nuis <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 16.51254 17.17869 26.45709 12.90600 24.75053  8.70546</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mtcars.lm</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">*</span> <span class="va">am</span>, weights <span class="op">=</span> <span class="st">"outer"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 16.51254 17.17869 26.45709 12.90600 24.75053  8.70546</span></span></code></pre>
 <p>These are the same as each other, but different from the
@@ -499,7 +492,7 @@ possible reference grid: Pass the <code>specs</code> argument to
 <code><a href="../reference/ref_grid.html">ref_grid()</a></code> as <code>non.nuisance</code>. But we have to
 quote it to delay evaluation, and also use <code><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars()</a></code> if
 (and only if) <code>specs</code> is a formula:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mtcars.lm</span>, <span class="op">~</span> <span class="va">gear</span> <span class="op">|</span> <span class="va">am</span>, non.nuis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars</a></span><span class="op">(</span><span class="va">specs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## am = 0:</span></span>
 <span><span class="co">##  gear emmean   SE df lower.CL upper.CL</span></span>
@@ -531,7 +524,7 @@ rows in the reference grid. But because of the way
 <code><a href="../reference/ref_grid.html">ref_grid()</a></code> works, this check is made <em>before</em> any
 multivariate-response levels are taken into account. If the limit is
 exceeded, an error is thrown:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mtcars.lm</span>, rg.limit <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Error: The rows of your requested reference grid would be 216, which exceeds</span></span>
 <span><span class="co">## the limit of 200 (not including any multivariate responses).</span></span>
@@ -596,11 +589,11 @@ have a binary response, pain, a treatment of interest (two active
 treatments and placebo), and pre-treatment predictors of sex, age, and
 duration of the condition. We will include the <code>vcovHC()</code>
 covariance estimate in the <strong>sandwich</strong> package.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">neuralgia.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Pain</span> <span class="op">~</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Age</span> <span class="op">+</span> <span class="va">Duration</span> <span class="op">+</span> <span class="va">Treatment</span>,</span>
 <span>                     data <span class="op">=</span> <span class="va">neuralgia</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="st">"Treatment"</span>, counterfactuals <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
-<span>        vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html" class="external-link">vcovHC</a></span><span class="op">)</span></span></code></pre></div>
+<span>        vcov. <span class="op">=</span> <span class="fu">sandwich</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/sandwich/man/vcovHC.html" class="external-link">vcovHC</a></span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Treatment  prob     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  A         0.283 0.0792 Inf    0.1280     0.439</span></span>
 <span><span class="co">##  B         0.221 0.0669 Inf    0.0894     0.352</span></span>
@@ -611,7 +604,7 @@ covariance estimate in the <strong>sandwich</strong> package.</p>
 <p>Note that the results are already on the response (probability)
 scale, which is the default. Let’s compare this with what we get without
 using counterfactuals (i.e., predicting at each covariate average):</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="st">"Treatment"</span>, weights <span class="op">=</span> <span class="st">"prop"</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  Treatment  prob     SE  df asymp.LCL asymp.UCL</span></span>
 <span><span class="co">##  A         0.196 0.1050 Inf    0.0617     0.475</span></span>
@@ -641,7 +634,7 @@ models (not all), an <code>emmGrid</code> may be updated with a
 For illustration, return again to the nutrition example, and consider
 the analysis of <code>group</code> and <code>race</code> as before,
 after removing interactions involving <code>age</code>:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">nutr.lm</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">group</span> <span class="op">|</span> <span class="va">race</span>, submodel <span class="op">=</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">group</span><span class="op">*</span><span class="va">race</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span>by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Note: adjust = "tukey" was changed to "sidak"</span></span>
@@ -683,7 +676,7 @@ equally, but with constraints that the interaction effects involving
 <p>There are two special character values that may be used with
 <code>submodel</code>. Specifying <code>"minimal"</code> creates a
 submodel with only the active factors:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">nutr.lm</span>, <span class="op">~</span> <span class="va">group</span> <span class="op">*</span> <span class="va">race</span>, submodel <span class="op">=</span> <span class="st">"minimal"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  group      race     emmean    SE df lower.CL upper.CL</span></span>
 <span><span class="co">##  FoodStamps Black     5.000 2.020 92    0.988    9.012</span></span>
@@ -702,7 +695,7 @@ essence analyze the residuals of the model with all contained or
 overlapping effects, then constrain the containing effects to be zero.
 So what is left if only the interaction effects of the factors involved.
 This is most useful with <code><a href="../reference/joint_tests.html">joint_tests()</a></code>:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">nutr.lm</span>, submodel <span class="op">=</span> <span class="st">"type2"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  model term df1 df2 F.ratio p.value note</span></span>
 <span><span class="co">##  age          3  92   0.961  0.4145     </span></span>
@@ -739,7 +732,7 @@ for some disease in cows. Two of the treatments are administered by
 injection, and the other three are administered orally. There are
 varying numbers of observations for each drug. The data and model
 follow:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span> <span class="op">(</span></span>
 <span>    route <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"injection"</span>, <span class="st">"oral"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bovineumab"</span>, <span class="st">"Charloisazepam"</span>, </span>
@@ -749,7 +742,7 @@ follow:</p>
 <span><span class="va">cows.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">resp</span> <span class="op">~</span> <span class="va">route</span> <span class="op">+</span> <span class="va">drug</span>, data <span class="op">=</span> <span class="va">cows</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>ref_grid</code> function finds a nested structure in this
 model:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cows.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">cows.lm</span><span class="op">)</span></span>
 <span><span class="va">cows.rg</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## 'emmGrid' object with variables:</span></span>
@@ -759,7 +752,7 @@ model:</p>
 <span><span class="co">## Some things are non-estimable (null space dim = 1)</span></span></code></pre>
 <p>When there is nesting, <code>emmeans</code> computes averages
 separately in each group</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">route.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="st">"route"</span><span class="op">)</span></span>
 <span><span class="va">route.emm</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  route     emmean    SE df lower.CL upper.CL</span></span>
@@ -770,7 +763,7 @@ separately in each group</p>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>… and insists on carrying along any grouping factors that a factor is
 nested in:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drug.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="st">"drug"</span><span class="op">)</span></span>
 <span><span class="va">drug.emm</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  drug           route     emmean    SE df lower.CL upper.CL</span></span>
@@ -782,13 +775,13 @@ nested in:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>Here are the associated pairwise comparisons:</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">route.emm</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast         estimate    SE df t.ratio p.value</span></span>
 <span><span class="co">##  oral - injection    -10.9 0.742  9 -14.671  &lt;.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: drug</span></span></code></pre>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">drug.emm</span>, by <span class="op">=</span> <span class="st">"route"</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## route = injection:</span></span>
 <span><span class="co">##  contrast                    estimate    SE df t.ratio p.value</span></span>
@@ -813,18 +806,18 @@ there had been no <code>by</code> variable.</p>
 <strong>ggplot2</strong> when graphing results with nested factors. For
 example, the default plot for the <code>cows</code> example is not
 ideal:</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="op">~</span> <span class="va">drug</span> <span class="op">|</span> <span class="va">route</span><span class="op">)</span></span></code></pre></div>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-29-1.png" alt="A panel for each route. This interaction plot has a lot of empty space because all 5 drugs are represented in each panel, and the x axis labels all overlap" width="528"></p>
 <p>We can instead remove <code>route</code> from the call and instead
 handle it with <strong>ggplot2</strong> code to use separate <em>x</em>
 scales:</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="op">~</span> <span class="va">drug</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-30-1.png" alt="This plot shows the same means as the previous one, but each panel shows only the drugs that are nested in each route" width="528"></p>
 <p>Similarly with <code><a href="../reference/plot.html">plot.emmGrid()</a></code>:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">drug.emm</span>, PIs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, nrow <span class="op">=</span> <span class="fl">2</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-31-1.png" alt="side-by-side CIs and PIs for drugs in each route. Again, with free_y scaling, each panel contains only the drugs involved" width="528"></p>
