@@ -116,6 +116,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
                 rows = ".",
                 xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, 
                 aes, ...) {
+    ggplot2::theme_set(theme_emm())
+    
     emm = .chk.list(emm, ...)
     if(missing(by)) 
         by = emm@misc$by.vars

@@ -32,6 +32,8 @@
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
                     colors = c("black", "blue", "blue", "red"),
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
+    ggplot2::theme_set(theme_emm())
+    
     if(!missing(intervals))
         CIs = intervals
     nonlin.scale = FALSE

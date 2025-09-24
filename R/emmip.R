@@ -142,7 +142,7 @@ emmip = function(object, formula, ...) {
 #' 
 #' # Example for the 'style' argument
 #' fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
-#' fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+#' fib.rg = ref_grid(fib.lm, at = list(diameter = c(12, 14, 15, 25, 36)))
 #' emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
 #' emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 #' 
@@ -359,6 +359,8 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                         col,
                         ...) {
     
+    ggplot2::theme_set(theme_emm())
+    
     labs = attr(emms, "labs")
     vars = attr(emms, "vars")
     
@@ -377,12 +379,16 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     linearg$position = pos
     if (length(vars$tvars) > 0) {
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
-                    color = .data$tvar, linetype = .data$tvar, shape = .data$tvar, group = .data$tvar))
+                    color = .data$tvar, linetype = .data$tvar, shape = .data$tvar, group = .data$tvar)) 
         if (style == "factor")
-            grobj = grobj + do.call(ggplot2::geom_point, dotarg)
-        grobj = grobj +
-            do.call(ggplot2::geom_line, linearg) +
-            ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab)
+            grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
+                do.call(ggplot2::geom_line, linearg) +
+                ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab) + 
+                ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
+        else
+            grobj = grobj +
+                do.call(ggplot2::geom_line, linearg) +
+                ggplot2::labs(x = xlab, y = ylab, color = tlab, shape = tlab) 
     }
     else { # just one trace per plot
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
@@ -425,6 +431,18 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     
     grobj
 }
+
+theme_emm = function (base_size = 13, base_family = "", header_family = NULL, 
+                      base_line_size = base_size/22, base_rect_size = base_size/22, 
+                      ink ="#332200", paper = "white", accent = "#FF6633") 
+{
+    rtn = ggplot2::theme_light(base_size = base_size, base_family = base_family,
+            header_family = header_family, base_line_size = base_line_size,
+            base_rect_size = base_rect_size, ink = ink, paper = paper, accent = accent)
+    rtn$panel.grid.minor = NULL
+    rtn
+}
+
 
 #' @rdname emmip
 #' @param emms A \code{data.frame} created by calling \code{emmip} with

@@ -8,6 +8,9 @@ title: "NEWS for the emmeans package"
   * Extended `qdrg()` so that it is a generic that can dispatch S3 methods
     based on the class of `object`. This allows a "budget" option for
     package developers who want to provide rudimentary **emmeans** support.
+  * Fixed code for `emmip_ggplot()`, so that we no longer call `aes_()` (#547)
+  * New theme for **ggplot2** graphics; also some scaling changes so `emmip()`
+    plots better fill the plotting area.
   
 
 ## emmeans 1.11.2-8

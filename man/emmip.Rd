@@ -208,7 +208,7 @@ emmip(noise.lm, ~ size | type * side)
 
 # Example for the 'style' argument
 fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
-fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+fib.rg = ref_grid(fib.lm, at = list(diameter = c(12, 14, 15, 25, 36)))
 emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
 emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 
