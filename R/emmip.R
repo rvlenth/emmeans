@@ -392,8 +392,9 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     }
     else { # just one trace per plot
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
-        # if (style == "factor")
-        #     grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+        if (style == "factor")
+            grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
+                ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
         grobj = grobj +
             do.call(ggplot2::geom_line, linearg) +
             ggplot2::labs(x = xlab, y = ylab)
