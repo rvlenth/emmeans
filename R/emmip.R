@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -433,15 +433,26 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     grobj
 }
 
-theme_emm = function (base_size = 13, base_family = "", header_family = NULL, 
+theme_emm = function (base_size = 13, base_family = "Gill Sans", header_family = "Gill Sans", 
                       base_line_size = base_size/22, base_rect_size = base_size/22, 
-                      ink ="#332200", paper = "white", accent = "#FF6633") 
+                      ink ="#0e0033ff", paper = "white", accent = "#FF6633") 
 {
-    rtn = ggplot2::theme_light(base_size = base_size, base_family = base_family,
+    dark_color = "#4E4369"
+    mid_color = "#79718D"
+    lit_color =  "#d2d2d8ff"
+  
+    ggplot2::theme_light(base_size = base_size, base_family = base_family,
             header_family = header_family, base_line_size = base_line_size,
-            base_rect_size = base_rect_size, ink = ink, paper = paper, accent = accent)
-    rtn$panel.grid.minor = NULL
-    rtn
+            base_rect_size = base_rect_size, ink = ink, paper = paper, accent = accent) +
+      ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+                    panel.border = ggplot2::element_rect(color = mid_color, linewidth = 0.85),
+                    panel.grid.major = ggplot2::element_line(colour = lit_color),
+                    strip.background = ggplot2::element_rect(fill = mid_color, color = mid_color),
+                    strip.text = ggplot2::element_text(size = ggplot2::rel(1), lineheight = 1.1, family = "Futura"),
+                    plot.title = ggplot2::element_text(colour = ink, family = "Futura", size = ggplot2::rel(1.6), margin = ggplot2::margin(12, 0, 8, 0)),
+                    plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
+                    legend.justification = "top")
+
 }
 
 
