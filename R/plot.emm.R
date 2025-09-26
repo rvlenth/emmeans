@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -30,7 +30,7 @@
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
-                    colors = c("black", "blue", "blue", "red"),
+                    colors = c("gray20", "darkcyan", "darkcyan", "red3"),
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
     ggplot2::theme_set(theme_emm())
     
@@ -529,7 +529,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (CIs) 
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lcl, xend = .data$ucl, 
                                 y = .data$pri.fac, yend = .data$pri.fac), 
-                                color = CI.col, lwd = 4, alpha = .25)
+                                color = CI.col, lwd = 4, alpha = .35)
 
         if (!is.null(extra)) {
             grobj = grobj + 
@@ -547,7 +547,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (length(byv) > 0)
             grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
                                                 labeller = "label_both")
-        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
+        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 3.2, shape = 18)
         
         if(!is.null(scale)) {
             args = list(...)
