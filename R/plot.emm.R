@@ -30,7 +30,7 @@
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
-                    colors = c("gray20", "darkcyan", "darkcyan", "red3"),
+                    colors = c("gray20", "darkcyan", "darkcyan", "red"),
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
     ggplot2::theme_set(theme_emm())
     
@@ -217,7 +217,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' plot(pigs.ci, scale = scales::log10_trans())
 plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                             xlab, ylab, layout, scale = NULL,
-                            colors = c("black", "blue", "blue", "red"), intervals, 
+                            colors = c("gray20", "darkcyan", "darkcyan", "red"), intervals, 
                             plotit = TRUE, ...) {
     if(!missing(intervals))
         CIs = intervals
@@ -298,7 +298,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                     s = (x < max(x))
                     lattice::panel.arrows(rcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
                 }
-            }
+            } 
             else {
                 lattice::panel.abline(v = unique(x), col = col.line, lty = lty, lwd = lwd)
                 if(CIs)
@@ -533,13 +533,13 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
 
         if (!is.null(extra)) {
             grobj = grobj + 
-                ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, 
-                        xend = .data$lcmpl, y = .data$pri.fac, yend = .data$pri.fac), 
-                        arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
+                ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, linewidth = 1,
+                        xend = .data$lcmpl, y = .data$pri.fac, yend = .data$pri.fac), linewidth = 0.9,
+                        arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"),  
                             type = "closed"), color = comp.col, 
                         data = summ[!is.na(summ$lcmpl), ]) +
                 ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, 
-                    xend = .data$rcmpl, y = .data$pri.fac, yend = .data$pri.fac), 
+                    xend = .data$rcmpl, y = .data$pri.fac, yend = .data$pri.fac), linewidth = 0.9,
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
                             type = "closed"), color = comp.col,
                     data = summ[!is.na(summ$rcmpl), ])
@@ -547,7 +547,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (length(byv) > 0)
             grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
                                                 labeller = "label_both")
-        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 3.2, shape = 18)
+        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 4, shape = 18)
         
         if(!is.null(scale)) {
             args = list(...)

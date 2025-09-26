@@ -352,7 +352,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
                         facetlab = "label_context",
                         scale, 
-                        dotarg = list(shape = "circle"), 
+                        dotarg = list(shape = 18), 
                         linearg = list(linetype = "solid"),
                         CIarg = list(lwd = 2, alpha = .5),
                         PIarg = list(lwd = 1.25, alpha = .33),
@@ -375,8 +375,11 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         scale = attr(emms, "scale")
 
     dotarg$position = pos
+    dotarg$shape = 16
+    dotarg$size = 3
     linearg$mapping = ggplot2::aes(group = .data$tvar)
     linearg$position = pos
+    linearg$linewidth = 0.8
     if (length(vars$tvars) > 0) {
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
                     color = .data$tvar, linetype = .data$tvar, shape = .data$tvar, group = .data$tvar)) 
@@ -391,6 +394,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                 ggplot2::labs(x = xlab, y = ylab, color = tlab, shape = tlab) 
     }
     else { # just one trace per plot
+        linearg$color = dotarg$color = "#4E4369"
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
@@ -433,7 +437,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     grobj
 }
 
-theme_emm = function (base_size = 13, base_family = "Gill Sans", header_family = "Gill Sans", 
+theme_emm = function (base_size = 13, base_family = "mono", header_family = "sans serif", 
                       base_line_size = base_size/22, base_rect_size = base_size/22, 
                       ink ="#0e0033ff", paper = "white", accent = "#FF6633") 
 {
@@ -448,13 +452,23 @@ theme_emm = function (base_size = 13, base_family = "Gill Sans", header_family =
                     panel.border = ggplot2::element_rect(color = mid_color, linewidth = 0.85),
                     panel.grid.major = ggplot2::element_line(colour = lit_color),
                     strip.background = ggplot2::element_rect(fill = mid_color, color = mid_color),
-                    strip.text = ggplot2::element_text(size = ggplot2::rel(1), lineheight = 1.1, family = "Futura"),
-                    plot.title = ggplot2::element_text(colour = ink, family = "Futura", size = ggplot2::rel(1.6), margin = ggplot2::margin(12, 0, 8, 0)),
-                    plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
+                    strip.text = ggplot2::element_text(size = ggplot2::rel(1), face = "bold", lineheight = 1.1),
+                    plot.title = ggplot2::element_text(colour = ink, family = "serif", size = ggplot2::rel(1.8), margin = ggplot2::margin(12, 0, 8, 0)),
+                    plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), family = "serif", margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
                     legend.justification = "top")
 
 }
 
+# set default plotting colors
+opts <- options(
+    ggplot2.discrete.colour = list(
+        "#79718D",
+        c("#66C2A5", "#FC8D62"),
+      RColorBrewer::brewer.pal(5, "Set2"),
+      RColorBrewer::brewer.pal(8, "Paired"),
+      colorRampPalette(RColorBrewer::brewer.pal(10, "Spectral"))(100)
+    )
+  )
 
 #' @rdname emmip
 #' @param emms A \code{data.frame} created by calling \code{emmip} with
