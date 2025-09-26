@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2020 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -126,7 +126,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     if(missing(aes))
         aes = list()
     # defaults if other than system ones...
-    daes = list(point = list(size = 2), segment = list(), label = list(size = 2.5))
+    daes = list(point = list(size = 2), segment = list(), label = list(size = 4))
     # fill aes w/ defaults if not present, at either level
     for(a in names(daes)) { 
         if(is.null(aes[[a]]))
@@ -220,6 +220,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
         pvtmp = pvtmp[!is.na(pvtmp)]
         tick.min = max(exmaj[exmaj <= min(pvtmp)])
         tick.max = min(exmaj[exmaj >= max(pvtmp)])
+
         
         # args for geom_segment
         sarg = c(list(mapping = quote(ggplot2::aes(xend = .data$p.value, yend = .data$midpt)),
@@ -231,7 +232,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
             do.call(ggplot2::geom_point, aes$point) +
             do.call(ggplot2::geom_segment, sarg) +
             ggplot2::geom_point(ggplot2::aes(x = tick.min, y = 1), alpha = 0) +
-            ggplot2::geom_point(ggplot2::aes(x = tick.max, y = 1), alpha = 0)
+            ggplot2::geom_point(ggplot2::aes(x = tick.max, y = 1), alpha = 0) +
+            ggplot2::scale_color_brewer(palette = "Spectral")
         if (!is.null(by)) {
             cols = setdiff(by, rows)
             if (length(cols) > 0)
@@ -259,7 +261,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
             
             larg = c(list(mapping = quote(ggplot2::aes(x = pos, y = .data$minus,
                                             label = .data$fmtval, hjust = "right")),
-                        data = emm.summ, stat = "identity", position = "identity"),  
+                        data = emm.summ, stat = "identity", position = "identity"), 
                         aes$label)
             grobj = grobj + 
                 do.call(ggplot2::geom_label, larg) +
