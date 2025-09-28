@@ -394,7 +394,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                 ggplot2::labs(x = xlab, y = ylab, color = tlab, shape = tlab) 
     }
     else { # just one trace per plot
-        linearg$color = dotarg$color = "#4E4369"
+        if(missing(col)) linearg$color = dotarg$color =  "#0077b6"
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
@@ -437,7 +437,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     grobj
 }
 
-theme_emm = function (base_size = 13, base_family = "mono", header_family = "sans serif", 
+theme_emm = function (base_size = 13, base_family = "sans", header_family = "sans", 
                       base_line_size = base_size/22, base_rect_size = base_size/22, 
                       ink ="#0e0033ff", paper = "white", accent = "#FF6633") 
 {
@@ -452,7 +452,7 @@ theme_emm = function (base_size = 13, base_family = "mono", header_family = "san
                     panel.border = ggplot2::element_rect(color = mid_color, linewidth = 0.85),
                     panel.grid.major = ggplot2::element_line(colour = lit_color),
                     strip.background = ggplot2::element_rect(fill = mid_color, color = mid_color),
-                    strip.text = ggplot2::element_text(size = ggplot2::rel(1), face = "bold", lineheight = 1.1),
+                    strip.text = ggplot2::element_text(size = ggplot2::rel(1), family = "sans", face = "bold", lineheight = 1.1),
                     plot.title = ggplot2::element_text(colour = ink, family = "serif", size = ggplot2::rel(1.8), margin = ggplot2::margin(12, 0, 8, 0)),
                     plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), family = "serif", margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
                     legend.justification = "top")
@@ -462,11 +462,11 @@ theme_emm = function (base_size = 13, base_family = "mono", header_family = "san
 # set default plotting colors
 opts <- options(
     ggplot2.discrete.colour = list(
-        "#79718D",
-        c("#66C2A5", "#FC8D62"),
-      RColorBrewer::brewer.pal(5, "Set2"),
-      RColorBrewer::brewer.pal(8, "Paired"),
-      colorRampPalette(RColorBrewer::brewer.pal(10, "Spectral"))(100)
+        "#79718D", # never comes into play
+        c("#d12e82ff", "#66A61E"), # for 2 levels 
+      RColorBrewer::brewer.pal(5, "Set2"), # for 3-5 levels
+      RColorBrewer::brewer.pal(8, "Paired"), # for 6-8 levels
+      colorRampPalette(RColorBrewer::brewer.pal(10, "Spectral"))(100) # for 9 - 100 levels (god save us if someone has more than 100 levels)
     )
   )
 
