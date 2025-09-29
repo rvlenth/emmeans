@@ -6,12 +6,12 @@
 \title{Plot an \code{emmGrid} or \code{summary_emm} object}
 \usage{
 \method{plot}{emmGrid}(x, y, type, CIs = TRUE, PIs = FALSE,
-  comparisons = FALSE, colors = c("black", "blue", "blue", "red"),
+  comparisons = FALSE, colors = c("gray20", "darkcyan", "darkcyan", "red"),
   alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
-  layout, scale = NULL, colors = c("black", "blue", "blue", "red"),
-  intervals, plotit = TRUE, ...)
+  layout, scale = NULL, colors = c("gray20", "darkcyan", "darkcyan",
+  "red"), intervals, plotit = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}
@@ -45,9 +45,12 @@ the two estimates. (A warning is issued if this can't be done.)
 Note that comparison arrows are not available with `summary_emm` objects.}
 
 \item{colors}{Character vector of color names to use for estimates, CIs, PIs, 
-and comparison arrows, respectively. CIs and PIs are rendered with some
-transparency, and colors are recycled if the length is less than four;
-so all plot elements are visible even if a single color is specified.}
+and comparison arrows, respectively. 
+Colors are recycled if the length is less than four;
+(Note: The actual colors used for CIs and PIs
+are lightened 65% and 80% towards white from the colors specified. Thus,
+because of recycling of colors, all plot elements are visible even if only
+one color is specified.)}
 
 \item{alpha}{The significance level to use in constructing comparison arrows}
 

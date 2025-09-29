@@ -356,10 +356,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                         linearg = list(linetype = "solid"),
                         CIarg = list(lwd = 2, alpha = .5),
                         PIarg = list(lwd = 1.25, alpha = .33),
-                        col,
                         ...) {
-    
-    ggplot2::theme_set(theme_emm())
     
     labs = attr(emms, "labs")
     vars = attr(emms, "vars")
@@ -367,9 +364,6 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     CIs = !is.null(emms$LCL)
     PIs = !is.null(emms$LPL)
     pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, dodge, 0)) # use dodging if CIs
-    
-    if(!missing(col)) ### brute-force color setting
-        dotarg$color = linearg$color = CIarg$color = PIarg$color = col
     
     if(missing(scale) && !is.null(attr(emms, "scale")))
         scale = attr(emms, "scale")
@@ -386,14 +380,6 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
                     color = .data$tvar, linetype = .data$tvar, group = .data$tvar, shape = .data$tvar))
       
-      # special color theme when there are more than 9 levels
-      if(length(unique(emms$tvar)) > 9) {
-            grobj = grobj + 
-              ggplot2::theme(palette.colour.discrete = colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(length(unique(emms$tvar)))    
-        )
-      }
-            
-      
       if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
                 do.call(ggplot2::geom_line, linearg) +
@@ -405,7 +391,10 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                 ggplot2::labs(x = xlab, y = ylab, color = tlab, shape = tlab) 
     }
     else { # just one trace per plot
-        if(missing(col)) linearg$color = dotarg$color =  "#0077b6"  
+        if(is.null(linearg$color) && is.null(linearg$colour))
+            linearg$color = .emm_palette[1]
+        if(is.null(dotarg$color) && is.null(dotarg$colour))
+            dotarg$color = .emm_palette[1]
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
@@ -445,13 +434,23 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         grobj = grobj + do.call(ggplot2::geom_point, dotarg)
     
     
-    grobj
+    grobj + theme_emm()
 }
+
+#' @importFrom grDevices palette.colors
+##### Here is a palette of 45 colors. More than that, SOL
+.emm_palette = c(
+    grDevices::palette.colors(palette = "Okabe-Ito)")[c(6:9,1:5)], # Start w/ steel blue, yellow is last
+    grDevices::palette.colors(palette = "Polychrome 36")[sample(1:36)]
+)
 
 theme_emm = function (base_size = 13, base_family = "sans", header_family = "sans", 
                       base_line_size = base_size/22, base_rect_size = base_size/22, 
                       ink ="#0e0033ff", paper = "white", accent = "#FF6633") 
 {
+    if(get_emm_option("gg.theme.version") == 1)
+        return(ggplot2::theme_grey())
+    
     dark_color = "#4E4369"
     mid_color = "#79718D"
     lit_color =  "#d2d2d8ff"
@@ -467,7 +466,7 @@ theme_emm = function (base_size = 13, base_family = "sans", header_family = "san
                     plot.title = ggplot2::element_text(colour = ink, family = "serif", size = ggplot2::rel(1.8), margin = ggplot2::margin(12, 0, 8, 0)),
                     plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), family = "serif", margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
                     legend.justification = "top",
-                    palette.colour.discrete = "Okabe-Ito" # color-blind friendly, 9 total colors
+                    palette.colour.discrete = .emm_palette # color-blind friendly, 9 total colors
     )
 }
 

@@ -9,8 +9,9 @@ title: "NEWS for the emmeans package"
     based on the class of `object`. This allows a "budget" option for
     package developers who want to provide rudimentary **emmeans** support.
   * Fixed code for `emmip_ggplot()`, so that we no longer call `aes_()` (#547)
-  * New theme for **ggplot2** graphics; also some scaling changes so `emmip()`
-    plots better fill the plotting area.
+  * **ggplot2**-based graphics have a new look. If you liked the old theme
+    better, use `emm_options(gg.theme.version = 1)`
+  * Scaling changes so `emmip()` so that plots better fill the plotting area.
   
 
 ## emmeans 1.11.2-8

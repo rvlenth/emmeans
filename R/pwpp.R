@@ -116,9 +116,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
                 rows = ".",
                 xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, 
                 aes, ...) {
-    ggplot2::theme_set(theme_emm())
-    
-    emm = .chk.list(emm, ...)
+
+        emm = .chk.list(emm, ...)
     if(missing(by)) 
         by = emm@misc$by.vars
     
@@ -281,7 +280,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
             #### expand = ggplot2::expand_scale(add = c(.025 + lpad, .025))) +
             ggplot2::guides(color = "none")
         
-        grobj + ggplot2::labs(x = xlab, y = ylab, caption = xsub)
+        grobj + ggplot2::labs(x = xlab, y = ylab, caption = xsub) + theme_emm()
 }
     
 # capitalize

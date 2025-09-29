@@ -554,6 +554,8 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #' \item{\code{graphics.engine}}{A character value matching 
 #'   \code{c("ggplot", "lattice")}, setting the default engine to use in
 #'   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
+#' \item{\code{gg.theme.version}}{An integer. Set it to 1 or 2 if you want the appearance
+#'   of plots used in \pkg{emmeans} version 1.x.x or 2.x.x}
 #' \item{\code{msg.interaction}}{A logical value controlling whether or not
 #'   a message is displayed when \code{emmeans} averages over a factor involved
 #'   in an interaction. It is probably not appropriate to do this, unless
@@ -757,6 +759,7 @@ emm_defaults = list (
     sep = " ",                # separator for combining factor levels
     parens = c("-|\\+|\\/|\\*", "(", ")"), # patterns for what/how to parenthesize in contrast
     graphics.engine = "ggplot",  # default for emmip and plot.emmGrid
+    gg.theme.version = 2,     # Use the ggplot theme used in this emmeans version 
 ###    msg.data.call = TRUE,     # message when there's a call in data or subset
     msg.interaction = TRUE,   # message about averaging w/ interactions
     msg.nesting = TRUE,       # message when nesting is detected

@@ -32,7 +32,6 @@
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
                     colors = c("gray20", "darkcyan", "darkcyan", "red"),
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
-    ggplot2::theme_set(theme_emm())
     
     if(!missing(intervals))
         CIs = intervals
@@ -140,9 +139,12 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   the two estimates. (A warning is issued if this can't be done.)
 #'   Note that comparison arrows are not available with `summary_emm` objects.
 #' @param colors Character vector of color names to use for estimates, CIs, PIs, 
-#'   and comparison arrows, respectively. CIs and PIs are rendered with some
-#'   transparency, and colors are recycled if the length is less than four;
-#'   so all plot elements are visible even if a single color is specified. 
+#'   and comparison arrows, respectively. 
+#'   Colors are recycled if the length is less than four;
+#'   (Note: The actual colors used for CIs and PIs
+#'   are lightened 65% and 80% towards white from the colors specified. Thus,
+#'   because of recycling of colors, all plot elements are visible even if only
+#'   one color is specified.)
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
@@ -482,9 +484,15 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     
     if(length(colors) < 4)
         colors = rep(colors, 4)
+
+    # private lil fcn to mix colors with white
+    fade_col = function(col, frac) {
+        x = grDevices::colorRamp(c(col, "white"))(frac) / 255
+        rgb(x[1], x[2], x[3], 1)
+    }
     dot.col = colors[1]
-    CI.col = colors[2]
-    PI.col = colors[3]
+    CI.col = fade_col(colors[2], 0.65)
+    PI.col = fade_col(colors[3], 0.80)
     comp.col = colors[4]
     
     if (engine == "lattice") {
@@ -515,6 +523,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         }
     } # --- end lattice plot
     else {  ## ggplot method
+        
         summ$lcl = lcl
         summ$ucl = ucl
 
@@ -525,11 +534,11 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (PIs) 
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lpl, xend = .data$upl, 
                                 y = .data$pri.fac, yend = .data$pri.fac), 
-                                color = PI.col, lwd = 2.5, alpha = .15)
+                                color = PI.col, lwd = 2.5)
         if (CIs) 
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lcl, xend = .data$ucl, 
                                 y = .data$pri.fac, yend = .data$pri.fac), 
-                                color = CI.col, lwd = 4, alpha = .35)
+                                color = CI.col, lwd = 4)
 
         if (!is.null(extra)) {
             grobj = grobj + 
@@ -562,6 +571,6 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if(!horizontal)
             grobj = grobj + ggplot2::coord_flip()
         
-        grobj + ggplot2::labs(x = xlab, y = ylab)
+        grobj + ggplot2::labs(x = xlab, y = ylab) + theme_emm()
     }
 }
