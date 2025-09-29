@@ -352,7 +352,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
                         facetlab = "label_context",
                         scale, 
-                        dotarg = list(shape = 18), 
+                        dotarg = list(shape = "circle"), 
                         linearg = list(linetype = "solid"),
                         CIarg = list(lwd = 2, alpha = .5),
                         PIarg = list(lwd = 1.25, alpha = .33),
@@ -380,10 +380,21 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
     linearg$mapping = ggplot2::aes(group = .data$tvar)
     linearg$position = pos
     linearg$linewidth = 0.8
+  
     if (length(vars$tvars) > 0) {
+      
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
-                    color = .data$tvar, linetype = .data$tvar, shape = .data$tvar, group = .data$tvar)) 
-        if (style == "factor")
+                    color = .data$tvar, linetype = .data$tvar, group = .data$tvar, shape = .data$tvar))
+      
+      # special color theme when there are more than 9 levels
+      if(length(unique(emms$tvar)) > 9) {
+            grobj = grobj + 
+              ggplot2::theme(palette.colour.discrete = colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(length(unique(emms$tvar)))    
+        )
+      }
+            
+      
+      if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
                 do.call(ggplot2::geom_line, linearg) +
                 ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab) + 
@@ -394,7 +405,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
                 ggplot2::labs(x = xlab, y = ylab, color = tlab, shape = tlab) 
     }
     else { # just one trace per plot
-        if(missing(col)) linearg$color = dotarg$color =  "#0077b6"
+        if(missing(col)) linearg$color = dotarg$color =  "#0077b6"  
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
@@ -455,20 +466,11 @@ theme_emm = function (base_size = 13, base_family = "sans", header_family = "san
                     strip.text = ggplot2::element_text(size = ggplot2::rel(1), family = "sans", face = "bold", lineheight = 1.1),
                     plot.title = ggplot2::element_text(colour = ink, family = "serif", size = ggplot2::rel(1.8), margin = ggplot2::margin(12, 0, 8, 0)),
                     plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), family = "serif", margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
-                    legend.justification = "top")
-
+                    legend.justification = "top",
+                    palette.colour.discrete = "Okabe-Ito" # color-blind friendly, 9 total colors
+    )
 }
 
-# set default plotting colors
-opts <- options(
-    ggplot2.discrete.colour = list(
-        "#79718D", # never comes into play
-        c("#d12e82ff", "#66A61E"), # for 2 levels 
-      RColorBrewer::brewer.pal(5, "Set2"), # for 3-5 levels
-      RColorBrewer::brewer.pal(8, "Paired"), # for 6-8 levels
-      colorRampPalette(RColorBrewer::brewer.pal(10, "Spectral"))(100) # for 9 - 100 levels (god save us if someone has more than 100 levels)
-    )
-  )
 
 #' @rdname emmip
 #' @param emms A \code{data.frame} created by calling \code{emmip} with
