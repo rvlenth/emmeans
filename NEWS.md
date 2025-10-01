@@ -10,8 +10,11 @@ title: "NEWS for the emmeans package"
     package developers who want to provide rudimentary **emmeans** support.
   * Fixed code for `emmip_ggplot()`, so that we no longer call `aes_()` (#547)
   * **ggplot2**-based graphics have a new look. If you liked the old theme
-    better, use `emm_options(gg.theme.version = 1)`
+    better, use `emm_options(gg.theme = 1)` to get an approximation of the old look.
+  * May also use `gg.theme` option to set any theme you want for future plots.
   * Scaling changes so `emmip()` so that plots better fill the plotting area.
+  * Intervals in `plot.emmGrid()` are now solid colors, rather than transparent ones,
+    to prevent grid lines from partially masking them.
   
 
 ## emmeans 1.11.2-8

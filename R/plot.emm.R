@@ -30,7 +30,7 @@
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
-                    colors = c("gray20", "darkcyan", "darkcyan", "red"),
+                    colors,
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
     
     if(!missing(intervals))
@@ -138,13 +138,11 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   overlap reflects as much as possible the significance of the comparison of
 #'   the two estimates. (A warning is issued if this can't be done.)
 #'   Note that comparison arrows are not available with `summary_emm` objects.
-#' @param colors Character vector of color names to use for estimates, CIs, PIs, 
-#'   and comparison arrows, respectively. 
-#'   Colors are recycled if the length is less than four;
-#'   (Note: The actual colors used for CIs and PIs
-#'   are lightened 65% and 80% towards white from the colors specified. Thus,
-#'   because of recycling of colors, all plot elements are visible even if only
-#'   one color is specified.)
+#' @param colors Optional character vector of colors to use for estimates, CIs, PIs, 
+#'   and comparison arrows, respectively. If missing, these are derived from the
+#'   theme. If just one color is given, estimates and intervals are made from
+#'   various blends of that color and the paper color, and the theme's accent
+#'   color is used for comparison arrows.
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
@@ -204,6 +202,12 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
 #' plot(warp.emm)
+#' 
+#' plot(warp.emm, PIs = TRUE, comparisons = TRUE)
+#' 
+#' with_emm_options(gg.theme = ggplot2::theme_dark(), 
+#'     plot(warp.emm, PIs = TRUE, comparisons = TRUE))
+#' 
 #' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
 #'      horizontal = FALSE, colors = "darkgreen")
 #' 
@@ -219,7 +223,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' plot(pigs.ci, scale = scales::log10_trans())
 plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                             xlab, ylab, layout, scale = NULL,
-                            colors = c("gray20", "darkcyan", "darkcyan", "red"), intervals, 
+                            colors, intervals, 
                             plotit = TRUE, ...) {
     if(!missing(intervals))
         CIs = intervals
@@ -482,20 +486,18 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     
     facName = paste(priv, collapse=":")
     
-    if(length(colors) < 4)
-        colors = rep(colors, 4)
-
     # private lil fcn to mix colors with white
-    fade_col = function(col, frac) {
-        x = grDevices::colorRamp(c(col, "white"))(frac) / 255
+    mix_col = function(col1, col2, frac) {
+        x = grDevices::colorRamp(c(col1, col2))(frac) / 255
         rgb(x[1], x[2], x[3], 1)
     }
-    dot.col = colors[1]
-    CI.col = fade_col(colors[2], 0.65)
-    PI.col = fade_col(colors[3], 0.80)
-    comp.col = colors[4]
     
     if (engine == "lattice") {
+        if(missing(colors))
+            colors = c("black", mix_col("white", "blue", .35), mix_col("white", "blue", .20), "red")
+        if(length(colors) == 1)
+            colors = c(colors, mix_col("white", colors, .35), mix_col("white", colors, .20), "red")
+        
         if (missing(layout)) {
             layout = c(1, length(ubv))
             if(!horizontal) 
@@ -523,6 +525,21 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         }
     } # --- end lattice plot
     else {  ## ggplot method
+        thm = theme_emm()
+        
+        if(missing(colors) && is.numeric(thopt <- get_emm_option("gg.theme")) && thopt == 1)
+            colors = c("black", mix_col("white", "blue", .35), mix_col("white", "blue", .20), "red")
+        
+        if(missing(colors) || (length(colors) == 1)) {
+            dot.col = ifelse(missing(colors), thm$geom@ink, colors)
+            paper = thm$geom@paper
+            clr = ifelse(missing(colors), thm$strip.background@colour, dot.col)
+            colors = c(dot.col, mix_col(paper, clr, 0.25), mix_col(paper, clr, 0.15), thm$geom@accent)
+        }
+        dot.col = colors[1]
+        CI.col = colors[2]
+        PI.col = colors[3]
+        comp.col = colors[4]
         
         summ$lcl = lcl
         summ$ucl = ucl
@@ -571,6 +588,6 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if(!horizontal)
             grobj = grobj + ggplot2::coord_flip()
         
-        grobj + ggplot2::labs(x = xlab, y = ylab) + theme_emm()
+        grobj + ggplot2::labs(x = xlab, y = ylab) + thm
     }
 }

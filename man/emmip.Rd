@@ -13,11 +13,10 @@ emmip(object, formula, ...)
   style, engine = get_emm_option("graphics.engine"), plotit = TRUE,
   nesting.order = FALSE, ...)
 
-emmip_ggplot(emms, style = "factor", dodge = 0.1, xlab = labs$xlab,
+emmip_ggplot(emms, style = "factor", dodge = 0.2, xlab = labs$xlab,
   ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context", scale,
   dotarg = list(shape = "circle"), linearg = list(linetype = "solid"),
-  CIarg = list(lwd = 2, alpha = 0.5), PIarg = list(lwd = 1.25, alpha =
-  0.33), ...)
+  CIarg = list(alpha = 0.4), PIarg = list(alpha = 0.25), ...)
 
 emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
   tlab = labs$tlab, pch = c(1, 2, 6, 7, 9, 10, 15:20), lty = 1,
@@ -110,10 +109,14 @@ fine-tuning purposes, additional
 arguments to \code{ggplot2::scale_y_continuous} may be included in \code{...} .}
 
 \item{dotarg}{\code{list}
-of arguments passed to \code{geom_point} to customize appearance of points}
+of arguments passed to \code{geom_point} to customize appearance of points.
+If this includes \code{shape} and it is of length greater than 1, it is interpreted
+as a shape palette instead.}
 
 \item{linearg}{\code{list}
-of arguments passed to \code{geom_line} to customize appearance of lines}
+of arguments passed to \code{geom_line} to customize appearance of lines.
+If this includes \code{linetype} and it is of length greater than 1,
+it is interpreted as a linetype.}
 
 \item{CIarg, PIarg}{\code{list}s
 of arguments passed to \code{geom_linerange} to customize appearance of intervals.
