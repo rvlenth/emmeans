@@ -133,7 +133,6 @@ emmip = function(object, formula, ...) {
 #'     emmip(noise.lm, type ~ side * size, CIs = TRUE,
 #'         CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
 #'         dotarg = list(size = 2, shape = "square", color = "black")))
-' 
 #' 
 #' # Create a black-and-white version of above with different linetypes
 #' # (Let the linetypes and symbols default to the palette)
@@ -401,21 +400,27 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     }
     
     if (length(vars$tvars) > 0) {
-      
-        # grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
-        #                                            color = .data$tvar, linetype = .data$tvar, group = .data$tvar, shape = .data$tvar))
-        grobj = suppressWarnings(ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
-                            color = .data$tvar, linetype = .data$tvar, shape = .data$tvar))) 
+        labarg = list(x = xlab, y = ylab, color = tlab)
+        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, color = .data$tvar))
         
-      if (style == "factor")
+        if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {
+            grobj = grobj + ggplot2::aes(shape = .data$tvar)
+            labarg$shape = tlab
+        }
+        if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {
+            grobj = grobj + ggplot2::aes(linetype = .data$tvar)
+            labarg$linetype = tlab
+        }
+        
+        if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
                 do.call(ggplot2::geom_line, linearg) +
-                ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab) + 
+                do.call(ggplot2::labs, labarg) + 
                 ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
         else
             grobj = grobj +
                 do.call(ggplot2::geom_line, linearg) +
-                ggplot2::labs(x = xlab, y = ylab, color = tlab, shape = tlab) 
+                do.call(ggplot2::labs, labarg) 
         
         # handle any custom shapes or linetypes
         if(!is.null(shape.pal))

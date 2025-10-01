@@ -194,8 +194,14 @@ emmip(noise.lm, type ~ size | side)
 # One interaction plot, using combinations of size and side as the x factor
 # ... with added confidence intervals and some formatting changes
 emmip(noise.lm, type ~ side * size, CIs = TRUE,
-    CIarg = list(lwd = 1, alpha = 1, color = "cyan"),
-    dotarg = list(color = "black"))
+    CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
+    dotarg = list(size = 2, shape = "square", color = "black"))
+    
+# Same using legacy theme
+with_emm_options(gg.theme = 1,
+    emmip(noise.lm, type ~ side * size, CIs = TRUE,
+        CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
+        dotarg = list(size = 2, shape = "square", color = "black")))
 
 # Create a black-and-white version of above with different linetypes
 # (Let the linetypes and symbols default to the palette)
