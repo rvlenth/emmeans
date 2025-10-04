@@ -139,9 +139,13 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   the two estimates. (A warning is issued if this can't be done.)
 #'   Note that comparison arrows are not available with `summary_emm` objects.
 #' @param colors Optional character vector of colors to use for estimates, CIs, PIs, 
-#'   and comparison arrows, respectively. If missing, these are derived from the
-#'   theme. If just one color is given, estimates and intervals are made from
-#'   various blends of that color and the paper color, and the theme's accent
+#'   and comparison arrows, respectively. If missing, these are derived from
+#'   \code{ink}, \code{paper}, and \code{accent} in the theme's \code{geom} element.
+#'   \code{ink} is used for the estimates, \code{accent} is used for comparison arrows,
+#'   and a contrasting color to \code{accent} is blended with \code{paper} for
+#'   the intervals. 
+#'   If just one color is given, estimates and intervals are made from
+#'   various blends of that color and \code{paper}, and \code{accent}
 #'   color is used for comparison arrows.
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
@@ -208,8 +212,8 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' with_emm_options(gg.theme = ggplot2::theme_dark(), 
 #'     plot(warp.emm, PIs = TRUE, comparisons = TRUE))
 #' 
-#' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
-#'      horizontal = FALSE, colors = "darkgreen")
+#' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
+#'      horizontal = FALSE, colors = "blue")
 #' 
 #' ### Using a transformed scale
 #' pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
@@ -533,7 +537,12 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if(missing(colors) || (length(colors) == 1)) {
             dot.col = ifelse(missing(colors), thm$geom@ink, colors)
             paper = thm$geom@paper
-            clr = ifelse(missing(colors), thm$strip.background@colour, dot.col)
+            if(missing(colors)) {   # derive a contrasting color to 'accent' color
+                xxx = (rgb2hsv(col2rgb(thm$geom@accent))[1] + 0.54) %% 1
+                clr = hcl(xxx * 360, 80, 50)
+            }
+            else
+                clr = dot.col
             colors = c(dot.col, mix_col(paper, clr, 0.25), mix_col(paper, clr, 0.15), thm$geom@accent)
         }
         dot.col = colors[1]

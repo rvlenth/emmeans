@@ -499,7 +499,7 @@ theme_emm = function (base_size = 13, base_family = "sans", header_family = "san
         return(ggplot2::theme_grey())
     
     dark_color = "#4E4369"
-    mid_color = "#002789" ### "#79718D"
+    mid_color =  "#79718D"   ###   "#002789"
     lit_color =  "#d2d2d8ff"
   
     ggplot2::theme_light(base_size = base_size, base_family = base_family,
