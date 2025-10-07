@@ -304,6 +304,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     prg@roles$multresp = NULL
     newrg@roles = prg@roles
     ## class(newrg) = "ref.grid"
+    newrg@grid$.wgt. = prg@grid$.wgt.[sapply(.find.by.rows(prg@grid, byv), head, 1)]
     update(force_regular(newrg), is.new.rg = TRUE)
 }
 
