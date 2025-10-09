@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Russ Lenth" />
+
+<meta name="date" content="2025-10-09" />
+
+<title>Notes on preparation and submission of emmeans</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {font-size: 11pt; font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;margin: 30px 50px 30px 50px; }h1,h2,h3,h4,h5,h6 { font-family: Arial,Helvetica,Sans-serif; }a { text-decoration: none; }a:link { color:darkblue; } a:visited { color:darkblue; } a:hover { color:dodgerblue; }a:active { color:dodgerblue; } code {color: #602000;font-family: "Lucida Console", Monaco, monospace; font-size: 90%;}.r { color: darkred; }.ro { color: darkgreen; background-color: #eeeeee; }.re { color: red;}.r code, a code, .ro code, .re code { color: inherit; }.vigindex ul { list-style-type: none; }.vigindex ul li { list-style: none; }.vigindex a code { color: inherit; }.vigindex li code { color: inherit; }</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Notes on preparation and submission of
+<strong>emmeans</strong></h1>
+<h4 class="author">Russ Lenth</h4>
+<h4 class="date">2025-10-09</h4>
+
+
+
+<div id="getting-it-ready-for-cran-submission" class="section level2">
+<h2>Getting it ready for CRAN submission</h2>
+<div id="vignette-index" class="section level3">
+<h3>Vignette index</h3>
+<p>The vignettes (but not this one) contain markup within HTML comments
+that compile a simple index. If any of these are added or changed, you
+need to manually update the index, and that is done by running</p>
+<pre><code>vigindex::vigindex()</code></pre>
+<p>This creates another vignette named <code>vigindex.Rmd</code>. The
+package is available via <a href="https://github.com/rvlenth/vigindex">https://github.com/rvlenth/vigindex</a>.</p>
+<p>Here are some typical tags:</p>
+<pre><code>&lt;!-- @index Transformations; 
+            Transformations!Bias correction;
+            Examples!`pigs`   --&gt;</code></pre>
+<p>The comment close <em>must</em> be on the same line as the last
+entry. The second and third examples create sub-entries. In those cases
+it’s a good idea to ensure that there is not already a main entry that
+is similar, but not identical, to the first part.</p>
+</div>
+<div id="other-manual-checking" class="section level3">
+<h3>Other manual checking</h3>
+<p>Make sure the version numbers in <code>DESCRIPTION</code> and
+<code>NEWS.md</code> match.</p>
+<p><em>And</em> look at the <a href="https://cran.r-project.org/web/packages/emmeans/index.html">emmeans
+package page</a> on CRAN, and go the “CRAN checks: emmeans results.”
+Make sure there are no issues there.</p>
+</div>
+<div id="build-and-check-the-tarball" class="section level3">
+<h3>Build and check the tarball</h3>
+<p>In RStudio, this is done via the <code>build</code> tab, then under
+“More <code>v</code>”, choose “Build source package. This will create a
+file named <code>emmeans-xxx.tar.gz</code> in the container of the
+project directory (just above the <code>emmeans</code> directory).</p>
+<p>Then check to make sure there are no errors. I always do this in a
+DOS window (or shell):</p>
+<pre><code>R CMD check --as-cran emmeans-xxx.tar.gz</code></pre>
+<p>Obviously, you need to correct any errors that are found.</p>
+<p><em>Note:</em> This creates a directory <code>emmeans.Rcheck/</code>
+at the same level as <code>emmeans/</code>. Sometimes I get errors if
+this directory already exists, because my system sometimes thinks I have
+an open file in there somewhere. So I manually delete that directory
+before checking.</p>
+</div>
+<div id="doing-a-thorough-check-of-related-packages" class="section level3">
+<h3>Doing a thorough check of related packages</h3>
+<p>This is a pain in the butt and optional, but it can prevent surprises
+that may come up when CRAN checks the package. I have a script that I
+developed recently. It takes a very long time and I usually start it
+before bedtime, then go through the results the next day. Here is the
+script:</p>
+<pre><code>reverse_check = function(reverse = list(which = &quot;all&quot;), Ncpus = 3) {
+    
+    tar = dir(pattern = &quot;*.tar.gz&quot;)
+    if(length(tar) == 0)
+        stop(&quot;No .tar.gz files found&quot;)
+    ans = menu(tar, graphics = FALSE, title = &quot;Choose tarball, or 0 to cancel&quot;)
+    if (ans == 0) return(NULL)
+    tar = tar[ans]
+    
+    # path to temp directory
+    nm = gsub(&quot;.tar.gz&quot;, &quot;&quot;, tar)
+    tmp = strsplit(tempdir(), &quot;\\\\&quot;)[[1]]
+    tmp = paste(tmp[-length(tmp)], collapse = &quot;\\&quot;)
+    dir = paste0(tmp, &quot;\\checkdir.for.&quot;, nm)
+    dir.create(dir)
+    
+    file.copy(tar, dir)
+    
+    message(&quot;Checking &quot;, tar, &quot;\nDirectory for results: &quot;, dir,
+            &quot;\n\nThis will take some time...&quot;)
+    chk = tools::check_packages_in_dir(dir, reverse = reverse, 
+                                       Ncpus = Ncpus, clean = TRUE)
+    sink(paste(dir, &quot;00summary.txt&quot;, sep = &quot;\\&quot;))
+    print(summary(chk))
+    sink(NULL)
+    message(&quot;\nDetails are in &quot;, dir,&quot;\n(See also 00summary.txt there)&quot;)
+    invisible(chk)
+}</code></pre>
+<p>After running it, look at the summary, and for each check log file
+associated with an error, look at what happened. Sometimes it’s just an
+unavailable package or other nuisance. It’s a painful process.</p>
+</div>
+<div id="check-against-r-devel" class="section level3">
+<h3>Check against R-Devel</h3>
+<p>Go to the <a href="https://win-builder.r-project.org/upload.aspx">Win-Builder
+site</a> where they give you three options. Pick the second one
+(R-devel), which is what they check against when the package is
+submitted. (You don’t need to check with R-release, because presumably
+you already did that earlier.) Click on “Choose file”, and navigate to
+the <code>tar.gz</code> file; then click on on “Submit file.” It’ll take
+an hour or so, and if you get a return message with “Status: OK,” you’re
+ready to submit it to CRAN.</p>
+</div>
+<div id="submit-the-package-to-cran" class="section level3">
+<h3>Submit the package to CRAN</h3>
+<p>Go to the <a href="https://cran.r-project.org/submit.html">CRAN
+submissions site</a>, enter your name and email, choose the
+<code>tar.gz</code> file, and click on “Upload package.” You’re not done
+yet! As maintainer, you’ll get an email confirming that you really are
+the one who submitted it. Click on the link they give. You’ll need to
+verify that you’ve read all the policies and looked at the CRAN and
+Winbuilder checks, etc. Then submit the package and wait to hear from
+them. You’ll get a routine reply once it’s gone through preliminary
+checks. Then within a few hours, hopefully you’ll get an email that it’s
+on its way to CRAN. Or you’ll get the dreaded email that it failed a
+check against another package; then you have to respond to that. Let’s
+just assume that won’t happen…</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

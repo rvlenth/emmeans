@@ -1,10 +1,12 @@
 Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
-Version: 1.11.2-80003
-Date: 2025-09-02
-Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cre", "cph"), 
-    email = "russell-lenth@uiowa.edu"),
+Version: 2.0.0
+Date: 2025-10-09
+Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cph"), 
+                    email = "russell-lenth@uiowa.edu"),
+    person("Julia", "Piaskowski", role = c("cre", "aut", "ctb"),
+           email = "jpiaskowski@uidaho.edu"),
     person("Balazs", "Banfai", role = "ctb"),
     person("Ben", "Bolker", role = "ctb"),
     person("Paul", "Buerkner", role = "ctb"),
@@ -13,9 +15,9 @@ Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cre", "cph"),
     person("Maarten", "Jung", role = "ctb"),
     person("Jonathon", "Love", role = "ctb"),
     person("Fernando", "Miguez", role = "ctb"),
-    person("Julia", "Piaskowski", role = "ctb"),
     person("Hannes", "Riebl", role = "ctb"),
     person("Henrik", "Singmann", role = "ctb"))
+Maintainer: Julia Piaskowski <jpiaskowski@uidaho.edu>
 Depends: R (>= 4.1.0)
 Imports: estimability (>= 1.4.1), graphics, methods, mvtnorm, numDeriv, stats, utils
 Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), compositions,

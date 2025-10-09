@@ -180,6 +180,15 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   you probably should \emph{not} use \code{sigma(model)}, and instead you should create an
 #'   appropriate value using the estimated random effects, e.g., from \code{VarCorr(model)}.
 #'   An example is provided in the \dQuote{transformations} vignette.
+#'   
+#'   \emph{A word of caution:} This bias-adjustment method is merely a one-term
+#'   correction, and it multiplies \code{sigma^2}. When \code{sigma} is reasonably
+#'   small relative to the scale of the response, this is fine; but when
+#'   \code{sigma} is large, this bias adjustment can produce bizarre and
+#'   out-of-range results. Consider for example a logit or probit model where
+#'   the back-transformed response is constrained to the interval [0, 1]; if
+#'   \code{sigma} is more than 1, the adjustment can 
+#'   easily pull the estimate outside of these constraints.
 #' 
 #' @section P-value adjustments:
 #'   The \code{adjust} argument specifies a multiplicity adjustment for tests or

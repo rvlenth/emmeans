@@ -4,6 +4,9 @@
 ^\.gitignore$
 ^\.travis\.yml$
 
+# Don't include our private doc in emmeans/inst
+^emm-prep*
+
 # For now we are including tests in the build
 ## ^tests/*
 

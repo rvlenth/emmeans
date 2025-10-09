@@ -122,7 +122,7 @@ call to this method, though the code tries to work around this.
 
 Package developers may provide minimal emmeans support by providing a `qdrg`
 method like this. If you do this in your package, you should [export and
-register the method](#exporting), and add `emmeans (>=1.12` and
+register the method](#exporting), and add `emmeans (>=2.0.0)` and
 `estimability` to the package's `Suggests` list.
 
 
