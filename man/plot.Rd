@@ -6,12 +6,11 @@
 \title{Plot an \code{emmGrid} or \code{summary_emm} object}
 \usage{
 \method{plot}{emmGrid}(x, y, type, CIs = TRUE, PIs = FALSE,
-  comparisons = FALSE, colors = c("black", "blue", "blue", "red"),
-  alpha = 0.05, adjust = "tukey", int.adjust = "none", intervals, ...)
+  comparisons = FALSE, colors, alpha = 0.05, adjust = "tukey",
+  int.adjust = "none", intervals, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
-  layout, scale = NULL, colors = c("black", "blue", "blue", "red"),
-  intervals, plotit = TRUE, ...)
+  layout, scale = NULL, colors, intervals, plotit = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}
@@ -44,10 +43,15 @@ overlap reflects as much as possible the significance of the comparison of
 the two estimates. (A warning is issued if this can't be done.)
 Note that comparison arrows are not available with `summary_emm` objects.}
 
-\item{colors}{Character vector of color names to use for estimates, CIs, PIs, 
-and comparison arrows, respectively. CIs and PIs are rendered with some
-transparency, and colors are recycled if the length is less than four;
-so all plot elements are visible even if a single color is specified.}
+\item{colors}{Optional character vector of colors to use for estimates, CIs, PIs, 
+and comparison arrows, respectively. If missing, these are derived from
+\code{ink}, \code{paper}, and \code{accent} in the theme's \code{geom} element.
+\code{ink} is used for the estimates, \code{accent} is used for comparison arrows,
+and a contrasting color to \code{accent} is blended with \code{paper} for
+the intervals. 
+If just one color is given, estimates and intervals are made from
+various blends of that color and \code{paper}, and \code{accent}
+color is used for comparison arrows.}
 
 \item{alpha}{The significance level to use in constructing comparison arrows}
 
@@ -130,8 +134,14 @@ respectively (see \code{\link{update.emmGrid}}).
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.emm <- emmeans(warp.lm, ~ tension | wool)
 plot(warp.emm)
-plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
-     horizontal = FALSE, colors = "darkgreen")
+
+plot(warp.emm, PIs = TRUE, comparisons = TRUE)
+
+with_emm_options(gg.theme = ggplot2::theme_dark(), 
+    plot(warp.emm, PIs = TRUE, comparisons = TRUE))
+
+plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
+     horizontal = FALSE, colors = "blue")
 
 ### Using a transformed scale
 pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)

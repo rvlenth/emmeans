@@ -13,11 +13,10 @@ emmip(object, formula, ...)
   style, engine = get_emm_option("graphics.engine"), plotit = TRUE,
   nesting.order = FALSE, ...)
 
-emmip_ggplot(emms, style = "factor", dodge = 0.1, xlab = labs$xlab,
+emmip_ggplot(emms, style = "factor", dodge = 0.2, xlab = labs$xlab,
   ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context", scale,
   dotarg = list(shape = "circle"), linearg = list(linetype = "solid"),
-  CIarg = list(lwd = 2, alpha = 0.5), PIarg = list(lwd = 1.25, alpha =
-  0.33), col, ...)
+  CIarg = list(alpha = 0.4), PIarg = list(alpha = 0.25), ...)
 
 emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
   tlab = labs$tlab, pch = c(1, 2, 6, 7, 9, 10, 15:20), lty = 1,
@@ -110,14 +109,23 @@ fine-tuning purposes, additional
 arguments to \code{ggplot2::scale_y_continuous} may be included in \code{...} .}
 
 \item{dotarg}{\code{list}
-of arguments passed to \code{geom_point} to customize appearance of points}
+of arguments passed to \code{geom_point} to customize appearance of points.
+If this includes \code{shape} and it is of length greater than 1, it is interpreted
+as a shape palette instead.}
 
 \item{linearg}{\code{list}
-of arguments passed to \code{geom_line} to customize appearance of lines}
+of arguments passed to \code{geom_line} to customize appearance of lines.
+If this includes \code{linetype} and it is of length greater than 1,
+it is interpreted as a linetype.}
 
 \item{CIarg, PIarg}{\code{list}s
 of arguments passed to \code{geom_linerange} to customize appearance of intervals.
 (Note: the \code{linetype} aesthetic defaults to \code{"solid"} under the hood)}
+
+\item{pch}{(Lattice only) The plotting characters to use for each group (i.e., levels of
+\code{trace.factors}). They are recycled as needed.}
+
+\item{lty}{(Lattice only) The line types to use for each group. Recycled as needed.}
 
 \item{col}{With \code{emmip_ggplot}, this adds \code{color = col} (not
 \code{colour}) to all of the \code{*arg} lists. This is intended for setting a
@@ -125,11 +133,6 @@ common color for everything, such as a black-and-white plot.
 With \code{emmip_lattice}, \code{col} specifies the colors to use
 for each group, recycled as needed. If not specified, the default trellis
 colors are used.}
-
-\item{pch}{(Lattice only) The plotting characters to use for each group (i.e., levels of
-\code{trace.factors}). They are recycled as needed.}
-
-\item{lty}{(Lattice only) The line types to use for each group. Recycled as needed.}
 }
 \value{
 If \code{plotit = FALSE}, a \code{data.frame} (actually, a
@@ -191,8 +194,14 @@ emmip(noise.lm, type ~ size | side)
 # One interaction plot, using combinations of size and side as the x factor
 # ... with added confidence intervals and some formatting changes
 emmip(noise.lm, type ~ side * size, CIs = TRUE,
-    CIarg = list(lwd = 1, alpha = 1, color = "cyan"),
-    dotarg = list(color = "black"))
+    CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
+    dotarg = list(size = 2, shape = "square", color = "black"))
+    
+# Same using legacy theme
+with_emm_options(gg.theme = 1,
+    emmip(noise.lm, type ~ side * size, CIs = TRUE,
+        CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
+        dotarg = list(size = 2, shape = "square", color = "black")))
 
 # Create a black-and-white version of above with different linetypes
 # (Let the linetypes and symbols default to the palette)
@@ -208,7 +217,7 @@ emmip(noise.lm, ~ size | type * side)
 
 # Example for the 'style' argument
 fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
-fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+fib.rg = ref_grid(fib.lm, at = list(diameter = c(12, 14, 15, 25, 36)))
 emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
 emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 

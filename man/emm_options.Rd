@@ -8,7 +8,7 @@
 \alias{emm_defaults}
 \title{Set or change emmeans options}
 \format{
-An object of class \code{list} of length 23.
+An object of class \code{list} of length 24.
 }
 \usage{
 emm_options(..., disable)
@@ -90,6 +90,9 @@ object.}
 \item{\code{graphics.engine}}{A character value matching 
   \code{c("ggplot", "lattice")}, setting the default engine to use in
   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
+\item{\code{gg.theme}}{An integer. Set it to 1 or 2 if you want the appearance
+  of plots used in \pkg{emmeans} version 1.x.x or 2.x.x. Or set it to the actual theme
+  that you want to use, e.g., \code{emm_options(gg.theme = ggplot2::theme_dark())}}
 \item{\code{msg.interaction}}{A logical value controlling whether or not
   a message is displayed when \code{emmeans} averages over a factor involved
   in an interaction. It is probably not appropriate to do this, unless
