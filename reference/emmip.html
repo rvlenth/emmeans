@@ -73,11 +73,10 @@ formula specification.</p>
 <span>  <span class="va">style</span>, engine <span class="op">=</span> <span class="fu"><a href="emm_options.html">get_emm_option</a></span><span class="op">(</span><span class="st">"graphics.engine"</span><span class="op">)</span>, plotit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  nesting.order <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">emmip_ggplot</span><span class="op">(</span><span class="va">emms</span>, style <span class="op">=</span> <span class="st">"factor"</span>, dodge <span class="op">=</span> <span class="fl">0.1</span>, xlab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">xlab</span>,</span>
+<span><span class="fu">emmip_ggplot</span><span class="op">(</span><span class="va">emms</span>, style <span class="op">=</span> <span class="st">"factor"</span>, dodge <span class="op">=</span> <span class="fl">0.2</span>, xlab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">xlab</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">ylab</span>, tlab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">tlab</span>, facetlab <span class="op">=</span> <span class="st">"label_context"</span>, <span class="va">scale</span>,</span>
 <span>  dotarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"circle"</span><span class="op">)</span>, linearg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"solid"</span><span class="op">)</span>,</span>
-<span>  CIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lwd <span class="op">=</span> <span class="fl">2</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, PIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lwd <span class="op">=</span> <span class="fl">1.25</span>, alpha <span class="op">=</span></span>
-<span>  <span class="fl">0.33</span><span class="op">)</span>, <span class="va">col</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  CIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span>, PIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">emmip_lattice</span><span class="op">(</span><span class="va">emms</span>, style <span class="op">=</span> <span class="st">"factor"</span>, xlab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">xlab</span>, ylab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">ylab</span>,</span>
 <span>  tlab <span class="op">=</span> <span class="va">labs</span><span class="op">$</span><span class="va">tlab</span>, pch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">9</span>, <span class="fl">10</span>, <span class="fl">15</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -205,27 +204,22 @@ arguments to <code><a href="https://ggplot2.tidyverse.org/reference/scale_contin
 
 <dt id="arg-dotarg">dotarg<a class="anchor" aria-label="anchor" href="#arg-dotarg"></a></dt>
 <dd><p><code>list</code>
-of arguments passed to <code>geom_point</code> to customize appearance of points</p></dd>
+of arguments passed to <code>geom_point</code> to customize appearance of points.
+If this includes <code>shape</code> and it is of length greater than 1, it is interpreted
+as a shape palette instead.</p></dd>
 
 
 <dt id="arg-linearg">linearg<a class="anchor" aria-label="anchor" href="#arg-linearg"></a></dt>
 <dd><p><code>list</code>
-of arguments passed to <code>geom_line</code> to customize appearance of lines</p></dd>
+of arguments passed to <code>geom_line</code> to customize appearance of lines.
+If this includes <code>linetype</code> and it is of length greater than 1,
+it is interpreted as a linetype.</p></dd>
 
 
 <dt id="arg-ciarg-piarg">CIarg, PIarg<a class="anchor" aria-label="anchor" href="#arg-ciarg-piarg"></a></dt>
 <dd><p><code>list</code>s
 of arguments passed to <code>geom_linerange</code> to customize appearance of intervals.
 (Note: the <code>linetype</code> aesthetic defaults to <code>"solid"</code> under the hood)</p></dd>
-
-
-<dt id="arg-col">col<a class="anchor" aria-label="anchor" href="#arg-col"></a></dt>
-<dd><p>With <code>emmip_ggplot</code>, this adds <code>color = col</code> (not
-<code>colour</code>) to all of the <code>*arg</code> lists. This is intended for setting a
-common color for everything, such as a black-and-white plot.
-With <code>emmip_lattice</code>, <code>col</code> specifies the colors to use
-for each group, recycled as needed. If not specified, the default trellis
-colors are used.</p></dd>
 
 
 <dt id="arg-pch">pch<a class="anchor" aria-label="anchor" href="#arg-pch"></a></dt>
@@ -235,6 +229,15 @@ colors are used.</p></dd>
 
 <dt id="arg-lty">lty<a class="anchor" aria-label="anchor" href="#arg-lty"></a></dt>
 <dd><p>(Lattice only) The line types to use for each group. Recycled as needed.</p></dd>
+
+
+<dt id="arg-col">col<a class="anchor" aria-label="anchor" href="#arg-col"></a></dt>
+<dd><p>With <code>emmip_ggplot</code>, this adds <code>color = col</code> (not
+<code>colour</code>) to all of the <code>*arg</code> lists. This is intended for setting a
+common color for everything, such as a black-and-white plot.
+With <code>emmip_lattice</code>, <code>col</code> specifies the colors to use
+for each group, recycled as needed. If not specified, the default trellis
+colors are used.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -302,36 +305,39 @@ have different symbols for each group by simply specifying <code>dotarg = list()
 <span class="r-in"><span><span class="co"># One interaction plot, using combinations of size and side as the x factor</span></span></span>
 <span class="r-in"><span><span class="co"># ... with added confidence intervals and some formatting changes</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">type</span> <span class="op">~</span> <span class="va">side</span> <span class="op">*</span> <span class="va">size</span>, CIs <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    CIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lwd <span class="op">=</span> <span class="fl">1</span>, alpha <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    dotarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    CIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.5</span>, alpha <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    dotarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="st">"square"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="emmip-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span><span class="co"># Same using legacy theme</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="emm_options.html">with_emm_options</a></span><span class="op">(</span>gg.theme <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>    <span class="fu">emmip</span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">type</span> <span class="op">~</span> <span class="va">side</span> <span class="op">*</span> <span class="va">size</span>, CIs <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>        CIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1.5</span>, alpha <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        dotarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span>, shape <span class="op">=</span> <span class="st">"square"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="emmip-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a black-and-white version of above with different linetypes</span></span></span>
 <span class="r-in"><span><span class="co"># (Let the linetypes and symbols default to the palette)</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">type</span> <span class="op">~</span> <span class="va">side</span> <span class="op">*</span> <span class="va">size</span>, CIs <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">"black"</span>,</span></span>
 <span class="r-in"><span>      linearg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, dotarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, CIarg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Ignoring unknown labels:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">colour</span> : <span style="color: #0000BB;">"type"</span></span>
-<span class="r-plt img"><img src="emmip-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="emmip-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># One interaction plot using combinations of type and side as the trace factor</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">type</span> <span class="op">*</span> <span class="va">side</span> <span class="op">~</span> <span class="va">size</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="emmip-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="emmip-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Individual traces in panels</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">noise.lm</span>, <span class="op">~</span> <span class="va">size</span> <span class="op">|</span> <span class="va">type</span> <span class="op">*</span> <span class="va">side</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="emmip-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="emmip-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example for the 'style' argument</span></span></span>
 <span class="r-in"><span><span class="va">fib.lm</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">strength</span> <span class="op">~</span> <span class="va">machine</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">diameter</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">fiber</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fib.rg</span> <span class="op">=</span> <span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">fib.lm</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>diameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>, <span class="fl">4</span>, <span class="fl">4.5</span>, <span class="fl">5</span>, <span class="fl">5.5</span>, <span class="fl">6</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fib.rg</span> <span class="op">=</span> <span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">fib.lm</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>diameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">14</span>, <span class="fl">15</span>, <span class="fl">25</span>, <span class="fl">36</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">fib.rg</span>, <span class="va">machine</span> <span class="op">~</span> <span class="va">diameter</span><span class="op">)</span>   <span class="co"># curves (because diameter is numeric)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Ignoring unknown labels:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"machine"</span></span>
-<span class="r-plt img"><img src="emmip-6.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">fib.rg</span>, <span class="va">machine</span> <span class="op">~</span> <span class="va">diameter</span>, style <span class="op">=</span> <span class="st">"factor"</span><span class="op">)</span>  <span class="co"># points and lines</span></span></span>
 <span class="r-plt img"><img src="emmip-7.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">fib.rg</span>, <span class="va">machine</span> <span class="op">~</span> <span class="va">diameter</span>, style <span class="op">=</span> <span class="st">"factor"</span><span class="op">)</span>  <span class="co"># points and lines</span></span></span>
+<span class="r-plt img"><img src="emmip-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For an example using extra ggplot2 code, see 'vignette("messy-data")',</span></span></span>
 <span class="r-in"><span><span class="co"># in the section on nested models.</span></span></span>
@@ -342,16 +348,16 @@ have different symbols for each group by simply specifying <code>dotarg = list()
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># On link scale:</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="va">Treatment</span> <span class="op">~</span> <span class="va">Sex</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="emmip-8.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="emmip-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># On response scale:</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="va">Treatment</span> <span class="op">~</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="emmip-9.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="emmip-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With transformed axis scale and custom scale divisions</span></span></span>
 <span class="r-in"><span><span class="fu">emmip</span><span class="op">(</span><span class="va">neuralgia.glm</span>, <span class="va">Treatment</span> <span class="op">~</span> <span class="va">Sex</span>, type <span class="op">=</span> <span class="st">"scale"</span>,</span></span>
 <span class="r-in"><span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.10</span>, <span class="fl">0.90</span>, by <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="emmip-10.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="emmip-11.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

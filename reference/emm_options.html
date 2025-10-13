@@ -80,7 +80,7 @@ which <code>emmGrid</code> objects are created, in a named list of option lists.
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>list</code> of length 23.</p>
+    <p>An object of class <code>list</code> of length 24.</p>
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
@@ -175,6 +175,11 @@ object.</p></dd>
 <dd><p>A character value matching
   <code>c("ggplot", "lattice")</code>, setting the default engine to use in
   <code><a href="emmip.html">emmip</a></code> and <code><a href="plot.html">plot.emmGrid</a></code>.  Defaults to <code>"ggplot"</code>.</p></dd>
+
+<dt><code>gg.theme</code></dt>
+<dd><p>An integer. Set it to 1 or 2 if you want the appearance
+  of plots used in <span class="pkg">emmeans</span> version 1.x.x or 2.x.x. Or set it to the actual theme
+  that you want to use, e.g., <code>emm_options(gg.theme = ggplot2::theme_dark())</code></p></dd>
 
 <dt><code>msg.interaction</code></dt>
 <dd><p>A logical value controlling whether or not

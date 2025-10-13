@@ -520,8 +520,6 @@ statistically different.</p>
 <p>To visualize the lines themselves, you may use</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="va">machine</span> <span class="op">~</span> <span class="va">diameter</span>, cov.reduce <span class="op">=</span> <span class="va">range</span><span class="op">)</span></span></code></pre></div>
-<pre class="re"><code><span><span class="co">## Ignoring unknown labels:</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"machine"</span></span></span></code></pre>
 <p><img src="interactions_files/figure-html/unnamed-chunk-20-1.png" alt="Plot with three increasing lines. The one for B is highest, the one for C is lower and more-or-less parallel to it, and the one for A is steeper and crosses the other two lines near their ends" width="432"></p>
 <p>The <code>cov.reduce = range</code> argument is passed to
 <code><a href="../reference/ref_grid.html">ref_grid()</a></code>; it is needed because by default, each covariate
@@ -539,7 +537,7 @@ different days, and the responses <code>sales1</code> and
 <code>sales2</code> were observed. Let’s consider three multivariate
 models for these data, with additive effects for days and stores, and
 different levels of fitting on the prices:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">org.quad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">sales1</span>, <span class="va">sales2</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">price1</span>, <span class="va">price2</span>, degree <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>                                       <span class="op">+</span> <span class="va">day</span> <span class="op">+</span> <span class="va">store</span>, data <span class="op">=</span> <span class="va">oranges</span><span class="op">)</span></span>
 <span><span class="va">org.int</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">sales1</span>, <span class="va">sales2</span><span class="op">)</span> <span class="op">~</span> <span class="va">price1</span> <span class="op">*</span> <span class="va">price2</span> <span class="op">+</span> <span class="va">day</span> <span class="op">+</span> <span class="va">store</span>, data <span class="op">=</span> <span class="va">oranges</span><span class="op">)</span></span>
@@ -553,14 +551,8 @@ between <code>variety</code> and each of the predictors involving
 there is an implied three-way interaction.) An interesting way to view
 these models is to look at how they predict sales of each variety at
 each observed values of the prices:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">org.quad</span>, <span class="va">price2</span> <span class="op">~</span> <span class="va">price1</span> <span class="op">|</span> <span class="va">variety</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span>, cov.reduce <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre class="re"><code><span><span class="co">## Ignoring unknown labels:</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"price2"</span></span></span></code></pre>
-<pre><code><span><span class="co">## Warning: The shape palette can deal with a maximum of 6 discrete values because more</span></span>
-<span><span class="co">## than 6 becomes difficult to discriminate</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> you have requested 9 values. Consider specifying shapes manually if you need</span></span>
-<span><span class="co">##   that many of them.</span></span></code></pre>
 <p><img src="interactions_files/figure-html/unnamed-chunk-22-1.png" alt="Two panels with sets of curves associated with values of price2. The panel for sales1 shows a tight bundle of curves that decrease with price1. The panel for sales2 shows a looser bundle of curves that diverge as price1 increases" width="432"></p>
 <p>The trends portrayed here are quite sensible: In the left panel, as
 we increase the price of variety 1, sales of that variety will tend to
@@ -576,7 +568,7 @@ though, there are implied <code>price1:variety</code> and
 regression coefficients for the two responses.</p>
 <p>Which model should we use? They are nested models, so they can be
 compared by <code><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova()</a></code>:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">org.quad</span>, <span class="va">org.int</span>, <span class="va">org.add</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## Analysis of Variance Table</span></span>
 <span><span class="co">## </span></span>
@@ -603,7 +595,7 @@ for exactly this kind of purpose. It uses a difference quotient to
 estimate the slope of a line fitted to a given variable. It works just
 like <code><a href="../reference/emmeans.html">emmeans()</a></code> except for requiring the variable to use in
 the difference quotient. Using the <code>org.int</code> model:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">org.int</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">variety</span>, var <span class="op">=</span> <span class="st">"price1"</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emtrends</span></span>
 <span><span class="co">##  variety price1.trend    SE df lower.CL upper.CL</span></span>
@@ -633,7 +625,7 @@ depend somewhat on the setting for <code>price1</code>. The graph above
 gives an indication of the nature of those changes.</p>
 <p>Similar results hold when we analyze the trends for
 <code>price2</code>:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emtrends.html">emtrends</a></span><span class="op">(</span><span class="va">org.int</span>, <span class="va">pairwise</span> <span class="op">~</span> <span class="va">variety</span>, var <span class="op">=</span> <span class="st">"price2"</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## $emtrends</span></span>
 <span><span class="co">##  variety price2.trend    SE df lower.CL upper.CL</span></span>
