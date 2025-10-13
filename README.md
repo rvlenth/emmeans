@@ -92,36 +92,31 @@ For the latest release notes on this development version, see the
 
 ## Rounding
 For its summary output, **emmeans** uses an optimal-digits algorithm that rounds
-results to about the number of digits that are useful, relative to estimates' 
+results to about the number of displayed digits that are useful, relative to estimates' 
 confidence limits. This avoids cluttering the output, but it is unlike other R
 results, which are typically less round. If this is annoying to you, there is an 
-option (`opt.digits = FALSE`) that disables the optimal-digits routine.
+option (`opt.digits = FALSE`) that disables the optimal-digits routine. Note that
+the values actually stored in `emm_summary` objects and such are *not* rounded.
 
 ## "Tidiness" can be dangerous
 I see more and more users who are in a terrible hurry to get results. They develop
 a "workflow" where they plan-out several steps at once and pipe them
 together. That's useful when you don't have to think about what happens in
-those steps; but *when you're doing statistics, you should be thinking!*
+those steps; but *when you're doing the kinds of post hoc analyses offered by*
+**emmeans**, *you should be thinking!*
 Most functions in the **emmeans** package yield results that are accompanied by 
 annotations such as transformations involved, P-value adjustments
 made, the families for those adjustments, etc. If you just pipe the results
 into some more code, *you never see those annotations*. 
 
-**Please slow down!** Look at the actual results from each **emmeans** package 
-function without any post-processing -- None. That way, you'll see the annotated 
-summaries.
-Statistics is pretty hard stuff. Don't make it harder by blindfolding yourself.
+**Please slow down!** Look at the actual results from each **emmeans** package
+function without any post-processing -- None. That way, you'll see the annotated
+summaries. Statistics is pretty hard stuff. Don't make it harder by blindfolding
+yourself.
 
 
 ## Supersession plan
-The developer of **emmeans** continues to maintain and occasionally add new
-features. However, none of us is immortal; and neither is software. I have
-thought of trying to find a co-maintainer who could carry the ball once I am
-gone or lose interest, but the flip side of that is that the codebase is not
-getting less messy as time goes on -- why impose that on someone else? So my
-thought now is that if at some point, enough active R developers want the
-capabilities of **emmeans** but I am no longer in the picture, they should feel free to supersede it with some other package that does it better. All of the code is publicly available on
-GitHub, so just take what is useful and replace what is not.
+[Julia Piaskowski](@jpiaskowski) is preparing to take over as maintainer.
 
 ##### *Note: **emmeans** supersedes the package **lsmeans**. The latter is just a front end for **emmeans**, and in fact, the `lsmeans()` function itself is part of **emmeans**.*
 

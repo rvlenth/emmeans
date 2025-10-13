@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -30,8 +30,9 @@
 #' @method plot emmGrid
 #' @export
 plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE, 
-                    colors = c("black", "blue", "blue", "red"),
+                    colors,
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
+    
     if(!missing(intervals))
         CIs = intervals
     nonlin.scale = FALSE
@@ -137,10 +138,15 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   overlap reflects as much as possible the significance of the comparison of
 #'   the two estimates. (A warning is issued if this can't be done.)
 #'   Note that comparison arrows are not available with `summary_emm` objects.
-#' @param colors Character vector of color names to use for estimates, CIs, PIs, 
-#'   and comparison arrows, respectively. CIs and PIs are rendered with some
-#'   transparency, and colors are recycled if the length is less than four;
-#'   so all plot elements are visible even if a single color is specified. 
+#' @param colors Optional character vector of colors to use for estimates, CIs, PIs, 
+#'   and comparison arrows, respectively. If missing, these are derived from
+#'   \code{ink}, \code{paper}, and \code{accent} in the theme's \code{geom} element.
+#'   \code{ink} is used for the estimates, \code{accent} is used for comparison arrows,
+#'   and a contrasting color to \code{accent} is blended with \code{paper} for
+#'   the intervals. 
+#'   If just one color is given, estimates and intervals are made from
+#'   various blends of that color and \code{paper}, and \code{accent}
+#'   color is used for comparison arrows.
 #' @param alpha The significance level to use in constructing comparison arrows
 #' @param adjust Character value: Multiplicity adjustment method for comparison arrows \emph{only}.
 #' @param int.adjust Character value: Multiplicity adjustment method for the plotted confidence intervals \emph{only}.
@@ -200,8 +206,14 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
 #' plot(warp.emm)
-#' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "mvt", 
-#'      horizontal = FALSE, colors = "darkgreen")
+#' 
+#' plot(warp.emm, PIs = TRUE, comparisons = TRUE)
+#' 
+#' with_emm_options(gg.theme = ggplot2::theme_dark(), 
+#'     plot(warp.emm, PIs = TRUE, comparisons = TRUE))
+#' 
+#' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
+#'      horizontal = FALSE, colors = "blue")
 #' 
 #' ### Using a transformed scale
 #' pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
@@ -215,7 +227,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' plot(pigs.ci, scale = scales::log10_trans())
 plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                             xlab, ylab, layout, scale = NULL,
-                            colors = c("black", "blue", "blue", "red"), intervals, 
+                            colors, intervals, 
                             plotit = TRUE, ...) {
     if(!missing(intervals))
         CIs = intervals
@@ -296,7 +308,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                     s = (x < max(x))
                     lattice::panel.arrows(rcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
                 }
-            }
+            } 
             else {
                 lattice::panel.abline(v = unique(x), col = col.line, lty = lty, lwd = lwd)
                 if(CIs)
@@ -478,14 +490,18 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     
     facName = paste(priv, collapse=":")
     
-    if(length(colors) < 4)
-        colors = rep(colors, 4)
-    dot.col = colors[1]
-    CI.col = colors[2]
-    PI.col = colors[3]
-    comp.col = colors[4]
+    # private lil fcn to mix colors with white
+    mix_col = function(col1, col2, frac) {
+        x = grDevices::colorRamp(c(col1, col2))(frac) / 255
+        rgb(x[1], x[2], x[3], 1)
+    }
     
     if (engine == "lattice") {
+        if(missing(colors))
+            colors = c("black", mix_col("white", "blue", .35), mix_col("white", "blue", .20), "red")
+        if(length(colors) == 1)
+            colors = c(colors, mix_col("white", colors, .35), mix_col("white", colors, .20), "red")
+        
         if (missing(layout)) {
             layout = c(1, length(ubv))
             if(!horizontal) 
@@ -513,6 +529,27 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         }
     } # --- end lattice plot
     else {  ## ggplot method
+        thm = theme_emm()
+        
+        if(missing(colors) && is.numeric(thopt <- get_emm_option("gg.theme")) && thopt == 1)
+            colors = c("black", mix_col("white", "blue", .35), mix_col("white", "blue", .20), "red")
+        
+        if(missing(colors) || (length(colors) == 1)) {
+            dot.col = ifelse(missing(colors), thm$geom@ink, colors)
+            paper = thm$geom@paper
+            if(missing(colors)) {   # derive a contrasting color to 'accent' color
+                xxx = (rgb2hsv(col2rgb(thm$geom@accent))[1] + 0.54) %% 1
+                clr = hcl(xxx * 360, 80, 50)
+            }
+            else
+                clr = dot.col
+            colors = c(dot.col, mix_col(paper, clr, 0.25), mix_col(paper, clr, 0.15), thm$geom@accent)
+        }
+        dot.col = colors[1]
+        CI.col = colors[2]
+        PI.col = colors[3]
+        comp.col = colors[4]
+        
         summ$lcl = lcl
         summ$ucl = ucl
 
@@ -523,21 +560,21 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (PIs) 
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lpl, xend = .data$upl, 
                                 y = .data$pri.fac, yend = .data$pri.fac), 
-                                color = PI.col, lwd = 2.5, alpha = .15)
+                                color = PI.col, lwd = 2.5)
         if (CIs) 
             grobj = grobj + ggplot2::geom_segment(ggplot2::aes(x = .data$lcl, xend = .data$ucl, 
                                 y = .data$pri.fac, yend = .data$pri.fac), 
-                                color = CI.col, lwd = 4, alpha = .25)
+                                color = CI.col, lwd = 4)
 
         if (!is.null(extra)) {
             grobj = grobj + 
-                ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, 
-                        xend = .data$lcmpl, y = .data$pri.fac, yend = .data$pri.fac), 
-                        arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
+                ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, linewidth = 1,
+                        xend = .data$lcmpl, y = .data$pri.fac, yend = .data$pri.fac), linewidth = 0.9,
+                        arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"),  
                             type = "closed"), color = comp.col, 
                         data = summ[!is.na(summ$lcmpl), ]) +
                 ggplot2::geom_segment(ggplot2::aes(x = .data$the.emmean, 
-                    xend = .data$rcmpl, y = .data$pri.fac, yend = .data$pri.fac), 
+                    xend = .data$rcmpl, y = .data$pri.fac, yend = .data$pri.fac), linewidth = 0.9,
                     arrow = ggplot2::arrow(length = ggplot2::unit(.07, "inches"), 
                             type = "closed"), color = comp.col,
                     data = summ[!is.na(summ$rcmpl), ])
@@ -545,7 +582,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (length(byv) > 0)
             grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
                                                 labeller = "label_both")
-        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 2)
+        grobj = grobj + ggplot2::geom_point(color = dot.col, size = 4, shape = 18)
         
         if(!is.null(scale)) {
             args = list(...)
@@ -560,6 +597,6 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if(!horizontal)
             grobj = grobj + ggplot2::coord_flip()
         
-        grobj + ggplot2::labs(x = xlab, y = ylab)
+        grobj + ggplot2::labs(x = xlab, y = ylab) + thm
     }
 }

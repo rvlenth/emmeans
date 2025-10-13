@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2017 Russell V. Lenth                                #
+#    Copyright (c) 2012-2025 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
@@ -125,8 +125,14 @@ emmip = function(object, formula, ...) {
 #' # One interaction plot, using combinations of size and side as the x factor
 #' # ... with added confidence intervals and some formatting changes
 #' emmip(noise.lm, type ~ side * size, CIs = TRUE,
-#'     CIarg = list(lwd = 1, alpha = 1, color = "cyan"),
-#'     dotarg = list(color = "black"))
+#'     CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
+#'     dotarg = list(size = 2, shape = "square", color = "black"))
+#'     
+#' # Same using legacy theme
+#' with_emm_options(gg.theme = 1,
+#'     emmip(noise.lm, type ~ side * size, CIs = TRUE,
+#'         CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
+#'         dotarg = list(size = 2, shape = "square", color = "black")))
 #' 
 #' # Create a black-and-white version of above with different linetypes
 #' # (Let the linetypes and symbols default to the palette)
@@ -142,7 +148,7 @@ emmip = function(object, formula, ...) {
 #' 
 #' # Example for the 'style' argument
 #' fib.lm = lm(strength ~ machine * sqrt(diameter), data = fiber)
-#' fib.rg = ref_grid(fib.lm, at = list(diameter = c(3.5, 4, 4.5, 5, 5.5, 6)^2))
+#' fib.rg = ref_grid(fib.lm, at = list(diameter = c(12, 14, 15, 25, 36)))
 #' emmip(fib.rg, machine ~ diameter)   # curves (because diameter is numeric)
 #' emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 #' 
@@ -310,9 +316,13 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #'   fine-tuning purposes, additional
 #'   arguments to \code{ggplot2::scale_y_continuous} may be included in \code{...} .
 #' @param dotarg \code{list}
-#'   of arguments passed to \code{geom_point} to customize appearance of points
+#'   of arguments passed to \code{geom_point} to customize appearance of points.
+#'   If this includes \code{shape} and it is of length greater than 1, it is interpreted
+#'   as a shape palette instead.
 #' @param linearg \code{list}
-#'   of arguments passed to \code{geom_line} to customize appearance of lines
+#'   of arguments passed to \code{geom_line} to customize appearance of lines.
+#'   If this includes \code{linetype} and it is of length greater than 1,
+#'   it is interpreted as a linetype.
 #' @param CIarg,PIarg \code{list}s
 #'   of arguments passed to \code{geom_linerange} to customize appearance of intervals.
 #'   (Note: the \code{linetype} aesthetic defaults to \code{"solid"} under the hood)
@@ -348,46 +358,89 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' emmip(neuralgia.glm, Treatment ~ Sex, type = "scale",
 #'     breaks = seq(0.10, 0.90, by = 0.10))
 #' @export
-emmip_ggplot = function(emms, style = "factor", dodge = .1,
+emmip_ggplot = function(emms, style = "factor", dodge = .2,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
                         facetlab = "label_context",
                         scale, 
                         dotarg = list(shape = "circle"), 
                         linearg = list(linetype = "solid"),
-                        CIarg = list(lwd = 2, alpha = .5),
-                        PIarg = list(lwd = 1.25, alpha = .33),
-                        col,
+                        CIarg = list(alpha = .40),
+                        PIarg = list(alpha = .25),
                         ...) {
+    
+    thm = theme_emm()    # Depends on gg.theme option
     
     labs = attr(emms, "labs")
     vars = attr(emms, "vars")
+    
+    shape.pal = linetype.pal = NULL   # we use these to store shape and linetype specs in dotarg and linearg
     
     CIs = !is.null(emms$LCL)
     PIs = !is.null(emms$LPL)
     pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, dodge, 0)) # use dodging if CIs
     
-    if(!missing(col)) ### brute-force color setting
-        dotarg$color = linearg$color = CIarg$color = PIarg$color = col
-    
     if(missing(scale) && !is.null(attr(emms, "scale")))
         scale = attr(emms, "scale")
 
     dotarg$position = pos
+    if(is.null(dotarg$size)) 
+        dotarg$size = 3
+    if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {  # treat as a shape palette
+        shape.pal = dotarg$shape
+        dotarg$shape = NULL
+    }
+    
     linearg$mapping = ggplot2::aes(group = .data$tvar)
     linearg$position = pos
+    if(is.null(linearg$linewidth))
+        linearg$linewidth = 0.8
+    if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
+        linetype.pal = linearg$linetype
+        linearg$linetype = NULL
+    }
+    
     if (length(vars$tvars) > 0) {
-        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, 
-                    color = .data$tvar, linetype = .data$tvar, shape = .data$tvar, group = .data$tvar))
+        labarg = list(x = xlab, y = ylab, color = tlab)
+        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, color = .data$tvar))
+        
+        if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {
+            grobj = grobj + ggplot2::aes(shape = .data$tvar)
+            labarg$shape = tlab
+        }
+        if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {
+            grobj = grobj + ggplot2::aes(linetype = .data$tvar)
+            labarg$linetype = tlab
+        }
+        
         if (style == "factor")
-            grobj = grobj + do.call(ggplot2::geom_point, dotarg)
-        grobj = grobj +
-            do.call(ggplot2::geom_line, linearg) +
-            ggplot2::labs(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab)
+            grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
+                do.call(ggplot2::geom_line, linearg) +
+                do.call(ggplot2::labs, labarg) + 
+                ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
+        else
+            grobj = grobj +
+                do.call(ggplot2::geom_line, linearg) +
+                do.call(ggplot2::labs, labarg) 
+        
+        # handle any custom shapes or linetypes
+        if(!is.null(shape.pal))
+            grobj = grobj + scale_shape_manual(values = shape.pal)
+        if(!is.null(linetype.pal))
+            grobj = grobj + scale_linetype_manual(values = linetype.pal)
     }
     else { # just one trace per plot
+        if(is.null(linearg$color) && is.null(linearg$colour))
+            linearg$color = .emm_palette[1]
+        if(is.null(dotarg$color) && is.null(dotarg$colour))
+            dotarg$color = .emm_palette[1]
+        if(is.null(CIarg$color) && is.null(CIarg$colour))
+            CIarg$color = .emm_palette[1]
+        if(is.null(PIarg$color) && is.null(PIarg$colour))
+            PIarg$color = .emm_palette[1]
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
-        # if (style == "factor")
-        #     grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+        if (style == "factor")
+            grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
+                ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
         grobj = grobj +
             do.call(ggplot2::geom_line, linearg) +
             ggplot2::labs(x = xlab, y = ylab)
@@ -397,12 +450,14 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         PIarg$mapping = ggplot2::aes(ymin = .data$LPL, ymax = .data$UPL)
         PIarg$position = pos
         if(is.null(PIarg$linetype))  PIarg$linetype = "solid"
+        if(is.null(PIarg$linewidth))  PIarg$linewidth = 1.5
         grobj = grobj + do.call(ggplot2::geom_linerange, PIarg)
     }
     if (CIs) {
         CIarg$mapping = ggplot2::aes(ymin = .data$LCL, ymax = .data$UCL)
         CIarg$position = pos
         if(is.null(CIarg$linetype))  CIarg$linetype = "solid"
+        if(is.null(CIarg$linewidth))  CIarg$linewidth = 2.5
         grobj = grobj + do.call(ggplot2::geom_linerange, CIarg)
     }
     if (length(byvars <- vars$byvars) > 0) {  # we have by variables 
@@ -423,8 +478,45 @@ emmip_ggplot = function(emms, style = "factor", dodge = .1,
         grobj = grobj + do.call(ggplot2::geom_point, dotarg)
     
     
-    grobj
+    grobj + thm
 }
+
+#' @importFrom grDevices palette.colors
+##### Here is a palette of 45 colors. More than that, SOL
+.emm_palette = c(
+    grDevices::palette.colors(palette = "Okabe-Ito)")[c(6:9,1:5)], # Start w/ steel blue, yellow is last
+    grDevices::palette.colors(palette = "Polychrome 36")[sample(1:36)]
+)
+
+theme_emm = function (base_size = 13, base_family = "sans", header_family = "sans", 
+                      base_line_size = base_size/22, base_rect_size = base_size/22, 
+                      ink ="#0e0033ff", paper = "white", accent = "#FF4000") 
+{
+    if(inherits(thm <- get_emm_option("gg.theme"), "theme"))
+        return(thm)
+    
+    if(thm == 1) # legacy theme from version 1.x.x
+        return(ggplot2::theme_grey())
+    
+    dark_color = "#4E4369"
+    mid_color =  "#79718D"   ###   "#002789"
+    lit_color =  "#d2d2d8ff"
+  
+    ggplot2::theme_light(base_size = base_size, base_family = base_family,
+            header_family = header_family, base_line_size = base_line_size,
+            base_rect_size = base_rect_size, ink = ink, paper = paper, accent = accent) +
+      ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+                    panel.border = ggplot2::element_rect(color = mid_color, linewidth = 0.85),
+                    panel.grid.major = ggplot2::element_line(colour = lit_color),
+                    strip.background = ggplot2::element_rect(fill = mid_color, color = mid_color),
+                    strip.text = ggplot2::element_text(size = ggplot2::rel(0.8), family = "sans", face = "bold", lineheight = 1.1),
+                    plot.title = ggplot2::element_text(colour = ink, family = "serif", size = ggplot2::rel(1.8), margin = ggplot2::margin(12, 0, 8, 0)),
+                    plot.subtitle = ggplot2::element_text(size = ggplot2::rel(1.1), family = "serif", margin = ggplot2::margin(4, 0, 0, 0), color = dark_color),
+                    legend.justification = "top",
+                    palette.colour.discrete = .emm_palette # color-blind friendly, 45 total colors
+    )
+}
+
 
 #' @rdname emmip
 #' @param emms A \code{data.frame} created by calling \code{emmip} with
