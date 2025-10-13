@@ -27,7 +27,7 @@ hpd.summary."><meta property="og:image" content="https://rvlenth.github.io/emmea
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.11.2-80003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -412,6 +412,14 @@ is a list of the linear functions associated with the joint test.</p>
   you probably should <em>not</em> use <code>sigma(model)</code>, and instead you should create an
   appropriate value using the estimated random effects, e.g., from <code>VarCorr(model)</code>.
   An example is provided in the “transformations” vignette.</p>
+<p><em>A word of caution:</em> This bias-adjustment method is merely a one-term
+  correction, and it multiplies <code>sigma^2</code>. When <code>sigma</code> is reasonably
+  small relative to the scale of the response, this is fine; but when
+  <code>sigma</code> is large, this bias adjustment can produce bizarre and
+  out-of-range results. Consider for example a logit or probit model where
+  the back-transformed response is constrained to the interval [0, 1]; if
+  <code>sigma</code> is more than 1, the adjustment can
+  easily pull the estimate outside of these constraints.</p>
     </div>
     <div class="section level2">
     <h2 id="p-value-adjustments">P-value adjustments<a class="anchor" aria-label="anchor" href="#p-value-adjustments"></a></h2>
@@ -753,7 +761,7 @@ is a list of the linear functions associated with the joint test.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Russell V. Lenth.</p>
+  <p>Developed by Russell V. Lenth, Julia Piaskowski.</p>
 </div>
 
 <div class="pkgdown-footer-right">
