@@ -273,7 +273,35 @@ object with `post.beta` replaced by that result. When `summary` is called and
 `frequentist = TRUE`; in that case, the reference grid is usually initialized with
 `bhat` as the average of the rows and `V = cov(post.beta)`.
 
+In some ways, Bayesian models are easier to support, because all we *really* need
+is the posterior sample of estimates, and with back-transformations and such
+we just compute thenappropriate posterior sample of back-transformed estimates, 
+and summarize with `summary.hpd`. We don't need the delta method.
+
+## Bias adjustment
+This is explained in the documentation for `summary`. It is implemented by doing
+a fixup to `link` where we replace `link$linkinv` by $h(\eta)+\frac12h''(\eta)$,
+the latter term being estimated using a difference quotient on `link$mu.eta`.
+
 ## `mvcontrast`
 This is like contrast except we identify one factor to treat as multivariate
 and then we use the specified contrast method on that multivariate vector
 and test the result using Hotelling's $T^2$.
+
+## Satterthwaite method
+First, I have to say that Iowa has special ownership of this since Satterthwaite 
+earned his PhD in our department (well, actually Math at the time) in 1943 by
+developing this method. It's about the only thing he ever did though, as he
+suffered from schizophrenia and just wasn't able to function well most of the rest
+of his life. Anyway, the idea is that we have a variance estimator $W$ and we like
+the idea that it would be proportional to a $\chi^2$ r.v. So we find the d.f. based on
+the first two moments. Now if $W/c \sim \chi^2_\nu$, then $E(W)=c\nu$ and $\mbox{var}(W) = 2c^2\nu$,
+implying that $2\cdot[E(W)]^2/\mbox{var(W)} = (2c^2\nu^2)/(2c^2\nu) = \nu$.
+Accordingly, we calculate $\hat\nu = 2w^2 / \hat{\mbox{var}}(W)$.
+
+In the support functions for `nlme::gls` objects, it is feasible to do this by 
+obtaining the jacobian of the variance matrix of the random effects and using 
+that to estimate the variance of the variance estimate in question. For `lme4::mermod`
+and `nlme::lme` objects, we don't have that variance matrix, but we have an
+approximate
+
