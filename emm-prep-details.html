@@ -320,7 +320,7 @@ significance and equivalence tests in the documentation.</p>
 <p>This calls <code>summary</code> with
 <code>infer = c(FALSE, TRUE)</code>. But it also has a
 <code>joint</code> argument that if <code>TRUE</code>, computes a joint
-test of all rows of <code>linfct</code>. Note that <span class="math inline">\(\text{cov}(Lb) = LVL&#39;\)</span> but we need to
+test of all rows of <code>linfct</code>. Note that <span class="math inline">\(\mbox{cov}(Lb) = LVL&#39;\)</span> but we need to
 take extra care to account for any non-estimable or linearly-dependent
 rows. Assuming we’ve done that, the Wald statistic is <span class="math inline">\((Lb - \mu_0)&#39;(LVL&#39;)^{-1}(Lb -
 \mu_0)\)</span> and the numerator degrees of freedom is the rank of
@@ -349,7 +349,7 @@ more than the two values if nonlinear.</p>
 <div id="est.se.df" class="section level3">
 <h3><code>.est.se.df</code></h3>
 <p>Is a primary workhorse for <code>summary</code>. Per its name, it
-puts together the linear predictions <span class="math inline">\(Lb\)</span>, standard errors <span class="math inline">\(\sqrt{\text{diag(LVL&#39;)}}\)</span>, and degrees
+puts together the linear predictions <span class="math inline">\(Lb\)</span>, standard errors <span class="math inline">\(\sqrt{\mbox{diag}(LVL&#39;)}\)</span>, and degrees
 of freedom via <code>dffun</code> and <code>dfargs</code>, and
 determines the link function, if present, and bookkeeping factors for
 multiplicity adjustments.</p>
@@ -396,12 +396,53 @@ the object with <code>post.beta</code> replaced by that result. When
 with <code>frequentist = TRUE</code>; in that case, the reference grid
 is usually initialized with <code>bhat</code> as the average of the rows
 and <code>V = cov(post.beta)</code>.</p>
+<p>In some ways, Bayesian models are easier to support, because all we
+<em>really</em> need is the posterior sample of estimates, and with
+back-transformations and such we just compute thenappropriate posterior
+sample of back-transformed estimates, and summarize with
+<code>summary.hpd</code>. We don’t need the delta method.</p>
+</div>
+<div id="bias-adjustment" class="section level2">
+<h2>Bias adjustment</h2>
+<p>This is explained in the documentation for <code>summary</code>. It
+is implemented by doing a fixup to <code>link</code> where we replace
+<code>link$linkinv</code> by <span class="math inline">\(h(\eta)+\frac12h&#39;&#39;(\eta)\)</span>, the
+latter term being estimated using a difference quotient on
+<code>link$mu.eta</code>.</p>
 </div>
 <div id="mvcontrast" class="section level2">
 <h2><code>mvcontrast</code></h2>
 <p>This is like contrast except we identify one factor to treat as
 multivariate and then we use the specified contrast method on that
 multivariate vector and test the result using Hotelling’s <span class="math inline">\(T^2\)</span>.</p>
+</div>
+<div id="satterthwaite-method" class="section level2">
+<h2>Satterthwaite method</h2>
+<p>First, I have to say that Iowa has special ownership of this since
+Satterthwaite earned his PhD in our department (well, actually Math at
+the time) in 1943 by developing this method. It’s about the only thing
+he ever did though, as he suffered from schizophrenia and just wasn’t
+able to function well most of the rest of his life. Anyway, the idea is
+that we have a variance estimator <span class="math inline">\(W\)</span>
+and we like the idea that it would be proportional to a <span class="math inline">\(\chi^2\)</span> r.v. So we find the d.f. based on
+the first two moments. Now if <span class="math inline">\(W/c \sim
+\chi^2_\nu\)</span>, then <span class="math inline">\(E(W)=c\nu\)</span>
+and <span class="math inline">\(\mbox{var}(W) = 2c^2\nu\)</span>,
+implying that <span class="math inline">\(2\cdot[E(W)]^2/\mbox{var(W)} =
+(2c^2\nu^2)/(2c^2\nu) = \nu\)</span>. Accordingly, we estimate the
+degrees of freedom using <span class="math inline">\(\hat\nu = 2W^2 /
+\hat{\mbox{var}}(W)\)</span>.</p>
+<p>In the support functions for <code>nlme::gls</code> objects, it is
+feasible to do this by obtaining the jacobian of the variance matrix of
+the random effects and using that to estimate the variance of the
+variance estimate in question. This is the function
+<code>gls_grad</code>. For <code>lme4::mermod</code> and
+<code>nlme::lme</code> objects, we don’t have that variance matrix, so
+instead we have an approximate method
+(<code>&quot;appx-satterthwaite&quot;</code>) that perturbs the response values
+slightly and refits the model. It only takes a few of these
+perturbations to do a respectable job of estimating the required
+variances; this is done by the <code>gradV.kludge</code> function.</p>
 </div>
 </div>
 

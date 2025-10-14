@@ -219,7 +219,7 @@ This just calls `summary` with `infer = c(TRUE, FALSE)`.
 ### `test`
 This calls `summary` with `infer = c(FALSE, TRUE)`. But it also has a `joint`
 argument that if `TRUE`, computes a joint test of all rows of `linfct`. Note
-that $\text{cov}(Lb) = LVL'$ but we need to take extra care to account for any
+that $\mbox{cov}(Lb) = LVL'$ but we need to take extra care to account for any
 non-estimable or linearly-dependent rows. Assuming we've done that, the Wald
 statistic is $(Lb - \mu_0)'(LVL')^{-1}(Lb - \mu_0)$ and the numerator degrees of
 freedom is the rank of $L$. We kind of have to punt for the denominator d.f.
@@ -242,7 +242,7 @@ the two values if nonlinear.
 
 ### `.est.se.df`
 Is a primary workhorse for `summary`. Per its name, it puts together the linear 
-predictions $Lb$, standard errors $\sqrt{\text{diag(LVL')}}$, and degrees of freedom
+predictions $Lb$, standard errors $\sqrt{\mbox{diag}(LVL')}$, and degrees of freedom
 via `dffun` and `dfargs`, and determines the link function, if present, and bookkeeping
 factors for multiplicity adjustments.
 
@@ -297,11 +297,14 @@ of his life. Anyway, the idea is that we have a variance estimator $W$ and we li
 the idea that it would be proportional to a $\chi^2$ r.v. So we find the d.f. based on
 the first two moments. Now if $W/c \sim \chi^2_\nu$, then $E(W)=c\nu$ and $\mbox{var}(W) = 2c^2\nu$,
 implying that $2\cdot[E(W)]^2/\mbox{var(W)} = (2c^2\nu^2)/(2c^2\nu) = \nu$.
-Accordingly, we calculate $\hat\nu = 2w^2 / \hat{\mbox{var}}(W)$.
+Accordingly, we estimate the degrees of freedom using  $\hat\nu = 2W^2 / \hat{\mbox{var}}(W)$.
 
-In the support functions for `nlme::gls` objects, it is feasible to do this by 
-obtaining the jacobian of the variance matrix of the random effects and using 
-that to estimate the variance of the variance estimate in question. For `lme4::mermod`
-and `nlme::lme` objects, we don't have that variance matrix, but we have an
-approximate
+In the support functions for `nlme::gls` objects, it is feasible to do this by
+obtaining the jacobian of the variance matrix of the random effects and using
+that to estimate the variance of the variance estimate in question. This is the
+function `gls_grad`. For `lme4::mermod` and `nlme::lme` objects, we don't have
+that variance matrix, so instead we have an approximate method
+(`"appx-satterthwaite"`) that perturbs the response values slightly and refits
+the model. It only takes a few of these perturbations to do a respectable job of
+estimating the required variances; this is done by the `gradV.kludge` function.
 
