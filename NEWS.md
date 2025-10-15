@@ -2,20 +2,26 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 1.11.2-80xxx ## NEXT version should be at least 1.12.0
+## emmeans 2.0.0
+We have a new major version number, with a new graphics look and a new maintainer,
+Julia (however, Russ is still very much involved).
+
   * Added a new `post.ci.method` option to set the default for `ci.method`
     in `hpd.summary()` (#538)
   * Extended `qdrg()` so that it is a generic that can dispatch S3 methods
     based on the class of `object`. This allows a "budget" option for
     package developers who want to provide rudimentary **emmeans** support.
   * Fixed code for `emmip_ggplot()`, so that we no longer call `aes_()` (#547)
-  * **ggplot2**-based graphics have a new look. If you liked the old theme
+  * **ggplot2**-based graphics have a new look. If you liked the old one
     better, use `emm_options(gg.theme = 1)` to get an approximation of the old look.
   * May also use `gg.theme` option to set any theme you want for future plots.
   * Scaling changes so `emmip()` so that plots better fill the plotting area.
   * Intervals in `plot.emmGrid()` are now solid colors, rather than transparent ones,
     to prevent grid lines from partially masking them.
-  
+  * Weights were not present in `ordinal` objects created with `mode = "mean.class"`
+    (#553)
+  * Cautionary note added on bias correction (in documentation of `summary.emmGrid`)
+    when `sigma` is large (#540)
 
 ## emmeans 1.11.2-8
   * Correction in `summary.emmGrid` to calculation of adjustment factors when
