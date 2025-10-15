@@ -23,6 +23,7 @@ Julia (however, Russ is still very much involved).
   * Cautionary note added on bias correction (in documentation of `summary.emmGrid`)
     when `sigma` is large (#540)
 
+
 ## emmeans 1.11.2-8
   * Correction in `summary.emmGrid` to calculation of adjustment factors when
     'by` variables are nested (#536)

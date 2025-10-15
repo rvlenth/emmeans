@@ -289,7 +289,7 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   \describe{
 #'     \item{Significance}{\eqn{H_0: \theta = \theta_0}  versus \cr
 #'        \eqn{H_1: \theta < \theta_0} (left-sided), or\cr
-#'       \eqn{H_1 \theta > \theta_0} (right-sided), or\cr
+#'       \eqn{H_1: \theta > \theta_0} (right-sided), or\cr
 #'       \eqn{H_1: \theta \ne \theta_0} (two-sided)\cr
 #'       The test statistic is\cr
 #'       \eqn{t = (Q - \theta_0)/SE}\cr 
