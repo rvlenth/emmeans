@@ -70,12 +70,13 @@ object that is otherwise not supported.</p>
 <span>  <span class="va">link</span>, <span class="va">qr</span>, <span class="va">ordinal</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
-<span><span class="fu">qdrg</span><span class="op">(</span><span class="va">object</span>, formula <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">formula</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>,</span>
+<span><span class="fu">qdrg</span><span class="op">(</span>formula <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">formula</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">recover_data.lm</span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>  coef <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, vcov <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>,</span>
-<span>  df <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, <span class="va">mcmc</span>, <span class="va">subset</span>,</span>
+<span>  df <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/df.residual.html" class="external-link">df.residual</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, <span class="va">mcmc</span>, <span class="va">object</span>, <span class="va">subset</span>,</span>
 <span>  weights <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span>, contrasts <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">contrasts</span>,</span>
-<span>  link <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">family</span><span class="op">$</span><span class="va">link</span>, qr <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">qr</span>, <span class="va">ordinal</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  link <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">lnk</span> <span class="op">&lt;-</span> <span class="va">object</span><span class="op">$</span><span class="va">family</span><span class="op">$</span><span class="va">link</span><span class="op">)</span>, <span class="va">lnk</span>, <span class="va">object</span><span class="op">$</span><span class="va">link</span><span class="op">)</span>,</span>
+<span>  qr <span class="op">=</span> <span class="va">object</span><span class="op">$</span><span class="va">qr</span>, <span class="va">ordinal</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -146,7 +147,9 @@ provided, <code>"latent"</code> is assumed).
 For this to work, we expect
 the first <code>ordinal$dim - 1</code> elements of <code>coef</code> to be the
 estimated threshold parameters, followed by the coefficients for the
-linear predictor.</p></dd>
+linear predictor. Also, if <code>mode</code> requires back-transforming (e.g.,
+<code>"prob"</code> or <code>"mean.class"</code>), the user may need to supply the <code>link</code>
+for it to work correctly.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -282,6 +285,7 @@ package.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     temp = cold, warm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     contact = no, yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Transformation: “logit” </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

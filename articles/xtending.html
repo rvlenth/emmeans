@@ -199,7 +199,7 @@ enough different to create any problems.</p>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 <div class="section level2">
-<h2 id="qdrg">[Quick and dirty support<a class="anchor" aria-label="anchor" href="#qdrg"></a>
+<h2 id="qdrg">Quick and dirty support<a class="anchor" aria-label="anchor" href="#qdrg"></a>
 </h2>
 <!-- @index `qdrg()`!S3 methods; **robmixglm** example; -->
 <p>Later, we will talk about how to fully support a model object in
@@ -229,8 +229,11 @@ class:</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>In this method, the <code>vcov</code> matrix includes covariances for
 some extra parameters besides the regression coefficients, so we have to
-use a subset of that matrix. Let’s get the reference grid for a
-selection of <code>bp</code> values:</p>
+use a subset of that matrix. Note that <code><a href="../reference/qdrg.html">qdrg()</a></code> functions as
+a standalone function as long as its <code>object</code> argument is
+missing; and a typical <code>qdrg</code> method will just determine what
+arguments to pass to this non-generic <code><a href="../reference/qdrg.html">qdrg()</a></code>. Let’s get the
+reference grid for a selection of <code>bp</code> values:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qdrg.html">qdrg</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">fit</span>, link <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">rg</span>, <span class="op">~</span> <span class="va">.</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code></pre></div>
@@ -296,7 +299,7 @@ method. Look at the one for <code>lm</code> objects:</p>
 <span><span class="co">##     recover_data(fcall, delete.response(terms(object)), object$na.action, </span></span>
 <span><span class="co">##         frame = frame, pwts = weights(object), ...)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55f58ffe6418&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55d8700ee788&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:emmeans&gt;</span></span></code></pre>
 <p>Note that all it does is obtain the <code>call</code> component and
 call the method for class <code>call</code>, with additional arguments
@@ -415,7 +418,7 @@ Following this advice, let’s take a look at it:</p>
 <span><span class="co">##     X &lt;- model.matrix(Terms, m, contrasts.arg = object$contrasts)</span></span>
 <span><span class="co">##     drop(X %*% object$coefficients)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55f590b9b338&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55d871781af0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:MASS&gt;</span></span></code></pre>
 <div class="section level6">
 <h6 id="eblqs"></h6>
