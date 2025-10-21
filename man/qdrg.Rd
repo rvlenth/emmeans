@@ -8,12 +8,13 @@
 qdrg(formula, data, coef, vcov, df, mcmc, object, subset, weights, contrasts,
   link, qr, ordinal, ...)
 
-\method{qdrg}{default}(object, formula = stats::formula(object),
+\method{qdrg}{default}(formula = stats::formula(object),
   data = try(recover_data.lm(object), silent = TRUE),
   coef = stats::coef(object), vcov = stats::vcov(object),
-  df = stats::df.residual(object), mcmc, subset,
+  df = stats::df.residual(object), mcmc, object, subset,
   weights = stats::weights(object), contrasts = object$contrasts,
-  link = object$family$link, qr = object$qr, ordinal, ...)
+  link = ifelse(!is.null(lnk <- object$family$link), lnk, object$link),
+  qr = object$qr, ordinal, ...)
 }
 \arguments{
 \item{formula}{Formula for the fixed effects}
@@ -55,7 +56,9 @@ provided, \code{"latent"} is assumed).
 For this to work, we expect
 the first \code{ordinal$dim - 1} elements of \code{coef} to be the
 estimated threshold parameters, followed by the coefficients for the
-linear predictor.}
+linear predictor. Also, if \code{mode} requires back-transforming (e.g.,
+\code{"prob"} or \code{"mean.class"}), the user may need to supply the \code{link}
+for it to work correctly.}
 
 \item{...}{Optional arguments passed to \code{\link{ref_grid}}}
 }

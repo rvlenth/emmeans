@@ -81,7 +81,7 @@ The first lesson to learn about extending **emmeans** is that sometimes, it alre
 [Back to Contents](#contents)
 
 
-## [Quick and dirty support {#qdrg}
+## Quick and dirty support {#qdrg}
 <!-- @index `qdrg()`!S3 methods; **robmixglm** example; -->
 Later, we will talk about how to fully support a model object in **emmeans**.
 But it is often very easy to provide *partial* support via the `qdrg()` ("quick and dirty reference grid") function. `qdrg()` creates a reference grid for a model, and that 
@@ -107,6 +107,9 @@ qdrg.robmixglm <- function(object, data = eval(object$call$data), ...) {
 ```
 In this method, the `vcov` matrix includes covariances for some extra parameters
 besides the regression coefficients, so we have to use a subset of that matrix.
+Note that `qdrg()` functions as a standalone function as long as its `object`
+argument is missing; and a typical `qdrg` method will just determine what arguments
+to pass to this non-generic `qdrg()`.
 Let's get the reference grid for a selection of `bp` values:
 ```{r}
 rg <- qdrg(object = fit, link = "log")

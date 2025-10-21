@@ -238,6 +238,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
 }
 
 # Workhorse for plot.summary_emm
+#' @importFrom grDevices col2rgb hcl rgb rgb2hsv
 .plot.srg = function(x, y, 
                      horizontal = TRUE, xlab, ylab, layout, colors,
                      engine = get_emm_option("graphics.engine"),

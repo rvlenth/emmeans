@@ -358,6 +358,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' emmip(neuralgia.glm, Treatment ~ Sex, type = "scale",
 #'     breaks = seq(0.10, 0.90, by = 0.10))
 #' @export
+#' @importFrom rlang .data
 emmip_ggplot = function(emms, style = "factor", dodge = .2,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
                         facetlab = "label_context",
@@ -424,9 +425,9 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
         
         # handle any custom shapes or linetypes
         if(!is.null(shape.pal))
-            grobj = grobj + scale_shape_manual(values = shape.pal)
+            grobj = grobj + ggplot2::scale_shape_manual(values = shape.pal)
         if(!is.null(linetype.pal))
-            grobj = grobj + scale_linetype_manual(values = linetype.pal)
+            grobj = grobj + ggplot2::scale_linetype_manual(values = linetype.pal)
     }
     else { # just one trace per plot
         if(is.null(linearg$color) && is.null(linearg$colour))

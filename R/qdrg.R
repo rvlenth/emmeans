@@ -82,7 +82,9 @@
 #'     For this to work, we expect
 #'     the first \code{ordinal$dim - 1} elements of \code{coef} to be the
 #'     estimated threshold parameters, followed by the coefficients for the
-#'     linear predictor.
+#'     linear predictor. Also, if \code{mode} requires back-transforming (e.g.,
+#'     \code{"prob"} or \code{"mean.class"}), the user may need to supply the \code{link}
+#'     for it to work correctly.
 #' @param ... Optional arguments passed to \code{\link{ref_grid}}
 #'
 #' @return An \code{emmGrid} object constructed from the arguments
@@ -180,19 +182,20 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
 
 #' @rdname qdrg
 #' @exportS3Method qdrg default
-qdrg.default = function(object, 
-                        formula = stats::formula(object), 
+qdrg.default = function(formula = stats::formula(object), 
                         data = try(recover_data.lm(object), silent = TRUE), 
                         coef = stats::coef(object),
                         vcov = stats::vcov(object), 
                         df = stats::df.residual(object), 
                         mcmc, 
+                        object,
                         subset, 
                         weights = stats::weights(object), 
                         contrasts = object$contrasts, 
-                        link = object$family$link,
+                        link = ifelse(!is.null(lnk<-object$family$link), lnk, object$link),
                         qr = object$qr, 
-                        ordinal, ...) 
+                        ordinal, 
+                        ...) 
 {
     
     if(inherits(data, "try-error")) {

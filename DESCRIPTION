@@ -2,7 +2,7 @@ Package: emmeans
 Type: Package
 Title: Estimated Marginal Means, aka Least-Squares Means
 Version: 2.0.0
-Date: 2025-10-14
+Date: 2025-10-24
 Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cph"), 
                     email = "russell-lenth@uiowa.edu"),
     person("Julia", "Piaskowski", role = c("cre", "aut", "ctb"),
@@ -19,7 +19,7 @@ Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cph"),
     person("Henrik", "Singmann", role = "ctb"))
 Maintainer: Julia Piaskowski <jpiaskowski@uidaho.edu>
 Depends: R (>= 4.1.0)
-Imports: estimability (>= 1.4.1), graphics, methods, mvtnorm, numDeriv, stats, utils
+Imports: estimability (>= 1.4.1), graphics, methods, mvtnorm, numDeriv, rlang, stats, utils
 Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), compositions,
           ggplot2, knitr, lattice, lme4, lmerTest (>= 2.0.32), logspline, MASS, 
           mediation, mgcv, multcomp, multcompView, MuMIn, nlme,
