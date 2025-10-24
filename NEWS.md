@@ -4,7 +4,7 @@ title: "NEWS for the emmeans package"
 
 ## emmeans 2.0.0
 We have a new major version number, with a new graphics look and a new maintainer,
-Julia (however, Russ is still very much involved).
+Julia Piaskowski (however, Russ is still very much involved).
 
   * Added a new `post.ci.method` option to set the default for `ci.method`
     in `hpd.summary()` (#538)

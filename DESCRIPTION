@@ -6,7 +6,7 @@ Date: 2025-10-24
 Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cph"), 
                     email = "russell-lenth@uiowa.edu"),
     person("Julia", "Piaskowski", role = c("cre", "aut", "ctb"),
-           email = "jpiaskowski@uidaho.edu"),
+           email = "julia.piask@gmail.com"),
     person("Balazs", "Banfai", role = "ctb"),
     person("Ben", "Bolker", role = "ctb"),
     person("Paul", "Buerkner", role = "ctb"),
