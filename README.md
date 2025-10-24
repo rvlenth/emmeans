@@ -116,7 +116,7 @@ yourself.
 
 
 ## Supersession plan
-Julia Piaskowski(https://github.com/jpiaskowski) is preparing to take over as maintainer.
+[Julia Piaskowski](https://github.com/jpiaskowski) is preparing to take over as maintainer.
 
 ##### *Note: **emmeans** supersedes the package **lsmeans**. The latter is just a front end for **emmeans**, and in fact, the `lsmeans()` function itself is part of **emmeans**.*
 
