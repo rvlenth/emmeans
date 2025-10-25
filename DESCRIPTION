@@ -5,7 +5,7 @@ Version: 2.0.0
 Date: 2025-10-24
 Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cph"), 
                     email = "russell-lenth@uiowa.edu"),
-    person("Julia", "Piaskowski", role = c("cre", "aut", "ctb"),
+    person("Julia", "Piaskowski", role = c("cre", "aut"),
            email = "julia.piask@gmail.com"),
     person("Balazs", "Banfai", role = "ctb"),
     person("Ben", "Bolker", role = "ctb"),
