@@ -5,10 +5,12 @@
 ^\.travis\.yml$
 
 # Don't include our private doc in emmeans/inst
-^emm-prep*
+^maintainer-notes/
 
 # For now we are including tests in the build
 ## ^tests/*
+
+
 
 # This keeps showing up lately, but I don't want it
 ^Rplots.pdf
