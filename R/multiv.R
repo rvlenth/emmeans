@@ -230,7 +230,7 @@ mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy))
     wgt = object@grid[[".wgt."]]
     g = object@grid = object@grid[seq_len(n <- nrow(newy)), setdiff(names(object@grid), c(mult.name, ".wgt.", ".offset.")), drop = FALSE]
     for (i in seq_len(k - 1)) object@grid = rbind(object@grid, g)
-    object@grid[["newname"]] = rep(newlevs, each = n)
+    object@grid[[newname]] = rep(newlevs, each = n)
     if(!is.null(wgt))
         object@grid[[".wgt."]] = rep(wgt[seq_len(n)], k)
     object@misc$tran = object@misc$inv.lbl = object@misc$sigma = NULL
