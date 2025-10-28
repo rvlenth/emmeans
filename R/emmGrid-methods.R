@@ -740,7 +740,7 @@ with_emm_options = function(..., expr) {
     cl[[1]] = as.name("emm_options")
     oldopts = getOption("emmeans")
     eval(cl, parent.frame())
-    result = try(eval(expr, parent.frame()))
+    result = try(eval(expr, parent.frame()), silent = TRUE)
     options(emmeans = oldopts)
     result
 }
