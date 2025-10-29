@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Russ Lenth" />
+
+<meta name="date" content="2025-10-29" />
+
+<title>Code overview</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+
+<style type="text/css">body {font-size: 11pt; font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;margin: 30px 50px 30px 50px; }h1,h2,h3,h4,h5,h6 { font-family: Arial,Helvetica,Sans-serif; }a { text-decoration: none; }a:link { color:darkblue; } a:visited { color:darkblue; } a:hover { color:dodgerblue; }a:active { color:dodgerblue; } code {color: #602000;font-family: "Lucida Console", Monaco, monospace; font-size: 90%;}.r { color: darkred; }.ro { color: darkgreen; background-color: #eeeeee; }.re { color: red;}.r code, a code, .ro code, .re code { color: inherit; }.vigindex ul { list-style-type: none; }.vigindex ul li { list-style: none; }.vigindex a code { color: inherit; }.vigindex li code { color: inherit; }</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Code overview</h1>
+<h4 class="author">Russ Lenth</h4>
+<h4 class="date">2025-10-29</h4>
+
+
+
+<p>Here we have a bit about the main functions and how they work. This
+is very, very far from a line-by=line description of what’s going on in
+the code, but it is hoped that this helps explain the fundamentals.</p>
+<div id="contents" class="section level2">
+<h2>Contents</h2>
+<ul>
+<li><a href="#ref-grid"><code>ref_grid</code></a></li>
+<li><a href="#emmeans"><code>emmeans</code></a></li>
+<li><a href="#nesting">Nested effects</a></li>
+<li><a href="#contrast"><code>contrast</code></a></li>
+<li><a href="#byrows"><code>.find.by.rows</code></a></li>
+<li><a href="#summary"><code>summary</code></a></li>
+<li><a href="#confint"><code>confint</code> and
+<code>test</code></a></li>
+<li><a href="#joint"><code>joint_tests</code></a></li>
+<li><a href="#est"><code>.est.se.df</code></a></li>
+<li><a href="#emtrends"><code>emtrends</code></a></li>
+<li><a href="#regrid"><code>regrid</code></a></li>
+<li><a href="#bayes">Bayesian models, <code>summary.hpd</code></a></li>
+<li><a href="#bias">Bias adjustment</a></li>
+<li><a href="#mvcontrast"><code>mvcontrast</code></a></li>
+<li><a href="#satt">Satterthwaite method</a></li>
+<li><a href="#estble">Estimability</a></li>
+</ul>
+</div>
+<div id="ref-grid" class="section level2">
+<h2><code>ref_grid</code></h2>
+<p>This is the foundation of the package. It looks at the model and
+extracts the necessary info to create an <code>emmGrid</code> object.
+The slots are</p>
+<ul>
+<li><code>bhat</code> – <span class="math inline">\(b\)</span>: the
+fixed-effects coefficients:</li>
+<li><code>V</code> – <span class="math inline">\(V\)</span>: the
+variance-covariance matrix of <span class="math inline">\(b\)</span></li>
+<li><code>linfct</code> – <span class="math inline">\(L\)</span>: the
+linear functions of <span class="math inline">\(b\)</span>, i.e., the
+linear predictor for the points in the reference grid is <span class="math inline">\(Lb\)</span></li>
+<li><code>grid</code>: a data frame with the factor/covariate
+combinations corresponding to each row of <span class="math inline">\(L\)</span>. It also usually has a column named
+<code>.wgt.</code> (weights for each point, used when weighted means are
+requested), and sometimes an <code>.offset.</code> column (if so, it is
+added to <span class="math inline">\(Lb\)</span>)</li>
+<li><code>levels</code>: a named list of levels. Basically,
+<code>@grid = do.call(expand.grid, @levels)</code></li>
+<li><code>dffun</code> and <code>dfargs</code>: a function and named
+list of arguments for computing the degrees of freedom associated with a
+linear prediction <span class="math inline">\(x&#39;b\)</span></li>
+<li><code>nbasis</code> – <span class="math inline">\(N\)</span>: either
+a <span class="math inline">\(1\times1\)</span> matrix of
+<code>NA</code> or a matrix whose columns span the null space of the
+coefficient matrix underlying <span class="math inline">\(b\)</span>. It
+is used for assessing estimability of <span class="math inline">\(x&#39;b\)</span>; if <span class="math inline">\(N&#39;x \ne 0\)</span>, then <span class="math inline">\(x&#39;b\)</span> is not uniquely estimable.</li>
+<li><code>post.beta</code>: for Bayesian models, this is a posterior
+sample of <span class="math inline">\(b\)</span> instances</li>
+<li><code>model.info</code>, <code>roles</code>, <code>matlevs</code>:
+lists with other model information</li>
+<li><code>misc</code>: a list of extra information used by package
+functions. See documentation for <code>update.emmGrid</code></li>
+</ul>
+<p><code>ref_grid()</code> calls a <code>recover_data()</code> method
+for the model to recover the data used to fit the model, looks also at
+the model’s <code>terms</code>, and figures out what variables are
+involved, which are factors, and what are the levels for each predictor.
+It then creates <code>@grid</code> and passes this to the
+<code>emm_basis()</code> method for the model, which returns
+<code>bhat</code>, <code>V</code>, and <code>X -&gt; linfct</code>,
+<code>dffun</code>, <code>dfargs</code>, and maybe some elements of
+<code>misc</code> such as the link function. Then it figures out if
+there was a response transformation. If the response is multivariate,
+then <code>X</code> is really just the matrix for each response, while
+<code>bhat</code> is a stretched-out matrix; so we figure out new
+variable name(s) and levels for the multivariate response, and expand
+<code>X</code> via a kronecker product, and expand <code>grid</code>
+accordingly as well.</p>
+</div>
+<div id="emmeans" class="section level2">
+<h2><code>emmeans</code></h2>
+<p><code>emmeans</code> creates a new <code>emmGrid</code> object
+corresponding to marginal means of the reference grid. (If provided the
+model instead, it calls <code>ref_grid()</code>.) It does this by
+averaging the rows of <code>linfct</code> in the same way. To keep track
+of everything properly, we first ensure that <code>grid</code> (and
+<code>linfct</code>) is sorted in standard order (first factor varying
+fastest, last the slowest). (It depends on the grid being regular; and
+if it isn’t, an error is thrown.) Then we create the index vector <span class="math inline">\(1, 2, ..., n\)</span> of row numbers, and puts
+this into an <code>array</code> with dimensions equal to the lengths of
+<code>levels</code>; then by identifying which dimensions need to be
+averaged over, that also identifies the row indexes of
+<code>linfct</code> that we need to average over, possibly with weights.
+The resturned <code>object</code> is basically the same as the input
+one, except for <code>grid</code> and <code>linfct</code>.</p>
+<div id="nesting" class="section level3">
+<h3>Nested fixed effects (and <code>.nested_emm</code>)</h3>
+<p>A nuance here is that if the model has nested fixed effects, we store
+the details in <code>model.info</code>. Depending on how the marginal
+means desired in <code>emmeans()</code> relate to the nesting pattern,
+<code>emmeans()</code> may need to be called with each level of the
+nesting factor(s). Meanwhile, because we need a regular grid in
+<code>emmeans()</code>, the reference grid is created with all
+predictors crossed, and a logical vector <code>misc$display</code> is
+created that is <code>TRUE</code> for the rows that exist in a nest, and
+<code>FALSE</code> if not.</p>
+</div>
+</div>
+<div id="contrast" class="section level2">
+<h2><code>contrast</code></h2>
+<p>This function creates a new <code>emmGrid</code> object from the
+supplied one, replacing <code>linfct</code> (<span class="math inline">\(L\)</span>) by <span class="math inline">\(ML\)</span>, where <span class="math inline">\(M\)</span> is a matrix of contrast coefficients.
+There are a bunch of standard contrast families that are implemented as
+<code>.emmc</code> functions (e.g., <code>pairwise.emmc()</code>) whose
+arguments are the factor levels and perhaps some other arguments (that
+all have to have defaults). The function returns a data frame such that
+each column has the coefficients of a linear function to apply to the
+rows of <span class="math inline">\(L\)</span> (or some subset thereof,
+as determined by <code>by</code>). When we have nested effects, there is
+a <code>.nested_contrast</code> function that does this for each nest.
+The <code>.emmc</code> function also returns the names to assign the
+contrast (and this modifies <code>levels</code> and
+grid<code>appropriately), and perhaps a default</code>adjust<code>method that is saved in</code>misc`.</p>
+<div id="byrows" class="section level3">
+<h3><code>.find.by.rows</code></h3>
+<p>When there is a non-trivial <code>by</code> specification in
+<code>contrast</code> (and some other functions), we need to identify
+which rows of the input <code>emmGrid</code> object correspond to each
+combination of levels of the <code>by</code> factors, and that is the
+purpose of the <code>.find.by.rows()</code> function. It returns a list
+of integer vectors for the respective <code>by</code> groups.</p>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2><code>summary</code></h2>
+<p>This function does the actual estimation and returns an object of
+class <code>emm_summary</code>, which extends <code>data.frame</code>.
+Its <code>print</code> method formats the results and displays them in
+much the way that a data frame is, but often with extra annotations
+(from <code>misc$mesg</code>). Its argument <code>infer</code> is a
+logical vector of length 2 that decides whether to also show confidence
+intervals or tests/P values, respectively (if of length only 1, that
+value is used for both). The default for <code>infer</code> is in
+<code>misc$infer</code> which is initialized to
+<code>(FALSE, FALSE)</code> by <code>ref_grid()</code>,
+<code>c(TRUE, FALSE)</code> by <code>emmeans()</code>, and
+<code>c(FALSE, TRUE)</code> by <code>contrast()</code>.</p>
+<p><code>summary</code> calls <code>.est.se.df()</code> (see below) and
+if <code>type = &quot;response&quot;</code>, the estimates are back-transformed
+via <code>link$linkinv(est)</code> and the SEs are multiplied by
+<code>link$mu.eta(est)</code> (this is the delta method). If
+<code>adjust</code> is other than <code>&quot;none&quot;</code>, we determine
+whether it is a “legal” adjustment (for example, the Tukey adjustment is
+not legal unless we have exactly <em>one</em> family of pairwise
+comparisons, and there are bookkeeping provisions to ascertain that);
+then for confidence intervals, critical values are adjusted, and for
+tests, P values are adjusted.</p>
+<p>The <code>summary</code> function also allows for a nonzero null
+hypothesis and/or one-sided tests, and implements the various
+significance and equivalence tests in the documentation.</p>
+<div id="confint" class="section level3">
+<h3><code>confint</code></h3>
+<p>This just calls <code>summary</code> with
+<code>infer = c(TRUE, FALSE)</code>.</p>
+</div>
+<div id="test" class="section level3">
+<h3><code>test</code></h3>
+<p>This calls <code>summary</code> with
+<code>infer = c(FALSE, TRUE)</code>. But it also has a
+<code>joint</code> argument that if <code>TRUE</code>, computes a joint
+test of all rows of <code>linfct</code>. Note that <span class="math inline">\(\mbox{cov}(Lb) = LVL&#39;\)</span> but we need to
+take extra care to account for any non-estimable or linearly-dependent
+rows. Assuming we’ve done that, the Wald statistic is <span class="math inline">\((Lb - \mu_0)&#39;(LVL&#39;)^{-1}(Lb -
+\mu_0)\)</span> and the numerator degrees of freedom is the rank of
+<span class="math inline">\(L\)</span>. We kind of have to punt for the
+denominator d.f. since the <code>dffun</code> slot doesn’t account for
+multivariate cases. Taking care of non-estimability entails a projection
+from the <strong>estimability</strong> package, and linear dependencies
+are handled via the <code>qr()</code> function.</p>
+</div>
+<div id="joint" class="section level3">
+<h3><code>joint_tests</code></h3>
+<p>This function goes through <code>linfct</code> with respect to the
+model terms and breaks it down into independent pieces relating to
+contrasts of each term, and calls <code>test(..., joint = TRUE)</code>
+for each piece. Then it assembles the results into a
+<code>summary_emm</code> object. By default, any terms that have zero
+d.f. are omitted.</p>
+<p>Note that, <code>joint_tests</code> returns no tests of covariates if
+just called with a default reference grid or <code>emmeans</code>
+result. If we call this with a model object, then it calls
+<code>ref_grid</code> with a different default for covariates, reducing
+them to an interval around their mean instead of just their mean. This
+works correctly so long as the covariate effects are linear. We need
+more than the two values if nonlinear.</p>
+</div>
+<div id="est" class="section level3">
+<h3><code>.est.se.df</code></h3>
+<p>Is a primary workhorse for <code>summary</code>. Per its name, it
+puts together the linear predictions <span class="math inline">\(Lb\)</span>, standard errors <span class="math inline">\(\sqrt{\mbox{diag}(LVL&#39;)}\)</span>, and degrees
+of freedom via <code>dffun</code> and <code>dfargs</code>, and
+determines the link function, if present, and bookkeeping factors for
+multiplicity adjustments.</p>
+</div>
+</div>
+<div id="emtrends" class="section level2">
+<h2><code>emtrends</code></h2>
+<p>This function requires a model object, and returns a special kind of
+reference grid based on difference ratios of the covariate
+<code>var</code>. It uses <code>ref_grid</code> to do most of the work,
+and there are special hooks there to hand it an expanded set of
+<code>var</code> values, which it then uses for the difference
+quotients. It allows for higher-order polynomial effects, using Newton’s
+divided-difference formulas.</p>
+</div>
+<div id="regrid" class="section level2">
+<h2><code>regrid</code></h2>
+<p>This function completely overhauls the reference grid, basically
+divorcing it from <span class="math inline">\(b\)</span> and <span class="math inline">\(L\)</span>. If called with
+<code>transform = &quot;response&quot;</code>, it replaces <code>bhat</code> with
+<code>h($Lb$)</code> (where <code>h</code> is
+<code>link$linkinv</code>), <code>linfct</code> with the identity
+matrix, and <code>V</code> with <span class="math inline">\(DLVL&#39;D\)</span> where <span class="math inline">\(D\)</span> is the diagonal matrix of
+<code>link$mu.eta</code> values. The <code>transform</code> argument
+also allows it to be transformed to other transformed scales using the
+same ideas in reverse, after first transforming to the response scale.
+With <code>transform = &quot;none&quot;</code>, we do like
+<code>transform = &quot;response&quot;</code> but using <code>h()</code> as the
+identity function. And with <code>transform = &quot;pass&quot;</code> we change
+nothing unless <code>N.sim</code> is non-missing, in which case the
+<code>post.beta</code> slot is added with simulated <span class="math inline">\(b\)</span> values according to the
+<code>sim</code> argument.</p>
+</div>
+<div id="bayesian-models-or-simulated-reference-grids-summary.hpd" class="section level2">
+<h2>Bayesian models (or simulated reference grids); <code id="bayes">summary.hpd</code></h2>
+<p>When <code>post.beta</code> is
+non-<code>NA</code>,<code>emmeans</code>, <code>contrast</code>,
+<code>emtrends</code>, and <code>regrid</code> apply whatever they did
+to <code>bhat</code> to each row of <code>post.beta</code>, and return
+the object with <code>post.beta</code> replaced by that result. When
+<code>summary</code> is called and <code>post.beta</code> is not
+<code>NA</code>, it diverts to <code>summary.hpd</code> unless called
+with <code>frequentist = TRUE</code>; in that case, the reference grid
+is usually initialized with <code>bhat</code> as the average of the rows
+and <code>V = cov(post.beta)</code>.</p>
+<p>In some ways, Bayesian models are easier to support, because all we
+<em>really</em> need is the posterior sample of estimates, and with
+back-transformations and such we just compute thenappropriate posterior
+sample of back-transformed estimates, and summarize with
+<code>summary.hpd</code>. We don’t need the delta method.</p>
+</div>
+<div id="bias" class="section level2">
+<h2>Bias adjustment</h2>
+<p>This is explained in the documentation for <code>summary</code>. It
+is implemented by doing a fixup to <code>link</code> where we replace
+<code>link$linkinv</code> by <span class="math inline">\(h(\eta)+\frac12h&#39;&#39;(\eta)\)</span>, the
+latter term being estimated using a difference quotient on
+<code>link$mu.eta</code>.</p>
+</div>
+<div id="mvcontrast" class="section level2">
+<h2><code>mvcontrast</code></h2>
+<p>This is like contrast except we identify one factor to treat as
+multivariate and then we use the specified contrast method on that
+multivariate vector and test the result using Hotelling’s <span class="math inline">\(T^2\)</span>.</p>
+</div>
+<div id="satt" class="section level2">
+<h2>Satterthwaite method</h2>
+<p>First, I have to say that Iowa has special ownership of this since
+Satterthwaite earned his PhD in our department (well, actually Math at
+the time) in 1943 by developing this method. It’s about the only thing
+he ever did though, as he suffered from schizophrenia and just wasn’t
+able to function well most of the rest of his life. Anyway, the idea is
+that we have a variance estimator <span class="math inline">\(W\)</span>
+and we like the idea that it would be proportional to a <span class="math inline">\(\chi^2\)</span> r.v. So we find the d.f. based on
+the first two moments. Now if <span class="math inline">\(W/c \sim
+\chi^2_\nu\)</span>, then <span class="math inline">\(E(W)=c\nu\)</span>
+and <span class="math inline">\(\mbox{var}(W) = 2c^2\nu\)</span>,
+implying that <span class="math inline">\(2\cdot[E(W)]^2/\mbox{var(W)} =
+(2c^2\nu^2)/(2c^2\nu) = \nu\)</span>. Accordingly, we estimate the
+degrees of freedom using <span class="math inline">\(\hat\nu = 2W^2 /
+\hat{\mbox{var}}(W)\)</span>.</p>
+<p>In the support functions for <code>nlme::gls</code> objects, it is
+feasible to do this by obtaining the jacobian of the variance matrix of
+the random effects and using that to estimate the variance of the
+variance estimate in question. This is the function
+<code>gls_grad</code>. For <code>lme4::mermod</code> and
+<code>nlme::lme</code> objects, we don’t have that variance matrix, so
+instead we have an approximate method
+(<code>&quot;appx-satterthwaite&quot;</code>) that perturbs the response values
+slightly and refits the model. It only takes a few of these
+perturbations to do a respectable job of estimating the required
+variances; this is done by the <code>gradV.kludge</code> function.</p>
+</div>
+<div id="estble" class="section level1">
+<h1>Estimability</h1>
+<p>An important part of the package is that we assess estimability of
+our predictions. This is important because some models allow
+rank-deficient model matrices; if we have a rank-deficient model, there
+are infinitely many possible solutions for the fixed effects, but we
+have only one of them. A prediction is defined as estimable if it is the
+same, no matter which solution we used. Equivalently, given the model
+matrix <span class="math inline">\(X\)</span>, <span class="math inline">\(x&#39;\beta\)</span> is estimable if, and only if,
+<span class="math inline">\(x\)</span> is in the row space of <span class="math inline">\(X\)</span>.</p>
+<p>The <strong>estimability</strong> packagen provides the functions
+needed to assess estimability. We do this by creating a basis <span class="math inline">\(N\)</span> for the null space of <span class="math inline">\(X\)</span>, i.e., <span class="math inline">\(XN=0\)</span>, and so <span class="math inline">\(x&#39;\beta\)</span> is estimable iff <span class="math inline">\(x&#39;N=0\)</span>. We store the matrix <span class="math inline">\(N\)</span> in the <code>@nbasis</code> slot of an
+<code>emmGrid</code> object.</p>
+<p>For more details, see the package documentation for
+<strong>estimability</strong> and its <a href="https://cran.r-project.org/web/packages/estimability/vignettes/add-est-check.html">vignette</a>.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
