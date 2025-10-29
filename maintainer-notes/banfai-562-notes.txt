@@ -1,0 +1,4 @@
+## emmeans 2.0.0.9001
+
+* Fix to `.parse_nest()` to handle nested factors with spaces in their name
+
