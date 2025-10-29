@@ -2,10 +2,6 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 2.0.0.9001
-
-* Fix to `.parse_nest()` to handle nested factors with spaces in their name
-
 ## emmeans 2.0.0
 We have a new major version number, with a new graphics look and a new maintainer,
 Julia Piaskowski (however, Russ is still very much involved).
