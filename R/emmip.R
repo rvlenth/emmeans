@@ -137,7 +137,7 @@ emmip = function(object, formula, ...) {
 #' # Create a black-and-white version of above with different linetypes
 #' # (Let the linetypes and symbols default to the palette)
 #' emmip(noise.lm, type ~ side * size, CIs = TRUE, col = "black",
-#'       linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 1)) +
+#'       linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 0.3)) +
 #'     ggplot2::theme_bw()
 #'
 #' # One interaction plot using combinations of type and side as the trace factor
@@ -367,6 +367,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
                         linearg = list(linetype = "solid"),
                         CIarg = list(alpha = .40),
                         PIarg = list(alpha = .25),
+                        col = NULL,
                         ...) {
     
     thm = theme_emm()    # Depends on gg.theme option
@@ -383,6 +384,15 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     if(missing(scale) && !is.null(attr(emms, "scale")))
         scale = attr(emms, "scale")
 
+    if(!is.null(col) && is.null(dotarg$color) && is.null(dotarg$colour))
+        dotarg$color = col
+    if(!is.null(col) && is.null(linearg$color) && is.null(linearg$colour))
+        linearg$color = col
+    if(!is.null(col) && is.null(CIarg$color) && is.null(CIarg$colour))
+        CIarg$color = col
+    if(!is.null(col) && is.null(PIarg$color) && is.null(PIarg$colour))
+        PIarg$color = col
+    
     dotarg$position = pos
     if(is.null(dotarg$size)) 
         dotarg$size = 3
