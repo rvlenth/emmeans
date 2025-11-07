@@ -206,7 +206,7 @@ with_emm_options(gg.theme = 1,
 # Create a black-and-white version of above with different linetypes
 # (Let the linetypes and symbols default to the palette)
 emmip(noise.lm, type ~ side * size, CIs = TRUE, col = "black",
-      linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 0.3)) +
+      linearg = list(), dotarg = list(size = 4), CIarg = list(alpha = 1)) +
     ggplot2::theme_bw()
 
 # One interaction plot using combinations of type and side as the trace factor

@@ -1,0 +1,5 @@
+## emmeans devel branch
+
+* Fix to `.parse_nest()` to handle nested factors with spaces in their name (#562)
+* `col` was not handled properly in `emmip()` (#565)
+

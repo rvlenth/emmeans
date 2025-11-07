@@ -137,7 +137,7 @@ emmip = function(object, formula, ...) {
 #' # Create a black-and-white version of above with different linetypes
 #' # (Let the linetypes and symbols default to the palette)
 #' emmip(noise.lm, type ~ side * size, CIs = TRUE, col = "black",
-#'       linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 0.3)) +
+#'       linearg = list(), dotarg = list(size = 4), CIarg = list(alpha = 1)) +
 #'     ggplot2::theme_bw()
 #'
 #' # One interaction plot using combinations of type and side as the trace factor
@@ -374,6 +374,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     
     labs = attr(emms, "labs")
     vars = attr(emms, "vars")
+    ngrps = ifelse(is.null(emms$tvar), 1, length(unique(emms$tvar)))
     
     shape.pal = linetype.pal = NULL   # we use these to store shape and linetype specs in dotarg and linearg
     
@@ -384,54 +385,43 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     if(missing(scale) && !is.null(attr(emms, "scale")))
         scale = attr(emms, "scale")
 
-    if(!is.null(col) && is.null(dotarg$color) && is.null(dotarg$colour))
-        dotarg$color = col
-    if(!is.null(col) && is.null(linearg$color) && is.null(linearg$colour))
-        linearg$color = col
-    if(!is.null(col) && is.null(CIarg$color) && is.null(CIarg$colour))
-        CIarg$color = col
-    if(!is.null(col) && is.null(PIarg$color) && is.null(PIarg$colour))
-        PIarg$color = col
-    
     dotarg$position = pos
     if(is.null(dotarg$size)) 
         dotarg$size = 3
-    if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {  # treat as a shape palette
-        shape.pal = dotarg$shape
-        dotarg$shape = NULL
-    }
     
-    linearg$mapping = ggplot2::aes(group = .data$tvar)
-    linearg$position = pos
-    if(is.null(linearg$linewidth))
-        linearg$linewidth = 0.8
-    if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
-        linetype.pal = linearg$linetype
-        linearg$linetype = NULL
-    }
-    
-    if (length(vars$tvars) > 0) {
-        labarg = list(x = xlab, y = ylab, color = tlab)
-        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, color = .data$tvar))
-        
-        if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {
-            grobj = grobj + ggplot2::aes(shape = .data$tvar)
-            labarg$shape = tlab
-        }
-        if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {
-            grobj = grobj + ggplot2::aes(linetype = .data$tvar)
-            labarg$linetype = tlab
+    if (ngrps > 1) {
+        if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {  # treat as a shape palette
+            shape.pal = dotarg$shape
+            dotarg$shape = NULL
         }
         
-        if (style == "factor")
+        linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar), linetype = .data$tvar)
+        dotarg$mapping = ggplot2::aes(shape = .data$tvar)
+        
+        linearg$position = pos
+        if(is.null(linearg$linewidth))
+             linearg$linewidth = 0.8
+         if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
+             linetype.pal = linearg$linetype
+             linearg$linetype = NULL
+         }
+         
+         
+        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, group = .data$tvar, color = .data$tvar))
+        
+        if (style == "factor") {
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
-                do.call(ggplot2::geom_line, linearg) +
-                do.call(ggplot2::labs, labarg) + 
                 ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
-        else
-            grobj = grobj +
-                do.call(ggplot2::geom_line, linearg) +
-                do.call(ggplot2::labs, labarg) 
+        }
+        grobj = grobj +
+                do.call(ggplot2::geom_line, linearg)
+        
+        labargs = list(x=xlab, y = ylab, color = tlab)
+        if(length(shape.pal) > 0)
+            labargs$shape = tlab
+        if(length(linetype.pal) > 0)
+            labargs$linetype = tlab
+        grobj = grobj + do.call(ggplot2::labs, labargs) ###(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab)
         
         # handle any custom shapes or linetypes
         if(!is.null(shape.pal))
@@ -440,18 +430,15 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
             grobj = grobj + ggplot2::scale_linetype_manual(values = linetype.pal)
     }
     else { # just one trace per plot
-        if(is.null(linearg$color) && is.null(linearg$colour))
-            linearg$color = .emm_palette[1]
-        if(is.null(dotarg$color) && is.null(dotarg$colour))
-            dotarg$color = .emm_palette[1]
-        if(is.null(CIarg$color) && is.null(CIarg$colour))
-            CIarg$color = .emm_palette[1]
-        if(is.null(PIarg$color) && is.null(PIarg$colour))
-            PIarg$color = .emm_palette[1]
+        if(is.null(col))
+            col = .emm_palette[1]
+        linearg$color = dotarg$color = CIarg$color = PIarg$color = col
+        col = NULL
         grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar))
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
                 ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
+        linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar))
         grobj = grobj +
             do.call(ggplot2::geom_line, linearg) +
             ggplot2::labs(x = xlab, y = ylab)
@@ -487,6 +474,9 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     }
     if (style == "factor")
         grobj = grobj + do.call(ggplot2::geom_point, dotarg)
+    
+    if(!is.null(col))
+        grobj = grobj + ggplot2::scale_color_manual(values = rep(col, ngrps))
     
     
     grobj + thm
