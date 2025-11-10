@@ -395,19 +395,21 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
             dotarg$shape = NULL
         }
         
-        linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar), linetype = .data$tvar)
-        dotarg$mapping = ggplot2::aes(shape = .data$tvar)
+        linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar), linetype = .data[[tlab]])
+        dotarg$mapping = ggplot2::aes(shape = .data[[tlab]])
         
         linearg$position = pos
         if(is.null(linearg$linewidth))
-             linearg$linewidth = 0.8
-         if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
-             linetype.pal = linearg$linetype
-             linearg$linetype = NULL
-         }
-         
-         
-        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, group = .data$tvar, color = .data$tvar))
+            linearg$linewidth = 0.8
+        if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
+            linetype.pal = linearg$linetype
+            linearg$linetype = NULL
+        }
+        
+        emms[[tlab]] = emms$tvar   # make the trace column have same name as its label
+        
+        grobj = ggplot2::ggplot(emms, ggplot2::aes(x = .data$xvar, y = .data$yvar, group = .data[[tlab]], 
+                    color = .data[[tlab]]))
         
         if (style == "factor") {
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) +
@@ -415,13 +417,6 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
         }
         grobj = grobj +
                 do.call(ggplot2::geom_line, linearg)
-        
-        labargs = list(x=xlab, y = ylab, color = tlab)
-        if(length(shape.pal) > 0)
-            labargs$shape = tlab
-        if(length(linetype.pal) > 0)
-            labargs$linetype = tlab
-        grobj = grobj + do.call(ggplot2::labs, labargs) ###(x = xlab, y = ylab, color = tlab, linetype = tlab, shape = tlab)
         
         # handle any custom shapes or linetypes
         if(!is.null(shape.pal))
@@ -440,10 +435,10 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
                 ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
         linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar))
         grobj = grobj +
-            do.call(ggplot2::geom_line, linearg) +
-            ggplot2::labs(x = xlab, y = ylab)
+            do.call(ggplot2::geom_line, linearg)
         
     }
+    grobj = grobj + ggplot2::labs(x = xlab, y = ylab)
     if (PIs) {
         PIarg$mapping = ggplot2::aes(ymin = .data$LPL, ymax = .data$UPL)
         PIarg$position = pos
