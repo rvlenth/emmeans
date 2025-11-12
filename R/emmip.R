@@ -305,11 +305,11 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #'   axis, and traces (the different curves), respectively. The \code{emmip}
 #'   function generates these automatically and provides therm via the \code{labs} 
 #'   attribute, but the user may override these if desired.
-#' @param facetlab Labeller for facets (when by variables are in play).
-#'   Use \code{"label_value"} to show just the factor levels, or \code{"label_both"}
-#'   to show both the factor names and factor levels. The default of
-#'   \code{"label_context"} decides which based on how many \code{by} factors there are.
-#'   See the documentation for \code{ggplot2::label_context}.
+#' @param facetlab Labeller for facets (when by variables are in play). Use
+#'   \code{"label_value"} to show just the factor levels, or \code{"label_both"}
+#'   to show both the factor names and factor levels; \code{"label_context"}
+#'   decides which based on how many \code{by} factors there are. See the
+#'   documentation for \code{ggplot2::labellers}.
 #' @param scale If not missing, an object of class \code{scales::trans} specifying
 #'   a (usually) nonlinear scaling for the vertical axis. For example, 
 #'   \code{scales = scales::log_trans()} specifies a logarithmic scale. For

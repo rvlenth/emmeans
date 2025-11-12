@@ -10,7 +10,8 @@
   int.adjust = "none", intervals, ...)
 
 \method{plot}{summary_emm}(x, y, horizontal = TRUE, CIs = TRUE, xlab, ylab,
-  layout, scale = NULL, colors, intervals, plotit = TRUE, ...)
+  facetlab = "label_both", layout, scale = NULL, colors, intervals,
+  plotit = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{emmGrid} or \code{summary_emm}}
@@ -73,6 +74,13 @@ plotted horizontally or vertically}
 \item{xlab}{Character label for horizontal axis}
 
 \item{ylab}{Character label for vertical axis}
+
+\item{facetlab}{Character or function method used to label facets in a 
+multi-panel plot (with the \code{ggplot} engine).
+Default is \code{"label_both"}, meaning that both factor names and levels are shown,
+You can use \code{"label_value"} to save space, or \code{"label_context"}
+to decide automatically (often wrongly). See the help page for 
+\code{ggplot2::labellers}}
 
 \item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
 when \code{engine == "lattice"}.}
@@ -143,14 +151,16 @@ with_emm_options(gg.theme = ggplot2::theme_dark(),
 plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
      horizontal = FALSE, colors = "blue")
 
-### Using a transformed scale
+### Using a transformed scale (also demonstrating 'facetlab' argument)
 pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
 pigs.emm <- emmeans(pigs.lm, ~ percent | source)
-plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10))
+plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10), 
+     facetlab = "label_value")
 
 # Based on a summary. 
 # To get a transformed axis, must specify 'scale'; but it does not necessarily
 # have to be the same as the actual response transformation
 pigs.ci <- confint(pigs.emm, type = "response")
-plot(pigs.ci, scale = scales::log10_trans())
+plot(pigs.ci, scale = scales::log10_trans(), 
+     facetlab = \(x) ggplot2::label_both(x, sep = " = "))
 }
