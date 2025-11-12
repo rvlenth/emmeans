@@ -361,7 +361,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
 #' @importFrom rlang .data
 emmip_ggplot = function(emms, style = "factor", dodge = .2,
                         xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab,
-                        facetlab = "label_context",
+                        facetlab = "label_both",
                         scale, 
                         dotarg = list(shape = "circle"), 
                         linearg = list(linetype = "solid"),

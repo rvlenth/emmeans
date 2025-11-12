@@ -14,7 +14,7 @@ emmip(object, formula, ...)
   nesting.order = FALSE, ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.2, xlab = labs$xlab,
-  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context", scale,
+  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_both", scale,
   dotarg = list(shape = "circle"), linearg = list(linetype = "solid"),
   CIarg = list(alpha = 0.4), PIarg = list(alpha = 0.25), col = NULL, ...)
 
