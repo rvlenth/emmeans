@@ -2,6 +2,13 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 2.0.1 ???
+
+* changed the default precision for reporting p-values from 4 to 3 digits and added 
+options to specify the desired p-value precision in `emm_options(pval.digits = 3)` (#567).
+* updated `emmip()` function for black-and-white plotting and added options to specify 
+the linetype (#565).
+
 ## emmeans 2.0.0
 We have a new major version number, with a new graphics look and a new maintainer,
 Julia Piaskowski (however, Russ is still very much involved).

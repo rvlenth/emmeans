@@ -1354,6 +1354,12 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     if(!is.null(attr(x, "digits")))
         digits = attr(x, "digits")
     
+    pval.digits = as.integer(get_emm_option("pval.digits"))
+    if(pval.digits < 2 || pval.digits > 7 || is.na(pval.digits)) {
+        warning("Digits for p-values must be between 2 and 7.\n")
+        emm_options(pval.digits = 3)
+    }
+    
     test.stat.names = c("t.ratio", "z.ratio", "F.ratio", "T.square")  # format these w 3 dec places
     x.save = x
     if(export) x.save = list()
@@ -1368,8 +1374,10 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
         if(!is.null(x[[nm]]))
             x[[nm]] = format(round(x[[nm]], 3), nsmall = 3, sci = FALSE)
     if (!is.null(x$p.value)) {
-        fp = x$p.value = format(round(x$p.value, 4), nsmall = 4, sci = FALSE)
-        x$p.value[fp=="0.0000"] = "<.0001"
+        pval_min = 10^-(pval.digits)
+        pval_min_display = format(pval_min, nsmall = pval.digits, sci = FALSE) 
+        x$p.value = ifelse(x$p.value < pval_min, paste0("<", pval_min_display),
+                            format(round(x$p.value, pval.digits), nsmall = pval.digits, sci = FALSE))
     }
 
     est = x[[estn]]
