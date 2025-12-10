@@ -1,4 +1,4 @@
-context("utility functionality in emmeans")
+context("utility functionality")
 
 m1 <- lm(breaks ~ wool*tension, data = warpbreaks)
 em1 <- emmeans(m1, ~ wool | tension)
