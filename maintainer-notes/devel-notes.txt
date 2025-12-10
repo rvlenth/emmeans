@@ -1,10 +1,5 @@
 ## emmeans devel branch
 
-  * Fix to `.parse_nest()` to handle nested factors with spaces in their name (#562)
-  * `col` was not handled properly in `emmip()` (#565)
-  * In `emmip()`, changed default for `facetlab` to `"label_both"`. This just
-    seems like a better choice.
-  * Added a `facetlab` argument to `plot.emmGrid()` -- badly needed when we have
-    several `by` groups
+
 
 
