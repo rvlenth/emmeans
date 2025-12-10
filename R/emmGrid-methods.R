@@ -587,7 +587,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
 #'   \code{FALSE}, the system value \code{getOption("digits")} is used.}
 #' \item{\code{pval.digits}}{An integer indicating the precision with which
 #'   p-values are printed. Integers between \code{2} and \code{7} are acceptable; the default is 
-#' \code{3}. Floating point numbers are truncated. }
+#' \code{4}. Floating point numbers are truncated. }
 #' \item{\code{back.bias.adj}}{A logical value controlling whether we 
 #'   try to adjust bias when back-transforming. If \code{FALSE}, we use naive
 #'   back transformation. If \code{TRUE} \emph{and \code{sigma} is available and valid}, a
@@ -771,7 +771,7 @@ emm_defaults = list (
     simplify.names = TRUE,    # simplify names like data$x to just "x"
     back.bias.adj = FALSE,    # Try to bias-adjust back-transformations?
     opt.digits = TRUE,        # optimize displayed digits for estimates and CI's?
-    pval.digits = 3L,          # how many digits to list for p-values
+    pval.digits = 4L,          # how many digits to list for p-values
     enable.submodel = TRUE,   # enable saving extra info for submodel
     rg.limit = 10000,         # limit on number of rows in a reference grid
     lmer.df = "kenward-roger",  # Use Kenward-Roger for df
