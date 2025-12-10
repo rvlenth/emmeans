@@ -1354,13 +1354,11 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     if(!is.null(attr(x, "digits")))
         digits = attr(x, "digits")
     
-    pval.digits = as.integer(get_emm_option("pval.digits"))[1]
-    if(is.na(pval.digits) || (pval.digits < 2) || (pval.digits > 7)) {
+    pval.digits = suppressWarnings(as.integer(get_emm_option("pval.digits")))[1]
+    if(is.na(pval.digits) || (pval.digits < 2) || (pval.digits > 6)) {
         pval.digits = ifelse(is.na(pval.digits), emm_defaults$pval.digits, pval.digits)
-        pval.digits = max(2, min(7, pval.digits))
+        pval.digits = max(2, min(6, pval.digits))
         emm_options(pval.digits = pval.digits)
-        warning(paste0("Digits for p-values must be between 2 and 7.\n",
-        "P-value precision set to ", pval.digits, " digits."), call. = FALSE)
     }
 
     test.stat.names = c("t.ratio", "z.ratio", "F.ratio", "T.square")  # format these w 3 dec places
