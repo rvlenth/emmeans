@@ -2,12 +2,20 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans 2.0.1 ???
+## emmeans 2.0.1
 
-* changed the default precision for reporting p-values from 4 to 3 digits and added 
-options to specify the desired p-value precision in `emm_options(pval.digits = 3)` (#567).
-* updated `emmip()` function for black-and-white plotting and added options to specify 
-the linetype (#565).
+  * Fix to `.parse_nest()` to handle nested factors with spaces in their name (#562)
+  * `col` was not handled properly in `emmip()` (#565)
+  * In `emmip()`, changed default for `facetlab` to `"label_both"`. This just
+    seems like a better choice.
+  * Added a `facetlab` argument to `plot.emmGrid()` -- badly needed when we have
+    several `by` groups
+  * Added the `pval.digits` option to specify the desired P-value precision (#567).
+    It defaults to 4, which was the only precision available in past versions.
+  * Note that the above change corrects a slight bug in past versions:
+    a P value smaller than 0.0001 that rounded *up* to 0.0001 was printed as `0.0001` 
+    rather than `<.0001`.
+
 
 ## emmeans 2.0.0
 We have a new major version number, with a new graphics look and a new maintainer,
