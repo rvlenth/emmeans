@@ -122,8 +122,9 @@ object.}
   of their confidence intervals; but always at least 3 digits. If
   \code{FALSE}, the system value \code{getOption("digits")} is used.}
 \item{\code{pval.digits}}{An integer indicating the precision with which
-  p-values are printed. Integers between \code{2} and \code{7} are acceptable; the default is 
-\code{4}. Floating point numbers are truncated. }
+  p-values are printed. Integers between \code{2} and \code{6} are acceptable; the default is 
+\code{4}. Floating point numbers are truncated. If a number outside the accepted range is
+used, the nearest acceptable integer will be used instead. Non-numeric arguments are ignored.}
 \item{\code{back.bias.adj}}{A logical value controlling whether we 
   try to adjust bias when back-transforming. If \code{FALSE}, we use naive
   back transformation. If \code{TRUE} \emph{and \code{sigma} is available and valid}, a
