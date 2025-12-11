@@ -1,0 +1,2113 @@
+# Changelog
+
+## emmeans 2.0.1
+
+- Fix to `.parse_nest()` to handle nested factors with spaces in their
+  name ([\#562](https://github.com/rvlenth/emmeans/issues/562))
+- `col` was not handled properly in
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  ([\#565](https://github.com/rvlenth/emmeans/issues/565))
+- In [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md),
+  changed default for `facetlab` to `"label_both"`. This just seems like
+  a better choice.
+- Added a `facetlab` argument to
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  – badly needed when we have several `by` groups
+- Added the `pval.digits` option to specify the desired P-value
+  precision ([\#567](https://github.com/rvlenth/emmeans/issues/567)). It
+  defaults to 4, which was the only precision available in past
+  versions.
+- Note that the above change corrects a slight bug in past versions: a P
+  value smaller than 0.0001 that rounded *up* to 0.0001 was printed as
+  `0.0001` rather than `<.0001`.
+
+## emmeans 2.0.0
+
+CRAN release: 2025-10-29
+
+We have a new major version number, with a new graphics look and a new
+maintainer, Julia Piaskowski (however, Russ is still very much
+involved).
+
+- Added a new `post.ci.method` option to set the default for `ci.method`
+  in
+  [`hpd.summary()`](https://rvlenth.github.io/emmeans/reference/hpd.summary.md)
+  ([\#538](https://github.com/rvlenth/emmeans/issues/538))
+- Extended
+  [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md) so
+  that it is a generic that can dispatch S3 methods based on the class
+  of `object`. This allows a “budget” option for package developers who
+  want to provide rudimentary **emmeans** support.
+- Fixed code for
+  [`emmip_ggplot()`](https://rvlenth.github.io/emmeans/reference/emmip.md),
+  so that we no longer call
+  [`aes_()`](https://ggplot2.tidyverse.org/reference/aes_.html)
+  ([\#547](https://github.com/rvlenth/emmeans/issues/547))
+- **ggplot2**-based graphics have a new look. If you liked the old one
+  better, use `emm_options(gg.theme = 1)` to get an approximation of the
+  old look.
+- May also use `gg.theme` option to set any theme you want for future
+  plots.
+- Scaling changes so
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) so
+  that plots better fill the plotting area.
+- Intervals in
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  are now solid colors, rather than transparent ones, to prevent grid
+  lines from partially masking them.
+- Weights were not present in `ordinal` objects created with
+  `mode = "mean.class"`
+  ([\#553](https://github.com/rvlenth/emmeans/issues/553))
+- Cautionary note added on bias correction (in documentation of
+  `summary.emmGrid`) when `sigma` is large
+  ([\#540](https://github.com/rvlenth/emmeans/issues/540))
+
+## emmeans 1.11.2-8
+
+CRAN release: 2025-08-27
+
+- Correction in `summary.emmGrid` to calculation of adjustment factors
+  when ’by\` variables are nested
+  ([\#536](https://github.com/rvlenth/emmeans/issues/536))
+- More detailed annotations for cross-group adjustments
+  ([\#536](https://github.com/rvlenth/emmeans/issues/536))
+- Added `ci.method` argument to
+  [`hpd.summary()`](https://rvlenth.github.io/emmeans/reference/hpd.summary.md)
+  to allow option of producing quantile-based intervals
+  ([\#538](https://github.com/rvlenth/emmeans/issues/538))
+- Efficiency improvements in method dispatching
+- Fix to `.make.scale()` to play nice with new R requirements
+
+## emmeans 1.11.2
+
+CRAN release: 2025-07-11
+
+- In ordinal-model support, changed all estimator names to match mode
+  names (this was true for `"prob"` and `"exc.prob"`, but not
+  `"cum.prob"`) (postponed from CRAN version 1.11.1 to allow time for
+  other package(s) to adapt)
+- Fix to coding errors that prevented more than one counterfactual
+  factor from being used.
+
+## emmeans 1.11.1
+
+CRAN release: 2025-05-04
+
+- Modified `as.data.frame.summary_emm` so it can’t loop infinitely
+  ([\#525](https://github.com/rvlenth/emmeans/issues/525))
+- Added documentation to `ref_grid` and `FAQs` vignette to clarify how
+  we use [`all.vars()`](https://rdrr.io/r/base/allnames.html) to
+  identify predictors, e.g. if a model formula contains `log(dose)`, the
+  covariate is `dose`, not `log(dose)`
+  ([\#523](https://github.com/rvlenth/emmeans/issues/523))
+- **UPCOMING:** In ordinal-model support, changed all estimator names to
+  match mode names (this was true for `"prob"` and `"exc.prob"`, but not
+  `"cum.prob"`). \[This change is on hold as it breaks another
+  package.\]
+- Added a contrast function
+  [`opoly.emmc()`](https://rvlenth.github.io/emmeans/reference/emmc-functions.md)
+  that does not rescale the coefficients to integers, and allows
+  unequally-spaced levels to be specified as `scores`
+  ([\#527](https://github.com/rvlenth/emmeans/issues/527)). In addition,
+  unlike `poly.emmc`, `opoly.emmc` supports the `exclude` and `include`
+  arguments.
+- Also added contrast functions `helmert.emmc` and `nrmlz.emmc`. The
+  latter is a wrapper that can be used to normalize the contrast
+  coefficients from any other `.emmc` function.
+- Fixed a scoping issue in `contrast.emmGrid` to make a custom `.emmc`
+  function easier to find. This bug prevented some examples from being
+  rendered correctly in all contexts.
+- Restored the
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  code that was omitted in 1.11.0 because apparently it was right the
+  first time. ([\#528](https://github.com/rvlenth/emmeans/issues/528))
+- Added an argument `npts` to
+  [`make.meanint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  and
+  [`make.symmint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  to facilitate generating an interval with more than two points.
+- Fix to
+  [`test()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  for situations with non-estimability and infinite df
+  ([\#528](https://github.com/rvlenth/emmeans/issues/528))
+- Added `linfct.emm_list())` method
+- Made
+  [`emmobj()`](https://rvlenth.github.io/emmeans/reference/emmobj.md)
+  less rigid (so that `as.emmGrid(as.list(obj))` more faithfully
+  reproduces `obj`)
+- Added an optional `drop` argument (`TRUE` by default) to the
+  `emm_list` methods.
+- Added optional arguments `se.bhat` and `se.diff` to
+  [`emmobj()`](https://rvlenth.github.io/emmeans/reference/emmobj.md)
+  ([\#529](https://github.com/rvlenth/emmeans/issues/529))
+
+## emmeans 1.11.0
+
+CRAN release: 2025-03-20
+
+- Added a
+  [`linfct()`](https://rvlenth.github.io/emmeans/reference/emmGrid-methods.md)
+  generic and default method that returns `object@linfct`
+- Removed some code in
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  that prevented some terms from being tested in nested models. Alas,
+  this is still not perfect.
+- Added the possibility of specifying `.` in the `specs` argument of
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  – e.g., `emmeans(mod, ".")`, `emmeans(mod, pairwise ~ . | drug)`.
+  ([\#522](https://github.com/rvlenth/emmeans/issues/522)). This creates
+  a list of all sets of means (and contrasts), thus creating an
+  `emm_list` object. This also works in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md).
+- In certain `emm_list` methods, we changed the default for `which` from
+  `1` to to `NULL`
+
+## emmeans 1.10.7
+
+CRAN release: 2025-01-31
+
+- Spelling changes in several vignettes
+- We have completely revamped the design of reference grids involving
+  counterfactuals. Now, if we specify counterfactuals `A` and `B`, the
+  reference grid comprises combinations of `A`, `B`, `actual_A`, and
+  `actual_B` the latter two used to track the original settings of `A`
+  and `B` in the dataset. We always average over combinations of these
+  factors. The previous code was a memory hog, and we have made it much
+  more efficient for large datasets.
+- [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  has also been revised to do special handling of counterfactual
+  reference grids. Whenever we average over a counterfactual `B`, we
+  only use the cases where `B == actual_B`, thus obtaining the same
+  results as would be obtained when `B` is not regarded as a
+  counterfactual.
+- Tweaks to
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md) to
+  create `@post.beta` slot correctly when there are non-estimable cases.
+- Bug fix for scoping in
+  [`subset.emmGrid()`](https://rvlenth.github.io/emmeans/reference/rbind.emmGrid.md)
+  ([\#518](https://github.com/rvlenth/emmeans/issues/518))
+- Changed
+  [`print.emmGrid()`](https://rvlenth.github.io/emmeans/reference/emmGrid-methods.md)
+  so that it calls [`show()`](https://rdrr.io/r/methods/show.html)
+  unless `export = TRUE`. This change was made because I noticed that
+  **pkgdown** uses [`print()`](https://rdrr.io/r/base/print.html) rather
+  than [`show()`](https://rdrr.io/r/methods/show.html) to display
+  example results.
+
+## emmeans 1.10.6
+
+CRAN release: 2024-12-12
+
+- Added new
+  [`add_submodels()`](https://rvlenth.github.io/emmeans/reference/manip-factors.md)
+  function that allows for comparison od estimates from different
+  submodels (when supported)
+- Additional notes for
+  [`eff_size()`](https://rvlenth.github.io/emmeans/reference/eff_size.md).
+  Also, a questionable example was deleted. It is so easy to misuse this
+  function, and I don’t even buy into the idea of standardized effect
+  sizes except in the simplest of cases. So I am considering deprecating
+  [`eff_size()`](https://rvlenth.github.io/emmeans/reference/eff_size.md)
+  and letting some other package be to blame for unsuitable or
+  misleading results.
+
+## emmeans 1.10.5
+
+CRAN release: 2024-10-14
+
+- Fix for long-standing `weights` bug in
+  [`lme()`](https://rdrr.io/pkg/nlme/man/lme.html)
+  ([\#356](https://github.com/rvlenth/emmeans/issues/356))
+- Fix for inconsistent contrasts in case of missing levels
+  ([\#508](https://github.com/rvlenth/emmeans/issues/508),
+  [\#509](https://github.com/rvlenth/emmeans/issues/509))
+- Fix for using nuisance variables with proportional weights
+  ([\#510](https://github.com/rvlenth/emmeans/issues/510))
+- New function
+  [`with_emm_options()`](https://rvlenth.github.io/emmeans/reference/emm_options.md)
+  to run code with options temporarily set
+- Tweak to optimal-digits output that shows `SE` to 3 significant digits
+
+## emmeans 1.10.4
+
+CRAN release: 2024-08-21
+
+- Refinements in tracking static offsets
+- Made d.f. consistent for `geeglm` and `glmgee`
+  ([\#496](https://github.com/rvlenth/emmeans/issues/496))
+- Fixed suggestion for installing from GitHub
+  ([\#497](https://github.com/rvlenth/emmeans/issues/497))
+- Change that allows factors to have `NA` levels
+  ([\#500](https://github.com/rvlenth/emmeans/issues/500)). This was
+  previously not allowed, and we added an `"allow.na.levs"` option
+  (defaults to `TRUE`) just in case we broke anything that used to work.
+- Better default contrasts in
+  [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md)
+  ([\#501](https://github.com/rvlenth/emmeans/issues/501))
+- Bug fix for nuisance factors when we have a multivariate response
+  ([\#503](https://github.com/rvlenth/emmeans/issues/503))
+- Improved auto-detection of response transformation
+  ([\#504](https://github.com/rvlenth/emmeans/issues/504))
+- Bug fix for detecting cases where we can’t use `nuisance`
+  ([\#503](https://github.com/rvlenth/emmeans/issues/503))
+- New
+  [`mvregrid()`](https://rvlenth.github.io/emmeans/reference/mvregrid.md)
+  function for multivariate response transformations such as a
+  compositional response.
+
+## emmeans 1.10.3
+
+CRAN release: 2024-07-01
+
+- Updated [`mice::mira`](https://amices.org/mice/reference/mira.html)
+  support to use Barnard-Rubin adjusted d.f.
+  ([\#494](https://github.com/rvlenth/emmeans/issues/494))
+- Fix to MuMIn support so a response transformation is auto-detected
+- Bug fix in `gls` support code
+  ([\#495](https://github.com/rvlenth/emmeans/issues/495))
+- I am trying to be clearer that some model-support modes cause implied
+  re-gridding, making the link function no longer operable. A new
+  subsection discussing this was added to the “Transformations”
+  vignette, and I also added indications of this to the “models”
+  vignette.
+- Don’t think too hard about which recent updates (since 1.8.9) are more
+  major than others. I’ll try to be more rational about this going
+  forward.
+
+## emmeans 1.10.2
+
+CRAN release: 2024-05-20
+
+This update is focused mostly on trying to clear up confusion with some
+users on the distinction between `emmGrid` objects and their summaries,
+since they display identically; and on encouraging users not to bypass
+important annotations.
+
+- Added a startup message and
+  [`help(untidy)`](https://rvlenth.github.io/emmeans/reference/untidy.md)
+- Added `rbind` method for `summary_emm` objects
+  ([\#480](https://github.com/rvlenth/emmeans/issues/480)). Note that
+  `summary_emm` objects already have estimates, P-values, etc. computed,
+  so `rbind`ing them preserves those results. On the other hand,
+  `rbind`ing `emmGrid` or `emm_list` objects produce new `emmGrid`
+  objects which have *not* yet been summarized and any `adjust` methods
+  are applied to the whole result.
+- Created [**pkgdown** site](https://rvlenth.github.io/emmeans/)
+
+## emmeans 1.10.1
+
+CRAN release: 2024-04-06
+
+- With `gls` or `lme` models, `mode = "satterthwaite"` and
+  `mode = "appx-satterthwaite"` failed when model was fitted with no
+  explicit `data` argument
+  ([\#465](https://github.com/rvlenth/emmeans/issues/465))
+- We decided to export the `.emmc` functions, just to make it easier to
+  see and use them
+- Added a new contrast function `wtcon.emmc(levs, wts, cmtype, ...)`
+  which generates contrasts via
+  `multcomp::contrMat(wts, type = cmtype, ...)`
+- [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  gains a new argument `wts` which can be passed to some `.emmc`
+  functions including `eff.emmc`, `del.eff.emmc`, and `wtcon.emmc`. If
+  `wts` is left missing, we pass equal weights of `. If we specify`wts =
+  NA`, we retrieve weights from the object (potentially different in each`by`group). Otherwise, the same fixed`wts\`
+  are used in each group.
+- Added a [`weights()`](https://rdrr.io/r/stats/weights.html) method for
+  `emmGrid` objects
+- Modification to
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md) to
+  play along if
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  changes the `by` variable via `options`
+  ([\#472](https://github.com/rvlenth/emmeans/issues/472))
+- After some wiggling around, we now allow
+  [`strata()`](https://rdrr.io/pkg/survival/man/strata.html) factors to
+  be included in the reference grid for **survival** models. It is up to
+  the user to decide what is sensible.
+  ([\#429](https://github.com/rvlenth/emmeans/issues/429),
+  [\#473](https://github.com/rvlenth/emmeans/issues/473))
+
+## emmeans 1.10.0
+
+CRAN release: 2024-01-23
+
+- Restored `tau` argument (now optional) for rq models
+  ([\#458](https://github.com/rvlenth/emmeans/issues/458))
+- Fixed issue where a multivariate factor having numeric levels may
+  mismatch a level in `at` even when apparently valid
+  ([\#458](https://github.com/rvlenth/emmeans/issues/458))
+- Added `cross.adjust` to legal arguments that can be passed via `misc`
+  slot
+- Robustified code for `cross.adjust`
+- Fixed masking of `vcov.` in `glmgee` support
+  ([\#460](https://github.com/rvlenth/emmeans/issues/460))
+- Fixed an error in `xtable()` method for `summary_emm` objects
+- Added `inner` argument to
+  [`make.tran()`](https://rvlenth.github.io/emmeans/reference/make.tran.md)
+  to allow for compound transform; e.g.,
+  `make.tran("inverse", inner = "sqrt")` is reciprocal sqrt
+  ([\#462](https://github.com/rvlenth/emmeans/issues/462))
+
+## emmeans 1.9.0
+
+CRAN release: 2023-12-18
+
+- Warning message about prior weights was sometimes unnecessary. We now
+  suppress it when all the prior weights are equal.
+- Fix to `MuMIn` support with `subset` argument
+  ([\#455](https://github.com/rvlenth/emmeans/issues/455))
+- Repair to coding error for nested models
+  ([\#457](https://github.com/rvlenth/emmeans/issues/457))
+- Added `glmtoolbox::glmgee` support
+  ([\#454](https://github.com/rvlenth/emmeans/issues/454))
+- [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md)
+  modified such that we often don’t need to specify `data` when `object`
+  is specified.
+- Support for for `rq`, `rqs` now incorporates all `tau` values in the
+  model as a pseudofactor
+  ([\#458](https://github.com/rvlenth/emmeans/issues/458)). The `tau`
+  argument itself is deprecated and ignored if specified.
+
+## emmeans 1.8.9
+
+CRAN release: 2023-10-17
+
+- Added functions
+  [`make.meanint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  and
+  [`make.symmint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  that return functions that compute symmetric intervals. The old
+  [`meanint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  and
+  [`symmint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  functions that return symmetric intervals of width `2` are retained
+  for back-compatibility
+- Small repairs to `multinom` support so it works with a model where the
+  response is a matrix of counts
+  ([\#439](https://github.com/rvlenth/emmeans/issues/439))
+- Enhancements/fixes for `MuMIn` support
+  ([\#442](https://github.com/rvlenth/emmeans/issues/442))
+- [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md) has
+  replaced its `ordinal.dim` argument with `ordinal`, a list with
+  elements `dim` and `mode` – which now fully supports all the modes
+  available for ordinal models
+  ([\#444](https://github.com/rvlenth/emmeans/issues/444)).
+  (`ordinal.dim` still works for backward compatibility.)
+- Fix to bookkeeping bug in `emtrends`
+  ([\#448](https://github.com/rvlenth/emmeans/issues/448))
+- Fix to `averaging` support with certain predictor function calls
+  ([\#449](https://github.com/rvlenth/emmeans/issues/449))
+
+## emmeans 1.8.8
+
+CRAN release: 2023-08-17
+
+- Bug correction in `contrast` when `tran` is a `list`
+  ([\#428](https://github.com/rvlenth/emmeans/issues/428))
+- Bug correction to suppress a nuisance warning when the number of prior
+  weights is 0 or 1 (which indeed doesn’t match the number of rows of
+  data, but also isn’t really an issue) (Commit d921152 for
+  **easystats**)
+- Bug correction for
+  [`strata()`](https://rdrr.io/pkg/survival/man/strata.html) terms in
+  **survival** models
+  ([\#429](https://github.com/rvlenth/emmeans/issues/429))
+- Added a risk-ratio and a probit example to the Transformations
+  vignette.
+- Multivariate levels were mishandled when specified out of order in
+  `at` ([\#430](https://github.com/rvlenth/emmeans/issues/430))
+- Fix to flow error in
+  [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md) where
+  we didn’t always get `V` right
+- Change to adjustment methods when there are non-estimable cases. Now
+  we always adapt the family size to include only the estimable ones.
+  This may change some adjusted P values or confidence limits obtained
+  in past versions, when the model is rank-deficient.
+- [`vcov.emmGrid()`](https://rvlenth.github.io/emmeans/reference/emmGrid-methods.md)
+  now only returns elements where `object@misc$display == TRUE`. We also
+  label the dimensions and provide a `sep` argument for creating labels.
+
+## emmeans 1.8.7
+
+CRAN release: 2023-06-23
+
+- Correction to a bug introduced in version 1.8.4, where we tried to
+  provide for an `offset` *argument* in the same way as an
+  [`offset()`](https://rdrr.io/r/stats/offset.html) *term* in the model
+  formula. Unfortunately, that change also caused wrong estimates to be
+  computed when the offset involves a nonlinear function such as
+  [`log()`](https://rdrr.io/r/base/Log.html), and made for whopping
+  inconsistencies in the narrative about offsets in the
+  `"sophisticated"` vignette; I apologize for these embarrassing errors.
+
+  We now provide for both kinds of offset specifications, but in
+  different ways as explained in a new section in the `"xplanations"`
+  vignette. The “subtle difference” mentioned in the NEWS for 1.8.4 no
+  longer applies.
+
+- Change in
+  [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md). If
+  `object` is specified, default for `df` is `df.residual(object)`
+  rather than `object$df.residual`, since
+  [`df.residual()`](https://rdrr.io/r/stats/df.residual.html) is a
+  standard method.
+
+- [`as.mcmc()`](https://rdrr.io/pkg/coda/man/mcmc.html) now uses
+  `get_emm_option("sep")` in labeling factor combinations
+  ([\#425](https://github.com/rvlenth/emmeans/issues/425)).
+
+## emmeans 1.8.6
+
+CRAN release: 2023-05-11
+
+- Major fix to `emm_basis.averaging` to take care of quirks in these
+  models ([\#402](https://github.com/rvlenth/emmeans/issues/402),
+  [\#409](https://github.com/rvlenth/emmeans/issues/409))
+- Added `decreasing` argument to
+  [`cld.emmGrid()`](https://rvlenth.github.io/emmeans/reference/CLD.emmGrid.md)
+  for compatibility with
+  [`multcomp::cld.glht()`](https://rdrr.io/pkg/multcomp/man/cld.html)
+  and others.
+- Fix to bug in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  when `data` is specified (**semTools** issue 119) … and related
+  tune-up to
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  to avoid issues with repeat calls
+  ([\#413](https://github.com/rvlenth/emmeans/issues/413))
+- Tweak to `emm_list` methods to make them more user-friendly
+  ([\#417](https://github.com/rvlenth/emmeans/issues/417))
+- We added a `pwts` argument to
+  [`recover_data.call()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md),
+  needed because prior weights did not always come through. This
+  provides a reliable way of passing prior weights in a
+  [`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  method
+
+## emmeans 1.8.5
+
+CRAN release: 2023-03-08
+
+- passing scale info to
+  [`emmip_ggplot()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  ([\#397](https://github.com/rvlenth/emmeans/issues/397))
+- Changes to `as.data.frame` behavior. It has been made more forceful in
+  preserving annotations (i.e., `summary_emm` behavior) so that users
+  don’t blind themselves to potentially important information. Also,
+  some users seem to force display of the data frame in order to see
+  more digits; so we now are taking a compromise approach: showing more
+  digits but still as a `summary_emm` object with annotations also
+  displayed.
+- Added `Chisq` value to results of `test(..., joint = TRUE)` and
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  when `df2` is infinite (per request in
+  [\#400](https://github.com/rvlenth/emmeans/issues/400))
+- The `basics` vignette has undergone a major revision that I hope helps
+  more in getting users oriented. It starts by discussing the fact that
+  EMMs’ underpinnings are more in experiments than observational data,
+  and emphasizes more the process of first getting a good model.
+- The `confidence-intervals` vignette has been updated to reflect the
+  same example with `pigs` as is used in `basics`
+- Following Issue [\#403](https://github.com/rvlenth/emmeans/issues/403)
+  on GitHub, we are taking a much stricter approach with anything
+  involving the `sigma` value in the `@misc` slot. For any models that
+  are not in the `"gaussian"` family, `sigma` is initialized to `NA` and
+  this has some implications:
+  - *Bias adjustment*: Bias adjustment is disabled by default for all
+    non-Gaussian family models, and a warning is issued. You can enable
+    bias adjustment by providing a valid `sigma` value; however, for
+    generalized linear models the value of `sigma(model)` *is often
+    inappropriate for bias adjustment, and in fact anyway.* you should
+    not do that\*, and for mixed models, you should calculate `sigma`
+    based on the random effects. See the vignette on transformations.
+  - *Prediction intervals*: With non-Gaussian models,
+    `predict(..., interval = "prediction")` will refuse to work, with no
+    option to override. Same with specifying `PIs = TRUE` in
+    [`plot()`](https://rdrr.io/r/graphics/plot.default.html) or
+    [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md).
+    The calculations done for prediction intervals are only valid for
+    Gaussian models. You may do predictions for non-Gaussian models via
+    simulating a posterior predictive distribution with Bayesian
+    approach; see an illustration in the “sophisticated” vignette.
+  - The above changes will help reduce the incidence of users using the
+    package incorrectly with GLMs, GLMMs, and GEEs. But there’s still
+    the issue that Gaussian mixed models will often have a *wrong*
+    default `sigma` value associated with them, resulting in incorrect
+    PIs and incorrect bias adjustments. I have not figured out how I
+    might help prevent that, but it probably will involve making tedious
+    modifications to these models’ `emm_basis` methods. Maybe some
+    future improvements to be made.
+- Bug fix for matching terms in `averaging` objects
+  ([\#402](https://github.com/rvlenth/emmeans/issues/402))
+- Bug fix for `mira` objects when `data` is required
+  ([\#406](https://github.com/rvlenth/emmeans/issues/406))
+
+## emmeans 1.8.4
+
+- Fix to [`scale()`](https://rdrr.io/r/base/scale.html) response
+  transformation when either `center` or `scale` is `FALSE`. I also
+  added support for `center()` and
+  [`standardize()`](https://rdrr.io/pkg/mvtnorm/man/ltMatrices.html)
+  from the **datawizard** package as response transformations, though
+  these are mapped to [`scale()`](https://rdrr.io/r/base/scale.html).
+
+- Citation correction
+  ([\#391](https://github.com/rvlenth/emmeans/issues/391))
+
+- Removed a message about contrasting transformed objects that even
+  confuses me! (I added a topic in the FAQs vignette instead)
+
+- Added new exported function `inverse` available as a response
+  transformation
+
+- I have quietly deprecated the previous `I_bet()` function, because it
+  produced a message that was confusing to inexperienced users. Instead,
+  we have tweaked some functions/methods so they seem to work the same
+  way with an `emm_list` object (using its first element) as an
+  `emmGrid` object.
+
+- We have removed the functions `convert_workspace()` and
+  `convert_scripts()` that were intended to clean up existing code and
+  objects for the ancient version of **lsmeans**. We also completely
+  removed several old functions from the codebase. Previously, we just
+  ignored them.
+
+- More reliable dispatching of
+  [`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  and
+  [`emm_basis()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  methods ([\#392](https://github.com/rvlenth/emmeans/issues/392))
+
+- New
+  [`permute_levels()`](https://rvlenth.github.io/emmeans/reference/manip-factors.md)
+  function to change the order of levels of a factor
+  ([\#393](https://github.com/rvlenth/emmeans/issues/393))
+
+- **This may alter results of existing code for models involving
+  offsets:** A user discovered an issue whereby offsets specified in an
+  [`offset()`](https://rdrr.io/r/stats/offset.html) model term are
+  accounted for, but those specified in an `offset = ...` argument are
+  ignored. We have revised the
+  [`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  and
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  code so that offsets specified either way (or even both) are treated
+  the same way (which is to *include* them in predictions unless
+  overridden by an `offset` argument in
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  or
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)).
+
+  This change creates a subtle difference in cases where you want
+  offsets to depend on other predictors: In a model with formula
+  `y ~ trt + offset(off)`, if you used to specify
+  `cov.reduce = off ~ trt`, now you need `cov.reduce = .offset. ~ trt`.
+  The latter will work the same with the model `y ~ trt, offset = off`.
+
+- Recoded some portions of the support functions for `zeroinfl` and
+  `hurdle` objects. We now use numerical differentiation to do the delta
+  method, and this comes out a lot cleaner.
+
+- Per the improved count-model support, we are now exporting and have
+  documented two new functions `hurdle.support()` and `zi.support()`
+  that may be useful in providing comparable support in other packages
+  that offer zero-inflated models.
+
+- Efficiency improvements: Several places in the code where we multiply
+  a matrix by a diagonal matrix, we replace this by equivalent code
+  using the [`sweep()`](https://rdrr.io/r/base/sweep.html) function.
+
+- Over time, too many users have latched on to the idea that
+  `emmeans(model, pairwise ~ treatment(s))` as *the* recipe for using
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md).
+  It works okay when you have just one factor, but when you have three
+  factors, say, `pairwise ~ fac1*fac2*fac3` gives you every possible
+  comparison among cell means; often, this creates an intractable amount
+  of output (e.g., 378 comparisons in a 3x3x3 case) – most of which are
+  diagonal comparisons.
+
+  So now, if a user is in interactive mode, specifies contrasts in a
+  *direct*
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  call (i.e., `sys.parent() == 0`), there is more than one *primary*
+  factor (not including `by` factors), and there are more than 21
+  contrasts as a result (e.g. more than 7 levels compared pairwise), we
+  issue an advisory warning message: “You may have generated more
+  contrasts than you really wanted…”. Because of the restrictions on
+  when this warning is issued, it should not affect reverse-dependent
+  package checks at all.
+
+## emmeans 1.8.3
+
+CRAN release: 2022-12-06
+
+- Fix to logic error in
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+  ([\#287](https://github.com/rvlenth/emmeans/issues/287), revisited)
+- Fix to `nbasis` calculation in ordinal models
+  ([\#387](https://github.com/rvlenth/emmeans/issues/387))
+- Bias-adjustment example added when we have random slopes
+- New `addl.vars` argument allows including variables (say, for random
+  slopes) in the reference grid.
+- Removed dependence on **xtable** package. The `xtable` methods are now
+  dynamically registered. This reduces the number of package
+  dependencies from 8 to 7 (as of this version).
+- Added alt text to all pictures in vignettes
+  ([\#389](https://github.com/rvlenth/emmeans/issues/389)). This makes
+  the materials more accessible per guidelines from the [A11Y
+  project](https://www.a11yproject.com/).
+- Added `"atanh"` to the options in
+  [`make.tran()`](https://rvlenth.github.io/emmeans/reference/make.tran.md)
+  and to the “named” response transformations that are auto-detected
+- [`make.tran()`](https://rvlenth.github.io/emmeans/reference/make.tran.md)
+  replaces `param` argument with `alpha` and `beta` (`param` is still
+  supported for backward compatibility) and documentation has been
+  revised in hopes of making everything clearer
+
+## emmeans 1.8.2
+
+CRAN release: 2022-10-27
+
+- Extended [`cld()`](https://rdrr.io/pkg/multcomp/man/cld.html) so it
+  can show findings rather than non-findings, in two different ways:
+  Using `delta`, groupings are based on actual tests of equivalence with
+  threshold `delta`; or setting `signif.sets = TRUE`, means that have
+  the same letter are significantly *different*. We also added a
+  vignette on “Re-engineering CLDs”.
+- Bug fix for subtle error in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  ([\#133](https://github.com/rvlenth/emmeans/issues/133))
+- Improved customization of
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) so
+  that we can specify `color`, `linetype`, and `symbol` are all
+  associated with groupings; and addition of an example to produce a
+  black-and-white plot. Note: While the default appearance of plots is
+  unchanged, plots from your existing code may be altered if you have
+  used `linearg`, `dotarg`, etc.
+- Allow `vcov.` to be coercible to a matrix, or a function that yields a
+  result coercible to a matrix
+  ([\#383](https://github.com/rvlenth/emmeans/issues/383))
+- Robustness improvement for `"appx-satterthwaite"` method
+  ([\#384](https://github.com/rvlenth/emmeans/issues/384))
+- Added `counterfactuals` argument to
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md),
+  setting up a reference grid consisting of the stated factors and a
+  constructed factor, `.obs.no.`. We then (by default) average this grid
+  over the covariate distribution. This facilitates G-computation under
+  the exchangeability assumption for counterfactuals.
+
+## emmeans 1.8.1
+
+- Fixed new bug in [`summary()`](https://rdrr.io/r/base/summary.html)
+  introduced in [\#359](https://github.com/rvlenth/emmeans/issues/359)
+  and reported in [\#364](https://github.com/rvlenth/emmeans/issues/364)
+- Fixed
+  [`as.data.frame.emm_list()`](https://rvlenth.github.io/emmeans/reference/emm_list-object.md)
+  so it preserves annotations like in
+  [`as.data.frame.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+- Fix to [`mgcv::gam`](https://rdrr.io/pkg/mgcv/man/gam.html) support to
+  accommodate fancier smoothers and more accurately detect random terms
+  ([\#365](https://github.com/rvlenth/emmeans/issues/365),
+  [\#366](https://github.com/rvlenth/emmeans/issues/366),
+  [\#369](https://github.com/rvlenth/emmeans/issues/369))
+- Fix in call to [`summary()`](https://rdrr.io/r/base/summary.html) from
+  inside a function
+  ([\#367](https://github.com/rvlenth/emmeans/issues/367))
+- Added a `delta` argument to
+  [`hpd.summary()`](https://rvlenth.github.io/emmeans/reference/hpd.summary.md),
+  thus allowing a way to assess equivalence with Bayesian estimates
+  ([\#370](https://github.com/rvlenth/emmeans/issues/370))
+- Bug fix for `stanreg` estimability code when `subset` was used in
+  model.
+- [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) and
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  now do appropriate things if `point.est` or `frequentist` appear among
+  the `...` arguments, when we have Bayesian models (note also,
+  `frequentist` was removed from the visible arguments for
+  `plot.emmGrid`).
+- With Bayesian models,
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  plotted intervals regardless of `CIs`; this has been corrected
+- Added [`head()`](https://rdrr.io/r/utils/head.html) and
+  [`tail()`](https://rdrr.io/r/utils/head.html) methods for `emmGrid`
+  objects
+- In `[.summary_emm()`, we changed the default to `as.df = FALSE` so
+  that annotations are still visible by default. This also preserves
+  annotations in [`head()`](https://rdrr.io/r/utils/head.html) and
+  [`tail()`](https://rdrr.io/r/utils/head.html) for summaries
+- New
+  [`emm_example()`](https://rvlenth.github.io/emmeans/reference/emm_example.md)
+  function used to tidy-up certain help-file examples when they are
+  conditional on an external package
+- Continued efforts to prevent users from hiding annotations they need
+  to see. The functions/methods
+  [`summary()`](https://rdrr.io/r/base/summary.html),
+  [`confint()`](https://rdrr.io/r/stats/confint.html),
+  [`test()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md),
+  and [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) all
+  produce data frames with annotations intact and visible. Additional
+  wrapping in [`data.frame()`](https://rdrr.io/r/base/data.frame.html),
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html), etc.
+  is completely unnecessary, and if you send questions or bug reports
+  with such code, I will regard it as willful ignorance and will refuse
+  to respond. See also the news for version 1.8.0.
+
+## emmeans 1.8.0
+
+CRAN release: 2022-08-05
+
+- Fixed minor bug in `lme` support
+  ([\#356](https://github.com/rvlenth/emmeans/issues/356))
+- Added support for `svyolr` objects from the **survey** package
+  ([\#350](https://github.com/rvlenth/emmeans/issues/350))
+- Improvements to [`mgcv::gam`](https://rdrr.io/pkg/mgcv/man/gam.html)
+  support. Previously, random smoothers were included. Thanks for
+  Maarten Jung for observing this and helping to identify them.
+- Improvements to `test(..., joint = TRUE)` and
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)…
+  - Sometimes did incorrect computations with rank deficient models
+  - `"est.fcns"` attribute is actually estimable
+  - Results for `(confounded)` entry in
+    [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+    is now much better formulated and more robust.
+  - Added section related to this in `xplanations` vignette
+  - Version dependency for `estimability (>= 1.4.1)` due to a bug in
+    version 1.4
+- In
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md),
+  we changed the default from `cov.reduce = range` to
+  `cov.reduce = meanint`, where `meanint(x)` returns
+  `mean(x) + c(-1, 1)`. This centers the covariate values around their
+  means, rather than their midranges, and is more in line with the
+  default of `ref_grid(..., cov.reduce = mean)`. However, this change in
+  default will change the results of
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  from past experiences with models having covariates that interact with
+  factors or other covariates. We also added a section on covariates to
+  the help for
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md),
+  and added another function
+  [`symmint()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  for use in `cov.reduce`.
+- `print.summary_emm()` now puts `by` groups in correct order rather
+  than in order of appearance.
+- The `as.data.frame` method has a new argument `destroy.annotations`,
+  which defaults to `FALSE` – in which case it returns a `summary_emm`
+  object (which inherits from `data.frame`). I see that many users
+  routinely wrap their results in `as.data.frame` because they want to
+  access displayed results in later steps. But in doing so they have
+  missed potentially useful annotations. Users who have used
+  `as.data.frame` to see results with lots of digits should instead use
+  `emm_options(opt.digits = FALSE)`.
+- New R version dependency `>= 4.1.0`, allowing freedom to use the
+  forward pipe operator `|>` and other features.
+- *Housecleaning:* We removed completely the `trend` argument in
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md),
+  which has long since been deprecated. We removed wrappers that
+  implement `pmmeans()`, `pmtrends()`, etc. – which I believe nobody
+  ever used.
+
+## emmeans 1.7.5
+
+CRAN release: 2022-06-22
+
+- Modified the defaults for several methods for class `emm_list`, and
+  added more complete documentation. We also added hidden `emm_list`
+  support to several functions like
+  [`add_grouping()`](https://rvlenth.github.io/emmeans/reference/manip-factors.md),
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md), and
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  itself. These changes, we hope, help in situations where users create
+  objects like `emm <- emmeans(model, pairwise ~ treatment)` but are not
+  experienced or attuned to the distinction between `emmGrid` and
+  `emm_list` objects. The mechanism for this is to provide a default of
+  for which element of the `emm_list` to use. A message is shown that
+  specifies which element was selected and encourages the user to
+  specify it explicitly in the future via either `[[ ]]` or a `which`
+  argument; for example, `plot(emm[[1]])` or `plot(emm, which = 1)`.
+- The object returned by
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  and `test(..., joint = TRUE)` now has an `"est.fcns"` attribute, which
+  is a list of the linear functions associated with the joint test(s).
+- [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  results now possibly include a `(confounded)` entry for effects not
+  purely explained by a model term.f
+- New `cross.adjust` argument in
+  [`summary.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  allows for additional *P*-value adjustment across `by` groups.
+- Apparently, `glm.nb` support no longer requires `data`
+  ([\#355](https://github.com/rvlenth/emmeans/issues/355)) so the
+  documentation was updated.
+
+## emmeans 1.7.4
+
+- Added an argument `enhance.levels` to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  that allows better labeling of the levels being contrasted. For
+  example, now (by default) if a factor `treat` has numeric levels, then
+  comparisons will have levels like `treat1 - treat2` rather than
+  `1 - 2`. We can request similar behavior with non-numeric levels, but
+  only if we specify which factors.
+- Two new functions
+  [`comb_facs()`](https://rvlenth.github.io/emmeans/reference/manip-factors.md)
+  and
+  [`split_fac()`](https://rvlenth.github.io/emmeans/reference/manip-factors.md)
+  for manipulating the factors in an `emmGrid`.
+- Added an argument `wts` to `eff.emmc` and `del.eff.emmc`, which allows
+  for weighted versions of effect-style contrasts
+  ([\#346](https://github.com/rvlenth/emmeans/issues/346))
+- Made [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md)
+  more robust in accommodating various manifestations of rank-deficient
+  models.
+- [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md) now
+  always uses `df` if provided. Previously forced `df = Inf` when a link
+  function was provided.
+- Fix to `df.error` calculation with `gls`
+  ([\#347](https://github.com/rvlenth/emmeans/issues/347))
+
+## emmeans 1.7.3
+
+CRAN release: 2022-03-27
+
+- **argument change** `ref_grid(..., transform = ...)` now should be
+  `ref_grid(..., regrid = ...)` to avoid confusing `transform` with the
+  `tran` option (which kind of does the opposite). If we match
+  `transform` and don’t match `tran`, it will still work, but a message
+  is displayed with advice to use `regrid` instead.
+- Repairs to `averaging` support
+  ([\#324](https://github.com/rvlenth/emmeans/issues/324)). Previous
+  versions were potentially dead wrong except for models created by
+  [`lm()`](https://rdrr.io/r/stats/lm.html) (and maybe some of those
+  were bad too)
+- Added a `which` argument to
+  [`emm()`](https://rvlenth.github.io/emmeans/reference/glht-support.md)
+  to select which list elements to pass to
+  [`multcomp::glht()`](https://rdrr.io/pkg/multcomp/man/glht.html)
+- Support for rank-deficient `gls` models (note that **nlme** allows
+  such models with `gls`, but not `lme`)
+- Bug in `lqm` / `lqmm` support
+  ([\#340](https://github.com/rvlenth/emmeans/issues/340))
+- Other minor corrections (e.g. #334)
+
+## emmeans 1.7.2
+
+CRAN release: 2022-01-04
+
+- Improvements to `averaging` support
+  ([\#319](https://github.com/rvlenth/emmeans/issues/319))
+- Fixed bug in comparison arrows when `by = NULL`
+  ([\#321](https://github.com/rvlenth/emmeans/issues/321)) (this bug was
+  a subtle byproduct of the name-checking in
+  [\#305](https://github.com/rvlenth/emmeans/issues/305)) Note this
+  fixes visible errors in the vignettes for ver 1.7.1-1
+- Patch for `gamlss` support
+  ([\#323](https://github.com/rvlenth/emmeans/issues/323))
+- Added [`withAutoprint()`](https://rdrr.io/r/base/source.html) to
+  documentation examples with
+  [`require()`](https://rdrr.io/r/base/library.html) clauses, so we see
+  interactive-style results
+- Correction to a logic error in adjustment corrections in
+  `summary.emmGrid`
+  ([\#31](https://github.com/rvlenth/emmeans/issues/31))
+- Revised
+  [`summary.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  so that if we have both a response transformation and a link function,
+  then both transformations are followed through with
+  `type = "response"`. Previously, I took the lazy way out and used
+  `summary(regrid(object, transform = "unlink"), type = "response")`
+  (see [\#325](https://github.com/rvlenth/emmeans/issues/325))
+- Fix to
+  [`force_regular()`](https://rvlenth.github.io/emmeans/reference/rbind.emmGrid.md)
+  which caused an unintended warning
+  ([\#326](https://github.com/rvlenth/emmeans/issues/326))
+- Fixes to issues in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  ([\#327](https://github.com/rvlenth/emmeans/issues/327))
+
+## emmeans 1.7.1
+
+- Support from multinomial models in mgcv::gam
+  ([\#303](https://github.com/rvlenth/emmeans/issues/303)) thanks to
+  Hannes Riebl
+- Bug fix for spaces in `by` variable names
+  ([\#305](https://github.com/rvlenth/emmeans/issues/305)). Related to
+  this are:
+  - [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+    now forces all names to be syntactically valid
+  - In
+    [`as.data.frame.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md),
+    we changed the `optional` argument to `check.names` (defaulting to
+    `TRUE`), and it actually has an effect. So by default, the result
+    will have syntactically valid names; this is a change, but only
+    because `optional` did not work right (because it is an argument for
+    \`as.data.frame.list()).
+- Fix for missing column names in `linfct` from
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  ([\#308](https://github.com/rvlenth/emmeans/issues/308))
+- Added `gnls` support
+  ([\#313](https://github.com/rvlenth/emmeans/issues/313),
+  [\#314](https://github.com/rvlenth/emmeans/issues/314), thanks to
+  Fernando Miguez)
+- Modified `glm` support so that `df.residual` is used when the family
+  is gaussian or gamma. Thus, e.g., we match `lm` results when the model
+  is fitted with a Gaussian family. Previously we ignored the d.f. for
+  all `glm` objects.
+- New vignette example with percentage differences
+- More graceful handling of comparisons when there is only one mean; and
+  a related FAQ
+
+## emmeans 1.7.0
+
+CRAN release: 2021-09-29
+
+#### Notable changes
+
+- New `rg.limit` option (and argument for
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md))
+  to limit the number of rows in the reference grid
+  ([\#282](https://github.com/rvlenth/emmeans/issues/282),
+  [\#292](https://github.com/rvlenth/emmeans/issues/292)). **This change
+  could affect existing code that used to work** – but only in fairly
+  extreme situations. Some users report extreme performance issues that
+  can be traced to the size of the reference grid being in the billions,
+  causing memory to be paged, etc. So providing this limit really is
+  necessary. The default is 10,000 rows. I hope that most existing users
+  don’t bump up against that too often. The `nuisance` (or
+  `non.nuisance`) argument in
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  (see below) can help work around this limit.
+- New `nuisance` option in
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md),
+  by which we can specify names of factors to exclude from the reference
+  grid (accommodating them by averaging)
+  ([\#282](https://github.com/rvlenth/emmeans/issues/282),
+  [\#292](https://github.com/rvlenth/emmeans/issues/292)). These must be
+  factors that don’t interact with anything, even other nuisance
+  factors. This provides a remedy for excessive grid sizes.
+- Improvements to and broadening of
+  [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md):
+  - Changed the order of arguments in to something a bit more natural
+  - Default for `contrasts` now `object$contrasts` when `object` is
+    specified
+  - Detection of multivariate situations
+  - Added `ordinal.dim` argument to support ordinal models
+- New
+  [`force_regular()`](https://rvlenth.github.io/emmeans/reference/rbind.emmGrid.md)
+  function adds invisible rows to an irregular `emmGrid` to make it
+  regular (i.e., covers all factor combinations)
+
+#### Bug fixes and tweaks
+
+- Removed dependency on **plyr** package
+  ([\#298](https://github.com/rvlenth/emmeans/issues/298))
+- Fix to bug in
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+  with nested structures
+  ([\#287](https://github.com/rvlenth/emmeans/issues/287))
+- Fix bug in [`rbind()`](https://rdrr.io/r/base/cbind.html) which
+  mishandled `@grid$.offset.`
+- Major repairs to `clm` and `clmm` support to fix issues related to
+  rank deficiency and nested models, particularly with `mode = "prob"`
+  ([\#300](https://github.com/rvlenth/emmeans/issues/300))
+- Allow `type` to be passed in
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  when `object` is already an `emmGrid` (incidentally noticed in
+  [\#287](https://github.com/rvlenth/emmeans/issues/287))
+- Code to prevent a warning when an existing factor is coerced to a
+  factor in the model formula – see [SO
+  question](https://stackoverflow.com/questions/68969384)
+- Add documentation note for `add_grouping` with multiple reference
+  factors ([\#291](https://github.com/rvlenth/emmeans/issues/291))
+
+## emmeans 1.6.3
+
+CRAN release: 2021-08-20
+
+- Clarification of documentation of `ref_grid(object, vcov. = ...)`
+  ([\#283](https://github.com/rvlenth/emmeans/issues/283))
+- Fix to `emmtrends()` with covariate formulas
+  ([\#284](https://github.com/rvlenth/emmeans/issues/284))
+- Improved parts of “Basics” vignette - removed “back story”, revised
+  guidance on \\P\\ values and models
+- Allow for \> 1 reference factor in
+  [`add_grouping()`](https://rvlenth.github.io/emmeans/reference/manip-factors.md)
+  ([\#286](https://github.com/rvlenth/emmeans/issues/286))
+- Repairs to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  to avoid all-`nonEst` results in irregular nested structures
+
+## emmeans 1.6.2
+
+- Fixed navigation error in vignette index
+- Discouraging message added to
+  [`cld()`](https://rdrr.io/pkg/multcomp/man/cld.html) results. Also am
+  providing an `emm_list` method for `emm_list` objects.
+- Added
+  [`mvcontrast()`](https://rvlenth.github.io/emmeans/reference/mvcontrast.md)
+  function ([\#281](https://github.com/rvlenth/emmeans/issues/281)) and
+  assoc vignette material
+- Added
+  [`update.summary_emm()`](https://rvlenth.github.io/emmeans/reference/update.emmGrid.md)
+
+## emmeans 1.6.1
+
+CRAN release: 2021-06-01
+
+- Fixed a bug in parsing a response transformation
+  ([\#274](https://github.com/rvlenth/emmeans/issues/274))
+- Changed handling of
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  so that `log2` and `log10` transformations are handled just like
+  `log`. ([\#273](https://github.com/rvlenth/emmeans/issues/273)) Also
+  disabled making ratios with `genlog` as it seems ill-advised.
+- Added support for `log1p` transformation
+- Improved detection of cases where Tukey adjustment is
+  \[in\]appropriate
+  ([\#275](https://github.com/rvlenth/emmeans/issues/275))
+- Added `type = "scale"` argument to
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  and [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md).
+  This is the same as `type = "response"` except the scale itself is
+  transformed (i.e., a log scale if the log transformation was used).
+  Since the same transformation is used, the appearance of the plot will
+  be the same as with `type = "lp"`, but with an altered axis scale.
+  Currently this is implemented only with `engine = "ggplot"`.
+- Fixed bug whereby Scheffe is ignored when there is only one contrast,
+  even though `scheffe.rank` \> 1 was specified.
+  ([\#171](https://github.com/rvlenth/emmeans/issues/171))
+- Added a [`subset()`](https://rdrr.io/r/base/subset.html) method for
+  `emmGrid` objects
+- Bug fixes for `mcmc` and `mcmc.list` objects
+  ([\#278](https://github.com/rvlenth/emmeans/issues/278),
+  [\#279](https://github.com/rvlenth/emmeans/issues/279))
+- [`test()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  shows `null` whenever it is nonzero on the chosen scale
+  ([\#280](https://github.com/rvlenth/emmeans/issues/280))
+
+## emmeans 1.6.0
+
+CRAN release: 2021-04-24
+
+This version has some changes that affect all users, e.g., not saving
+`.Last.ref_grid`, so we incremented the sub-version number.
+
+- Changed handling of logit transformations in
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md),
+  so that the odds-ratio transformation persists into subsequent
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  calls e.g., interaction contrasts.
+- We also made `contrast(..., type = ...)` work correctly
+- Bug fix so that all `p.adjust.methods` work
+  ([\#267](https://github.com/rvlenth/emmeans/issues/267))
+- Support for `mblogit` extended to work with `mmblogit` models
+  ([\#268](https://github.com/rvlenth/emmeans/issues/268)) (However,
+  since, **mclogit** pkg incorporates its own interface)
+- Added `export` option in
+  [`print.emmGrid()`](https://rvlenth.github.io/emmeans/reference/emmGrid-methods.md)
+  and `print.emm_summary()`
+- Changed default for `emm_options(save.ref_grid = FALSE)`. Years ago,
+  it seemed potentially useful to save the last reference grid, but this
+  is extra overhead, and writes in the user’s global environment. The
+  option remains if you want it.
+- Added a note advising against using `as.data.frame` (because we lose
+  potentially important annotations), and information/example on how to
+  see more digits (which I guess is why I’m seeing users do this).
+- Further refinement to nesting detection. A model like `y ~ A:B`
+  detected `A %in% B` and `B %in% A`, and hence `A %in% A*B` and
+  `B %in% A*B` due to a change in 1.4.6. Now we omit cases where factors
+  are nested in themselves!
+- Expansion of `cov.reduce` formulas to allow use of custom models for
+  predicting mediating covariates
+
+## emmeans 1.5.5
+
+- The `multinom` “correction” in version 1.5.4 was actually an
+  “incorrection.” It was right before, and I made it wrong! **If
+  analyzing `multinom` models, use a version *other* than 1.5.4**
+- Repairs to support for `mblogit` models
+- Bug fix for `survreg` support
+  ([\#258](https://github.com/rvlenth/emmeans/issues/258)) –
+  [`survreg()`](https://rdrr.io/pkg/survival/man/survreg.html) doesn’t
+  handle missing factor levels the same way as
+  [`lm()`](https://rdrr.io/r/stats/lm.html). This also affects results
+  from [`coxph()`](https://rdrr.io/pkg/survival/man/coxph.html),
+  `AER::tobit()`, …
+- Addition of a note in help `auto.noise` dataset, and changing that
+  example and vignette example to have `noise/10` as the response
+  variable. (Thanks to speech and hearing professor Stuart Rosen for
+  pointing out this issue in an e-mail comment.)
+- Bug fix for `appx-satterthwaite` mode in `gls`/`lme` models
+  ([\#263](https://github.com/rvlenth/emmeans/issues/263))
+- Added `mode = "asymptotic"` for `gls`/`lme` models.
+- Added `facetlab` argument to
+  [`emmip_ggplot()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  so user can control how facets are labeled
+  ([\#261](https://github.com/rvlenth/emmeans/issues/261))
+- Efficiency improvements in
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  ([\#265](https://github.com/rvlenth/emmeans/issues/265))
+- Bug fixes in
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  and interaction contrasts for nested models
+  ([\#266](https://github.com/rvlenth/emmeans/issues/266))
+- Improvement to `multinom` support suggested by this [SO
+  question](https://stackoverflow.com/questions/66675697)
+
+## emmeans 1.5.4
+
+CRAN release: 2021-02-03
+
+- Fix to bug in
+  [`rbind.emm_list()`](https://rvlenth.github.io/emmeans/reference/rbind.emmGrid.md)
+  to default for `which`
+- Fix for a glitch in recovering data for `gee` models
+  ([\#249](https://github.com/rvlenth/emmeans/issues/249))
+- Support for `svyglm` objects
+  ([\#248](https://github.com/rvlenth/emmeans/issues/248))
+- Better support for `lqm`, `lqmm`, and added support for `rq` & `rqs`
+  objects (**quantreg** package). User may pass `summary` or `boot`
+  arguments such as `method`, `se`, `R`, …
+  ([\#250](https://github.com/rvlenth/emmeans/issues/250))
+- Correction to `multinom` objects (SEs were previously incorrect) and
+  addition of support for related `mclogit::mblogit` objects. If at all
+  possible, users should re-run any pre-1.5.4 analyses of multinomial
+  models  
+  **Note: This correction was wrong!** If using multinomial models, you
+  should use some version *other than* 1.5.4!
+- Change to less misleading messages and documentation related to the
+  `N.sim` argument of
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md).
+  We are no longer calling this a posterior sample because this is not
+  really a Bayesian method, it is just a simulated set of regression
+  coefficients.
+
+## emmeans 1.5.3
+
+CRAN release: 2020-12-09
+
+- Per long-time threats, we really are removing `CLD()` once and for
+  all. We tried in version 1.5.0, but forced to cave due to downstream
+  problems.
+- Addition of `levels<-` method that maps to `update(... levels =)`
+  ([\#237](https://github.com/rvlenth/emmeans/issues/237))
+- Fix [`cld()`](https://rdrr.io/pkg/multcomp/man/cld.html) so it works
+  with nested cases
+  ([\#239](https://github.com/rvlenth/emmeans/issues/239))
+- Enable [`coef()`](https://rdrr.io/r/stats/coef.html) method to work
+  with contrasts of nested models. This makes it possible for
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md) to
+  work ([\#239](https://github.com/rvlenth/emmeans/issues/239))
+- Fixed a coding error in
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) that occurs
+  if we use \`type = “response” but there is in fact no transformation
+  ([reported on
+  StackOverflow](https://stackoverflow.com/questions/64962094))
+- Added `"log10"` and `"log2"` as legal transformations in
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+- Revised vignette example for MCMC models, added example with
+  **bayestestR**
+- Expanded support for ordinal models to all link functions available in
+  **ordinal** (errors-out if **ordinal** not installed and link not
+  available in
+  [`stats::make.link()`](https://rdrr.io/r/stats/make.link.html))
+- Cleaned-up
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) to
+  route plot output to rendering functions
+  [`emmip_ggplot()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  and
+  [`emmip_lattice()`](https://rvlenth.github.io/emmeans/reference/emmip.md).
+  These functions allow more customization to the plot and can also be
+  called independently. (To do later, maybe next update: the same for
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md).
+  What to name rendering functions?? – suggestions?)
+- Cleaned up code for `.emmc` functions so that parenthesization of
+  levels does not get in the way of `ref`, `exclude`, or `include`
+  arguments ([\#246](https://github.com/rvlenth/emmeans/issues/246))
+- Fix to bug in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  when `data` is specified
+  ([\#247](https://github.com/rvlenth/emmeans/issues/247))
+- Tries harder to recover original data when available in the object
+  ([\#247](https://github.com/rvlenth/emmeans/issues/247)). In
+  particular, sometimes this is available, e.g., in `$model` slot in a
+  `lm` object, *as long as there are no predictor transformations*. This
+  provides a little bit more safety in cases the data have been removed
+  or altered.
+- Tweaks to
+  [`rbind.emm_list()`](https://rvlenth.github.io/emmeans/reference/rbind.emmGrid.md)
+  to allow subsetting. (Also documentation & example)
+
+## emmeans 1.5.2
+
+CRAN release: 2020-10-24
+
+- Change to `plot.emmGrid(... comparisons = TRUE)` where we determine
+  arrow bounds and unnecessary-arrow deletions *separately* in each `by`
+  group. See also [Stack Overflow
+  posting](https://stackoverflow.com/questions/63713439)
+- [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  with contrasts specified ignores `adjust` and passes to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  instead. Associated documentation improved (I hope)
+- Bug-fix for missing cases in `plot(..., comparisons = TRUE)`
+  ([\#228](https://github.com/rvlenth/emmeans/issues/228))
+- Robustified
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  so that comparison arrows work correctly with back-transformations.
+  (Previously we used
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md) in
+  that case, causing different CIs and PIs depending on `comparisons`)
+  ([\#230](https://github.com/rvlenth/emmeans/issues/230))
+- Bug fixes in support for `stan_polr` models.
+- Bug fix for incorrect (and relatively harmless) warning in several
+  models ([\#234](https://github.com/rvlenth/emmeans/issues/234))
+- Lower object size via removing unnecessary environment deps
+  ([\#232](https://github.com/rvlenth/emmeans/issues/232))
+- Repairs to [`as.list()`](https://rdrr.io/r/base/list.html) and
+  [`as.emmGrid()`](https://rvlenth.github.io/emmeans/reference/as.emmGrid.md)
+  to fully support nesting and submodels.
+
+## emmeans 1.5.1
+
+CRAN release: 2020-09-18
+
+- Additional checking for potential errors (e.g. memory overload)
+  connected with `submodel` support. Also, much more memory-efficient
+  code therein ([\#218](https://github.com/rvlenth/emmeans/issues/218),
+  [\#219](https://github.com/rvlenth/emmeans/issues/219))
+- A new option `enable.submodel` so user can switch off `submodel`
+  support when unwanted or to save memory.
+- `multinom` support for `N.sim` option
+- Modification to internal dispatching of `recover_data` and `emm_basis`
+  so that an external package’s methods are always found and given
+  priority whether or not they are registered
+  ([\#220](https://github.com/rvlenth/emmeans/issues/220))
+- Patches to `gamlss` support. Smoothers are not supported but other
+  aspects are more reliable. See [CV
+  posting](https://stats.stackexchange.com/questions/484886)
+- Improvement to auto-detection of transformations
+  ([\#223](https://github.com/rvlenth/emmeans/issues/223))
+- Added `aes` argument in
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md) for
+  more control over rendering
+  ([\#178](https://github.com/rvlenth/emmeans/issues/178))
+- Fix to a situation in
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  where ordering of factor levels could change depending on `CIs` and
+  `PIs` ([\#225](https://github.com/rvlenth/emmeans/issues/225))
+
+## emmeans 1.5.0
+
+CRAN release: 2020-08-18
+
+- Changed help page for
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  to reflect `cov.keep` (ver. 1.4.2)
+- [`emm_options()`](https://rvlenth.github.io/emmeans/reference/emm_options.md)
+  gains a `disable` argument to use for setting aside any existing
+  options. Useful for reproducible bug reporting.
+- In
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  with a `contr` argument or two-sided formula, we now suppress several
+  particular `...` arguments from being passed on to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  when they should apply only to the construction of the EMMs
+  ([\#214](https://github.com/rvlenth/emmeans/issues/214))
+- More control of what `...` arguments are passed to methods
+- `CLD()` was deprecated in version 1.3.4. THIS IS THE LAST VERSION
+  where it will continue to be available. Users should use
+  [`multcomp::cld()`](https://rdrr.io/pkg/multcomp/man/cld.html)
+  instead, for which an `emmGrid` method will continue to exist.
+- Experimental `submodel` option
+  - Bug fix therein
+    ([\#217](https://github.com/rvlenth/emmeans/issues/217))
+- Enhancements to [`mgcv::gam`](https://rdrr.io/pkg/mgcv/man/gam.html)
+  support ([\#216](https://github.com/rvlenth/emmeans/issues/216))
+- New `ubds` dataset for testing with messy situations
+- Added minimal support for `lqm` and `lqmm` models
+  ([\#213](https://github.com/rvlenth/emmeans/issues/213))
+- Interim support for user-supplied contrasts for `stanreg` models
+  ([\#212](https://github.com/rvlenth/emmeans/issues/212))
+
+## emmeans 1.4.8
+
+CRAN release: 2020-06-26
+
+- Bug fix and smoother support for `stanreg` objects
+  ([\#202](https://github.com/rvlenth/emmeans/issues/202))
+- Fix to
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) to
+  be consistent between one curve and several, in whether points are
+  displayed (`style` option)
+- Added `"scale"` option to
+  [`make.tran()`](https://rvlenth.github.io/emmeans/reference/make.tran.md)
+- Auto-detection of standardized response transformation
+- Fix to a scoping issue in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  ([\#201](https://github.com/rvlenth/emmeans/issues/201))
+- Bug fix for [\#197](https://github.com/rvlenth/emmeans/issues/197)
+  created a new issue
+  [\#206](https://github.com/rvlenth/emmeans/issues/206). Both now
+  fixed.
+- Non-existent reference levels in
+  [`trt.vs.ctrl.emmc()`](https://rvlenth.github.io/emmeans/reference/emmc-functions.md)
+  now throws an error
+  ([\#208](https://github.com/rvlenth/emmeans/issues/208))
+- Added a default for `linfct` (the identity) to `emmobj`
+- Provisions for more flexible and consistent labeling/naming of
+  results. This includes added `emm_options` `"sep"` and `"parens"`, and
+  a `parens` argument in
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md).
+  `sep` controls how factor levels are combined when ploted or
+  contrasted, and `parens` sets whether, what, and how labels are
+  parenthesized in
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md).
+  In constructing contrasts of contrasts, for example, labels like
+  `A - B - C - D` are now `(A - B) - (C - D)`, by default. To reproduce
+  old labeling, do \`emm_options(sep = “,”, parens = “a^”)
+
+## emmeans 1.4.7
+
+CRAN release: 2020-05-25
+
+- Repairs to
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md) so it
+  plays nice with nonestimable cases
+- Added `"xplanations"` vignette with additional documentation on
+  methods used. (comparison arrows, for starters)
+- Touch-ups to [`plot()`](https://rdrr.io/r/graphics/plot.default.html),
+  especially regarding comparison arrows
+- Bug fix for `stanreg` models
+  ([\#196](https://github.com/rvlenth/emmeans/issues/196))
+- Fixed error in `emmeans(obj, "1", by = "something")`
+  ([\#197](https://github.com/rvlenth/emmeans/issues/197))
+- [`eff_size()`](https://rvlenth.github.io/emmeans/reference/eff_size.md)
+  now supports `emm_list` objects with a `$contrasts` component, using
+  those contrasts. This helps those who specify `pairwise ~ treatment`.
+- Labels in
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  for factor combinations with `by` groups were wacky
+  ([\#199](https://github.com/rvlenth/emmeans/issues/199))
+- [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  screwed up with multivariate models
+  ([\#200](https://github.com/rvlenth/emmeans/issues/200)).
+- Added a new argument `calc` to
+  [`summary()`](https://rdrr.io/r/base/summary.html). For example,
+  `calc = c(n = ~.wgt.)` will add a column of sample sizes to the
+  summary.
+
+## emmeans 1.4.6
+
+CRAN release: 2020-04-19
+
+- Improvements to `coxph` support for models with strata
+- [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  with `specs` of class `list` now passes any `offset` and `trend`
+  arguments ([\#179](https://github.com/rvlenth/emmeans/issues/179))
+- Added `plim` argument to
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md) to
+  allow controlling the scale
+- More documentation on using `params`
+  ([\#180](https://github.com/rvlenth/emmeans/issues/180))
+- Robustified support for `gls` objects when data are incomplete
+  ([\#181](https://github.com/rvlenth/emmeans/issues/181))
+- Fixed bug in
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  and `test(..., joint = TRUE)` that can occur with nontrivial
+  `@dffun()` slots
+  ([\#184](https://github.com/rvlenth/emmeans/issues/184))
+- Improved support for Satterthwaite-based methods in `gls`
+  ([\#185](https://github.com/rvlenth/emmeans/issues/185)) and renamed
+  `boot-satterthwaite` to `appx-satterthwaite`
+  ([\#176](https://github.com/rvlenth/emmeans/issues/176))
+- Further repairs to nesting-related code
+  ([\#186](https://github.com/rvlenth/emmeans/issues/186))
+- Fix `transform` argument in
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  so it is same as in
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+  ([\#188](https://github.com/rvlenth/emmeans/issues/188))
+- Added [`pwpm()`](https://rvlenth.github.io/emmeans/reference/pwpm.md)
+  function for displaying estimates, pairwise comparisons, and *P*
+  values in matrix form
+
+## emmeans 1.4.5
+
+CRAN release: 2020-03-04
+
+- Change to
+  [`.all.vars()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  that addresses [\#170](https://github.com/rvlenth/emmeans/issues/170)
+- Addition of hidden argument `scheffe.rank` in
+  [`summary.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  to manually specify the desired dimensionality of a Scheffe adjustment
+  ([\#171](https://github.com/rvlenth/emmeans/issues/171))
+- Provided for `...` to be included in `options` in calls to
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  and
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md).
+  This allows passing any
+  [`summary()`](https://rdrr.io/r/base/summary.html) argument more
+  easily, e.g.,
+  `emmeans(..., type = "response", bias.adjust = TRUE, infer = c(TRUE, TRUE))`
+  (Before, we would have had to wrap this in
+  [`summary()`](https://rdrr.io/r/base/summary.html))
+- Added a `plotit` argument to
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  that works similarly to that in
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md).
+- Removed startup message for behavior change in 1.4.2; it’s been long
+  enough.
+- Fixed bug with `character predictors in`at\`
+  ([\#175](https://github.com/rvlenth/emmeans/issues/175))
+
+## emmeans 1.4.4
+
+CRAN release: 2020-01-28
+
+- Fixed bug in
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  associated with non-factors such as `Date`
+  ([\#162](https://github.com/rvlenth/emmeans/issues/162))
+- Added `nesting.order` option to
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  ([\#163](https://github.com/rvlenth/emmeans/issues/163))
+- New `style` argument for
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  allows plotting on a numeric scale
+- More robust detection of response transformations
+  ([\#166](https://github.com/rvlenth/emmeans/issues/166))
+- Ensure [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md)
+  has tick marks on P-value axis
+  ([\#167](https://github.com/rvlenth/emmeans/issues/167))
+- Bug fix for
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+  for error when estimates exceed bounds
+- Bug fix in auto-detecting nesting
+  ([\#169](https://github.com/rvlenth/emmeans/issues/169)) to make it
+  less “enthusiastic”
+- Fixes to formula operations needed because
+  `formula.tools:::as.character.formula` messes me up (thanks to Berwin
+  Turloch, UWA, for alerting me)
+- Making `dqrg()` more visible in the documentation (because it’s often
+  useful)
+- Added more methods for `emm_list` objects,
+  e.g. [`rbind()`](https://rdrr.io/r/base/cbind.html) and
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html),
+  [`as.list()`](https://rdrr.io/r/base/list.html), and
+  [`as.emm_list()`](https://rvlenth.github.io/emmeans/reference/as.emmGrid.md)
+
+## emmeans 1.4.3.01
+
+CRAN release: 2019-11-28
+
+- Fixed bug in post-grid support that affects, e.g., the **ggeffects**
+  package ([\#161](https://github.com/rvlenth/emmeans/issues/161))
+
+## emmeans 1.4.3
+
+CRAN release: 2019-11-26
+
+- Added `"bcnPower"` option to
+  [`make.tran()`](https://rvlenth.github.io/emmeans/reference/make.tran.md)
+  (per [`car::bcnPower()`](https://rdrr.io/pkg/car/man/bcPower.html))
+- Scoping correction for `emmtrends()`
+  ([\#153](https://github.com/rvlenth/emmeans/issues/153))
+- Allow passing `...` to hook functions (need exposed by
+  [\#154](https://github.com/rvlenth/emmeans/issues/154))
+- Addition to
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+  whereby we can fake any response transformation – not just `"log"`
+  (again inspired by
+  [\#154](https://github.com/rvlenth/emmeans/issues/154))
+- Informative message when **pbkrtest** or **lmerTest** is not found
+  (affects `merMod` objects)
+  ([\#157](https://github.com/rvlenth/emmeans/issues/157))
+- Change in
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md) to
+  make extremely small P values more distinguishable
+
+## emmeans 1.4.2
+
+CRAN release: 2019-10-24
+
+- First argument of
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  is now `object`, not `model`, to avoid potential mis-matching of the
+  latter with optional `mode` argument
+- [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  now uses more robust and efficient code whereby a single reference
+  grid is constructed containing all needed values of `var`. The old
+  version could fail, e.g., in cases where the reference grid involves
+  post-processing.
+  ([\#145](https://github.com/rvlenth/emmeans/issues/145))
+- Added `scale` argument to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+- Added new `"identity"` contrast method
+- New
+  [`eff_size()`](https://rvlenth.github.io/emmeans/reference/eff_size.md)
+  function for Cohen effect sizes
+- Expanded capabilities for interaction contrasts
+  ([\#146](https://github.com/rvlenth/emmeans/issues/146))
+- New `cov.keep` argument in
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  for specifying covariates to be treated just like factors
+  ([\#148](https://github.com/rvlenth/emmeans/issues/148)). A side
+  effect is that the system default for indicator variables as
+  covariates is to treat them like 2-level factors. *This could change
+  the results obtained from some analyses using earlier versions*. To
+  replicate old analyses, set `emm_options(cov.keep = character(0))`.
+- Added merMod-related options as convenience arguments
+  ([\#150](https://github.com/rvlenth/emmeans/issues/150))
+- Bug fixes: `regrid` ignored offsets with Bayesian models;
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  did not supply `options` and `misc` arguments to
+  [`emm_basis()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  ([\#143](https://github.com/rvlenth/emmeans/issues/143))
+
+## emmeans 1.4.1
+
+CRAN release: 2019-09-12
+
+- Added non-estimability infrastructure for Bayesian models, `stanreg`
+  in particular ([\#114](https://github.com/rvlenth/emmeans/issues/114))
+- Added `max.degree` argument in
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md)
+  making it possible to obtain higher-order trends
+  ([\#133](https://github.com/rvlenth/emmeans/issues/133)). Plus minor
+  tuneups, e.g., smaller default increment for difference quotients
+- Made
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  more forgiving with ’by`variables; e.g.,`emmeans(model, ~ dose \|
+  treat, by =
+  “route”)`will find both`by`variables whereas previously`“route”\`
+  would be ignored.
+- Temporary fix for glitch in gls support where Satterthwaite isn’t
+  always right.
+- Attempt to make annotations clearer and more consistent regarding
+  degrees-of-freedom methods.
+- Provisions whereby externally provided
+  [`emm_basis()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  and
+  [`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  methods are used in preference to internal ones - so package
+  developers can provide improvements over what I’ve cobbled together.
+- Tried to produce more informative message when
+  [`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  fails
+- Fixed bug in
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  in identifying true contrasts
+  ([\#134](https://github.com/rvlenth/emmeans/issues/134))
+- Fixed a bug in
+  [`plot.summary_emm()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  regarding `CIs` and `intervals`
+  ([\#137](https://github.com/rvlenth/emmeans/issues/137))
+- Improved support for response transformations. Models with formulas
+  like like `log(y + 1) ~ ...` and `2*sqrt(y + 0.5) ~ ...` are now
+  auto-detected. \[This may cause discrepancies with examples in past
+  usages, but if so, that would be because the response transformation
+  was previously incorrectly interpreted.\]
+- Added a `ratios` argument to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  to decide how to handle `log` and `logit`
+- Added message/annotation when contrasts are summarized with
+  `type = "response"` but there is no way to back-transform them (or we
+  opted out with `ratios = FALSE`)
+
+## emmeans 1.4
+
+CRAN release: 2019-08-01
+
+- Added a courtesy function
+  [`.emm_register()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  to make it easier for other packages to register their **emmeans**
+  support methods
+- Clarified the “confidence intervals” vignette discussion of `infer`,
+  explaining that Bayesian models are handled differently
+  ([\#128](https://github.com/rvlenth/emmeans/issues/128))
+- Added `PIs` option to
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md)
+  and [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  ([\#131](https://github.com/rvlenth/emmeans/issues/131)). Also, in
+  [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md),
+  the `intervals` argument has been changed to `CIs` for sake of
+  consistency and less confusion; `intervals` is still supported for
+  backaward compatibility.
+- `plot.emmGrid` gains a `colors` argument so we can customize colors
+  used.
+- Bug fix for `glht` support
+  ([\#132](https://github.com/rvlenth/emmeans/issues/132) contributed by
+  Balsz Banfai)
+- `regrid` gains `sim` and `N.sim` arguments whereby we can generate a
+  fake posterior sample from a frequentist model.
+
+## emmeans 1.3.5.1
+
+CRAN release: 2019-06-26
+
+- Bug fix for `gls` objects with non-matrix `apVar` member
+  ([\#119](https://github.com/rvlenth/emmeans/issues/119))
+- Repairs faulty links in 1.3.5 vignettes
+
+## emmeans 1.3.5
+
+CRAN release: 2019-06-10
+
+- First steps to take prediction seriously. This includes
+  - Addition of a `sigma` argument to
+    [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+    (defaults to `sigma(object)` if available)
+  - Addition of an `interval` argument in
+    [`predict.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  - Addition of a `likelihood` argument in `as.mcmc` to allow for
+    simulating from the posterior predictive distribution
+  - Crude provisions for bias adjustment when back-transforming. This is
+    not really prediction, but it is made possible by availability of
+    `sigma` in object
+- Further steps to lower the profile of
+  [`cld()`](https://rdrr.io/pkg/multcomp/man/cld.html) and `CLD()`
+- Family size for Tukey adjustment was wrong when using `exclude`
+  ([\#107](https://github.com/rvlenth/emmeans/issues/107))
+- Provided for direct passing of info from `recover_data` to `emm_basis`
+- Attempts to broaden `MCMCglmm` support
+
+## emmeans 1.3.4
+
+CRAN release: 2019-04-21
+
+- Un-naming a lot of arguments in `do.call(paste, ...)` and
+  `do.call(order, ...)`, to prevent problems with factor names like
+  `method` that are argument names for these functions
+  ([\#94](https://github.com/rvlenth/emmeans/issues/94))
+- Fix to a logic error in
+  [`summary.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+  whereby transformations of class `list` were ignored.
+- Enhancement to `update.emmGrid(..., levels = levs)` whereby we can
+  easily relabel the reference grid and ensure that the `grid` and
+  `roles` slots stay consistent. Added vignette example.
+- Clarified ordering rules used by
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md).
+  We now ensure that the original order of the reference grid is
+  preserved. Previously, the grid was re-ordered if any numeric or
+  character levels occurred out of order, per
+  [`order()`](https://rdrr.io/r/base/order.html)
+- Curbing use of “statistical significance” language. This includes
+  additional vignette material and plans to deprecate `CLD()` due to its
+  misleading display of pairwise-comparison tests.
+- Bug fix for `betareg` objects, where the wrong `terms` component was
+  sometimes used.
+- Correction to logic error that affected multiplicity adjustments when
+  `by` variables are present
+  ([\#98](https://github.com/rvlenth/emmeans/issues/98)).
+- Addition of
+  [`pwpp()`](https://rvlenth.github.io/emmeans/reference/pwpp.md)
+  function to plot *P* values of comparisons
+- Improvement to `summary(..., adjust = "scheffe")`. We now actually
+  compute and use the rank of the matrix of linear functions to obtain
+  the *F* numerator d.f., rather than trying to guess the likely correct
+  value.
+- Removal of vignette on transitioning from **lsmeans** – it’s been a
+  long enough time now.
+
+## emmeans 1.3.3
+
+CRAN release: 2019-03-02
+
+- Fix to unintended consequence of
+  [\#71](https://github.com/rvlenth/emmeans/issues/71) that caused
+  incorrect ordering of
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  results if they are later used by
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md).
+  This was first noticed with ordinal models in `prob` mode
+  ([\#83](https://github.com/rvlenth/emmeans/issues/83)).
+- Improved checking of conformability of parameters – for models with
+  rank deficiency not handled same way as lm()’s NA convention
+- Added basic support for
+  [`sommer::mmer`](https://rdrr.io/pkg/sommer/man/mmer.html),
+  `MuMIn::averaging`, and
+  [`mice::mira`](https://amices.org/mice/reference/mira.html) objects
+- Fix in [`nnet::multinom`](https://rdrr.io/pkg/nnet/man/multinom.html)
+  support when there are 2 outcomes
+  ([\#19](https://github.com/rvlenth/emmeans/issues/19))
+- Added Satterthwaite d.f. to `gls` objects
+- `famSize` now correct when `exclude` or `include` is used in a
+  contrast function (see
+  [\#68](https://github.com/rvlenth/emmeans/issues/68))
+- Stronger warnings of possible bias with `aovList` objects, in part due
+  to the popularity of `afex::aov_ez()` which uses these models.
+- Updates to FAQs vignette
+
+## emmeans 1.3.2
+
+CRAN release: 2019-01-22
+
+- I decided to enable “optimal digits” display by default. In summaries,
+  we try to show enough—but not too much—precision in estimates and
+  confidence intervals. If you don’t like this and want to revert to the
+  old (exaggerated precision) behavior, do
+  `emm_options(opt.digits = FALSE)`
+- Added `include` argument to most `.emmc` functions
+  ([\#67](https://github.com/rvlenth/emmeans/issues/67))
+- Now allow character values for `ref`, `exclude`, and `include` in
+  `.emmc` functions
+  ([\#68](https://github.com/rvlenth/emmeans/issues/68))
+- Better handling of matrix predictors
+  ([\#66](https://github.com/rvlenth/emmeans/issues/66))
+- Fixed over-zealous choice to not pass `...` arguments in
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  when two-sided formulas are present
+- Fix to `clm` support when model is rank-deficient
+- Fix to `regrid(..., transform = "log")` error when there are existing
+  non-estimable cases (issue
+  [\#65](https://github.com/rvlenth/emmeans/issues/65))
+- Improvements to `brmsfit` support
+  ([\#43](https://github.com/rvlenth/emmeans/issues/43))
+- Added support for [`mgcv::gam`](https://rdrr.io/pkg/mgcv/man/gam.html)
+  and [`mgcv::gamm`](https://rdrr.io/pkg/mgcv/man/gamm.html) models
+- [`.my.vcov()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  now passes `...` to clients
+- Removed **glmmADMB** support. This package appears to be dormant
+- Fixed ordering bug for nested models
+  ([\#71](https://github.com/rvlenth/emmeans/issues/71))
+- Support for `manova` object no longer requires `data` keyword
+  ([\#72](https://github.com/rvlenth/emmeans/issues/72))
+- Added support for multivariate response in `aovlist` models
+  ([\#73](https://github.com/rvlenth/emmeans/issues/73))
+- Documentation clarification
+  ([\#76](https://github.com/rvlenth/emmeans/issues/76))
+- Fix to `CLD` fatal error when `sort = TRUE`
+  ([\#77](https://github.com/rvlenth/emmeans/issues/77))
+- Fix to issue with weights and incomplete cases with `lme` objects
+  ([\#75](https://github.com/rvlenth/emmeans/issues/75))
+- Nested fixed-effects yielded NonEsts when two factors are nested in
+  the same factor(s)
+  ([\#79](https://github.com/rvlenth/emmeans/issues/79))
+
+## emmeans 1.3.1
+
+CRAN release: 2018-12-13
+
+- `"mvt"` adjustment ignored `by` grouping
+- [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  mis-labeled estimates when levels varied among `by` groups (most
+  prominently this happened in `CLD(..., details = TRUE)`)
+- Changed `aovlist` support so it re-fits the model when non-sum-to-zero
+  contrasts were used
+- `print.summary_emm()` now cleans up numeric columns with
+  [`zapsmall()`](https://rdrr.io/r/base/zapsmall.html)
+- More robust handling of `nesting` in
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  and [`update()`](https://rdrr.io/r/stats/update.html), and addition of
+  `covnest` argument for whether to include covariates when
+  auto-detecting nesting
+- Revision of some vignettes
+- Fixed bug in
+  [`hpd.summary()`](https://rvlenth.github.io/emmeans/reference/hpd.summary.md)
+  and handoff to it from
+  [`summary()`](https://rdrr.io/r/base/summary.html)
+- Fixed bug where
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  ignored `mult.levs`
+- Fixes in emmeans where it passes `...` where it shouldn’t
+- `CLD()` now works for MCMC models (uses frequentist summary)
+- Addition of `opt.digits` option
+
+## emmeans 1.3.0
+
+CRAN release: 2018-10-26
+
+- Deprecated functions like `ref.grid()` put to final rest, and we no
+  longer support packages that provide `recover.data` or `lsm.basis`
+  methods
+- Courtesy exports `.recover_data()` and `.emm_basis()` to provide
+  access for extension developers to all available methods
+- Streamlining of a stored example in `inst/extdata`
+- Fix to
+  [`.all.vars()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  that could cause errors when response variable has a function call
+  with character constants.
+- Relabeling of differences as ratios when appropriate in
+  [`regrid()`](https://rvlenth.github.io/emmeans/reference/regrid.md)
+  (so results match [`summary()`](https://rdrr.io/r/base/summary.html)
+  labeling with `type = "response"`).
+- `plot.emmGrid(..., comparisons = TRUE, type = "response")` produced
+  incorrect comparison arrows; now fixed
+
+## emmeans 1.2.4
+
+CRAN release: 2018-09-22
+
+- Support for model formulas such as `df$y ~ df$treat + df[["cov"]]`.
+  This had failed previously for two obscure reasons, but now works
+  correctly.
+- New `simplify.names` option for above types of models
+- [`emm_options()`](https://rvlenth.github.io/emmeans/reference/emm_options.md)
+  with no arguments now returns all options in force, including the
+  defaults. This makes it more consistent with
+  [`options()`](https://rdrr.io/r/base/options.html)
+- Bug fix for
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md);
+  produced incorrect results in models with offsets.
+- Separated the help pages for
+  [`update.emmGrid()`](https://rvlenth.github.io/emmeans/reference/update.emmGrid.md)
+  and
+  [`emm_options()`](https://rvlenth.github.io/emmeans/reference/emm_options.md)
+- New [`qdrg()`](https://rvlenth.github.io/emmeans/reference/qdrg.md)
+  function (quick and dirty reference grid) for help with unsupported
+  model objects
+
+## emmeans 1.2.3
+
+CRAN release: 2018-07-18
+
+- S3 methods involving packages **multcomp** and **coda** are now
+  dynamically registered, not merely exported as functions. This passes
+  checks when S3 methods are required to be registered.
+- [`cld()`](https://rdrr.io/pkg/multcomp/man/cld.html) has been
+  deprecated in favor of `CLD()`. This had been a headache. **multcomp**
+  is the wrong place for the generic to be; it is too fancy a dance to
+  export `cld` with or without having **multcomp** installed.
+- Added vignette caution regarding interdependent covariates
+- Improved **glmmADMB** support to recover contrasts correctly
+
+## emmeans 1.2.2
+
+CRAN release: 2018-06-26
+
+- Removed ggplot2, multcomp, and coda to Suggests – thus vastly reducing
+  dependencies
+- Added a FAQ to the FAQs vignette
+- Modified advice in `xtending.Rmd` vignette on how to export methods
+- Fixes to `revpairwise.emmc` and `cld` regarding comparing only 1 EMM
+- `cld.emm_list` now returns results only for `object[[ which[1] ]]`,
+  along with a warning message.
+- Deprecated `emmeans` specs like `cld ~ group`, a vestige of
+  **lsmeans** as it did not work correctly (and was already
+  undocumented)
+
+## emmeans 1.2.1
+
+CRAN release: 2018-05-21
+
+- Moved **brms** to `Suggests` (dozens and dozens fewer dependencies)
+
+## emmeans 1.2
+
+CRAN release: 2018-05-08
+
+- Index of vignette topics added
+- New, improved (to my taste) vignette formats
+- Fixed df bug in regrid
+  ([\#29](https://github.com/rvlenth/emmeans/issues/29))
+- Fixed annotation bug for nested models
+  ([\#30](https://github.com/rvlenth/emmeans/issues/30))
+- Better documentation for `lme` models in “models” vignette
+- Additional fixes for arguments passed to `.emmc` functions
+  ([\#22](https://github.com/rvlenth/emmeans/issues/22))
+- Support added for logical predictors (who knew we could have those?
+  not me)
+- Replaced tex/pdf “Extending” vignette with Rmd/html
+- Overhauled the faulty logic for df methods in emm_basis.merMod
+- Added Henrik to contributors list (long-standing oversight)
+- Added `exclude` argument to most `.emmc` functions: allows user to
+  omit certain levels when computing contrasts
+- New
+  [`hpd.summary()`](https://rvlenth.github.io/emmeans/reference/hpd.summary.md)
+  function for Bayesian models to show HPD intervals rather than
+  frequentist summary. Note:
+  [`summary()`](https://rdrr.io/r/base/summary.html) automatically
+  reroutes to it. Also
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) and
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) play
+  along.
+- Rudimentary support for **brms** package
+- *Ad hoc* Satterthwaite method for
+  [`nlme::lme`](https://rdrr.io/pkg/nlme/man/lme.html) models
+
+## emmeans 1.1.3
+
+CRAN release: 2018-04-01
+
+- Formatting corrections in documentation
+- Fixed bug for survival models where
+  [`Surv()`](https://rdrr.io/pkg/survival/man/Surv.html) was interpreted
+  as a response transformation.
+- Fixed bug (issue [\#19](https://github.com/rvlenth/emmeans/issues/19))
+  in multinom support
+- Fixed bug (issue [\#22](https://github.com/rvlenth/emmeans/issues/22))
+  in optional arguments with interaction contrasts
+- Fixed bug (issue [\#23](https://github.com/rvlenth/emmeans/issues/23))
+  in weighting with character predictors
+- Clarifying message when
+  [`cld()`](https://rdrr.io/pkg/multcomp/man/cld.html) is applied to an
+  `emm_list` (issue
+  [\#24](https://github.com/rvlenth/emmeans/issues/24))
+- Added `offset` argument to
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  (scalar offset only) and to
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  (vector offset allowed) – (issue
+  [\#18](https://github.com/rvlenth/emmeans/issues/18))
+- New optional argument for `[.summary_emm` to choose whether to retain
+  its class or coerce to a `data.frame` (relates to issue
+  [\#14](https://github.com/rvlenth/emmeans/issues/14))
+- Added `reverse` option for `trt.vs.ctrl` and relatives
+  ([\#27](https://github.com/rvlenth/emmeans/issues/27))
+
+## emmeans 1.1.2
+
+CRAN release: 2018-02-24
+
+- Changed the way `terms` is accessed with `lme` objects to make it more
+  robust
+- `emmeans:::convert_scripts()` renames output file more simply
+- Added `[` method for class `summary_emm`
+- Added `simple` argument for `contrast` - essentially the complement of
+  `by`
+- Improved estimability handling in
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+- Made
+  [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
+  accept `ylevs` list of length \> 1; also slight argument change:
+  `mult.name` -\> `mult.names`
+- Various bug fixes, bullet-proofing
+- Fixes to make Markdown files render better
+
+## emmeans 1.1
+
+CRAN release: 2018-01-10
+
+- Fixed a bug in
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  wherein `weights` was ignored when `specs` is a `list`
+- Coerce `data` argument, if supplied to a data.frame
+  ([`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  doesn’t like tibbles…)
+- Added `as.data.frame` method for `emmGrid` objects, making it often
+  possible to pass it directly to other functions as a `data` argument.
+- Fixed bug in
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+  where `by` was ignored for interaction contrasts
+- Fixed bug in
+  [`as.glht()`](https://rvlenth.github.io/emmeans/reference/glht-support.md)
+  where it choked on `df = Inf`
+- Fixed bug occurring when a model call has no `data` or `subset`
+- New
+  [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md)
+  function tests all \[interaction\] contrasts
+
+## emmeans 1.0
+
+CRAN release: 2017-12-05
+
+- Added preliminary support for `gamlss` objects (but doesn’t support
+  smoothing). Additional argument is
+  `what = c("mu", "sigma", "nu", "tau")` It seems to be flaky when the
+  model of interest is just `~ 1`.
+- Improved support for models with fancy variable names (containing
+  spaces and such)
+- Fixed a bug whereby
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
+  might pass `data` to
+  [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)
+- Added some missing documentation for
+  [`summary.emmGrid()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)
+- Repaired handling of `emm_options(summary = ...)` to work as
+  advertised.
+- Changed many object names in examples and vignettes from xxx.emmGrid
+  to xxx.emm (result of overdoing the renaming the object class itself)
+- Changed `emmGrid()` function to
+  [`emm()`](https://rvlenth.github.io/emmeans/reference/glht-support.md)
+  as had been intended as alternative to
+  [`mcp()`](https://rdrr.io/pkg/multcomp/man/glht.html) in
+  [`multcomp::glht()`](https://rdrr.io/pkg/multcomp/man/glht.html)
+  (result of ditto).
+- Fixed error in exporting
+  [`cld.emm_list()`](https://rvlenth.github.io/emmeans/reference/CLD.emmGrid.md)
+- Fixed a bug whereby all CIs were computed using the first estimate’s
+  degrees of freedom.
+- Now using `Inf` to display d.f. for asymptotic (z) tests. (`NA` will
+  still work too but `Inf` is a better choice for consistency and
+  meaning.)
+- Bug fix in nesting-detection code when model has only an intercept
+
+## emmeans 0.9.1
+
+CRAN release: 2017-11-05
+
+- Documentation corrections (broken links, misspellings, mistakes)
+- More sophisticated check for randomized data in
+  [`recover_data()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  now throws an error when it finds recovered data not reproducible
+- Added support for gam::gam objects
+- Fixes to [`vcov()`](https://rdrr.io/r/stats/vcov.html) calls to comply
+  with recent R-devel changes
+
+## emmeans 0.9
+
+CRAN release: 2017-10-20
+
+This is the initial major version that replaces the **lsmeans** package.
+Changes shown below are changes made to the last real release of
+**lsmeans** (version 2.27-2). **lsmeans** versions greater than that are
+transitional to that package being retired.
+
+- We now emphasize the terminology “estimated marginal means” rather
+  than “least-squares means”
+- The flagship functions are now
+  [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md),
+  [`emtrends()`](https://rvlenth.github.io/emmeans/reference/emtrends.md),
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md),
+  etc. But
+  [`lsmeans()`](https://rvlenth.github.io/emmeans/reference/wrappers.md),
+  [`lstrends()`](https://rvlenth.github.io/emmeans/reference/wrappers.md),
+  etc. as well as `pmmeans()` etc. are mapped to their corresponding
+  `emxxxx()` functions.
+- In addition, we are trying to avoid names that could get confused as
+  S3 methods. So, `ref.grid -> ref_grid`, `lsm.options -> emm_options`,
+  etc.
+- Classes `ref.grid` and `lsmobj` are gone. Both are replaced by class
+  `emmGrid`. An
+  [`as.emmGrid()`](https://rvlenth.github.io/emmeans/reference/as.emmGrid.md)
+  function is provided to convert old objects to class `emmGrid`.
+- I decided to revert back to “kenward-roger” as the default
+  degrees-of-freedom method for `lmerMod models`. Also added options
+  `disable.lmerTest` and `lmerTest.limit`, similar to those for
+  **pbkrtest**.
+- Documentation and NAMESPACE are now “ROxygenated”
+- Additional `neuralgia` and `pigs` datasets
+- Dispatching of `emmmeans()` methods is now top-down rather than
+  convoluted intermingling of S3 methods
+- Improved display of back-transformed contrasts when log or logit
+  transformation was used: We change any `-`s in labels to `/`s to
+  emphasize that thnese results are ratios.
+- A message is now displayed when nesting is auto-detected in
+  `ref_grid`. (Can be disabled via
+  [`emm_options()`](https://rvlenth.github.io/emmeans/reference/emm_options.md))
+- Options were added for several messages that users may want to
+  suppress, e.g., ones about interactions and nesting.
+- Greatly overhauled help page for models. It is now a vignette, with a
+  quick reference chart linked to details, and is organized by
+  similarities instead of packages.
+- Support for ‘mer’ objects (lme4.0 package) removed.
+- A large number of smaller interlinked vignettes replaces the one big
+  one on using the package. Several vignettes are linked in the help
+  pages.
+- Graphics methods
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html) and
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) are
+  now **ggplot2**-based. Old **lattice**-based functionality is still
+  available too, and there is a `graphics.engine` option to choose the
+  default.
+- Non-exported utilities convert_workspace() and convert_scripts() to
+  help with transition
+- Moved `Suggests` pkgs to `Enhances` when not needed for
+  building/testing
+
+### NOTE: **emmeans** is a continuation of the **lsmeans** package.
+
+New developments will take place in **emmeans**, and **lsmeans** will
+remain static and eventually will be archived.

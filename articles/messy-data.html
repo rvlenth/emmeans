@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Working with messy data</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.0</h4>
+package, Version 2.0.1</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/messy-data.Rmd" class="external-link"><code>vignettes/messy-data.Rmd</code></a></small>
@@ -250,7 +250,7 @@ set them at their means and use those means for purposes of predictions
 and EMMs. These adjusted means are shown in the following plot.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">framing.glm</span>, <span class="va">treat</span> <span class="op">~</span> <span class="va">educ</span> <span class="op">|</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="messy-data_files/figure-html/unnamed-chunk-7-1.png" alt="Two panels, each showing a decreasing trend with educ except they increase again with educ=Coll+. In the male panel, the curve for treat 1 is higher than that for treat 2, while the reverse is true in the female panel" width="432"></p>
+<p><img src="messy-data_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="Two panels, each showing a decreasing trend with educ except they increase again with educ=Coll+. In the male panel, the curve for treat 1 is higher than that for treat 2, while the reverse is true in the female panel" width="432"></p>
 <p>This plot gives the impression that the effect of <code>treat</code>
 is reversed between male and female subjects; and also that the effect
 of education is not monotone. Both of these are counter-intuitive.</p>
@@ -269,7 +269,7 @@ we obtain an entirely different impression:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">framing.glm</span>, <span class="va">treat</span> <span class="op">~</span> <span class="va">educ</span> <span class="op">|</span> <span class="va">gender</span>, type <span class="op">=</span> <span class="st">"response"</span>, </span>
 <span>    cov.reduce <span class="op">=</span> <span class="va">emo</span> <span class="op">~</span> <span class="va">treat</span><span class="op">*</span><span class="va">gender</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">income</span><span class="op">)</span></span></code></pre></div>
-<p><img src="messy-data_files/figure-html/unnamed-chunk-8-1.png" alt="Similar to previous figure but now the curves flatten out with &gt;HS about the same as Coll+. For the maile panel, we still have the trace for treat 1 higher than for treat 0; but in the female panel, they are about the same as each other, and a bit lower than treat 0 for males. To see these results in numerical form, call emmeans() with the same arguments *except* replace the second argument with ~treat*educ|gender" width="432"></p>
+<p><img src="messy-data_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="Similar to previous figure but now the curves flatten out with &gt;HS about the same as Coll+. For the maile panel, we still have the trace for treat 1 higher than for treat 0; but in the female panel, they are about the same as each other, and a bit lower than treat 0 for males. To see these results in numerical form, call emmeans() with the same arguments *except* replace the second argument with ~treat*educ|gender" width="432"></p>
 <p>The reference grid underlying this plot has different
 <code>emo</code> values for each factor combination. The plot suggests
 that, after taking emotional response into account, male (but not
@@ -656,7 +656,7 @@ after removing interactions involving <code>age</code>:</p>
 <span><span class="co">##  contrast           race     estimate   SE df t.ratio p.value</span></span>
 <span><span class="co">##  FoodStamps - NoAid Black        7.92 2.62 92   3.021  0.0098</span></span>
 <span><span class="co">##  FoodStamps - NoAid Hispanic    -2.50 6.55 92  -0.382  0.9739</span></span>
-<span><span class="co">##  FoodStamps - NoAid White        5.54 1.27 92   4.364  0.0001</span></span>
+<span><span class="co">##  FoodStamps - NoAid White        5.54 1.27 92   4.364 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: age </span></span>
 <span><span class="co">## P value adjustment: sidak method for 3 tests</span></span></code></pre>
@@ -699,7 +699,7 @@ This is most useful with <code><a href="../reference/joint_tests.html">joint_tes
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">nutr.lm</span>, submodel <span class="op">=</span> <span class="st">"type2"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  model term df1 df2 F.ratio p.value note</span></span>
 <span><span class="co">##  age          3  92   0.961  0.4145     </span></span>
-<span><span class="co">##  group        1  92  23.044  &lt;.0001     </span></span>
+<span><span class="co">##  group        1  92  23.044 &lt;0.0001     </span></span>
 <span><span class="co">##  race         2  92   0.196  0.8227     </span></span>
 <span><span class="co">##  age:group    3  92   1.069  0.3663     </span></span>
 <span><span class="co">##  age:race     3  92   1.019  0.3880  d e</span></span>
@@ -778,19 +778,19 @@ nested in:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">route.emm</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast         estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  oral - injection    -10.9 0.742  9 -14.671  &lt;.0001</span></span>
+<span><span class="co">##  oral - injection    -10.9 0.742  9 -14.671 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: drug</span></span></code></pre>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">drug.emm</span>, by <span class="op">=</span> <span class="st">"route"</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## route = injection:</span></span>
 <span><span class="co">##  contrast                    estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  Charloisazepam - Bovineumab     9.17 1.180  9   7.757  &lt;.0001</span></span>
+<span><span class="co">##  Charloisazepam - Bovineumab     9.17 1.180  9   7.757 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## route = oral:</span></span>
 <span><span class="co">##  contrast                    estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  Herefordmycin - Angustatin     -8.75 1.120  9  -7.805  0.0001</span></span>
-<span><span class="co">##  Mollycoddle - Angustatin       -9.92 0.989  9 -10.030  &lt;.0001</span></span>
+<span><span class="co">##  Herefordmycin - Angustatin     -8.75 1.120  9  -7.805 &lt;0.0001</span></span>
+<span><span class="co">##  Mollycoddle - Angustatin       -9.92 0.989  9 -10.030 &lt;0.0001</span></span>
 <span><span class="co">##  Mollycoddle - Herefordmycin    -1.17 1.180  9  -0.987  0.6026</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: tukey method for comparing a family of 3 estimates</span></span></code></pre>
@@ -808,19 +808,19 @@ example, the default plot for the <code>cows</code> example is not
 ideal:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="op">~</span> <span class="va">drug</span> <span class="op">|</span> <span class="va">route</span><span class="op">)</span></span></code></pre></div>
-<p><img src="messy-data_files/figure-html/unnamed-chunk-29-1.png" alt="A panel for each route. This interaction plot has a lot of empty space because all 5 drugs are represented in each panel, and the x axis labels all overlap" width="528"></p>
+<p><img src="messy-data_files/figure-html/unnamed-chunk-29-1.png" class="r-plt" alt="A panel for each route. This interaction plot has a lot of empty space because all 5 drugs are represented in each panel, and the x axis labels all overlap" width="528"></p>
 <p>We can instead remove <code>route</code> from the call and instead
 handle it with <strong>ggplot2</strong> code to use separate <em>x</em>
 scales:</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="op">~</span> <span class="va">drug</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="messy-data_files/figure-html/unnamed-chunk-30-1.png" alt="This plot shows the same means as the previous one, but each panel shows only the drugs that are nested in each route" width="528"></p>
+<p><img src="messy-data_files/figure-html/unnamed-chunk-30-1.png" class="r-plt" alt="This plot shows the same means as the previous one, but each panel shows only the drugs that are nested in each route" width="528"></p>
 <p>Similarly with <code><a href="../reference/plot.html">plot.emmGrid()</a></code>:</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">drug.emm</span>, PIs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, nrow <span class="op">=</span> <span class="fl">2</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="messy-data_files/figure-html/unnamed-chunk-31-1.png" alt="side-by-side CIs and PIs for drugs in each route. Again, with free_y scaling, each panel contains only the drugs involved" width="528"></p>
+<p><img src="messy-data_files/figure-html/unnamed-chunk-31-1.png" class="r-plt" alt="side-by-side CIs and PIs for drugs in each route. Again, with free_y scaling, each panel contains only the drugs involved" width="528"></p>
 </div>
 <div class="section level3">
 <h3 id="nest-trap">Auto-identification of nested factors – avoid being trapped!<a class="anchor" aria-label="anchor" href="#nest-trap"></a>
@@ -870,7 +870,7 @@ specifying something akin to
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

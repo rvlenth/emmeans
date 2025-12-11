@@ -17,7 +17,7 @@ which emmGrid objects are created, in a named list of option lists."><meta prope
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@ which <code>emmGrid</code> objects are created, in a named list of option lists.
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>list</code> of length 24.</p>
+    <p>An object of class <code>list</code> of length 25.</p>
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
@@ -218,6 +218,12 @@ object.</p></dd>
   displayed is just enough to reasonably distinguish estimates from the ends
   of their confidence intervals; but always at least 3 digits. If
   <code>FALSE</code>, the system value <code>getOption("digits")</code> is used.</p></dd>
+
+<dt><code>pval.digits</code></dt>
+<dd><p>An integer indicating the precision with which
+  p-values are printed. Integers between <code>2</code> and <code>6</code> are acceptable; the default is
+<code>4</code>. Floating point numbers are truncated. If a number outside the accepted range is
+used, the nearest acceptable integer will be used instead. Non-numeric arguments are ignored.</p></dd>
 
 <dt><code>back.bias.adj</code></dt>
 <dd><p>A logical value controlling whether we
@@ -361,7 +367,7 @@ the user's <code>.Rprofile</code> file could contain:</p><div class="sourceCode"
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

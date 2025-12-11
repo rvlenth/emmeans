@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Interaction analysis in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.0</h4>
+package, Version 2.0.1</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/interactions.Rmd" class="external-link"><code>vignettes/interactions.Rmd</code></a></small>
@@ -164,9 +164,9 @@ interactions!). They would go straight to analyses like this:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $contrasts</span></span>
 <span><span class="co">##  contrast estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  S - M      -0.958 0.156 24  -6.147  &lt;.0001</span></span>
-<span><span class="co">##  S - L       5.167 0.156 24  33.140  &lt;.0001</span></span>
-<span><span class="co">##  M - L       6.125 0.156 24  39.287  &lt;.0001</span></span>
+<span><span class="co">##  S - M      -0.958 0.156 24  -6.147 &lt;0.0001</span></span>
+<span><span class="co">##  S - L       5.167 0.156 24  33.140 &lt;0.0001</span></span>
+<span><span class="co">##  M - L       6.125 0.156 24  39.287 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: type, side </span></span>
 <span><span class="co">## P value adjustment: tukey method for comparing a family of 3 estimates</span></span></code></pre>
@@ -182,7 +182,7 @@ visualize the nature of the interactions before doing any statistical
 comparisons. The following plot helps.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">noise.lm</span>, <span class="va">type</span> <span class="op">~</span> <span class="va">size</span> <span class="op">|</span> <span class="va">side</span><span class="op">)</span></span></code></pre></div>
-<p><img src="interactions_files/figure-html/unnamed-chunk-4-1.png" alt="emmip plot of type and size, with separate panels for each side. To see the same numerical information, do emmeans(noise.lm, ~ type:size|side)" width="432"></p>
+<p><img src="interactions_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="emmip plot of type and size, with separate panels for each side. To see the same numerical information, do emmeans(noise.lm, ~ type:size|side)" width="432"></p>
 <p>Examining this plot, we see that the “medium” mean is not always
 higher; so the marginal means, and the way they compare, does not
 represent what is always the case. Moreover, what is evident in the plot
@@ -214,15 +214,15 @@ conditioning on <code>type</code>:</p>
 <span><span class="co">## $contrasts</span></span>
 <span><span class="co">## type = Std:</span></span>
 <span><span class="co">##  contrast estimate   SE df t.ratio p.value</span></span>
-<span><span class="co">##  S - M     -2.0000 0.22 24  -9.071  &lt;.0001</span></span>
-<span><span class="co">##  S - L      5.0833 0.22 24  23.056  &lt;.0001</span></span>
-<span><span class="co">##  M - L      7.0833 0.22 24  32.127  &lt;.0001</span></span>
+<span><span class="co">##  S - M     -2.0000 0.22 24  -9.071 &lt;0.0001</span></span>
+<span><span class="co">##  S - L      5.0833 0.22 24  23.056 &lt;0.0001</span></span>
+<span><span class="co">##  M - L      7.0833 0.22 24  32.127 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## type = Octel:</span></span>
 <span><span class="co">##  contrast estimate   SE df t.ratio p.value</span></span>
 <span><span class="co">##  S - M      0.0833 0.22 24   0.378  0.9245</span></span>
-<span><span class="co">##  S - L      5.2500 0.22 24  23.812  &lt;.0001</span></span>
-<span><span class="co">##  M - L      5.1667 0.22 24  23.434  &lt;.0001</span></span>
+<span><span class="co">##  S - L      5.2500 0.22 24  23.812 &lt;0.0001</span></span>
+<span><span class="co">##  M - L      5.1667 0.22 24  23.434 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: side </span></span>
 <span><span class="co">## P value adjustment: tukey method for comparing a family of 3 estimates</span></span></code></pre>
@@ -278,24 +278,24 @@ the additional argument <code>combine</code> is set to
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"consec"</span>, simple <span class="op">=</span> <span class="st">"each"</span>, combine <span class="op">=</span> <span class="cn">TRUE</span>, adjust <span class="op">=</span> <span class="st">"mvt"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  side type  size contrast    estimate    SE df t.ratio p.value</span></span>
 <span><span class="co">##  L    Std   .    M - S          1.500 0.312 24   4.811  0.0011</span></span>
-<span><span class="co">##  L    Std   .    L - M         -8.667 0.312 24 -27.795  &lt;.0001</span></span>
-<span><span class="co">##  R    Std   .    M - S          2.500 0.312 24   8.018  &lt;.0001</span></span>
-<span><span class="co">##  R    Std   .    L - M         -5.500 0.312 24 -17.639  &lt;.0001</span></span>
+<span><span class="co">##  L    Std   .    L - M         -8.667 0.312 24 -27.795 &lt;0.0001</span></span>
+<span><span class="co">##  R    Std   .    M - S          2.500 0.312 24   8.018 &lt;0.0001</span></span>
+<span><span class="co">##  R    Std   .    L - M         -5.500 0.312 24 -17.639 &lt;0.0001</span></span>
 <span><span class="co">##  L    Octel .    M - S         -0.333 0.312 24  -1.069  0.9769</span></span>
-<span><span class="co">##  L    Octel .    L - M         -5.667 0.312 24 -18.174  &lt;.0001</span></span>
+<span><span class="co">##  L    Octel .    L - M         -5.667 0.312 24 -18.174 &lt;0.0001</span></span>
 <span><span class="co">##  R    Octel .    M - S          0.167 0.312 24   0.535  0.9999</span></span>
-<span><span class="co">##  R    Octel .    L - M         -4.667 0.312 24 -14.967  &lt;.0001</span></span>
-<span><span class="co">##  .    Std   S    R - L         -1.833 0.312 24  -5.880  0.0001</span></span>
+<span><span class="co">##  R    Octel .    L - M         -4.667 0.312 24 -14.967 &lt;0.0001</span></span>
+<span><span class="co">##  .    Std   S    R - L         -1.833 0.312 24  -5.880 &lt;0.0001</span></span>
 <span><span class="co">##  .    Std   M    R - L         -0.833 0.312 24  -2.673  0.1710</span></span>
-<span><span class="co">##  .    Std   L    R - L          2.333 0.312 24   7.483  &lt;.0001</span></span>
+<span><span class="co">##  .    Std   L    R - L          2.333 0.312 24   7.483 &lt;0.0001</span></span>
 <span><span class="co">##  .    Octel S    R - L         -0.500 0.312 24  -1.604  0.7740</span></span>
 <span><span class="co">##  .    Octel M    R - L          0.000 0.312 24   0.000  1.0000</span></span>
 <span><span class="co">##  .    Octel L    R - L          1.000 0.312 24   3.207  0.0566</span></span>
 <span><span class="co">##  L    .     S    Octel - Std   -1.000 0.312 24  -3.207  0.0562</span></span>
-<span><span class="co">##  L    .     M    Octel - Std   -2.833 0.312 24  -9.087  &lt;.0001</span></span>
+<span><span class="co">##  L    .     M    Octel - Std   -2.833 0.312 24  -9.087 &lt;0.0001</span></span>
 <span><span class="co">##  L    .     L    Octel - Std    0.167 0.312 24   0.535  0.9999</span></span>
 <span><span class="co">##  R    .     S    Octel - Std    0.333 0.312 24   1.069  0.9769</span></span>
-<span><span class="co">##  R    .     M    Octel - Std   -2.000 0.312 24  -6.414  &lt;.0001</span></span>
+<span><span class="co">##  R    .     M    Octel - Std   -2.000 0.312 24  -6.414 &lt;0.0001</span></span>
 <span><span class="co">##  R    .     L    Octel - Std   -1.167 0.312 24  -3.742  0.0162</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: mvt method for 20 tests</span></span></code></pre>
@@ -321,13 +321,13 @@ and compare them. Here are estimates of those contrasts:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm_s.t</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"poly"</span><span class="op">)</span>   <span class="co">## 'by = "type"' already in previous result </span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## type = Std:</span></span>
 <span><span class="co">##  contrast  estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  linear       -5.08 0.220 24 -23.056  &lt;.0001</span></span>
-<span><span class="co">##  quadratic    -9.08 0.382 24 -23.786  &lt;.0001</span></span>
+<span><span class="co">##  linear       -5.08 0.220 24 -23.056 &lt;0.0001</span></span>
+<span><span class="co">##  quadratic    -9.08 0.382 24 -23.786 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## type = Octel:</span></span>
 <span><span class="co">##  contrast  estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  linear       -5.25 0.220 24 -23.812  &lt;.0001</span></span>
-<span><span class="co">##  quadratic    -5.08 0.382 24 -13.311  &lt;.0001</span></span>
+<span><span class="co">##  linear       -5.25 0.220 24 -23.812 &lt;0.0001</span></span>
+<span><span class="co">##  quadratic    -5.08 0.382 24 -13.311 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: side</span></span></code></pre>
 <p>The comparison of these contrasts may be done using the
@@ -338,7 +338,7 @@ follows:</p>
 <span><span class="va">IC_st</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  size_poly type_consec estimate    SE df t.ratio p.value</span></span>
 <span><span class="co">##  linear    Octel - Std   -0.167 0.312 24  -0.535  0.5979</span></span>
-<span><span class="co">##  quadratic Octel - Std    4.000 0.540 24   7.407  &lt;.0001</span></span>
+<span><span class="co">##  quadratic Octel - Std    4.000 0.540 24   7.407 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: side</span></span></code></pre>
 <p>(Using <code>by = NULL</code> restores <code>type</code> to a primary
@@ -365,7 +365,7 @@ via interaction contrasts:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summary.emmGrid.html">test</a></span><span class="op">(</span><span class="va">IC_st</span>, joint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  df1 df2 F.ratio p.value</span></span>
-<span><span class="co">##    2  24  27.571  &lt;.0001</span></span></code></pre>
+<span><span class="co">##    2  24  27.571 &lt;0.0001</span></span></code></pre>
 <p>This result is exactly the same as the <em>F</em> test of
 <code>size:type</code> in the <code>anova</code> output.</p>
 <p>The three-way interaction may be explored via interaction contrasts
@@ -390,11 +390,11 @@ one Type-III-ANOVA-like table:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">noise.lm</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  model term     df1 df2 F.ratio p.value</span></span>
-<span><span class="co">##  size             2  24 893.190  &lt;.0001</span></span>
-<span><span class="co">##  type             1  24  72.429  &lt;.0001</span></span>
+<span><span class="co">##  size             2  24 893.190 &lt;0.0001</span></span>
+<span><span class="co">##  type             1  24  72.429 &lt;0.0001</span></span>
 <span><span class="co">##  side             1  24   0.048  0.8291</span></span>
-<span><span class="co">##  size:type        2  24  27.571  &lt;.0001</span></span>
-<span><span class="co">##  size:side        2  24  44.333  &lt;.0001</span></span>
+<span><span class="co">##  size:type        2  24  27.571 &lt;0.0001</span></span>
+<span><span class="co">##  size:side        2  24  44.333 &lt;0.0001</span></span>
 <span><span class="co">##  type:side        1  24   1.190  0.2861</span></span>
 <span><span class="co">##  size:type:side   2  24  10.333  0.0006</span></span></code></pre>
 <p>You may even add <code>by</code> variable(s) to obtain separate ANOVA
@@ -403,15 +403,15 @@ tables for the remaining factors:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/joint_tests.html">joint_tests</a></span><span class="op">(</span><span class="va">noise.lm</span>, by <span class="op">=</span> <span class="st">"side"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## side = L:</span></span>
 <span><span class="co">##  model term df1 df2 F.ratio p.value</span></span>
-<span><span class="co">##  size         2  24 651.714  &lt;.0001</span></span>
-<span><span class="co">##  type         1  24  46.095  &lt;.0001</span></span>
-<span><span class="co">##  size:type    2  24  23.524  &lt;.0001</span></span>
+<span><span class="co">##  size         2  24 651.714 &lt;0.0001</span></span>
+<span><span class="co">##  type         1  24  46.095 &lt;0.0001</span></span>
+<span><span class="co">##  size:type    2  24  23.524 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## side = R:</span></span>
 <span><span class="co">##  model term df1 df2 F.ratio p.value</span></span>
-<span><span class="co">##  size         2  24 285.810  &lt;.0001</span></span>
-<span><span class="co">##  type         1  24  27.524  &lt;.0001</span></span>
-<span><span class="co">##  size:type    2  24  14.381  0.0001</span></span></code></pre>
+<span><span class="co">##  size         2  24 285.810 &lt;0.0001</span></span>
+<span><span class="co">##  type         1  24  27.524 &lt;0.0001</span></span>
+<span><span class="co">##  size:type    2  24  14.381 &lt;0.0001</span></span></code></pre>
 <p><a href="#contents">Back to Contents</a></p>
 </div>
 <div class="section level2">
@@ -434,9 +434,9 @@ of four means and another. This is facilitated by the
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"pairwise"</span>, mult.name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"type"</span>, <span class="st">"side"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast T.square df1 df2 F.ratio p.value</span></span>
-<span><span class="co">##  S - M      88.857   4  21  19.438  &lt;.0001</span></span>
-<span><span class="co">##  S - L    1199.429   4  21 262.375  &lt;.0001</span></span>
-<span><span class="co">##  M - L    1638.000   4  21 358.312  &lt;.0001</span></span>
+<span><span class="co">##  S - M      88.857   4  21  19.438 &lt;0.0001</span></span>
+<span><span class="co">##  S - L    1199.429   4  21 262.375 &lt;0.0001</span></span>
+<span><span class="co">##  M - L    1638.000   4  21 358.312 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: sidak</span></span></code></pre>
 <p>In this output, the <code>T.square</code> values are Hotelling’s
@@ -456,7 +456,7 @@ size of car, without regard to which side:</p>
 <span>       by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    size T.square df1 df2 F.ratio p.value</span></span>
 <span><span class="co">##  Octel - Std S      11.429   2  23   5.476  0.0113</span></span>
-<span><span class="co">##  Octel - Std M     123.714   2  23  59.280  &lt;.0001</span></span>
+<span><span class="co">##  Octel - Std M     123.714   2  23  59.280 &lt;0.0001</span></span>
 <span><span class="co">##  Octel - Std L      14.286   2  23   6.845  0.0047</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: sidak</span></span></code></pre>
@@ -468,9 +468,9 @@ interactions:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">noise.emm</span>, submodel <span class="op">=</span> <span class="op">~</span> <span class="va">side</span> <span class="op">+</span> <span class="va">size</span> <span class="op">+</span> <span class="va">type</span><span class="op">)</span>, </span>
 <span>           <span class="st">"pairwise"</span>, mult.name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"type"</span>, <span class="st">"side"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast T.square df1 df2  F.ratio p.value</span></span>
-<span><span class="co">##  S - M      37.786   1  24   37.786  &lt;.0001</span></span>
-<span><span class="co">##  S - L    1098.286   1  24 1098.286  &lt;.0001</span></span>
-<span><span class="co">##  M - L    1543.500   1  24 1543.500  &lt;.0001</span></span>
+<span><span class="co">##  S - M      37.786   1  24   37.786 &lt;0.0001</span></span>
+<span><span class="co">##  S - L    1098.286   1  24 1098.286 &lt;0.0001</span></span>
+<span><span class="co">##  M - L    1543.500   1  24 1543.500 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## P value adjustment: sidak </span></span>
 <span><span class="co">## NOTE: Some or all d.f. are reduced due to singularities</span></span></code></pre>
@@ -520,7 +520,7 @@ statistically different.</p>
 <p>To visualize the lines themselves, you may use</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">fiber.lm</span>, <span class="va">machine</span> <span class="op">~</span> <span class="va">diameter</span>, cov.reduce <span class="op">=</span> <span class="va">range</span><span class="op">)</span></span></code></pre></div>
-<p><img src="interactions_files/figure-html/unnamed-chunk-20-1.png" alt="Plot with three increasing lines. The one for B is highest, the one for C is lower and more-or-less parallel to it, and the one for A is steeper and crosses the other two lines near their ends" width="432"></p>
+<p><img src="interactions_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="Plot with three increasing lines. The one for B is highest, the one for C is lower and more-or-less parallel to it, and the one for A is steeper and crosses the other two lines near their ends" width="432"></p>
 <p>The <code>cov.reduce = range</code> argument is passed to
 <code><a href="../reference/ref_grid.html">ref_grid()</a></code>; it is needed because by default, each covariate
 is reduced to only one value (see the <a href="basics.html">“basics”
@@ -553,7 +553,7 @@ these models is to look at how they predict sales of each variety at
 each observed values of the prices:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">org.quad</span>, <span class="va">price2</span> <span class="op">~</span> <span class="va">price1</span> <span class="op">|</span> <span class="va">variety</span>, mult.name <span class="op">=</span> <span class="st">"variety"</span>, cov.reduce <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="interactions_files/figure-html/unnamed-chunk-22-1.png" alt="Two panels with sets of curves associated with values of price2. The panel for sales1 shows a tight bundle of curves that decrease with price1. The panel for sales2 shows a looser bundle of curves that diverge as price1 increases" width="432"></p>
+<p><img src="interactions_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="Two panels with sets of curves associated with values of price2. The panel for sales1 shows a tight bundle of curves that decrease with price1. The panel for sales2 shows a looser bundle of curves that diverge as price1 increases" width="432"></p>
 <p>The trends portrayed here are quite sensible: In the left panel, as
 we increase the price of variety 1, sales of that variety will tend to
 decrease – and the decrease will be faster when the other variety of
@@ -637,7 +637,7 @@ gives an indication of the nature of those changes.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $contrasts</span></span>
 <span><span class="co">##  contrast        estimate    SE df t.ratio p.value</span></span>
-<span><span class="co">##  sales1 - sales2    0.917 0.143 22   6.387  &lt;.0001</span></span>
+<span><span class="co">##  sales1 - sales2    0.917 0.143 22   6.387 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: day, store</span></span></code></pre>
 <p>At the averages, increasing the price of variety 2 has the effect of
@@ -668,7 +668,7 @@ in this vignette – in order to provide a complete picture.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

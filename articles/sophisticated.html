@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sophisticated models in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.0</h4>
+package, Version 2.0.1</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/sophisticated.Rmd" class="external-link"><code>vignettes/sophisticated.Rmd</code></a></small>
@@ -201,7 +201,7 @@ test polynomial contrasts:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">Oats.emm.n</span>, <span class="st">"poly"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast  estimate    SE   df t.ratio p.value</span></span>
-<span><span class="co">##  linear      152.69 15.60 43.2   9.802  &lt;.0001</span></span>
+<span><span class="co">##  linear      152.69 15.60 43.2   9.802 &lt;0.0001</span></span>
 <span><span class="co">##  quadratic    -8.27  6.95 44.2  -1.190  0.2402</span></span>
 <span><span class="co">##  cubic        -6.32 15.20 42.8  -0.415  0.6800</span></span>
 <span><span class="co">## </span></span>
@@ -811,7 +811,7 @@ resultant SD and regrid with bias correction:</p>
 back-transformed:</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-intervals.html" class="external-link">mcmc_areas</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">as.mcmc</a></span><span class="op">(</span><span class="va">cbpp.rgrd</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="sophisticated_files/figure-html/unnamed-chunk-37-1.png" alt="kernel denity estimates for each of the 4 periods. Their medians and spreads decrease with period, and period 1 is especially different. See the previous summary table for the numerical values of the estimated means" width="432"></p>
+<p><img src="sophisticated_files/figure-html/unnamed-chunk-37-1.png" class="r-plt" alt="kernel denity estimates for each of the 4 periods. Their medians and spreads decrease with period, and period 1 is especially different. See the previous summary table for the numerical values of the estimated means" width="432"></p>
 <p>… and here are intervals for each period compared with its
 neighbor:</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
@@ -840,7 +840,7 @@ future herds of 25 cattle, we can do:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">2019.0605</span><span class="op">)</span></span>
 <span><span class="va">cbpp.preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/coda/man/mcmc.html" class="external-link">as.mcmc</a></span><span class="op">(</span><span class="va">cbpp.rgrd</span>, likelihood <span class="op">=</span> <span class="st">"binomial"</span>, trials <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
 <span><span class="fu">bayesplot</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/bayesplot/reference/MCMC-distributions.html" class="external-link">mcmc_hist</a></span><span class="op">(</span><span class="va">cbpp.preds</span>, binwidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="sophisticated_files/figure-html/unnamed-chunk-39-1.png" alt="Histograms of the predictive distributions for each period. The one for period 1 has bins from 0 to 15; the number of bins decreases until period 4 has only bins for 0 through 5." width="432"></p>
+<p><img src="sophisticated_files/figure-html/unnamed-chunk-39-1.png" class="r-plt" alt="Histograms of the predictive distributions for each period. The one for period 1 has bins from 0 to 15; the number of bins decreases until period 4 has only bins for 0 through 5." width="432"></p>
 <p><a href="#contents">Back to Contents</a></p>
 <p><a href="vignette-topics.html">Index of all vignette topics</a></p>
 </div>
@@ -856,7 +856,7 @@ future herds of 25 cattle, we can do:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

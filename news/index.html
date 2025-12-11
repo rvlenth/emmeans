@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,16 @@
       <small>Source: <a href="https://github.com/rvlenth/emmeans/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.1" id="emmeans-201">emmeans 2.0.1<a class="anchor" aria-label="anchor" href="#emmeans-201"></a></h2>
+<ul><li>Fix to <code>.parse_nest()</code> to handle nested factors with spaces in their name (<a href="https://github.com/rvlenth/emmeans/issues/562" class="external-link">#562</a>)</li>
+<li>
+<code>col</code> was not handled properly in <code><a href="../reference/emmip.html">emmip()</a></code> (<a href="https://github.com/rvlenth/emmeans/issues/565" class="external-link">#565</a>)</li>
+<li>In <code><a href="../reference/emmip.html">emmip()</a></code>, changed default for <code>facetlab</code> to <code>"label_both"</code>. This just seems like a better choice.</li>
+<li>Added a <code>facetlab</code> argument to <code><a href="../reference/plot.html">plot.emmGrid()</a></code> – badly needed when we have several <code>by</code> groups</li>
+<li>Added the <code>pval.digits</code> option to specify the desired P-value precision (<a href="https://github.com/rvlenth/emmeans/issues/567" class="external-link">#567</a>). It defaults to 4, which was the only precision available in past versions.</li>
+<li>Note that the above change corrects a slight bug in past versions: a P value smaller than 0.0001 that rounded <em>up</em> to 0.0001 was printed as <code>0.0001</code> rather than <code>&lt;.0001</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.0" id="emmeans-200">emmeans 2.0.0<a class="anchor" aria-label="anchor" href="#emmeans-200"></a></h2><p class="text-muted">CRAN release: 2025-10-29</p>
 <p>We have a new major version number, with a new graphics look and a new maintainer, Julia Piaskowski (however, Russ is still very much involved).</p>
@@ -701,7 +711,7 @@
 <h2 class="pkg-version" data-toc-text="1.3.3" id="emmeans-133">emmeans 1.3.3<a class="anchor" aria-label="anchor" href="#emmeans-133"></a></h2><p class="text-muted">CRAN release: 2019-03-02</p>
 <ul><li>Fix to unintended consequence of <a href="https://github.com/rvlenth/emmeans/issues/71" class="external-link">#71</a> that caused incorrect ordering of <code><a href="../reference/contrast.html">contrast()</a></code> results if they are later used by <code><a href="../reference/emmeans.html">emmeans()</a></code>. This was first noticed with ordinal models in <code>prob</code> mode (<a href="https://github.com/rvlenth/emmeans/issues/83" class="external-link">#83</a>).</li>
 <li>Improved checking of conformability of parameters – for models with rank deficiency not handled same way as lm()’s NA convention</li>
-<li>Added basic support for <code><a href="https://rdrr.io/pkg/sommer/man/DEPRECATED_MMER.html" class="external-link">sommer::mmer</a></code>, <code>MuMIn::averaging</code>, and <code><a href="https://amices.org/mice/reference/mira.html" class="external-link">mice::mira</a></code> objects</li>
+<li>Added basic support for <code><a href="https://rdrr.io/pkg/sommer/man/mmer.html" class="external-link">sommer::mmer</a></code>, <code>MuMIn::averaging</code>, and <code><a href="https://amices.org/mice/reference/mira.html" class="external-link">mice::mira</a></code> objects</li>
 <li>Fix in <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">nnet::multinom</a></code> support when there are 2 outcomes (<a href="https://github.com/rvlenth/emmeans/issues/19" class="external-link">#19</a>)</li>
 <li>Added Satterthwaite d.f. to <code>gls</code> objects</li>
 <li>
@@ -915,7 +925,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

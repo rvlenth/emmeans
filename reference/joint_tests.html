@@ -27,7 +27,7 @@ each combination of them."><meta property="og:image" content="https://rvlenth.gi
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -232,7 +232,7 @@ really are zero.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">jt</span> <span class="op">&lt;-</span> <span class="fu">joint_tests</span><span class="op">(</span><span class="va">pigs.lm</span><span class="op">)</span><span class="op">)</span>             <span class="co">## will be same as type III ANOVA</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term     df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  source           2  17  30.256  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  source           2  17  30.256 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  percent          3  17   8.214  0.0013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  source:percent   6  17   0.926  0.5011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -258,7 +258,7 @@ really are zero.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">pigs.lm</span>, weights <span class="op">=</span> <span class="st">"outer"</span><span class="op">)</span>  <span class="co">## differently weighted</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term     df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  source           2  17  28.601  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  source           2  17  28.601 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  percent          3  17   7.889  0.0016</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  source:percent   6  17   0.926  0.5011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -300,13 +300,13 @@ really are zero.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">toy.fac</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 404.601  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 404.601 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  female         1   6  65.291  0.0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  treat:female   1   6   1.448  0.2741</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">toy.cov</span><span class="op">)</span>   <span class="co"># female is regarded as a 2-level factor by default</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 404.601  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 404.601 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  female         1   6  65.291  0.0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  treat:female   1   6   1.448  0.2741</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -317,21 +317,21 @@ really are zero.</p>
 <span class="r-in"><span><span class="co"># Center around the mean</span></span></span>
 <span class="r-in"><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">toy.cov</span>, cov.keep <span class="op">=</span> <span class="fl">0</span>, cov.reduce <span class="op">=</span> <span class="fu">make.meanint</span><span class="op">(</span>delta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 401.865  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 401.865 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  female         1   6  65.291  0.0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  treat:female   1   6   1.448  0.2741</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># Center around zero (like SAS's results for toy.cov)</span></span></span>
 <span class="r-in"><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">toy.cov</span>, cov.keep <span class="op">=</span> <span class="fl">0</span>, cov.reduce <span class="op">=</span> <span class="fu">make.symmint</span><span class="op">(</span>ctr <span class="op">=</span> <span class="fl">0</span>, delta <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 208.621  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 208.621 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  female         1   6  65.291  0.0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  treat:female   1   6   1.448  0.2741</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># Center around 0.5 (like SAS's results for toy.fac)</span></span></span>
 <span class="r-in"><span><span class="fu">joint_tests</span><span class="op">(</span><span class="va">toy.cov</span>, cov.keep <span class="op">=</span> <span class="fl">0</span>, cov.reduce <span class="op">=</span> <span class="va">range</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 404.601  &lt;.0001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  treat          1   6 404.601 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  female         1   6  65.291  0.0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  treat:female   1   6   1.448  0.2741</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -343,9 +343,9 @@ really are zero.</p>
 <span class="r-in"><span><span class="co"># Show overall joint tests by C:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">ubds.lm</span>, by <span class="op">=</span> <span class="st">"C"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="st">"consec"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="summary.emmGrid.html">test</a></span><span class="op">(</span>joint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  C df1 df2 F.ratio p.value note</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1   6  71   8.993  &lt;.0001    e</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2   7  71   9.763  &lt;.0001    e</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3   8  71   8.774  &lt;.0001     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1   6  71   8.993 &lt;0.0001    e</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2   7  71   9.763 &lt;0.0001    e</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3   8  71   8.774 &lt;0.0001     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> e: df1 reduced due to non-estimability </span>
 <span class="r-in"><span></span></span>
@@ -354,19 +354,19 @@ really are zero.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C = 1:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value note</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  A:B            2  71   5.709  0.0050    e</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  (confounded)   4  71  10.635  &lt;.0001     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  (confounded)   4  71  10.635 &lt;0.0001     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C = 2:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value note</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  A              1  71  14.601  0.0003    e</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B              1  71  24.059  &lt;.0001    e</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B              1  71  24.059 &lt;0.0001    e</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  A:B            3  71   2.778  0.0474    e</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  (confounded)   2  71   8.656  0.0004     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> C = 3:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  model term   df1 df2 F.ratio p.value note</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  A              2  71   7.398  0.0012     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  B              2  71  22.157  &lt;.0001     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B              2  71  22.157 &lt;0.0001     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  A:B            4  71   3.009  0.0237     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> e: df1 reduced due to non-estimability </span>
@@ -382,7 +382,7 @@ really are zero.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

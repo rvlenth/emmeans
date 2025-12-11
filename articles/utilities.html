@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Utilities and options for emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.0</h4>
+package, Version 2.0.1</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/utilities.Rmd" class="external-link"><code>vignettes/utilities.Rmd</code></a></small>
@@ -151,7 +151,7 @@ internal settings to what is desired; for example:</p>
 <pre class="ro"><code><span><span class="co">##  source emmean     SE df  n lower.CL upper.CL null t.ratio p.value</span></span>
 <span><span class="co">##  fish     3.39 0.0367 23 10     3.32     3.47 3.56  -4.385  0.0002</span></span>
 <span><span class="co">##  soy      3.67 0.0374 23 10     3.59     3.74 3.56   2.988  0.0066</span></span>
-<span><span class="co">##  skim     3.80 0.0394 23  9     3.72     3.88 3.56   6.130  &lt;.0001</span></span>
+<span><span class="co">##  skim     3.80 0.0394 23  9     3.72     3.88 3.56   6.130 &lt;0.0001</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over the levels of: percent </span></span>
 <span><span class="co">## Results are given on the log (not the response) scale. </span></span>
@@ -340,7 +340,7 @@ multiplicity adjustment. This is done quite simply:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">pigs.emm.s</span><span class="op">)</span>, <span class="va">pigs.anal.p</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast              estimate     SE df t.ratio p.value</span></span>
 <span><span class="co">##  fish - soy             -0.2728 0.0529 23  -5.153  0.0002</span></span>
-<span><span class="co">##  fish - skim            -0.4023 0.0542 23  -7.428  &lt;.0001</span></span>
+<span><span class="co">##  fish - skim            -0.4023 0.0542 23  -7.428 &lt;0.0001</span></span>
 <span><span class="co">##  soy - skim             -0.1295 0.0530 23  -2.442  0.1364</span></span>
 <span><span class="co">##  percent12 - percent9    0.1796 0.0561 23   3.202  0.0238</span></span>
 <span><span class="co">##  percent15 - percent12   0.0378 0.0582 23   0.650  1.0000</span></span>
@@ -362,7 +362,7 @@ multiplicity adjustment.</p>
 <span><span class="co">##  percent15 / percent12 1.039 0.0604 23    0.881    1.224    1   0.650  0.9680</span></span>
 <span><span class="co">##  percent18 / percent15 1.086 0.0750 23    0.894    1.320    1   1.194  0.7306</span></span>
 <span><span class="co">##  fish / soy            0.761 0.0403 23    0.656    0.884    1  -5.153  0.0002</span></span>
-<span><span class="co">##  fish / skim           0.669 0.0362 23    0.574    0.779    1  -7.428  &lt;.0001</span></span>
+<span><span class="co">##  fish / skim           0.669 0.0362 23    0.574    0.779    1  -7.428 &lt;0.0001</span></span>
 <span><span class="co">##  soy / skim            0.879 0.0466 23    0.756    1.020    1  -2.442  0.1111</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Results are averaged over some or all of the levels of: source, percent </span></span>
@@ -566,7 +566,7 @@ specify the levels of <code>tension</code> first and the levels of
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

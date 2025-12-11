@@ -15,7 +15,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,8 @@
 <span></span>
 <span><span class="co"># S3 method for class 'summary_emm'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, horizontal <span class="op">=</span> <span class="cn">TRUE</span>, CIs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">xlab</span>, <span class="va">ylab</span>,</span>
-<span>  <span class="va">layout</span>, scale <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">colors</span>, <span class="va">intervals</span>, plotit <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  facetlab <span class="op">=</span> <span class="st">"label_both"</span>, <span class="va">layout</span>, scale <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">colors</span>, <span class="va">intervals</span>,</span>
+<span>  plotit <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -171,6 +172,15 @@ plotted horizontally or vertically</p></dd>
 <dd><p>Character label for vertical axis</p></dd>
 
 
+<dt id="arg-facetlab">facetlab<a class="anchor" aria-label="anchor" href="#arg-facetlab"></a></dt>
+<dd><p>Character or function method used to label facets in a
+multi-panel plot (with the <code>ggplot</code> engine).
+Default is <code>"label_both"</code>, meaning that both factor names and levels are shown,
+You can use <code>"label_value"</code> to save space, or <code>"label_context"</code>
+to decide automatically (often wrongly). See the help page for
+<code><a href="https://ggplot2.tidyverse.org/reference/labellers.html" class="external-link">ggplot2::labellers</a></code></p></dd>
+
+
 <dt id="arg-layout">layout<a class="anchor" aria-label="anchor" href="#arg-layout"></a></dt>
 <dd><p>Numeric value passed to <code><a href="https://rdrr.io/pkg/lattice/man/xyplot.html" class="external-link">dotplot</a></code>
 when <code>engine == "lattice"</code>.</p></dd>
@@ -248,17 +258,19 @@ respectively (see <code><a href="update.emmGrid.html">update.emmGrid</a></code>)
 <span class="r-in"><span>     horizontal <span class="op">=</span> <span class="cn">FALSE</span>, colors <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">### Using a transformed scale</span></span></span>
+<span class="r-in"><span><span class="co">### Using a transformed scale (also demonstrating 'facetlab' argument)</span></span></span>
 <span class="r-in"><span><span class="va">pigs.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">conc</span> <span class="op">+</span> <span class="fl">2</span><span class="op">)</span> <span class="op">~</span> <span class="va">source</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">percent</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">pigs</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pigs.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">pigs.lm</span>, <span class="op">~</span> <span class="va">percent</span> <span class="op">|</span> <span class="va">source</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pigs.emm</span>, type <span class="op">=</span> <span class="st">"scale"</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">100</span>, by <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pigs.emm</span>, type <span class="op">=</span> <span class="st">"scale"</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">100</span>, by <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>     facetlab <span class="op">=</span> <span class="st">"label_value"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Based on a summary. </span></span></span>
 <span class="r-in"><span><span class="co"># To get a transformed axis, must specify 'scale'; but it does not necessarily</span></span></span>
 <span class="r-in"><span><span class="co"># have to be the same as the actual response transformation</span></span></span>
 <span class="r-in"><span><span class="va">pigs.ci</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">pigs.emm</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pigs.ci</span>, scale <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/transform_log.html" class="external-link">log10_trans</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pigs.ci</span>, scale <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/transform_log.html" class="external-link">log10_trans</a></span><span class="op">(</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>     facetlab <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labellers.html" class="external-link">label_both</a></span><span class="op">(</span><span class="va">x</span>, sep <span class="op">=</span> <span class="st">" = "</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot-6.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -271,7 +283,7 @@ respectively (see <code><a href="update.emmGrid.html">update.emmGrid</a></code>)
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
