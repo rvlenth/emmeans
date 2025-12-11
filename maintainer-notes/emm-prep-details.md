@@ -47,11 +47,14 @@ Then check to make sure there are no errors. I always do this in a DOS window (o
 ```
 R CMD check --as-cran emmeans-xxx.tar.gz
 ```
+
 Obviously, you need to correct any errors that are found.
 
 *Note:* This creates a directory `emmeans.Rcheck/` at the same level as `emmeans/`.
 Sometimes I get errors if this directory already exists, because my system sometimes thinks
 I have an open file in there somewhere. So I manually delete that directory before checking.
+
+
 
 ### Doing a thorough check of related packages
 Installs all reverse dependencies and checks functionality of updated package.
@@ -98,6 +101,10 @@ If there is a problem, contact the package developer. These issues need to be re
 
 ### build a TarBall
 
+In an R session: 
+```
+devtools::build()
+```
 
 ### Check against R-Devel
 Go to the [Win-Builder site](https://win-builder.r-project.org/upload.aspx)

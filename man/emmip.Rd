@@ -14,9 +14,9 @@ emmip(object, formula, ...)
   nesting.order = FALSE, ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.2, xlab = labs$xlab,
-  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_context", scale,
+  ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_both", scale,
   dotarg = list(shape = "circle"), linearg = list(linetype = "solid"),
-  CIarg = list(alpha = 0.4), PIarg = list(alpha = 0.25), ...)
+  CIarg = list(alpha = 0.4), PIarg = list(alpha = 0.25), col = NULL, ...)
 
 emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
   tlab = labs$tlab, pch = c(1, 2, 6, 7, 9, 10, 15:20), lty = 1,
@@ -96,11 +96,11 @@ axis, and traces (the different curves), respectively. The \code{emmip}
 function generates these automatically and provides therm via the \code{labs} 
 attribute, but the user may override these if desired.}
 
-\item{facetlab}{Labeller for facets (when by variables are in play).
-Use \code{"label_value"} to show just the factor levels, or \code{"label_both"}
-to show both the factor names and factor levels. The default of
-\code{"label_context"} decides which based on how many \code{by} factors there are.
-See the documentation for \code{ggplot2::label_context}.}
+\item{facetlab}{Labeller for facets (when by variables are in play). Use
+\code{"label_value"} to show just the factor levels, or \code{"label_both"}
+to show both the factor names and factor levels; \code{"label_context"}
+decides which based on how many \code{by} factors there are. See the
+documentation for \code{ggplot2::labellers}.}
 
 \item{scale}{If not missing, an object of class \code{scales::trans} specifying
 a (usually) nonlinear scaling for the vertical axis. For example, 
@@ -122,17 +122,17 @@ it is interpreted as a linetype.}
 of arguments passed to \code{geom_linerange} to customize appearance of intervals.
 (Note: the \code{linetype} aesthetic defaults to \code{"solid"} under the hood)}
 
-\item{pch}{(Lattice only) The plotting characters to use for each group (i.e., levels of
-\code{trace.factors}). They are recycled as needed.}
-
-\item{lty}{(Lattice only) The line types to use for each group. Recycled as needed.}
-
 \item{col}{With \code{emmip_ggplot}, this adds \code{color = col} (not
 \code{colour}) to all of the \code{*arg} lists. This is intended for setting a
 common color for everything, such as a black-and-white plot. 
 With \code{emmip_lattice}, \code{col} specifies the colors to use
 for each group, recycled as needed. If not specified, the default trellis
 colors are used.}
+
+\item{pch}{(Lattice only) The plotting characters to use for each group (i.e., levels of
+\code{trace.factors}). They are recycled as needed.}
+
+\item{lty}{(Lattice only) The line types to use for each group. Recycled as needed.}
 }
 \value{
 If \code{plotit = FALSE}, a \code{data.frame} (actually, a
@@ -206,7 +206,7 @@ with_emm_options(gg.theme = 1,
 # Create a black-and-white version of above with different linetypes
 # (Let the linetypes and symbols default to the palette)
 emmip(noise.lm, type ~ side * size, CIs = TRUE, col = "black",
-      linearg = list(), dotarg = list(size = 2), CIarg = list(alpha = 1)) +
+      linearg = list(), dotarg = list(size = 4), CIarg = list(alpha = 1)) +
     ggplot2::theme_bw()
 
 # One interaction plot using combinations of type and side as the trace factor

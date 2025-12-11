@@ -110,6 +110,12 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #'   plotted horizontally or vertically
 #' @param xlab Character label for horizontal axis
 #' @param ylab Character label for vertical axis
+#' @param facetlab Character or function method used to label facets in a 
+#'   multi-panel plot (with the \code{ggplot} engine).
+#'   Default is \code{"label_both"}, meaning that both factor names and levels are shown,
+#'   You can use \code{"label_value"} to save space, or \code{"label_context"}
+#'   to decide automatically (often wrongly). See the help page for 
+#'   \code{ggplot2::labellers}
 #' @param layout Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
 #'   when \code{engine == "lattice"}.
 #' @param type Character value specifying the type of prediction desired
@@ -215,32 +221,34 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
 #' plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
 #'      horizontal = FALSE, colors = "blue")
 #' 
-#' ### Using a transformed scale
+#' ### Using a transformed scale (also demonstrating 'facetlab' argument)
 #' pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
 #' pigs.emm <- emmeans(pigs.lm, ~ percent | source)
-#' plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10))
+#' plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10), 
+#'      facetlab = "label_value")
 #' 
 #' # Based on a summary. 
 #' # To get a transformed axis, must specify 'scale'; but it does not necessarily
 #' # have to be the same as the actual response transformation
 #' pigs.ci <- confint(pigs.emm, type = "response")
-#' plot(pigs.ci, scale = scales::log10_trans())
+#' plot(pigs.ci, scale = scales::log10_trans(), 
+#'      facetlab = \(x) ggplot2::label_both(x, sep = " = "))
 plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
-                            xlab, ylab, layout, scale = NULL,
+                            xlab, ylab, facetlab = "label_both", layout, scale = NULL,
                             colors, intervals, 
                             plotit = TRUE, ...) {
     if(!missing(intervals))
         CIs = intervals
     if(attr(x, "type") != "response")   # disable scale when no response transformation
         scale = NULL
-    .plot.srg (x, y, horizontal, xlab, ylab, layout, scale = scale,
+    .plot.srg (x, y, horizontal, xlab, ylab, facetlab = facetlab, layout, scale = scale,
                CIs = CIs, colors = colors, plotit = plotit, ...)
 }
 
 # Workhorse for plot.summary_emm
 #' @importFrom grDevices col2rgb hcl rgb rgb2hsv
 .plot.srg = function(x, y, 
-                     horizontal = TRUE, xlab, ylab, layout, colors,
+                     horizontal = TRUE, xlab, ylab, facetlab = "label_both", layout, colors,
                      engine = get_emm_option("graphics.engine"),
                      CIs = TRUE, PIs = FALSE, extra = NULL, 
                      plotit = TRUE, backtran = FALSE, link, scale = NULL, ...) {
@@ -582,7 +590,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         }
         if (length(byv) > 0)
             grobj = grobj + ggplot2::facet_grid(as.formula(paste(paste(byv, collapse = "+"), " ~ .")), 
-                                                labeller = "label_both")
+                                                labeller = facetlab)
         grobj = grobj + ggplot2::geom_point(color = dot.col, size = 4, shape = 18)
         
         if(!is.null(scale)) {

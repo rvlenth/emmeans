@@ -385,8 +385,9 @@ force_regular = function(object) {
     spec = trimws(unlist(strsplit(spec, ",")))
     for (s in spec) {
         parts = strsplit(s, "[ ]+%in%[ ]+")[[1]]
+        trm = .all.vars(stats::reformulate(parts[1]))
         grp = .all.vars(stats::reformulate(parts[2]))
-        result[[parts[[1]]]] = grp
+        result[[trm]] = grp
     }
     if(length(result) == 0)
         result = NULL
