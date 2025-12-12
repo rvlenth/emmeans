@@ -30,4 +30,4 @@ reverse_check = function(reverse = list(which = "all"), Ncpus = 3) {
   invisible(chk)
 }
 
-
+reverse_check()
