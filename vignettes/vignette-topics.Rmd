@@ -391,12 +391,12 @@ vignette: >
       * [in *models: L*](models.html#L)
       * [in *sophisticated: lmer*](sophisticated.html#lmer)
       * [System options for](sophisticated.html#lmerOpts)
-  * Logistic-like regression
-      * [Non-logit links](transformations.html#not-logit)
   * Logistic regression
       * [Odds ratios](transformations.html#oddsrats)
       * [Risk ratios](transformations.html#riskrats)
       * [Surprising results](FAQs.html#transformations)
+  * Logistic-like regression
+      * [Non-logit links](transformations.html#not-logit)
   * LSD
       * [protected](basics.html#recs2)
 
@@ -517,9 +517,9 @@ vignette: >
   * [Pairwise *P*-value plots](comparisons.html#pwpp)
   * [`params`](basics.html#params)
   * [Percentage differences](transformations.html#altscale)
+  * [`plot.emmGrid()`](basics.html#plot.emmGrid)
   * [`plot()`](basics.html#plots)
       * [nested factors](messy-data.html#cows)
-  * [`plot.emmGrid()`](basics.html#plot.emmGrid)
   * Plots
       * [of confidence intervals](basics.html#plot.emmGrid)
       * [of EMMs](basics.html#plots)
@@ -582,6 +582,8 @@ vignette: >
       * [Implied](transformations.html#regrid3)
   * [Re-labeling](utilities.html#relevel)
   * [Recommended practices](basics.html#recs1)
+  * `recover_data.call()`
+      * [`frame` argument](xtending.html#rdargs)
   * [`recover_data()`](xtending.html#intro)
       * [Communicating with `emm_basis()`](xtending.html#communic)
       * [`data` and `params` arguments](xtending.html#rdargs)
@@ -589,8 +591,6 @@ vignette: >
       * [Error handling](xtending.html#rderrs)
       * [for `lqs` objects](xtending.html#rd.lqs)
       * [for `rsm` objects](xtending.html#rdrsm)
-  * `recover_data.call()`
-      * [`frame` argument](xtending.html#rdargs)
   * [`ref_grid()`](basics.html#RG)
       * [`at`](basics.html#RG)
       * `cov.reduce`
@@ -611,12 +611,12 @@ vignette: >
   * [Registering `qdrg` methods](xtending.html#exporting)
   * [Registering `recover_data` and `emm_basis` methods](xtending.html#exporting)
   * [`regrid` argument](transformations.html#stdize)
+  * [`regrid.flag`](xtending.html#regridded)
   * [`regrid()`](transformations.html#regrid)
       * [probit or other non-logit models](transformations.html#not-logit)
       * [`regrid` vs. `type`](transformations.html#regrid2)
       * [to obtain risk ratios](transformations.html#riskrats)
       * [`transform = "log"`](transformations.html#logs)
-  * [`regrid.flag`](xtending.html#regridded)
   * [Residual plots](basics.html#pigs)
   * [Response scale](confidence-intervals.html#tran)
   * [Response transformations](basics.html#transf)
@@ -667,6 +667,8 @@ vignette: >
       * [in *messy-data: submodels*](messy-data.html#submodels)
       * [in *xplanations: submodels*](xplanations.html#submodels)
   * [Subsets of data](FAQs.html#model)
+  * [`summary_emm` object](basics.html#emmobj)
+      * [As a data frame](utilities.html#data)
   * `summary()`
       * [`adjust`](comparisons.html#pairwise)
       * [in *basics: emmobj*](basics.html#emmobj)
@@ -682,8 +684,6 @@ vignette: >
           * [in *confidence-intervals: summary*](confidence-intervals.html#summary)
       * [Show sample size](confidence-intervals.html#summary)
       * [`type = "unlink"`](transformations.html#tranlink)
-  * [`summary_emm` object](basics.html#emmobj)
-      * [As a data frame](utilities.html#data)
 
 
 [Back to top](#topnav)
