@@ -35,10 +35,16 @@ the first part.
 ### Other manual checking
 Make sure the version numbers in `DESCRIPTION` and `NEWS.md` match.
 
-*And* look at the [emmeans package page](https://cran.r-project.org/web/packages/emmeans/index.html) on CRAN,
-and go the "CRAN checks: emmeans results." Make sure there are no issues there.
+*And* look at the [emmeans package page](https://cran.r-project.org/web/packages/emmeans/index.html) on CRAN, and go the "CRAN checks: emmeans results." Make sure there are no issues there.
 
 ### Build and check the tarball
+
+You can do this on the command line:
+
+```
+devtools::build(manual = TRUE)
+```
+
 In RStudio, this is done via the `build` tab, then under "More `v`", 
 choose "Build source package. This will create a file named `emmeans-xxx.tar.gz`
 in the container of the project directory (just above the `emmeans` directory).
@@ -54,7 +60,13 @@ Obviously, you need to correct any errors that are found.
 Sometimes I get errors if this directory already exists, because my system sometimes thinks
 I have an open file in there somewhere. So I manually delete that directory before checking.
 
+#### Another Approach
 
+Build the package and checks it in one step.
+
+```{r}
+devtools::check(manual = TRUE, cran = TRUE)
+```
 
 ### Doing a thorough check of related packages
 Installs all reverse dependencies and checks functionality of updated package.
@@ -101,17 +113,20 @@ If there is a problem, contact the package developer. These issues need to be re
 
 ### build a TarBall
 
+*(if needed)*
+
 In an R session: 
+
 ```
-devtools::build()
+devtools::build(manual)
 ```
 
 ### Check against R-Devel
 Go to the [Win-Builder site](https://win-builder.r-project.org/upload.aspx)
 where they give you three options. Pick the second one (R-devel), which is what
 they check against when the package is submitted. (You don't need to check with
-R-release, because presumably you already did that earlier.) Click on "Choose file",
-and navigate to the `tar.gz` file; then click on on "Submit file." It'll take
+R-release, because presumably you already did that earlier.) Click on "Browse...",
+and navigate to the `tar.gz` file; then click on on "Upload file." It'll take
 an hour or so, and if you get a return message with "Status: OK," you're ready to
 submit it to CRAN.
 
