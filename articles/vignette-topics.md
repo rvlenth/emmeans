@@ -536,9 +536,6 @@
     lmer*](https://rvlenth.github.io/emmeans/articles/sophisticated.html#lmer)
   - [System options
     for](https://rvlenth.github.io/emmeans/articles/sophisticated.html#lmerOpts)
-- Logistic-like regression
-  - [Non-logit
-    links](https://rvlenth.github.io/emmeans/articles/transformations.html#not-logit)
 - Logistic regression
   - [Odds
     ratios](https://rvlenth.github.io/emmeans/articles/transformations.html#oddsrats)
@@ -546,6 +543,9 @@
     ratios](https://rvlenth.github.io/emmeans/articles/transformations.html#riskrats)
   - [Surprising
     results](https://rvlenth.github.io/emmeans/articles/FAQs.html#transformations)
+- Logistic-like regression
+  - [Non-logit
+    links](https://rvlenth.github.io/emmeans/articles/transformations.html#not-logit)
 - LSD
   - [protected](https://rvlenth.github.io/emmeans/articles/basics.html#recs2)
 
@@ -712,10 +712,10 @@
 - [`params`](https://rvlenth.github.io/emmeans/articles/basics.html#params)
 - [Percentage
   differences](https://rvlenth.github.io/emmeans/articles/transformations.html#altscale)
+- [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/articles/basics.html#plot.emmGrid)
 - [`plot()`](https://rvlenth.github.io/emmeans/articles/basics.html#plots)
   - [nested
     factors](https://rvlenth.github.io/emmeans/articles/messy-data.html#cows)
-- [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/articles/basics.html#plot.emmGrid)
 - Plots
   - [of confidence
     intervals](https://rvlenth.github.io/emmeans/articles/basics.html#plot.emmGrid)
@@ -800,6 +800,9 @@
 - [Re-labeling](https://rvlenth.github.io/emmeans/articles/utilities.html#relevel)
 - [Recommended
   practices](https://rvlenth.github.io/emmeans/articles/basics.html#recs1)
+- [`recover_data.call()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
+  - [`frame`
+    argument](https://rvlenth.github.io/emmeans/articles/xtending.html#rdargs)
 - [`recover_data()`](https://rvlenth.github.io/emmeans/articles/xtending.html#intro)
   - [Communicating with
     `emm_basis()`](https://rvlenth.github.io/emmeans/articles/xtending.html#communic)
@@ -812,9 +815,6 @@
     objects](https://rvlenth.github.io/emmeans/articles/xtending.html#rd.lqs)
   - [for `rsm`
     objects](https://rvlenth.github.io/emmeans/articles/xtending.html#rdrsm)
-- [`recover_data.call()`](https://rvlenth.github.io/emmeans/reference/extending-emmeans.md)
-  - [`frame`
-    argument](https://rvlenth.github.io/emmeans/articles/xtending.html#rdargs)
 - [`ref_grid()`](https://rvlenth.github.io/emmeans/articles/basics.html#RG)
   - [`at`](https://rvlenth.github.io/emmeans/articles/basics.html#RG)
   - `cov.reduce`
@@ -846,6 +846,7 @@
   methods](https://rvlenth.github.io/emmeans/articles/xtending.html#exporting)
 - [`regrid`
   argument](https://rvlenth.github.io/emmeans/articles/transformations.html#stdize)
+- [`regrid.flag`](https://rvlenth.github.io/emmeans/articles/xtending.html#regridded)
 - [`regrid()`](https://rvlenth.github.io/emmeans/articles/transformations.html#regrid)
   - [probit or other non-logit
     models](https://rvlenth.github.io/emmeans/articles/transformations.html#not-logit)
@@ -854,7 +855,6 @@
   - [to obtain risk
     ratios](https://rvlenth.github.io/emmeans/articles/transformations.html#riskrats)
   - [`transform = "log"`](https://rvlenth.github.io/emmeans/articles/transformations.html#logs)
-- [`regrid.flag`](https://rvlenth.github.io/emmeans/articles/xtending.html#regridded)
 - [Residual
   plots](https://rvlenth.github.io/emmeans/articles/basics.html#pigs)
 - [Response
@@ -933,6 +933,10 @@
     submodels*](https://rvlenth.github.io/emmeans/articles/xplanations.html#submodels)
 - [Subsets of
   data](https://rvlenth.github.io/emmeans/articles/FAQs.html#model)
+- [`summary_emm`
+  object](https://rvlenth.github.io/emmeans/articles/basics.html#emmobj)
+  - [As a data
+    frame](https://rvlenth.github.io/emmeans/articles/utilities.html#data)
 - [`summary()`](https://rdrr.io/r/base/summary.html)
   - [`adjust`](https://rvlenth.github.io/emmeans/articles/comparisons.html#pairwise)
   - [in *basics:
@@ -957,10 +961,6 @@
   - [Show sample
     size](https://rvlenth.github.io/emmeans/articles/confidence-intervals.html#summary)
   - [`type = "unlink"`](https://rvlenth.github.io/emmeans/articles/transformations.html#tranlink)
-- [`summary_emm`
-  object](https://rvlenth.github.io/emmeans/articles/basics.html#emmobj)
-  - [As a data
-    frame](https://rvlenth.github.io/emmeans/articles/utilities.html#data)
 
 [Back to top](#topnav)
 
