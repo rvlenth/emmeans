@@ -145,3 +145,7 @@ routine reply once it's gone through preliminary checks. Then within a few
 hours, hopefully you'll get an email that it's on its way to CRAN. Or you'll get
 the dreaded email that it failed a check against another package; then you have
 to respond to that. Let's just assume that won't happen...
+
+```
+devtools::release(check = FALSE)
+```
