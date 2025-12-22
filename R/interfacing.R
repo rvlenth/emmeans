@@ -103,20 +103,19 @@ recover_data = function(object, ...) {
 # get classes that are OK for external code to modify
 # We don't allow overriding certain anchor classes, 
 # nor ones in 3rd place or later in inheritance
-.chk.cls = function(object) {
+.chk.cls = function(cls) {
+    sacred = c("default", "call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
+    setdiff(head(cls, 2), sacred)
+}
+
+# Private utility to find a method
+.find_method = function(object, generic) {
     cls = class(object)
     # is it an S4 class? If so, replace cls with its inheritance chain
     if(!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "Try-Error"))
         cls = c(cls[[1]], names(classes@contains))
     
-    sacred = c("default", "call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
-    setdiff(cls, sacred)
-}
-
-# Private utility to find a method
-.find_method = function(object, generic) {
-    cls = .chk.cls(object)
-    for (cl in head(cls, 2)) { # Look for user-provided method if not buried too deep
+    for (cl in .chk.cls(cls)) { # Look for user-provided method if not buried too deep
         mth <- .get.outside.method(generic, cl)
         if(!is.null(mth))
             return(mth)
