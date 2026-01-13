@@ -28,7 +28,7 @@ Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), compositions,
           tibble, xtable (>= 1.8-2)
 Enhances: CARBayes, coxme, gee, geepack, MCMCglmm, MCMCpack, mice, 
           nnet, pscl, rstanarm, sommer, survival         
-URL: https://rvlenth.github.io/emmeans/
+URL: https://rvlenth.github.io/emmeans/, https://github.com/rvlenth/emmeans/
 BugReports: https://github.com/rvlenth/emmeans/issues
 LazyData: yes
 ByteCompile: yes
