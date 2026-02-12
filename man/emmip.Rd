@@ -11,7 +11,7 @@ emmip(object, formula, ...)
 
 \method{emmip}{default}(object, formula, type, CIs = FALSE, PIs = FALSE,
   style, engine = get_emm_option("graphics.engine"), plotit = TRUE,
-  nesting.order = FALSE, ...)
+  nesting.order = FALSE, abbr.len = c(0, 0), ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.2, xlab = labs$xlab,
   ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_both", scale,
@@ -83,6 +83,12 @@ used to construct the plot.}
 are presented in order according to their nesting factors, even if those nesting
 factors are not present in \code{formula}. If \code{FALSE}, only the
 variables in \code{formula} are used to order the variables.}
+
+\item{abbr.len}{Integer vector of length 1 or 2 used to specify that factor levels
+be abbreviated to the specified lengths, using \code{\link{abbreviate}}. Any values
+less than 1 are ignored. \code{abbr.len[1]} applies to a factor plotted along the 
+horizontal axis, and \code{abbr.len[2]} (if present) applies to trace factors (shown in a legend)
+or by factors (shown in facet labels).}
 
 \item{emms}{A \code{data.frame} created by calling \code{emmip} with
 \code{plotit = FALSE}. Certain variables and attributes are expected
@@ -190,6 +196,9 @@ noise.lm = lm(noise ~ size * type * side, data = auto.noise)
 
 # Separate interaction plots of size by type, for each side
 emmip(noise.lm, type ~ size | side)
+
+# Same using the "lattice" engine
+emmip(noise.lm, type ~ size | side, engine = "lattice")
 
 # One interaction plot, using combinations of size and side as the x factor
 # ... with added confidence intervals and some formatting changes

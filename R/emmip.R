@@ -80,6 +80,11 @@ emmip = function(object, formula, ...) {
 #'   are presented in order according to their nesting factors, even if those nesting
 #'   factors are not present in \code{formula}. If \code{FALSE}, only the
 #'   variables in \code{formula} are used to order the variables.
+#' @param abbr.len Integer vector of length 1 or 2 used to specify that factor levels
+#'   be abbreviated to the specified lengths, using \code{\link{abbreviate}}. Any values
+#'   less than 1 are ignored. \code{abbr.len[1]} applies to a factor plotted along the 
+#'   horizontal axis, and \code{abbr.len[2]} (if present) applies to trace factors (shown in a legend)
+#'   or by factors (shown in facet labels). 
 #' @param ... Additional arguments passed to \code{\link{emmeans}} (when
 #'   \code{object} is not already an \code{emmGrid} object),
 #'   \code{predict.emmGrid}, 
@@ -121,6 +126,9 @@ emmip = function(object, formula, ...) {
 #'
 #' # Separate interaction plots of size by type, for each side
 #' emmip(noise.lm, type ~ size | side)
+#' 
+#' # Same using the "lattice" engine
+#' emmip(noise.lm, type ~ size | side, engine = "lattice")
 #'
 #' # One interaction plot, using combinations of size and side as the x factor
 #' # ... with added confidence intervals and some formatting changes
@@ -160,7 +168,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
                          # pch = c(1,2,6,7,9,10,15:20), 
                          # lty = 1, col = NULL, 
                          plotit = TRUE, 
-                         nesting.order = FALSE, ...) {
+                         nesting.order = FALSE, abbr.len = c(0,0), ...) {
     object = .chk.list(object, ...)
     engine = match.arg(engine, c("ggplot", "lattice", "none"))
     if (engine == "ggplot")
@@ -281,6 +289,14 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     # remove the unneeded stuff from xlabs
     xargs = xargs[setdiff(names(xargs), c("xlab","ylab"))]
     
+    ### any abbreviations?
+    if((abbr.len[1] >= 1) && is.factor(emms$xvar))
+        levels(emms$xvar) = abbreviate(levels(emms$xvar), abbr.len[1])
+    if((length(abbr.len) > 1) && (abbr.len[2] >= 1) && is.factor(emms$tvar)) {
+        levels(emms$tvar) = abbreviate(levels(emms$tvar), abbr.len[2])
+        if(!is.null(emms[[tlab]]))
+            levels(emms[[tlab]]) = abbreviate(levels(emms[[tlab]]), abbr.len[2])
+    }
     emms$.single. = NULL   # in case we have that trick column
     attr(emms, "labs") = list(xlab = xlab, ylab = ylab, tlab = tlab)
     attr(emms, "vars") = list(byvars = byvars, tvars = setdiff(tvars, ".single."))
