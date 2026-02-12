@@ -512,8 +512,8 @@ The `space` argument causes the panels to be sized according to the number of me
 
 Similarly with `plot.emmGrid()`:
 ```{r, fig.height = 2.5, fig.width = 5.5, fig.alt = "side-by-side CIs and PIs for drugs in each route. Again, with free_y scaling, each panel contains only the drugs involved"}
-plot(drug.emm, PIs = TRUE) + 
-    facet_wrap(~ route, nrow = 2, scales = "free_y", space = "free_y")
+plot(drug.emm, by = "route", PIs = TRUE) + 
+    facet_wrap(~ route, scales = "free_y", space = "free_y")
 ```
 
 
