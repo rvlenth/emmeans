@@ -395,7 +395,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
             dotarg$shape = NULL
         }
         
-        linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar), linetype = .data[[tlab]])
+        linearg$mapping = ggplot2::aes(x = .data$xvar, linetype = .data[[tlab]], group = .data[[tlab]])
         dotarg$mapping = ggplot2::aes(shape = .data[[tlab]])
         
         linearg$position = pos
@@ -433,7 +433,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
         if (style == "factor")
             grobj = grobj + do.call(ggplot2::geom_point, dotarg) + 
                 ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = 0.1))
-        linearg$mapping = ggplot2::aes(x = as.numeric(.data$xvar))
+        linearg$mapping = ggplot2::aes(x = .data$xvar, group = .data$tvar)
         grobj = grobj +
             do.call(ggplot2::geom_line, linearg)
         

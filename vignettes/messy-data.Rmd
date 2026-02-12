@@ -505,7 +505,7 @@ We can instead remove `route` from the call and instead handle it with **ggplot2
 code to use separate *x* scales:
 ```{r, fig.width = 5.5, fig.alt = "This plot shows the same means as the previous one, but each panel shows only the drugs that are nested in each route"}
 require(ggplot2)
-emmip(cows.rg, ~ drug) + facet_wrap(~ route, scales = "free_x")
+emmip(cows.rg, ~ drug) + facet_wrap(~ route, scales = "free_x", space = "free_x")
 ```
 
 Similarly with `plot.emmGrid()`:

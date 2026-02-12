@@ -1,5 +1,6 @@
 ## emmeans devel branch
 
-currently at 2.0.1
+Changes to 2.0.1
 
-
+* fixed problem observed near end of "messy data" vignette where lines and points 
+  didn't coincide
