@@ -109,10 +109,11 @@ recover_data = function(object, ...) {
 }
 
 # Private utility to find a method
+#' @importFrom methods getClass
 .find_method = function(object, generic) {
     cls = class(object)
     # is it an S4 class? If so, replace cls with its inheritance chain
-    if(!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "Try-Error"))
+    if(!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "try-error"))
         cls = c(cls[[1]], names(classes@contains))
     
     for (cl in .chk.cls(cls)) { # Look for user-provided method if not buried too deep
