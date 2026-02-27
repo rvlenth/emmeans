@@ -284,7 +284,8 @@ plot(foo8, CIs = FALSE, comparisons = TRUE)
 ```
 
 ``` re
-## Error: Aborted -- Some comparison arrows have negative length!
+## Error:
+## ! Aborted -- Some comparison arrows have negative length!
 ## (in group "1")
 ```
 

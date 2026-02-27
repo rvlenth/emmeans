@@ -31,14 +31,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/rvlenth/emmeans/blob/master/DESCRIPTION)
 
-Lenth R, Piaskowski J (2025). *emmeans: Estimated Marginal Means, aka
-Least-Squares Means*. R package version 2.0.1,
+Lenth R, Piaskowski J (2026). *emmeans: Estimated Marginal Means, aka
+Least-Squares Means*. R package version 2.0.2,
 <https://rvlenth.github.io/emmeans/>.
 
     @Manual{,
       title = {emmeans: Estimated Marginal Means, aka Least-Squares Means},
       author = {Russell V. Lenth and Julia Piaskowski},
-      year = {2025},
-      note = {R package version 2.0.1},
+      year = {2026},
+      note = {R package version 2.0.2},
       url = {https://rvlenth.github.io/emmeans/},
     }

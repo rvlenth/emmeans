@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Working with messy data</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.1</h4>
+package, Version 2.0.2</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/vignettes/messy-data.Rmd" class="external-link"><code>vignettes/messy-data.Rmd</code></a></small>
@@ -526,7 +526,8 @@ multivariate-response levels are taken into account. If the limit is
 exceeded, an error is thrown:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">mtcars.lm</span>, rg.limit <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error: The rows of your requested reference grid would be 216, which exceeds</span></span>
+<pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> The rows of your requested reference grid would be 216, which exceeds</span></span>
 <span><span class="co">## the limit of 200 (not including any multivariate responses).</span></span>
 <span><span class="co">## Your options are:</span></span>
 <span><span class="co">##   1. Specify some (or more) nuisance factors using the 'nuisance' argument</span></span>
@@ -801,7 +802,7 @@ there had been no <code>by</code> variable.</p>
 <div class="section level4">
 <h4 id="graphs-with-nesting">Graphs with nesting<a class="anchor" aria-label="anchor" href="#graphs-with-nesting"></a>
 </h4>
-<!-- @index `emmip()`!nested factors; `plot()`!nested factors; **ggplot2** package -->
+<!-- @index `emmip()`!nested factors; `plot()`!nested factors; `emmip()`!abbreviated labels; **ggplot2** package -->
 <p>It can be very helpful to take advantage of special features of
 <strong>ggplot2</strong> when graphing results with nested factors. For
 example, the default plot for the <code>cows</code> example is not
@@ -811,15 +812,19 @@ ideal:</p>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-29-1.png" class="r-plt" alt="A panel for each route. This interaction plot has a lot of empty space because all 5 drugs are represented in each panel, and the x axis labels all overlap" width="528"></p>
 <p>We can instead remove <code>route</code> from the call and instead
 handle it with <strong>ggplot2</strong> code to use separate <em>x</em>
-scales:</p>
+scales; and also abbreviate the drug levels so there is less
+clutter:</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="op">~</span> <span class="va">drug</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/emmip.html">emmip</a></span><span class="op">(</span><span class="va">cows.rg</span>, <span class="op">~</span> <span class="va">drug</span>, abbr.len <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, scales <span class="op">=</span> <span class="st">"free_x"</span>, space <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-30-1.png" class="r-plt" alt="This plot shows the same means as the previous one, but each panel shows only the drugs that are nested in each route" width="528"></p>
+<p>The <code>space</code> argument causes the panels to be sized
+according to the number of means plotted.</p>
 <p>Similarly with <code><a href="../reference/plot.html">plot.emmGrid()</a></code>:</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">drug.emm</span>, PIs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, nrow <span class="op">=</span> <span class="fl">2</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">drug.emm</span>, by <span class="op">=</span> <span class="st">"route"</span>, PIs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">route</span>, scales <span class="op">=</span> <span class="st">"free_y"</span>, space <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="messy-data_files/figure-html/unnamed-chunk-31-1.png" class="r-plt" alt="side-by-side CIs and PIs for drugs in each route. Again, with free_y scaling, each panel contains only the drugs involved" width="528"></p>
 </div>
 <div class="section level3">

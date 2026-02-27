@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.1" id="emmeans-201">emmeans 2.0.1<a class="anchor" aria-label="anchor" href="#emmeans-201"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.2" id="emmeans-202">emmeans 2.0.2<a class="anchor" aria-label="anchor" href="#emmeans-202"></a></h2>
+<ul><li>Improved dispatching for S4 classes. Previously caused problems with counterfactuals were used.</li>
+<li>fixed problem observed near end of “messy data” vignette where lines and points didn’t coincide</li>
+<li>Added an <code>abbr.len</code> argument to <code><a href="../reference/emmip.html">emmip()</a></code> for abbreviating factor levels</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.1" id="emmeans-201">emmeans 2.0.1<a class="anchor" aria-label="anchor" href="#emmeans-201"></a></h2><p class="text-muted">CRAN release: 2025-12-16</p>
 <ul><li>Fix to <code>.parse_nest()</code> to handle nested factors with spaces in their name (<a href="https://github.com/rvlenth/emmeans/issues/562" class="external-link">#562</a>)</li>
 <li>
 <code>col</code> was not handled properly in <code><a href="../reference/emmip.html">emmip()</a></code> (<a href="https://github.com/rvlenth/emmeans/issues/565" class="external-link">#565</a>)</li>

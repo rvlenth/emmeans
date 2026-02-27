@@ -1,6 +1,18 @@
 # Changelog
 
+## emmeans 2.0.2
+
+- Improved dispatching for S4 classes. Previously caused problems with
+  counterfactuals were used.
+- fixed problem observed near end of “messy data” vignette where lines
+  and points didn’t coincide
+- Added an `abbr.len` argument to
+  [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md) for
+  abbreviating factor levels
+
 ## emmeans 2.0.1
+
+CRAN release: 2025-12-16
 
 - Fix to `.parse_nest()` to handle nested factors with spaces in their
   name ([\#562](https://github.com/rvlenth/emmeans/issues/562))

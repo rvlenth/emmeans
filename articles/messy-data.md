@@ -533,7 +533,8 @@ taken into account. If the limit is exceeded, an error is thrown:
 ref_grid(mtcars.lm, rg.limit = 200)
 ```
 
-    ## Error: The rows of your requested reference grid would be 216, which exceeds
+    ## Error:
+    ## ! The rows of your requested reference grid would be 216, which exceeds
     ## the limit of 200 (not including any multivariate responses).
     ## Your options are:
     ##   1. Specify some (or more) nuisance factors using the 'nuisance' argument
@@ -877,23 +878,28 @@ because all 5 drugs are represented in each panel, and the x axis labels
 all overlap](messy-data_files/figure-html/unnamed-chunk-29-1.png)
 
 We can instead remove `route` from the call and instead handle it with
-**ggplot2** code to use separate *x* scales:
+**ggplot2** code to use separate *x* scales; and also abbreviate the
+drug levels so there is less clutter:
 
 ``` r
 require(ggplot2)
-emmip(cows.rg, ~ drug) + facet_wrap(~ route, scales = "free_x")
+emmip(cows.rg, ~ drug, abbr.len = 6) + 
+  facet_wrap(~ route, scales = "free_x", space = "free_x")
 ```
 
 ![This plot shows the same means as the previous one, but each panel
 shows only the drugs that are nested in each
 route](messy-data_files/figure-html/unnamed-chunk-30-1.png)
 
+The `space` argument causes the panels to be sized according to the
+number of means plotted.
+
 Similarly with
 [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md):
 
 ``` r
-plot(drug.emm, PIs = TRUE) + 
-    facet_wrap(~ route, nrow = 2, scales = "free_y")
+plot(drug.emm, by = "route", PIs = TRUE) + 
+    facet_wrap(~ route, scales = "free_y", space = "free_y")
 ```
 
 ![side-by-side CIs and PIs for drugs in each route. Again, with free_y

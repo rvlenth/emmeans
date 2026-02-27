@@ -11,7 +11,7 @@ emmip(object, formula, ...)
 # Default S3 method
 emmip(object, formula, type, CIs = FALSE, PIs = FALSE,
   style, engine = get_emm_option("graphics.engine"), plotit = TRUE,
-  nesting.order = FALSE, ...)
+  nesting.order = FALSE, abbr.len = c(0, 0), ...)
 
 emmip_ggplot(emms, style = "factor", dodge = 0.2, xlab = labs$xlab,
   ylab = labs$ylab, tlab = labs$tlab, facetlab = "label_both", scale,
@@ -105,6 +105,16 @@ emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
   order according to their nesting factors, even if those nesting
   factors are not present in `formula`. If `FALSE`, only the variables
   in `formula` are used to order the variables.
+
+- abbr.len:
+
+  Integer vector of length 1 or 2 used to specify that factor levels be
+  abbreviated to the specified lengths, using
+  [`abbreviate`](https://rdrr.io/r/base/abbreviate.html). Any values
+  less than 1 are ignored. `abbr.len[1]` applies to a factor plotted
+  along the horizontal axis, and `abbr.len[2]` (if present) applies to
+  trace factors (shown in a legend) or by factors (shown in facet
+  labels).
 
 - emms:
 
@@ -238,6 +248,10 @@ noise.lm = lm(noise ~ size * type * side, data = auto.noise)
 
 # Separate interaction plots of size by type, for each side
 emmip(noise.lm, type ~ size | side)
+
+
+# Same using the "lattice" engine
+emmip(noise.lm, type ~ size | side, engine = "lattice")
 
 
 # One interaction plot, using combinations of size and side as the x factor

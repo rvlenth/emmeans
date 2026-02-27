@@ -267,6 +267,8 @@
   - [Setting defaults
     for](https://rvlenth.github.io/emmeans/articles/utilities.html#defaults)
 - [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
+  - [abbreviated
+    labels](https://rvlenth.github.io/emmeans/articles/messy-data.html#cows)
   - [in *basics:
     emmip*](https://rvlenth.github.io/emmeans/articles/basics.html#emmip)
   - [in *basics:
