@@ -103,22 +103,26 @@ recover_data = function(object, ...) {
 # get classes that are OK for external code to modify
 # We don't allow overriding certain anchor classes, 
 # nor ones in 3rd place or later in inheritance
-.chk.cls = function(object) {
+.chk.cls = function(cls) {
     sacred = c("default", "call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
-    setdiff(head(class(object), 2), sacred)
+    setdiff(head(cls, 2), sacred)
 }
 
 # Private utility to find a method
+#' @importFrom methods getClass
 .find_method = function(object, generic) {
-    for (cl in .chk.cls(object)) {
+    cls = class(object)
+    # is it an S4 class? If so, replace cls with its inheritance chain
+    if(!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "try-error"))
+        cls = c(cls[[1]], names(classes@contains))
+    
+    for (cl in .chk.cls(cls)) { # Look for user-provided method if not buried too deep
         mth <- .get.outside.method(generic, cl)
         if(!is.null(mth))
             return(mth)
     }
-    for (cl in class(object)) {
-        # mth = utils::getAnywhere(paste(generic, cl, sep = "."))
-        # if (length(mth$objs) > 0)
-        #     return(mth$objs[[1]])
+    # Now look for our own S3 methods
+    for (cl in cls) {
         mth = getS3method(generic, cl, optional = TRUE)
         if(!is.null(mth))
             return(mth)

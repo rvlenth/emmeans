@@ -197,6 +197,7 @@ vignette: >
       * [Modifying](utilities.html#update)
       * [Setting defaults for](utilities.html#defaults)
   * `emmip()`
+      * [abbreviated labels](messy-data.html#cows)
       * [in *basics: emmip*](basics.html#emmip)
       * [in *basics: plots*](basics.html#plots)
       * [in *interactions: factors*](interactions.html#factors)

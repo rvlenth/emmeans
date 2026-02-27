@@ -2,6 +2,14 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 2.0.2
+
+  * Improved dispatching for S4 classes. Previously caused problems with
+    counterfactuals were used.
+  * fixed problem observed near end of "messy data" vignette where lines and points 
+    didn't coincide
+  * Added an `abbr.len` argument to `emmip()` for abbreviating factor levels
+
 ## emmeans 2.0.1
 
   * Fix to `.parse_nest()` to handle nested factors with spaces in their name (#562)
