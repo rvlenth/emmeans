@@ -53,7 +53,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     X = kronecker(pat, X)
     nbasis = estimability::all.estble
     nbasis = kronecker(rep(1,k), nbasis)
-    misc = list(tran = "clr")   ### misc = list(tran = "log", inv.lbl = "e^y")
+    misc = list(tran = "clr", inv.lbl = "e^y")   ### misc = list(tran = "log", inv.lbl = "e^y")
     dfargs = list(df = object$edf)
     dffun = function(k, dfargs) dfargs$df
     if(is.null(ylevs <- object$lev))
