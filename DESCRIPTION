@@ -21,7 +21,7 @@ Maintainer: Julia Piaskowski <julia.piask@gmail.com>
 Depends: R (>= 4.1.0)
 Imports: estimability (>= 1.4.1), graphics, methods, mvtnorm, numDeriv, rlang, stats, utils
 Suggests: bayesplot, bayestestR, biglm, brms, car, coda (>= 0.17), compositions,
-          ggplot2, knitr, lattice, lme4, lmerTest (>= 2.0.32), logspline, MASS, 
+          ggplot2 (>= 4.0.0), knitr, lattice, lme4, lmerTest (>= 2.0.32), logspline, MASS, 
           mediation, mgcv, multcomp, multcompView, MuMIn, nlme,
           ordinal (>= 2014.11-12), pbkrtest (>= 0.4-1), 
           rmarkdown, robmixglm, rsm, sandwich, scales, splines, testthat, 
