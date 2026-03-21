@@ -131,7 +131,8 @@ as.data.frame.summary_emm = function(x, ...) {
 #'   In \code{confint.emmGrid}, 
 #'   \code{predict.emmGrid}, and 
 #'   \code{test.emmGrid}, these arguments are passed to
-#'   \code{summary.emmGrid}.
+#'   \code{summary.emmGrid}. These arguments are also passed to \code{mvregrid}
+#'   when we have a multivariate transformation.
 #'
 #' @return \code{summary.emmGrid}, \code{confint.emmGrid}, and
 #'   \code{test.emmGrid} return an object of class \code{"summary_emm"}, which
@@ -419,6 +420,24 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
                             null, delta, side, frequentist, 
                             bias.adjust = get_emm_option("back.bias.adj"),
                             sigma, ...) {
+    if (missing(type))
+        type = .get.predict.type(object@misc)
+    else
+        type = .validate.type(type)
+    
+    # if we have a multivariate transformation, try to replace it with mvregrid
+    if((type == "response") && !is.null(tran <- object@misc$tran) && (tran %in% mult.trans)) {
+        foo = try(mvregrid(object, ...), silent = TRUE)
+        if(!inherits(foo, "try-error")) {
+            object = foo
+            message("Note: Multivariate transformation found, object has been re-gridded;\n",
+                    "this may distort levels or order of listing")
+        }
+        else {
+            warning("Multivariate transformation found that we can't invert.\n",
+                    "Perhaps add a 'mult.name' argument?")
+        }
+    }
     if(missing(sigma))
         sigma = object@misc$sigma
     if(missing(frequentist) && !is.null(object@misc$frequentist))
@@ -467,11 +486,6 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     
     
     
-    if (missing(type))
-        type = .get.predict.type(misc)
-    else
-        type = .validate.type(type)
-    
     # if there are two transformations and we want response, then we need to undo both
     if ((type == "response") && (!is.null(misc$tran2))) {
         tmp = match.call()
@@ -483,10 +497,11 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     }
     else
         two.trans = FALSE
+    ### Commented out because we handled this earlier
     # Check if we have a log-ratio transformation. At least then we can guess the problem.
-    if ((type == "response") && is.character(object@misc$tran) && endsWith(object@misc$tran, "lr"))
-        warning("It looks like you have a multivariate transformation -- not handled by type = 'response'.\n",
-                "Perhaps instead you wanted to use 'mvregrid()'?")
+    # if ((type == "response") && is.character(object@misc$tran) && endsWith(object@misc$tran, "lr"))
+    #     warning("It looks like you have a multivariate transformation -- not handled by type = 'response'.\n",
+    #             "Perhaps instead you wanted to use 'mvregrid()'?")
     
 
     

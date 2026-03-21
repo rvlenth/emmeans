@@ -116,7 +116,8 @@ corresponds (perhaps after recycling) to the order of the reference grid.}
 In \code{confint.emmGrid}, 
 \code{predict.emmGrid}, and 
 \code{test.emmGrid}, these arguments are passed to
-\code{summary.emmGrid}.}
+\code{summary.emmGrid}. These arguments are also passed to \code{mvregrid}
+when we have a multivariate transformation.}
 
 \item{parm}{(Required argument for \code{confint} methods, but not used)}
 
