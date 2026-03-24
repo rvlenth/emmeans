@@ -27,4 +27,3 @@ std.and.rot <- function(x, pc, ...) {
 
 # EMMs obtained if model had been fitted with PC$scores as the response ...
 mvregrid(arr.emm, newname = "prin.comp", fcn = std.and.rot, pc = PC)
-
