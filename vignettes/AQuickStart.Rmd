@@ -1,5 +1,5 @@
 ---
-title: "Quick start guide for **emmeans**"
+title: "Quick start guide for emmeans"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >

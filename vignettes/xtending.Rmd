@@ -1,5 +1,5 @@
 ---
-title: "For developers: Extending **emmeans**"
+title: "For developers: Extending emmeans"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
 vignette: >
