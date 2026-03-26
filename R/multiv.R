@@ -221,10 +221,11 @@ mvregrid = function(object, transform = "response", mult.name, newname = mult.na
     yhat = matrix(predict(object), ncol = (p <- length(levels[[mult.name]])))
     if(missing(fcn))
         fcn = ifelse(transform == "response", paste0(tran, "Inv"), transform)
-    if(requireNamespace("compositions"))
-        fcn = get(fcn, envir = asNamespace("compositions"))
-    else
-        stop("The 'compositions' package must be installed to proceed")
+    if((is.character(fcn)) && requireNamespace("compositions")) {
+        fcn = try(get(fcn, envir = asNamespace("compositions")), silent = TRUE)
+        if(inherits(fcn, "try-error"))
+            stop("The 'compositions' package must be installed to proceed")
+    }
     
     newy = fcn(yhat, ...)
     k = ncol(newy)
@@ -241,7 +242,7 @@ mvregrid = function(object, transform = "response", mult.name, newname = mult.na
         })
         object@post.beta = t(pb)
     }
-    Jac = numDeriv::jacobian(\(x) as.numeric(fcn(x)), yhat)
+    Jac = numDeriv::jacobian(\(x, ...) as.numeric(fcn(x, ...)), yhat, ...)
     object@V = Jac %*% vcov(object) %*% t(Jac)
     object@bhat = as.numeric(newy)
     object@linfct = diag(length(object@bhat))
