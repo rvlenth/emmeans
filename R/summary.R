@@ -426,7 +426,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         type = .validate.type(type)
     
     # if we have a multivariate transformation, try to replace it with mvregrid
-    if((type == "response") && !is.null(tran <- object@misc$tran) && (tran %in% mult.trans)) {
+    if((type == "response") && !is.null(tran <- object@misc$tran) && 
+       is.character(tran) && (tran %in% mult.trans)) {
         foo = try(mvregrid(object, ...), silent = TRUE)
         if(!inherits(foo, "try-error")) {
             object = foo
