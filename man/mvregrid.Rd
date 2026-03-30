@@ -4,20 +4,28 @@
 \alias{mvregrid}
 \title{Multivariate regridding}
 \usage{
-mvregrid(object, newname = "component", newlevs = seq_len(ncol(newy)),
-  mult.name = names(levels)[length(levels)], fcn = paste0(tran, "Inv"),
-  ...)
+mvregrid(object, transform = "response", mult.name, newname = mult.name,
+  newlevs, fcn, ...)
 }
 \arguments{
 \item{object}{An \code{emmGrid} object}
 
-\item{newname}{The name to give to the newly created multivariate factor}
-
-\item{newlevs}{Character levels of the newly created factor (must conform to
-the number of columns created by \code{fcn})}
+\item{transform}{The transformation to use in re-gridding. If \code{"response"},
+we apply the inverse of the multivariate transformation in \code{object@misc$tran};
+otherwise, we re-grid as if \code{transform} had been applied to the multivariate
+response. (Note that this will entail first re-gridding to the response scale
+if necessary.)}
 
 \item{mult.name}{The name of the multivariate factor to be transformed.
-By default, we use the last factor}
+If missing, we use \code{object@roles$multresp}, and throw an error message 
+if it is \code{NULL} or ambiguous; in that case, the user must repeat the
+call with \code{mult.name} specified.}
+
+\item{newname}{the name to be given to the newly transformed variable}
+
+\item{newlevs}{levels of the newly created factor (must conform to
+the number of columns created by \code{fcn}). If missing, we use the column names
+of the newly created variable.}
 
 \item{fcn}{The multivariate function to apply. If character, we look for it 
 in the namespace of the \pkg{compositions} package.}

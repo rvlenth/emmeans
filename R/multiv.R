@@ -149,7 +149,9 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
 }
 
 
-
+# List of multivariate transformations we recognize
+mult.trans = c("alr", "apt", "cdt", "clr", "cpt", "idt", "iit", "ilr", "ilt", "ipt", "ult")
+log.mult.trans = mult.trans[endsWith(mult.trans, "lr")]  # only the log-ratio-based ones
 
 #' Multivariate regridding
 #' 
@@ -168,11 +170,19 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
 #' Currently, no bias-adjustment option is available.
 #'
 #' @param object An \code{emmGrid} object
-#' @param newname The name to give to the newly created multivariate factor
-#' @param newlevs Character levels of the newly created factor (must conform to
-#' the number of columns created by \code{fcn})
+#' @param transform The transformation to use in re-gridding. If \code{"response"},
+#'   we apply the inverse of the multivariate transformation in \code{object@misc$tran};
+#'   otherwise, we re-grid as if \code{transform} had been applied to the multivariate
+#'   response. (Note that this will entail first re-gridding to the response scale
+#'   if necessary.)
 #' @param mult.name The name of the multivariate factor to be transformed.
-#'   By default, we use the last factor
+#'   If missing, we use \code{object@roles$multresp}, and throw an error message 
+#'   if it is \code{NULL} or ambiguous; in that case, the user must repeat the
+#'   call with \code{mult.name} specified.
+#' @param newname the name to be given to the newly transformed variable
+#' @param newlevs levels of the newly created factor (must conform to
+#'   the number of columns created by \code{fcn}). If missing, we use the column names
+#'   of the newly created variable.
 #' @param fcn The multivariate function to apply. If character, we look for it 
 #'   in the namespace of the \pkg{compositions} package.
 #' @param ... Additional arguments passed to \code{fcn}
@@ -185,33 +195,46 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
 #'     emm_example("mvregrid")
 #'     # Use emm_example("mvregrid", list = TRUE) # to see just the code
 #' 
-mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy)), 
-                    mult.name = names(levels)[length(levels)], 
-                    fcn = paste0(tran, "Inv"), ...) {
-    levels = levels(object)
+mvregrid = function(object, transform = "response", mult.name, newname = mult.name, newlevs, fcn, ...) {
     tran = object@misc$tran
+    if((transform != "response") && !is.null(tran)) {    # non-response transformation -- 1st regrid to response scale
+        object = mvregrid(object, transform = "response", mult.name = mult.name)
+    }
+    levels = levels(object)
     if(is.character(tran))
         tran = rev(strsplit(tran, "\\.")[[1]])[1]
     by = object@misc$by.vars
-    if (mult.name != names(levels)[length(levels)]) {
-        idx = which(names(levels) == mult.name)
-        if(length(idx) == 0) 
-            stop("we don't have a factor named '", mult.name, "'")
-        levels = c(levels[-idx], levels[idx])
+    if (missing(mult.name)) {
+        mult.name = object@roles$multresp
+        if(is.null(mult.name) || (length(mult.name) != 1))
+            stop("No default for 'mult.name' identified; must supply it")
     }
+    idx = which(names(levels) == mult.name)
+    if(length(idx) == 0) 
+        stop("we don't have a factor named '", mult.name, "'")
+    levels = c(levels[-idx], levels[idx])
+
     ord = .std.order(object@grid, levels)
     if(any(ord != seq_along(ord)))
         object = object[ord] |> update(by.vars = by)
     
     yhat = matrix(predict(object), ncol = (p <- length(levels[[mult.name]])))
-    if(is.character(fcn)) {
-        if(requireNamespace("compositions"))
-            fcn = get(fcn, envir = asNamespace("compositions"))
-        else
+    if(missing(fcn))
+        fcn = ifelse(transform == "response", paste0(tran, "Inv"), transform)
+    if((is.character(fcn)) && requireNamespace("compositions")) {
+        fcn = try(get(fcn, envir = asNamespace("compositions")), silent = TRUE)
+        if(inherits(fcn, "try-error"))
             stop("The 'compositions' package must be installed to proceed")
     }
+    
     newy = fcn(yhat, ...)
-    if(length(newlevs) != (k <- ncol(newy)))
+    k = ncol(newy)
+    if(missing(newlevs)) {
+        newlevs = colnames(newy)
+        if(is.null(newlevs))
+            newlevs = seq_len(ncol(newy))
+    }
+    else if(length(newlevs) != k)
         stop("Nonconforming 'newlevs': Must be of length ", k)
     if(!is.na(object@post.beta)) {
         pb = apply(object@linfct %*% t(object@post.beta), 2, function(y) {
@@ -219,7 +242,7 @@ mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy))
         })
         object@post.beta = t(pb)
     }
-    Jac = numDeriv::jacobian(\(x) as.numeric(fcn(x)), yhat)
+    Jac = numDeriv::jacobian(\(x, ...) as.numeric(fcn(x, ...)), yhat, ...)
     object@V = Jac %*% vcov(object) %*% t(Jac)
     object@bhat = as.numeric(newy)
     object@linfct = diag(length(object@bhat))
@@ -233,7 +256,9 @@ mvregrid = function(object, newname = "component", newlevs = seq_len(ncol(newy))
     object@grid[[newname]] = rep(newlevs, each = n)
     if(!is.null(wgt))
         object@grid[[".wgt."]] = rep(wgt[seq_len(n)], k)
-    object@misc$tran = object@misc$inv.lbl = object@misc$sigma = NULL
+    object@misc$tran = object@misc$inv.lbl = object@misc$sigma = object@misc$is.new.rg = NULL
+    if(transform != "response")
+        object@misc$tran = transform
     object@misc$pri.vars = setdiff(names(object@grid), c(object@misc$by.vars, ".wgt'"))
     object@misc$methDesc = "mvregrid"
     
