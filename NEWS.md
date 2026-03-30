@@ -2,7 +2,7 @@
 title: "NEWS for the emmeans package"
 ---
 
-## emmeans devel
+## emmeans 2.0.3
   * Repaired `contrast` so that it recognizes multivariate transformations 
     `alr`, `clr`, and `ilr` as being log-based. Thus contrasts thereof are
     log odds ratios (#575)
