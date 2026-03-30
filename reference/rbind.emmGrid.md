@@ -123,14 +123,14 @@ w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
 t.w <- pairs(emmeans(warp.rg, ~ tension | wool))
 rbind(w.t, t.w, adjust = "mvt")
 #>  tension wool contrast estimate   SE df t.ratio p.value
-#>  L       .    A - B      16.333 5.16 48   3.167  0.0206
+#>  L       .    A - B      16.333 5.16 48   3.167  0.0207
 #>  M       .    A - B      -4.778 5.16 48  -0.926  0.9119
-#>  H       .    A - B       5.778 5.16 48   1.120  0.8258
+#>  H       .    A - B       5.778 5.16 48   1.120  0.8257
 #>  .       A    L - M      20.556 5.16 48   3.986  0.0019
-#>  .       A    L - H      20.000 5.16 48   3.878  0.0027
+#>  .       A    L - H      20.000 5.16 48   3.878  0.0028
 #>  .       A    M - H      -0.556 5.16 48  -0.108  1.0000
 #>  .       B    L - M      -0.556 5.16 48  -0.108  1.0000
-#>  .       B    L - H       9.444 5.16 48   1.831  0.3795
+#>  .       B    L - H       9.444 5.16 48   1.831  0.3792
 #>  .       B    M - H      10.000 5.16 48   1.939  0.3192
 #> 
 #> P value adjustment: mvt method for 9 tests 
@@ -172,8 +172,8 @@ rbind(all, which = c(2, 4), adjust = "mvt")
 #>  src.contrast pct.contrast          estimate   SE df t.ratio p.value
 #>  fish - soy   .                        -9.47 2.33 23  -4.059  0.0028
 #>  fish - skim  .                       -15.58 2.39 23  -6.526 <0.0001
-#>  soy - skim   .                        -6.11 2.34 23  -2.613  0.0783
-#>  .            percent12 - percent9      6.36 2.47 23   2.570  0.0852
+#>  soy - skim   .                        -6.11 2.34 23  -2.613  0.0782
+#>  .            percent12 - percent9      6.36 2.47 23   2.570  0.0854
 #>  .            percent15 - percent12     1.96 2.57 23   0.763  0.9397
 #>  .            percent18 - percent15     3.31 3.04 23   1.088  0.7944
 #> 

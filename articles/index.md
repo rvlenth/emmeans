@@ -3,7 +3,7 @@
 ### All vignettes
 
 - [Quick start guide for
-  \*\*emmeans\*\*](https://rvlenth.github.io/emmeans/articles/AQuickStart.md):
+  emmeans](https://rvlenth.github.io/emmeans/articles/AQuickStart.md):
 - [Basics of estimated marginal
   means](https://rvlenth.github.io/emmeans/articles/basics.md):
 - [Comparisons and contrasts in
@@ -19,7 +19,7 @@
 - [Models supported by
   emmeans](https://rvlenth.github.io/emmeans/articles/models.md):
 - [Prediction in
-  \*\*emmeans\*\*](https://rvlenth.github.io/emmeans/articles/predictions.md):
+  emmeans](https://rvlenth.github.io/emmeans/articles/predictions.md):
 - [Re-engineering
   CLDs](https://rvlenth.github.io/emmeans/articles/re-engineering-clds.md):
 - [Sophisticated models in
@@ -33,4 +33,4 @@
 - [Explanations
   supplement](https://rvlenth.github.io/emmeans/articles/xplanations.md):
 - [For developers: Extending
-  \*\*emmeans\*\*](https://rvlenth.github.io/emmeans/articles/xtending.md):
+  emmeans](https://rvlenth.github.io/emmeans/articles/xtending.md):

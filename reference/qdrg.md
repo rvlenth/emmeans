@@ -185,6 +185,9 @@ if (require(biglm, quietly = TRUE))
     
 if(require(coda, quietly = TRUE) && require(lme4, quietly = TRUE)) 
     emm_example("qdrg-coda")
+#> Registered S3 method overwritten by 'lme4':
+#>   method           from
+#>   na.action.merMod car 
 #> 
 #> Attaching package: ‘lme4’
 #> The following object is masked from ‘package:nlme’:

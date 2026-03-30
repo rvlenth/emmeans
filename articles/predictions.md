@@ -1,4 +1,4 @@
-# Prediction in \*\*emmeans\*\*
+# Prediction in emmeans
 
 In this vignette, we discuss **emmeans**’s rudimentary capabilities for
 constructing prediction intervals.

@@ -29,7 +29,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/rvlenth/emmeans/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/rvlenth/emmeans/blob/main/DESCRIPTION)
 
 Lenth R, Piaskowski J (2026). *emmeans: Estimated Marginal Means, aka
 Least-Squares Means*. R package version 2.0.2,

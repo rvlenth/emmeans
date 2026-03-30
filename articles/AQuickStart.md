@@ -1,4 +1,4 @@
-# Quick start guide for \*\*emmeans\*\*
+# Quick start guide for emmeans
 
 ## Contents
 

@@ -28,7 +28,7 @@ models that have a compositional response."><meta property="og:image" content="h
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/AQuickStart.html">Quick start guide for **emmeans**</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/AQuickStart.html">Quick start guide for emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/basics.html">Basics of estimated marginal means</a></li>
     <li><a class="dropdown-item" href="../articles/comparisons.html">Comparisons and contrasts in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/confidence-intervals.html">Confidence intervals and tests in emmeans</a></li>
@@ -36,14 +36,14 @@ models that have a compositional response."><meta property="og:image" content="h
     <li><a class="dropdown-item" href="../articles/interactions.html">Interaction analysis in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/messy-data.html">Working with messy data</a></li>
     <li><a class="dropdown-item" href="../articles/models.html">Models supported by emmeans</a></li>
-    <li><a class="dropdown-item" href="../articles/predictions.html">Prediction in **emmeans**</a></li>
+    <li><a class="dropdown-item" href="../articles/predictions.html">Prediction in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/re-engineering-clds.html">Re-engineering CLDs</a></li>
     <li><a class="dropdown-item" href="../articles/sophisticated.html">Sophisticated models in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/transformations.html">Transformations and link functions in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/utilities.html">Utilities and options for emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/vignette-topics.html">Index of vignette topics</a></li>
     <li><a class="dropdown-item" href="../articles/xplanations.html">Explanations supplement</a></li>
-    <li><a class="dropdown-item" href="../articles/xtending.html">For developers: Extending **emmeans**</a></li>
+    <li><a class="dropdown-item" href="../articles/xtending.html">For developers: Extending emmeans</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -57,7 +57,7 @@ models that have a compositional response."><meta property="og:image" content="h
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Multivariate regridding</h1>
-      <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/R/multiv.R" class="external-link"><code>R/multiv.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/main/R/multiv.R" class="external-link"><code>R/multiv.R</code></a></small>
       <div class="d-none name"><code>mvregrid.Rd</code></div>
     </div>
 
@@ -69,9 +69,8 @@ models that have a compositional response.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mvregrid</span><span class="op">(</span><span class="va">object</span>, newname <span class="op">=</span> <span class="st">"component"</span>, newlevs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">newy</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  mult.name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">levels</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">levels</span><span class="op">)</span><span class="op">]</span>, fcn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tran</span>, <span class="st">"Inv"</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mvregrid</span><span class="op">(</span><span class="va">object</span>, transform <span class="op">=</span> <span class="st">"response"</span>, <span class="va">mult.name</span>, newname <span class="op">=</span> <span class="va">mult.name</span>,</span>
+<span>  <span class="va">newlevs</span>, <span class="va">fcn</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -82,18 +81,29 @@ models that have a compositional response.</p>
 <dd><p>An <code>emmGrid</code> object</p></dd>
 
 
-<dt id="arg-newname">newname<a class="anchor" aria-label="anchor" href="#arg-newname"></a></dt>
-<dd><p>The name to give to the newly created multivariate factor</p></dd>
-
-
-<dt id="arg-newlevs">newlevs<a class="anchor" aria-label="anchor" href="#arg-newlevs"></a></dt>
-<dd><p>Character levels of the newly created factor (must conform to
-the number of columns created by <code>fcn</code>)</p></dd>
+<dt id="arg-transform">transform<a class="anchor" aria-label="anchor" href="#arg-transform"></a></dt>
+<dd><p>The transformation to use in re-gridding. If <code>"response"</code>,
+we apply the inverse of the multivariate transformation in <code>object@misc$tran</code>;
+otherwise, we re-grid as if <code>transform</code> had been applied to the multivariate
+response. (Note that this will entail first re-gridding to the response scale
+if necessary.)</p></dd>
 
 
 <dt id="arg-mult-name">mult.name<a class="anchor" aria-label="anchor" href="#arg-mult-name"></a></dt>
 <dd><p>The name of the multivariate factor to be transformed.
-By default, we use the last factor</p></dd>
+If missing, we use <code>object@roles$multresp</code>, and throw an error message
+if it is <code>NULL</code> or ambiguous; in that case, the user must repeat the
+call with <code>mult.name</code> specified.</p></dd>
+
+
+<dt id="arg-newname">newname<a class="anchor" aria-label="anchor" href="#arg-newname"></a></dt>
+<dd><p>the name to be given to the newly transformed variable</p></dd>
+
+
+<dt id="arg-newlevs">newlevs<a class="anchor" aria-label="anchor" href="#arg-newlevs"></a></dt>
+<dd><p>levels of the newly created factor (must conform to
+the number of columns created by <code>fcn</code>). If missing, we use the column names
+of the newly created variable.</p></dd>
 
 
 <dt id="arg-fcn">fcn<a class="anchor" aria-label="anchor" href="#arg-fcn"></a></dt>
@@ -129,36 +139,114 @@ formula.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> --- Running code from 'system.file("extexamples", "mvregrid.R", package = "emmeans")'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; data(AnimalVegetation, package = "compositions")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; require("compositions")</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: compositions</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Welcome to compositions, a package for compositional data analysis.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Find an intro with "? compositions"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘compositions’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     anova, cor, cov, dist, var</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:graphics’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     segments</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     %*%, norm, scale, scale.default</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; data(AnimalVegetation)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AV &lt;- as.data.frame(AnimalVegetation)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVmod &lt;- lm(compositions::ilr(cbind(disc, spick, din, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +     spin)) ~ regA, data = AV)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AV$region &lt;- factor(ifelse(AV$regA == 1, "A", "B"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVmod &lt;- lm(ilr(cbind(disc, spick, din, spin)) ~ region, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     data = AV)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVRG &lt;- suppressWarnings(ref_grid(AVmod))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &gt; AVRG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'emmGrid' object with variables:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     regA = 0, 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     region = A, B</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rep.meas = multivariate response levels: 1, 2, 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Transformation: “::.compositions.ilr” </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Transformation: “ilr” </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; confint(mvregrid(AVRG, newname = "comp", newlevs = c("disc", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> +     "spick", "din", "spin"), fcn = "ilrInv"), by = "regA")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> regA = 0:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; lvls &lt;- c("disc", "spick", "din", "spin")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; confint(mvregrid(AVRG, newname = "comp", newlevs = lvls), </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     by = "region")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region = A:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  comp  prediction     SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  disc       0.322 0.0217 98    0.279    0.365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  spick      0.260 0.0134 98    0.233    0.286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  din        0.183 0.0152 98    0.153    0.213</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  spin       0.235 0.0122 98    0.211    0.260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region = B:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  comp  prediction     SE df lower.CL upper.CL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  disc       0.349 0.0228 98    0.304    0.394</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  spick      0.229 0.0123 98    0.205    0.254</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  din        0.184 0.0155 98    0.153    0.214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  spin       0.238 0.0122 98    0.214    0.262</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> regA = 1:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  comp  prediction     SE df lower.CL upper.CL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  disc       0.322 0.0217 98    0.279    0.365</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  spick      0.260 0.0134 98    0.233    0.286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  din        0.183 0.0152 98    0.153    0.213</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  spin       0.235 0.0122 98    0.211    0.260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; mvregrid(AVRG, transform = "clr", newname = "comp", </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     newlevs = lvls)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  region comp  prediction     SE df</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A      disc      0.2722 0.0773 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B      disc      0.3617 0.0773 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A      spick     0.0579 0.0527 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B      spick    -0.0590 0.0527 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A      din      -0.2902 0.0731 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B      din      -0.2813 0.0731 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  A      spin     -0.0398 0.0474 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  B      spin     -0.0214 0.0474 98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results are given on the clr (not the response) scale. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; arr.lm &lt;- lm(as.matrix(USArrests) ~ state.region)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; arr.emm &lt;- emmeans(arr.lm, ~crime | state.region, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     mult.name = "crime")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; PC &lt;- princomp(USArrests, cor = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; std.and.rot &lt;- function(x, pc, ...) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     z &lt;- sweep(sweep(x, 2, pc$center, "-"), 2, pc$scale, "/")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     z %*% pc$loadings</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &gt; mvregrid(arr.emm, newname = "prin.comp", fcn = std.and.rot, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> +     pc = PC)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state.region = Northeast:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  prin.comp  emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.1    -1.0350 0.477 46 -1.99507  -0.0749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.2    -0.5710 0.274 46 -1.12204  -0.0199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.3     0.4020 0.159 46  0.08119   0.7229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.4    -0.0924 0.140 46 -0.37370   0.1890</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state.region = South:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  prin.comp  emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.1     0.7125 0.358 46 -0.00753   1.4326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.2     0.8652 0.205 46  0.45186   1.2785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.3     0.3153 0.120 46  0.07463   0.5559</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.4     0.0886 0.105 46 -0.12241   0.2996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state.region = North Central:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  prin.comp  emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.1    -0.8013 0.413 46 -1.63276   0.0301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.2    -0.1986 0.237 46 -0.67589   0.2786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.3    -0.1127 0.138 46 -0.39056   0.1652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.4     0.1027 0.121 46 -0.14094   0.3464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state.region = West:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  prin.comp  emmean    SE df lower.CL upper.CL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.1     0.5793 0.397 46 -0.21955   1.3781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.2    -0.4862 0.228 46 -0.94473  -0.0277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.3    -0.5624 0.133 46 -0.82933  -0.2954</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Comp.4    -0.1399 0.116 46 -0.37401   0.0942</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

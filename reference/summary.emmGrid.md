@@ -158,7 +158,8 @@ x[..., as.df = FALSE]
 
   Optional arguments such as `scheffe.rank` (see “P-value adjustments”).
   In `confint.emmGrid`, `predict.emmGrid`, and `test.emmGrid`, these
-  arguments are passed to `summary.emmGrid`.
+  arguments are passed to `summary.emmGrid`. These arguments are also
+  passed to `mvregrid` when we have a multivariate transformation.
 
 - parm:
 
@@ -608,9 +609,9 @@ test(pigs.emm, null = log(35), delta = log(1.10), side = ">")
 con <- contrast(pigs.emm, "consec")
 test(con)
 #>  contrast              ratio     SE df null t.ratio p.value
-#>  percent12 / percent9   1.20 0.0671 23    1   3.202  0.0111
+#>  percent12 / percent9   1.20 0.0671 23    1   3.202  0.0109
 #>  percent15 / percent12  1.04 0.0604 23    1   0.650  0.8613
-#>  percent18 / percent15  1.09 0.0750 23    1   1.194  0.5201
+#>  percent18 / percent15  1.09 0.0750 23    1   1.194  0.5200
 #> 
 #> Results are averaged over the levels of: source 
 #> P value adjustment: mvt method for 3 tests 
@@ -652,8 +653,8 @@ summary(con, infer = c(TRUE, TRUE), adjust = "scheffe", scheffe.rank = 5)
 # Show estimates to more digits
 print(test(con), digits = 7)
 #>  contrast                 ratio         SE df null t.ratio p.value
-#>  percent12 / percent9  1.196684 0.06710564 23    1   3.202  0.0109
-#>  percent15 / percent12 1.038570 0.06042501 23    1   0.650  0.8614
+#>  percent12 / percent9  1.196684 0.06710564 23    1   3.202  0.0110
+#>  percent15 / percent12 1.038570 0.06042501 23    1   0.650  0.8613
 #>  percent18 / percent15 1.085945 0.07499759 23    1   1.194  0.5201
 #> 
 #> Results are averaged over the levels of: source 

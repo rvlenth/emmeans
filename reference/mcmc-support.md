@@ -147,18 +147,18 @@ if(requireNamespace("coda"))
 #>    plus standard error of the mean:
 #> 
 #>                                 Mean    SD Naive SE Time-series SE
-#> size 15.0357142857143 period 1 3.860 1.912  0.08551        0.10055
-#> size 15.0357142857143 period 2 1.652 1.391  0.06221        0.06134
-#> size 15.0357142857143 period 3 1.598 1.250  0.05592        0.05594
-#> size 15.0357142857143 period 4 1.058 1.062  0.04752        0.05217
+#> size 15.0357142857143 period 1 3.898 1.946  0.08703        0.08711
+#> size 15.0357142857143 period 2 1.640 1.369  0.06122        0.06564
+#> size 15.0357142857143 period 3 1.582 1.214  0.05430        0.05531
+#> size 15.0357142857143 period 4 1.074 1.104  0.04938        0.05347
 #> 
 #> 2. Quantiles for each variable:
 #> 
 #>                                2.5% 25% 50% 75% 97.5%
-#> size 15.0357142857143 period 1    1   3   4   5     8
-#> size 15.0357142857143 period 2    0   1   1   2     5
-#> size 15.0357142857143 period 3    0   1   1   2     5
-#> size 15.0357142857143 period 4    0   0   1   2     4
+#> size 15.0357142857143 period 1    1   2   4   5 8.000
+#> size 15.0357142857143 period 2    0   1   1   2 4.525
+#> size 15.0357142857143 period 3    0   1   1   2 4.000
+#> size 15.0357142857143 period 4    0   0   1   2 4.000
 #> 
 #> 
     # Use emm_example("as.mcmc-coda", list = TRUE) # to see just the code

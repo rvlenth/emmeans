@@ -62,7 +62,7 @@ When the SEs are unequal, it is possible, for example, for two adjacent
 means to be significantly different, while two more distant ones do not
 differ significantly. If that happens, we can’t use underlines to group
 the means. The problem here is that lines are continuous, and that
-continuousness forces a continuum of groupings.
+continuity forces a continuum of groupings.
 
 However, Piepho (2004) solved this problem by using *symbols* instead of
 lines, and creating a display where any two means associated with the

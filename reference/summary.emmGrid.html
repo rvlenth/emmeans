@@ -38,7 +38,7 @@ hpd.summary."><meta property="og:image" content="https://rvlenth.github.io/emmea
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/AQuickStart.html">Quick start guide for **emmeans**</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/AQuickStart.html">Quick start guide for emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/basics.html">Basics of estimated marginal means</a></li>
     <li><a class="dropdown-item" href="../articles/comparisons.html">Comparisons and contrasts in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/confidence-intervals.html">Confidence intervals and tests in emmeans</a></li>
@@ -46,14 +46,14 @@ hpd.summary."><meta property="og:image" content="https://rvlenth.github.io/emmea
     <li><a class="dropdown-item" href="../articles/interactions.html">Interaction analysis in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/messy-data.html">Working with messy data</a></li>
     <li><a class="dropdown-item" href="../articles/models.html">Models supported by emmeans</a></li>
-    <li><a class="dropdown-item" href="../articles/predictions.html">Prediction in **emmeans**</a></li>
+    <li><a class="dropdown-item" href="../articles/predictions.html">Prediction in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/re-engineering-clds.html">Re-engineering CLDs</a></li>
     <li><a class="dropdown-item" href="../articles/sophisticated.html">Sophisticated models in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/transformations.html">Transformations and link functions in emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/utilities.html">Utilities and options for emmeans</a></li>
     <li><a class="dropdown-item" href="../articles/vignette-topics.html">Index of vignette topics</a></li>
     <li><a class="dropdown-item" href="../articles/xplanations.html">Explanations supplement</a></li>
-    <li><a class="dropdown-item" href="../articles/xtending.html">For developers: Extending **emmeans**</a></li>
+    <li><a class="dropdown-item" href="../articles/xtending.html">For developers: Extending emmeans</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -67,7 +67,7 @@ hpd.summary."><meta property="og:image" content="https://rvlenth.github.io/emmea
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Summaries, predictions, intervals, and tests for <code>emmGrid</code> objects</h1>
-      <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/master/R/summary.R" class="external-link"><code>R/summary.R</code></a>, <a href="https://github.com/rvlenth/emmeans/blob/master/R/test.R" class="external-link"><code>R/test.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/main/R/summary.R" class="external-link"><code>R/summary.R</code></a>, <a href="https://github.com/rvlenth/emmeans/blob/main/R/test.R" class="external-link"><code>R/test.R</code></a></small>
       <div class="d-none name"><code>summary.emmGrid.Rd</code></div>
     </div>
 
@@ -231,7 +231,8 @@ corresponds (perhaps after recycling) to the order of the reference grid.</p></d
 In <code>confint.emmGrid</code>,
 <code>predict.emmGrid</code>, and
 <code>test.emmGrid</code>, these arguments are passed to
-<code>summary.emmGrid</code>.</p></dd>
+<code>summary.emmGrid</code>. These arguments are also passed to <code>mvregrid</code>
+when we have a multivariate transformation.</p></dd>
 
 
 <dt id="arg-parm">parm<a class="anchor" aria-label="anchor" href="#arg-parm"></a></dt>
@@ -671,9 +672,9 @@ is a list of the linear functions associated with the joint test.</p>
 <span class="r-in"><span><span class="va">con</span> <span class="op">&lt;-</span> <span class="fu"><a href="contrast.html">contrast</a></span><span class="op">(</span><span class="va">pigs.emm</span>, <span class="st">"consec"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">test</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast              ratio     SE df null t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  percent12 / percent9   1.20 0.0671 23    1   3.202  0.0111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  percent12 / percent9   1.20 0.0671 23    1   3.202  0.0109</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  percent15 / percent12  1.04 0.0604 23    1   0.650  0.8613</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  percent18 / percent15  1.09 0.0750 23    1   1.194  0.5201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  percent18 / percent15  1.09 0.0750 23    1   1.194  0.5200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: source </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: mvt method for 3 tests </span>
@@ -715,8 +716,8 @@ is a list of the linear functions associated with the joint test.</p>
 <span class="r-in"><span><span class="co"># Show estimates to more digits</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">test</span><span class="op">(</span><span class="va">con</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast                 ratio         SE df null t.ratio p.value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  percent12 / percent9  1.196684 0.06710564 23    1   3.202  0.0109</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  percent15 / percent12 1.038570 0.06042501 23    1   0.650  0.8614</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  percent12 / percent9  1.196684 0.06710564 23    1   3.202  0.0110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  percent15 / percent12 1.038570 0.06042501 23    1   0.650  0.8613</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  percent18 / percent15 1.085945 0.07499759 23    1   1.194  0.5201</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Results are averaged over the levels of: source </span>

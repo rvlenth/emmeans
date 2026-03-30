@@ -2,6 +2,8 @@
 
 ## emmeans 2.0.2
 
+CRAN release: 2026-03-05
+
 - Improved dispatching for S4 classes. Previously caused problems with
   counterfactuals were used.
 - fixed problem observed near end of “messy data” vignette where lines

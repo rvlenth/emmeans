@@ -160,6 +160,13 @@ labels for `educ` to shorter strings.
 
 ``` r
 framing <- mediation::framing 
+```
+
+    ## Registered S3 method overwritten by 'lme4':
+    ##   method           from
+    ##   na.action.merMod car
+
+``` r
 levels(framing$educ) <- c("NA","Ref","< HS", "HS", "> HS","Coll +") 
 framing.glm <- glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat), 
     family = binomial, data = framing)
