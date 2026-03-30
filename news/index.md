@@ -1,5 +1,19 @@
 # Changelog
 
+## emmeans 2.0.3
+
+- Repaired `contrast` so that it recognizes multivariate transformations
+  `alr`, `clr`, and `ilr` as being log-based. Thus contrasts thereof are
+  log odds ratios
+  ([\#575](https://github.com/rvlenth/emmeans/issues/575))
+- Re-vamped
+  [`mvregrid()`](https://rvlenth.github.io/emmeans/reference/mvregrid.md)
+  with a ’transform\` argument for more flexibility, and different
+  defaults. Pre-existing code that uses this function may fail.
+- [`summary()`](https://rdrr.io/r/base/summary.html) now tries to invert
+  a multivariate transformation, if present, when called with
+  `type = "response"`
+
 ## emmeans 2.0.2
 
 CRAN release: 2026-03-05

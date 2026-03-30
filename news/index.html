@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,14 @@
       <small>Source: <a href="https://github.com/rvlenth/emmeans/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.3" id="emmeans-203">emmeans 2.0.3<a class="anchor" aria-label="anchor" href="#emmeans-203"></a></h2>
+<ul><li>Repaired <code>contrast</code> so that it recognizes multivariate transformations <code>alr</code>, <code>clr</code>, and <code>ilr</code> as being log-based. Thus contrasts thereof are log odds ratios (<a href="https://github.com/rvlenth/emmeans/issues/575" class="external-link">#575</a>)</li>
+<li>Re-vamped <code><a href="../reference/mvregrid.html">mvregrid()</a></code> with a ’transform` argument for more flexibility, and different defaults. Pre-existing code that uses this function may fail.</li>
+<li>
+<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> now tries to invert a multivariate transformation, if present, when called with <code>type = "response"</code>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.2" id="emmeans-202">emmeans 2.0.2<a class="anchor" aria-label="anchor" href="#emmeans-202"></a></h2><p class="text-muted">CRAN release: 2026-03-05</p>
 <ul><li>Improved dispatching for S4 classes. Previously caused problems with counterfactuals were used.</li>
