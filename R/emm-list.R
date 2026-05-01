@@ -191,7 +191,8 @@ contrast.emm_list = function(object, ... , which = NULL) {
 pairs.emm_list = function(x, ..., which = NULL) {
     which = .guess.which(x, which)
     rtn = .lapply(x[which], pairs, ...)
-    names(rtn) = paste("comparisons of", names(rtn))
+    if (is.list(rtn))
+        names(rtn) = paste("comparisons of", names(rtn))
     rtn
 }
 
