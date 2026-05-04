@@ -1,4 +1,4 @@
-R package **emmeans**: Estimated marginal means <img src="man/figures/logo.png" align="right" />
+R package **emmeans**: Estimated marginal means <img src="man/figures/hex_logo.png" align="right" width="200" />
 ====
 ## Website
 https://rvlenth.github.io/emmeans/
