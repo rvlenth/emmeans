@@ -16,7 +16,8 @@ Authors@R: c(person("Russell V.", "Lenth", role = c("aut", "cph"),
     person("Jonathon", "Love", role = "ctb"),
     person("Fernando", "Miguez", role = "ctb"),
     person("Hannes", "Riebl", role = "ctb"),
-    person("Henrik", "Singmann", role = "ctb"))
+    person("Henrik", "Singmann", role = "ctb"),
+    person("Alexis", "Derumigny", role = "ctb"))
 Maintainer: Julia Piaskowski <julia.piask@gmail.com>
 Depends: R (>= 4.1.0)
 Imports: estimability (>= 1.4.1), graphics, methods, mvtnorm, numDeriv, rlang, stats, utils

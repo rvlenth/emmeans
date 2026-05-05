@@ -2,6 +2,10 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 2.0.4
+  * Updated logo (now hexagonal)
+  * bug-fix for labelling in pairwise contrasts
+
 ## emmeans 2.0.3
   * Repaired `contrast` so that it recognizes multivariate transformations 
     `alr`, `clr`, and `ilr` as being log-based. Thus contrasts thereof are
