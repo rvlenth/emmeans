@@ -40,84 +40,84 @@ the arguments that apply. Detailed documentation follows, with objects
 grouped by the code in the “Group” column. Scroll down or follow the
 links to those groups for more information.
 
-| Object.class | Package    |  Group  | Arguments / notes (Suffix of `~` indicates re-gridding)                                                    |
-|:-------------|:-----------|:-------:|:-----------------------------------------------------------------------------------------------------------|
-| aov          | stats      | [A](#A) |                                                                                                            |
-| aovList      | stats      | [V](#V) | Best with balanced designs, orthogonal coding                                                              |
-| averaging    | MuMIn      | [I](#I) | `formula`, `subset` (see details)                                                                          |
-| betareg      | betareg    | [B](#B) | `mode = c("link", "precision", "phi.link",`                                                                |
-|              |            |         | `"variance"~, "quantile"~)`                                                                                |
-| brmsfit      | brms       | [P](#P) | Supported in **brms** package                                                                              |
-| carbayes     | CARBayes   | [S](#S) | `data` is required                                                                                         |
-| clm          | ordinal    | [O](#O) | `mode = c("latent"~, "linear.predictor", "cum.prob"~,`                                                     |
-|              |            |         | `"exc.prob"~, "prob"~, "mean.class"~, "scale")`                                                            |
-| clmm         | ordinal    | [O](#O) | Like `clm` but no `"scale"` mode                                                                           |
-| coxme        | coxme      | [G](#G) |                                                                                                            |
-| coxph        | survival   | [G](#G) |                                                                                                            |
-| gam          | mgcv       | [G](#G) | `freq = FALSE`, `unconditional = FALSE`,                                                                   |
-|              |            |         | `what = c("location", "scale", "shape", "rate", "prob.gt.0")`                                              |
-| gamm         | mgcv       | [G](#G) | `call = object$gam$call`                                                                                   |
-| Gam          | gam        | [G](#G) | `nboot = 800`                                                                                              |
-| gamlss       | gamlss     | [H](#H) | `what = c("mu", "sigma", "nu", "tau")`                                                                     |
-| gee          | gee        | [E](#E) | `vcov.method = c("naive", "robust")`                                                                       |
-| geeglm       | geepack    | [E](#E) | `vcov.method = c("vbeta", "vbeta.naiv", "vbeta.j1s",`                                                      |
-|              |            |         | `"vbeta.fij", "robust", "naive")` or a matrix                                                              |
-| geese        | geepack    | [E](#E) | Like `geeglm`                                                                                              |
-| glm          | stats      | [G](#G) |                                                                                                            |
-| glm.nb       | MASS       | [G](#G) |                                                                                                            |
-| glmerMod     | lme4       | [G](#G) |                                                                                                            |
-| glmgee       | glmtoolbox | [E](#E) | `vcov.method = c("robust", "df-adjusted", "model",`                                                        |
-|              |            |         | `"bias-corrected", "jackknife")`                                                                           |
-| glmmadmb     | glmmADMB   |         | No longer supported                                                                                        |
-| glmmPQL      | MASS       | [G](#G) | inherits `lm` support                                                                                      |
-| glmmTMB      | glmmTMB    | [P](#P) | Supported in **glmmTMB** package                                                                           |
-| gls          | nlme       | [K](#K) | `mode = c("auto", "df.error", "satterthwaite", "asymptotic")`                                              |
-| gnls         | nlme       | [A](#A) | Supports `params` part. Requires `param = "<name>"`                                                        |
-| hurdle       | pscl       | [C](#C) | `mode = c("response", "count", "zero", "prob0"),`                                                          |
-|              |            |         | `lin.pred = c(FALSE~, TRUE)`                                                                               |
-| lavaan       | lavaan     | [P](#P) | Supported by the **semTools** package (see `? lavaan2emmeans`)                                             |
-| lm           | stats      | [A](#A) | Several other classes inherit from this and may be supported                                               |
-| lme          | nlme       | [K](#K) | `sigmaAdjust = c(TRUE, FALSE),`                                                                            |
-|              |            |         | `mode = c("auto", containment", "satterthwaite", "asymptotic"),`                                           |
-|              |            |         | `extra.iter = 0`                                                                                           |
-| lmerMod      | lme4       | [L](#L) | `lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`,                                             |
-|              |            |         | `pbkrtest.limit = 3000`, `disable.pbkrtest = FALSE`.                                                       |
-|              |            |         | `emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)`                                             |
-| logistf      | glmmTMB    | [P](#P) | Supported in **logistf** package                                                                           |
-| lqm,lqmm     | lqmm       | [Q](#Q) | `tau = "0.5"` (must match an entry in `object$tau`)                                                        |
-|              |            |         | Optional: `method`, `R`, `seed`, `startQR` (must be fully spelled-out)                                     |
-| manova       | stats      | [M](#M) | `mult.name`, `mult.levs`                                                                                   |
-| maov         | stats      | [M](#M) | `mult.name`, `mult.levs`                                                                                   |
-| mblogit      | mclogit    | [N](#N) | `mode = c("prob"~, "latent")`                                                                              |
-|              |            |         | Always include response in specs for [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md) |
-| mcmc         | mcmc       | [S](#S) | May require `formula`, `data`                                                                              |
-| MCMCglmm     | MCMCglmm   | [S](#S) | (see also [M](#M#)) `mult.name`, `mult.levs`, `trait`,                                                     |
-|              |            |         | `mode = c("default", "multinomial")`; `data` is required                                                   |
-| mira         | mice       | [I](#I) | Optional arguments per class of `$analyses` elements                                                       |
-| mixed        | afex       | [P](#P) | Supported in **afex** package                                                                              |
-| mlm          | stats      | [M](#M) | `mult.name`, `mult.levs`                                                                                   |
-| mmer         | sommer     | [G](#G) |                                                                                                            |
-| mmrm         | mmrm       | [P](#P) | Supported in the **mmrm** package                                                                          |
-| multinom     | nnet       | [N](#N) | `mode = c("prob"~, "latent")`                                                                              |
-|              |            |         | Always include response in specs for [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md) |
-| nauf         | nauf.*xxx* | [P](#P) | Supported in **nauf** package                                                                              |
-| nlme         | nlme       | [A](#A) | Supports fixed part. Requires `param = "<name>"`                                                           |
-| polr         | MASS       | [O](#O) | `mode = c("latent"~, "linear.predictor", "cum.prob"~,`                                                     |
-|              |            |         | `"exc.prob"~, "prob"~, "mean.class"~)`                                                                     |
-| rlm          | MASS       | [A](#A) | inherits `lm` support                                                                                      |
-| rms          | rms        | [O](#O) | `mode = ("middle"~, "latent"~, "linear.predictor",`                                                        |
-|              |            |         | `"cum.prob"~, "exc.prob"~, "prob"~, "mean.class"~)`                                                        |
-| rq,rqs       | quantreg   | [Q](#Q) | `tau = object$tau`                                                                                         |
-|              |            |         | Creates a pseudo-factor `tau` with levels `tau`                                                            |
-|              |            |         | Optional: `se`, `R`, `bsmethod`, etc.                                                                      |
-| rlmerMod     | robustlmm  | [P](#P) | Supported in **robustlmm** package                                                                         |
-| rsm          | rsm        | [P](#P) | Supported in **rsm** package                                                                               |
-| stanreg      | rstanarm   | [S](#S) | Args for `stanreg_`*xxx* similar to those for *xxx*                                                        |
-| survreg      | survival   | [A](#A) |                                                                                                            |
-| svyglm       | survey     | [A](#A) |                                                                                                            |
-| svyolr       | survey     | [O](#O) | Piggybacks on `polr` support                                                                               |
-| zeroinfl     | pscl       | [C](#C) | `mode = c("response", "count", "zero", "prob0")`,                                                          |
-|              |            |         | `lin.pred = c(FALSE~, TRUE)`                                                                               |
+| Object.class | Package | Group | Arguments / notes (Suffix of `~` indicates re-gridding) |
+|:---|:---|:--:|:---|
+| aov | stats | [A](#A) |  |
+| aovList | stats | [V](#V) | Best with balanced designs, orthogonal coding |
+| averaging | MuMIn | [I](#I) | `formula`, `subset` (see details) |
+| betareg | betareg | [B](#B) | `mode = c("link", "precision", "phi.link",` |
+|  |  |  | `"variance"~, "quantile"~)` |
+| brmsfit | brms | [P](#P) | Supported in **brms** package |
+| carbayes | CARBayes | [S](#S) | `data` is required |
+| clm | ordinal | [O](#O) | `mode = c("latent"~, "linear.predictor", "cum.prob"~,` |
+|  |  |  | `"exc.prob"~, "prob"~, "mean.class"~, "scale")` |
+| clmm | ordinal | [O](#O) | Like `clm` but no `"scale"` mode |
+| coxme | coxme | [G](#G) |  |
+| coxph | survival | [G](#G) |  |
+| gam | mgcv | [G](#G) | `freq = FALSE`, `unconditional = FALSE`, |
+|  |  |  | `what = c("location", "scale", "shape", "rate", "prob.gt.0")` |
+| gamm | mgcv | [G](#G) | `call = object$gam$call` |
+| Gam | gam | [G](#G) | `nboot = 800` |
+| gamlss | gamlss | [H](#H) | `what = c("mu", "sigma", "nu", "tau")` |
+| gee | gee | [E](#E) | `vcov.method = c("naive", "robust")` |
+| geeglm | geepack | [E](#E) | `vcov.method = c("vbeta", "vbeta.naiv", "vbeta.j1s",` |
+|  |  |  | `"vbeta.fij", "robust", "naive")` or a matrix |
+| geese | geepack | [E](#E) | Like `geeglm` |
+| glm | stats | [G](#G) |  |
+| glm.nb | MASS | [G](#G) |  |
+| glmerMod | lme4 | [G](#G) |  |
+| glmgee | glmtoolbox | [E](#E) | `vcov.method = c("robust", "df-adjusted", "model",` |
+|  |  |  | `"bias-corrected", "jackknife")` |
+| glmmadmb | glmmADMB |  | No longer supported |
+| glmmPQL | MASS | [G](#G) | inherits `lm` support |
+| glmmTMB | glmmTMB | [P](#P) | Supported in **glmmTMB** package |
+| gls | nlme | [K](#K) | `mode = c("auto", "df.error", "satterthwaite", "asymptotic")` |
+| gnls | nlme | [A](#A) | Supports `params` part. Requires `param = "<name>"` |
+| hurdle | pscl | [C](#C) | `mode = c("response", "count", "zero", "prob0"),` |
+|  |  |  | `lin.pred = c(FALSE~, TRUE)` |
+| lavaan | lavaan | [P](#P) | Supported by the **semTools** package (see `? lavaan2emmeans`) |
+| lm | stats | [A](#A) | Several other classes inherit from this and may be supported |
+| lme | nlme | [K](#K) | `sigmaAdjust = c(TRUE, FALSE),` |
+|  |  |  | `mode = c("auto", containment", "satterthwaite", "asymptotic"),` |
+|  |  |  | `extra.iter = 0` |
+| lmerMod | lme4 | [L](#L) | `lmer.df = c("kenward-roger", "satterthwaite", "asymptotic")`, |
+|  |  |  | `pbkrtest.limit = 3000`, `disable.pbkrtest = FALSE`. |
+|  |  |  | `emm_options(lmer.df =, pbkrtest.limit =, disable.pbkrtest =)` |
+| logistf | glmmTMB | [P](#P) | Supported in **logistf** package |
+| lqm,lqmm | lqmm | [Q](#Q) | `tau = "0.5"` (must match an entry in `object$tau`) |
+|  |  |  | Optional: `method`, `R`, `seed`, `startQR` (must be fully spelled-out) |
+| manova | stats | [M](#M) | `mult.name`, `mult.levs` |
+| maov | stats | [M](#M) | `mult.name`, `mult.levs` |
+| mblogit | mclogit | [N](#N) | `mode = c("prob"~, "latent")` |
+|  |  |  | Always include response in specs for [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md) |
+| mcmc | mcmc | [S](#S) | May require `formula`, `data` |
+| MCMCglmm | MCMCglmm | [S](#S) | (see also [M](#M#)) `mult.name`, `mult.levs`, `trait`, |
+|  |  |  | `mode = c("default", "multinomial")`; `data` is required |
+| mira | mice | [I](#I) | Optional arguments per class of `$analyses` elements |
+| mixed | afex | [P](#P) | Supported in **afex** package |
+| mlm | stats | [M](#M) | `mult.name`, `mult.levs` |
+| mmer | sommer | [G](#G) |  |
+| mmrm | mmrm | [P](#P) | Supported in the **mmrm** package |
+| multinom | nnet | [N](#N) | `mode = c("prob"~, "latent")` |
+|  |  |  | Always include response in specs for [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md) |
+| nauf | nauf.*xxx* | [P](#P) | Supported in **nauf** package |
+| nlme | nlme | [A](#A) | Supports fixed part. Requires `param = "<name>"` |
+| polr | MASS | [O](#O) | `mode = c("latent"~, "linear.predictor", "cum.prob"~,` |
+|  |  |  | `"exc.prob"~, "prob"~, "mean.class"~)` |
+| rlm | MASS | [A](#A) | inherits `lm` support |
+| rms | rms | [O](#O) | `mode = ("middle"~, "latent"~, "linear.predictor",` |
+|  |  |  | `"cum.prob"~, "exc.prob"~, "prob"~, "mean.class"~)` |
+| rq,rqs | quantreg | [Q](#Q) | `tau = object$tau` |
+|  |  |  | Creates a pseudo-factor `tau` with levels `tau` |
+|  |  |  | Optional: `se`, `R`, `bsmethod`, etc. |
+| rlmerMod | robustlmm | [P](#P) | Supported in **robustlmm** package |
+| rsm | rsm | [P](#P) | Supported in **rsm** package |
+| stanreg | rstanarm | [S](#S) | Args for `stanreg_`*xxx* similar to those for *xxx* |
+| survreg | survival | [A](#A) |  |
+| svyglm | survey | [A](#A) |  |
+| svyolr | survey | [O](#O) | Piggybacks on `polr` support |
+| zeroinfl | pscl | [C](#C) | `mode = c("response", "count", "zero", "prob0")`, |
+|  |  |  | `lin.pred = c(FALSE~, TRUE)` |
 
 ## Group A – “Standard” or minimally supported models
 

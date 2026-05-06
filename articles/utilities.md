@@ -26,6 +26,7 @@ etc. are run. Those settings can be manipulated via the
 To illustrate, consider the `pigs` dataset and model yet again:
 
 ``` r
+
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 pigs.emm <- emmeans(pigs.lm, "source")
 pigs.emm
@@ -52,6 +53,7 @@ arguments. If so, just update the internal settings to what is desired;
 for example:
 
 ``` r
+
 pigs.emm.s <- update(pigs.emm, infer = c(TRUE, TRUE), null = log(35),
                      calc = c(n = ".wgt."))
 pigs.emm.s
@@ -91,6 +93,7 @@ call as follows (results are not shown because they are the same as
 before):
 
 ``` r
+
 emmeans(pigs.lm, "source", infer = c(TRUE, TRUE), null = log(35),
         calc = c(n = ".wgt."))
 ```
@@ -104,6 +107,7 @@ Speaking of the `options` argument, note that the default in
 `options = get_emm_option("emmeans")`. Let’s see what that is:
 
 ``` r
+
 get_emm_option("emmeans")
 ```
 
@@ -120,6 +124,7 @@ the result is summarized. The reverse is true for results of
 [`contrast()`](https://rvlenth.github.io/emmeans/reference/contrast.md)):
 
 ``` r
+
 get_emm_option("contrast")
 ```
 
@@ -131,6 +136,7 @@ get_emm_option("contrast")
 There are also defaults for a newly constructed reference grid:
 
 ``` r
+
 get_emm_option("ref_grid")
 ```
 
@@ -159,6 +165,7 @@ options; and that is done via the
 function:
 
 ``` r
+
 emm_options(emmeans = list(type = "response"),
             contrast = list(infer = c(TRUE, TRUE)))
 ```
@@ -168,6 +175,7 @@ Now, new
 results and contrasts follow the new defaults:
 
 ``` r
+
 pigs.anal.p <- emmeans(pigs.lm, consec ~ percent)
 pigs.anal.p
 ```
@@ -220,6 +228,7 @@ or [`pairs()`](https://rdrr.io/r/graphics/pairs.html), specify
 options:
 
 ``` r
+
 options(emmeans = NULL)
 ```
 
@@ -237,6 +246,7 @@ without optimizing digits. Compare it with the first summary in this
 vignette.
 
 ``` r
+
 emm_options(opt.digits = FALSE)
 pigs.emm
 ```
@@ -253,6 +263,7 @@ pigs.emm
 ```
 
 ``` r
+
 emm_options(opt.digits = TRUE)  # revert to optimal digits
 ```
 
@@ -277,6 +288,7 @@ confidence intervals rather than tests for contrasts, your `.Rprofile`
 file could contain the line
 
 ``` r
+
 options(emmeans = list(lmer.df = "satterthwaite", 
                        contrast = list(infer = c(TRUE, FALSE))))
 ```
@@ -296,6 +308,7 @@ tests with a suitable multiplicity adjustment. This is done quite
 simply:
 
 ``` r
+
 rbind(pairs(pigs.emm.s), pigs.anal.p[[2]])
 ```
 
@@ -321,6 +334,7 @@ combine the same results into a family but ask for the “exact”
 multiplicity adjustment.
 
 ``` r
+
 update(pigs.anal.p[[2]] + pairs(pigs.emm.s), adjust = "mvt")
 ```
 
@@ -352,6 +366,7 @@ To subset an `emmGrid` object, just use the subscripting operator `[]`.
 For instance,
 
 ``` r
+
 pigs.emm[2:3]
 ```
 
@@ -384,6 +399,7 @@ it possible to access the values. For illustration, let’s add the widths
 of the confidence intervals in our example.
 
 ``` r
+
 CIs <- confint(pigs.emm)
 CIs$CI.width <- with(CIs, upper.CL - lower.CL)
 CIs
@@ -404,6 +420,7 @@ By the way, the values stored internally are kept to full precision,
 more than is typically displayed:
 
 ``` r
+
 CIs$emmean
 ```
 
@@ -414,6 +431,7 @@ CIs$emmean
 If you want to display more digits, specify so using the `print` method:
 
 ``` r
+
 print(CIs, digits = 5)
 ```
 
@@ -444,6 +462,7 @@ Suppose for example that we want to distinguish animal and non-animal
 sources of protein in the `pigs` example:
 
 ``` r
+
 pigs.emm.ss <- add_grouping(pigs.emm.s, "type", "source",
                             c("animal", "vegetable", "animal"))
 str(pigs.emm.ss)
@@ -464,6 +483,7 @@ with the reference factor nested in the new grouping factor. Now we can
 obtain means and comparisons for each group
 
 ``` r
+
 emmeans(pigs.emm.ss, pairwise ~ type)
 ```
 
@@ -500,6 +520,7 @@ Consider, for example, the `warpbreaks` data provided with R. We will
 define a single factor and fit a non homogeneous-variance model:
 
 ``` r
+
 warp <- transform(warpbreaks, treat = interaction(wool, tension))
 library(nlme)
 warp.gls <- gls(breaks ~ treat, weights = varIdent(form = ~ 1|treat), data = warp)
@@ -523,6 +544,7 @@ But now we want to re-cast this `emmGrid` into one that has separate
 factors for `wool` and `tension`. We can do this as follows:
 
 ``` r
+
 warp.fac <- update(warp.emm, levels = list(
                 wool = c("A", "B"), tension = c("L", "M", "H")))
 str(warp.fac)
@@ -537,6 +559,7 @@ str(warp.fac)
 So now we can do various contrasts involving the separate factors:
 
 ``` r
+
 contrast(warp.fac, "consec", by = "wool")
 ```
 

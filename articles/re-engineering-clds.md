@@ -92,6 +92,7 @@ As a moving example, we simulate some data from an unbalanced design
 with 7 treatments labeled A, B, …, G; and fit a model to those
 
 ``` r
+
 set.seed(22.10)
 mu = c(16, 15, 19, 15, 15, 17, 16)  # true means
 n =  c(19, 15, 16, 18, 29,  2, 14)  # sample sizes
@@ -112,6 +113,7 @@ Let’s see a compact letter display for the marginal means. (Call this
 **CLD \#1**)
 
 ``` r
+
 foo.emm = emmeans(foo.lm, "trt")
 
 library(multcomp)
@@ -188,6 +190,7 @@ In addition, we typically will not make multiplicity adjustments to
 equivalence tests. Here is the result we obtain (call this **CLD \#2**)
 
 ``` r
+
 cld(foo.emm, delta = 1, adjust = "none")
 ```
 
@@ -228,6 +231,7 @@ display has a distinctively different appearance, because common symbols
 tend to be far apart rather than contiguous. (Call this **CLD \#3**)
 
 ``` r
+
 cld(foo.emm, signif = TRUE)
 ```
 

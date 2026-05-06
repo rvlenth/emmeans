@@ -35,7 +35,8 @@ model for these data, excluding interaction (which is justified in this
 case). For sake of illustration, we will exclude a few observations.
 
 ``` r
-library(lme4)
+
+library(lme4); library(lmerTest)
 Oats.lmer <- lmer(yield ~ Variety + factor(nitro) + (1|Block/Variety),
                         data = nlme::Oats, subset = -c(1,2,3,5,8,13,21,34,55))
 ```
@@ -43,6 +44,7 @@ Oats.lmer <- lmer(yield ~ Variety + factor(nitro) + (1|Block/Variety),
 Let’s look at the EMMs for `nitro`:
 
 ``` r
+
 Oats.emm.n <- emmeans(Oats.lmer, "nitro")
 Oats.emm.n
 ```
@@ -68,6 +70,7 @@ implements that method. We may specify a different degrees-of-freedom
 method via the optional argument `lmer.df`:
 
 ``` r
+
 emmeans(Oats.lmer, "nitro", lmer.df = "satterthwaite")
 ```
 
@@ -94,6 +97,7 @@ the principal difference between the methods. A third possibility is
 `"asymptotic"`:
 
 ``` r
+
 emmeans(Oats.lmer, "nitro", lmer.df = "asymptotic")
 ```
 
@@ -121,6 +125,7 @@ As `nitro` has quantitative levels, we might want to test polynomial
 contrasts:
 
 ``` r
+
 contrast(Oats.emm.n, "poly")
 ```
 
@@ -142,6 +147,7 @@ is a whole-plot factor, and there is not much of a bump in degrees of
 freedom for comparisons:
 
 ``` r
+
 emmeans(Oats.lmer, pairwise ~ Variety)
 ```
 
@@ -206,6 +212,7 @@ random intercepts and slopes for each chick (this is likely not the best
 model, but it’s not totally stupid and it serves an an illustration).
 
 ``` r
+
 cw.lmer <- lmer(sqrt(weight) ~ Time*Diet + (1+Time|Chick), data = ChickWeight)
 ```
 
@@ -214,6 +221,7 @@ Our goal is to use this model to estimate the mean `weight` at times 5,
 needed:
 
 ``` r
+
 cw.emm <- emmeans(cw.lmer, ~ Time|Diet, at = list(Time = c(5, 10, 15, 20)))
 ```
 
@@ -232,6 +240,7 @@ The first step is to obtain an estimated covariance matrix for \\(E, C,
 S)\\:
 
 ``` r
+
 V <- matrix(0, nrow = 3, ncol = 3, dimnames = list(c("E","C","S"), c("E","C","S")))
 V[1, 1] <- sigma(cw.lmer)^2              # Var(E)
 V[2:3, 2:3] <- VarCorr(cw.lmer)$Chick    # Cov(C, S)
@@ -249,6 +258,7 @@ Now, using the matrix expression \\Var(a'X) = a'Va\\ for \\X=c(E,C,S)\\
 and a given vector \\a\\, we can obtain the needed SDs:
 
 ``` r
+
 sig <- sapply(c(5, 10, 15, 20), function(t) {
     a <- c(1, 1, t)
     sqrt(sum(a * V %*% a))
@@ -265,6 +275,7 @@ bias-adjusted estimated weights. We can use `sigma = sig` as-is since
 the values follow the same ordering as `cw.emm@grid`.
 
 ``` r
+
 confint(cw.emm, type = "response", bias.adj = TRUE, sigma = sig)
 ```
 
@@ -342,6 +353,7 @@ offset of `log(n)` is included so that `n` functions as an “exposure”
 variable.
 
 ``` r
+
 ins <- data.frame(
     n = c(500, 1200, 100, 400, 500, 300),
     size = factor(rep(1:3,2), labels = c("S","M","L")),
@@ -354,6 +366,7 @@ ins.glm <- glm(claims ~ size + age + offset(log(n)),
 First, let’s look at the reference grid obtained by default:
 
 ``` r
+
 ref_grid(ins.glm)
 ```
 
@@ -369,6 +382,7 @@ Note that `n` is included in the reference grid and that its average
 value of 500 is displayed. But let’s look at the EMMs:
 
 ``` r
+
 (EMM <- emmeans(ins.glm, "size", type = "response"))
 ```
 
@@ -387,6 +401,7 @@ We can see more explicitly what is happening by examining the internal
 structure of `EMM`:
 
 ``` r
+
 EMM@grid
 ```
 
@@ -407,6 +422,7 @@ This may be accomplished by specifying an `offset` parameter in the
 call:
 
 ``` r
+
 emmeans(ins.glm, "size", type = "response", offset = log(1))
 ```
 
@@ -426,6 +442,7 @@ in the reference grid itself (output not shown, because it is
 identical):
 
 ``` r
+
 emmeans(ins.glm, "size", type = "response", at = list(n = 1))
 ```
 
@@ -434,6 +451,7 @@ example, if you want estimates of claims per 100 cars, simply use
 (results not shown):
 
 ``` r
+
 emmeans(ins.glm, "size", type = "response", offset = log(100))
 ```
 
@@ -464,12 +482,14 @@ fermentation: `temp` (temperature) and `contact` (contact with grape
 skins), with the judge making the rating as a scale predictor:
 
 ``` r
+
 require("ordinal")
 ```
 
     ## Loading required package: ordinal
 
 ``` r
+
 wine.clm <- clm(rating ~ temp + contact, scale = ~ judge,
                 data = wine, link = "probit")
 ```
@@ -478,6 +498,7 @@ wine.clm <- clm(rating ~ temp + contact, scale = ~ judge,
 Here are the EMMs for each factor using default options:
 
 ``` r
+
 emmeans(wine.clm, list(pairwise ~ temp, pairwise ~ contact))
 ```
 
@@ -531,6 +552,7 @@ detailed information for this model by specifying
 `mode = "linear.predictor"`:
 
 ``` r
+
 tmp <- ref_grid(wine.clm, mode = "lin")
 tmp
 ```
@@ -549,6 +571,7 @@ predictor named `cut` that accounts for the different intercepts in the
 model. Let’s obtain EMMs for `temp` on the linear-predictor scale:
 
 ``` r
+
 emmeans(tmp, "temp")
 ```
 
@@ -573,6 +596,7 @@ of a particular cut point. Let’s look at `temp` again in terms of the
 probability that the rating will be at least 4:
 
 ``` r
+
 emmeans(wine.clm, ~ temp, mode = "exc.prob", at = list(cut = "3|4"))
 ```
 
@@ -594,6 +618,7 @@ a factor with the same name as the model response – in this case
 factors of interest as `by` variables:
 
 ``` r
+
 emmeans(wine.clm, ~ rating | temp, mode = "prob")
 ```
 
@@ -622,6 +647,7 @@ Using `mode = "mean.class"` obtains the average of these probability
 distributions as probabilities of the integers 1–5:
 
 ``` r
+
 emmeans(wine.clm, "temp", mode = "mean.class")
 ```
 
@@ -638,6 +664,7 @@ And there is a mode for the scale model too. In this example, the scale
 model involves only judges, and that is the only factor in the grid:
 
 ``` r
+
 summary(ref_grid(wine.clm, mode = "scale"), type = "response")
 ```
 
@@ -678,6 +705,7 @@ obtain the reference grids for these models in the usual way. For later
 use, we also fit the same model with just the prior information.
 
 ``` r
+
 cbpp <- transform(lme4::cbpp, unit = 1:56)
 require("bayestestR")
 options(contrasts = c("contr.bayes", "contr.poly"))
@@ -694,6 +722,7 @@ cbpp_prior.rg <- ref_grid(cbpp_prior.rstan)
 Here is the structure of the reference grid:
 
 ``` r
+
 cbpp.rg
 ```
 
@@ -706,6 +735,7 @@ cbpp.rg
 So here are the EMMs (no averaging needed in this simple model):
 
 ``` r
+
 summary(cbpp.rg)
 ```
 
@@ -737,12 +767,14 @@ objects. This gives us an object of class `mcmc` (defined in the
 **coda** package), which can be summarized and explored as we please.
 
 ``` r
+
 require("coda")
 ```
 
     ## Loading required package: coda
 
 ``` r
+
 summary(as.mcmc(cbpp.rg))
 ```
 
@@ -780,6 +812,7 @@ The **bayestestR** package provides `emmGrid` methods for most of its
 description and testing functions. For example:
 
 ``` r
+
 bayestestR::bayesfactor_parameters(pairs(cbpp.rg), prior = pairs(cbpp_prior.rg))
 ```
 
@@ -802,6 +835,7 @@ bayestestR::bayesfactor_parameters(pairs(cbpp.rg), prior = pairs(cbpp_prior.rg))
 ```
 
 ``` r
+
 bayestestR::p_rope(pairs(cbpp.rg), range = c(-0.25, 0.25))
 ```
 
@@ -837,12 +871,14 @@ for the posterior SDs of the two random effects. (I used the `colnames`
 function to find that they are in the 78th and 79th columns.)
 
 ``` r
+
 cbpp.sigma = as.matrix(cbpp.rstan$stanfit)[, 78:79]
 ```
 
 Here are the first few:
 
 ``` r
+
 head(cbpp.sigma)
 ```
 
@@ -861,6 +897,7 @@ So to obtain bias-adjusted marginal probabilities, obtain the resultant
 SD and regrid with bias correction:
 
 ``` r
+
 totSD <- sqrt(apply(cbpp.sigma^2, 1, sum))
 cbpp.rgrd <- regrid(cbpp.rg, bias.adjust = TRUE, sigma = totSD)
 summary(cbpp.rgrd)
@@ -881,6 +918,7 @@ Here is a plot of the posterior incidence probabilities,
 back-transformed:
 
 ``` r
+
 bayesplot::mcmc_areas(as.mcmc(cbpp.rgrd))
 ```
 
@@ -892,6 +930,7 @@ means](sophisticated_files/figure-html/unnamed-chunk-37-1.png)
 … and here are intervals for each period compared with its neighbor:
 
 ``` r
+
 contrast(cbpp.rgrd, "consec", reverse = TRUE)
 ```
 
@@ -916,6 +955,7 @@ posterior predictive distribution. For example, if we want to predict
 the CBPP incidence in future herds of 25 cattle, we can do:
 
 ``` r
+
 set.seed(2019.0605)
 cbpp.preds <- as.mcmc(cbpp.rgrd, likelihood = "binomial", trials = 25)
 bayesplot::mcmc_hist(cbpp.preds, binwidth = 1)

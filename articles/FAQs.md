@@ -289,6 +289,7 @@ of something else. Some possibilities include:
   pairwise comparisons are estimable:
 
 ``` r
+
 pg <- transform(pigs, x = rep(1:3, c(10, 10, 9)))
 pg.lm <- lm(log(conc) ~ x + source + factor(percent), data = pg)
 emmeans(pg.lm, consec ~ percent)
@@ -359,6 +360,7 @@ degrees of freedom is the same as obtaining the corresponding values
 from the standard normal. For example:
 
 ``` r
+
 qt(c(.9, .95, .975), df = Inf)
 ```
 
@@ -367,6 +369,7 @@ qt(c(.9, .95, .975), df = Inf)
 ```
 
 ``` r
+
 qnorm(c(.9, .95, .975))
 ```
 
@@ -425,6 +428,7 @@ ratios, you can re-grid the means first. Re-gridding starts anew with
 everything on the response scale, and no memory of the transformation.
 
 ``` r
+
 EMM <- emmeans(...)
 pairs(regrid(EMM))   # or contrast(regrid(EMM), ...)
 ```
@@ -459,6 +463,7 @@ groups, you need to null-out the `by` variable and summarize, as in the
 following:
 
 ``` r
+
 EMM <- emmeans(model, ~ treat | group)   # where treat has 2 levels
 pairs(EMM, adjust = "sidak")   # adjustment is ignored - only 1 test per group
 summary(pairs(EMM), by = NULL, adjust = "sidak")   # all are in one group now
@@ -540,6 +545,7 @@ command takes a counterfactuals approach. Thus, try adding a
 reproduce the results in Stata’s Example 6 for `margins`, do:
 
 ``` r
+
 margex <- haven::read_dta("https://www.stata-press.com/data/r18/margex.dta")
 margex.glm <- glm(outcome ~ sex * factor(group) + age, data = margex,
                   family = binomial)

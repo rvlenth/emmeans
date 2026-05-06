@@ -35,6 +35,7 @@ vignette](https://rvlenth.github.io/emmeans/articles/basics.md) for the
 `pigs` example:
 
 ``` r
+
 mod4 <- lm(inverse(conc) ~ source + factor(percent), data = pigs)
 RG <- ref_grid(mod4)
 EMM.source <- emmeans(RG, "source")
@@ -66,6 +67,7 @@ that just call [`summary()`](https://rdrr.io/r/base/summary.html) with
 the appropriate `infer` setting; for example,
 
 ``` r
+
 test(EMM.source)
 ```
 
@@ -89,6 +91,7 @@ direction of comparisons, so that a *right*-tailed test on the `conc`
 scale becomes a *left*-tailed test on the `inverse(conc)` scale,
 
 ``` r
+
 test(EMM.source, null = inverse(40), side = "<")
 ```
 
@@ -110,6 +113,7 @@ slot. Among the latter are usually weights in a column named `.wgt.`,
 and we can use that to include sample size in the summary:
 
 ``` r
+
 confint(EMM.source, calc = c(n = ~.wgt.))
 ```
 
@@ -140,6 +144,7 @@ preceding
 call again:
 
 ``` r
+
 test(EMM.source, null = inverse(40), side = "<", type = "response")
 ```
 
@@ -167,6 +172,7 @@ conducted on the linear-predictor scale (as is noted in the output).
 Similar statements apply to confidence intervals on the response scale:
 
 ``` r
+
 confint(EMM.source, side = "<", level = .90, type = "response")
 ```
 
@@ -208,6 +214,7 @@ contrasts are created. For example, pairwise comparisons default to
 *changes* `adjust` if it is inappropriate. For example, with
 
 ``` r
+
 confint(EMM.source, adjust = "tukey")
 ```
 
@@ -244,6 +251,7 @@ obtained with `adjust = "none"`. Compare the following adjusted tests
 with the unadjusted ones previously computed.
 
 ``` r
+
 test(EMM.source, null = inverse(40), side = "<", adjust = "bonferroni")
 ```
 
@@ -269,6 +277,7 @@ purpose, the `by` argument in
 example,
 
 ``` r
+
 confint(RG, by = "source")
 ```
 
@@ -310,6 +319,7 @@ There can be a `by` specification in
 overridden by another `by`. Here are examples, not run:
 
 ``` r
+
 emmeans(mod4, ~ percent | source)     ### same results as above
 summary(.Last.value, by = "percent")       ### grouped the other way
 ```
@@ -324,6 +334,7 @@ interaction for the `warpbreaks` data, and construct pairwise
 comparisons of `tension` by `wool`:
 
 ``` r
+
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.pw <- pairs(emmeans(warp.lm, ~ tension | wool))
 warp.pw
@@ -353,6 +364,7 @@ This broadening can be done in two ways. One is to remove the `by`
 variable, which then treats all results as one family. In our example:
 
 ``` r
+
 test(warp.pw, by = NULL, adjust = "bonferroni")
 ```
 
@@ -377,6 +389,7 @@ additional adjustment method to apply to corresponding sets of
 within-group adjusted *P* values:
 
 ``` r
+
 test(warp.pw, adjust = "tukey", cross.adjust = "bonferroni")
 ```
 
@@ -413,6 +426,7 @@ interaction (so that the levels of one factor compare differently at
 levels of the other factor).
 
 ``` r
+
 mod5 <- lm(inverse(conc) ~ source * factor(percent), data = pigs)
 RG5 <- ref_grid(mod5)
 contrast(RG5, "consec", simple = "percent")
@@ -456,6 +470,7 @@ vignette](https://rvlenth.github.io/emmeans/articles/comparisons.md)),
 we might do
 
 ``` r
+
 PRS.source <- pairs(EMM.source)
 PRS.source
 ```
@@ -479,6 +494,7 @@ zero. Easy enough, using the `joint` argument in `test` (note: the
 [`test()`](https://rvlenth.github.io/emmeans/reference/summary.emmGrid.md)):
 
 ``` r
+
 test(PRS.source, joint = TRUE)
 ```
 
@@ -504,6 +520,7 @@ function that performs joint tests of contrasts among each term in a
 model or `emmGrid` object.
 
 ``` r
+
 joint_tests(RG5)
 ```
 
@@ -526,6 +543,7 @@ they may or may not correspond to model sums of squares.)
 One may use `by` variables with `joint_tests`. For example:
 
 ``` r
+
 joint_tests(RG5, by = "source")
 ```
 
@@ -566,6 +584,7 @@ be equivalent if they are within 0.005 of each other. We can test this
 as follows:
 
 ``` r
+
 test(PRS.source, delta = 0.005, adjust = "none")
 ```
 

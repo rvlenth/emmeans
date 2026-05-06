@@ -101,8 +101,8 @@ if(requireNamespace("xtable"))
 #> > pigsint.emm <- emmeans(pigsint.lm, ~percent | source)
 #> 
 #> > xtable::xtable(pigsint.emm, type = "response")
-#> % latex table generated in R 4.5.3 by xtable 1.8-8 package
-#> % Tue Mar 31 00:06:06 2026
+#> % latex table generated in R 4.6.0 by xtable 1.8-8 package
+#> % Wed May  6 00:04:13 2026
 #> \begin{table}[ht]
 #> \centering
 #> \begin{tabular}{rrrrrr}

@@ -29,6 +29,7 @@ these vignettes; but this time, we use a `log` transformation of the
 response:
 
 ``` r
+
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 ```
 
@@ -38,6 +39,7 @@ we obtain the EMMs for `source`, examine its structure, and finally
 produce a summary, including a test against a null value of log(35):
 
 ``` r
+
 emm.src <- emmeans(pigs.lm, "source")
 str(emm.src)
 ```
@@ -49,6 +51,7 @@ str(emm.src)
 ```
 
 ``` r
+
 summary(emm.src, infer = TRUE, null = log(35))
 ```
 
@@ -68,6 +71,7 @@ This can be done by adding `type = "response"` to the
 [`summary()`](https://rdrr.io/r/base/summary.html) call:
 
 ``` r
+
 summary(emm.src, infer = TRUE, null = log(35), type = "response")
 ```
 
@@ -132,6 +136,7 @@ back-transforms an `emmGrid` object and adjusts everything in it
 appropriately. For example:
 
 ``` r
+
 str(regrid(emm.src))
 ```
 
@@ -141,6 +146,7 @@ str(regrid(emm.src))
 ```
 
 ``` r
+
 summary(regrid(emm.src), infer = TRUE, null = 35)
 ```
 
@@ -175,6 +181,7 @@ after the reference grid is constructed but before the averaging takes
 place:
 
 ``` r
+
 pigs.rg <- ref_grid(pigs.lm)
 remm.src <- emmeans(regrid(pigs.rg), "source")
 summary(remm.src, infer = TRUE, null = 35)
@@ -203,6 +210,7 @@ simplifies this. The first two steps above could have been done more
 easily as follows:
 
 ``` r
+
 remm.src <- emmeans(pigs.lm, "source", regrid = "response")
 ```
 
@@ -215,6 +223,7 @@ whereas the `type` argument is simply remembered and used by
 call:
 
 ``` r
+
 emmeans(pigs.lm, "source", type = "response")
 ```
 
@@ -266,6 +275,7 @@ equivalent to the following. We use it to obtain estimated probabilities
 of experiencing pain:
 
 ``` r
+
 neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), data = neuralgia)
 neuralgia.emm <- emmeans(neuralgia.glm, "Treatment", type = "response")
 ```
@@ -273,6 +283,7 @@ neuralgia.emm <- emmeans(neuralgia.glm, "Treatment", type = "response")
     ## NOTE: Results may be misleading due to involvement in interactions
 
 ``` r
+
 neuralgia.emm
 ```
 
@@ -298,6 +309,7 @@ instance where log-differences are back-transformed – in this case to
 odds ratios:
 
 ``` r
+
 pairs(neuralgia.emm, reverse = TRUE)
 ```
 
@@ -327,6 +339,7 @@ being averaged over. To find out, look at an interaction plot of the
 fitted model:
 
 ``` r
+
 emmip(neuralgia.glm, Sex ~ Treatment)
 ```
 
@@ -352,6 +365,7 @@ the marginal `Treatment` EMMs on both the link scale and the response
 scale (we are opting to do the averaging on the link scale):
 
 ``` r
+
 neur.Trt.emm <- suppressMessages(emmeans(neuralgia.glm, "Treatment"))
 plot(neur.Trt.emm)   # Link scale by default
 ```
@@ -360,6 +374,7 @@ plot(neur.Trt.emm)   # Link scale by default
 confint(neur.Trt.emm)](transformations_files/figure-html/unnamed-chunk-13-1.png)
 
 ``` r
+
 plot(neur.Trt.emm, type = "response")
 ```
 
@@ -381,6 +396,7 @@ calculated but plotted on a nonlinear scale corresponding to the
 transformation or link:
 
 ``` r
+
 plot(neur.Trt.emm, type = "scale")
 ```
 
@@ -403,6 +419,7 @@ function
 (see its documentation):
 
 ``` r
+
 plot(neur.Trt.emm, type = "scale", breaks = seq(0.10, 0.90, by = 0.10),
      minor_breaks = seq(0.05, 0.95, by = 0.05))
 ```
@@ -418,6 +435,7 @@ example, here we display the same results on an arcsin-square-root
 scale.
 
 ``` r
+
 plot(neur.Trt.emm, type = "response") +
   ggplot2::scale_x_continuous(trans = scales::asn_trans(),
                               breaks = seq(0.10, 0.90, by = 0.10))
@@ -444,6 +462,7 @@ link *and* a response transformation. Here is an example, with the
 built-in `wapbreaks` dataset:
 
 ``` r
+
 warp.glm <- glm(sqrt(breaks) ~ wool*tension, family = Gamma, data = warpbreaks)
 ref_grid(warp.glm)
 ```
@@ -461,6 +480,7 @@ there is the square-root response transformation besides. If we choose
 `type = "response"` in summarizing, we undo *both* transformations:
 
 ``` r
+
 emmeans(warp.glm, ~ tension | wool, type = "response")
 ```
 
@@ -487,6 +507,7 @@ back-transform the rest of the way. It is possible to undo the link, and
 not the response transformation:
 
 ``` r
+
 emmeans(warp.glm, ~ tension | wool, type = "unlink")
 ```
 
@@ -545,6 +566,7 @@ response variable is a percentage and we want to use the response
 transformation \\\sin^{-1}\sqrt{y/100}\\. Then proceed like this:
 
 ``` r
+
 tran <- make.tran("asin.sqrt", 100)
 my.model <- with(tran, 
     lmer(linkfun(percent) ~ treatment + (1|Block), data = mydata))
@@ -569,6 +591,7 @@ It is not at all uncommon to fit a model using statements like the
 following:
 
 ``` r
+
 mydata <- transform(mydata, logy.5 = log(yield + 0.5))
 my.model <- lmer(logy.5 ~ treatment + (1|Block), data = mydata)
 ```
@@ -579,6 +602,7 @@ to figure out that a response transformation was used. What can be done
 is to update the reference grid with the required information:
 
 ``` r
+
 my.rg <- update(ref_grid(my.model), tran = make.tran("genlog", .5))
 ```
 
@@ -591,6 +615,7 @@ For standard transformations (those in
 give the name of the transformation; e.g.,
 
 ``` r
+
 model.rg <- update(ref_grid(model), tran = "sqrt")
 ```
 
@@ -608,6 +633,7 @@ done more easily by specifying the transformation directly in the model
 formula:
 
 ``` r
+
 my.better.model <- lmer(log(yield + 0.5) ~ treatment + (1|Block), data = mydata)
 ```
 
@@ -633,6 +659,7 @@ Consider the `pigs` example once again, but suppose we had fitted a
 model with a square-root transformation instead of a log:
 
 ``` r
+
 pigroot.lm <- lm(sqrt(conc) ~ source + factor(percent), data = pigs)
 logemm.src <- regrid(emmeans(pigroot.lm, "source"), transform = "log")
 confint(logemm.src, type = "response")
@@ -650,6 +677,7 @@ confint(logemm.src, type = "response")
 ```
 
 ``` r
+
 pairs(logemm.src, type = "response")
 ```
 
@@ -676,6 +704,7 @@ It is possible to fake transformations other than the log. Just use the
 same method, e.g. (results not displayed)
 
 ``` r
+
 regrid(emm, transform = "probit")
 ```
 
@@ -695,6 +724,7 @@ The additional machinery of
 makes this possible. First, do
 
 ``` r
+
 log.emm <- regrid(neuralgia.emm, "log")
 ```
 
@@ -705,6 +735,7 @@ of logs, which are logs of ratios. The risk ratios are thus obtainable
 by
 
 ``` r
+
 pairs(log.emm, reverse = TRUE, type = "response")
 ```
 
@@ -733,6 +764,7 @@ the `"logit"` scale if we want odds ratios, or to `"log"` scale if we
 want risk ratios. For example,
 
 ``` r
+
 neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"), 
                      data = neuralgia)
 prb.emm <- suppressMessages(emmeans(neuralgia.prb, "Treatment"))
@@ -765,6 +797,7 @@ the percentage difference between \\a\\ and \\b\\ is \\100(a-b)/b =
 100(r-1)\\. Thus,
 
 ``` r
+
 pct.diff.tran <- list(
     linkfun = function(mu) log(mu/100 + 1),
     linkinv = function(eta) 100 * (exp(eta) - 1),
@@ -793,6 +826,7 @@ Another way to obtain the same estimates is to directly transform the
 estimated ratios to \\100r - 100\\:
 
 ``` r
+
 contrast(regrid(pairs(logemm.src)), "identity", scale = 100, offset = -100,
          infer = c(TRUE, TRUE))
 ```
@@ -825,6 +859,7 @@ function (called by \`emmeans() and others) tries to detect the scaling
 parameters. To illustrate:
 
 ``` r
+
 fiber.lm <- lm(scale(strength) ~ machine * scale(diameter), data = fiber)
 emmeans(fiber.lm, "machine")   # on the standardized scale
 ```
@@ -840,6 +875,7 @@ emmeans(fiber.lm, "machine")   # on the standardized scale
 ```
 
 ``` r
+
 emmeans(fiber.lm, "machine", type = "response")   # strength scale
 ```
 
@@ -858,6 +894,7 @@ More interesting (and complex) is what happens with
 Without anything fancy added, we have
 
 ``` r
+
 emtrends(fiber.lm, "machine", var = "diameter")
 ```
 
@@ -879,6 +916,7 @@ response transformation, and that is done via `regrid` (which invokes
 after the reference grid is constructed):
 
 ``` r
+
 emtrends(fiber.lm, "machine", var = "diameter", regrid = "response")
 ```
 
@@ -896,6 +934,7 @@ What if we want slopes for (change in `scale(strength)`) / (change in
 specify the scaling parameters for `diameter`.
 
 ``` r
+
 with(fiber, c(mean = mean(diameter), sd = sd(diameter)))
 ```
 
@@ -905,6 +944,7 @@ with(fiber, c(mean = mean(diameter), sd = sd(diameter)))
 ```
 
 ``` r
+
 emtrends(fiber.lm, "machine", var = "scale(diameter, 24.133, 4.324)")
 ```
 
@@ -921,6 +961,7 @@ This result is the one most directly related to the regression
 coefficients:
 
 ``` r
+
 coef(fiber.lm)[4:6]
 ```
 
@@ -948,6 +989,7 @@ function which for some reason doesn’t allow the scaling information to
 be detected.
 
 ``` r
+
 mod <- some.fcn(scale(RT) ~ group + (1|subject), data = mydata)
 emmeans(mod, "group", type = "response",
         tran = make.tran("scale", y = mydata$RT))
@@ -957,6 +999,7 @@ The other, equivalent, method is to create the transformation object
 first and use it in fitting the model:
 
 ``` r
+
 mod <- with(make.tran("scale", y = mydata$RT),
             some.fcn(linkfun(RT) ~ group + (1|subject), data = mydata))
 emmeans(mod, "group", type = "response")
@@ -970,6 +1013,7 @@ know what the results would be if we had standardized. Here we
 reverse-engineer the `fiber.lm` example above:
 
 ``` r
+
 fib.lm <- lm(strength ~ machine * diameter, data = fiber)
 
 # On raw scale:
@@ -986,6 +1030,7 @@ emmeans(fib.lm, "machine")
 ```
 
 ``` r
+
 # On standardized scale:
 tran <- make.tran("scale", y = fiber$strength)
 emmeans(fib.lm, "machine", regrid = tran)
@@ -1046,6 +1091,7 @@ available via the [`sigma()`](https://rdrr.io/r/stats/sigma.html)
 function:
 
 ``` r
+
 sigma(pigs.lm)
 ```
 
@@ -1057,6 +1103,7 @@ This estimate is used by default. The bias-adjusted EMMs for the sources
 are:
 
 ``` r
+
 summary(emm.src, type = "response", bias.adj = TRUE)
 ```
 
@@ -1098,6 +1145,7 @@ with (by default) a log link; and obtain the EMMs, with and without a
 bias adjustment
 
 ``` r
+
 ismod <- glm(count ~ spray, data = InsectSprays, family = poisson())
 emmeans(ismod, "spray", type = "response")
 ```
@@ -1119,6 +1167,7 @@ The above results were computed with no bias adjustment, the default. If
 you try
 
 ``` r
+
 emmeans(ismod, "spray", type = "response", bias.adj = TRUE)
 ```
 
@@ -1131,6 +1180,7 @@ simple structure of this dataset, we can verify this by noting that the
 estimates we have correspond exactly to the simple observed mean counts:
 
 ``` r
+
 with(InsectSprays, tapply(count, spray, mean))
 ```
 
@@ -1159,6 +1209,7 @@ variations as well as overdispersion (variations larger than expected
 with a simple binomial model):
 
 ``` r
+
 require(lme4)
 cbpp <- transform(cbpp, unit = 1:nrow(cbpp))
 cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period + 
@@ -1185,6 +1236,7 @@ adjustment. However, the model estimates two independent sources of
 random variation that probably should be taken into account:
 
 ``` r
+
 lme4::VarCorr(cbpp.glmer)
 ```
 
@@ -1201,6 +1253,7 @@ purpose, we need the combined effect of these variations; so we compute
 the overall SD via the Pythagorean theorem:
 
 ``` r
+
 total.SD = sqrt(0.89107^2 + 0.18396^2)
 ```
 
@@ -1208,6 +1261,7 @@ Accordingly, here are the bias-adjusted estimates of the marginal
 probabilities:
 
 ``` r
+
 summary(emm, type = "response", bias.adjust = TRUE, sigma = total.SD)
 ```
 
@@ -1231,6 +1285,7 @@ are fairly close to those obtained directly from the incidences in the
 data:
 
 ``` r
+
 cases <- with(cbpp, tapply(incidence, period, sum))
 trials <- with(cbpp, tapply(size, period, sum))
 cases / trials

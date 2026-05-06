@@ -49,6 +49,7 @@ whether we are using an appropriate value. You may check the value being
 assumed by looking at the `misc` slot in the reference grid:
 
 ``` r
+
 rg <- ref_grid(model)
 rg@misc$sigma
 ```
@@ -78,6 +79,7 @@ practices, so we will center each herd’s `ewt` measurements, then use
 that as a covariate in a mixed model:
 
 ``` r
+
 feedlot = transform(feedlot, adj.ewt = ewt - predict(lm(ewt ~ herd)))
 require(lme4)
 feedlot.lmer <- lmer(swt ~ adj.ewt + diet + (1|herd), data = feedlot)
@@ -97,6 +99,7 @@ summary(feedlot.rg)  ## point predictions
 Now, as advised, let’s look at the SDs involved in this model:
 
 ``` r
+
 lme4::VarCorr(feedlot.lmer)  ## for the model
 ```
 
@@ -107,6 +110,7 @@ lme4::VarCorr(feedlot.lmer)  ## for the model
 ```
 
 ``` r
+
 feedlot.rg@misc$sigma  ## default in the ref. grid
 ```
 
@@ -125,6 +129,7 @@ a total SD using the Pythagorean Theorem. We will update the reference
 grid with the new value:
 
 ``` r
+
 feedlot.rg <- update(feedlot.rg, sigma = sqrt(77.087^2 + 57.832^2))
 ```
 
@@ -133,6 +138,7 @@ We are now ready to form prediction intervals. To do so, simply call the
 `interval` argument:
 
 ``` r
+
 predict(feedlot.rg, interval = "prediction")
 ```
 
@@ -150,6 +156,7 @@ predict(feedlot.rg, interval = "prediction")
 These results may also be displayed graphically:
 
 ``` r
+
 plot(feedlot.rg, PIs = TRUE)
 ```
 
@@ -166,6 +173,7 @@ sanity check, observe that these prediction intervals cover about the
 same ground as the original data:
 
 ``` r
+
 range(feedlot$swt)
 ```
 
@@ -192,12 +200,14 @@ expedient thing to do is to fit a different model where `herd` is a
 fixed effect:
 
 ``` r
+
 feedlot.lm <- lm(swt ~ adj.ewt + diet + herd, data = feedlot)
 ```
 
 So to predict slaughter weight for herds `9` and `19`:
 
 ``` r
+
 newrg <- ref_grid(feedlot.lm, at = list(adj.ewt = 0, herd = c("9", "19")))
 predict(newrg, interval = "prediction", by = "herd")
 ```

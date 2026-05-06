@@ -23,13 +23,14 @@ As an example for this topic, consider the `auto.noise` dataset included
 with the package. This is a balanced 3x2x2 experiment with three
 replications. The response – noise level – is evaluated with different
 sizes of cars, types of anti-pollution filters, on each side of the car
-being measured.[¹](#fn1)
+being measured.[^1]
 
 Let’s fit a model and obtain the ANOVA table (because of the scale of
 the data, we believe that the response is recorded in tenths of
 decibels; so we compensate for this by scaling the response):
 
 ``` r
+
 noise.lm <- lm(noise/10 ~ size * type * side, data = auto.noise)
 anova(noise.lm)
 ```
@@ -56,6 +57,7 @@ to estimating marginal means (even in the face of all these
 interactions!). They would go straight to analyses like this:
 
 ``` r
+
 emmeans(noise.lm, pairwise ~ size)
 ```
 
@@ -97,6 +99,7 @@ visualize the nature of the interactions before doing any statistical
 comparisons. The following plot helps.
 
 ``` r
+
 emmip(noise.lm, type ~ size | side)
 ```
 
@@ -112,6 +115,7 @@ So it seems more useful to do the comparisons of size separately for
 each filter type. This is easily done, simply by conditioning on `type`:
 
 ``` r
+
 emm_s.t <- emmeans(noise.lm, pairwise ~ size | type)
 ```
 
@@ -120,6 +124,7 @@ emm_s.t <- emmeans(noise.lm, pairwise ~ size | type)
 ```
 
 ``` r
+
 emm_s.t
 ```
 
@@ -168,13 +173,13 @@ analysis should be grounded in evaluating the practical impact of the
 estimated effects *first*, and seeing if the statistical evidence backs
 it up. Those who put all their attention on how many asterisks (I call
 these people “`*` gazers”) are ignoring the fact that these don’t
-measure the sizes of the effects on a practical scale.[²](#fn2) An
-effect can be practically negligible and still have a very small *P*
-value – or practically important but have a large *P* value – depending
-on sample size and error variance. Failure to describe what is actually
-going on in the data is a failure to do an adequate analysis. Use lots
-of plots, and *think* about the results. For more on this, see the
-discussion of *P* values in the [“basics”
+measure the sizes of the effects on a practical scale.[^2] An effect can
+be practically negligible and still have a very small *P* value – or
+practically important but have a large *P* value – depending on sample
+size and error variance. Failure to describe what is actually going on
+in the data is a failure to do an adequate analysis. Use lots of plots,
+and *think* about the results. For more on this, see the discussion of
+*P* values in the [“basics”
 vignette](https://rvlenth.github.io/emmeans/articles/basics.html#pvalues).
 
 ### Simple contrasts
@@ -187,6 +192,7 @@ specifying which factors are *not* used as `by` variables. For example,
 consider:
 
 ``` r
+
 noise.emm <- emmeans(noise.lm, ~ size * side * type)
 ```
 
@@ -209,6 +215,7 @@ contrast sets is returned. However, if the additional argument `combine`
 is set to `TRUE`, they are all combined into one family:
 
 ``` r
+
 contrast(noise.emm, "consec", simple = "each", combine = TRUE, adjust = "mvt")
 ```
 
@@ -255,6 +262,7 @@ contrasts of `size` separately for each `type`, and compare them. Here
 are estimates of those contrasts:
 
 ``` r
+
 contrast(emm_s.t[[1]], "poly")   ## 'by = "type"' already in previous result 
 ```
 
@@ -278,6 +286,7 @@ argument in
 as follows:
 
 ``` r
+
 IC_st <- contrast(emm_s.t[[1]], interaction = c("poly", "consec"), by = NULL)
 IC_st
 ```
@@ -300,6 +309,7 @@ need to understand more clearly what contrasts are being estimated, the
 [`coef()`](https://rdrr.io/r/stats/coef.html) method helps:
 
 ``` r
+
 coef(IC_st)
 ```
 
@@ -320,6 +330,7 @@ By the way, “type III” tests of interaction effects can be obtained via
 interaction contrasts:
 
 ``` r
+
 test(IC_st, joint = TRUE)
 ```
 
@@ -334,6 +345,7 @@ This result is exactly the same as the *F* test of `size:type` in the
 The three-way interaction may be explored via interaction contrasts too:
 
 ``` r
+
 emmeans(noise.lm, ~ size*type*side) |>
     contrast(interaction = c("poly", "consec", "consec"))
 ```
@@ -357,6 +369,7 @@ function that obtains and tests the interaction contrasts for all
 effects in the model and compiles them in one Type-III-ANOVA-like table:
 
 ``` r
+
 joint_tests(noise.lm)
 ```
 
@@ -375,6 +388,7 @@ You may even add `by` variable(s) to obtain separate ANOVA tables for
 the remaining factors:
 
 ``` r
+
 joint_tests(noise.lm, by = "side")
 ```
 
@@ -412,6 +426,7 @@ another. This is facilitated by the
 function:
 
 ``` r
+
 mvcontrast(noise.emm, "pairwise", mult.name = c("type", "side"))
 ```
 
@@ -438,6 +453,7 @@ example, we wish to compare the two filter types for each size of car,
 without regard to which side:
 
 ``` r
+
 update(mvcontrast(noise.emm, "consec", mult.name = "side", by = "size"), 
        by = NULL)
 ```
@@ -457,6 +473,7 @@ to repeat the initial multivariate comparison after removing all
 interactions:
 
 ``` r
+
 mvcontrast(update(noise.emm, submodel = ~ side + size + type), 
            "pairwise", mult.name = c("type", "side"))
 ```
@@ -489,6 +506,7 @@ dataset, and fit a model including the interaction between `diameter` (a
 covariate) and `machine` (a factor):
 
 ``` r
+
 fiber.lm <- lm(strength ~ diameter*machine, data = fiber)
 ```
 
@@ -499,6 +517,7 @@ compare the slopes of those lines via the
 function:
 
 ``` r
+
 emtrends(fiber.lm, pairwise ~ machine, var = "diameter")
 ```
 
@@ -526,6 +545,7 @@ different.
 To visualize the lines themselves, you may use
 
 ``` r
+
 emmip(fiber.lm, machine ~ diameter, cov.reduce = range)
 ```
 
@@ -551,6 +571,7 @@ models for these data, with additive effects for days and stores, and
 different levels of fitting on the prices:
 
 ``` r
+
 org.quad <- lm(cbind(sales1, sales2) ~ poly(price1, price2, degree = 2)
                                        + day + store, data = oranges)
 org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = oranges)
@@ -567,6 +588,7 @@ interesting way to view these models is to look at how they predict
 sales of each variety at each observed values of the prices:
 
 ``` r
+
 emmip(org.quad, price2 ~ price1 | variety, mult.name = "variety", cov.reduce = FALSE)
 ```
 
@@ -592,6 +614,7 @@ Which model should we use? They are nested models, so they can be
 compared by [`anova()`](https://rdrr.io/r/stats/anova.html):
 
 ``` r
+
 anova(org.quad, org.int, org.add)
 ```
 
@@ -628,6 +651,7 @@ except for requiring the variable to use in the difference quotient.
 Using the `org.int` model:
 
 ``` r
+
 emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
 ```
 
@@ -664,6 +688,7 @@ nature of those changes.
 Similar results hold when we analyze the trends for `price2`:
 
 ``` r
+
 emtrends(org.int, pairwise ~ variety, var = "price2", mult.name = "variety")
 ```
 
@@ -700,13 +725,12 @@ in this vignette – in order to provide a complete picture.
 [Index of all vignette
 topics](https://rvlenth.github.io/emmeans/articles/vignette-topics.md)
 
-------------------------------------------------------------------------
+[^1]: I sure wish I could ask some questions about how how these data
+    were collected; for example, are these independent experimental
+    runs, or are some cars measured more than once? The model is based
+    on the independence assumption, but I have my doubts.
 
-1.  I sure wish I could ask some questions about how how these data were
-    collected; for example, are these independent experimental runs, or
-    are some cars measured more than once? The model is based on the
-    independence assumption, but I have my doubts.
-
-2.  You may have noticed that there are no asterisks in the ANOVA table
-    in this vignette. I habitually opt out of star-gazing by including
-    `options(show.signif.stars = FALSE)` in my `.Rprofile` file.
+[^2]: You may have noticed that there are no asterisks in the ANOVA
+    table in this vignette. I habitually opt out of star-gazing by
+    including `options(show.signif.stars = FALSE)` in my `.Rprofile`
+    file.

@@ -38,6 +38,7 @@ The first thing to do is to look at the help page for extending the
 package:
 
 ``` r
+
 help("extending-emmeans", package="emmeans")
 ```
 
@@ -67,6 +68,7 @@ outlier-resistant model fitting. We will cobble together some
 dataset (a simulated two-factor experiment) for testing.
 
 ``` r
+
 fake = expand.grid(rep = 1:5, A = c("a1","a2"), B = c("b1","b2","b3"))
 fake$y = c(11.46,12.93,11.87,11.01,11.92,17.80,13.41,13.96,14.27,15.82,
            23.14,23.75,-2.09,28.43,23.01,24.11,25.51,24.11,23.95,30.37,
@@ -84,6 +86,7 @@ robust-regression models using *M* estimation. We’ll fit a model using
 the default settings for all tuning parameters:
 
 ``` r
+
 library(MASS)
 fake.rlm = rlm(y ~ A * B, data = fake)
 
@@ -133,6 +136,7 @@ class of its `object` argument. Consider for example a model fitted in
 the **robmixglm** package:
 
 ``` r
+
 require(robmixglm, quietly = TRUE)
 fit <- robmixglm(inverse(conc) ~ source + factor(percent), family = "gamma",
                  data = pigs, cores = 1)
@@ -145,6 +149,7 @@ they are buried in there. Here is an S3 method that supports this model
 class:
 
 ``` r
+
 qdrg.robmixglm <- function(object, data = eval(object$call$data), ...) {
     coef <- coef(object)
     idx <- seq_along(coef)
@@ -164,6 +169,7 @@ to pass to this non-generic
 get the reference grid for a selection of `bp` values:
 
 ``` r
+
 rg <- qdrg(object = fit, link = "log")
 emmeans(rg, ~ ., type = "response")
 ```
@@ -218,6 +224,7 @@ even having a `vcov` method. So for these, we really do need to write
 new methods for `lqs` objects. First, let’s fit a model.
 
 ``` r
+
 fake.lts = ltsreg(y ~ A * B, data = fake)
 ```
 
@@ -227,6 +234,7 @@ It is usually an easy matter to write a `recover_data` method. Look at
 the one for `lm` objects:
 
 ``` r
+
 emmeans:::recover_data.lm
 ```
 
@@ -237,7 +245,7 @@ emmeans:::recover_data.lm
 ##     recover_data(fcall, delete.response(terms(object)), object$na.action, 
 ##         frame = frame, pwts = weights(object), ...)
 ## }
-## <bytecode: 0x56274c563eb8>
+## <bytecode: 0x5555f5b78890>
 ## <environment: namespace:emmeans>
 ```
 
@@ -247,12 +255,14 @@ and `na.action`. It happens that we can access these attributes in
 exactly the same way as for `lm` objects; so:
 
 ``` r
+
 recover_data.lqs = emmeans:::recover_data.lm
 ```
 
 Let’s test it:
 
 ``` r
+
 rec.fake = recover_data(fake.lts)
 head(rec.fake)
 ```
@@ -320,6 +330,7 @@ message.
 The `emm_basis` method has four required arguments:
 
 ``` r
+
 args(emmeans:::emm_basis.lm)
 ```
 
@@ -352,6 +363,7 @@ values for a new set of predictors (e.g., `newdata` in `predict.lm`).
 Following this advice, let’s take a look at it:
 
 ``` r
+
 MASS:::predict.lqs
 ```
 
@@ -367,7 +379,7 @@ MASS:::predict.lqs
 ##     X <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
 ##     drop(X %*% object$coefficients)
 ## }
-## <bytecode: 0x56274e766b28>
+## <bytecode: 0x555600280a80>
 ## <environment: namespace:MASS>
 ```
 
@@ -377,6 +389,7 @@ Based on this, here is a listing of an `emm_basis` method for `lqs`
 objects:
 
 ``` r
+
 emm_basis.lqs = function(object, trms, xlev, grid, ...) { 
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts) 
@@ -394,6 +407,7 @@ emm_basis.lqs = function(object, trms, xlev, grid, ...) {
 Before explaining it, let’s verify that it works:
 
 ``` r
+
 emmeans(fake.lts, ~ B | A)
 ```
 
@@ -652,6 +666,7 @@ reference grid. That means we need to make `recover_data` a lot fancier!
 Here it is:
 
 ``` r
+
 recover_data.rsm = function(object, data, mode = c("asis", "coded", "decoded"), ...) {
     mode = match.arg(mode)
     cod = rsm::codings(object)
@@ -730,6 +745,7 @@ Now comes the `emm_basis` method that will be called after the grid is
 defined. It is listed below:
 
 ``` r
+
 emm_basis.rsm = function(object, trms, xlev, grid, 
                          mode = c("asis", "coded", "decoded"), misc, ...) {
     mode = match.arg(mode)
@@ -773,6 +789,7 @@ Here’s a demonstration of this **rsm** support. The standard example for
 blocks and with two coded predictors.
 
 ``` r
+
 library("rsm")
 example("rsm")   ### (output is not shown) ###
 ```
@@ -781,6 +798,7 @@ First, let’s look at some results on the coded scale—which are the same
 as for an ordinary `lm` object.
 
 ``` r
+
 emmeans(CR.rs2, ~ x1 * x2, mode = "coded", 
         at = list(x1 = c(-1, 0, 1), x2 = c(-2, 2)))
 ```
@@ -802,6 +820,7 @@ Now, the coded variables `x1` and `x2` are derived from these coding
 formulas for predictors `Time` and `Temp`:
 
 ``` r
+
 codings(CR.rs1)
 ```
 
@@ -818,6 +837,7 @@ Thus, for example, a coded value of `x1 = 1` corresponds to a time of
 Note that the `at` list must now be given in terms of `Time` and `Temp`:
 
 ``` r
+
 emmeans(CR.rs2, ~ Time * Temp, mode = "decoded", 
         at = list(Time = c(80, 85, 90), Temp = c(165, 185)))
 ```
@@ -884,6 +904,7 @@ to make this simple. Suppose that your package offers two model classes
 file `zzz.R`):
 
 ``` r
+
 .onLoad <- function(libname, pkgname) {
     if (requireNamespace("emmeans", quietly = TRUE))
         emmeans::.emm_register(c("foo", "bar"), pkgname)

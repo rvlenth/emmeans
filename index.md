@@ -78,6 +78,7 @@ graphs of them (interaction-style plots and side-by-side intervals).
   Then run
 
 ``` r
+
 remotes::install_github("rvlenth/emmeans", dependencies = TRUE, build_vignettes = TRUE)
 ```
 

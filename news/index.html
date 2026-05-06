@@ -57,7 +57,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.3" id="emmeans-203">emmeans 2.0.3<a class="anchor" aria-label="anchor" href="#emmeans-203"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.4" id="emmeans-204">emmeans 2.0.4<a class="anchor" aria-label="anchor" href="#emmeans-204"></a></h2>
+<ul><li>Updated logo (now hexagonal)</li>
+<li>bug-fix for labelling in pairwise contrasts</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.3" id="emmeans-203">emmeans 2.0.3<a class="anchor" aria-label="anchor" href="#emmeans-203"></a></h2><p class="text-muted">CRAN release: 2026-04-09</p>
 <ul><li>Repaired <code>contrast</code> so that it recognizes multivariate transformations <code>alr</code>, <code>clr</code>, and <code>ilr</code> as being log-based. Thus contrasts thereof are log odds ratios (<a href="https://github.com/rvlenth/emmeans/issues/575" class="external-link">#575</a>)</li>
 <li>Re-vamped <code><a href="../reference/mvregrid.html">mvregrid()</a></code> with a ’transform` argument for more flexibility, and different defaults. Pre-existing code that uses this function may fail.</li>
 <li>
@@ -192,7 +197,7 @@
 <li>Added a new contrast function <code>wtcon.emmc(levs, wts, cmtype, ...)</code> which generates contrasts via <code>multcomp::contrMat(wts, type = cmtype, ...)</code>
 </li>
 <li>
-<code><a href="../reference/contrast.html">contrast()</a></code> gains a new argument <code>wts</code> which can be passed to some <code>.emmc</code> functions including <code>eff.emmc</code>, <code>del.eff.emmc</code>, and <code>wtcon.emmc</code>. If <code>wts</code> is left missing, we pass equal weights of <code>. If we specify</code>wts = NA<code>, we retrieve weights from the object (potentially different in     each</code>by<code>group). Otherwise, the same fixed</code>wts` are used in each group.</li>
+<code><a href="../reference/contrast.html">contrast()</a></code> gains a new argument <code>wts</code> which can be passed to some <code>.emmc</code> functions including <code>eff.emmc</code>, <code>del.eff.emmc</code>, and <code>wtcon.emmc</code>. If <code>wts</code> is left missing, we pass equal weights of <code>. If we specify</code>wts = NA<code>, we retrieve weights from the object (potentially different in each</code>by<code>group). Otherwise, the same fixed</code>wts` are used in each group.</li>
 <li>Added a <code><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights()</a></code> method for <code>emmGrid</code> objects</li>
 <li>Modification to <code><a href="../reference/pwpp.html">pwpp()</a></code> to play along if <code><a href="../reference/contrast.html">contrast()</a></code> changes the <code>by</code> variable via <code>options</code> (<a href="https://github.com/rvlenth/emmeans/issues/472" class="external-link">#472</a>)</li>
 <li>After some wiggling around, we now allow <code><a href="https://rdrr.io/pkg/survival/man/strata.html" class="external-link">strata()</a></code> factors to be included in the reference grid for <strong>survival</strong> models. It is up to the user to decide what is sensible. (<a href="https://github.com/rvlenth/emmeans/issues/429" class="external-link">#429</a>, <a href="https://github.com/rvlenth/emmeans/issues/473" class="external-link">#473</a>)</li>

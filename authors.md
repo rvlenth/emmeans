@@ -26,6 +26,8 @@
 
 - **Henrik Singmann**. Contributor.
 
+- **Alexis Derumigny**. Contributor.
+
 ## Citation
 
 Source:

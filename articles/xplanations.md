@@ -221,6 +221,7 @@ Here is a constructed example with specified means and somewhat unequal
 SEs
 
 ``` r
+
 m = c(6.1, 4.5, 5.4,    6.3, 5.5, 6.7)
 se2 = c(.3, .4, .37,  .41, .23, .48)^2
 lev = list(A = c("a1","a2","a3"), B = c("b1", "b2"))
@@ -240,6 +241,7 @@ split-plot) factor and `B` as a between-subjects (whole-plot) factor.
 We’ll start with a correlation of 0.3.
 
 ``` r
+
 mkmat <- function(V, rho = 0, indexes = list(1:3, 4:6)) {
     sd = sqrt(diag(V))
     for (i in indexes)
@@ -259,6 +261,7 @@ correctly](xplanations_files/figure-html/unnamed-chunk-3-1.png)
 Same with intraclass correlation of 0.6:
 
 ``` r
+
 foo6 = foo
 foo6@V <- mkmat(foo6@V, 0.6)
 plot(foo6, CIs = FALSE, comparisons = TRUE)
@@ -278,6 +281,7 @@ Now we have a warning that some arrows don’t overlap, but should. We can
 make it even worse by upping the correlation to 0.8:
 
 ``` r
+
 foo8 = foo
 foo8@V <- mkmat(foo8@V, 0.8)
 plot(foo8, CIs = FALSE, comparisons = TRUE)
@@ -296,6 +300,7 @@ comparisons while keeping the others the same. These all work out if we
 use `B` as a `by` variable:
 
 ``` r
+
 plot(foo8, CIs = FALSE, comparisons = TRUE, by = "B")
 ```
 
@@ -310,6 +315,7 @@ within the levels of `B`. Or, we can use
 the *P* values for all comparisons among the six means:
 
 ``` r
+
 pwpp(foo6, sort = FALSE)
 ```
 
@@ -317,6 +323,7 @@ pwpp(foo6, sort = FALSE)
 pairs(foo6)](xplanations_files/figure-html/unnamed-chunk-7-1.png)
 
 ``` r
+
 pwpm(foo6)
 ```
 
@@ -361,6 +368,7 @@ into a set of contrasts labeled `(confounded)` in the output (as long as
 `warpbreaks` dataset with the last cell removed.
 
 ``` r
+
 options(contrasts = c("contr.treatment", "contr.poly"))   ## ensure system default
 w <- warpbreaks[1:40, ]   ### no data for (wool = B, tension = H)
 w.lm <- lm(breaks ~ wool * tension, data = w)
@@ -388,6 +396,7 @@ How do we obtain these extra 2 d.f.? Well, first of all, it is easy to
 obtain a joint test of *all* comparisons among the cell means
 
 ``` r
+
 (test.all <- test(contrast(w.rg, "consec"), joint = TRUE))
 ```
 
@@ -403,6 +412,7 @@ What we do is simply pool together all the contrasts that were tested in
 estimable functions associated with `jt`:
 
 ``` r
+
 (ef <- attr(jt, "est.fcns"))
 ```
 
@@ -419,6 +429,7 @@ estimable functions associated with `jt`:
 Then we can get a joint test of all these together via some trickery:
 
 ``` r
+
 tmp <- w.rg
 tmp@linfct <- do.call(rbind, ef)      # combine EFs into a matrix
 tmp@grid <- tmp@grid[1:2, ]           # replace the @linfct and @grid slots
@@ -438,6 +449,7 @@ the effects in the top part of the `jt` table. We can get the
 unexplained part of `test.all` by d.f.-weighted subtraction:
 
 ``` r
+
 (test.all$df1 * test.all$F.ratio  -  test.ef$df1 * test.ef$F.ratio) /
     (test.all$df1 - test.ef$df1)
 ```
@@ -462,6 +474,7 @@ differently, even though they seem equivalent.
 To illustrate, consider the following two models:
 
 ``` r
+
 require(MASS)
 mod1 <- glm(Claims ~ District + Group + Age + offset(log(Holders)),
             data = Insurance,
@@ -486,6 +499,7 @@ fitting the model, and constrained to have a regression coefficient
 of 1. Let’s see how this plays out by looking at the reference grids:
 
 ``` r
+
 (rg1 <- ref_grid(mod1))
 ```
 
@@ -499,6 +513,7 @@ of 1. Let’s see how this plays out by looking at the reference grids:
 ```
 
 ``` r
+
 (rg2 <- ref_grid(mod2))
 ```
 
@@ -520,6 +535,7 @@ case, that fourth variable is set to its mean by default.
 Now let’s compare some EMMs:
 
 ``` r
+
 emmeans(rg1, "Age")
 ```
 
@@ -536,6 +552,7 @@ emmeans(rg1, "Age")
 ```
 
 ``` r
+
 emmeans(rg2, "Age")
 ```
 
@@ -564,6 +581,7 @@ and we can do that by specifying an offset of \\\log 1 = 0\\ to get a
 rate per holder:
 
 ``` r
+
 emmeans(rg1, "Age", offset = 0, type = "response")
 ```
 
@@ -587,6 +605,7 @@ This is done as follows: For `mod1`, we compute `mean(Holders)`
 separately for each `Age`:
 
 ``` r
+
 emmeans(mod1, "Age", cov.reduce = Holders ~ Age)
 ```
 
@@ -606,6 +625,7 @@ For `mod2`, `Holders` is not considered a predictor, and instead we need
 separate mean offsets:
 
 ``` r
+
 emmeans(mod2, "Age", cov.reduce = .static.offset. ~ Age)
 ```
 

@@ -44,6 +44,7 @@ depends on how many factors you have, and how they relate.
 If a one-factor model fits well and the factor is named `treatment`, do
 
 ``` r
+
 EMM <- emmeans(model, "treatment")   # or emmeans(model, ~ treatment)
 EMM    # display the means
 
@@ -81,6 +82,7 @@ want to do “simple comparisons” of the cell means. That is, compare or
 contrast the means separately, holding one factor fixed at each level.
 
 ``` r
+
 EMM <- emmeans(model, ~ treat * dose)
 EMM    # display the cell means
 
@@ -97,6 +99,7 @@ to undo the `by` variable and specify the desired adjustment (which
 one set of pairwise comparisons.) For example
 
 ``` r
+
 test(pairs(EMM, by = "dose"), by = NULL, adjust = "mvt")
 ```
 
@@ -117,6 +120,7 @@ kind of object as
 so you can run them multiple times. For example,
 
 ``` r
+
 CON <- pairs(EMM, by = "dose")
 contrast(CON, "consec", by = NULL)    # by = NULL is essential here!
 ```
@@ -124,6 +128,7 @@ contrast(CON, "consec", by = NULL)    # by = NULL is essential here!
 Or equivalently, the named argument `interaction` can be used
 
 ``` r
+
 contrast(EMM, interaction = c("pairwise", "consec"))
 ```
 

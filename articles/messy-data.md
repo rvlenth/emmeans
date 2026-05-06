@@ -40,6 +40,7 @@ First, let’s fit a model than includes all main effects and 2-way
 interactions, and obtain its “type II” ANOVA:
 
 ``` r
+
 nutr.lm <- lm(gain ~ (age + group + race)^2, data = nutrition) 
 car::Anova(nutr.lm)
 ```
@@ -66,6 +67,7 @@ There is definitely a `group` effect and a hint of and interaction with
 counts:
 
 ``` r
+
 emmeans(nutr.lm, ~ group * race, calc = c(n = ".wgt."))
 ```
 
@@ -89,6 +91,7 @@ space of the data used to fit the model. And we have no data for three
 of the age groups in the Hispanic population:
 
 ``` r
+
 with(nutrition, table(race, age))
 ```
 
@@ -109,6 +112,7 @@ analysis are to focus only on Black and White populations; or to focus
 only on age group 3. For example (the latter):
 
 ``` r
+
 emmeans(nutr.lm, pairwise ~ group | race, at = list(age = "3")) |>
     summary(by = NULL)
 ```
@@ -159,6 +163,7 @@ variables as well. Let’s a logistic regression model, after changing the
 labels for `educ` to shorter strings.
 
 ``` r
+
 framing <- mediation::framing 
 ```
 
@@ -167,6 +172,7 @@ framing <- mediation::framing
     ##   na.action.merMod car
 
 ``` r
+
 levels(framing$educ) <- c("NA","Ref","< HS", "HS", "> HS","Coll +") 
 framing.glm <- glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat), 
     family = binomial, data = framing)
@@ -177,6 +183,7 @@ their means and use those means for purposes of predictions and EMMs.
 These adjusted means are shown in the following plot.
 
 ``` r
+
 emmip(framing.glm, treat ~ educ | gender, type = "response") 
 ```
 
@@ -201,6 +208,7 @@ predictors – easily done using `cov.reduce` – and we obtain an entirely
 different impression:
 
 ``` r
+
 emmip(framing.glm, treat ~ educ | gender, type = "response", 
     cov.reduce = emo ~ treat*gender + age + educ + income)
 ```
@@ -226,6 +234,7 @@ By the way, the results in this plot are the same is what you would
 obtain by refitting the model with an adjusted covariate
 
 ``` r
+
 emo.adj <- resid(lm(emo ~ treat*gender + age + educ + income, data = framing))
 ```
 
@@ -237,6 +246,7 @@ defined in sequence; for example, if `x1`, `x2`, and `x3` are all
 mediating covariates, we might use
 
 ``` r
+
 emmeans(..., cov.reduce = list(x1 ~ trt, x2 ~ trt + x1, x3 ~ trt + x1 + x2))
 ```
 
@@ -280,6 +290,7 @@ the same as proportional weighting applied one factor at a time; the
 following two would yield the same results:
 
 ``` r
+
 emmeans(model, "A", weights = "outer") 
 emmeans(model, c("A", "B"), weights = "prop") |>  emmeans(weights = "prop") 
 ```
@@ -298,6 +309,7 @@ Here is a comparison of predictions for `nutr.lm` defined
 [above](#issues), using different weighting schemes:
 
 ``` r
+
 sapply(c("equal", "prop", "outer", "cells", "flat"), \(w)
     emmeans(nutr.lm, ~ race, weights = w) |> predict())
 ```
@@ -367,6 +379,7 @@ Time for an example. Consider the `mtcars` dataset standard in R, and
 the model
 
 ``` r
+
 mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs + 
                   factor(gear) + factor(carb), data = mtcars)
 ```
@@ -374,6 +387,7 @@ mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs +
 And let’s construct two different reference grids:
 
 ``` r
+
 rg.usual <- ref_grid(mtcars.lm)
 rg.usual
 ```
@@ -392,6 +406,7 @@ rg.usual
 ```
 
 ``` r
+
 nrow(linfct(rg.usual))
 ```
 
@@ -400,6 +415,7 @@ nrow(linfct(rg.usual))
 ```
 
 ``` r
+
 rg.nuis = ref_grid(mtcars.lm, non.nuisance = "cyl")
 rg.nuis
 ```
@@ -413,6 +429,7 @@ rg.nuis
 ```
 
 ``` r
+
 nrow(linfct(rg.nuis))
 ```
 
@@ -427,6 +444,7 @@ really nothing else to show, other than to demonstrate that we get the
 same EMMs either way, with slightly different annotations:
 
 ``` r
+
 emmeans(rg.usual, ~ cyl * am)
 ```
 
@@ -444,6 +462,7 @@ emmeans(rg.usual, ~ cyl * am)
 ```
 
 ``` r
+
 emmeans(rg.nuis, ~ cyl * am)
 ```
 
@@ -467,6 +486,7 @@ weights since they are averaged separately. Let’s try it to see how the
 estimates differ:
 
 ``` r
+
 predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"), 
                 wt.nuis = "prop"))
 ```
@@ -476,6 +496,7 @@ predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"),
 ```
 
 ``` r
+
 predict(emmeans(mtcars.lm, ~ cyl * am, weights = "outer"))
 ```
 
@@ -498,6 +519,7 @@ use [`all.vars()`](https://rdrr.io/r/base/allnames.html) if (and only
 if) `specs` is a formula:
 
 ``` r
+
 emmeans(mtcars.lm, ~ gear | am, non.nuis = quote(all.vars(specs)))
 ```
 
@@ -537,6 +559,7 @@ works, this check is made *before* any multivariate-response levels are
 taken into account. If the limit is exceeded, an error is thrown:
 
 ``` r
+
 ref_grid(mtcars.lm, rg.limit = 200)
 ```
 
@@ -609,6 +632,7 @@ condition. We will include the `vcovHC()` covariance estimate in the
 **sandwich** package.
 
 ``` r
+
 neuralgia.glm <- glm(Pain ~ Sex + Age + Duration + Treatment,
                      data = neuralgia, family = binomial)
 emmeans(neuralgia.glm, "Treatment", counterfactuals = "Treatment",
@@ -630,6 +654,7 @@ which is the default. Let’s compare this with what we get without using
 counterfactuals (i.e., predicting at each covariate average):
 
 ``` r
+
 emmeans(neuralgia.glm, "Treatment", weights = "prop", type = "response")
 ```
 
@@ -661,6 +686,7 @@ nutrition example, and consider the analysis of `group` and `race` as
 before, after removing interactions involving `age`:
 
 ``` r
+
 emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race) |> 
         summary(by = NULL)
 ```
@@ -707,6 +733,7 @@ There are two special character values that may be used with `submodel`.
 Specifying `"minimal"` creates a submodel with only the active factors:
 
 ``` r
+
 emmeans(nutr.lm, ~ group * race, submodel = "minimal")
 ```
 
@@ -732,6 +759,7 @@ interaction effects of the factors involved. This is most useful with
 [`joint_tests()`](https://rvlenth.github.io/emmeans/reference/joint_tests.md):
 
 ``` r
+
 joint_tests(nutr.lm, submodel = "type2")
 ```
 
@@ -775,6 +803,7 @@ varying numbers of observations for each drug. The data and model
 follow:
 
 ``` r
+
 cows <- data.frame (
     route = factor(rep(c("injection", "oral"), c(5, 9))),
     drug = factor(rep(c("Bovineumab", "Charloisazepam", 
@@ -787,6 +816,7 @@ cows.lm <- lm(resp ~ route + drug, data = cows)
 The `ref_grid` function finds a nested structure in this model:
 
 ``` r
+
 cows.rg <- ref_grid(cows.lm)
 cows.rg
 ```
@@ -803,6 +833,7 @@ When there is nesting, `emmeans` computes averages separately in each
 group
 
 ``` r
+
 route.emm <- emmeans(cows.rg, "route")
 route.emm
 ```
@@ -820,6 +851,7 @@ route.emm
 nested in:
 
 ``` r
+
 drug.emm <- emmeans(cows.rg, "drug")
 drug.emm
 ```
@@ -838,6 +870,7 @@ drug.emm
 Here are the associated pairwise comparisons:
 
 ``` r
+
 pairs(route.emm, reverse = TRUE)
 ```
 
@@ -849,6 +882,7 @@ pairs(route.emm, reverse = TRUE)
 ```
 
 ``` r
+
 pairs(drug.emm, by = "route", reverse = TRUE)
 ```
 
@@ -877,6 +911,7 @@ It can be very helpful to take advantage of special features of
 default plot for the `cows` example is not ideal:
 
 ``` r
+
 emmip(cows.rg, ~ drug | route)
 ```
 
@@ -889,6 +924,7 @@ We can instead remove `route` from the call and instead handle it with
 drug levels so there is less clutter:
 
 ``` r
+
 require(ggplot2)
 emmip(cows.rg, ~ drug, abbr.len = 6) + 
   facet_wrap(~ route, scales = "free_x", space = "free_x")
@@ -905,6 +941,7 @@ Similarly with
 [`plot.emmGrid()`](https://rvlenth.github.io/emmeans/reference/plot.md):
 
 ``` r
+
 plot(drug.emm, by = "route", PIs = TRUE) + 
     facet_wrap(~ route, scales = "free_y", space = "free_y")
 ```

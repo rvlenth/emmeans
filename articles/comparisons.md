@@ -27,6 +27,7 @@ for `emmGrid` objects. In the code below, we obtain the EMMs for
 `source` for the `pigs` data, and then compare the sources pairwise.
 
 ``` r
+
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 pigs.emm.s <- emmeans(pigs.lm, "source")
 pairs(pigs.emm.s)
@@ -67,6 +68,7 @@ function. We simply hand it the `emmGrid` object to use in making the
 comparisons:
 
 ``` r
+
 pwpm(pigs.emm.s)
 ```
 
@@ -91,6 +93,7 @@ swap where the \\P\\ values go, and perform non-inferiority tests with a
 threshold of 0.05 as follows:
 
 ``` r
+
 pwpm(pigs.emm.s, means = FALSE, flip = TRUE,     # args for pwpm()
      reverse = TRUE,                             # args for pairs()
      side = ">", delta = 0.05, adjust = "none")  # args for test()
@@ -125,6 +128,7 @@ means to be compared, the estimated population SD `sigma`, and its
 degrees of freedom `edf`. This is illustrated with the current example:
 
 ``` r
+
 eff_size(pigs.emm.s, sigma = sigma(pigs.lm), edf = 23)
 ```
 
@@ -145,6 +149,7 @@ are narrower if we claim that we know `sigma` perfectly (i.e., infinite
 degrees of freedom):
 
 ``` r
+
 eff_size(pigs.emm.s, sigma = sigma(pigs.lm), edf = Inf)
 ```
 
@@ -166,6 +171,7 @@ use the differences, use the `method` argument to specify that you don’t
 want to compute pairwise differences again; e.g.,
 
 ``` r
+
 eff_size(pairs(pigs.emm.s), sigma = sigma(pigs.lm), edf = 23, method = "identity")
 ```
 
@@ -177,6 +183,7 @@ Comparisons may be summarized graphically via the `comparisons` argument
 in `plot.emm()`:
 
 ``` r
+
 plot(pigs.emm.s, comparisons = TRUE)
 ```
 
@@ -211,6 +218,7 @@ subsection), we devised the “pairwise *P*-value plot” displaying all the
 *P* values in pairwise comparisons:
 
 ``` r
+
 pwpp(pigs.emm.s)
 ```
 
@@ -231,6 +239,7 @@ compared goes up. For example, suppose we include the interactions in
 the model for the pigs data, and compare all 12 cell means:
 
 ``` r
+
 pigs.lmint <- lm(log(conc) ~ source * factor(percent), data = pigs)
 pigs.cells <- emmeans(pigs.lmint, ~ source * percent)
 pwpp(pigs.cells, type = "response")
@@ -253,6 +262,7 @@ factor has a common level), we can make this a lot less cluttered via a
 `by` specification:
 
 ``` r
+
 pwpp(pigs.cells, by = "source", type = "response")
 ```
 
@@ -290,6 +300,7 @@ use [`coef()`](https://rdrr.io/r/stats/coef.html) to see the
 coefficients of these linear functions:
 
 ``` r
+
 coef(pairs(pigs.emm.s))
 ```
 
@@ -318,6 +329,7 @@ numeric variable. In such cases, users often want to compute orthogonal
 polynomial contrasts:
 
 ``` r
+
 pigs.emm.p <- emmeans(pigs.lm, "percent")
 ply <- contrast(pigs.emm.p, "poly")
 ply
@@ -334,6 +346,7 @@ ply
 ```
 
 ``` r
+
 coef(ply)
 ```
 
@@ -369,6 +382,7 @@ method and the desired contrast family as the `family` argument. For
 example,
 
 ``` r
+
 nrmlz.emmc(1:4, family = "helmert")
 ```
 
@@ -381,6 +395,7 @@ nrmlz.emmc(1:4, family = "helmert")
 ```
 
 ``` r
+
 contrast(pigs.emm.s, "nrmlz", family = "pairwise")
 ```
 
@@ -411,6 +426,7 @@ the formula in its second argument. For example, with the `oranges`
 dataset provided in the package,
 
 ``` r
+
 org.aov <- aov(sales1 ~ day + Error(store), data = oranges,
                contrasts = list(day = "contr.sum"))
 org.emml <- emmeans(org.aov, consec ~ day)
@@ -475,6 +491,7 @@ As an example, suppose we want to compare every third level of a
 treatment. The following function provides for this:
 
 ``` r
+
 skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE, ...) {
     if((k <- length(levels)) < skip + 1)
         stop("Need at least ", skip + 1, " levels")
@@ -493,6 +510,7 @@ skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE, ...) {
 To test it, try 5 levels:
 
 ``` r
+
 skip_comp.emmc(1:5)
 ```
 
@@ -506,6 +524,7 @@ skip_comp.emmc(1:5)
 ```
 
 ``` r
+
 skip_comp.emmc(1:5, skip = 0, reverse = TRUE)
 ```
 
@@ -522,6 +541,7 @@ skip_comp.emmc(1:5, skip = 0, reverse = TRUE)
 `oranges` example we had previously:
 
 ``` r
+
 contrast(org.emml[[1]], "skip_comp", skip = 2, reverse = TRUE)
 ```
 
@@ -544,6 +564,7 @@ the `pigs` example. This may be done by providing the coefficients in a
 list, and the added constants in the `offset` argument:
 
 ``` r
+
 LF <- contrast(pigs.emm.s, 
                list(lambda1 = c(1, 2, 0), lambda2 = c(0, 3, -2)),
                offset = c(-7, 1))
@@ -586,6 +607,7 @@ response is on the log scale, it back-transforms contrasts to ratios
 when results are to be of `response` type. For example:
 
 ``` r
+
 pairs(pigs.emm.s, type = "lp")
 ```
 
@@ -601,6 +623,7 @@ pairs(pigs.emm.s, type = "lp")
 ```
 
 ``` r
+
 pairs(pigs.emm.s, type = "response")
 ```
 

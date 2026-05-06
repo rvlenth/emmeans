@@ -108,6 +108,7 @@ adequately. But we will briefly discuss five models and settle on one of
 them:
 
 ``` r
+
 mod1 <- lm(conc ~ source * factor(percent), data = pigs)
 mod2 <- update(mod1, . ~ source + factor(percent))   # no interaction
 ```
@@ -128,6 +129,7 @@ amounts *per* unit volume.)
 So here are three more models:
 
 ``` r
+
 mod3 <- update(mod1, inverse(conc) ~ .)
 mod4 <- update(mod2, inverse(conc) ~ .)     # no interaction
 mod5 <- update(mod4, . ~ source + percent)  # linear term for percent
@@ -152,6 +154,7 @@ function to obtain estimated marginal means (EMMs). We’ll explain them
 later.
 
 ``` r
+
 (EMM.source <- emmeans(mod4, "source"))
 ```
 
@@ -167,6 +170,7 @@ later.
 ```
 
 ``` r
+
 (EMM.percent <- emmeans(mod4, "percent"))
 ```
 
@@ -186,6 +190,7 @@ Let’s compare these with the ordinary marginal means (OMMs) on
 `inverse(conc)`:
 
 ``` r
+
 with(pigs, tapply(inverse(conc), source, mean))
 ```
 
@@ -195,6 +200,7 @@ with(pigs, tapply(inverse(conc), source, mean))
 ```
 
 ``` r
+
 with(pigs, tapply(inverse(conc), percent, mean))
 ```
 
@@ -214,6 +220,7 @@ predictions over the grid comprising all factor combinations – called
 the *reference grid*. For the example at hand, the reference grid is
 
 ``` r
+
 (RG <- expand.grid(source = levels(pigs$source), percent = unique(pigs$percent)))
 ```
 
@@ -236,6 +243,7 @@ the *reference grid*. For the example at hand, the reference grid is
 To get the EMMs, we first need to obtain predictions on this grid:
 
 ``` r
+
 (preds <- matrix(predict(mod4, newdata = RG), nrow = 3))
 ```
 
@@ -249,6 +257,7 @@ To get the EMMs, we first need to obtain predictions on this grid:
 then obtain the marginal means of these predictions:
 
 ``` r
+
 apply(preds, 1, mean)   # row means -- for source
 ```
 
@@ -257,6 +266,7 @@ apply(preds, 1, mean)   # row means -- for source
 ```
 
 ``` r
+
 apply(preds, 2, mean)   # column means -- for percent
 ```
 
@@ -275,6 +285,7 @@ That the OMMs for `percent` do not behave this way is due to the
 imbalance in sample sizes:
 
 ``` r
+
 with(pigs, table(source, percent))
 ```
 
@@ -323,6 +334,7 @@ We can see a snapshot of the reference grid via the `ref_grid` function;
 for example
 
 ``` r
+
 (RG4 <- ref_grid(mod4))
 ```
 
@@ -334,6 +346,7 @@ for example
 ```
 
 ``` r
+
 ref_grid(mod5)
 ```
 
@@ -354,6 +367,7 @@ and `mod5`, and we can put them on an equal footing by using the same
 `percent` values as reference levels:
 
 ``` r
+
 (RG5 <- ref_grid(mod5, at = list(percent = c(9, 12, 15, 18))))
 ```
 
@@ -380,6 +394,7 @@ interaction-style plots via the
 function
 
 ``` r
+
 emmip(RG4, source ~ percent, style = "factor")
 ```
 
@@ -390,6 +405,7 @@ parallel straigt lines. The values plotted here can be obtained via
 'summary(RG5)'](basics_files/figure-html/unnamed-chunk-13-1.png)
 
 ``` r
+
 emmip(RG5, source ~ percent, style = "factor")
 ```
 
@@ -415,6 +431,7 @@ can take either a model object or a reference-grid object as their first
 argument. Thus we can obtain EMMs for `mod5` directly from `RG5`, e.g.
 
 ``` r
+
 emmeans(RG5, "source")
 ```
 
@@ -439,6 +456,7 @@ in case they are needed. For instance, the above EMMs could have been
 obtained using
 
 ``` r
+
 emmeans(mod5, "source", at = list(percent = c(9, 12, 15, 18)))
 ## (same results as above)
 ```
@@ -475,6 +493,7 @@ can work with.\] We can back-transform the results by specifying
 instance,
 
 ``` r
+
 emmeans(RG4, "source", type = "response")
 ```
 
@@ -490,6 +509,7 @@ emmeans(RG4, "source", type = "response")
 ```
 
 ``` r
+
 emmip(RG4, source ~ percent, type = "response")
 ```
 
@@ -524,6 +544,7 @@ factor `disp` (displacement) as a covariate, and include a quadratic
 term for `disp`. Here are two equivalent models:
 
 ``` r
+
 mcmod1 <- lm(mpg ~ factor(cyl) + disp + I(disp^2), data = mtcars)
 mtcars <- transform(mtcars, 
                     dispsq = disp^2)
@@ -534,6 +555,7 @@ These two models have exactly the same predicted values. But look at the
 EMMs:
 
 ``` r
+
 emmeans(mcmod1, "cyl")
 ```
 
@@ -547,6 +569,7 @@ emmeans(mcmod1, "cyl")
 ```
 
 ``` r
+
 emmeans(mcmod2, "cyl")
 ```
 
@@ -564,6 +587,7 @@ equivalent. Why is this – and which (if either) is right? To understand,
 look at the reference grids:
 
 ``` r
+
 ref_grid(mcmod1)
 ```
 
@@ -574,6 +598,7 @@ ref_grid(mcmod1)
 ```
 
 ``` r
+
 ref_grid(mcmod2)
 ```
 
@@ -592,6 +617,7 @@ If we use consistent values of `disp` and`dispsq`, we get the same
 results as for `mcmod1`:
 
 ``` r
+
 emmeans(mcmod2, "cyl", at = list(disp = 230.72, dispsq = 230.72^2))
 ```
 
@@ -620,6 +646,7 @@ of the model formula. But sometimes, these variables are not actually
 predictors. For example:
 
 ``` r
+
 deg <- 2
 mod <- lm(y ~ treat * poly(x, degree = deg), data = mydata)
 ```
@@ -633,6 +660,7 @@ this model. To get things to work correctly, you need to name `deg` in a
 `params` argument, e.g.,
 
 ``` r
+
 emmeans(mod, ~ treat | x, at = list(x = 1:3), params = "deg")
 ```
 
@@ -659,6 +687,7 @@ The other graphics option offered is the
 data with both `cyl` and `disp` as covariates
 
 ``` r
+
 mcmod3 <- lm(mpg ~ disp * cyl, data = mtcars)
 ```
 
@@ -666,6 +695,7 @@ In the following, we display the estimates and 95% confidence intervals
 for `RG4` in separate panels for each `source`.
 
 ``` r
+
 EMM3 <- emmeans(mcmod3, ~ cyl | disp, 
                 at = list(cyl = c(4,6,8), disp = c(100,200,300)))
 plot(EMM3)
@@ -684,6 +714,7 @@ that displacement largely depends on the number of cylinders. So here is
 yet another way to use `cov.reduce` to modify the reference grid:
 
 ``` r
+
 mcrg <- ref_grid(mcmod3, at = list(cyl = c(4,6,8)),
                          cov.reduce = disp ~ cyl)
 mcrg @ grid
@@ -703,6 +734,7 @@ results are sensible, reflecting what the model predicts for typical
 cars with each number of cylinders:
 
 ``` r
+
 plot(mcrg)
 ```
 
@@ -718,6 +750,7 @@ this time we opt to include confidence intervals and put the three
 sources in separate panels:
 
 ``` r
+
 require("ggplot2")
 emmip(mod4, ~ percent | source, CIs = TRUE, type = "response") +
     geom_point(aes(x = percent, y = conc), data = pigs, pch = 2, color = "blue")
@@ -745,6 +778,7 @@ formatted as the user likes (see the documentation for `print.emmGrid`
 for details). Here is an example using one of the objects above:
 
 ``` r
+
 ci <- confint(mcrg, level = 0.90, adjust = "scheffe")
 xport <- print(ci, export = TRUE)
 cat("<font color = 'blue'>\n")
@@ -779,6 +813,7 @@ is retained in the reference grid). This produces results comparable to
 ordinary marginal means:
 
 ``` r
+
 emmeans(mod4, "percent", weights = "cells")
 ```
 
@@ -800,6 +835,7 @@ interesting to compare this with the results for a model that includes
 only `percent` as a predictor.
 
 ``` r
+
 mod6 <- lm(inverse(conc) ~ factor(percent), data = pigs)
 emmeans(mod6, "percent")
 ```
@@ -837,6 +873,7 @@ amounts of nitrogen added to the soil. Here is a model and reference
 grid:
 
 ``` r
+
 MOats.lm <- lm (yield ~ Block + Variety, data = MOats)
 ref_grid (MOats.lm, mult.name = "nitro")
 ```
@@ -867,6 +904,7 @@ ones, return an object of class `emmGrid`. From previously defined
 objects:
 
 ``` r
+
 class(RG4)
 ```
 
@@ -877,6 +915,7 @@ class(RG4)
 ```
 
 ``` r
+
 class(EMM.source)
 ```
 
@@ -889,6 +928,7 @@ class(EMM.source)
 If you simply show these objects, you get different-looking results:
 
 ``` r
+
 RG4
 ```
 
@@ -900,6 +940,7 @@ RG4
 ```
 
 ``` r
+
 EMM.source
 ```
 
@@ -919,6 +960,7 @@ the object. You can override these defaults; for example to just see a
 quick summary of what is there, do
 
 ``` r
+
 str(EMM.source)
 ```
 
@@ -938,6 +980,7 @@ within most functions that produce `these kinds of results.`emmGrid\`
 objects. For example:
 
 ``` r
+
 # equivalent to summary(emmeans(mod4, "percent"), level = 0.90, infer = TRUE))
 emmeans(mod4, "percent", level = 0.90, infer = TRUE)
 ```
@@ -959,6 +1002,7 @@ This [`summary()`](https://rdrr.io/r/base/summary.html) method for
 bells and whistles:
 
 ``` r
+
 class(summary(EMM.source))
 ```
 

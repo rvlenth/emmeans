@@ -1,6 +1,13 @@
 # Changelog
 
+## emmeans 2.0.4
+
+- Updated logo (now hexagonal)
+- bug-fix for labelling in pairwise contrasts
+
 ## emmeans 2.0.3
+
+CRAN release: 2026-04-09
 
 - Repaired `contrast` so that it recognizes multivariate transformations
   `alr`, `clr`, and `ilr` as being log-based. Thus contrasts thereof are
