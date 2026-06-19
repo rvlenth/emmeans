@@ -5,6 +5,8 @@ title: "NEWS for the emmeans package"
 ## emmeans 2.0.4
   * Updated logo (now hexagonal)
   * bug-fix for labelling in pairwise contrasts
+  * `emmip(..., engine = "lattice")` now uses the axis/trace labels again
+    (a typo referenced the wrong object, so the labels were silently dropped)
 
 ## emmeans 2.0.3
   * Repaired `contrast` so that it recognizes multivariate transformations 
