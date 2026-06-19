@@ -9,6 +9,9 @@ title: "NEWS for the emmeans package"
     for a negative `n` (previously the two were effectively swapped)
   * Fixed an error in the `atanh` response transformation: a typo in its
     `mu.eta` derivative (`tanh^2(eta)`) made `type = "response"` fail
+  * `cross.adjust` is now correctly ignored (as documented) when the `by`
+    groups are not all the same size, rather than silently producing
+    mis-shaped (recycled) adjusted P values
 
 ## emmeans 2.0.3
   * Repaired `contrast` so that it recognizes multivariate transformations 
