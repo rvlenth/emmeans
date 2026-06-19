@@ -5,6 +5,9 @@ title: "NEWS for the emmeans package"
 ## emmeans 2.0.4
   * Updated logo (now hexagonal)
   * bug-fix for labelling in pairwise contrasts
+  * `cross.adjust` is now correctly ignored (as documented) when the `by`
+    groups are not all the same size, rather than silently producing
+    mis-shaped (recycled) adjusted P values
 
 ## emmeans 2.0.3
   * Repaired `contrast` so that it recognizes multivariate transformations 

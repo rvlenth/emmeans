@@ -716,8 +716,9 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         }
         
         # Handle cross-adjustments
-        if ( (length(by.rows) > 1) && 
+        if ( (length(by.rows) > 1) &&
              (length(len <- sapply(by.rows, length)) > 1) &&
+             (length(unique(len)) == 1) &&   # all by groups must be the same size
              is.na(pmatch(cross.adjust, "none")) ) {
             val = c("sidak", p.adjust.methods)
             w = pmatch(tolower(cross.adjust), tolower(val))
