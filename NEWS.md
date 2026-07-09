@@ -5,6 +5,8 @@ title: "NEWS for the emmeans package"
 ## emmeans 2.0.4
   * Updated logo (now hexagonal)
   * bug-fix for labelling in pairwise contrasts
+  * `head()` and `tail()` for `emmGrid` objects now follow base-R semantics
+    for a negative `n` (previously the two were effectively swapped)
 
 ## emmeans 2.0.3
   * Repaired `contrast` so that it recognizes multivariate transformations 

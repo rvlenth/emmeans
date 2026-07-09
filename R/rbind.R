@@ -174,9 +174,9 @@ subset.emmGrid = function(x, subset, ...) {
 #' @method head emmGrid
 #' @export
 head.emmGrid = function(x, n = 6, ...) {
-    s = sign(n[1])
-    n = min(abs(n[1]), nrow(x@grid))
-    x[s * seq_len(n)]
+    N = nrow(x@grid)
+    n = if (n[1] < 0) max(N + n[1], 0L) else min(n[1], N)
+    x[seq_len(n)]
 }
 
 #' @rdname rbind.emmGrid
@@ -185,9 +185,8 @@ head.emmGrid = function(x, n = 6, ...) {
 #' @method tail emmGrid
 #' @export
 tail.emmGrid = function(x, n = 6, ...) {
-    s = sign(n[1])
     N = nrow(x@grid)
-    n = min(abs(n[1]), N)
-    x[s * (seq_len(n) - n + N)]
+    n = if (n[1] < 0) max(N + n[1], 0L) else min(n[1], N)
+    x[seq_len(n) + (N - n)]
 }
 
