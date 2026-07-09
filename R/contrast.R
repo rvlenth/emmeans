@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (c) 2012-2019 Russell V. Lenth                                #
+#    Copyright (c) 2012-2026 Russell V. Lenth                                #
 #                                                                            #
 #    This file is part of the emmeans package for R (*emmeans*)              #
 #                                                                            #
