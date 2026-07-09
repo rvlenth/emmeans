@@ -548,7 +548,7 @@ emmip_lattice = function(emms, style = "factor",
                          xlab = labs$xlab, ylab = labs$ylab, tlab = labs$tlab, 
                          pch = c(1,2,6,7,9,10,15:20), 
                          lty = 1, col = NULL, ...) {
-    labs = attr(emm, "labs")
+    labs = attr(emms, "labs")
     vars = attr(emms, "vars")
     
     # The strips the way I want them
