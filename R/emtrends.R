@@ -67,7 +67,11 @@
 #' @param max.degree Integer value. The maximum degree of trends to compute (this
 #'   is capped at 5). If greater than 1, an additional factor \code{degree} is
 #'   added to the grid, with corresponding numerical derivatives of orders
-#'   \code{1, 2, ..., max.degree} as the estimates.
+#'   \code{1, 2, ..., max.degree} as the estimates. The estimates at \code{var = x0} are 
+#' equal to the coefficients of \eqn{(x – x0)^degree} based on interpolating over
+#' the \eqn{degree + 1} fitted values centered at \eqn{x0} and spaced \eqn{h} apart.
+#' These are also known as Newton divided differences.
+
 #' @param ... Additional arguments passed to \code{\link{ref_grid}} or 
 #'   \code{\link{emmeans}} as appropriate. See Details.
 #'
