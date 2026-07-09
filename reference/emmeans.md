@@ -19,7 +19,7 @@ emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
   An object of class `emmGrid`; or a fitted model object that is
   supported, such as the result of a call to `lm` or `lmer`. Many
   fitted-model objects are supported; see
-  [[`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/articles/models.md)](https://rvlenth.github.io/emmeans/doc/models.md)
+  [`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/doc/models.md)
   for details.
 
 - specs:
@@ -88,7 +88,7 @@ emmeans(object, specs, by = NULL, fac.reduce = function(coefs) apply(coefs,
   [`ref_grid`](https://rvlenth.github.io/emmeans/reference/ref_grid.md).
   Common examples are `at`, `cov.reduce`, `data`, `type`, `regrid`,
   `df`, `nesting`, and `vcov.`. Model-type-specific options (see
-  [[`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/articles/models.md)](https://rvlenth.github.io/emmeans/doc/models.md)),
+  [`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/doc/models.md)),
   commonly `mode`, may be used here as well. In addition, if the model
   formula contains references to variables that are not predictors, you
   must provide a `params` argument with a list of their names. These

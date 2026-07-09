@@ -138,7 +138,7 @@ valid names are
   [`plot.emmGrid`](https://rvlenth.github.io/emmeans/reference/plot.md)
   when `CIs = TRUE`. Be cautious that methods that depend on specifying
   `alpha` are prone to abuse. See the discussion in
-  [[`vignette("basics", "emmeans")`](https://rvlenth.github.io/emmeans/articles/basics.md)](https://rvlenth.github.io/emmeans/doc/basics.html#pvalues).
+  [`vignette("basics", "emmeans")`](https://rvlenth.github.io/emmeans/doc/basics.html#pvalues).
 
 - `adjust`:
 

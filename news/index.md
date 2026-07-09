@@ -4,6 +4,10 @@
 
 - Updated logo (now hexagonal)
 - bug-fix for labelling in pairwise contrasts
+- [`head()`](https://rdrr.io/r/utils/head.html) and
+  [`tail()`](https://rdrr.io/r/utils/head.html) for `emmGrid` objects
+  now follow base-R semantics for a negative `n` (previously the two
+  were effectively swapped)
 
 ## emmeans 2.0.3
 

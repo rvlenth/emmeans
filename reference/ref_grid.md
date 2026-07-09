@@ -21,7 +21,7 @@ ref_grid(object, at, cov.reduce = mean,
 
   An object produced by a supported model-fitting function, such as
   `lm`. Many models are supported. See
-  [[`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/articles/models.md)](https://rvlenth.github.io/emmeans/doc/models.md).
+  [`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/doc/models.md).
 
 - at:
 
@@ -456,7 +456,7 @@ and several methods exist for them – for example
 Reference grids are fundamental to
 [`emmeans`](https://rvlenth.github.io/emmeans/reference/emmeans.md).
 Supported models are detailed in
-[[`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/articles/models.md)](https://rvlenth.github.io/emmeans/doc/models.md).
+[`vignette("models", "emmeans")`](https://rvlenth.github.io/emmeans/doc/models.md).
 See
 [`update.emmGrid`](https://rvlenth.github.io/emmeans/reference/update.emmGrid.md)
 for details of arguments that can be in `options` (or in `...`).

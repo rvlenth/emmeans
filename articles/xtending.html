@@ -18,8 +18,8 @@
     }
   };
 </script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="For developers: Extending emmeans">
 </head>
@@ -299,7 +299,7 @@ method. Look at the one for <code>lm</code> objects:</p>
 <span><span class="co">##     recover_data(fcall, delete.response(terms(object)), object$na.action, </span></span>
 <span><span class="co">##         frame = frame, pwts = weights(object), ...)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x5555f5b78890&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x5594199115d0&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:emmeans&gt;</span></span></code></pre>
 <p>Note that all it does is obtain the <code>call</code> component and
 call the method for class <code>call</code>, with additional arguments
@@ -418,7 +418,7 @@ Following this advice, let’s take a look at it:</p>
 <span><span class="co">##     X &lt;- model.matrix(Terms, m, contrasts.arg = object$contrasts)</span></span>
 <span><span class="co">##     drop(X %*% object$coefficients)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x555600280a80&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55941b84d020&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:MASS&gt;</span></span></code></pre>
 <div class="section level6">
 <h6 id="eblqs"></h6>
@@ -443,15 +443,15 @@ for <code>lqs</code> objects:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">fake.lts</span>, <span class="op">~</span> <span class="va">B</span> <span class="op">|</span> <span class="va">A</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## A = a1:</span></span>
 <span><span class="co">##  B  emmean    SE df lower.CL upper.CL</span></span>
-<span><span class="co">##  b1   11.9 0.238 24     11.5     12.4</span></span>
-<span><span class="co">##  b2   23.2 0.238 24     22.7     23.7</span></span>
-<span><span class="co">##  b3   17.8 0.238 24     17.4     18.3</span></span>
+<span><span class="co">##  b1   11.8 0.227 24     11.4     12.3</span></span>
+<span><span class="co">##  b2   23.1 0.227 24     22.6     23.6</span></span>
+<span><span class="co">##  b3   17.8 0.227 24     17.3     18.3</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## A = a2:</span></span>
 <span><span class="co">##  B  emmean    SE df lower.CL upper.CL</span></span>
-<span><span class="co">##  b1   14.3 0.238 24     13.8     14.8</span></span>
-<span><span class="co">##  b2   24.0 0.238 24     23.5     24.5</span></span>
-<span><span class="co">##  b3   20.8 0.238 24     20.3     21.3</span></span>
+<span><span class="co">##  b1   13.9 0.227 24     13.5     14.4</span></span>
+<span><span class="co">##  b2   24.1 0.227 24     23.6     24.5</span></span>
+<span><span class="co">##  b3   20.5 0.227 24     20.0     21.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
 <p>Hooray! Note the results are comparable to those we had for
@@ -970,7 +970,7 @@ those classes of objects, so that users have access to
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

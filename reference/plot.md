@@ -173,7 +173,7 @@ large and small standard errors are intermingled in just the wrong way.
 Note that the maximum and minimum estimates have arrows only in one
 direction, since there is no need to compare them with anything higher
 or lower, respectively. See the
-[[`vignette("xplanations", "emmeans")`](https://rvlenth.github.io/emmeans/articles/xplanations.md)](https://rvlenth.github.io/emmeans/doc/xplanations.html#arrows)
+[`vignette("xplanations", "emmeans")`](https://rvlenth.github.io/emmeans/doc/xplanations.html#arrows)
 for details on how these are derived.
 
 If `adjust` or `int.adjust` are not supplied, they default to the

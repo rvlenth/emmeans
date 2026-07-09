@@ -245,7 +245,7 @@ emmeans:::recover_data.lm
 ##     recover_data(fcall, delete.response(terms(object)), object$na.action, 
 ##         frame = frame, pwts = weights(object), ...)
 ## }
-## <bytecode: 0x5555f5b78890>
+## <bytecode: 0x5594199115d0>
 ## <environment: namespace:emmeans>
 ```
 
@@ -379,7 +379,7 @@ MASS:::predict.lqs
 ##     X <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
 ##     drop(X %*% object$coefficients)
 ## }
-## <bytecode: 0x555600280a80>
+## <bytecode: 0x55941b84d020>
 ## <environment: namespace:MASS>
 ```
 
@@ -414,15 +414,15 @@ emmeans(fake.lts, ~ B | A)
 ``` ro
 ## A = a1:
 ##  B  emmean    SE df lower.CL upper.CL
-##  b1   11.9 0.238 24     11.5     12.4
-##  b2   23.2 0.238 24     22.7     23.7
-##  b3   17.8 0.238 24     17.4     18.3
+##  b1   11.8 0.227 24     11.4     12.3
+##  b2   23.1 0.227 24     22.6     23.6
+##  b3   17.8 0.227 24     17.3     18.3
 ## 
 ## A = a2:
 ##  B  emmean    SE df lower.CL upper.CL
-##  b1   14.3 0.238 24     13.8     14.8
-##  b2   24.0 0.238 24     23.5     24.5
-##  b3   20.8 0.238 24     20.3     21.3
+##  b1   13.9 0.227 24     13.5     14.4
+##  b2   24.1 0.227 24     23.6     24.5
+##  b3   20.5 0.227 24     20.0     21.0
 ## 
 ## Confidence level used: 0.95
 ```
