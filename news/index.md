@@ -8,6 +8,8 @@
   [`tail()`](https://rdrr.io/r/utils/head.html) for `emmGrid` objects
   now follow base-R semantics for a negative `n` (previously the two
   were effectively swapped)
+- Fixed an error in the `atanh` response transformation: a typo in its
+  `mu.eta` derivative (`tanh^2(eta)`) made `type = "response"` fail
 
 ## emmeans 2.0.3
 
