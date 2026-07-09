@@ -5,6 +5,8 @@ title: "NEWS for the emmeans package"
 ## emmeans 2.0.4
   * Updated logo (now hexagonal)
   * bug-fix for labelling in pairwise contrasts
+  * `head()` and `tail()` for `emmGrid` objects now follow base-R semantics
+    for a negative `n` (previously the two were effectively swapped)
   * Fixed an error in the `atanh` response transformation: a typo in its
     `mu.eta` derivative (`tanh^2(eta)`) made `type = "response"` fail
 
