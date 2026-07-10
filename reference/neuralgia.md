@@ -9,7 +9,7 @@ the duration of complaint before the treatment began.
 ## Usage
 
 ``` r
-neuralgia
+data(neuralgia)
 ```
 
 ## Format

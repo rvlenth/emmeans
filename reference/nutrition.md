@@ -8,7 +8,7 @@ edition, p.278.)
 ## Usage
 
 ``` r
-nutrition
+data(nutrition)
 ```
 
 ## Format

@@ -5,7 +5,7 @@ A two-factor experiment with some observations lost
 ## Usage
 
 ``` r
-pigs
+data(pigs)
 ```
 
 ## Format

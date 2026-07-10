@@ -9,7 +9,7 @@ response.
 ## Usage
 
 ``` r
-feedlot
+data(feedlot)
 ```
 
 ## Format

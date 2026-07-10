@@ -6,7 +6,7 @@ rearranged as one multivariate observation per plot.
 ## Usage
 
 ``` r
-MOats
+data(MOats)
 ```
 
 ## Format

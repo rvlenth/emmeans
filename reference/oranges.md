@@ -7,7 +7,7 @@ combination.
 ## Usage
 
 ``` r
-oranges
+data(oranges)
 ```
 
 ## Format

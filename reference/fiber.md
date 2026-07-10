@@ -6,7 +6,7 @@ as a simple analysis-of-covariance example.
 ## Usage
 
 ``` r
-fiber
+data(fiber)
 ```
 
 ## Format
