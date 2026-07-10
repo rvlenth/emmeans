@@ -6,7 +6,7 @@ output: emmeans::.emm_vignette
 ---
 
 Here we have a bit about the main functions and how they work. This is very, very far from
-a line-by=line description of what's going on in the code, but it is hoped that
+a line-by-line description of what's going on in the code, but it is hoped that
 this helps explain the fundamentals.
 
 ## Contents
