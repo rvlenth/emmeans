@@ -24,7 +24,7 @@ The dataset was obtained from the Data and Story Library (DASL)
   of the experiment.
 }
 \usage{
-auto.noise
+data(auto.noise)
 }
 \description{
 Three-factor experiment comparing pollution-filter noise for two filters,

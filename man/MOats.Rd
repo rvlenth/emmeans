@@ -19,7 +19,7 @@ A data frame with 18 observations and 3 variables
 The dataset \code{\link[nlme]{Oats}} in the \pkg{nlme} package.
 }
 \usage{
-MOats
+data(MOats)
 }
 \description{
 This is the \code{Oats} dataset provided in the \pkg{nlme} package, but it is

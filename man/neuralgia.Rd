@@ -23,7 +23,7 @@ Cai, Weijie (2014) \emph{Making Comparisons Fair: How LS-Means Unify
   \url{http://support.sas.com/resources/papers/proceedings14/SAS060-2014.pdf}
 }
 \usage{
-neuralgia
+data(neuralgia)
 }
 \description{
 These data arise from a study of analgesic effects of treatments of elderly
