@@ -121,10 +121,10 @@ dataset.</p></dd>
 <dt id="arg-max-degree">max.degree<a class="anchor" aria-label="anchor" href="#arg-max-degree"></a></dt>
 <dd><p>Integer value. The maximum degree of trends to compute (this
   is capped at 5). If greater than 1, an additional factor <code>degree</code> is
-  added to the grid, with corresponding numerical derivatives of orders
-  <code>1, 2, ..., max.degree</code> as the estimates. The estimates at <code>var = x0</code> are
-equal to the coefficients of \((x – x0)^degree\) based on interpolating over
-the \(degree + 1\) fitted values centered at \(x0\) and spaced \(h\) apart.
+  added to the grid, with corresponding levels for orders
+  <code>1, 2, ..., max.degree</code>. The estimates at \(\mathtt{var} = x_0\) are
+equal to the coefficients of \((x – x_0)^{degree}\) based on interpolating over
+the \(degree + 1\) fitted values centered at \(x_0\) and spaced \(h\) apart.
 These are also known as Newton divided differences.</p></dd>
 
 

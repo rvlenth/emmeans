@@ -50,11 +50,11 @@ emtrends(object, specs, var, delta.var = 0.001 * rng, max.degree = 1, ...)
 
   Integer value. The maximum degree of trends to compute (this is capped
   at 5). If greater than 1, an additional factor `degree` is added to
-  the grid, with corresponding numerical derivatives of orders
-  `1, 2, ..., max.degree` as the estimates. The estimates at `var = x0`
-  are equal to the coefficients of \\(x – x0)^degree\\ based on
-  interpolating over the \\degree + 1\\ fitted values centered at \\x0\\
-  and spaced \\h\\ apart. These are also known as Newton divided
+  the grid, with corresponding levels for orders
+  `1, 2, ..., max.degree`. The estimates at \\\mathtt{var} = x_0\\ are
+  equal to the coefficients of \\(x – x_0)^{degree}\\ based on
+  interpolating over the \\degree + 1\\ fitted values centered at
+  \\x_0\\ and spaced \\h\\ apart. These are also known as Newton divided
   differences.
 
 - ...:
