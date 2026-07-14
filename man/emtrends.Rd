@@ -31,10 +31,10 @@ dataset.}
 
 \item{max.degree}{Integer value. The maximum degree of trends to compute (this
   is capped at 5). If greater than 1, an additional factor \code{degree} is
-  added to the grid, with corresponding numerical derivatives of orders
-  \code{1, 2, ..., max.degree} as the estimates. The estimates at \code{var = x0} are 
-equal to the coefficients of \eqn{(x – x0)^degree} based on interpolating over
-the \eqn{degree + 1} fitted values centered at \eqn{x0} and spaced \eqn{h} apart.
+  added to the grid, with corresponding levels for orders
+  \code{1, 2, ..., max.degree}. The estimates at \eqn{\mathtt{var} = x_0} are 
+equal to the coefficients of \eqn{(x – x_0)^{degree}} based on interpolating over
+the \eqn{degree + 1} fitted values centered at \eqn{x_0} and spaced \eqn{h} apart.
 These are also known as Newton divided differences.}
 
 \item{...}{Additional arguments passed to \code{\link{ref_grid}} or 
