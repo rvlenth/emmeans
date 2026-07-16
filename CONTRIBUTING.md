@@ -52,7 +52,7 @@ All contributers must follow the [contributer code of conduct](https://www.contr
 1. Read through the [code overview](#code-overview). 
 2. File an issue before proceeding with any bug fix or feature addition. This is less about asking permission and more for coordination. 
 3. Once changes are agreed upon, fork the repository and make a new branch for the planned change. 
-4. After implementing a change, please run existing unit tests (`testthat::test_check()`) to ensure existing functionality still works. Please update the NEWS.md file with your change. Please do not update the version or date in the DESCRIPTION file. 
+4. After implementing a change, please run existing unit tests (`testthat::test_check()`) to ensure existing functionality still works. Please update the NEWS.md file with your change. Please do not update the version or date in the DESCRIPTION file, but *do* add your name to the end of the authors field with the label "ctb" indicating you are a contributor to emmeans. 
 5. Make a pull request to the main branch with a reasonably descriptive message describing the changes made and linking to the issue filed. 
 
 ### Setting up your development environment {#dev-env}
@@ -104,13 +104,15 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 
 There may be additional information in the opening R chunk, depending on the purpose of the vignette (e.g. other packages are loaded). A common addition is `options(show.signif.stars = FALSE, width = 100)` indicating that the emmeans documentation does not typically show significance stars. 
 
+Please create a section at the top indexing all the level 2 (`##`) headers in the vignette with their html anchors so each section has a direct web link. 
+
 There is a custom CSS file for emmeans that `emmeans::.emm_vignette` will use when building the documentation. 
 
 Please see the [vignettes directory](https://github.com/rvlenth/emmeans/tree/main/vignettes) for specific examples. 
 
 ### Unit tests {#testing}
 
-....
+*(section under construction)*
 
 ### Generative AI policy {#ai-policy)}
 
