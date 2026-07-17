@@ -22,7 +22,7 @@ A data frame with 36 observations and 6 variables:
 This is (or once was) available as a SAS sample dataset.
 }
 \usage{
-data(oranges)
+oranges
 }
 \description{
 This example dataset on sales of oranges has two factors, two covariates, and

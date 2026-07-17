@@ -21,7 +21,7 @@ Urquhart NS (1982) Adjustment in covariates when one factor affects
   the covariate. \emph{Biometrics} 38, 651-660.
 }
 \usage{
-data(feedlot)
+feedlot
 }
 \description{
 This is an unbalanced analysis-of-covariance example, where one covariate is

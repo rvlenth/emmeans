@@ -22,7 +22,7 @@ Windels HF (1964) PhD thesis, Univ. of Minnesota. (Reported as
   31, 33, and 35 have been omitted, creating a more notable imbalance.
 }
 \usage{
-data(pigs)
+pigs
 }
 \description{
 A two-factor experiment with some observations lost

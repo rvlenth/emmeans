@@ -21,7 +21,7 @@ to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
 length, so the first entry is the cell with the lowest frequency.
 }
 \usage{
-data(ubds)
+ubds
 }
 \description{
 This is a simulated unbalanced dataset with three factors
