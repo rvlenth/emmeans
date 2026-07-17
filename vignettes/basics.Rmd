@@ -258,7 +258,7 @@ instead of specific ones.
 <!-- @index `emmip()`; Interaction-style plots; -->
 The two models' predictions can be compared using interaction-style plots
 via the `emmip()` function
-```{r fig.alt = "interaction-style plots of 'RG4' and 'RG5'. These show parallel trends along 'percent' for each 'source'. The one for 'RG5' consists of parallel straigt lines. The values plotted here can be obtained via 'summary(RG4)' and 'summary(RG5)'"}
+```{r fig.alt = "interaction-style plots of 'RG4' and 'RG5'. These show parallel trends along 'percent' for each 'source'. The one for 'RG5' consists of parallel straight lines. The values plotted here can be obtained via 'summary(RG4)' and 'summary(RG5)'"}
 emmip(RG4, source ~ percent, style = "factor")
 emmip(RG5, source ~ percent, style = "factor")
 ```
