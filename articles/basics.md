@@ -388,8 +388,11 @@ We could also have done this using
 [`ref_grid()`](https://rvlenth.github.io/emmeans/reference/ref_grid.md)
 to set covariate levels using unique values. It’s safer to use `at`
 because `cov.reduce` affects *all* covariates instead of specific ones.
-\###### {#emmip} The two models’ predictions can be compared using
-interaction-style plots via the
+
+###### 
+
+The two models’ predictions can be compared using interaction-style
+plots via the
 [`emmip()`](https://rvlenth.github.io/emmeans/reference/emmip.md)
 function
 
@@ -513,19 +516,19 @@ emmeans(RG4, "source", type = "response")
 emmip(RG4, source ~ percent, type = "response")
 ```
 
-\<img
-src=“/home/runner/work/emmeans/emmeans/docs/articles/basics_files/figure-html/unnamed-chunk-16-1.png”
-class=“r-plt” alt=“interaction-style plots for ‘RG4’ after
-back-transforming. Compared to the plots of ‘RG4’ without
-back-transforming, these trends increase rather than decrease (due to
-the inverse transformation) and they fan-out somewhat as ‘percent’
-increases. The values plotted here are obtainable via ‘summary(RG4, type
-= “response”)’” width=“432” /\> We are now on the `conc` scale, and that
-will likely be less confusing. Compared with the earlier plots in which
-the trends were decreasing and parallel, this plot has them increasing
-(because of the inverse relationship) and non-parallel. An interaction
-that occurs on the response scale is pretty well explained by a model
-with no interactions on the inverse scale.
+![interaction-style plots for 'RG4' after back-transforming. Compared to
+the plots of 'RG4' without back-transforming, these trends increase
+rather than decrease (due to the inverse transformation) and they
+fan-out somewhat as 'percent' increases. The values plotted here are
+obtainable via summary(RG4, type =
+'response')](basics_files/figure-html/unnamed-chunk-16-1.png)
+
+We are now on the `conc` scale, and that will likely be less confusing.
+Compared with the earlier plots in which the trends were decreasing and
+parallel, this plot has them increasing (because of the inverse
+relationship) and non-parallel. An interaction that occurs on the
+response scale is pretty well explained by a model with no interactions
+on the inverse scale.
 
 Transformations have a lot of nuances, and we refer you to the [vignette
 of
