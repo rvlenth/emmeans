@@ -16,6 +16,10 @@ with_emm_options(..., expr)
 emm_defaults
 ```
 
+## Format
+
+An object of class `list` of length 25.
+
 ## Arguments
 
 - ...:

@@ -6,7 +6,7 @@ filters, three sizes of cars, and two sides of the car.
 ## Usage
 
 ``` r
-data(auto.noise)
+auto.noise
 ```
 
 ## Format

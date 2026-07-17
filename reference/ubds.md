@@ -10,7 +10,7 @@ attribute makes it simple to construct subsets that have empty cells.
 ## Usage
 
 ``` r
-data(ubds)
+ubds
 ```
 
 ## Format

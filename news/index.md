@@ -2,6 +2,8 @@
 
 ## emmeans 2.0.4
 
+CRAN release: 2026-07-15
+
 - Updated logo (now hexagonal)
 - bug-fix for labelling in pairwise contrasts
 - [`head()`](https://rdrr.io/r/utils/head.html) and
