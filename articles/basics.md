@@ -403,7 +403,7 @@ emmip(RG4, source ~ percent, style = "factor")
 
 ![interaction-style plots of 'RG4' and 'RG5'. These show parallel trends
 along 'percent' for each 'source'. The one for 'RG5' consists of
-parallel straigt lines. The values plotted here can be obtained via
+parallel straight lines. The values plotted here can be obtained via
 'summary(RG4)' and
 'summary(RG5)'](basics_files/figure-html/unnamed-chunk-13-1.png)
 
@@ -414,7 +414,7 @@ emmip(RG5, source ~ percent, style = "factor")
 
 ![interaction-style plots of 'RG4' and 'RG5'. These show parallel trends
 along 'percent' for each 'source'. The one for 'RG5' consists of
-parallel straigt lines. The values plotted here can be obtained via
+parallel straight lines. The values plotted here can be obtained via
 'summary(RG4)' and
 'summary(RG5)'](basics_files/figure-html/unnamed-chunk-13-2.png) Both
 plots show three parallel trends, because neither model includes an
