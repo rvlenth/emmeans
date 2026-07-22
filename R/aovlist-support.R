@@ -108,7 +108,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         bi = bi[indx(idx, nr)]
         ii = match(rn[idx], xnms)
         use = setdiff(ii, which(!is.na(bhat1))) #++ omit elts already filled
-        if(length(use) > 0) {
+        if (length(use) > 0) {
             ii.left = seq_along(ii)[!is.na(match(ii,use))]
             wts[nm, indx(use)] = 1
             bhat1[use] = bi[ii.left]
@@ -154,7 +154,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         Vmats[[1]] = vv
     }
     # override V if vcov. is supplied
-    if(!missing(vcov.)) {
+    if (!missing(vcov.)) {
         V = .my.vcov(object, vcov.)
         dfargs = list()
         dffun = function(k, dfargs) Inf
@@ -174,7 +174,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     
     # submodel support
     mm = NULL
-    if(!is.null(dat <- attr(object, "data"))) {
+    if (!is.null(dat <- attr(object, "data"))) {
         m = model.frame(trms, dat, na.action = na.pass, xlev = xlev)
         mm = model.matrix(trms, m, contrasts.arg = contr)
         mm = .cmpMM(mm, assign = attr(mm, "assign"))
@@ -191,7 +191,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
 #'   \code{aovlist} objects
 #' @export
 .aovlist.dffun = function(k, dfargs) {
-    if(is.matrix(k) && (nrow(k) > 1)) {
+    if (is.matrix(k) && (nrow(k) > 1)) {
         dfs = apply(k, 1, .aovlist.dffun, dfargs)
         min(dfs)
     }

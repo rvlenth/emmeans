@@ -56,7 +56,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     misc = list(tran = "clr", inv.lbl = "e^y")   ### misc = list(tran = "log", inv.lbl = "e^y")
     dfargs = list(df = object$edf)
     dffun = function(k, dfargs) dfargs$df
-    if(is.null(ylevs <- object$lev))
+    if (is.null(ylevs <- object$lev))
         ylevs = seq_len(k + 1)
     ylevs = list(class = ylevs)
     if (is.null(ylevs)) ylevs = list(class = seq_len(k))
@@ -79,7 +79,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     idx = matrix(seq_along(linfct[, 1]), 
                  ncol = length(object@levels[[object@roles$multresp]]))
     bhat = as.numeric(idx) # right length, contents will be replaced
-    if(sim <- !missing(N.sim)) {
+    if (sim <- !missing(N.sim)) {
         message("Simulating a sample of size ", N.sim)
         bsamp = mvtnorm::rmvnorm(N.sim, object@bhat, object@V)
         postb = matrix(0, nrow = N.sim, ncol = length(bhat))
@@ -123,7 +123,7 @@ emm_basis.mblogit = function(object, ..., vcov.) {
     object$lev = levels(object$model[[1]])
     object$edf = Inf
     # we have to arrange the vcov elements in row-major order
-    if(missing(vcov.))
+    if (missing(vcov.))
         vcov. = vcov(object)
     perm = matrix(seq_along(as.numeric(object$coefmat)), 
                   ncol = ncol(object$coefmat))

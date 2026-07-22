@@ -74,7 +74,7 @@ test.emmGrid = function(object, null = 0,
             summary(object, infer=c(FALSE,TRUE), null = null, by = by, ...)
     }
     else {
-        if(verbose) {
+        if (verbose) {
             cat("Joint test of the following linear predictions\n")
             print(cbind(object@grid, equals = null))
         } 
@@ -83,7 +83,7 @@ test.emmGrid = function(object, null = 0,
         estble.idx = which(!is.na(object@bhat))
         bhat = bhat[estble.idx]
         est.flag = !is.na(object@nbasis[1])
-        if(est.flag) {
+        if (est.flag) {
             est.tol = get_emm_option("estble.tol")
             nbasis = zapsmall(object@nbasis)
         }
@@ -92,7 +92,7 @@ test.emmGrid = function(object, null = 0,
             by.rows = list(sel.rows = rows)
         else {
             by.rows = list(all = seq_len(nrow(L)))
-            if(missing(by)) 
+            if (missing(by)) 
                 by = object@misc$by.vars
             if (!is.null(by)) 
                 by.rows = .find.by.rows(object@grid, by)
@@ -112,7 +112,7 @@ test.emmGrid = function(object, null = 0,
             LL = LL[!narows, , drop = FALSE]
             rrflag = 0 + 2 * any(narows)  ## flag for estimability issue
             
-            if(est.flag)  { 
+            if (est.flag)  { 
                 if (any(!estimability::is.estble(LL, nbasis, est.tol))) {
                     LL = estimability::estble.subspace(zapsm(LL), nbasis)
                     rrflag = bitwOr(rrflag, 2)
@@ -125,7 +125,7 @@ test.emmGrid = function(object, null = 0,
                 return(c(df1 = 0, df2 = NA, F.ratio = NA, p.value = NA, note = 3))
             
             if (r < nrow(LL)) {
-                if(!all(null == 0))
+                if (!all(null == 0))
                     stop("Rows are linearly dependent - cannot do the test when 'null' != 0")
                 rrflag = bitwOr(rrflag, 1)
             }
@@ -137,7 +137,7 @@ test.emmGrid = function(object, null = 0,
                 r = length(nz)
                 tR = tR[nz, nz, drop = FALSE]
             }
-            if(length(null) < r) null = rep(null, r)
+            if (length(null) < r) null = rep(null, r)
             tQ = tQ.all = t(qr.Q(qrLt))[nz, , drop = FALSE]
             # tQ.all will have all the columns. tQ may get subsetted
             # NOW get rid of the NA parts...
@@ -149,7 +149,7 @@ test.emmGrid = function(object, null = 0,
             if (inherits(F, "try-error"))
                 c(df1 = r, df2 = NA,  F.ratio = NA, p.value = NA, note = 1)
             else {
-                if(is.null(df2 <- object@misc$df))
+                if (is.null(df2 <- object@misc$df))
                     df2 = min(apply(tQ, 1, function(.) object@dffun(., object@dfargs)))
                 if (is.na(df2)) 
                     df2 = Inf
@@ -362,7 +362,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     }
     facs = setdiff(names(object@levels), c(by, "1"))
 
-    if(length(facs) == 0)
+    if (length(facs) == 0)
         stop("There are no factors to test")
     
     # Use "factors" attr if avail to screen-out interactions not in model
@@ -389,7 +389,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
-            if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) { # term is in model
+            if (any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) { # term is in model
                 nesters = NULL
                 if (!is.null(nesting)) {
                     nst = intersect(these, names(nesting))
@@ -442,7 +442,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
                 efi = if (!is.null(nm)) lapply(ef, function(e) e[[nm]])
                 else ef
                 efi = do.call(rbind, efi)
-                if(!is.null(efi)) {
+                if (!is.null(efi)) {
                     lf = rbind(lf, efi)     # stack 'em up into lf
                     rows = c(rows, r[seq_len(nrow(efi))])   # rows w/ same by combs
                 }
@@ -468,9 +468,9 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     
     result = result[order(result[[1]]), -1, drop = FALSE]
     est.fcns = est.fcns[order(ef.ord)]
-    if(!show0df) {
+    if (!show0df) {
         result = result[result$df1 > 0, , drop = FALSE]
-        if(!is.null(by))
+        if (!is.null(by))
             est.fcns = lapply(est.fcns, function(x) x[!sapply(x, is.null)])
         est.fcns = est.fcns[!sapply(est.fcns, is.null)]
     }
@@ -479,12 +479,12 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
     nms = colnames(object@linfct)
-    if(is.null(by)) 
+    if (is.null(by)) 
         est.fcns = lapply(est.fcns, function(x) {
-            if(!is.null(x)) colnames(x) = nms; x})
+            if (!is.null(x)) colnames(x) = nms; x})
     else 
         est.fcns = lapply(est.fcns, function(L) lapply(L, function(x) {
-            if(!is.null(x)) colnames(x) = nms; x}))
+            if (!is.null(x)) colnames(x) = nms; x}))
     attr(result, "est.fcns") = est.fcns
     if (any(result$note != "")) {
         msg = character(0)

@@ -29,7 +29,7 @@
 
         if (inherits(result, "emmGrid"))
         result = .sub.em(result, subst)
-    else if(inherits(result, "emm_list")) {
+    else if (inherits(result, "emm_list")) {
         for (i in seq_along(result))
             result[[i]] = .sub.em(result[[i]], subst)
         names(result) = gsub("^em", subst, names(result))
@@ -122,8 +122,8 @@ lsm.options = function(...) {
 #' @export
 get.lsm.option = function(x, default = emm_defaults[[x]]) {
     .Deprecated("get_emm_option")
-    if(x == "ref.grid") x = "ref_grid"
-    if(x == "lsmeans") x = "emmeans"
+    if (x == "ref.grid") x = "ref_grid"
+    if (x == "lsmeans") x = "emmeans"
     get_emm_option(x, default = default)
 }
     

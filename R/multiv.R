@@ -88,7 +88,7 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
     object = .chk.list(object, ...)
     if (is.null(mult.name) || length(mult.name) == 0)
         stop("Must specify at least one factor in 'mult.name'")
-    if(length(setdiff(names(object@levels), union(by, mult.name))) == 0)
+    if (length(setdiff(names(object@levels), union(by, mult.name))) == 0)
         by = NULL   # avoid the case where we're left with no variables
     con = contrast(object, method = method, by = union(by, mult.name), ...)
     mvnm = paste(mult.name, collapse = " ")
@@ -105,7 +105,7 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
             T2 = df1 = df2 = F = NA
         else {
             df1 = QR$rank
-            if(df1 < length(r)) red.rank <<- TRUE
+            if (df1 < length(r)) red.rank <<- TRUE
             rawdf = mean(df[r])
             df2 = rawdf - df1 + 1
             qe = qr.coef(QR, est[r] - null)
@@ -138,7 +138,7 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
         mesg = paste("P value adjustment:", adjust)
     if (red.rank)
         mesg = c(mesg, "NOTE: Some or all d.f. are reduced due to singularities")
-    if(any(is.na(result$T.square)))
+    if (any(is.na(result$T.square)))
         mesg = c(mesg, 
             "NAs indicate non-estimabile cases or other errors")
     attr(result, "mesg") = mesg
@@ -191,52 +191,52 @@ log.mult.trans = mult.trans[endsWith(mult.trans, "lr")]  # only the log-ratio-ba
 #' @export
 #' 
 #' @examples
-#' if(requireNamespace("compositions"))
+#' if (requireNamespace("compositions"))
 #'     emm_example("mvregrid")
 #'     # Use emm_example("mvregrid", list = TRUE) # to see just the code
 #' 
 mvregrid = function(object, transform = "response", mult.name, newname = mult.name, newlevs, fcn, ...) {
     tran = object@misc$tran
-    if((transform != "response") && !is.null(tran)) {    # non-response transformation -- 1st regrid to response scale
+    if ((transform != "response") && !is.null(tran)) {    # non-response transformation -- 1st regrid to response scale
         object = mvregrid(object, transform = "response", mult.name = mult.name)
     }
     levels = levels(object)
-    if(is.character(tran))
+    if (is.character(tran))
         tran = rev(strsplit(tran, "\\.")[[1]])[1]
     by = object@misc$by.vars
     if (missing(mult.name)) {
         mult.name = object@roles$multresp
-        if(is.null(mult.name) || (length(mult.name) != 1))
+        if (is.null(mult.name) || (length(mult.name) != 1))
             stop("No default for 'mult.name' identified; must supply it")
     }
     idx = which(names(levels) == mult.name)
-    if(length(idx) == 0) 
+    if (length(idx) == 0) 
         stop("we don't have a factor named '", mult.name, "'")
     levels = c(levels[-idx], levels[idx])
 
     ord = .std.order(object@grid, levels)
-    if(any(ord != seq_along(ord)))
+    if (any(ord != seq_along(ord)))
         object = object[ord] |> update(by.vars = by)
     
     yhat = matrix(predict(object), ncol = (p <- length(levels[[mult.name]])))
-    if(missing(fcn))
+    if (missing(fcn))
         fcn = ifelse(transform == "response", paste0(tran, "Inv"), transform)
-    if((is.character(fcn)) && requireNamespace("compositions")) {
+    if ((is.character(fcn)) && requireNamespace("compositions")) {
         fcn = try(get(fcn, envir = asNamespace("compositions")), silent = TRUE)
-        if(inherits(fcn, "try-error"))
+        if (inherits(fcn, "try-error"))
             stop("The 'compositions' package must be installed to proceed")
     }
     
     newy = fcn(yhat, ...)
     k = ncol(newy)
-    if(missing(newlevs)) {
+    if (missing(newlevs)) {
         newlevs = colnames(newy)
-        if(is.null(newlevs))
+        if (is.null(newlevs))
             newlevs = seq_len(ncol(newy))
     }
-    else if(length(newlevs) != k)
+    else if (length(newlevs) != k)
         stop("Nonconforming 'newlevs': Must be of length ", k)
-    if(!is.na(object@post.beta)) {
+    if (!is.na(object@post.beta)) {
         pb = apply(object@linfct %*% t(object@post.beta), 2, function(y) {
             as.numeric(fcn(matrix(y, ncol = p), ...))
         })
@@ -254,10 +254,10 @@ mvregrid = function(object, transform = "response", mult.name, newname = mult.na
     g = object@grid = object@grid[seq_len(n <- nrow(newy)), setdiff(names(object@grid), c(mult.name, ".wgt.", ".offset.")), drop = FALSE]
     for (i in seq_len(k - 1)) object@grid = rbind(object@grid, g)
     object@grid[[newname]] = rep(newlevs, each = n)
-    if(!is.null(wgt))
+    if (!is.null(wgt))
         object@grid[[".wgt."]] = rep(wgt[seq_len(n)], k)
     object@misc$tran = object@misc$inv.lbl = object@misc$sigma = object@misc$is.new.rg = NULL
-    if(transform != "response")
+    if (transform != "response")
         object@misc$tran = transform
     object@misc$pri.vars = setdiff(names(object@grid), c(object@misc$by.vars, ".wgt'"))
     object@misc$methDesc = "mvregrid"

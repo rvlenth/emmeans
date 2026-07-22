@@ -74,10 +74,10 @@
 comb_facs = function(object, facs, newname = paste(facs, collapse = "."),
                      drop = FALSE, ...) {
     object = .chk.list(object, ...)
-    if((length(facs)  < 1))
+    if ((length(facs)  < 1))
         stop("No factors have been specified to combine")
     levs = object@levels
-    if(any(sapply(facs, function(x) !(x %in% names(levs)))))
+    if (any(sapply(facs, function(x) !(x %in% names(levs)))))
         stop("Unknown factor(s)")
     if (newname %in% facs)
         stop("newname of '", newname, "' cannot be used. Specify something else")
@@ -90,16 +90,16 @@ comb_facs = function(object, facs, newname = paste(facs, collapse = "."),
         rows = lapply(levs[[newname]], function(nm) which(grid[[newname]] == nm))
         maxw = sapply(rows, function(i) max(w[i]))
         zw = which(maxw == 0)
-        if(length(zw) > 0) {
+        if (length(zw) > 0) {
             r = unlist(rows[zw])
             levs[[newname]] = levs[[newname]][-r]
             grid = grid[-r, , drop = FALSE]
             object@linfct = object@linfct[-r, , drop = FALSE]
-            if(!is.null(object@misc$display))
+            if (!is.null(object@misc$display))
                 object@misc$display = object@misc$display[-r]
         }
     }
-    if(!is.null(nests <- object@model.info$nesting)) {
+    if (!is.null(nests <- object@model.info$nesting)) {
         # which of facs are nested?
         m = match(facs, names(nests), nomatch = 0)
         if (length(m[m > 0]) == length(facs)) { # all are nested, find common nests
@@ -161,7 +161,7 @@ split_fac = function(object, fac, newfacs, ...) {
         stop("The factor '", fac, "' is not in the reference grid")
     newg = expand.grid(newfacs)
     ref = object@levels[[fac]]
-    if(nrow(newg) != length(ref))
+    if (nrow(newg) != length(ref))
         stop("Mismatch between 'fac' levels (", length(ref),
              ") and new factor combinations (", nrow(newg), ")")
     iy = as.numeric(factor(object@grid[[fac]], levels = ref))
@@ -173,8 +173,8 @@ split_fac = function(object, fac, newfacs, ...) {
     object@levels = c(object@levels[i < idx], newfacs, object@levels[i > idx])
     object@roles$predictors = object@misc$pri.vars = names(object@levels)
     object@misc$by.vars = NULL
-    if(!is.null(nests <- object@model.info$nesting)) {
-        if(fac %in% names(nests)) {
+    if (!is.null(nests <- object@model.info$nesting)) {
+        if (fac %in% names(nests)) {
             for (f in names(newfacs))
                 nests[[f]] = nests[[fac]]
             nests[[fac]] = NULL
@@ -250,9 +250,9 @@ split_fac = function(object, fac, newfacs, ...) {
 #' 
 add_grouping = function(object, newname, refname, newlevs, ...) {
     object = .chk.list(object, ...)
-    if(!is.null(object@model.info$nesting[[refname]]))
+    if (!is.null(object@model.info$nesting[[refname]]))
         stop("'", refname, "' is already nested in another factor; cannot re-group it")
-    if(newname %in% object@roles$predictors)
+    if (newname %in% object@roles$predictors)
         stop("'", newname, "' is already the name of an existing predictor")
     rlevs = do.call(paste, do.call(expand.grid, object@levels[refname]))
     if (length(newlevs) != length(rlevs))
@@ -286,7 +286,7 @@ add_grouping = function(object, newname, refname, newlevs, ...) {
     grid[!valid, ".wgt."] = 0
     object@linfct[!valid, ] = NaN
     object@misc$pri.vars = c(object@misc$pri.vars, newname)
-    if(is.null(disp <- object@misc$display))
+    if (is.null(disp <- object@misc$display))
         object@misc$display = valid
     else
         object@misc$display = disp & valid

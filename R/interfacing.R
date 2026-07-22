@@ -94,7 +94,7 @@
 #' @order 1
 recover_data = function(object, ...) {
     mth = .find_method(object, "recover_data")
-    if(!is.null(mth))
+    if (!is.null(mth))
         return(mth(object, ...))
     UseMethod("recover_data")  ## This call has to be here to establish recover_data as a generic
     
@@ -113,18 +113,18 @@ recover_data = function(object, ...) {
 .find_method = function(object, generic) {
     cls = class(object)
     # is it an S4 class? If so, replace cls with its inheritance chain
-    if(!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "try-error"))
+    if (!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "try-error"))
         cls = c(cls[[1]], names(classes@contains))
     
     for (cl in .chk.cls(cls)) { # Look for user-provided method if not buried too deep
         mth <- .get.outside.method(generic, cl)
-        if(!is.null(mth))
+        if (!is.null(mth))
             return(mth)
     }
     # Now look for our own S3 methods
     for (cl in cls) {
         mth = getS3method(generic, cl, optional = TRUE)
-        if(!is.null(mth))
+        if (!is.null(mth))
             return(mth)
     }
     NULL
@@ -137,7 +137,7 @@ recover_data = function(object, ...) {
     from = sapply(strsplit(mth[[3]], "[ :]"), function(x) rev(x)[1])
     if (length(from) == 0)
         return (NULL)
-    if(any(outside <- (from != "emmeans")))
+    if (any(outside <- (from != "emmeans")))
         mth[which(outside)[1]]
     else
         NULL
@@ -200,17 +200,17 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
     offarg = fcall$offset
-    if(missing(addl.vars))
+    if (missing(addl.vars))
         addl.vars = character(0)
     vars = union(vars, addl.vars)
         
     if (!missing(frame)) {
-        if(is.null(data) && !.has.fcns(trms))
+        if (is.null(data) && !.has.fcns(trms))
             data = frame
-        if("(offset)" %in% names(data)) 
+        if ("(offset)" %in% names(data)) 
             vars = union(vars, "(offset)")
     }
-    else if(!is.null(offarg))
+    else if (!is.null(offarg))
         vars = union(vars, .all.vars(reformulate(deparse(offarg))))
     
     
@@ -228,7 +228,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         # [e.g., subset = sample(1:n, 50) will give us a 
         #    different subset than model used]
         mm = match(c("data", "subset"), names(fcall), 0L)
-        if(any(mm > 0)) {
+        if (any(mm > 0)) {
             # Flag cases where there is a function call in data or subset
             # May indicate a situation where data are randomized
             fcns = unlist(lapply(fcall[mm], 
@@ -241,7 +241,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         fcall[[1L]] = quote(stats::model.frame)
         fcall$xlev = NULL # we'll ignore xlev
         
-        if(!is.numeric(na.action))   ### In case na.action is not a vector of indices
+        if (!is.numeric(na.action))   ### In case na.action is not a vector of indices
             na.action = NULL
         
         # If we have an explicit list of cases to exclude, let everything through now
@@ -255,7 +255,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         if (is.null(env))
             env = parent.frame()
         tbl = try(eval(fcall, env, parent.frame()), silent = TRUE)
-        if(inherits(tbl, "try-error"))
+        if (inherits(tbl, "try-error"))
             return(.rd.error(vars, fcall))
         if (possibly.random) {
             chk = eval(fcall, env, parent.frame())
@@ -276,21 +276,21 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         tbl = tbl[complete.cases(tbl), , drop=FALSE]
     }
     # if there is a separate offset argument, calculate the static offset
-    if(!is.null(offarg)) {
+    if (!is.null(offarg)) {
         if ("(offset)" %in% names(tbl)) { # don't have to calculate it
             offval = tbl[["(offset)"]]
             vars = setdiff(vars, "(offset)")
         }
         else
             offval = eval(offarg, tbl, enclos = environment(trms))
-        if(!is.null(offval)) {
+        if (!is.null(offval)) {
             tbl$.static.offset. = offval
             addl.vars = c(addl.vars, ".static.offset.")
         }
     }
 
     
-    if(!missing(pwts) && !is.null(pwts)) {
+    if (!missing(pwts) && !is.null(pwts)) {
         if ((npw <- length(pwts)) == nrow(tbl))
             tbl[["(weights)"]] = pwts
         else if (length(unique(pwts)) > 1)
@@ -302,7 +302,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     attr(tbl, "call") = object # the original call
     attr(tbl, "terms") = trms
     attr(tbl, "predictors") = setdiff(.all.vars(delete.response(trms)), params)
-    if(!missing(addl.vars)) {
+    if (!missing(addl.vars)) {
         attr(tbl, "predictors") = union(attr(tbl, "predictors"), addl.vars)
         vars = setdiff(vars, addl.vars)
     }
@@ -408,7 +408,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 emm_basis = function(object, trms, xlev, grid, ...) {
     # look for outside methods first
     mth = .find_method(object, "emm_basis")
-    if(!is.null(mth))
+    if (!is.null(mth))
         return(mth(object, trms, xlev, grid, ...))
     UseMethod("emm_basis")  ## This call has to be here to establish emm_basis as a generic
 }

@@ -118,24 +118,24 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
                 aes, ...) {
 
         emm = .chk.list(emm, ...)
-    if(missing(by)) 
+    if (missing(by)) 
         by = emm@misc$by.vars
     
     ### set up aesthetics
-    if(missing(aes))
+    if (missing(aes))
         aes = list()
     # defaults if other than system ones...
     daes = list(point = list(size = 2), segment = list(), label = list(size = 2.5))
     # fill aes w/ defaults if not present, at either level
     for(a in names(daes)) { 
-        if(is.null(aes[[a]]))
+        if (is.null(aes[[a]]))
             aes[[a]] = daes[[a]]
         else for (b in names(daes[[a]]))
             if (is.null(aes[[a]][[b]]))
                 aes[[a]][[b]] = daes[[a]][[b]]
     }
     
-    if(rows != "." && !(rows %in% by))
+    if (rows != "." && !(rows %in% by))
         stop("'rows' must be a subset of the 'by' variables")
     
     args = list(object = emm, method = method, by = by, ...)
@@ -152,7 +152,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     args$null = NULL
     con.summ = do.call(summary.emmGrid, args)
     
-    if(missing(xlab)) {
+    if (missing(xlab)) {
         adjust = .cap(attr(con.summ, "adjust"))
         delta = attr(con.summ, "delta")
         side = attr(con.summ, "side")
@@ -168,14 +168,14 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     }
     
     sep = get_emm_option("sep")
-    if(missing(ylab))
+    if (missing(ylab))
         ylab = paste(attr(emm.summ, "pri.vars"), collapse = ":")
     
     # figure out levels being compared
     cf = coef(con)
     use = setdiff(names(cf), names(con@misc$orig.grid))
     idx = apply(as.matrix(cf[use]), 2, function(x) {
-        if(!all(range(x) == c(-1,1)) || (sum(abs(x)) != 2))
+        if (!all(range(x) == c(-1,1)) || (sum(abs(x)) != 2))
             stop("Each contrast must be a comparison of two estimates")
         c(which(x == 1), which(x == -1))
     })
@@ -183,7 +183,7 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     pf = do.call(paste, c(unname(emm.summ[primv]), sep = sep))
     pemm = suppressMessages(emmeans(emm, primv))
     levs = do.call(paste, c(unname(pemm@grid[primv]), sep = sep))
-    if(sort) ord = order(predict(pemm))
+    if (sort) ord = order(predict(pemm))
     else ord = seq_along(pf)
     pf = emm.summ$pri.fac = factor(pf, levels = levs[ord])
     
@@ -340,7 +340,7 @@ gran = function(x, min_incr = .01) {
     # spread-out the p values less than .0004
     rnk = rank(x)
     sm = which(x < .0004)
-    if(length(sm) > 0)
+    if (length(sm) > 0)
         x[sm] = .0004 - .0003 * rnk[sm] / length(sm)
     
     ord = order(x)
@@ -418,7 +418,7 @@ pwpm = function(emm, by, reverse = FALSE,
                 pvals = TRUE, means = TRUE, diffs = TRUE, 
                 flip = FALSE, digits, ...) {
     emm = .chk.list(emm, ...)
-    if(missing(by)) 
+    if (missing(by)) 
         by = emm@misc$by.vars
     
     emm = update(emm, by = by)
@@ -437,7 +437,7 @@ pwpm = function(emm, by, reverse = FALSE,
     }
     
     if (!is.null(prs$null)) {
-        null.hyp = as.character(signif(unique(prs$null), digits = 5))
+        null.hyp = as.character(signif (unique(prs$null), digits = 5))
         if (length(null.hyp) > 1)
             null.hyp = "(various values)"
     }
@@ -445,14 +445,14 @@ pwpm = function(emm, by, reverse = FALSE,
     pby = .find.by.rows(prs, by)
 
     
-    if(opt.dig <- missing(digits)) {
+    if (opt.dig <- missing(digits)) {
         tmp = mns[[estName]] + mns[["SE"]] * cbind(rep(-2, nrow(mns)), 0, 2)
         digits = max(apply(tmp, 1, .opt.dig))
         opt.dig = TRUE
     }
 
     result = lapply(seq_along(mby), function(i) {
-        if(opt.dig) {
+        if (opt.dig) {
             pv = prs$p.value[pby[[i]]]
             fpv = sprintf("%6.4f", pv) 
             fpv[pv < 0.0001] = "<.0001"
@@ -465,7 +465,7 @@ pwpm = function(emm, by, reverse = FALSE,
         lbls = mns$lbls[mby[[i]]]
         n = length(lbls)
         mat = matrix("", nrow = n, ncol = n, dimnames = list(lbls, lbls))
-        if(pvals) {
+        if (pvals) {
             mat[trifcn(mat)] = fpv
             mat = t(mat)
         }
@@ -521,7 +521,7 @@ print.pwpm = function(x, ...) {
     # print a parm and its name if present unless it's in excl
     # optional subst is NAMED vector where each possibilitty MUST be present
     catparm = function(f, excl = "0", delim = "  ", quote = TRUE, subst) {
-        if(!is.na(pf <- parms[f]) && !(pf %in% excl)) {
+        if (!is.na(pf <- parms[f]) && !(pf %in% excl)) {
             if (!missing(subst)) pf = subst[pf]
             if (quote) pf = dQuote(pf)
             cat(paste0(delim, f, " = ", pf))

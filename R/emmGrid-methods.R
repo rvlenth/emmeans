@@ -90,17 +90,17 @@ str.emmGrid <- function(object, ...) {
         cat(paste(cf, collapse = ", "))
         cat("\n")
     }
-    if(!is.null(object@model.info$nesting)) {
+    if (!is.null(object@model.info$nesting)) {
         cat("Nesting structure:  ")
         cat(.fmt.nest(object@model.info$nesting))
         cat("\n")
     }
-    if(!is.null(tran <- object@misc$tran)) {
+    if (!is.null(tran <- object@misc$tran)) {
         showtran(object@misc, "Transformation:")
         if (!is.null(tran2 <- object@misc$tran2))
             showtran(list(tran = tran2), "Additional response transformation:")
     }
-    if(!is.na(object@nbasis[1])) {
+    if (!is.na(object@nbasis[1])) {
         cat(paste0("Some things are non-estimable (null space dim = ",
                   ncol(object@nbasis), ")\n"))
     }
@@ -120,7 +120,7 @@ str.emmGrid <- function(object, ...) {
 #' @export
 print.emmGrid = function(x, ..., export = FALSE) {
     print(summary.emmGrid(x, ...), export = export)
-    # if(export)
+    # if (export)
     #     print(summary.emmGrid(x, ...), export = export)
     # else
     #     show(x)
@@ -158,7 +158,7 @@ vcov.emmGrid = function(object, ..., sep = get_emm_option("sep")) {
         hook(object, tol = tol, ...)
     }
     else {
-        if(is.null(disp <- object@misc$display))
+        if (is.null(disp <- object@misc$display))
             disp = seq_len(nrow(object@linfct))
         X = object@linfct[disp, , drop = FALSE]
         estble = estimability::is.estble(X, object@nbasis, tol) 
@@ -414,7 +414,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
     misc = object@misc
     for (nm in names(args)) {
         fullname = try(match.arg(nm, valid.choices), silent=TRUE)
-        if(inherits(fullname, "try-error")) {
+        if (inherits(fullname, "try-error")) {
             if (!silent)
                 message("Argument ", sQuote(nm), " was ignored. Valid choices are:\n",
                         paste(valid.choices, collapse=", "))
@@ -432,7 +432,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                 if (nrow(object@grid) != nrow(grd))
                     stop("Length of replacement levels does not match the number of rows in the grid")
                 oldlvls = object@levels
-                if(!is.null(object@model.info$nesting) &&
+                if (!is.null(object@model.info$nesting) &&
                    ((length(oldlvls) != length(lvls)) ||
                     any(sapply(oldlvls, length) != sapply(lvls, length))))
                     warning("Changes to levels may have altered nesting structure.\n",
@@ -448,7 +448,7 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                 misc$adjust = "none"
                 misc$famSize = nrow(grd)
             }
-            else if((fullname == "estName") && 
+            else if ((fullname == "estName") && 
                     !is.null(misc$predict.type) && startsWith(misc$predict.type, "r"))
                 misc$inv.lbl = args[[nm]]
             else if (fullname %in% valid.slots) # all slots but "levels"
@@ -465,19 +465,19 @@ update.emmGrid = function(object, ..., silent = FALSE) {
                 # special case - I keep nesting in model.info. Plus add'l checks
                 if (fullname == "nesting") {
                     object@model.info$nesting = lst = .parse_nest(args[[nm]])
-                    if(!is.null(lst)) {
+                    if (!is.null(lst)) {
                         nms = union(names(lst), unlist(lst))
-                        if(!all(nms %in% names(object@grid)))
+                        if (!all(nms %in% names(object@grid)))
                             stop("Nonexistent variables specified in 'nesting'")
                         object@misc$display = .find.nonempty.nests(object, nms)
                     }
                 }
                 if (fullname == "submodel") {
-                    if(!is.null(A <- .alias.matrix(object, args[[nm]]))) {
+                    if (!is.null(A <- .alias.matrix(object, args[[nm]]))) {
                         rcols = attr(A, "rcols")
                         L = object@linfct
                         k = ncol(L) / ncol(A)
-                        if(abs(k - (k<-as.integer(k))) > .01)
+                        if (abs(k - (k<-as.integer(k))) > .01)
                             stop("Incompatible columns in alias setup")
                         ixmat = matrix(seq_along(L[1,]), ncol = k)
                         for (j in seq_len(k)) {
@@ -716,7 +716,7 @@ emm_options = function(..., disable) {
 #' @export
 get_emm_option = function(x, default = emm_defaults[[x]]) {
     opts = getOption("emmeans", list())
-    if(is.null(default) || hasName(opts, x))
+    if (is.null(default) || hasName(opts, x))
         opts[[x]]
     else 
         default
@@ -737,7 +737,7 @@ get_emm_option = function(x, default = emm_defaults[[x]]) {
 #' 
 with_emm_options = function(..., expr) {
     cl = match.call()
-    if(missing(expr)) {
+    if (missing(expr)) {
         expr = cl[[length(cl)]]
         cl = cl[-length(cl)]
     }
@@ -994,7 +994,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         lbls = lbls[disp]
     }
     colnames(object@linfct) = lbls
-    if(all(estble))
+    if (all(estble))
         object@nbasis = estimability::all.estble
     else
         object@nbasis = object@linfct[, !estble, drop = FALSE]
@@ -1016,15 +1016,15 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
             ifelse(length(idx) == 0, NA, min(dfargs$df[idx], na.rm = TRUE))
         }
     }
-    if(!is.null(prev.df.msg)) 
+    if (!is.null(prev.df.msg)) 
         attr(object@dffun, "mesg") = ifelse(
             startsWith(prev.df.msg, "inherited"), prev.df.msg,
             paste("inherited from", prev.df.msg, "when re-gridding"))
     
-    if(transform %in% c("response", "mu", "unlink", links, "user") && !is.null(object@misc$tran)) {
+    if (transform %in% c("response", "mu", "unlink", links, "user") && !is.null(object@misc$tran)) {
         flink = link = attr(est, "link")
         if (bias.adjust) {
-            if(missing(sigma))
+            if (missing(sigma))
                 sigma = object@misc$sigma
             link = .make.bias.adj.link(link, sigma)
             #### (not needed)   bias.adjust = attr(link, "bias.adjust")
@@ -1047,7 +1047,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
                 for (v in setdiff(object@misc$pri.vars, object@misc$by.vars))
                     object@grid[[v]] = gsub(" - ", "/", object@grid[[v]])
         }
-        if((transform %in% c("mu", "unlink")) && !is.null(object@misc$tran2)) {
+        if ((transform %in% c("mu", "unlink")) && !is.null(object@misc$tran2)) {
             object@misc$tran = object@misc$tran2
             object@misc$tran2 = object@misc$tran.mult = object@misc$tran.offset = object@misc$inv.lbl = NULL
         }
@@ -1072,7 +1072,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         }
         object@bhat = link$linkfun(object@bhat)
         Vee = object@V
-        if(length(incl) > 0) {
+        if (length(incl) > 0) {
             D = 1 / link$mu.eta(object@bhat[incl])
             object@V = sweep(sweep(Vee[vincl, vincl, drop = FALSE], 1, D, "*"), 2, D, "*")
         }
@@ -1086,7 +1086,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
         object@misc$inv.lbl = inv.link.lbl
     }
     
-    if(!is.na(PB[1])) {
+    if (!is.na(PB[1])) {
         PB = PB[ , !is.na(object@bhat), drop = FALSE]
         attr(PB, "n.chains") = NC
         object@post.beta = PB
@@ -1096,7 +1096,7 @@ regrid = function(object, transform = c("response", "mu", "unlink", "none", "pas
     object@grid$.offset. = object@misc$offset.mult =
         object@misc$estHook = object@misc$vcovHook = NULL
     object@model.info$model.matrix = "Submodels are not available with regridded objects"
-    if(!missing(predict.type))
+    if (!missing(predict.type))
         object = update(object, predict.type = predict.type)
 
     object

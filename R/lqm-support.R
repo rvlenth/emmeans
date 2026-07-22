@@ -83,12 +83,12 @@ emm_basis.rq = function(object, trms, xlev, grid, tau = object$tau, ...) {
         stop("No valid 'tau' values were specified")
     bhat = object$coefficients
     summ = summary(object, covariance = TRUE, ...)
-    nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
+    nm = if (is.null(names(bhat))) row.names(bhat) else names(bhat)
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     assign = attr(X, "assign")
     X = X[, nm, drop = FALSE]
-    if(is.matrix(bhat)) {
+    if (is.matrix(bhat)) {
         bhat = bhat[, taucols, drop = FALSE]
         k = ncol(bhat)
         X = kronecker(diag(k), X)

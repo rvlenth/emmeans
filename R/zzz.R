@@ -41,7 +41,7 @@
 #' emmeans(neur.glm, "Treatment")
 #' 
 #' ### Post-processed results lose the annotations
-#' if(requireNamespace("tibble")) {
+#' if (requireNamespace("tibble")) {
 #'     emmeans(neur.glm, "Treatment") |> tibble::as_tibble()
 #' }
 #' 
@@ -106,7 +106,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
         register_s3_method("multcomp", "cld", "emm_list")
         register_s3_method("multcomp", "modelparm", "emmwrap")
     }
-    if(.requireNS("xtable", fail = .nothing)) {
+    if (.requireNS("xtable", fail = .nothing)) {
         register_s3_method("xtable", "xtable", "emmGrid")
         register_s3_method("xtable", "xtable", "summary_emm")
         register_s3_method("xtable", "print", "xtable_emm")
@@ -155,7 +155,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 .emm_register = function(classes, pkgname, qdrg = FALSE) {
     envir = asNamespace(pkgname)
     for (class in classes) {
-        if(qdrg) 
+        if (qdrg) 
             register_s3_method("emmeans", "recover_data", class, envir)
         else {
             register_s3_method("emmeans", "recover_data", class, envir)

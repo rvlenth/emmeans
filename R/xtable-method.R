@@ -51,7 +51,7 @@
 #' 
 #' @method xtable emmGrid
 #' @examples
-#' if(requireNamespace("xtable"))
+#' if (requireNamespace("xtable"))
 #'     emm_example("xtable")
 #'     # Use emm_example("xtable", list = TRUE) # to just list the code
 xtable.emmGrid = function(x, caption = NULL, label = NULL, align = NULL, digits = 4, 

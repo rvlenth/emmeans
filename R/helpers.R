@@ -39,7 +39,7 @@ recover_data.lm = function(object, frame = object$model, ...) {
 emm_basis.lm = function(object, trms, xlev, grid, ...) {
     # coef() works right for lm but coef.aov tosses out NAs
     bhat = object$coefficients
-    nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
+    nm = if (is.null(names(bhat))) row.names(bhat) else names(bhat)
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     assign = attr(X, "assign")
@@ -103,7 +103,7 @@ recover_data.manova = function(object, ...) {
 ### merMod objects (lme4 package)
 #' @export
 recover_data.merMod = function(object, ...) {
-    if(!lme4::isLMM(object) && !lme4::isGLMM(object)) 
+    if (!lme4::isLMM(object) && !lme4::isGLMM(object)) 
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
     recover_data(fcall, delete.response(terms(object)), 
@@ -173,7 +173,7 @@ emm_basis.merMod = function(object, trms, xlev, grid,
                               adjV = pbkrtest::vcovAdj.lmerMod(object, 0))
                 V = as.matrix(dfargs$adjV)
                 tst = try(pbkrtest::Lb_ddf)
-                if(!inherits(tst, "try-error"))
+                if (!inherits(tst, "try-error"))
                     dffun = function(k, dfargs) pbkrtest::Lb_ddf (k, dfargs$unadjV, dfargs$adjV)
                 else {
                     mode = "asymptotic"
@@ -340,7 +340,7 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
     #     stop()
     # }
     
-    if(is.null(data)) {
+    if (is.null(data)) {
         vars = all.vars(eval(object$call[[2]]))
         lst = lapply(vars, get)
         names(lst) = vars
@@ -481,13 +481,13 @@ emm_basis.gls = function(object, trms, xlev, grid,
     if (!is.matrix(object$apVar))
         mode = "df.error"
     if (mode %in% c("satterthwaite", "appx-satterthwaite")) {
-        data = if(is.null(misc$data))
+        data = if (is.null(misc$data))
             eval(object$call$data, parent.frame(2))
         else
             misc$data
         misc = list()
         chk = attr(object$apVar, "Pars")
-        if(max(abs(coef(object$modelStruct) - chk[-length(chk)])) > .001) {
+        if (max(abs(coef(object$modelStruct) - chk[-length(chk)])) > .001) {
             message("Analytical Satterthwaite method not available; using appx-satterthwaite")
             mode = "appx-satterthwaite"
         }
@@ -636,7 +636,7 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
     nms = colnames(result$X)
     # delete columns for intercept and main effects of strata
     zaps = which(nms %in% setdiff(nms, names(result$bhat)))
-    if(length(zaps) > 0)
+    if (length(zaps) > 0)
         result$X = result$X[, -zaps, drop = FALSE]
     ### result$X = result$X - rep(object$means, each = nrow(result$X))
     result$misc$tran = "log"
@@ -646,7 +646,7 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
 
 .notran2 = function(object, ...) {
     for (nm in c("tran", "tran2"))
-        if(!is.null(object@misc[[nm]]) && object@misc[[nm]] == "Surv") object@misc[[nm]] = NULL
+        if (!is.null(object@misc[[nm]]) && object@misc[[nm]] == "Surv") object@misc[[nm]] = NULL
     object
 }
 
@@ -816,7 +816,7 @@ recover_data.glmgee = function(object, ...) {
 
 #' @exportS3Method emm_basis glmgee
 emm_basis.glmgee = function(object, trms, xlev, grid, vcov.method = "robust", ...) {
-    vcov. = if(is.character(vcov.method))
+    vcov. = if (is.character(vcov.method))
         vcov(object, type = vcov.method, ...)
     else
         vcov.method
@@ -887,7 +887,7 @@ recover_data.svyglm = function(object, data = NULL, ...) {
         misc$inv.lbl = "prob"
     else if (length(grep("poisson", fam$family)) == 1)
         misc$inv.lbl = "rate"
-    if(length(grep("gaussian", fam$family)) == 0)
+    if (length(grep("gaussian", fam$family)) == 0)
         misc$sigma = NA
     misc
 }

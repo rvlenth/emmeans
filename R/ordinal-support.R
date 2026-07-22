@@ -233,9 +233,9 @@ emm_basis.clm = function (object, trms, xlev, grid,
     mode = object@misc$mode
     object@misc$postGridHook = object@misc$mode = NULL
     object = regrid(object, transform = "response", ...)
-    if(object@misc$estName == "exc.prob") { # back-transforming yields exceedance probs
+    if (object@misc$estName == "exc.prob") { # back-transforming yields exceedance probs
         object@bhat = 1 - object@bhat
-        if(!is.null(object@post.beta[1]))
+        if (!is.null(object@post.beta[1]))
             object@post.beta = 1 - object@post.beta
         object@misc$estName = "cum.prob"
     }
@@ -247,7 +247,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     }
     else if (mode == "exc.prob") {
         object@bhat = 1 - object@bhat
-        if(!is.null(object@post.beta[1]))
+        if (!is.null(object@post.beta[1]))
             object@post.beta = 1 - object@post.beta
         object@misc$estName = "exc.prob"        
     }
@@ -275,7 +275,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     # proceed to disavow that this was ever exposed to 'emmeans' or 'contrast'
     ## class(newrg) = "ref.grid"
     misc = newrg@misc
-    if(!is.null(misc$display) && all(misc$display))
+    if (!is.null(misc$display) && all(misc$display))
         misc$display = NULL
     misc$is.new.rg = TRUE
     misc$infer = c(FALSE,FALSE)
@@ -379,7 +379,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
 
 #' @exportS3Method emm_basis clmm          
 emm_basis.clmm = function (object, trms, xlev, grid, ...) {
-    if(is.null(object$Hessian)) {
+    if (is.null(object$Hessian)) {
         message("Updating the model to obtain the Hessian...")
         object = update(object, Hess = TRUE)
     }

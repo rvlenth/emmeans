@@ -50,7 +50,7 @@ emm_basis.nls = function(object, trms, xlev, grid, ...) {
 ### Additional REQUIRED argument is 'param' - parameter name to explore
 #' @exportS3Method recover_data nlme
 recover_data.nlme = function(object, param, ...) {
-    if(missing(param))
+    if (missing(param))
         return("'param' argument is required for nlme objects")
     fcall = object$call
     if (!is.null(fcall$weights))
@@ -58,7 +58,7 @@ recover_data.nlme = function(object, param, ...) {
     fixed = fcall$fixed
     if (is.call(fixed))
         fixed = eval(fixed, envir = parent.frame())
-    if(!is.list(fixed))
+    if (!is.list(fixed))
         fixed = list(fixed)
     form = NULL
     for (x in fixed)
@@ -98,7 +98,7 @@ recover_data.gnls = function(object, param, data, ...) {
     fcall = object$call$params
     if (is.null(fcall))
         return("Models fitted without a 'params' specification are not supported.")
-    if(missing(param))
+    if (missing(param))
         return("'param' argument is required for gnls objects")
 
     plist = object$plist
@@ -122,7 +122,7 @@ recover_data.gnls = function(object, param, data, ...) {
     form = params[[param]]
     
     trms = delete.response(terms(eval(form, envir = environment(formula(object)))))
-    if(is.null(data))
+    if (is.null(data))
         data = eval(object$call$data, envir = environment(formula(object)))
     recover_data(fcall, trms, object$na.action, data = data, ...)
 }

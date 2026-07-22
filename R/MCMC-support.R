@@ -99,7 +99,7 @@
 #' @method as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
 #' @examples
-#' if(requireNamespace("coda")) 
+#' if (requireNamespace("coda")) 
 #'     emm_example("as.mcmc-coda")
 #'     # Use emm_example("as.mcmc-coda", list = TRUE) # to see just the code
 #'     
@@ -117,7 +117,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     est = estimability::is.estble(x@linfct, x@nbasis)
     if (!any(est))
         stop("Aborted -- No estimates in the grid are estimable")
-    else if(!all(est) && !NE.include) {
+    else if (!all(est) && !NE.include) {
         rows = paste(which(!est), collapse = ", ")
         warning("Cases  ", rows, "  were dropped due to non-estimability", call. = FALSE)
     }
@@ -128,7 +128,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
         mat = mat[, est, drop = FALSE]
         x@grid = x@grid[est, , drop = FALSE]
     }
-    if(!is.null(offset <- x@grid[[".offset."]])) {
+    if (!is.null(offset <- x@grid[[".offset."]])) {
         n = nrow(mat)
         mat = mat + matrix(rep(offset, each = n), nrow = n)
     }
@@ -156,9 +156,9 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     if (any(names)) {
         names = rep(names, length(nm))
         for (i in seq_along(nm))
-            if(names[i]) x@grid[nm[i]] = paste(nm[i], x@grid[[nm[i]]])
+            if (names[i]) x@grid[nm[i]] = paste(nm[i], x@grid[[nm[i]]])
     }
-    if(is.null(dimnames(mat)))
+    if (is.null(dimnames(mat)))
         dimnames(mat) = list(seq_len(nrow(mat)), seq_len(ncol(mat)))
     dimnames(mat)[[2]] = do.call(paste, c(unname(x@grid[, nm, drop = FALSE]), 
                                           sep = get_emm_option("sep")))
@@ -188,7 +188,7 @@ as.mcmc.emm_list = function(x, which = 1, ...) {
 #' @rdname mcmc-support
 as.mcmc.list.emmGrid = function(x, names = TRUE, ...) {
     result = as.mcmc.emmGrid(x, names = names, sep.chains = TRUE, ...)
-    if(!inherits(result, "mcmc.list"))
+    if (!inherits(result, "mcmc.list"))
         result = coda::mcmc.list(result)
     result
 }
@@ -271,7 +271,7 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #' @export
 #'
 #' @examples
-#' if(require("coda")) 
+#' if (require("coda")) 
 #'     emm_example("hpd.summary-coda")
 #'     # Use emm_example("hpd.summary-coda", list = TRUE) # to see just the code
 #' 
@@ -280,7 +280,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
                        delta,
                        bias.adjust = get_emm_option("back.bias.adj"), sigma, 
                        ...) {
-    if(!is.null(object@misc$.predFlag))
+    if (!is.null(object@misc$.predFlag))
         stop("Prediction intervals for MCMC models should be done using 'frequentist = TRUE'\n",
              "or using 'as.mcmc(object, ..., likelihood = ...)'")
     
@@ -291,7 +291,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     
     # Steal some init code from summary.emmGrid:
     opt = get_emm_option("summary")
-    if(!is.null(opt)) {
+    if (!is.null(opt)) {
         opt$object = object
         object = do.call("update.emmGrid", opt)
     }
@@ -303,9 +303,9 @@ hpd.summary = function(object, prob, by, type, point.est = median,
                     misc$display
     grid = object@grid[use.elts, , drop = FALSE]
     
-    if(missing(prob))
+    if (missing(prob))
         prob = misc$level
-    if(missing(by))
+    if (missing(by))
         by = misc$by.vars
     
     if (missing(type))
@@ -329,7 +329,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     
     ### OK, finally, here is the real stuff
     pe.lbl = as.character(substitute(point.est))
-    if(length(pe.lbl) > 1) 
+    if (length(pe.lbl) > 1) 
         pe.lbl = "user-supplied function"
     mesg = c(misc$initMesg, paste("Point estimate displayed:", pe.lbl))
     if (length(misc$avgd.over) > 0) {
@@ -360,11 +360,11 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         for (j in seq_along(mcmc[1, ]))
             mcmc[, j] = with(link, linkinv(mcmc[, j]))
         mesg = c(mesg, paste("Results are back-transformed from the", link$name, "scale"))
-        if(bias.adjust)
+        if (bias.adjust)
             mesg = c(mesg, paste("Bias adjustment applied based on sigma =",
                                  .fmt.sigma(sigma)))
     }
-    else if(!is.null(link))
+    else if (!is.null(link))
         mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))
     
     est = !is.na(mcmc[1, ])
@@ -385,7 +385,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     lblnms = setdiff(names(grid), 
                      c(object@roles$responses, ".offset.", ".wgt."))
     lbls = grid[lblnms]
-    if(!is.null(p.equiv)) {
+    if (!is.null(p.equiv)) {
         summ$p.equiv = p.equiv
         summ$odds.eq = odds.eq
     }
@@ -429,14 +429,14 @@ recover_data.MCMCglmm = function(object, data, trait, ...) {
     if ("trait" %in% names(data)) {
         # don't do anything, just use what's provided
     }
-    else if(length(yvars) > 1) {
+    else if (length(yvars) > 1) {
 #        for (v in yvars) data[[v]] = NULL
         dat = data
         for (i in seq_len(length(yvars) - 1))
             data = rbind(data, dat)
         data$trait = factor(rep(yvars, each = nrow(dat)))
     }
-    else if(!missing(trait)) {
+    else if (!missing(trait)) {
         # we'll create a fake "trait" variable with specified variable
         n = nrow(data)
         levs = levels(data[[trait]])
@@ -585,7 +585,7 @@ emm_basis.mcmc.list = function(object, trms, xlev, grid, vcov., ...) {
 ### default contrasts matching what was used in fitting the mdoel
 #' @exportS3Method recover_data carbayes
 recover_data.carbayes = function(object, data, ...) {
-    if(is.null(data)) # Try to recover data from parent frame
+    if (is.null(data)) # Try to recover data from parent frame
         data = model.frame(object$formula, data = parent.frame())
     cl = call("carbayes.proxy", formula = object$formula, data = quote(data))
     trms = delete.response(terms(eval(object$formula, parent.frame())))
@@ -626,7 +626,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     }
     # Previous code...
     ### m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-    ### if(is.null(contr <- object$contrasts))
+    ### if (is.null(contr <- object$contrasts))
     ###     contr = attr(model.matrix(object), "contrasts")
     ### X = model.matrix(trms, m, contrasts.arg = contr)
     ### bhat = rstanarm::fixef(object)
@@ -637,13 +637,13 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     # Instead, use internal routine in rstanarm to get the model matrix
     # Later, we'll get bhat and V from the posterior sample because
     # the vcov(object) doesn't always jibe with fixef(object)
-    if(is.null(object$contrasts)) # old version of rstanarm where contrasts may get lost.
+    if (is.null(object$contrasts)) # old version of rstanarm where contrasts may get lost.
         object$contrasts = attr(model.matrix(object), "contrasts")
     pp_data = get("pp_data", envir = getNamespace("rstanarm"))
     X = pp_data(object, newdata = grid, re.form = ~0, ...)[[1]]
     nms = colnames(X)
     
-    if(!is.null(object$zeta)) {   # Polytomous regression model
+    if (!is.null(object$zeta)) {   # Polytomous regression model
         if (missing(mode))
             mode = "latent"
         else
@@ -691,13 +691,13 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     nbasis = estimability::all.estble
     all.nms = colnames(X)
     if (length(nms) < length(all.nms)) {
-        if(is.null(contr <- object$contrasts))
+        if (is.null(contr <- object$contrasts))
             contr = attr(model.matrix(object), "contrasts")
         coef = NA * X[1, ]
         coef[names(bhat)] = bhat
         bhat = coef
         data = object$data
-        if(!is.null(subset <- object$call$subset)) {
+        if (!is.null(subset <- object$call$subset)) {
             subset = eval(subset, envir = data, enclos = environment(terms(object)))
             data = data[subset, , drop = FALSE]
         }

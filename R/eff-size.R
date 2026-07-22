@@ -117,7 +117,7 @@
 eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     ### Lame attempt to warn if unsuitable...
     # obj.sig = object@misc$sigma
-    # if(is.null(obj.sig) || is.na(obj.sig[1]))
+    # if (is.null(obj.sig) || is.na(obj.sig[1]))
     #     warning("'eff_size()' results are highly suspect for many models.\n",
     #             " Cohen effect sizes are not even defined for generalized linear models.\n",
     #             " See documentation notes.", call. = FALSE)
@@ -157,5 +157,5 @@ eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     object@V = con@V
     update(contrast(object, method, adjust = "none", ...), 
            estName = "effect.size", infer = c(TRUE, FALSE),
-           initMesg = paste("sigma used for effect sizes:", signif(sigma, digits = 4)))
+           initMesg = paste("sigma used for effect sizes:", signif (sigma, digits = 4)))
 }

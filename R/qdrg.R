@@ -114,10 +114,10 @@
 #' if (require(biglm, quietly = TRUE)) 
 #'     emm_example("qdrg-biglm")
 #'     
-#' if(require(coda, quietly = TRUE) && require(lme4, quietly = TRUE)) 
+#' if (require(coda, quietly = TRUE) && require(lme4, quietly = TRUE)) 
 #'     emm_example("qdrg-coda")
 #'     
-#' if(require(ordinal, quietly = TRUE)) 
+#' if (require(ordinal, quietly = TRUE)) 
 #'     emm_example("qdrg-ordinal")
 #'
 qdrg = function(formula, data, coef, vcov, df, mcmc, object,
@@ -127,7 +127,7 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         UseMethod("qdrg", object = object)
     }
     else { 
-        if(!inherits(formula, "formula")) {
+        if (!inherits(formula, "formula")) {
             cl = match.call()
             cl$object = formula
             cl$formula = NULL
@@ -136,41 +136,41 @@ qdrg = function(formula, data, coef, vcov, df, mcmc, object,
         }
         # back-compatible access to old ordinal.dim arg...
         od = (\(ordinal, ordinal.dim = NULL, ...) {
-            if(!missing(ordinal) && is.numeric(ordinal)) ordinal.dim = ordinal
+            if (!missing(ordinal) && is.numeric(ordinal)) ordinal.dim = ordinal
             ordinal.dim
         })(ordinal, ...)
-        if(!is.null(od)) ordinal = list(dim = od, mode = "latent")
+        if (!is.null(od)) ordinal = list(dim = od, mode = "latent")
         
         result = match.call()
-        if(missing(formula))
+        if (missing(formula))
             stop("When 'object' is missing, must at least provide 'formula'")
         result$formula = formula
-        if(missing(data))
+        if (missing(data))
             result$data = parent.frame()
         else
             result$data = data
         if (!missing(coef)) result$coef = coef
         if (!missing(vcov)) result$vcov = vcov
-        if(!missing(df)) result$df = df
-        if(missing(contrasts))
+        if (!missing(df)) result$df = df
+        if (missing(contrasts))
             contrasts = attr(model.matrix(result$formula, data = data), "contrasts")
         
-        if(!missing(df)) result$df = df
-        if(is.null(result$df))
+        if (!missing(df)) result$df = df
+        if (is.null(result$df))
             result$df = Inf
-        if(!missing(mcmc)) result$mcmc = mcmc
-        if(!missing(subset)) result$subset = subset
-        if(!missing(weights)) result$weights = weights
-        if(!missing(contrasts)) result$contrasts = contrasts
-        if(!missing(link)) result$link = link
-        if(!missing(qr) && any(is.na(result$coef))) result$qr = qr
-        if(!missing(ordinal)) result$ordinal = ordinal
+        if (!missing(mcmc)) result$mcmc = mcmc
+        if (!missing(subset)) result$subset = subset
+        if (!missing(weights)) result$weights = weights
+        if (!missing(contrasts)) result$contrasts = contrasts
+        if (!missing(link)) result$link = link
+        if (!missing(qr) && any(is.na(result$coef))) result$qr = qr
+        if (!missing(ordinal)) result$ordinal = ordinal
         
         # make sure "formula" exists, has a LHS and is is 2nd element so that 
         # response transformation can be found
         if (is.null(result$formula))
             stop("No formula; cannot construct a reference grid")
-        if(length(result$formula) < 3)
+        if (length(result$formula) < 3)
             result$formula = update.formula(result$formula, response ~ .)
         fpos = grep("formula", names(result))[1]
         result = result[c(1, fpos, seq_along(result)[-c(1, fpos)])]
@@ -198,13 +198,13 @@ qdrg.default = function(formula = stats::formula(object),
                         ...) 
 {
     
-    if(inherits(data, "try-error")) {
-        if(is.null(data <- object$data))
+    if (inherits(data, "try-error")) {
+        if (is.null(data <- object$data))
             stop("Unable to recover data. You must specify it explicitly in the 'data' argument.")
     }
-    if(missing(mcmc)) mcmc = NULL   # for some weird reason, this is needed
-    if(missing(subset)) subset = NULL
-    if(missing(ordinal)) ordinal = NULL
+    if (missing(mcmc)) mcmc = NULL   # for some weird reason, this is needed
+    if (missing(subset)) subset = NULL
+    if (missing(ordinal)) ordinal = NULL
     qdrg(formula = formula, data = data, coef = coef, vcov = vcov, df = df, mcmc = mcmc,
          subset = subset, weights = weights, contrasts = contrasts, link = link,
          qr = qr, ordinal = ordinal, ...)
@@ -237,11 +237,11 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
     misc = list()
     
     # If ordinal, add extra avgd, subtracted intercepts -- for latent mode
-    if(!is.null(ordinal <- object$ordinal)) {
-        if(is.null(ordinal$mode)) ordinal$mode = "latent"
+    if (!is.null(ordinal <- object$ordinal)) {
+        if (is.null(ordinal$mode)) ordinal$mode = "latent"
         ordinal$mode = match.arg(ordinal$mode, c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
-        if(is.null(od <- ordinal$dim)) stop ("'ordinal' MUST have a 'dim' element", call. = FALSE)
-        if(ordinal$mode == "latent") {
+        if (is.null(od <- ordinal$dim)) stop ("'ordinal' MUST have a 'dim' element", call. = FALSE)
+        if (ordinal$mode == "latent") {
             intcpt = matrix(-1 / (od - 1), nrow = nrow(X), ncol = od - 1)
             colnames(intcpt) = names(bhat)[1:(od - 1)]
             X = cbind(intcpt, X[, -1, drop = FALSE])
@@ -265,7 +265,7 @@ emm_basis.qdrg = function(object, trms, xlev, grid, ...) {
     bhat = .impute.NAs(bhat, X) # make coefs lm-compatible
     nbasis = estimability::all.estble
     if (sum(is.na(bhat)) > 0) {
-        if(!is.null(object$qr))
+        if (!is.null(object$qr))
             nbasis = estimability::nonest.basis(object$qr)
         else {
             if (is.name(object$data))

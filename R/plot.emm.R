@@ -33,10 +33,10 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
                     colors,
                     alpha = .05, adjust = "tukey", int.adjust = "none", intervals, ...) {
     
-    if(!missing(intervals))
+    if (!missing(intervals))
         CIs = intervals
     nonlin.scale = FALSE
-    if(!missing(type)) {
+    if (!missing(type)) {
         # If we say type = "scale", set it to "response" and set a flag
         if (nonlin.scale <- (type %.pin% "scale"))  ##(pmatch(type, "scale", 0) == 1)) 
             type = "response"
@@ -47,7 +47,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
     ptype = ifelse(is.null(object@misc$predict.type), "lp", object@misc$predict.type)
     # when we want comparisons, we have a transformation, and we want non-link scale, it's mandatory to regrid first:
     ### Nope, we are bypassing that as we will ALWAYS do things on the link scale
-    # if(comparisons && !is.null(object@misc$tran) && 
+    # if (comparisons && !is.null(object@misc$tran) && 
     #         !(ptype %in% c("link", "lp", "linear.predictor")))
     #     object = regrid(object, transform = ptype)
     if (missing(int.adjust)) {
@@ -77,7 +77,7 @@ plot.emmGrid = function(x, y, type, CIs = TRUE, PIs = FALSE, comparisons = FALSE
     estName = attr(summ, "estName")
     extra = NULL
     bayes = 
-    if(comparisons) {
+    if (comparisons) {
         if ((!is.na(object@post.beta[1])) && (!frequentist))
             stop("Comparison intervals are not implemented for Bayesian analyses")
         extra = object
@@ -237,9 +237,9 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                             xlab, ylab, facetlab = "label_both", layout, scale = NULL,
                             colors, intervals, 
                             plotit = TRUE, ...) {
-    if(!missing(intervals))
+    if (!missing(intervals))
         CIs = intervals
-    if(attr(x, "type") != "response")   # disable scale when no response transformation
+    if (attr(x, "type") != "response")   # disable scale when no response transformation
         scale = NULL
     .plot.srg (x, y, horizontal, xlab, ylab, facetlab = facetlab, layout, scale = scale,
                CIs = CIs, colors = colors, plotit = plotit, ...)
@@ -303,15 +303,15 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             lcl = as.numeric(lcl[subscripts])
             ucl = as.numeric(ucl[subscripts])
             compare = !is.null(lcmpl)
-            if(compare) {
+            if (compare) {
                 lcmpl = as.numeric(lcmpl[subscripts])
                 rcmpl = as.numeric(rcmpl[subscripts])
             }
-            if(horizontal) {
+            if (horizontal) {
                 lattice::panel.abline(h = unique(y), col = col.line, lty = lty, lwd = lwd)
-                if(CIs) 
+                if (CIs) 
                     lattice::panel.arrows(lcl, y, ucl, y, col = col, length = .6, unit = "char", angle = 90, code = 3)
-                if(compare) {
+                if (compare) {
                     s = (x > min(x))
                     lattice::panel.arrows(lcmpl[s], y[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
                     s = (x < max(x))
@@ -320,9 +320,9 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             } 
             else {
                 lattice::panel.abline(v = unique(x), col = col.line, lty = lty, lwd = lwd)
-                if(CIs)
+                if (CIs)
                     lattice::panel.arrows(x, lcl, x, ucl, col=col, length = .6, unit = "char", angle = 90, code = 3)
-                if(compare) {
+                if (compare) {
                     s = (y > min(y))
                     lattice::panel.arrows(x[s], lcmpl[s], x[s], y[s], length = .5, unit = "char", code = 1, col = "red", type = "closed", fill="red")
                     s = (y < max(y))
@@ -363,7 +363,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         # # we need to work on the linear predictor scale
         # # typeid = 1 -> response, 2 -> other
         # typeid = pmatch(extra@misc$predict.type, "response", nomatch = 2)
-        # if(length(typeid) < 1) typeid = 2        
+        # if (length(typeid) < 1) typeid = 2        
         # if (typeid == 1)
         #     est = predict(extra, type = "lp")
         # else
@@ -379,7 +379,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         overlap = apply(psumm[ ,(k-1):k], 1, function(x) 2*min(-x[1],x[2])/(x[2]-x[1]))
         
         # figure out by variables and indexes (lbv, ubv already defined)
-        if(is.null(byv))
+        if (is.null(byv))
             pbv = rep(1, nrow(psumm))
         else
             pbv = do.call("paste", c(unname(psumm[byv]), sep = sep))
@@ -465,7 +465,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         # invtran = I
         # if (typeid == 1) {
         #     tran = extra@misc$tran
-        #     if(is.character(tran)) {
+        #     if (is.character(tran)) {
         #         link = try(make.link(tran), silent=TRUE)
         #         if (!inherits(link, "try-error"))
         #             invtran = link$linkinv
@@ -479,7 +479,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     }
     else lcmpl = rcmpl = NULL
     
-    if(backtran && !missing(link) && !is.null(link)) { ### we need to back-transform stuff... link must be non-missing
+    if (backtran && !missing(link) && !is.null(link)) { ### we need to back-transform stuff... link must be non-missing
         summ$the.emmean = with(link, linkinv(summ$the.emmean))
         summ[[clNames[1]]] = lcl = with(link, linkinv(lcl))
         summ[[clNames[2]]] = ucl = with(link, linkinv(ucl))
@@ -487,13 +487,13 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
             summ$lpl = with(link, linkinv(summ$lpl))
             summ$upl = with(link, linkinv(summ$upl))
         }
-        if(!is.null(extra)) {
+        if (!is.null(extra)) {
             summ$lcmpl = lcmpl = with(link, linkinv(summ$lcmpl))
             summ$rcmpl = rcmpl = with(link, linkinv(summ$rcmpl))
         }
     }
     
-    if(!plotit) 
+    if (!plotit) 
         return(as.data.frame(summ))
     
     
@@ -506,14 +506,14 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     }
     
     if (engine == "lattice") {
-        if(missing(colors))
+        if (missing(colors))
             colors = c("black", mix_col("white", "blue", .35), mix_col("white", "blue", .20), "red")
-        if(length(colors) == 1)
+        if (length(colors) == 1)
             colors = c(colors, mix_col("white", colors, .35), mix_col("white", colors, .20), "red")
         
         if (missing(layout)) {
             layout = c(1, length(ubv))
-            if(!horizontal) 
+            if (!horizontal) 
                 layout = rev(layout)
         }
         
@@ -540,13 +540,13 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
     else {  ## ggplot method
         thm = theme_emm()
         
-        if(missing(colors) && is.numeric(thopt <- get_emm_option("gg.theme")) && thopt == 1)
+        if (missing(colors) && is.numeric(thopt <- get_emm_option("gg.theme")) && thopt == 1)
             colors = c("black", mix_col("white", "blue", .35), mix_col("white", "blue", .20), "red")
         
-        if(missing(colors) || (length(colors) == 1)) {
+        if (missing(colors) || (length(colors) == 1)) {
             dot.col = ifelse(missing(colors), thm$geom@ink, colors)
             paper = thm$geom@paper
-            if(missing(colors)) {   # derive a contrasting color to 'accent' color
+            if (missing(colors)) {   # derive a contrasting color to 'accent' color
                 xxx = (rgb2hsv(col2rgb(thm$geom@accent))[1] + 0.54) %% 1
                 clr = hcl(xxx * 360, 80, 50)
             }
@@ -593,7 +593,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
                                                 labeller = facetlab)
         grobj = grobj + ggplot2::geom_point(color = dot.col, size = 4, shape = 18)
         
-        if(!is.null(scale)) {
+        if (!is.null(scale)) {
             args = list(...)
             pass = (names(args) %.pin% names(as.list(args(ggplot2::scale_x_continuous))))
             args = c(list(trans = scale), args[pass])
@@ -603,7 +603,7 @@ plot.summary_emm = function(x, y, horizontal = TRUE, CIs = TRUE,
         if (missing(xlab)) xlab = attr(summ, "estName")
         if (missing(ylab)) ylab = facName
             
-        if(!horizontal)
+        if (!horizontal)
             grobj = grobj + ggplot2::coord_flip()
         
         grobj + ggplot2::labs(x = xlab, y = ylab) + thm

@@ -184,7 +184,7 @@ pairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     attr(M, "adjust") = "tukey"
     attr(M, "type") = "pairs"
     attr(M, "famSize") = k - length(exclude)
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
@@ -210,7 +210,7 @@ revpairwise.emmc = function(levs, exclude = integer(0), include, ...) {
     attr(M, "desc") = "pairwise differences"
     attr(M, "adjust") = "tukey"
     attr(M, "type") = "pairs"
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
@@ -267,7 +267,7 @@ opoly.emmc = function(levs, max.degree = min(6, k-1), scores,
     if (MS <- missing(scores))
         scores = seq_along(levs)
     exclude = .get.excl(levs, exclude, include)
-    if(length(exclude) > 0) {
+    if (length(exclude) > 0) {
         oldlevs = levs
         if (MS)
             scores = scores[-exclude]
@@ -278,7 +278,7 @@ opoly.emmc = function(levs, max.degree = min(6, k-1), scores,
     if (length(scores) != k)
         stop("In opoly.emmc: Lengths of 'scores' must equal ", length(levs), call. = FALSE)
     M = contr.poly(k, contrasts = TRUE, scores = scores, sparse = FALSE)
-    if(length(exclude) > 0) {
+    if (length(exclude) > 0) {
         MM = M
         levs = oldlevs
         M = matrix(0, nrow = length(oldlevs), ncol = ncol(MM))
@@ -332,7 +332,7 @@ trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE,
         M = -M
     attr(M, "desc") = "differences from control"
     attr(M, "adjust") = "dunnettx"
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
@@ -391,7 +391,7 @@ eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(lev
     }
     attr(M, "desc") = "differences from grand mean"
     attr(M, "adjust") = "fdr"
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
@@ -433,7 +433,7 @@ consec.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, ...
     M = M[-1]
     attr(M, "desc") = "changes between consecutive levels"
     attr(M, "adjust") = "mvt"
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
@@ -461,7 +461,7 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, .
     M = M[-1]
     attr(M, "desc") = "mean after minus mean before"
     attr(M, "adjust") = "mvt"
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = length(levs) - length(exclude)
     M
 }
@@ -483,7 +483,7 @@ helmert.emmc <- function(levs, exclude = integer(0), include, ...) {
     names(M) <- paste(lbl[-1],"vs earlier")
     attr(M, "desc") <- "Helmert contrasts"
     attr(M, "adjust") = "none"
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         attr(M, "famSize") = k
     M
 }
@@ -522,7 +522,7 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
     k = length(levs) - length(exclude)
     M = as.data.frame(diag(length(levs)))
     names(M) = levs
-    if(length(exclude) > 0)
+    if (length(exclude) > 0)
         M = M[ , -exclude, drop = FALSE]
     attr(M, "desc") = "Identity"
     attr(M, "famSize") = k
@@ -539,7 +539,7 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
 #' the levels in \code{levs} to the set of all levels in \code{key}
 #' @export
 .num.key = function(levs, key) {
-    if(!is.null(raw <- attr(levs, "raw")))
+    if (!is.null(raw <- attr(levs, "raw")))
         levs = raw
     orig.key = key
     if (is.character(key))
@@ -563,7 +563,7 @@ identity.emmc = function(levs, exclude = integer(0), include, ...) {
 #' @export
 .get.excl = function(levs, exc, inc) {
     if (!missing(inc)) {
-        if(length(exc) > 0)
+        if (length(exc) > 0)
             stop("Cannot specify both 'exclude' and 'include'", call. = FALSE)
         inc = .num.key(levs, inc)
         exc = setdiff(seq_along(levs), inc)

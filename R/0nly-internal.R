@@ -28,7 +28,7 @@
     if (is.null(bnm <- names(bhat)) || is.null(colnames(X)))
         return(bhat)
     nm = intersect(bnm, (xnm <- colnames(X)))
-    if(length(nm) == length(xnm))
+    if (length(nm) == length(xnm))
         return(bhat[nm])
     tmp = rep(NA, length(xnm))
     names(tmp) = xnm
@@ -51,14 +51,14 @@
 .chk.predict = function(obj) {
     sig = obj@misc$sigma
     ok = (is.null(sig) || (!is.null(sig) && !is.na(sig)))
-    if(!ok)
+    if (!ok)
         warning("Prediction intervals are not available for this object", call. = FALSE)
     ok
 }
 
 ### Internal function to implement 'allow.na.levs' option
 .chk.fac = function(x) {
-    if(get_emm_option("allow.na.levs"))
+    if (get_emm_option("allow.na.levs"))
         factor(x, exclude = NULL)
     else
         factor(x)
@@ -79,7 +79,7 @@
         return(character(0))
     if (!inherits(expr, "formula")) {
         expr = try(eval(expr), silent = TRUE)
-        if(inherits(expr, "try-error")) {
+        if (inherits(expr, "try-error")) {
             return(character(0))
         }
     }
@@ -91,7 +91,7 @@
     retain = gsub("\\\\", "", retain)
     for (i in seq_along(retain))
         vars = gsub(repl[i], retain[i], vars)
-    if(length(vars) == 0) vars = "1"   # no vars ---> intercept
+    if (length(vars) == 0) vars = "1"   # no vars ---> intercept
     vars
 }
 
@@ -129,7 +129,7 @@
 # with 'form.rtn' attribute
 .parse.specs.for.all = function(object, specs, by) {
     all.key = "."  # The key to use to request all sets of means
-    if(is.list(specs))
+    if (is.list(specs))
         return(specs)
     rtn = NULL
     if (inherits(specs, "formula")) {
@@ -138,7 +138,7 @@
             return(specs)
         specs = rtn$rhs
         rtn$by = setdiff(rtn$by, specs)
-        if(length(rtn$by) > 0)
+        if (length(rtn$by) > 0)
             by = rtn$by
     }
     # now we have is.character(specs) ...
@@ -146,7 +146,7 @@
         return(specs)
     # hack the object to bypass estimability checking. 
     # Doesn't matter what stats are as we use only the labels
-    if(any(is.na(object@bhat))) {
+    if (any(is.na(object@bhat))) {
         k = ncol(object@linfct)
         object@bhat = seq_len(k)
         object@V = diag(k)
@@ -160,11 +160,11 @@
                 stgs = c(stgs, fac)
         stgs = unique(stgs)
     }
-    if(length(stgs) == 0)
+    if (length(stgs) == 0)
         stop("'", all.key, "' specification yielded no terms", call. = FALSE)
     
     result = strsplit(stgs, ":")
-    if(!is.null(rtn))
+    if (!is.null(rtn))
         attr(result, "form.rtn") = rtn
     result
 }
@@ -198,9 +198,9 @@
 #' @export
 #' 
 .diag = function(x, nrow, ncol) {
-    if(is.matrix(x))
+    if (is.matrix(x))
         diag(x)
-    else if((length(x) == 1) && missing(nrow) && missing(ncol)) 
+    else if ((length(x) == 1) && missing(nrow) && missing(ncol)) 
         matrix(x)
     else 
         diag(x, nrow, ncol)
@@ -305,7 +305,7 @@
 
 # returns a list of all matches to ... or lst with full names from args
 .match.dots.list = function(args, ..., lst) {
-    if(missing(lst))
+    if (missing(lst))
         lst = list(...)
     idx = pmatch(names(lst), args, nomatch = 0)
     rtn = lst[idx > 0]
@@ -429,7 +429,7 @@ model.frame = function(formula, data, ...) {
         tran = ifelse(is.null(tran$name), "custom", tran$name)
     if (!is.null(mul <- misc$tran.mult))
         tran = paste0(mul, "*", tran)
-    if(!is.null(off <- misc$tran.offset))
+    if (!is.null(off <- misc$tran.offset))
         tran = paste0(tran, "(mu + ", off, ")")
     tran
 }
@@ -488,8 +488,8 @@ model.frame = function(formula, data, ...) {
 .cmpMM = function(X, weights = rep(1, nrow(X)), assign = attr(X$qr, "assign")) {
     if (!get_emm_option("enable.submodel"))
         return(NULL)
-    if(!is.qr(X)) {
-        if(any(is.na(X)))
+    if (!is.qr(X)) {
+        if (any(is.na(X)))
             return(NULL)
         X = try({
             X = sweep(X, 1, sqrt(weights), "*") # scale rows by sqrt(weights)
@@ -546,7 +546,7 @@ model.frame = function(formula, data, ...) {
     # create term labels in compatible factor order
     subtbl = attr(terms(update(object@model.info$terms, submodel)), "factors")
     com = intersect(rownames(tbl), rownames(subtbl))
-    if(length(com) == 0) { # No matching factors at all
+    if (length(com) == 0) { # No matching factors at all
         com = 1; 
         subtbl = matrix(0)
     }

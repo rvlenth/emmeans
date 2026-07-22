@@ -211,14 +211,14 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if (!missing(type))
         options = as.list(c(options, predict.type = type))
     
-    if(!missing(simple))
+    if (!missing(simple))
         return(.simcon(object, method = method, interaction = interaction,
                       offset = offset, scale = scale, name = name, options = options,
                       type = type, simple = simple, combine = combine, 
                       adjust = adjust, parens = parens, ...))
-    if(missing(by)) 
+    if (missing(by)) 
         by = object@misc$by.vars
-    if(length(by) == 0) # character(0) --> NULL
+    if (length(by) == 0) # character(0) --> NULL
         by = NULL
     
     nesting = object@model.info$nesting
@@ -231,11 +231,11 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if (is.logical(interaction) && interaction)
         interaction = method
     if (!is.logical(interaction)) { # i.e., interaction is not FALSE
-        if(missing(adjust))
+        if (missing(adjust))
             adjust = "none"
         vars = names(object@levels)
         k = length(vars)
-        if(!is.null(by)) {
+        if (!is.null(by)) {
             vars = c(setdiff(vars, by), by)
             k = k - length(by)
         }
@@ -264,7 +264,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             pos = which(vars == nms[i])
             object = contrast.emmGrid(object, interaction[[i]], by = vars[-pos], 
                                       name = nm, enhance.levels = FALSE, ...)
-            if(is.null(tcm))
+            if (is.null(tcm))
                 tcm = object@misc$con.coef
             else
                 tcm = object@misc$con.coef %*% tcm
@@ -288,7 +288,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     
     # figure out any enhancement of factor levels
     if (is.logical(enhance.levels)) { # convert to character
-        if(enhance.levels)
+        if (enhance.levels)
             enhance.levels = names(args[sapply(args, .is.num)])               
         else # FALSE
             enhance.levels = character(0)
@@ -316,15 +316,15 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     levs = do.call("paste", args)  # NOTE - these are levels for the first (or only) by-group
     if (length(levs) == 0)   # prevent error when there are no levels to contrast
         method = "eff"
-    if(is.null(by))
+    if (is.null(by))
         all.levs = levs
     
     # parenthesize levels if they contain spaces or operators
     rawlevs = levs  # save orig ones
-    if(missing(parens))
+    if (missing(parens))
         parens = get_emm_option("parens")
-    if(is.character(parens) && length(idx <- grep(parens[1], all.levs)) > 0) {
-        if(length(parens) < 3)
+    if (is.character(parens) && length(idx <- grep(parens[1], all.levs)) > 0) {
+        if (length(parens) < 3)
             parens = c(parens, "(", ")")
         all.levs[idx] = paste0(parens[2], all.levs[idx], parens[3])
         idx = grep(parens[1], levs)
@@ -348,13 +348,13 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
             method = get(fn, envir = parent.frame()) 
         else 
             stop(paste("Contrast function '", fn, "' not found", sep=""))
-        if(!missing(wts) && any(is.na(wts))) {
+        if (!missing(wts) && any(is.na(wts))) {
             variable.cmat = TRUE
             all.wts = weights(object)
-            wts = if(!is.null(by))   rep(1, length(levs))
+            wts = if (!is.null(by))   rep(1, length(levs))
                   else               all.wts
         }
-        if(missing(wts))
+        if (missing(wts))
             wts = rep(1, length(levs))
     }
 
@@ -366,7 +366,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     cmat = method(levs, wts = wts, ...)
     if (!is.data.frame(cmat))
         stop("Contrast function must provide a data.frame")
-    else if(ncol(cmat) == 0) {
+    else if (ncol(cmat) == 0) {
         cmat = data.frame(`(nothing)` = rep(NA, nrow(args)), check.names = FALSE)
         adjust = "none"
     }
@@ -405,7 +405,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     # Irregular grids are handled by .nested_contrast
     else {
         tcmat = kronecker(.diag(rep(1,length(by.rows))), tcmat)
-        if(variable.cmat) { # we have to replace each block
+        if (variable.cmat) { # we have to replace each block
             rowidx = seq_len(ncol(cmat))  # note we're working with transpose
             colidx = seq_len(nrow(cmat))
             for(i in seq_along(by.rows)) {
@@ -464,7 +464,7 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     if (!is.null(attr(cmat, "offset")))
         offset = attr(cmat, "offset")
     if (!is.null(offset)) {
-        if(!hasName(grid, ".offset."))
+        if (!hasName(grid, ".offset."))
             grid[[".offset."]] = 0
         grid[[".offset."]] = grid[[".offset."]] + rep(offset, length(by.rows))
     }
@@ -474,19 +474,19 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
     misc$adjust = adjust
     misc$infer = c(FALSE, TRUE)
     misc$by.vars = by
-    if(!is.na(misc$estType) && misc$estType == "pairs") # internal flag to keep track of original by vars for paired comps
+    if (!is.na(misc$estType) && misc$estType == "pairs") # internal flag to keep track of original by vars for paired comps
         misc$.pairby = paste(c("", by), collapse = ",")
     # save contrast coefs
     by.cols = seq_len(ncol(tcmat))
-    if(!is.null(by.rows))
+    if (!is.null(by.rows))
         by.cols[unlist(by.rows)] = by.cols # gives us inverse of by.rows order
     misc$orig.grid = orig.grid  # save original grid
     misc$con.coef = tcmat[ , by.cols, drop = FALSE] # save contrast coefs
     # test that each set of coefs sums to 0
     true.con = all(abs(apply(cmat, 2, function(.) sum(.) / (1.0e-6 + max(abs(.))))) < 1.0e-6) 
-    if(is.na(true.con)) # prevent error when there are no contrasts
+    if (is.na(true.con)) # prevent error when there are no contrasts
         true.con = FALSE
-    if(true.con)
+    if (true.con)
         misc$sigma = NULL   # sigma surely no longer makes sense
 
     # zap the transformation info except in special cases
@@ -545,13 +545,13 @@ contrast.emmGrid = function(object, method = "eff", interaction = FALSE,
 # We handle `adjust`` ourselves rather than passing it to `contrast``
 .simcon = function(object, ..., simple, by, combine = FALSE, adjust) {
     if (is.list(simple)) {
-        if(is.null(names(simple)))
+        if (is.null(names(simple)))
             names(simple) = sapply(simple, function(.) 
                 paste("simple contrasts for", paste0(., collapse = "*")))
         result = lapply(simple, function(.) 
             .simcon(object, ..., simple = .))
         class(result) = c("emm_list", "list")
-        if(combine)
+        if (combine)
             result = do.call(rbind.emmGrid, result)
     }
     else if ((length(simple) == 1) && (simple == "each") && !("each" %in% names(object@levels))) {
@@ -622,9 +622,9 @@ coef.emmGrid = function(object, ...) {
 #' @method weights emmGrid
 #' @export
 weights.emmGrid = function(object, ...) {
-    if(is.null(rtn <- object@grid[[".wgt."]]))
+    if (is.null(rtn <- object@grid[[".wgt."]]))
         rtn = rep(1, nrow(object@grid))
-    if(!is.null(object@misc$display))
+    if (!is.null(object@misc$display))
         rtn = rtn[object@misc$display]
     rtn
 }

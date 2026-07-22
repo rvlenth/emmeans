@@ -46,7 +46,7 @@
 #' 
 emm_example = function(name, run = !list, list = FALSE, ...) {
     test = (\(test = FALSE, ...) test)(...)
-    if(test) {
+    if (test) {
         file = paste0("inst/extexamples/", name, ".R")
         filestg = paste0("inst/extexamples/", name, ".R")
     }
@@ -60,7 +60,7 @@ emm_example = function(name, run = !list, list = FALSE, ...) {
         cat(readLines(file), sep = "\n")
         cat("\n")
     }
-    if(run) {
+    if (run) {
         prompt.echo = try(get("prompt.echo", parent.frame(3)), silent = TRUE)
         continue.echo = try(get("continue.echo", parent.frame(3)), silent = TRUE)
         if (inherits(prompt.echo, "try-error")) {

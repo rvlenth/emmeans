@@ -201,7 +201,7 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     emmo = do.call("emmeans", emmopts)
     
     # add possibility of type = "scale". If so, we use "response" and set a flag
-    if(missing(type)) {
+    if (missing(type)) {
         type = get_emm_option("summary")$predict.type
         if (is.null(type))
             type = .get.predict.type(emmo@misc)
@@ -217,9 +217,9 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     frequentist = (\(frequentist = FALSE, ...) frequentist)(...)
     emms = summary(emmo, type = type, infer = c(CIs, FALSE), 
                    point.est = point.est, frequentist = frequentist)
-    if(PIs) {
+    if (PIs) {
         prd = predict(emmo, interval = "pred", type = type, ...)
-        if(!is.null(prd)) {
+        if (!is.null(prd)) {
             emms$LPL = prd$lower.PL
             emms$UPL = prd$upper.PL
         }
@@ -231,10 +231,10 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     for (i in 1:3)
         names(emms)[nm == tgts[i]] = subs[i] 
     attr(emms, "estName") = "yvar"
-    if(!CIs)
+    if (!CIs)
         emms$LCL = emms$UCL = NULL
     
-    if(!nesting.order) { # re-order by factor levels actually in plot
+    if (!nesting.order) { # re-order by factor levels actually in plot
         snm = intersect(nm, unlist(specs))
         ord = do.call(order, unname(emms[rev(snm)]))
         emms = emms[ord, ]
@@ -290,11 +290,11 @@ emmip.default = function(object, formula, type, CIs = FALSE, PIs = FALSE,
     xargs = xargs[setdiff(names(xargs), c("xlab","ylab"))]
     
     ### any abbreviations?
-    if((abbr.len[1] >= 1) && is.factor(emms$xvar))
+    if ((abbr.len[1] >= 1) && is.factor(emms$xvar))
         levels(emms$xvar) = abbreviate(levels(emms$xvar), abbr.len[1])
-    if((length(abbr.len) > 1) && (abbr.len[2] >= 1) && is.factor(emms$tvar)) {
+    if ((length(abbr.len) > 1) && (abbr.len[2] >= 1) && is.factor(emms$tvar)) {
         levels(emms$tvar) = abbreviate(levels(emms$tvar), abbr.len[2])
-        if(!is.null(emms[[tlab]]))
+        if (!is.null(emms[[tlab]]))
             levels(emms[[tlab]]) = abbreviate(levels(emms[[tlab]]), abbr.len[2])
     }
     emms$.single. = NULL   # in case we have that trick column
@@ -398,15 +398,15 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     PIs = !is.null(emms$LPL)
     pos = ggplot2::position_dodge(width = ifelse(CIs|PIs, dodge, 0)) # use dodging if CIs
     
-    if(missing(scale) && !is.null(attr(emms, "scale")))
+    if (missing(scale) && !is.null(attr(emms, "scale")))
         scale = attr(emms, "scale")
 
     dotarg$position = pos
-    if(is.null(dotarg$size)) 
+    if (is.null(dotarg$size)) 
         dotarg$size = 3
     
     if (ngrps > 1) {
-        if(!is.null(dotarg$shape) && length(dotarg$shape) > 1) {  # treat as a shape palette
+        if (!is.null(dotarg$shape) && length(dotarg$shape) > 1) {  # treat as a shape palette
             shape.pal = dotarg$shape
             dotarg$shape = NULL
         }
@@ -415,9 +415,9 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
         dotarg$mapping = ggplot2::aes(shape = .data[[tlab]])
         
         linearg$position = pos
-        if(is.null(linearg$linewidth))
+        if (is.null(linearg$linewidth))
             linearg$linewidth = 0.8
-        if(!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
+        if (!is.null(linearg$linetype) && length(linearg$linetype) > 1) {  # treat as a linetype palette
             linetype.pal = linearg$linetype
             linearg$linetype = NULL
         }
@@ -435,13 +435,13 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
                 do.call(ggplot2::geom_line, linearg)
         
         # handle any custom shapes or linetypes
-        if(!is.null(shape.pal))
+        if (!is.null(shape.pal))
             grobj = grobj + ggplot2::scale_shape_manual(values = shape.pal)
-        if(!is.null(linetype.pal))
+        if (!is.null(linetype.pal))
             grobj = grobj + ggplot2::scale_linetype_manual(values = linetype.pal)
     }
     else { # just one trace per plot
-        if(is.null(col))
+        if (is.null(col))
             col = .emm_palette[1]
         linearg$color = dotarg$color = CIarg$color = PIarg$color = col
         col = NULL
@@ -458,15 +458,15 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     if (PIs) {
         PIarg$mapping = ggplot2::aes(ymin = .data$LPL, ymax = .data$UPL)
         PIarg$position = pos
-        if(is.null(PIarg$linetype))  PIarg$linetype = "solid"
-        if(is.null(PIarg$linewidth))  PIarg$linewidth = 1.5
+        if (is.null(PIarg$linetype))  PIarg$linetype = "solid"
+        if (is.null(PIarg$linewidth))  PIarg$linewidth = 1.5
         grobj = grobj + do.call(ggplot2::geom_linerange, PIarg)
     }
     if (CIs) {
         CIarg$mapping = ggplot2::aes(ymin = .data$LCL, ymax = .data$UCL)
         CIarg$position = pos
-        if(is.null(CIarg$linetype))  CIarg$linetype = "solid"
-        if(is.null(CIarg$linewidth))  CIarg$linewidth = 2.5
+        if (is.null(CIarg$linetype))  CIarg$linetype = "solid"
+        if (is.null(CIarg$linewidth))  CIarg$linewidth = 2.5
         grobj = grobj + do.call(ggplot2::geom_linerange, CIarg)
     }
     if (length(byvars <- vars$byvars) > 0) {  # we have by variables 
@@ -486,7 +486,7 @@ emmip_ggplot = function(emms, style = "factor", dodge = .2,
     if (style == "factor")
         grobj = grobj + do.call(ggplot2::geom_point, dotarg)
     
-    if(!is.null(col))
+    if (!is.null(col))
         grobj = grobj + ggplot2::scale_color_manual(values = rep(col, ngrps))
     
     
@@ -504,10 +504,10 @@ theme_emm = function (base_size = 13, base_family = "sans", header_family = "san
                       base_line_size = base_size/22, base_rect_size = base_size/22, 
                       ink ="#0e0033ff", paper = "white", accent = "#FF4000") 
 {
-    if(inherits(thm <- get_emm_option("gg.theme"), "theme"))
+    if (inherits(thm <- get_emm_option("gg.theme"), "theme"))
         return(thm)
     
-    if(thm == 1) # legacy theme from version 1.x.x
+    if (thm == 1) # legacy theme from version 1.x.x
         return(ggplot2::theme_grey())
     
     dark_color = "#4E4369"
@@ -573,12 +573,12 @@ emmip_lattice = function(emms, style = "factor",
     if (!is.null(col)) TP$superpose.symbol$col = TP$superpose.line$col = col
     lattice::trellis.par.set(TP)
     
-    plty = if(style=="factor") c("p","l")   else "l"
+    plty = if (style=="factor") c("p","l")   else "l"
     plotspecs = list(x = plotform, data = emms, groups = ~ tvar, 
                      xlab = xlab, ylab = ylab,
                      strip = my.strip, auto.key = my.key(vars$tvars), 
                      type = plty)
-    if(length(vars$tvars) == 0)
+    if (length(vars$tvars) == 0)
         plotspecs$auto.key = NULL # no key when single trace
     grobj = do.call(lattice::xyplot, c(plotspecs, list(...)))
     lattice::trellis.par.set(TP.orig)

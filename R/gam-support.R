@@ -63,7 +63,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
                 z = sample(resid, replace = TRUE) + old.smooth[, lab]
                 as.numeric(eval(cl))
             })
-        covar = if(m == 1) var(boot) 
+        covar = if (m == 1) var(boot) 
                 else       cov(t(boot))
         result$V = rbind(cbind(result$V, matrix(0, nrow = n, ncol = m)),
                          cbind(matrix(0, nrow = m, ncol = n), covar))
@@ -127,7 +127,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
 recover_data.gam = function(object, ...) {
     if (length(object$smooth) > 0) { # get rid of random terms
         fixnm = unlist(lapply(object$smooth, function(s) {
-                              if(.smooth.is.random(s)) ""
+                              if (.smooth.is.random(s)) ""
                               else c(s$term, s$by)
             }))
         fixnm = union(.all.vars(delete.response(object$pterms)), fixnm)
@@ -194,7 +194,7 @@ emm_basis.gam = function(object, trms, xlev, grid,
     
     nbasis = estimability::all.estble
     link = object$family$link[what_num]
-    if(link == "identity") # they may be lying
+    if (link == "identity") # they may be lying
         link = switch(fam_name,
                       ocat = "logit",
                       ziP = "log",

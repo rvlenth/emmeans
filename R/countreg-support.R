@@ -98,7 +98,7 @@ emm_basis.zeroinfl = function(object, trms, xlev, grid,
         mu2 = object$linkinv(lp2)
         mu2prime = stats::make.link(object$link)$mu.eta(lp2)
         
-        if(mode == "response") {
+        if (mode == "response") {
             delta = cbind(sweep(X1, 1, mu1 * (1 - mu2), "*"), 
                           sweep(X2, 1, -mu1 * mu2prime, "*"))
             bhat = (1 - mu2) * mu1
@@ -162,7 +162,7 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
             lnk = make.link(misc$tran)
             bhat = lnk$linkinv(lp)
             mult = lnk$mu.eta(lp)
-            if(mode == "prob0") {
+            if (mode == "prob0") {
                 shape = 
                 tmp = .zi.support(bhat, object$theta["zero"], .make.p0(object$dist$zero))
                 bhat = tmp[1, ]

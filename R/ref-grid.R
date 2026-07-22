@@ -460,7 +460,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                      nuisance = character(0), non.nuisance, wt.nuis = "equal",
                       rg.limit = get_emm_option("rg.limit"), ...) 
 {
-    if(!missing(counterfactuals)) { # route this to a different routine
+    if (!missing(counterfactuals)) { # route this to a different routine
         cl = match.call()
         cl[[1]] = as.name(".cf.refgrid") # internal function for counterfactuals
         return(eval(cl))
@@ -476,7 +476,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     }
     
     if (!missing(df)) {
-        if(is.null(options)) options = list()
+        if (is.null(options)) options = list()
         options$df = df
     }
     
@@ -490,7 +490,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     else if (is.null(options$delts)) # attach needed attributes to given data
         data = recover_data(object, data = as.data.frame(data), ...)
     
-    if(is.character(data)) # 'data' is in fact an error message
+    if (is.character(data)) # 'data' is in fact an error message
         stop(data)
 
     ## undocumented hook to use ref_grid as slave to get data
@@ -619,7 +619,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         nuisance = setdiff(names(ref.levels), non.nuisance)
 
     # Now create the reference grid
-    if(no.nuis <- (length(nuisance) == 0)) {
+    if (no.nuis <- (length(nuisance) == 0)) {
         .check.grid(ref.levels, rg.limit)
         grid = do.call(expand.grid, ref.levels)
     }
@@ -686,12 +686,12 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     basis = emm_basis(object, trms, xl, grid, misc = attr(data, "misc"), options = options, ...)
 
     environment(basis$dffun) = baseenv()   # releases unnecessary storage
-    if(length(basis$bhat) != ncol(basis$X))
+    if (length(basis$bhat) != ncol(basis$X))
         stop("Something went wrong:\n",
              " Non-conformable elements in reference grid.",
              call. = TRUE)
     
-    if(!no.nuis) {
+    if (!no.nuis) {
         basis = .basis.nuis(basis, nuis.info, wt.nuis, ref.levels, data, grid, ref.levels)
         grid = basis$grid
         nuisance = ref.levels[nuis.info$nuis] # now nuisance has the levels info
@@ -706,17 +706,17 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # and it is silently ignored
     frm = try(formula(eval(attr(data, "call")[[2]], environment(trms))), silent = TRUE)
     if (inherits(frm, "formula")) { # response may be transformed
-        lhs = if(length(frm) == 2) NULL
+        lhs = if (length(frm) == 2) NULL
               else frm[-3]
         tran = setdiff(.all.vars(lhs, functions = TRUE), c(.all.vars(lhs), "~", "cbind", "+", "-", "*", "/", "^", "%%", "%/%"))
-        if(length(tran) > 0) {
+        if (length(tran) > 0) {
             # we are now supporting scale() as well as some functions from datawizard
             if (tran[1] %in% c("scale", "center", "centre", "standardize", "standardise")) { # we'll try to set it up based on terms component
                 pv = try(attr(terms(object), "predvars"), silent = TRUE)
                 if (!inherits(pv, "try-error") && !is.null(pv)) {
                     scal = which(sapply(c(sapply(pv, as.character), "foo"), 
                                         function(x) x[1]) == tran[1])
-                    if(length(scal) > 0) {
+                    if (length(scal) > 0) {
                         pv = pv[[scal[1]]]
                         ctr = ifelse(is.null(pv$center), 0, ifelse(pv$center, pv$center, 0))
                         scl = ifelse(is.null(pv$scale), 1, ifelse(pv$scale, pv$scale, 1))
@@ -739,9 +739,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                 const.warn = "There are unevaluated constants in the response formula\nAuto-detection of the response transformation may be incorrect"
                 # Look for a multiplier, e.g. 2*sqrt(y)
                 tst = strsplit(strsplit(as.character(lhs[2]), "\\(")[[1]][1], "\\*")[[1]]
-                if(length(tst) > 1) {
+                if (length(tst) > 1) {
                     mul = try(eval(parse(text = tst[1])), silent = TRUE)
-                    if(!inherits(mul, "try-error")) {
+                    if (!inherits(mul, "try-error")) {
                         misc$tran.mult = mul
                         tran = gsub("\\*\\.", "", tran)
                     }
@@ -759,7 +759,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
                         warning(const.warn)
                 }
             }
-            if(is.null(misc[["tran"]]))
+            if (is.null(misc[["tran"]]))
                 misc$tran = tran
             else
                 misc$tran2 = tran
@@ -770,10 +770,10 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # Take care of multivariate response
     multresp = character(0) ### ??? was list()
     ylevs = misc$ylevs
-    if(!is.null(ylevs)) { # have a multivariate situation
+    if (!is.null(ylevs)) { # have a multivariate situation
         if (missing(mult.levs))
             mult.levs = ylevs
-        if(!missing(mult.names)) {
+        if (!missing(mult.names)) {
             k = seq_len(min(length(ylevs), length(mult.names)))
             names(mult.levs)[k] = mult.names[k]
         } 
@@ -830,20 +830,20 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     if (!missing(offset)) {  # For safety, we always treat it as scalar
         if (offset[1] != 0)
             oval = offset[1]
-        if(".static.offset." %in% names(grid))
+        if (".static.offset." %in% names(grid))
             grid$.static.offset. = ref.levels$.static.offset. = oval
     }
     else {
-        if(".static.offset." %in% names(grid)) { # static offset is available
+        if (".static.offset." %in% names(grid)) { # static offset is available
             oval = om * grid[[".static.offset."]]
         }
         #else implied
-        if(!is.null(attr(trms,"offset"))) {
+        if (!is.null(attr(trms,"offset"))) {
             if (any(om != 0))
                 oval = om * (oval + .get.offset(trms, grid))
         }
     }
-    if(any(oval != 0))
+    if (any(oval != 0))
         grid[[".offset."]] = oval
     
     
@@ -890,18 +890,18 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     misc$level = .95
     misc$adjust = "none"
     misc$famSize = nrow(grid)
-    if(is.null(misc$avgd.over))
+    if (is.null(misc$avgd.over))
        misc$avgd.over = character(0)
     
     # emm_basis may have provided a sigma. If not, use sigma value from model or args
-    if(is.null(misc$sigma) && missing(sigma)) { # Get 'sigma(object)' if available, else NULL
+    if (is.null(misc$sigma) && missing(sigma)) { # Get 'sigma(object)' if available, else NULL
         sigma = suppressWarnings(try(stats::sigma(object), silent = TRUE))
         if (inherits(sigma, "try-error"))
             sigma = NULL
         misc$sigma = sigma
     }
     # ... but override it only if sigma != NA
-    if(is.null(misc$sigma) || (length(misc$sigma) == 0) || !is.na(misc$sigma[1]))
+    if (is.null(misc$sigma) || (length(misc$sigma) == 0) || !is.na(misc$sigma[1]))
         misc$sigma = sigma
     
 
@@ -910,7 +910,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         post.beta = matrix(NA)
     
     predictors = intersect(attr(data, "predictors"), names(grid))
-    # if(!missing(counterfactuals)) predictors = c(predictors, ".obs.no.")
+    # if (!missing(counterfactuals)) predictors = c(predictors, ".obs.no.")
     
     simp.tbl = environment(trms)$.simplify.names.
     if (! is.null(simp.tbl)) {
@@ -944,9 +944,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     
     if (!missing(nesting)) {
         result@model.info$nesting = lst = .parse_nest(nesting)
-        if(!is.null(lst)) {
+        if (!is.null(lst)) {
             nms = union(names(lst), unlist(lst))
-            if(!all(nms %in% names(result@grid)))
+            if (!all(nms %in% names(result@grid)))
                 stop("Nonexistent variables specified in 'nesting'")
             result@misc$display = .find.nonempty.nests(result, nms)
         }
@@ -961,14 +961,14 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 
     result = .update.options(result, options, ...)
 
-    if(!is.null(hook <- misc$postGridHook)) {
+    if (!is.null(hook <- misc$postGridHook)) {
         if (is.character(hook))
             hook = get(hook)
         result@misc$postGridHook = NULL
         result = hook(result, ...)
     }
-    if(!missing(regrid)) {
-        # if(missing(wt.counter)) wt.counter = 1
+    if (!missing(regrid)) {
+        # if (missing(wt.counter)) wt.counter = 1
         result = regrid(result, transform = regrid, sigma = sigma, ...)
     }
     
@@ -983,7 +983,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 # Goes into global environment unless .Last.ref_grid is found further up
 .save.ref_grid = function(object) {
     if (is.logical(isnewrg <- object@misc$is.new.rg))
-        if(isnewrg && get_emm_option("save.ref_grid"))
+        if (isnewrg && get_emm_option("save.ref_grid"))
             assign(".Last.ref_grid", object, inherits = TRUE)
 }
 
@@ -1013,7 +1013,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # What's left will be things like "factor(dose)", "interact(dose,treat)", etc
     # we're saving these in orig
     orig = cfac = setdiff(facs.m, facs.d)
-    if(length(cfac) != 0) {
+    if (length(cfac) != 0) {
         cvars = lapply(cfac, function(x) .all.vars(stats::reformulate(x))) # Strip off the function calls
         cfac = intersect(unique(unlist(cvars)), covs.d) # Exclude any variables that are already factors
     }
@@ -1021,7 +1021,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     # Do same with covariates
     ccov = setdiff(covs.m, covs.d)
     orig = c(orig, ccov)
-    if(length(ccov) > 0) {
+    if (length(ccov) > 0) {
         cvars = lapply(ccov, function(x) .all.vars(stats::reformulate(x)))
         ccov = intersect(unique(unlist(cvars)), facs.d)
     }
@@ -1079,7 +1079,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         paste(all.vars(reformulate(nm)), collapse = ","))
     for (i in seq_along(nuis)) {
         f = nuis[i]
-        if(f %in% rn)
+        if (f %in% rn)
             fsum[i] = sum(tbl[f, ])
     }
     nuis = nuis[fsum == 1]   # silently remove any unfound or interacting factors
@@ -1107,7 +1107,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 # of the model matrix.
 .basis.nuis = function(basis, info, wt, levs, data, grid, ref.levels) {
     X = basis$X
-    if(!is.null(basis$misc$regrid.flag) || all(apply(X, 1, \(x) sum(x != 0)) == 1))   # each row has 1 nonzero element
+    if (!is.null(basis$misc$regrid.flag) || all(apply(X, 1, \(x) sum(x != 0)) == 1))   # each row has 1 nonzero element
         stop("Sorry, 'nuisance' specs are not allowed for this situation.",
              " Revise the call accordingly.", call. = FALSE)
     ra = info$row.assign
@@ -1150,9 +1150,9 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
 
 # Internal function to do reference grid for counterfactuals
 .cf.refgrid = function(object, counterfactuals, data, options = list(), ...) {
-    if(missing(data))
+    if (missing(data))
         data = recover_data(object, ...)
-    if(!hasName(data, "(weights)"))
+    if (!hasName(data, "(weights)"))
         pwts = rep(1, nrow(data))
     else
         pwts = data[["(weights)"]]
@@ -1164,12 +1164,12 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     cgrid = do.call(expand.grid, clevs)
     # handle nasty fact that character predictors don't act like factors
     for (j in cfac)
-        if(is.character(data[[j]])) 
+        if (is.character(data[[j]])) 
             cgrid[[j]] = as.character(cgrid[[j]])
     
     # Get the stuff we need for each main dataset step
     link = .get.link(rg@misc)
-    if(is.null(link))
+    if (is.null(link))
         link = make.link("identity")
     trms = rg@model.info$terms
     xlev = rg@model.info$xlev
@@ -1183,7 +1183,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     cidx = lapply(pg, \(x) which(pd == x))
 
     # special case for covariates with no matches
-    if(all(sapply(cidx, length) == 0))
+    if (all(sapply(cidx, length) == 0))
         cidx = list(seq_len(nrow(data)))
     
     # account for any NAs in bhat
@@ -1209,7 +1209,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
         for(j in cfac)
             g[all.active, j] = cgrid[i,j]
         bas = embmeth(object, trms, xlev, g, ...)
-        if(!is.null(bas$misc$postGridHook))
+        if (!is.null(bas$misc$postGridHook))
             stop("Sorry, we do not support counterfactuals for this situation.")
         X = bas$X[, nonNA, drop = FALSE]
         eta = X %*% bas$bhat[nonNA]
@@ -1244,7 +1244,7 @@ ref_grid <- function(object, at, cov.reduce = mean, cov.keep = get_emm_option("c
     RG@grid = do.call("expand.grid", levs)
     RG@grid$.wgt. = rep(wts, length(bh)/length(wts))
     misc = rg@misc
-    if(!is.null(misc$inv.lbl))
+    if (!is.null(misc$inv.lbl))
         misc$estName = misc$inv.lbl
     misc[c("tran", "inv.lbl", "sigma")] = NULL
     RG@misc = c(misc, famSize = length(bh), cf.grid = TRUE)

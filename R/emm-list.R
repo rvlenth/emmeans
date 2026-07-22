@@ -88,7 +88,7 @@ NULL
     if (drop && (length(rtn) == 1))   {
         rtn = rtn[[1]]
     }
-    else if(length(rtn) != 0)                   {
+    else if (length(rtn) != 0)                   {
         cls = ifelse(class(rtn[[1]])[1] == "emmGrid", "emm_list", "summary_eml")
         class(rtn) = c(cls, "list")
     }
@@ -125,7 +125,7 @@ summary.emm_list <- function(object, ..., which = seq_along(object)) {
     #     if (inherits(x, "summary_emm"))  x
     #     else summary.emmGrid(x, ...)
     # })
-    if(length(which) == 1)
+    if (length(which) == 1)
         summary.emmGrid(object[[which]], ...)
     else
         .lapply(object[which], \(x) summary.emmGrid(x, ...))
@@ -164,10 +164,10 @@ print.emm_list = function(x, ...) {
 ### Utility fcn to identify which elements' names start with "em" or "lm"
 ### this only operates if which == NULL
 .guess.which = guess.which = function(object, which) {
-    if(!is.null(which))
+    if (!is.null(which))
         return(which)
     rtn = which(substr(paste0(names(object), "xx"), 1, 2) %in% c("em", "ls"))
-    if(length(rtn) == 0)
+    if (length(rtn) == 0)
         rtn = 1
     rtn
 }
@@ -179,7 +179,7 @@ print.emm_list = function(x, ...) {
 contrast.emm_list = function(object, ... , which = NULL) {
     which = .guess.which(object, which)
     rtn = .lapply(object[which], contrast, ...)
-    if(is.list(rtn))
+    if (is.list(rtn))
         names(rtn) = paste("contrasts of", names(rtn))
     rtn
 }
@@ -260,7 +260,7 @@ plot.emm_list = function(x, ..., which = 1) {
 #' rbind(all, which = c(2, 4), adjust = "mvt")
 rbind.emm_list = function(..., which, adjust = "bonferroni") {
     elobj = list(...)[[1]]
-    if(!missing(which))
+    if (!missing(which))
          elobj = elobj[which]
     class(elobj) = c("emm_list", "list")
     update(do.call(rbind.emmGrid, elobj), adjust = adjust)
@@ -276,9 +276,9 @@ rbind.emm_list = function(..., which, adjust = "bonferroni") {
 #' @method rbind summary_emm
 rbind.summary_emm = function(..., which) {
     slobj = list(...)
-    if(!all(sapply(slobj, \(z) inherits(z, "data.frame")))) {
+    if (!all(sapply(slobj, \(z) inherits(z, "data.frame")))) {
         # workaround to make tern.gee::lsmeans() work
-        slobj = lapply(slobj, \(z) if(inherits(z, "data.frame")) data.frame(z) else z)
+        slobj = lapply(slobj, \(z) if (inherits(z, "data.frame")) data.frame(z) else z)
        return(do.call("rbind", slobj))
     }
     rbind.summary_eml(slobj, which = which)
@@ -289,7 +289,7 @@ rbind.summary_emm = function(..., which) {
 #' @method rbind summary_eml
 rbind.summary_eml = function(..., which) {
     x = list(...)[[1]]
-    if(!missing(which))
+    if (!missing(which))
         x = x[which]
     nms.lst = lapply(x, names)
     bys = unique(do.call(c, lapply(x, \(z) attr(z, "by.vars"))))

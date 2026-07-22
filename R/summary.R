@@ -27,7 +27,7 @@
 # repeat calls and remove the `summary_emm` class the second time.
 #' @export
 as.data.frame.summary_emm = function(x, ...) {
-    if(!is.null(attr(x, "digits")))
+    if (!is.null(attr(x, "digits")))
         oldClass(x) = "data.frame"
     else
         attr(x, "digits") = getOption("digits")
@@ -426,10 +426,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         type = .validate.type(type)
     
     # if we have a multivariate transformation, try to replace it with mvregrid
-    if((type == "response") && !is.null(tran <- object@misc$tran) && 
+    if ((type == "response") && !is.null(tran <- object@misc$tran) && 
        is.character(tran) && (tran %in% mult.trans)) {
         foo = try(mvregrid(object, ...), silent = TRUE)
-        if(!inherits(foo, "try-error")) {
+        if (!inherits(foo, "try-error")) {
             object = foo
             message("Note: Multivariate transformation found, object has been re-gridded;\n",
                     "this may distort levels or order of listing")
@@ -439,30 +439,30 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
                     "Perhaps add a 'mult.name' argument?")
         }
     }
-    if(missing(sigma))
+    if (missing(sigma))
         sigma = object@misc$sigma
-    if(missing(frequentist) && !is.null(object@misc$frequentist))
+    if (missing(frequentist) && !is.null(object@misc$frequentist))
         frequentist = object@misc$frequentist
-    if(missing(bias.adjust)) {
+    if (missing(bias.adjust)) {
         if (!is.null(object@misc$bias.adjust)) 
             bias.adjust = object@misc$bias.adjust
         else
             bias.adjust = get_emm_option("back.bias.adj")
     }
     
-    if(!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
+    if (!is.na(object@post.beta[1]) && (missing(frequentist) || !frequentist))
         return (hpd.summary(object, prob = level, by = by, type = type, delta = delta,
                             bias.adjust = bias.adjust, sigma = sigma, ...))
 
     
     # Any "summary" options override built-in
     opt = get_emm_option("summary")
-    if(!is.null(opt)) {
+    if (!is.null(opt)) {
         opt$object = object
         object = do.call("update.emmGrid", opt)
     }
     
-    if(!missing(sigma))
+    if (!missing(sigma))
         object = update(object, sigma = sigma)  # we'll keep sigma in misc
     
     misc = object@misc
@@ -470,19 +470,19 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     grid = object@grid[use.elts, , drop = FALSE]
     
     ### For missing arguments, get from misc, else default    
-    if(missing(infer))
+    if (missing(infer))
         infer = misc$infer
-    if(missing(level))
+    if (missing(level))
         level = misc$level
-    if(missing(adjust))
+    if (missing(adjust))
         adjust = misc$adjust
-    if(missing(cross.adjust) && !is.null(misc$cross.adjust))
+    if (missing(cross.adjust) && !is.null(misc$cross.adjust))
         cross.adjust = misc$cross.adjust
-    if(missing(by))
+    if (missing(by))
         by = misc$by.vars
     
     # Disable Tukey if by vars don't match those used in construction
-    if((!is.na(misc$estType) && misc$estType == "pairs") && (paste(c("", by), collapse = ",") != misc$.pairby))
+    if ((!is.na(misc$estType) && misc$estType == "pairs") && (paste(c("", by), collapse = ",") != misc$.pairby))
         misc$estType = object@misc$estType = "contrast"
     
     
@@ -512,23 +512,23 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         object = update(object, inv.lbl = paste0(t2, "(resp)"))
     }
     
-    if(missing(df)) 
+    if (missing(df)) 
         df = misc$df
-    if(!is.null(df)) {
+    if (!is.null(df)) {
         object@dffun = function(k, dfargs) df[1]
         attr(object@dffun, "mesg") = "user-specified"
     }
     
     # for missing args that default to zero unless provided or in misc slot
     .nul.eq.zero = function(val) {
-        if(is.null(val)) 0
+        if (is.null(val)) 0
         else val
     }
-    if(missing(null))
+    if (missing(null))
         null = .nul.eq.zero(misc$null)
-    if(missing(delta))
+    if (missing(delta))
         delta = .nul.eq.zero(misc$delta)
-    if(missing(side))
+    if (missing(side))
         side = .nul.eq.zero(misc$side)
     
     
@@ -553,10 +553,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     
     if ((length(infer) == 0) || !is.logical(infer)) 
         infer = c(FALSE, FALSE)
-    if(length(infer == 1)) 
+    if (length(infer == 1)) 
         infer = c(infer,infer)
     
-    if(inv && !is.null(misc$tran)) {
+    if (inv && !is.null(misc$tran)) {
         if (!is.null(misc$inv.lbl)) {
             names(result)[1] = misc$inv.lbl
             if (!is.null(misc$log.contrast))  # contrast of logs - relabel as ratios
@@ -588,7 +588,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         inv = FALSE
         link = NULL
     }
-    if(inv && bias.adjust && !is.null(link)) {
+    if (inv && bias.adjust && !is.null(link)) {
         link = .make.bias.adj.link(link, sigma)
         bias.adjust = attr(link, "bias.adjust")  # disables later message if skipped
     }
@@ -615,7 +615,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     corrmat = sch.rank = NULL
     if (adjust %.pin% "mvt") { ##(!is.na(pmatch(adjust, "mvt"))) {
         vvv = vcov(object)
-        if(any(is.na(vvv))) {
+        if (any(is.na(vvv))) {
             warning("'mvt' adjustment not available due to missing values")
             corrmat = .diag(rep(NA, nrow(vvv)))
         }
@@ -624,19 +624,19 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         attr(corrmat, "by.rows") = by.rows
     }
     else if (adjust %.pin% "scheffe") {  ##(!is.na(pmatch(adjust, "scheffe"))) {
-        if(is.null(sch.rank <- .match.dots("scheffe.rank", ...)))
+        if (is.null(sch.rank <- .match.dots("scheffe.rank", ...)))
             sch.rank = sapply(by.rows, function(.) qr(zapsmall(object@linfct[., , drop = FALSE]))$rank)
-        if(length(unique(sch.rank)) > 1)
+        if (length(unique(sch.rank)) > 1)
             fam.info[1] = "uneven"   # This forces ragged.by = TRUE in .adj functions
     }
     
     # Add calculated columns
-    if(!missing(calc) || !is.null(calc <- misc$calc)) {
+    if (!missing(calc) || !is.null(calc <- misc$calc)) {
         env = c(result, grid[setdiff(names(grid), names(result))])
         for (v in names(calc)) {
             elt = rev(as.character(calc[[v]]))[1] # pick out rhs if a formula
             val = try(eval(parse(text = elt), envir = env), silent = TRUE)
-            if(!inherits(val, "try-error"))
+            if (!inherits(val, "try-error"))
                 result[[v]] = env[[v]] = val
             else
                 warning("The column '", v, "' could not be calculated, ",
@@ -651,13 +651,13 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     else
         linkname = link$name
     
-    if(infer[1]) { # add CIs
+    if (infer[1]) { # add CIs
         acv = .adj.critval(result[[1]], level, result$df, adjust, fam.info, side, corrmat, by.rows, sch.rank)
         ###adjust = acv$adjust # in older versions, I forced same adj method for tests
         cv = acv$cv
         cv = switch(side + 2, cbind(-Inf, cv), cbind(-cv, cv), cbind(-cv, Inf))
         cnm = if (zFlag) c("asymp.LCL", "asymp.UCL") else c("lower.CL","upper.CL")
-        if(!is.null(misc$.predFlag)) {
+        if (!is.null(misc$.predFlag)) {
             cnm = c("lower.PL", "upper.PL")
             sigma = misc$sigma
             mesg = c(mesg, paste0(
@@ -683,10 +683,10 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
             mesg = c(mesg, paste("Intervals are back-transformed from the", linkname, "scale"))
         }
     }
-    if(infer[2]) { # add tests
+    if (infer[2]) { # add tests
         tnm = ifelse (zFlag, "z.ratio", "t.ratio")
         tail = ifelse(side == 0, -sign(abs(delta)), side)
-        if(!two.trans) {
+        if (!two.trans) {
             result[["null"]] = null
             if (inv && !is.null(link))
                 result[["null"]] = link$linkinv(null)
@@ -740,8 +740,8 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
         
         if (delta > 0)
             mesg = c(mesg, paste("Statistics are tests of", c("nonsuperiority","equivalence","noninferiority")[side+2],
-                                 "with a threshold of", signif(delta, 5)))
-        if(tail != 0) 
+                                 "with a threshold of", signif (delta, 5)))
+        if (tail != 0) 
             mesg = c(mesg, paste("P values are ", ifelse(tail<0,"left-","right-"),"tailed", sep=""))
         if (inv) 
             mesg = c(mesg, paste("Tests are performed on the", linkname, "scale"))
@@ -749,7 +749,7 @@ summary.emmGrid <- function(object, infer, level, adjust, by,
     if (inv) {
         result[["SE"]] = with(link, abs(mu.eta(result[[1]]) * result[["SE"]]))
         result[[1]] = with(link, linkinv(result[[1]]))
-        if(bias.adjust)
+        if (bias.adjust)
             mesg = c(mesg, paste("Bias adjustment applied based on sigma =", 
                                  .fmt.sigma(sigma)))
     }
@@ -799,7 +799,7 @@ predict.emmGrid <- function(object, type,
 {
     # update with any "summary" options
     opt = get_emm_option("summary")
-    if(!is.null(opt)) {
+    if (!is.null(opt)) {
         opt$object = object
         object = do.call("update.emmGrid", opt)
     }
@@ -831,7 +831,7 @@ predict.emmGrid <- function(object, type,
         link = attr(pred, "link")
         if (!is.null(link)) {
             if (bias.adjust) {
-                if(missing(sigma))
+                if (missing(sigma))
                     sigma = object@misc$sigma
                 link = .make.bias.adj.link(link, sigma)
             }
@@ -869,7 +869,7 @@ as.data.frame.emmGrid = function(x,
                                  destroy.annotations = FALSE, ...) {
     rtn = summary.emmGrid(x, ...)
     attr(rtn, "digits") = getOption("digits")
-    if(destroy.annotations)
+    if (destroy.annotations)
         rtn = as.data.frame.data.frame(rtn, row.names = row.names, check.names = check.names)
     rtn
 }
@@ -927,7 +927,7 @@ as.data.frame.emmGrid = function(x,
             if (!any(is.na(x)) && estimability::is.estble(x, object@nbasis, tol)) {
                 x = x[active]
                 est = sum(bhat * x)
-                if(do.se) {
+                if (do.se) {
                     se = sqrt(.qf.non0(object@V, x))
                     df = object@dffun(x, object@dfargs)
                     ### Brute force: if (is.na(df)) df = Inf    ### Added
@@ -953,7 +953,7 @@ as.data.frame.emmGrid = function(x,
     }
     if (!is.null(misc$tran)) {
         attr(result, "link") = .get.link(misc)
-        if(is.character(misc$tran) && (misc$tran == "none"))
+        if (is.character(misc$tran) && (misc$tran == "none"))
             attr(result, "link") = NULL
     }
     result
@@ -961,7 +961,7 @@ as.data.frame.emmGrid = function(x,
 
 # workhorse for nailing down the link function
 .get.link = function(misc) {
-    link = if(is.character(misc$tran))
+    link = if (is.character(misc$tran))
         .make.link(misc$tran)
     else if (is.list(misc$tran))
         misc$tran
@@ -976,9 +976,9 @@ as.data.frame.emmGrid = function(x,
             link = with(link, list(
                 linkinv = function(eta) linkinv(eta / mult) - offset,
                 mu.eta = function(eta) mu.eta(eta / mult) / mult))
-            if(mult != 1)
+            if (mult != 1)
                 name =  paste0(round(mult, 3), "*", name)        
-            if(off != 0)
+            if (off != 0)
                 name = paste0(name, "(mu + ", round(off, 3), ")")
             link$name = name         
         }
@@ -995,7 +995,7 @@ as.data.frame.emmGrid = function(x,
 # We also return an attribute "bias.adjust" which is TRUE if ok, FALSE if we aborted
 .make.bias.adj.link = function(link, sigma) {
     ###if (is.null(sigma) || (!is.null(sigma) && (is.na(sigma) || (sigma < 0)))) { ###old code
-    if(is.null(sigma) || (length(sigma) == 0) || is.na(sigma[1]) || (sigma[1] < 0)) {
+    if (is.null(sigma) || (length(sigma) == 0) || is.na(sigma[1]) || (sigma[1] < 0)) {
          warning("Bias adjustment skipped: No valid 'sigma' provided\n", 
                 "(And perhaps bias.adjust should NOT be used; see ? summary.emmGrid)", 
                 call. = FALSE)
@@ -1044,7 +1044,7 @@ as.data.frame.emmGrid = function(x,
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", p.adjust.methods)
     
     k = pmatch(adjust, adj.meths)
-    if(is.na(k))
+    if (is.na(k))
         stop("Adjust method '", adjust, "' is not recognized or not valid")
     adjust = adj.meths[k]
     if ((tail != 0) && (adjust %in% c("tukey", "scheffe", "dunnettx"))) # meth not approp for 1-sided
@@ -1105,7 +1105,7 @@ as.data.frame.emmGrid = function(x,
     }
     do.msg = (chk.adj > 1) && !((fs < 3) && (chk.adj < 10)) ### WAS (chk.adj > 1) && (nc > 1) && !((fs < 3) && (chk.adj < 10)) 
     if (do.msg) {
-#         xtra = if(chk.adj < 10) paste("a family of", fam.size, "tests")
+#         xtra = if (chk.adj < 10) paste("a family of", fam.size, "tests")
 #         else             paste(n.contr, "tests")
         xtra = if (!adaptive || (length(by.rows) == 1)) switch(adjust, 
                       tukey = paste("for comparing a family of", fam.size, "estimates"),
@@ -1142,7 +1142,7 @@ as.data.frame.emmGrid = function(x,
     
     adj.meths = c("sidak", "tukey", "scheffe", "dunnettx", "mvt", "bonferroni", "none")
     k = pmatch(adjust, adj.meths)
-    if(is.na(k))
+    if (is.na(k))
         k = which(adj.meths == "bonferroni") 
     adjust = adj.meths[k]
     
@@ -1200,9 +1200,9 @@ as.data.frame.emmGrid = function(x,
     }
     
     if (do.msg) {
-        #        xtra = if(chk.adj < 10) paste("a family of", fam.size, "estimates")
+        #        xtra = if (chk.adj < 10) paste("a family of", fam.size, "estimates")
         #        else             paste(n.contr, "estimates")
-        xtra = if(!adaptive || (length(by.rows) == 1)) 
+        xtra = if (!adaptive || (length(by.rows) == 1)) 
             switch(adjust, 
                    tukey = paste("for comparing a family of", fam.size, "estimates"),
                    scheffe = paste("with rank", scheffe.dim),
@@ -1353,7 +1353,7 @@ as.data.frame.emmGrid = function(x,
 .just.labs = function(m, just) {
     nm = dimnames(m)[[2]]
     for (j in seq_len(length(nm))) {
-        if(just[nm[j]] == "L") 
+        if (just[nm[j]] == "L") 
             nm[j] = format(nm[j], width = nchar(m[1,j]), justify = "left")
     }
     dimnames(m) = list(rep("", nrow(m)), nm)
@@ -1368,11 +1368,11 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     if (is.null(estn)) # uh-oh, somebody messed it up - so Hail Mary
         return(invisible(print(data.frame(x))))
     
-    if(!is.null(attr(x, "digits")))
+    if (!is.null(attr(x, "digits")))
         digits = attr(x, "digits")
     
     pval.digits = suppressWarnings(as.integer(get_emm_option("pval.digits")))[1]
-    if(is.na(pval.digits) || (pval.digits < 2) || (pval.digits > 6)) {
+    if (is.na(pval.digits) || (pval.digits < 2) || (pval.digits > 6)) {
         pval.digits = ifelse(is.na(pval.digits), emm_defaults$pval.digits, pval.digits)
         pval.digits = max(2, min(6, pval.digits))
         emm_options(pval.digits = pval.digits)
@@ -1380,16 +1380,16 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
 
     test.stat.names = c("t.ratio", "z.ratio", "F.ratio", "T.square")  # format these w 3 dec places
     x.save = x
-    if(export) x.save = list()
+    if (export) x.save = list()
     for(i in which(sapply(x, is.matrix))) 
         x[[i]] = NULL   # hide matrices
     for (i in seq_along(names(x)))   # zapsmall the numeric columns
         if (is.numeric(x[[i]]))  
             x[[i]] = zapsmall(x[[i]])
-    just = sapply(x, function(col) if(is.numeric(col)) "R" else "L")  ### was later
+    just = sapply(x, function(col) if (is.numeric(col)) "R" else "L")  ### was later
     if (!is.null(x$df)) x$df = round(x$df, 2)
     for (nm in test.stat.names)
-        if(!is.null(x[[nm]]))
+        if (!is.null(x[[nm]]))
             x[[nm]] = format(round(x[[nm]], 3), nsmall = 3, sci = FALSE)
     if (!is.null(x$p.value)) {
         pval_min = 10^-(pval.digits)
@@ -1402,7 +1402,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     if (get_emm_option("opt.digits") && is.null(digits)) {
         qnms = names(x)
         if (!is.null(x$SE))
-            x$SE = signif(x$SE, 3)
+            x$SE = signif (x$SE, 3)
         if (!is.null(x[["SE"]]))
             tmp = est + x[["SE"]] * cbind(rep(-2, nrow(x)), 0, 2)
         # else if (!is.null(x[["lower.HPD"]]))
@@ -1426,7 +1426,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
         if (x[1] == "R") format(x[-seq_len(2)], width = w, justify="right")
         else format(x[-seq_len(2)], width = w, justify="left")
     })
-    if(!is.matrix(m)) m = t(as.matrix(m))
+    if (!is.matrix(m)) m = t(as.matrix(m))
     by.vars = attr(x, "by.vars")
     if (is.null(by.vars)) {
         m = .just.labs(m, just)
@@ -1439,7 +1439,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
     }
     else { # separate listing for each by variable
         m = .just.labs(m[, setdiff(names(x), by.vars), drop = FALSE], just)
-        if(export) 
+        if (export) 
             x.save$summary = list()
         pargs = unname(as.list(x[, by.vars, drop=FALSE]))
         # We want labels to come out in order though...
@@ -1453,7 +1453,7 @@ print.summary_emm = function(x, ..., digits=NULL, quote=FALSE, right=TRUE, expor
             rows = which(lbls==lb)
             levs = paste(by.vars, "=", xc[rows[1], by.vars])
             levs = paste(levs, collapse=", ")
-            if(export)
+            if (export)
                 x.save$summary[[levs]] = m[rows, , drop = FALSE]
             else {
                 cat(paste(levs, ":\n", sep=""))

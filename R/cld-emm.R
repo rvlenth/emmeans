@@ -119,7 +119,7 @@
 #'
 #' @method cld emmGrid
 #' @examples
-#' if(requireNamespace("multcomp"))
+#' if (requireNamespace("multcomp"))
 #'     emm_example("cld-multcomp")
 #'     # Use emm_example("cld-multcomp", list = TRUE) # to just list the code
 #'
@@ -132,7 +132,7 @@ cld.emmGrid = function(object, details = FALSE, sort = TRUE,
         object@post.beta = matrix(NA)
     }
     emmtbl = summary(object, ...)
-    if(missing(by)) 
+    if (missing(by)) 
         by = object@misc$by.vars
     if (sort) {
         args = list()
@@ -160,11 +160,11 @@ cld.emmGrid = function(object, details = FALSE, sort = TRUE,
     if (delta > 0)
         signif.sets = TRUE
     
-    p.boo = if(signif.sets)
+    p.boo = if (signif.sets)
         (pwtbl$p.value >= alpha)
     else
         (pwtbl$p.value < alpha)
-    if(is.null(by)) {
+    if (is.null(by)) {
         by.rows = list(seq_len(nrow(pwtbl)))
         by.out = list(seq_len(nrow(emmtbl)))
     }
@@ -213,7 +213,7 @@ cld.emmGrid = function(object, details = FALSE, sort = TRUE,
     ltrs[excl.rows] = ""
     
     emmtbl[[".group"]] = ltrs
-    if(sort && reversed) for (i in seq_len(length(by.out))) {
+    if (sort && reversed) for (i in seq_len(length(by.out))) {
         r = by.out[[i]]
         emmtbl[r, ] = emmtbl[rev(r), ]
     }

@@ -70,14 +70,14 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
         ### names(w) = sub("([a-z]+\\()([0-9:_() A-Za-z]+)(\\))", "\\2", bnms[w], perl = TRUE)
         w
     }
-    if(!missing(subset)) {
+    if (!missing(subset)) {
         if (is.character(subset)) {  # wrap:stg or prefix:stg
             tmp = strsplit(subset, ":")[[1]]
-            if(tmp[[1]] == "wrap")
+            if (tmp[[1]] == "wrap")
                 subset = wrapped_by(tmp[2])
             else # anything else is interpreted as prefix
                 subset = prefixed_by(rev(tmp)[1])
-            if(length(subset) == 0)
+            if (length(subset) == 0)
                 stop("subset specification eliminates all coefficients!")
         }
         bhat = bhat[subset]
@@ -96,7 +96,7 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
     ME = cbind("(Intercept)" = 1, do.call(cbind, mmlist))
     cols = strsplit(bnms, ":")  # the cols we need
     ext = setdiff(intersect(unlist(cols), names(grid)), colnames(ME)) # extra expressions we need to compute
-    if(length(ext) > 0) {
+    if (length(ext) > 0) {
         xcols = sapply(ext, \(expr) eval(parse(text = expr), envir = grid))
         ME = cbind(ME, xcols)
     }
@@ -153,7 +153,7 @@ recover_data.mira = function(object, data = NULL, ...) {
 emm_basis.mira = function(object, trms, xlev, grid, ...) {
     # In case our method did a "pass it on" with the data, we need to add that attribute
     data = list(...)$misc$data
-    if(!is.null(data))
+    if (!is.null(data))
         object$analyses = lapply(object$analyses, function(a) {attr(a, "data") = data; a})
     bas = emm_basis(object$analyses[[1]], trms, xlev, grid, ...)
     k = length(object$analyses)

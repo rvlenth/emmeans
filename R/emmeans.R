@@ -307,7 +307,7 @@ emmeans = function(object, specs, by = NULL,
                    weights, offset, ..., tran) {
     
     object = .chk.list(object, ...)
-    if(!is(object, "emmGrid")) {
+    if (!is(object, "emmGrid")) {
         args = .zap.args(object = object, ..., omit = "submodel")
         if (is.null(args$wt.nuis)) # pass weights as wt.nuis
             args$wt.nuis = ifelse(!missing(weights) && is.character(weights), weights, "equal")
@@ -316,10 +316,10 @@ emmeans = function(object, specs, by = NULL,
     
     # Check to see if we want all sets of means
     specs = .parse.specs.for.all(object, specs, by)
-    if(!is.null(rtn <- attr(specs, "form.rtn"))) {
-        if(length(rtn$by) > 0)
+    if (!is.null(rtn <- attr(specs, "form.rtn"))) {
+        if (length(rtn$by) > 0)
             by = rtn$by
-        if(length(rtn$lhs) > 0) 
+        if (length(rtn$lhs) > 0) 
             contr = rtn$lhs
     }
     
@@ -341,14 +341,14 @@ emmeans = function(object, specs, by = NULL,
         options $tran = tran
     }
     
-    if(is.null(nesting <- object@model.info$nesting)) 
+    if (is.null(nesting <- object@model.info$nesting)) 
         {
         RG = object
         facs = union(specs, by)
         
         # Check that grid is complete
         # This isn't a 100% reliable check, but...
-        if(nrow(RG@grid) != prod(sapply(RG@levels, length)))
+        if (nrow(RG@grid) != prod(sapply(RG@levels, length)))
             stop("Irregular reference grid: Marginal means cannot be determined.\n",
                  "You can possibly fix this with the 'force_regular' function.")
         
@@ -359,7 +359,7 @@ emmeans = function(object, specs, by = NULL,
         
         ## Handle counterfactuals...
         # cf.grid is either NULL, logical, or a "parent" grid that should replace RG
-        if(!is.null(cf.grid <- RG@misc$cf.grid)) {
+        if (!is.null(cf.grid <- RG@misc$cf.grid)) {
             weights = "cells"  # always use cells weights with counterfactuals
             if (inherits(cf.grid, "emmGrid"))
                 RG = cf.grid
@@ -373,10 +373,10 @@ emmeans = function(object, specs, by = NULL,
             }
             # Fix up the returned grid to play along
             cf.surv = intersect(facs, RG@roles$counterfactuals)
-            if(length(cf.surv) == 0) # no cfs remain
+            if (length(cf.surv) == 0) # no cfs remain
                 RG@misc$cf.grid = RG@roles$counterfactuals = NULL
             else {
-                if(length(intersect(facs, paste0("actual_", cf.surv))) == length(cf.surv))
+                if (length(intersect(facs, paste0("actual_", cf.surv))) == length(cf.surv))
                     RG@misc$cf.grid = TRUE
                 else
                     RG@misc$cf.grid = RG   # save this as "parent" grid
@@ -385,11 +385,11 @@ emmeans = function(object, specs, by = NULL,
         
         # Ensure object is in standard order
         ord = .std.order(RG@grid, RG@levels) ###do.call(order, unname(RG@grid[rev(names(RG@levels))]))
-        if(any(ord != seq_along(ord)))
+        if (any(ord != seq_along(ord)))
             RG = RG[ord]
         
         # xxx if ((length(facs) == 1) && (facs == "1")) {  ### just want grand mean
-        if("1" %in% facs) {
+        if ("1" %in% facs) {
             RG@levels[["1"]] = "overall"
             RG@grid[ ,"1"] = 1
         }
@@ -397,7 +397,7 @@ emmeans = function(object, specs, by = NULL,
         
         # Figure out the structure of the grid
         wgt = RG@grid[[".wgt."]]
-        if(!is.null(wgt) && all(zapsmall(wgt) == 0)) wgt = wgt + 1 ### repl all zero wgts with 1
+        if (!is.null(wgt) && all(zapsmall(wgt) == 0)) wgt = wgt + 1 ### repl all zero wgts with 1
         dims = sapply(RG@levels, length)
         row.idx = array(seq_len(nrow(RG@linfct)), dims)
         use.mars = match(facs, names(RG@levels)) # which margins to use
@@ -477,8 +477,8 @@ emmeans = function(object, specs, by = NULL,
         linfct = t(matrix(K, nrow = ncol(RG@linfct),
                           dimnames = list(colnames(RG@linfct), NULL)))
 
-        if(.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
-            if(get_emm_option("msg.interaction"))
+        if (.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
+            if (get_emm_option("msg.interaction"))
                 message("NOTE: Results may be misleading due ", 
                         "to involvement in interactions")
         
@@ -491,7 +491,7 @@ emmeans = function(object, specs, by = NULL,
         avgd.over = names(RG@levels[avgd.mars])
         
         # add/override .offset. column if requested
-        if(!missing(offset)) {
+        if (!missing(offset)) {
             combs[[".offset."]] = rep(offset, nrow(combs))[seq_len(nrow(combs))]
             
         }
@@ -505,7 +505,7 @@ emmeans = function(object, specs, by = NULL,
         RG@roles$responses = character()
         RG@misc$is.new.rg = NULL
         RG@misc$famSize = nrow(linfct)
-        if(RG@misc$estName == "prediction") 
+        if (RG@misc$estName == "prediction") 
             RG@misc$estName = "emmean"
         RG@misc$adjust = "none"
         RG@misc$infer = c(TRUE,FALSE)
@@ -534,14 +534,14 @@ emmeans = function(object, specs, by = NULL,
         object@model.info$nesting = NULL
         result = .nested_emm(object, specs, by = by, fac.reduce = fac.reduce, 
                        options = options, weights = weights, offset = offset, nesting = nesting)
-        if(!is.null(type <- list(...)$type))
+        if (!is.null(type <- list(...)$type))
             result = update(result, type = type)
     }
     
 
-    if(!missing(contr)) { # return a list with emmeans and contrasts
+    if (!missing(contr)) { # return a list with emmeans and contrasts
         # # skip doing contrasts when we have no primary factor
-        # if(length(result@misc$pri.vars) == 0) 
+        # if (length(result@misc$pri.vars) == 0) 
         #     return(result)
         warn.contr = interactive() && (sys.parent() == 0) && is.character(contr) && 
             (length(result@misc$pri.vars) > 1)
@@ -552,7 +552,7 @@ emmeans = function(object, specs, by = NULL,
         args = .zap.args(object = result, method = contr, by = by, ..., omit = dontpass)
         ctrs = do.call(contrast, args)
         result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)
-        if(!is.null(lbl <- object@misc$methDesc))
+        if (!is.null(lbl <- object@misc$methDesc))
             names(result)[1] = lbl
         
         if (warn.contr && (nrow(result$contr@grid) > 21))
@@ -676,7 +676,7 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
     pri.vars = names(grid)
     dotargs = list(...)
     model.info = dotargs$model.info
-    if(is.null(model.info))
+    if (is.null(model.info))
         model.info = list(call = str2lang("emmobj"), xlev = levels, 
                           nesting = .parse_nest(nesting))
     roles = list(predictors= names(grid), responses=character(0), 
@@ -787,7 +787,7 @@ as.list.emmGrid = function(x, model.info.slot = FALSE, ...) {
     result = lapply(slots,function(nm) slot(x, nm))
     names(result) = slots
     result = c(result, x@misc)
-    if(model.info.slot)
+    if (model.info.slot)
         result$model.info = x@model.info
     else
         result$nesting = x@model.info$nesting
@@ -806,7 +806,7 @@ as.list.emmGrid = function(x, model.info.slot = FALSE, ...) {
 # terms is terms() component of model
 .some.term.contains = function(facs, terms) {
     for (trm in attr(terms, "term.labels")) {
-        if(all(sapply(facs, function(f) length(grep(f,trm))>0)))
+        if (all(sapply(facs, function(f) length(grep(f,trm))>0)))
             if (length(.all.vars(as.formula(paste("~",trm)))) > length(facs)) 
                 return(TRUE)
     }

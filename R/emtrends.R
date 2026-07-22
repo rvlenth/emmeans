@@ -218,7 +218,7 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     if (!is.null(fcn)) { # need a different "h" when diff wrt a function
         tmp = sapply(seq_along(delts), function(i)
             eval(parse(text = fcn), envir = bigRG@grid[var.subs[[i]], , drop = FALSE]))
-        if(!is.matrix(tmp)) tmp = matrix(tmp, nrow = 1)
+        if (!is.matrix(tmp)) tmp = matrix(tmp, nrow = 1)
         delta.var = apply(tmp, 1, function(.) mean(diff(.)))
     }
     
@@ -260,7 +260,7 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     args = list(object = NULL, specs = specs, ...)
     args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend =
               args$regrid = args$tran = NULL
-    if(max.degree > 1) {
+    if (max.degree > 1) {
         chk = union(all.vars(specs), args$by)
         if (!("degree" %in% chk))
             args$by = c("degree", args$by)

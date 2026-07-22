@@ -41,8 +41,8 @@
 .nested_emm = function(rgobj, specs, by = NULL, ..., nesting) {
     # # Trap something not supported for these... This doesn't work
     # dots = list(...)
-    # if("weights" %in% dots)
-    #     if(!is.na(pmatch(dots$weights, "show.levels")))
+    # if ("weights" %in% dots)
+    #     if (!is.na(pmatch(dots$weights, "show.levels")))
     #         stop('weights = "show.levels" is not supported for nested models.')
 
     orig.by = by   # save original 'by' vars
@@ -142,12 +142,12 @@
             message("Note: Grouping factor(s) for '", nm, "' have been added to the 'by' list.")
         }
 
-    if(!is.character(method))
+    if (!is.character(method))
         stop ("Non-character contrast methods are not supported with nested objects")
     
     testcon = try(get(paste0(method, ".emmc"))(1:3), silent = TRUE)
-    if(inherits(testcon, "try-error")) testcon = NULL
-    if(missing(adjust)) 
+    if (inherits(testcon, "try-error")) testcon = NULL
+    if (missing(adjust)) 
         adjust = attr(testcon, "adjust")
     estType = attr(testcon, "type")
 
@@ -159,7 +159,7 @@
         wkrg = wkrg[which(display), drop.levels = TRUE]
     wkrg@model.info$nesting = wkrg@misc$display = NULL
     by.rows = .find.by.rows(wkrg@grid, by)
-    if(length(by.rows) == 1)
+    if (length(by.rows) == 1)
         result = contrast.emmGrid(wkrg, method = method, interaction = interaction, by = by, adjust = adjust, ...)
     else {
         result = lapply(by.rows, function(rows) {
@@ -193,7 +193,7 @@
         if (nm %in% names(nesting))
             result@model.info$nesting[[nm]] = intersect(nesting[[nm]], by)
     }
-    if(!is.na(ET <- result@misc$estType) && (ET == "pairs")) # internal flag to keep track of original by vars for paired comps
+    if (!is.na(ET <- result@misc$estType) && (ET == "pairs")) # internal flag to keep track of original by vars for paired comps
         result@misc$.pairby = paste(c("", by), collapse = ",")
     
     result
@@ -256,12 +256,12 @@ force_regular = function(object) {
         i = which(newkey == key)
         newlf[i, ] = object@linfct[j, ]
         newdisp[i] = TRUE
-        if(wtd) newgrid$.wgt.[i] = oldgrid$.wgt.[j]
-        if(ofs) newgrid$.offset.[i] = oldgrid$.offset.[j]
+        if (wtd) newgrid$.wgt.[i] = oldgrid$.wgt.[j]
+        if (ofs) newgrid$.offset.[i] = oldgrid$.offset.[j]
     }
     object@grid = newgrid
     object@linfct = newlf
-    if(is.null(object@model.info$nesting) && all(newdisp))  # remove 'display` if all TRUE`
+    if (is.null(object@model.info$nesting) && all(newdisp))  # remove 'display` if all TRUE`
         newdisp = NULL
     object@misc$display = newdisp
     object
@@ -302,7 +302,7 @@ force_regular = function(object) {
             result[[nm]] = otrs[max.levs == 1]
     }
     
-    if(!is.null(trms)) {
+    if (!is.null(trms)) {
         
         # Now look at factors attribute
         fac = attr(trms, "factors")
@@ -331,7 +331,7 @@ force_regular = function(object) {
             }
         }
         
-    }  # [end if(!is.null(trms))]
+    }  # [end if (!is.null(trms))]
     
     # include nesting factors that are themselves nested
     for (nm in names(result))
@@ -389,7 +389,7 @@ force_regular = function(object) {
         grp = .all.vars(stats::reformulate(parts[2]))
         result[[trm]] = grp
     }
-    if(length(result) == 0)
+    if (length(result) == 0)
         result = NULL
     result
 }

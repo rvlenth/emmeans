@@ -195,9 +195,9 @@
 make.tran = function(type = c("genlog", "power", "boxcox", "sympower", 
                               "asin.sqrt", "atanh", "bcnPower", "scale"), 
                               alpha = 1, beta = 0, param, y, inner, ...) {
-    if(!missing(inner)){
-        if(type == "scale") {
-            if(is.character(inner))
+    if (!missing(inner)){
+        if (type == "scale") {
+            if (is.character(inner))
                 inner = make.tran(inner)
             y = inner$linkfun(y)
         }
@@ -206,12 +206,12 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
     
     txt = type
     type = try(match.arg(type), silent = TRUE)
-    if(inherits(type, "try-error"))
+    if (inherits(type, "try-error"))
         return(.make.link(txt))
     remove(list = "txt")
     
     # backward compat
-    if(length(alpha) > 1) param = alpha  # unnamed parem
+    if (length(alpha) > 1) param = alpha  # unnamed parem
     if (!missing(param)) {
         if (length(param) > 1) beta = param[2]
         alpha = param[1]
@@ -219,17 +219,17 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
     mu.lbl = "mu"
     if (beta != 0)
         mu.lbl = paste0("(mu - ", round(beta, 3), ")")
-    if(type == "scale") {
+    if (type == "scale") {
         sy = scale(y, ...)
-        if(is.null(alpha <- attr(sy, "scaled:center")))
+        if (is.null(alpha <- attr(sy, "scaled:center")))
             alpha = 0
-        if(is.null(beta <- attr(sy, "scaled:scale")))
+        if (is.null(beta <- attr(sy, "scaled:scale")))
             beta = 1
         remove(list = c("y", "sy")) # remove baggage from env
     }
     switch(type,
            genlog = { # beta serves in the role of the base of the log
-               if((beta < 0) || (beta == 1))
+               if ((beta < 0) || (beta == 1))
                    stop('"genlog" transformation must have a positive base != 1')
                logbase = ifelse(beta == 0, 1, log(beta))
                xlab = ifelse(beta == 0, "", paste0(" (base ", round(beta, 3), ")"))
@@ -243,7 +243,7 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
            },
            power = {
                if (alpha == 0) {
-                   if(beta == 0) make.link("log")
+                   if (beta == 0) make.link("log")
                    else make.tran("genlog", -beta)
                }
                else list(
@@ -259,7 +259,7 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
            },
            boxcox = {
                if (alpha == 0) {
-                   result = if(beta == 0) make.link("log")
+                   result = if (beta == 0) make.link("log")
                    else make.tran("genlog", -beta)
                    return (result)
                }
@@ -308,7 +308,7 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
                )
            },
            bcnPower = {
-               if(beta <= 0)
+               if (beta <= 0)
                    stop ("The value of 'beta' must be strictly positive.")
                list(
                    linkfun = function(mu) {
@@ -326,7 +326,7 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
                        0.5 * (1 + (beta/q)^2) * dq },
                    valideta = function(eta) all(eta > 0),
                    alpha = alpha, beta = beta, 
-                   name = paste0("bcnPower(", signif(alpha,3), ", ", signif(beta,3), ")")
+                   name = paste0("bcnPower(", signif (alpha,3), ", ", signif (beta,3), ")")
                )
            },
            scale = list(
@@ -335,17 +335,17 @@ make.tran = function(type = c("genlog", "power", "boxcox", "sympower",
                mu.eta = function(eta) rep(beta, length(eta)),
                valideta = function(eta) TRUE,
                alpha = alpha, beta = beta, 
-               name = paste0("scale(", signif(alpha, 3), ", ", signif(beta, 3), ")")
+               name = paste0("scale(", signif (alpha, 3), ", ", signif (beta, 3), ")")
            )
     )
 }
 
 # Create a compound link function f(g(y)) where outer and inner are make.link results
 .make.compound.link = function(outer, inner, ...) {
-    if(is.character(inner))
+    if (is.character(inner))
         inner = make.tran(inner)
     name = outer$name
-    if(length(grep("mu", name)) == 0) name = paste0(name, "(mu)")
+    if (length(grep("mu", name)) == 0) name = paste0(name, "(mu)")
     name = gsub("mu", inner$name, name)
     list(
         linkfun = function(mu) outer$linkfun(inner$linkfun(mu)),

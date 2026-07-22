@@ -286,7 +286,7 @@ suppose we want to compare every third level of a treatment.
 The following function provides for this:
 ```{r}
 skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE, ...) {
-    if((k <- length(levels)) < skip + 1)
+    if ((k <- length(levels)) < skip + 1)
         stop("Need at least ", skip + 1, " levels")
     coef <- data.frame()
     coef <- as.data.frame(lapply(seq_len(k - skip - 1), function(i) {

@@ -64,12 +64,12 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
         stop("All objects must inherit from 'emmGrid'")
     bhats = lapply(objs, function(o) o@bhat)
     bhat = bhats[[1]]
-    if(!all(sapply(bhats, function(b) (length(b) == length(bhat)) 
+    if (!all(sapply(bhats, function(b) (length(b) == length(bhat)) 
                    && (sum((b - bhat)^2, na.rm = TRUE) == 0))))
         stop("All objects must have the same fixed effects")
     Vs = lapply(objs, function(o) o@V)
     V = Vs[[1]]
-    if(!all(sapply(Vs, function(v) sum((v - V)^2) == 0)))
+    if (!all(sapply(Vs, function(v) sum((v - V)^2) == 0)))
         stop("All objects must have the same covariances")
     obj = objs[[1]]
     linfcts = lapply(objs, function(o) o@linfct)
@@ -115,7 +115,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' @method + emmGrid
 #' @export
 "+.emmGrid" = function(e1, e2) {
-    if(!is(e2, "emmGrid"))
+    if (!is(e2, "emmGrid"))
         stop("'+.emmGrid' works only when all objects are class `emmGrid`", call. = FALSE)
     rbind(e1, e2)
 }
@@ -141,9 +141,9 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
     x = update(x, pri.vars = names(x@grid), famSize = length(i), estType = "[")
     x@misc$orig.grid = x@misc$con.coef = x@misc$.pairby = NULL
     x@misc$by.vars = NULL
-    if(!missing(adjust))
+    if (!missing(adjust))
         x@misc$adjust = adjust
-    if(!is.null(disp <- x@misc$display))
+    if (!is.null(disp <- x@misc$display))
         x@misc$display = disp[i]
     if (drop.levels) {
         for (nm in names(x@levels))
