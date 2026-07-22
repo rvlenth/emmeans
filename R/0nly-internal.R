@@ -38,7 +38,7 @@
 
 ## %in%-style operator with partial matching
 ## e.g.,  ("bonf" %.pin% p.adjust.methods)  is TRUE
-"%.pin%" = function (x, table) pmatch(x, table, nomatch = 0L) > 0L
+"%.pin%" = function(x, table) pmatch(x, table, nomatch = 0L) > 0L
 
 ## Like is.numeric() but returns TRUE for character vectors like c("1", "3", "2")
 ## (but will return FALSE if any x is NA)
@@ -70,9 +70,10 @@
 ##   Passes ... to all.vars
 #' @rdname extending-emmeans
 #' @order 41
-#' @param expr,retain Arguments for \code{.all.vars}, which is an alternative to \code{\link{all.vars}}
-#'   that has special provisions for retaining the special characters in \code{retain},
-#'   thus allowing model specifications like \code{y ~ data$trt * df[["dose"]]}
+#' @param expr,retain Arguments for \code{.all.vars}, which is an alternative to
+#' \code{\link{all.vars}} that has special provisions for retaining the special characters
+#' in \code{retain}, thus allowing model specifications like 
+#' \code{y ~ data$trt * df[["dose"]]}
 #' @export
 .all.vars = function(expr, retain = c("\\$", "\\[\\[", "\\]\\]", "'", '"'), ...) {
     if (is.null(expr) || length(expr) == 0)
@@ -86,7 +87,7 @@
     repl = paste(".Av", seq_along(retain), ".", sep = "")
     for (i in seq_along(retain))
         expr = gsub(retain[i], repl[i], expr)
-    subs = switch(length(expr), 1, c(1,2), c(2,1,3))
+    subs = switch(length(expr), 1, c(1, 2), c(2, 1, 3))
     vars = all.vars(as.formula(paste(expr[subs], collapse = "")), ...)
     retain = gsub("\\\\", "", retain)
     for (i in seq_along(retain))
@@ -95,7 +96,7 @@
     vars
 }
 
-### returns TRUE iff there is one or more function call in a formula
+### returns TRUE if there is one or more function call in a formula
 .has.fcns = function(form) {
     fcns = setdiff(.all.vars(form, functions = TRUE),
                    c("~", "+", "-", "*", "/", ":", "(", "|", .all.vars(form)))
@@ -297,7 +298,7 @@
     comp = grep("\\$|\\[\\[", vars) # untick vars containing "$"
     if (length(comp) > 0) {
         attr(comp, "details") = gsub("\"", "",
-            sapply(strsplit(vars[comp], "\\$|\\[\\[|\\]\\]"), function(.) .[1:2]))
+                sapply(strsplit(vars[comp], "\\$|\\[\\[|\\]\\]"), function(.) .[1:2]))
     }
     comp
 }
@@ -348,7 +349,7 @@
 # by creating data.frames within data having required variables of simple names
 model.frame = function(formula, data, ...) {
     if (is.null(data))
-        return (stats::model.frame(formula, ...))
+        return(stats::model.frame(formula, ...))
     idx = .find.comp.names(names(data))
     if (length(idx) > 0) {
         nm = names(data)[idx]
@@ -379,7 +380,7 @@ model.frame = function(formula, data, ...) {
 
 # Utility to simplify names. each elt of top row of tbl is changed to bottom row
 .simplify.names = function(nms, tbl) {
-    for (j in seq_along(tbl[1,]))
+    for (j in seq_along(tbl[1, ]))
         nms[nms == tbl[1, j]] = tbl[2, j]
     nms
 }
@@ -538,7 +539,7 @@ model.frame = function(formula, data, ...) {
     tbl = attr(X, "factors")
     if (is.character(submodel)) {
         type2 = pmatch(submodel[1], "type2", nomatch = 0) # 1 if type2, 0 otherwise
-        submodel = as.formula(paste("~", paste(names(object@levels), collapse="*")))
+        submodel = as.formula(paste("~", paste(names(object@levels), collapse = "*")))
     }
     else
         type2 = 0
