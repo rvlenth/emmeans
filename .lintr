@@ -4,5 +4,6 @@ linters: linters_with_defaults(
     assignment_linter(operator = c("<-", "=", "<<-")),
     indentation_linter(indent = 4L),
     infix_spaces_linter(exclude_operators = c("|"), allow_multiple_spaces = TRUE),
-    line_length_linter(length = 90L)
+    line_length_linter(length = 100L),
+    brace_linter = NULL, # else gets its own line
   )

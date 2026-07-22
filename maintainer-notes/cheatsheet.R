@@ -9,7 +9,7 @@ roxygen2::roxygenise()
 testthat::test_dir("tests/testthat")
 
 # to build the entire package
-devtools::build()
+devtools::build(cran = TRUE, manual = TRUE, vignettes = TRUE)
 
 # required check
 devtools::check()

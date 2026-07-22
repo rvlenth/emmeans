@@ -1,7 +1,7 @@
 ---
 title: "How to Contribute to **emmeans**"
 author: "Russ Lenth and Julia Piaskowski"
-date: "2026-7-10"
+date: "2026-7-22"
 ---
 
 Welcome! We presume you're reading this because you want to contribute to
@@ -105,8 +105,11 @@ This package has a few conventions that depart from the default expectations est
   * Curly braces: the opening brace is the last character of a line but it does not 
   need its own line; the closing brace needs its own line.
 
+  * `else {` always starts on a new line ()
+
 Run `lintr::lint_dir(path = c("R", "tests")` to check your style. A .lintr file
 is included in the **emmeans** root directory for **emmeans** custom style choices.
+For existing **emmeans** R/Rmd files, you will see lint errors. 
 
 ## Documentation and vignette style {#doc-style}
 
