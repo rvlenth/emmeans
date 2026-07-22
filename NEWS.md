@@ -2,10 +2,14 @@
 title: "NEWS for the emmeans package"
 ---
 
+## emmeans 2.0.5
+  * Bug fix in how an image was rendered in the "Basics" vignette. 
+  * Updated logo that is canonically correct
+  * Contributing guide added to the repository
+
 ## emmeans 2.0.4
   * Updated logo (now hexagonal)
   * bug-fix for labelling in pairwise contrasts
-
   * `head()` and `tail()` for `emmGrid` objects now follow base-R semantics
     for a negative `n` (previously the two were effectively swapped)
   * Fixed an error in the `atanh` response transformation: a typo in its
