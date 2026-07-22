@@ -22,7 +22,7 @@
 ### functions to implement different families of contrasts
 ### All return a matrix or data frame whose columns are the desired contrasts coefs
 ### with appropriate row and column names
-### Also they have two attributes: 
+### Also they have two attributes:
 ###   "desc" is an expanded description of the family,
 ###   "adjust" is the default multiplicity adjustment (used if adjust="auto" in emmeans)
 
@@ -51,7 +51,7 @@
 #' \code{poly.emmc} uses equally-spaced factor levels; coefficients are derived from the
 #' \code{\link[stats]{poly}} function, but an \emph{ad hoc} algorithm is used to
 #' scale them to integer coefficients that are (usually) the same as in
-#' published tables of orthogonal polynomial contrasts. On the other hand, 
+#' published tables of orthogonal polynomial contrasts. On the other hand,
 #' \code{opoly.emmc}'s coefficients are always normalized (sum of squares equals 1),
 #' but allows the user to choose alternate reference points in \code{scores}, as in the
 #' \code{\link{contr.poly}} function.
@@ -85,15 +85,15 @@
 #' respectively, as in subtracting the overall EMM from each EMM. The default
 #' multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based
 #' method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
-#' 
-#' \code{nrmlz.emmc} is a wrapper that can be used with any other \code{.emmc} 
-#' function that will normalize the contrast coefficients so that the sum of its 
+#'
+#' \code{nrmlz.emmc} is a wrapper that can be used with any other \code{.emmc}
+#' function that will normalize the contrast coefficients so that the sum of its
 #' squares equals 1. Just provide the root name of the function in \code{family},
 #' along with any other arguments to pass to it.
-#' 
-#' \code{wtcon.emmc} generates weighted contrasts based on the function 
+#'
+#' \code{wtcon.emmc} generates weighted contrasts based on the function
 #' \code{\link[multcomp]{contrMat}} function in the \pkg{multcomp} package,
-#' using the provided \code{type} as documented there. If the user provides 
+#' using the provided \code{type} as documented there. If the user provides
 #' \code{wts}, they have to conform to the length of \code{levs}; however,
 #' if \code{wts} is not specified, \code{contrast} will fill-in what is
 #' required, and usually this is safer (especially when \code{by != NULL}
@@ -134,9 +134,9 @@
 #' contrast(warp.emm, "trt.vs.ctrl", ref = "M")
 #' \dontrun{
 #' ## Same when enhanced labeling is used:
-#' contrast(warp.emm, "trt.vs.ctrl", 
+#' contrast(warp.emm, "trt.vs.ctrl",
 #'          enhance.levels = "tension", ref = "tensionM")}
-#' 
+#'
 #' # Comparisons with grand mean
 #' contrast(warp.emm, "eff")
 #' # Comparisons with a weighted grand mean
@@ -158,7 +158,7 @@
 #'     M
 #' }
 #' contrast(warp.emm, "revhelmert")
-#' 
+#'
 #' \dontrun{
 #' # See what is used for polynomial contrasts with 6 levels
 #' emmeans:::poly.emmc(1:6)
@@ -256,13 +256,13 @@ poly.emmc = function(levs, max.degree = min(6, k-1), ...) {
 # Orthonormal poly contrasts - not rescaled
 #' @rdname emmc-functions
 #' @param scores Set of values of length \code{length(levs)} over which
-#'   orthogonal polynomials are computed. The default scores are the 
+#'   orthogonal polynomials are computed. The default scores are the
 #'   consecutive integers \code{seq_along(levs)}.
 #'   (If \code{exclude} or \code{include}
-#'   are used, the default scores are subsetted accordingly; and if \code{scores} 
+#'   are used, the default scores are subsetted accordingly; and if \code{scores}
 #'   is specified, its length must be the same as that of the subsetted \code{levs}).
 #' @export
-opoly.emmc = function(levs, max.degree = min(6, k-1), scores, 
+opoly.emmc = function(levs, max.degree = min(6, k-1), scores,
                       exclude = integer(0), include, ...) {
     if (MS <- missing(scores))
         scores = seq_along(levs)
@@ -296,19 +296,19 @@ opoly.emmc = function(levs, max.degree = min(6, k-1), scores,
 # All comparisons with a control; ref = index of control group
 # New version -- allows more than one control group (ref is a vector)
 #' @rdname emmc-functions
-#' @param ref Integer(s) or character(s) specifying which level(s) to use 
+#' @param ref Integer(s) or character(s) specifying which level(s) to use
 #'   as the reference. Character values must exactly match elements of \code{levs}
 #'   (including any enhancements -- see examples)
 #' @export
-trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE, 
+trt.vs.ctrl.emmc = function(levs, ref = 1, reverse = FALSE,
                             exclude = integer(0), include, ...) {
     ref = .num.key(levs, ref)
     exclude = .get.excl(levs, exclude, include)
     if (length(ref) == 0 || (min(ref) < 1) || (max(ref) > length(levs)))
         stop("In trt.vs.ctrl.emmc(), 'ref' levels are out of range", call. = FALSE)
     k = length(levs)
-    cnm = ifelse(length(ref)==1, 
-                 levs[ref], 
+    cnm = ifelse(length(ref)==1,
+                 levs[ref],
                  paste("avg(", paste(levs[ref], collapse=","), ")", sep=""))
     templ = rep(0, length(levs))
     templ[ref] = -1 / length(ref)
@@ -380,7 +380,7 @@ eff.emmc = function(levs, exclude = integer(0), include, wts = rep(1, length(lev
         stop("length of 'wts' must equal the number of levels",
              " or the number of included levels")
     wts[exclude] = 0
-    
+
     M = data.frame(row.names = levs)
     wts = wts / sum(wts)
     for (i in setdiff(seq_along(levs), exclude)) {
@@ -452,7 +452,7 @@ mean_chg.emmc = function(levs, reverse = FALSE, exclude = integer(0), include, .
     nms = levs[active.rows]
     for (i in seq_len(k-1)) {
         kmi = k - i
-        con = rep(c(-sgn/i, sgn/kmi), c(i, kmi)) 
+        con = rep(c(-sgn/i, sgn/kmi), c(i, kmi))
         nm = paste(nms[i], nms[i+1], sep="|")
         tmp[active.rows] = con
         M[[nm]] = tmp
@@ -506,7 +506,7 @@ nrmlz.emmc = function(levs, family, ...) {
 wtcon.emmc = function(levs, wts = rep(1, length(levs)), cmtype = "GrandMean", ...) {
     if (!requireNamespace("multcomp"))
         stop("The 'multcomp' package must be installed to use 'wtcon' contrasts", call. = FALSE)
-    
+
     names(wts) = levs
     M = data.frame(t(multcomp::contrMat(wts, type = cmtype, ...)))
     M

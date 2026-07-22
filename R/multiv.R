@@ -20,7 +20,7 @@
 ##############################################################################
 
 #' Multivariate contrasts
-#' 
+#'
 #' This function displays tests of multivariate comparisons or contrasts.
 #' The contrasts are constructed at each level of the variable in \code{mult.name},
 #' and then we do a multivariate test that the vector of estimates is equal to
@@ -29,8 +29,8 @@
 #' \eqn{m} error degrees of freedom and multivariate dimensionality \eqn{d}, then
 #' the resulting \eqn{F} statistic has degrees of freedom \eqn{(d, m - d + 1)}
 #' as shown in Hotelling (1931).
-#' 
-#' 
+#'
+#'
 #' @param object An object of class \code{emmGrid}
 #' @param method A contrast method, per \code{\link{contrast.emmGrid}}
 #' @param mult.name Character vector of names of the factors whose levels
@@ -45,7 +45,7 @@
 #'   (\code{"none"} for no adjustment). The available adjustment methods are
 #'   more limited that in \code{contrast}, and any default adjustment returned
 #'   via \code{method} is ignored.
-#' @param show.ests Logical flag determining whether the multivariate means 
+#' @param show.ests Logical flag determining whether the multivariate means
 #'   are displayed
 #' @param ... Additional arguments passed to \code{contrast}
 #'
@@ -64,24 +64,24 @@
 #' mean vector itself can be implemented via \code{method = "identity")} (see
 #' the examples).
 #'
-#' @references Hotelling, Harold (1931) "The generalization of Student's ratio", 
+#' @references Hotelling, Harold (1931) "The generalization of Student's ratio",
 #'   \emph{Annals of Mathematical Statistics} 2(3), 360–378. doi:10.1214/aoms/1177732979
-#' 
+#'
 #' @export
 #'
 #' @examples
 #' MOats.lm <- lm(yield ~ Variety + Block, data = MOats)
 #' MOats.emm <- emmeans(MOats.lm, ~ Variety | rep.meas)
 #' mvcontrast(MOats.emm, "consec", show.ests = TRUE)  # mult.name defaults to rep.meas
-#' 
+#'
 #' # Test each mean against a specified null vector
-#' mvcontrast(MOats.emm, "identity", name = "Variety", 
+#' mvcontrast(MOats.emm, "identity", name = "Variety",
 #'            null = c(80, 100, 120, 140), adjust = "none")
 #' # (Note 'name' is passed to contrast() and overrides default name "contrast")
-#' 
+#'
 #' # 'mult.name' need not refer to a multivariate response
 #' mvcontrast(MOats.emm, "trt.vs.ctrl1", mult.name = "Variety")
-#' 
+#'
 mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp, null = 0,
                       by = object@misc$by.vars, adjust = c("sidak", p.adjust.methods),
                       show.ests = FALSE, ...) {
@@ -120,7 +120,7 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
     class(result) = c("summary_emm", "data.frame")
 
     by = setdiff(by, mult.name)
-    if (length(by) == 0) 
+    if (length(by) == 0)
         by = NULL
     rows = .find.by.rows(result, by)
     adjust = match.arg(adjust)
@@ -132,14 +132,14 @@ mvcontrast = function(object, method = "eff", mult.name = object@roles$multresp,
     }
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
-    if (adjust == "none") 
+    if (adjust == "none")
         mesg = NULL
     else
         mesg = paste("P value adjustment:", adjust)
     if (red.rank)
         mesg = c(mesg, "NOTE: Some or all d.f. are reduced due to singularities")
     if (any(is.na(result$T.square)))
-        mesg = c(mesg, 
+        mesg = c(mesg,
             "NAs indicate non-estimabile cases or other errors")
     attr(result, "mesg") = mesg
     if (show.ests)
@@ -154,19 +154,19 @@ mult.trans = c("alr", "apt", "cdt", "clr", "cpt", "idt", "iit", "ilr", "ilt", "i
 log.mult.trans = mult.trans[endsWith(mult.trans, "lr")]  # only the log-ratio-based ones
 
 #' Multivariate regridding
-#' 
+#'
 #' This function is similar to \code{\link{regrid}} except it performs a
 #' multivariate transformation. This is useful, for instance, in multivariate
 #' models that have a compositional response.
-#' 
+#'
 #' If a multivariate response transformation was used in fitting the model,
 #' its name is auto-detected, and in that case we need not specify \code{fcn}
 #' as long as its inverse can be found in the namespace of the \pkg{compositions}
-#' package. (That package need not be installed unless \code{fcn} is a character 
+#' package. (That package need not be installed unless \code{fcn} is a character
 #' value.) For some such models, auto-detection process throws a
 #' warning message, especially if \code{cbind} is also present in the model
 #' formula.
-#' 
+#'
 #' Currently, no bias-adjustment option is available.
 #'
 #' @param object An \code{emmGrid} object
@@ -176,25 +176,25 @@ log.mult.trans = mult.trans[endsWith(mult.trans, "lr")]  # only the log-ratio-ba
 #'   response. (Note that this will entail first re-gridding to the response scale
 #'   if necessary.)
 #' @param mult.name The name of the multivariate factor to be transformed.
-#'   If missing, we use \code{object@roles$multresp}, and throw an error message 
+#'   If missing, we use \code{object@roles$multresp}, and throw an error message
 #'   if it is \code{NULL} or ambiguous; in that case, the user must repeat the
 #'   call with \code{mult.name} specified.
 #' @param newname the name to be given to the newly transformed variable
 #' @param newlevs levels of the newly created factor (must conform to
 #'   the number of columns created by \code{fcn}). If missing, we use the column names
 #'   of the newly created variable.
-#' @param fcn The multivariate function to apply. If character, we look for it 
+#' @param fcn The multivariate function to apply. If character, we look for it
 #'   in the namespace of the \pkg{compositions} package.
 #' @param ... Additional arguments passed to \code{fcn}
 #'
 #' @return A new \code{emmGrid} object with the newly created factor as its last factor
 #' @export
-#' 
+#'
 #' @examples
 #' if (requireNamespace("compositions"))
 #'     emm_example("mvregrid")
 #'     # Use emm_example("mvregrid", list = TRUE) # to see just the code
-#' 
+#'
 mvregrid = function(object, transform = "response", mult.name, newname = mult.name, newlevs, fcn, ...) {
     tran = object@misc$tran
     if ((transform != "response") && !is.null(tran)) {    # non-response transformation -- 1st regrid to response scale
@@ -210,14 +210,14 @@ mvregrid = function(object, transform = "response", mult.name, newname = mult.na
             stop("No default for 'mult.name' identified; must supply it")
     }
     idx = which(names(levels) == mult.name)
-    if (length(idx) == 0) 
+    if (length(idx) == 0)
         stop("we don't have a factor named '", mult.name, "'")
     levels = c(levels[-idx], levels[idx])
 
     ord = .std.order(object@grid, levels)
     if (any(ord != seq_along(ord)))
         object = object[ord] |> update(by.vars = by)
-    
+
     yhat = matrix(predict(object), ncol = (p <- length(levels[[mult.name]])))
     if (missing(fcn))
         fcn = ifelse(transform == "response", paste0(tran, "Inv"), transform)
@@ -226,7 +226,7 @@ mvregrid = function(object, transform = "response", mult.name, newname = mult.na
         if (inherits(fcn, "try-error"))
             stop("The 'compositions' package must be installed to proceed")
     }
-    
+
     newy = fcn(yhat, ...)
     k = ncol(newy)
     if (missing(newlevs)) {
@@ -261,6 +261,6 @@ mvregrid = function(object, transform = "response", mult.name, newname = mult.na
         object@misc$tran = transform
     object@misc$pri.vars = setdiff(names(object@grid), c(object@misc$by.vars, ".wgt'"))
     object@misc$methDesc = "mvregrid"
-    
+
     object
 }

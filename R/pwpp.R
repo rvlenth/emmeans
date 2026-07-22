@@ -20,10 +20,10 @@
 ##############################################################################
 
 #' Pairwise P-value plot
-#' 
-#' Constructs a plot of P values associated with pairwise comparisons of 
+#'
+#' Constructs a plot of P values associated with pairwise comparisons of
 #' estimated marginal means.
-#' 
+#'
 #' Factor levels (or combinations thereof) are plotted on the vertical scale, and P values
 #' are plotted on the horizontal scale. Each P value is plotted twice -- at
 #' vertical positions corresponding to the levels being compared -- and connected by
@@ -32,15 +32,15 @@
 #' and half-line segments appear in the color of the other level.
 #' The P-value scale is nonlinear, so as to stretch-out smaller P values and
 #' compress larger ones.
-#' P values smaller than 0.0004 are altered and plotted in a way that makes 
+#' P values smaller than 0.0004 are altered and plotted in a way that makes
 #'   them more distinguishable from one another.
-#' 
+#'
 #' If \code{xlab}, \code{ylab}, and \code{xsub} are not provided, reasonable labels
 #' are created. \code{xsub} is used to note special features; e.g., equivalence
 #' thresholds or one-sided tests.
-#' 
+#'
 #' @param emm An \code{emmGrid} object
-#' @param method Character or list. Passed to \code{\link{contrast}}, and defines 
+#' @param method Character or list. Passed to \code{\link{contrast}}, and defines
 #'           the contrasts to be displayed. Any contrast method may be used,
 #'           provided that each contrast includes one coefficient of \code{1},
 #'           one coefficient of \code{-1}, and the rest \code{0}. That is, calling
@@ -48,7 +48,7 @@
 #'           one estimate minus another estimate.
 #' @param by Character vector of variable(s) in the grid to condition on. These will
 #'           create different panels, one for each level or level-combination.
-#'           Grid factors not in \code{by} are the \emph{primary} factors: 
+#'           Grid factors not in \code{by} are the \emph{primary} factors:
 #'           whose levels or level combinations are compared pairwise.
 #' @param sort Logical value. If \code{TRUE}, levels of the factor combinations are
 #'             ordered by their marginal means. If \code{FALSE}, they appear in
@@ -63,7 +63,7 @@
 #'               it may be desirable to specify \code{FALSE} or use \code{rows}
 #'               so that some panels are vertically stacked.
 #' @param rows Character vector of which \code{by} variable(s) are used to define
-#'           rows of the panel layout. Those variables in \code{by} not included in 
+#'           rows of the panel layout. Those variables in \code{by} not included in
 #'           \code{rows} define columns in the array of panels.
 #'           A \code{"."} indicates that only one row
 #'           is used, so all panels are stacked side-by-side.
@@ -80,18 +80,18 @@
 #'                  adjust the position. Changing it by one unit should shift the position by
 #'                  about one character width (right if positive, left if negative).
 #'                  Note that this interacts with \code{aes$label} below.
-#' @param aes optional named list of lists. Entries considered are \code{point}, 
+#' @param aes optional named list of lists. Entries considered are \code{point},
 #'   \code{segment}, and \code{label}, and contents are passed to the respective
-#'   \code{ggplot2::geom_xxx()} functions. These affect rendering of points, 
-#'   line segments joining them, and value labels. 
+#'   \code{ggplot2::geom_xxx()} functions. These affect rendering of points,
+#'   line segments joining them, and value labels.
 #'   Defaults are \code{point = list(size = 2)},
 #'   \code{segment = list()}, and \code{label = list(size = 2.5)}.
-#' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}, 
+#' @param ... Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}},
 #'   as well as to \code{geom_segment} and \code{geom_label}
-#' 
+#'
 #' @note If \code{emm} is the result of a Bayesian analysis, the plot is based on
 #'   summaries with \code{frequentist = TRUE}.
-#' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
+#' @note The \pkg{ggplot2} and \pkg{scales} packages must be installed in order
 #'   for \code{pwpp} to work.
 #' @note Additional plot aesthetics are available by adding them to the returned object;
 #'   see the examples
@@ -106,52 +106,52 @@
 #' pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
 #'
 #' # custom aesthetics:
-#' my.aes <- list(point = list(shape = "square"), 
+#' my.aes <- list(point = list(shape = "square"),
 #'                segment = list(linetype = "dashed", color = "red"),
 #'                label = list(family = "serif", fontface = "italic"))
 #' my.pal <- c("darkgreen", "blue", "magenta", "orange")
 #' pwpp(emm, aes = my.aes) + ggplot2::scale_color_manual(values = my.pal)
-#' 
-pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE, 
+#'
+pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
                 rows = ".",
-                xlab, ylab, xsub = "", plim = numeric(0), add.space = 0, 
+                xlab, ylab, xsub = "", plim = numeric(0), add.space = 0,
                 aes, ...) {
 
         emm = .chk.list(emm, ...)
-    if (missing(by)) 
+    if (missing(by))
         by = emm@misc$by.vars
-    
+
     ### set up aesthetics
     if (missing(aes))
         aes = list()
     # defaults if other than system ones...
     daes = list(point = list(size = 2), segment = list(), label = list(size = 2.5))
     # fill aes w/ defaults if not present, at either level
-    for(a in names(daes)) { 
+    for(a in names(daes)) {
         if (is.null(aes[[a]]))
             aes[[a]] = daes[[a]]
         else for (b in names(daes[[a]]))
             if (is.null(aes[[a]][[b]]))
                 aes[[a]][[b]] = daes[[a]][[b]]
     }
-    
+
     if (rows != "." && !(rows %in% by))
         stop("'rows' must be a subset of the 'by' variables")
-    
+
     args = list(object = emm, method = method, by = by, ...)
     args$interaction = args$simple = args$offset = NULL
     con = do.call(contrast, args)
-    
+
     # We allow the con call to change the by variable via options...
     by = con@misc$by
-    
+
     args = list(object = emm, infer = c(FALSE, FALSE), by = by, frequentist = TRUE, ...)
     emm.summ = do.call(summary.emmGrid, args)
-    
+
     args = list(object = con, infer = c(FALSE, TRUE), frequentist = TRUE, ...)
     args$null = NULL
     con.summ = do.call(summary.emmGrid, args)
-    
+
     if (missing(xlab)) {
         adjust = .cap(attr(con.summ, "adjust"))
         delta = attr(con.summ, "delta")
@@ -159,18 +159,18 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
         xlab = "P value"
         if (adjust != "None")
             xlab = paste0(adjust, "-adjusted ", xlab)
-        
+
         if (delta != 0)
             xsub = paste(c("Nonsuperiority", "Equivalence", "Noninferiority")[side + 2],
                          "test with threshold", delta)
         else
             xsub = c("Left-sided tests", "", "Right-sided tests")[side + 2]
     }
-    
+
     sep = get_emm_option("sep")
     if (missing(ylab))
         ylab = paste(attr(emm.summ, "pri.vars"), collapse = ":")
-    
+
     # figure out levels being compared
     cf = coef(con)
     use = setdiff(names(cf), names(con@misc$orig.grid))
@@ -186,18 +186,18 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
     if (sort) ord = order(predict(pemm))
     else ord = seq_along(pf)
     pf = emm.summ$pri.fac = factor(pf, levels = levs[ord])
-    
+
     con.summ$plus = pf[idx[1, ]]
     con.summ$minus = pf[idx[2, ]]
-    
+
     estName = attr(emm.summ, "estName")
-    
-    
+
+
 ########## The rest should probably be done in a separate function ################
-    
-    .requireNS("ggplot2", 
+
+    .requireNS("ggplot2",
                "pwpp requires the 'ggplot2' package be installed.", call. = FALSE)
-    
+
         # granulate values in each group so they won't overlap
         # do this on the transformed (plotted) scale
         byr = .find.by.rows(con.summ, by)
@@ -205,26 +205,26 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
             pv = con.summ$p.value[r]
             con.summ$p.value[r] = gran(pv)
         }
-        
+
         # form the reverse half & get midpoints
         con.summ$midpt = (as.numeric(con.summ$plus) + as.numeric(con.summ$minus)) / 2
         tmp = con.summ
         tmp$plus = con.summ$minus
         tmp$minus = con.summ$plus
         con.summ = rbind(con.summ, tmp)
-        
+
         # find ranges to ensure we get tick marks:
         exmaj = c(0, .pvmaj.brk)
         pvtmp = c(plim, con.summ$p.value)
         pvtmp = pvtmp[!is.na(pvtmp)]
         tick.min = max(exmaj[exmaj <= min(pvtmp)])
         tick.max = min(exmaj[exmaj >= max(pvtmp)])
-        
+
         # args for geom_segment
         sarg = c(list(mapping = quote(ggplot2::aes(xend = .data$p.value, yend = .data$midpt)),
-                    data = NULL, stat = "identity", position = "identity"), 
+                    data = NULL, stat = "identity", position = "identity"),
                     aes$segment)
-        grobj = ggplot2::ggplot(data = con.summ, 
+        grobj = ggplot2::ggplot(data = con.summ,
                                 ggplot2::aes(x = .data$p.value, y = .data$plus,
                                               color = .data$minus, group = .data$minus)) +
             do.call(ggplot2::geom_point, aes$point) +
@@ -240,8 +240,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
                 cols = "."
             }
             grobj = grobj + ggplot2::facet_grid(
-                as.formula(paste( paste(rows, collapse = "+"), "~", 
-                                  paste(cols, collapse = "+"))), 
+                as.formula(paste( paste(rows, collapse = "+"), "~",
+                                  paste(cols, collapse = "+"))),
                 labeller = "label_both")
         }
         else
@@ -255,40 +255,40 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
             lpad = .012 * (add.space + max(nchar(emm.summ$fmtval))) * ncols # how much space needed for labels rel to (0,1)
             lpad = lpad * (1.1 - tminp) # scale closer to actual width of scales
             lpos = .pval.inv(tminp - lpad)   # pvalue at left end of label
-            
+
             larg = c(list(mapping = quote(ggplot2::aes(x = pos, y = .data$minus,
                                             label = .data$fmtval, hjust = "right")),
-                        data = emm.summ, stat = "identity", position = "identity"),  
+                        data = emm.summ, stat = "identity", position = "identity"),
                         aes$label)
-            grobj = grobj + 
+            grobj = grobj +
                 do.call(ggplot2::geom_label, larg) +
                 ggplot2::geom_point(ggplot2::aes(x = lpos, y = 1), alpha = 0) # invisible point to stake out space
         }
         else
             lpad = 0
-        
-        .requireNS("scales", 
+
+        .requireNS("scales",
                    "pwpp requires the 'scales' package be installed.", call. = FALSE)
-        .pvtrans = scales::trans_new("Scaled P value", 
-                                     transform = function(x) .pval.tran(x), 
+        .pvtrans = scales::trans_new("Scaled P value",
+                                     transform = function(x) .pval.tran(x),
                                      inverse = function(p) .pval.inv(p),
                                      format = function(x) format(x, drop0trailing = TRUE, scientific = FALSE),
                                      domain = c(0,1) )
-        grobj = grobj + ggplot2::scale_x_continuous(trans = .pvtrans, 
+        grobj = grobj + ggplot2::scale_x_continuous(trans = .pvtrans,
                                                     breaks = .pvmaj.brk, minor_breaks = .pvmin.brk) +
             #### I plotted an extra point instead of expanding scale
             #### expand = ggplot2::expand_scale(add = c(.025 + lpad, .025))) +
             ggplot2::guides(color = "none")
-        
+
         grobj + ggplot2::labs(x = xlab, y = ylab, caption = xsub) + theme_emm()
 }
-    
+
 # capitalize
 .cap = function(s)
     paste0(toupper(substring(s, 1, 1)), substring(s, 2))
 
-          
-### Scale-transformation code: We stretch out small P values without stretching 
+
+### Scale-transformation code: We stretch out small P values without stretching
 ### extremely small ones too much -- via a combination of log and normal cdf functions
 
 .tran.ctr = -2.5  # params of normal cdf transf of log(.value)
@@ -318,8 +318,8 @@ pwpp = function(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
 }
 
 # For scale_x_continuous(): (moved to body of fcn so I can check w/ requyireNamespace)
-# .pvtrans = scales::trans_new("Scaled P value", 
-#                              transform = function(x) .pval.tran(x), 
+# .pvtrans = scales::trans_new("Scaled P value",
+#                              transform = function(x) .pval.tran(x),
 #                              inverse = function(p) .pval.inv(p),
 #                              format = function(x) format(x, drop0trailing = TRUE, scientific = FALSE),
 #                              domain = c(0,1) )
@@ -330,19 +330,19 @@ gran = function(x, min_incr = .01) {
     x = x[!is.na(x)]
     if ((length(x) <= 3) || (diff(range(x)) == 0))
         return(savex)
-    
+
     kink = function(xx) { # linear spline basis; call with knot subtracted
         xx[xx < 0] = 0
         xx
     }
-    
+
     ### x[x < .00009] = .00009   # forces granulation of extremely small P
     # spread-out the p values less than .0004
     rnk = rank(x)
     sm = which(x < .0004)
     if (length(sm) > 0)
         x[sm] = .0004 - .0003 * rnk[sm] / length(sm)
-    
+
     ord = order(x)
     tx = log(x[ord])
     df = diff(tx)
@@ -368,8 +368,8 @@ gran = function(x, min_incr = .01) {
 #' via arguments \code{means}, \code{diffs}, and \code{pvals}, respectively.
 #' To control the direction of the pairwise differences, use \code{reverse};
 #' and to control what appears in the upper and lower triangle(s), use \code{flip}.
-#' Optional arguments are passed to \code{contrast.emmGrid} and/or 
-#' \code{summary.emmGrid}, making it possible to control what estimates 
+#' Optional arguments are passed to \code{contrast.emmGrid} and/or
+#' \code{summary.emmGrid}, making it possible to control what estimates
 #' and tests are displayed.
 #'
 #' @param emm An \code{emmGrid} object
@@ -379,48 +379,48 @@ gran = function(x, min_incr = .01) {
 #'   Grid factors not in \code{by} are the \emph{primary} factors:
 #'   whose levels or level combinations are compared pairwise.
 #' @param reverse Logical value passed to \code{\link{pairs.emmGrid}}.
-#'   Thus, \code{FALSE} specifies \code{"pairwise"} comparisons 
+#'   Thus, \code{FALSE} specifies \code{"pairwise"} comparisons
 #'   (earlier vs. later), and \code{TRUE} specifies \code{"revpairwise"}
 #'   comparisons (later vs. earlier).
-#' @param pvals Logical value. If \code{TRUE}, the pairwise differences 
+#' @param pvals Logical value. If \code{TRUE}, the pairwise differences
 #'   of the EMMs are included in each matrix according to \code{flip}.
 #' @param means Logical value. If \code{TRUE}, the estimated marginal means
 #'   (EMMs) from \code{emm} are included in the matrix diagonal(s).
-#' @param diffs Logical value. If \code{TRUE}, the pairwise differences 
+#' @param diffs Logical value. If \code{TRUE}, the pairwise differences
 #'   of the EMMs are included in each matrix according to \code{flip}.
-#' @param flip Logical value that determines where P values and differences 
+#' @param flip Logical value that determines where P values and differences
 #'   are placed. \code{FALSE} places the P values in the upper triangle
 #'   and differences in the lower, and \code{TRUE} does just the opposite.
 #' @param digits Integer. Number of digits to display. If missing,
 #'   an optimal number of digits is determined.
-#' @param ... Additional arguments passed to \code{\link{contrast.emmGrid}} and 
+#' @param ... Additional arguments passed to \code{\link{contrast.emmGrid}} and
 #'   \code{\link{summary.emmGrid}}. You should \emph{not} include \code{method}
-#'   here, because pairwise comparisons are always used. 
+#'   here, because pairwise comparisons are always used.
 #'
 #' @return A matrix or `list` of matrices, one for each `by` level.
-#' 
+#'
 #' @seealso A graphical display of essentially the same results is available
 #'   from \code{\link{pwpp}}
 #' @export
-#' 
+#'
 #' @note If \code{emm} is the result of a Bayesian analysis, \code{pwpm} is
 #'   based on a frequentist analysis
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 #' warp.emm <- emmeans(warp.lm, ~ tension | wool)
-#' 
+#'
 #' pwpm(warp.emm)
-#' 
+#'
 #' # use dot options to specify noninferiority tests
 #' pwpm(warp.emm, by = NULL, side = ">", delta = 5, adjust = "none")
 pwpm = function(emm, by, reverse = FALSE,
-                pvals = TRUE, means = TRUE, diffs = TRUE, 
+                pvals = TRUE, means = TRUE, diffs = TRUE,
                 flip = FALSE, digits, ...) {
     emm = .chk.list(emm, ...)
-    if (missing(by)) 
+    if (missing(by))
         by = emm@misc$by.vars
-    
+
     emm = update(emm, by = by)
     pri = paste(emm@misc$pri.vars, collapse = ":")
     mns = confint(emm, frequentist = TRUE, ...)
@@ -429,13 +429,13 @@ pwpm = function(emm, by, reverse = FALSE,
     prs = test(pairs(emm, reverse = reverse, frequentist = TRUE, ...), ...)
     diffName = attr(prs, "estName")
     null.hyp = "0"
-    if (!reverse) 
+    if (!reverse)
         trifcn = lower.tri
     else {
         flip = !flip
         trifcn = upper.tri
     }
-    
+
     if (!is.null(prs$null)) {
         null.hyp = as.character(signif (unique(prs$null), digits = 5))
         if (length(null.hyp) > 1)
@@ -444,7 +444,7 @@ pwpm = function(emm, by, reverse = FALSE,
     mby = .find.by.rows(mns, by)
     pby = .find.by.rows(prs, by)
 
-    
+
     if (opt.dig <- missing(digits)) {
         tmp = mns[[estName]] + mns[["SE"]] * cbind(rep(-2, nrow(mns)), 0, 2)
         digits = max(apply(tmp, 1, .opt.dig))
@@ -454,14 +454,14 @@ pwpm = function(emm, by, reverse = FALSE,
     result = lapply(seq_along(mby), function(i) {
         if (opt.dig) {
             pv = prs$p.value[pby[[i]]]
-            fpv = sprintf("%6.4f", pv) 
+            fpv = sprintf("%6.4f", pv)
             fpv[pv < 0.0001] = "<.0001"
         }
         else
             fpv = format(prs$p.value[pby[[i]]], digits = digits)
         fmn = format(mns[mby[[i]], estName], digits = digits)
-        fdiff = format(prs[pby[[i]], diffName], digits = digits) 
-        
+        fdiff = format(prs[pby[[i]], diffName], digits = digits)
+
         lbls = mns$lbls[mby[[i]]]
         n = length(lbls)
         mat = matrix("", nrow = n, ncol = n, dimnames = list(lbls, lbls))
@@ -483,7 +483,7 @@ pwpm = function(emm, by, reverse = FALSE,
         if (flip) t(mat)
         else mat
     })
-    if (reverse) 
+    if (reverse)
         flip = !flip
     names(result) = paste(paste(by, collapse = ", "), "=", names(mby))
     if (length(result) == 1)
@@ -505,7 +505,7 @@ print.pwpm = function(x, ...) {
         entries = seq_along(x)
     else {
         entries = 1
-        m = x 
+        m = x
     }
 
     for (i in entries) {
@@ -517,7 +517,7 @@ print.pwpm = function(x, ...) {
             diag(m) = paste0("[", diag(m), "]")
         print(m, quote = FALSE, right = TRUE, na.print = "nonEst")
     }
-    
+
     # print a parm and its name if present unless it's in excl
     # optional subst is NAMED vector where each possibilitty MUST be present
     catparm = function(f, excl = "0", delim = "  ", quote = TRUE, subst) {
@@ -549,5 +549,5 @@ print.pwpm = function(x, ...) {
     }
     invisible(x)
 }
-    
+
 

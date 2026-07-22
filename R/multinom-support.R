@@ -28,7 +28,7 @@
 # library(nnet)
 # ml$prog2 <- relevel(ml$prog, ref = "academic")
 # test <- multinom(prog2 ~ ses + write, data = ml)
-# 
+#
 
 # same as recover_data.lm
 #' @exportS3Method recover_data multinom
@@ -37,8 +37,8 @@ recover_data.multinom = function(object, ...) {
     recover_data(fcall, delete.response(terms(object)), object$na.action, ...)
 }
 
-#' @exportS3Method emm_basis multinom     
-emm_basis.multinom = function(object, trms, xlev, grid, 
+#' @exportS3Method emm_basis multinom
+emm_basis.multinom = function(object, trms, xlev, grid,
                               mode = c("prob", "latent"), ...) {
     mode = match.arg(mode)
     bhat = t(coef(object))
@@ -64,7 +64,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     misc$ylevs = ylevs
     if (mode == "prob")
         misc$postGridHook = .multinom.postGrid
-    list(X = X, bhat = as.numeric(bhat), nbasis = nbasis, V = V, 
+    list(X = X, bhat = as.numeric(bhat), nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
@@ -76,7 +76,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     linfct = object@linfct
     misc = object@misc
     # grid will have multresp as slowest-varying factor...
-    idx = matrix(seq_along(linfct[, 1]), 
+    idx = matrix(seq_along(linfct[, 1]),
                  ncol = length(object@levels[[object@roles$multresp]]))
     bhat = as.numeric(idx) # right length, contents will be replaced
     if (sim <- !missing(N.sim)) {
@@ -99,7 +99,7 @@ emm_basis.multinom = function(object, trms, xlev, grid,
     }
     misc$postGridHook = misc$tran = misc$inv.lbl = NULL
     misc$estName = "prob"
-    
+
     object@bhat = bhat
     object@V = linfct %*% tcrossprod(object@V, linfct)
     object@linfct = diag(1, length(bhat))
@@ -112,12 +112,12 @@ emm_basis.multinom = function(object, trms, xlev, grid,
 
 ### Support for mclogit::mblogit models???
 #' @exportS3Method recover_data mblogit
-recover_data.mblogit = function (object, ...) 
+recover_data.mblogit = function (object, ...)
 {
     recover_data.multinom(object, ...)
 }
 
-#' @exportS3Method emm_basis mblogit      
+#' @exportS3Method emm_basis mblogit
 emm_basis.mblogit = function(object, ..., vcov.) {
     object$coefficients = object$coefmat
     object$lev = levels(object$model[[1]])
@@ -125,7 +125,7 @@ emm_basis.mblogit = function(object, ..., vcov.) {
     # we have to arrange the vcov elements in row-major order
     if (missing(vcov.))
         vcov. = vcov(object)
-    perm = matrix(seq_along(as.numeric(object$coefmat)), 
+    perm = matrix(seq_along(as.numeric(object$coefmat)),
                   ncol = ncol(object$coefmat))
     perm = as.numeric(t(perm))
     vcov. = vcov.[perm, perm]

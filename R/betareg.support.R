@@ -21,7 +21,7 @@
 
 # Support for 'betareg' class
 
-# mode is same as 'type' in predict.betareg, PLUS 
+# mode is same as 'type' in predict.betareg, PLUS
 # mode = "phi.link" refers to link function before back-transforming to "precision"
 
 #' @exportS3Method recover_data betareg
@@ -30,7 +30,7 @@ recover_data.betareg = function(object, mode = c("response", "link", "precision"
     mode = match.arg(mode)
     if (mode  %in% c("response", "link"))
         mode = "mean"
-    if (mode == "phi.link") 
+    if (mode == "phi.link")
         mode = "precision"
     if (mode %in% c("mean", "precision"))
         trms = delete.response(terms(object, model = mode))
@@ -46,25 +46,25 @@ recover_data.betareg = function(object, mode = c("response", "link", "precision"
 # PRELIMINARY...
 # Currently works correctly only for "resp", "link", "precision", "phi" modes
 #' @exportS3Method emm_basis betareg
-emm_basis.betareg = function(object, trms, xlev, grid, 
-        mode = c("response", "link", "precision", "phi.link", "variance", "quantile"), 
+emm_basis.betareg = function(object, trms, xlev, grid,
+        mode = c("response", "link", "precision", "phi.link", "variance", "quantile"),
         quantile = .5, ...) {
     mode = match.arg(mode)
 #     if (mode %in% c("variance", "quantile"))
 #         stop(paste0('"', mode, '" mode is not yet supported.'))
-    
+
     # figure out which parameters we need
     model = if (mode %in% c("response", "link")) "mean"
         else if (mode %in% c("precision", "phi.link")) "precision"
         else "full"
     V = .pscl.vcov(object, model = model) # borrowed from pscl methods
     bhat = coef(object, model = model)
-    
+
     nbasis = estimability::all.estble
     dffun = function(k, dfargs) Inf
     dfargs = list()
-    
-    
+
+
     if (mode %in% c("response", "link", "precision", "phi.link")) {
         m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
         X = model.matrix(trms, m, contrasts.arg = object$contrasts[[model]])
@@ -80,13 +80,13 @@ emm_basis.betareg = function(object, trms, xlev, grid,
         m.idx = seq_len(ncol(X))
         m.lp = as.numeric(X %*% bhat[m.idx] + .get.offset(m.trms, grid))
         mu = object$link$mean$linkinv(m.lp)
-            
+
         p.trms = delete.response(terms(object, "precision"))
         p.m = model.frame(m.trms, grid, na.action = na.pass, xlev = xlev)
         Z = model.matrix(p.trms, p.m, contrasts.arg = object$contrasts$precision)
         p.lp = as.numeric(Z %*% bhat[-m.idx] + .get.offset(p.trms, grid))
         phi = object$link$precision$linkinv(p.lp)
-        
+
         if (mode == "variance") {
             bhat = mu * (1 - mu) / (1 + phi)
             dbhat.dm = (1 - 2 * mu) / (1 + phi)
@@ -117,10 +117,10 @@ emm_basis.betareg = function(object, trms, xlev, grid,
 ### predict methods
 # link: X%*%beta + off_m
 # response: mu = h_m(link)
-# 
+#
 # phi.link: Z%*%gamma + off_p
 # precision: phi = h_p(phi.link)
-# 
+#
 # variance: mu*(1 - mu) / (1 + phi)
 # quantile: qbeta(p, mu*phi, (1 - mu)*phi)
 #

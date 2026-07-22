@@ -28,9 +28,9 @@
 # NOTE: S3 registration of as.mcmc and as.mcmc.list is done dynamically in zzz.R
 
 #' Support for MCMC-based estimation
-#' 
-#' When a model is fitted using Markov chain Monte Carlo (MCMC) methods, 
-#' its reference grid contains a \code{post.beta} slot. These functions 
+#'
+#' When a model is fitted using Markov chain Monte Carlo (MCMC) methods,
+#' its reference grid contains a \code{post.beta} slot. These functions
 #' transform those posterior samples to posterior samples of EMMs or
 #' related contrasts. They can then be summarized or plotted using,
 #' e.g., functions in the \pkg{coda} package.
@@ -46,7 +46,7 @@
 #' @param sep.chains Logical value. If \code{TRUE}, and there is more than one
 #'   MCMC chain available, an \code{\link[coda]{mcmc.list}} object is returned
 #'   by \code{as.mcmc}, with separate EMMs posteriors in each chain.
-#' @param likelihood Character value or function. If given, simulations are made from 
+#' @param likelihood Character value or function. If given, simulations are made from
 #'   the corresponding posterior predictive distribution. If not given, we obtain
 #'   the posterior distribution of the parameters in \code{object}. See Prediction
 #'   section below.
@@ -58,7 +58,7 @@
 #' @param ... arguments passed to other methods
 #'
 #' @return An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
-#' 
+#'
 #' @section Details:
 #' When the object's \code{post.beta} slot is non-trivial, \code{as.mcmc} will
 #' return an \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}} object
@@ -68,42 +68,42 @@
 #' means. In \code{as.mcmc}, if \code{sep.chains} is \code{TRUE} and there is in
 #' fact more than one chain, an \code{mcmc.list} is returned with each chain's
 #' results. The \code{as.mcmc.list} method is guaranteed to return an
-#' \code{mcmc.list}, even if it comprises just one chain. 
-#' 
+#' \code{mcmc.list}, even if it comprises just one chain.
+#'
 #' @section Prediction:
 #' When \code{likelihood} is specified, it is used to simulate values from the
 #' posterior predictive distribution corresponding to the given likelihood and
-#' the posterior distribution of parameter values. Denote the likelihood 
+#' the posterior distribution of parameter values. Denote the likelihood
 #' function as \eqn{f(y|\theta,\phi)}, where \eqn{y} is a response, \eqn{\theta}
 #' is the parameter estimated in \code{object}, and \eqn{\phi} comprises zero or
-#' more additional parameters to be specified. If \code{likelihood} is a 
-#' function, that function should take as its first argument a vector of 
+#' more additional parameters to be specified. If \code{likelihood} is a
+#' function, that function should take as its first argument a vector of
 #' \eqn{\theta} values (each corresponding to one row of \code{object@grid}).
 #' Any \eqn{\phi} values should be specified as additional named function
-#' arguments, and passed to \code{likelihood} via \code{...}. This function should 
+#' arguments, and passed to \code{likelihood} via \code{...}. This function should
 #' simulate values of \eqn{y}.
-#' 
+#'
 #' A few standard likelihoods are available by specifying \code{likelihood} as
 #' a character value. They are:
 #' \describe{
 #'   \item{\code{"normal"}}{The normal distribution with mean \eqn{\theta} and
 #'   standard deviation specified by additional argument \code{sigma}}
-#'   \item{\code{"binomial"}}{The binomial distribution with success probability 
+#'   \item{\code{"binomial"}}{The binomial distribution with success probability
 #'     \eqn{theta}, and number of trials specified by \code{trials}}
-#'   \item{\code{"poisson"}}{The Poisson distribution with mean \eqn{theta} 
+#'   \item{\code{"poisson"}}{The Poisson distribution with mean \eqn{theta}
 #'     (no additional parameters)}
 #'   \item{\code{"gamma"}}{The gamma distribution with scale parameter \eqn{\theta}
 #'     and shape parameter specified by \code{shape}}
 #' }
-#' 
+#'
 #' @method as.mcmc emmGrid
 #' @export as.mcmc.emmGrid
 #' @examples
-#' if (requireNamespace("coda")) 
+#' if (requireNamespace("coda"))
 #'     emm_example("as.mcmc-coda")
 #'     # Use emm_example("as.mcmc-coda", list = TRUE) # to see just the code
-#'     
-as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE, 
+#'
+as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
                            likelihood, NE.include = FALSE, ...) {
     if (is.na(x@post.beta[1])) {
         stop("No posterior sample -- can't make an 'mcmc' object")
@@ -136,9 +136,9 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
         if (is.character(likelihood)) {
             likelihood = match.arg(likelihood, c("normal", "binomial", "poisson", "gamma"))
             likelihood = switch(likelihood,
-                normal = function(theta, sigma, ...) 
+                normal = function(theta, sigma, ...)
                     rnorm(length(theta), mean = theta, sd = sigma),
-                binomial = function(theta, trials, ...) 
+                binomial = function(theta, trials, ...)
                     rbinom(length(theta), size = trials, prob = theta),
                 poisson = function(theta, ...)
                     rpois(length(theta), lambda = theta),
@@ -150,7 +150,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
         mat = apply(mat, 2, likelihood, ...)
 ##! TODO: Add "multinomial" support. This will require a flag to observe
 ##! the 'by' variable(s), then we get parameter values from the columns
-##! corresponding to each 'by' group 
+##! corresponding to each 'by' group
     }
     nm = setdiff(names(x@grid), c(".wgt.",".offset."))
     if (any(names)) {
@@ -160,7 +160,7 @@ as.mcmc.emmGrid = function(x, names = TRUE, sep.chains = TRUE,
     }
     if (is.null(dimnames(mat)))
         dimnames(mat) = list(seq_len(nrow(mat)), seq_len(ncol(mat)))
-    dimnames(mat)[[2]] = do.call(paste, c(unname(x@grid[, nm, drop = FALSE]), 
+    dimnames(mat)[[2]] = do.call(paste, c(unname(x@grid[, nm, drop = FALSE]),
                                           sep = get_emm_option("sep")))
     n.chains = attr(x@post.beta, "n.chains")
     if (!sep.chains || is.null(n.chains) || (n.chains == 1))
@@ -203,7 +203,7 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 
 
 #' Summarize an emmGrid from a Bayesian model
-#' 
+#'
 #' This function computes point estimates and HPD (or quantile) intervals for each
 #' factor combination in \code{object@emmGrid}. While this function
 #' may be called independently, it is called automatically by the S3 method
@@ -215,35 +215,35 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #'   the current \code{level} option is used; see \code{\link{emm_options}})
 #' @param by factors to use as \code{by} variables
 #' @param type prediction type as in \code{\link{summary.emmGrid}}
-#' @param point.est function to use to compute the point estimates from the 
+#' @param point.est function to use to compute the point estimates from the
 #'   posterior sample for each grid point
 #' @param ci.method character value matching \code{"HPD"} (default) or \code{"quantile"}
 #'   (but actually not case-sensitive).
-#'   The default is to use HPD intervals (which are the shortest possible intervals). 
+#'   The default is to use HPD intervals (which are the shortest possible intervals).
 #'   Alternatively, choosing \code{"quantile"} uses the quantiles of the posterior
 #'   having equal tail probabilities.
-#' @param delta Numeric equivalence threshold (on the linear predictor scale 
+#' @param delta Numeric equivalence threshold (on the linear predictor scale
 #'   regardless of \code{type}).
 #'   See the section below on equivalence testing.
 #' @param bias.adjust Logical value for whether to adjust for bias in
-#'   back-transforming (\code{type = "response"}). This requires a value of 
+#'   back-transforming (\code{type = "response"}). This requires a value of
 #'   \code{sigma} to exist in the object or be specified.
-#' @param sigma Error SD assumed for bias correction (when 
+#' @param sigma Error SD assumed for bias correction (when
 #'   \code{type = "response"}. If not specified,
 #'   \code{object@misc$sigma} is used, and a warning if it is not found or invalid.
-#'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the 
+#'   \emph{Note:} \code{sigma} may be a vector, as long as it conforms to the
 #'   number of observations in the posterior sample.
 #' @param ... required but not used
 #'
 #' @return an object of class \code{summary_emm}
-#' 
+#'
 #' @section Equivalence testing note:
 #'   If \code{delta} is positive, two columns labeled \code{p.equiv} and
 #'   \code{odds.eq} are appended to the summary. \code{p.equiv} is the fraction
 #'   of posterior estimates having absolute values less than \code{delta}. The
 #'   \code{odds.eq} column is just \code{p.equiv} converted to an odds ratio; so
 #'   it is the posterior odds of equivalence.
-#'   
+#'
 #'   A high value of \code{p.equiv} is evidence
 #'   in favor of equivalence. It can be used to obtain something equivalent
 #'   (in spirit) to the frequentist Schuirmann (TOST) procedure, whereby we would
@@ -251,63 +251,63 @@ as.mcmc.list.emm_list = function(x, which = 1, ...) {
 #'   confidence interval falls entirely in the interval \eqn{[-\delta, \delta]}.
 #'   Similarly in the Bayesian context, an equally strong argument for
 #'   equivalence is obtained if \code{p.equiv} exceeds \eqn{1 - 2\alpha}.
-#'   
+#'
 #'   A closely related quantity is the ROPE (region of practical equivalence),
 #'   obtainable via \code{bayestestR::rope(object, range = c(-delta, delta))}.
 #'   Its value is approximately \code{100 * p.equiv / 0.95} if the default
-#'   \code{ci = 0.95} is used. See also \pkg{bayestestR}'s 
+#'   \code{ci = 0.95} is used. See also \pkg{bayestestR}'s
 #'   \href{https://github.com/easystats/bayestestR/issues/567}{issue #567}.
-#'   
-#'   Finally, a Bayes factor for equivalence is obtainable by dividing 
+#'
+#'   Finally, a Bayes factor for equivalence is obtainable by dividing
 #'   \code{odds.eq} by the prior odds of equivalence, assessed or elicited separately.
-#'   
+#'
 #' @note
 #' HPD intervals require the \pkg{coda} package to be installed on your system;
-#' otherwise an error is thrown. (So one way to sidestep that error is to specify 
+#' otherwise an error is thrown. (So one way to sidestep that error is to specify
 #' \code{ci.method = "quantile"}).
-#' 
+#'
 #' @seealso summary.emmGrid
-#' 
+#'
 #' @export
 #'
 #' @examples
-#' if (require("coda")) 
+#' if (require("coda"))
 #'     emm_example("hpd.summary-coda")
 #'     # Use emm_example("hpd.summary-coda", list = TRUE) # to see just the code
-#' 
-hpd.summary = function(object, prob, by, type, point.est = median, 
-                       ci.method = get_emm_option("post.ci.method"), 
+#'
+hpd.summary = function(object, prob, by, type, point.est = median,
+                       ci.method = get_emm_option("post.ci.method"),
                        delta,
-                       bias.adjust = get_emm_option("back.bias.adj"), sigma, 
+                       bias.adjust = get_emm_option("back.bias.adj"), sigma,
                        ...) {
     if (!is.null(object@misc$.predFlag))
         stop("Prediction intervals for MCMC models should be done using 'frequentist = TRUE'\n",
              "or using 'as.mcmc(object, ..., likelihood = ...)'")
-    
+
     ci.method = match.arg(tolower(ci.method), choices = c("hpd", "quantile"))
-    
+
     if (ci.method == "HPD")
         .requireNS("coda", "Bayesian summary requires the 'coda' package")
-    
+
     # Steal some init code from summary.emmGrid:
     opt = get_emm_option("summary")
     if (!is.null(opt)) {
         opt$object = object
         object = do.call("update.emmGrid", opt)
     }
-    
+
     misc = object@misc
-    use.elts = if (is.null(misc$display))  
-                    rep(TRUE, nrow(object@grid)) 
-                else                        
+    use.elts = if (is.null(misc$display))
+                    rep(TRUE, nrow(object@grid))
+                else
                     misc$display
     grid = object@grid[use.elts, , drop = FALSE]
-    
+
     if (missing(prob))
         prob = misc$level
     if (missing(by))
         by = misc$by.vars
-    
+
     if (missing(type))
         type = .get.predict.type(misc)
     else
@@ -320,16 +320,16 @@ hpd.summary = function(object, prob, by, type, point.est = median,
             t2 = "tran"
         object = update(object, inv.lbl = paste0(t2, "(resp)"))
     }
-    
+
     link = .get.link(misc)
     inv = (type %in% c("response", "mu", "unlink")) # flag to inverse-transform
     if (inv && is.null(link))
         inv = FALSE
-    
-    
+
+
     ### OK, finally, here is the real stuff
     pe.lbl = as.character(substitute(point.est))
-    if (length(pe.lbl) > 1) 
+    if (length(pe.lbl) > 1)
         pe.lbl = "user-supplied function"
     mesg = c(misc$initMesg, paste("Point estimate displayed:", pe.lbl))
     if (length(misc$avgd.over) > 0) {
@@ -339,13 +339,13 @@ hpd.summary = function(object, prob, by, type, point.est = median,
                         paste(misc$avgd.over, collapse = ", ")), mesg)
     }
 
-    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE, 
+    mcmc = as.mcmc.emmGrid(object, names = FALSE, sep.chains = FALSE,
                            NE.include = TRUE, ...)
     mcmc = mcmc[, use.elts, drop = FALSE]
     p.equiv = odds.eq = NULL
     if (!missing(delta) && (delta > 0)) {
         p.equiv = apply(mcmc, 2, \(x) mean(abs(x) < delta))
-        mesg = c(mesg, paste0("'p.equiv' and 'odds.eq' based on posterior P(|lin. pred.| < ", 
+        mesg = c(mesg, paste0("'p.equiv' and 'odds.eq' based on posterior P(|lin. pred.| < ",
                               round(delta, digits = 4), ")"))
         odds.eq = p.equiv / (1 - p.equiv)
     }
@@ -356,7 +356,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
             link = .make.bias.adj.link(link, sigma)
             bias.adjust = attr(link, "bias.adjust")
         }
-        
+
         for (j in seq_along(mcmc[1, ]))
             mcmc[, j] = with(link, linkinv(mcmc[, j]))
         mesg = c(mesg, paste("Results are back-transformed from the", link$name, "scale"))
@@ -366,7 +366,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
     }
     else if (!is.null(link))
         mesg = c(mesg, paste("Results are given on the", link$name, "(not the response) scale."))
-    
+
     est = !is.na(mcmc[1, ])
     mcmc[, !est] = 0 # temp so we don't get errors
     pt.est = data.frame(apply(mcmc, 2, point.est))
@@ -382,7 +382,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         names(summ) = cnm = c("lower.QL", "upper.QL")
         mesg = c(mesg, paste("quantile interval probability:", prob))
     }
-    lblnms = setdiff(names(grid), 
+    lblnms = setdiff(names(grid),
                      c(object@roles$responses, ".offset.", ".wgt."))
     lbls = grid[lblnms]
     if (!is.null(p.equiv)) {
@@ -401,7 +401,7 @@ hpd.summary = function(object, prob, by, type, point.est = median,
         else
             names(pt.est) = misc$estName = "response"
     }
-    
+
     summ[!est, ] = NA
     pt.est[!est, ] = NA
     summ = cbind(lbls, pt.est, summ)
@@ -451,7 +451,7 @@ recover_data.MCMCglmm = function(object, data, trait, ...) {
 
 # misc may be NULL or a list generated by trait spec
 #' @exportS3Method emm_basis MCMCglmm
-emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov., 
+emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
                               mode = c("default", "multinomial"), misc, ...) {
     nobs.MCMCglmm = function(object, ...) 1   # prevents warning about nobs
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
@@ -480,8 +480,8 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
         if (!is.null(link))
             misc = .std.link.labels(list(link = link), misc)
     }
-    list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
-         dffun = function(k, dfargs) Inf, dfargs = list(), 
+    list(X = X, bhat = bhat, nbasis = matrix(NA), V = V,
+         dffun = function(k, dfargs) Inf, dfargs = list(),
          misc = misc, post.beta = Sol)
 }
 
@@ -500,7 +500,7 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
         expX = exp(cbind(0, matrix(l[cols], ncol = k)) / scal)
         as.numeric(apply(expX, 1, function(z) z / sum(z)))
     })) # These results come out with response levels varying the fastest.
-    
+
     object@bhat = apply(post.p, 2, mean)
     object@V = cov(post.p)
     preds = c(misc$trait, object@roles$predictors)
@@ -509,14 +509,14 @@ emm_basis.MCMCglmm = function(object, trms, xlev, grid, vcov.,
     object@levels = c(list(misc$resp.levs), object@levels)
     names(object@levels)[1] = misc$trait
     object@grid = do.call(expand.grid, object@levels)
-    
-    misc$postGridHook = misc$tran = misc$inv.lbl = 
+
+    misc$postGridHook = misc$tran = misc$inv.lbl =
         misc$trait = misc$resp.levs = NULL
     misc$display = object@model.info$nesting = NULL
     misc$estName = "prob"
     object@linfct = diag(1, ncol(post.p))
     object@misc = misc
-    
+
     object
 }
 
@@ -546,7 +546,7 @@ recover_data.mcmc = function(object, formula, data, ...) {
     recover_data(cl, trms, NULL, data, ...)
 }
 
-#' @exportS3Method emm_basis mcmc         
+#' @exportS3Method emm_basis mcmc
 emm_basis.mcmc = function(object, trms, xlev, grid, vcov., contrasts.arg = NULL, ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts.arg)
@@ -557,8 +557,8 @@ emm_basis.mcmc = function(object, trms, xlev, grid, vcov., contrasts.arg = NULL,
     else
         V = .my.vcov(object, vcov.)
     misc = list()
-    list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
-         dffun = function(k, dfargs) Inf, dfargs = list(), 
+    list(X = X, bhat = bhat, nbasis = matrix(NA), V = V,
+         dffun = function(k, dfargs) Inf, dfargs = list(),
          misc = misc, post.beta = samp)
 }
 
@@ -569,12 +569,12 @@ recover_data.mcmc.list = function(object, formula, data, ...) {
     recover_data.mcmc(object[[1]], formula, data, ...)
 }
 
-#' @exportS3Method emm_basis mcmc.list    
+#' @exportS3Method emm_basis mcmc.list
 emm_basis.mcmc.list = function(object, trms, xlev, grid, vcov., ...) {
     result = emm_basis.mcmc(object[[1]], trms, xlev, grid, vcov., ...)
     cols = seq_len(ncol(result$post.beta))
     for (i in 2:length(object))
-        result$post.beta = rbind(result$post.beta, 
+        result$post.beta = rbind(result$post.beta,
             as.matrix(object[[i]])[, cols, drop = FALSE])
     attr(result$post.beta, "n.chains") = length(object)
     result
@@ -600,8 +600,8 @@ emm_basis.carbayes = function(object, trms, xlev, grid, ...) {
     bhat = apply(samp, 2, mean)
     V = cov(samp)
     misc = list()
-    list(X = X, bhat = bhat, nbasis = matrix(NA), V = V, 
-         dffun = function(k, dfargs) Inf, dfargs = list(), 
+    list(X = X, bhat = bhat, nbasis = matrix(NA), V = V,
+         dffun = function(k, dfargs) Inf, dfargs = list(),
          misc = misc, post.beta = samp)
 }
 
@@ -615,7 +615,7 @@ recover_data.stanreg = function(object, ...) {
 }
 
 # note: mode and rescale are ignored for some models
-#' @exportS3Method emm_basis stanreg      
+#' @exportS3Method emm_basis stanreg
 emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     misc = list()
     if (!is.null(object$family)) {
@@ -642,16 +642,16 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
     pp_data = get("pp_data", envir = getNamespace("rstanarm"))
     X = pp_data(object, newdata = grid, re.form = ~0, ...)[[1]]
     nms = colnames(X)
-    
+
     if (!is.null(object$zeta)) {   # Polytomous regression model
         if (missing(mode))
             mode = "latent"
         else
-            mode = match.arg(mode, 
+            mode = match.arg(mode,
                              c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"))
-        
+
         xint = match("(Intercept)", nms, nomatch = 0L)
-        if (xint > 0L) 
+        if (xint > 0L)
             X = X[, -xint, drop = FALSE]
         k = length(object$zeta)
         if (mode == "latent") {
@@ -668,7 +668,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
             X = cbind(kronecker(-j, X), kronecker(diag(1,k), J))
             link = object$method
             if (link == "logistic") link = "logit"
-            misc = list(ylevs = list(cut = names(object$zeta)), 
+            misc = list(ylevs = list(cut = names(object$zeta)),
                         tran = link, inv.lbl = "cumprob", offset.mult = -1)
             if (mode != "linear.predictor") {
                 misc$mode = mode
@@ -676,7 +676,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
             }
         }
         nms = colnames(X) = c(nms, names(object$zeta))
-        
+
         misc$respName = as.character.default(terms(object))[2]
     }
     samp = as.matrix(object$stanfit)
@@ -686,7 +686,7 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
 
     bhat = apply(samp, 2, mean)
     V = cov(samp)
-    
+
     # estimability...
     nbasis = estimability::all.estble
     all.nms = colnames(X)
@@ -704,10 +704,10 @@ emm_basis.stanreg = function(object, trms, xlev, grid, mode, rescale, ...) {
         mmat = model.matrix(trms, data, contrasts.arg = contr)
         nbasis = estimability::nonest.basis(mmat)
     }
-    
-    
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
-         dffun = function(k, dfargs) Inf, dfargs = list(), 
+
+
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
+         dffun = function(k, dfargs) Inf, dfargs = list(),
          misc = misc, post.beta = samp)
 }
 

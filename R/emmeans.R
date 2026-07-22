@@ -37,7 +37,7 @@ emmeans.list = function(object, specs, ...) {
         desc
     }
     name.arg = match.call()$name
-    
+
     for (i in seq_len(length(specs))) {
         nm = nms[i]
         # We'll rename the contrasts if spec is named
@@ -76,13 +76,13 @@ emmeans.list = function(object, specs, ...) {
 
 # Here's our flagship function!
 #' Estimated marginal means (Least-squares means)
-#' 
+#'
 #' Compute estimated marginal means (EMMs) for specified factors
 #' or factor combinations in a linear model; and optionally, comparisons or
 #' contrasts among them. EMMs are also known as least-squares means.
-#' 
-#' Users should also consult the documentation for \code{\link{ref_grid}}, 
-#' because many important options for EMMs are implemented there, via the 
+#'
+#' Users should also consult the documentation for \code{\link{ref_grid}},
+#' because many important options for EMMs are implemented there, via the
 #' \code{...} argument.
 #'
 #' @param object An object of class \code{emmGrid}; or a fitted model object
@@ -92,15 +92,15 @@ emmeans.list = function(object, specs, ...) {
 #' @param specs A \code{character} vector specifying the names of the predictors
 #'   over which EMMs are desired. \code{specs} may also be a \code{formula}
 #'   or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
-#'   is described in the Overview section below. 
+#'   is described in the Overview section below.
 #'   Specifying \code{.} as the only factor name
 #'   creates a list of specifications for all model terms.
-#'   
+#'
 #'   \bold{Note:} We recommend \emph{against} using two-sided formulas; see the
 #'   note below for \code{contr}.
 #' @param by A character vector specifying the names of predictors to condition on.
 #' @param fac.reduce A function that combines the rows of a matrix into a single
-#'   vector. This implements the ``marginal averaging'' aspect of EMMs. 
+#'   vector. This implements the ``marginal averaging'' aspect of EMMs.
 #'   The default is the mean of the rows. Typically if it is overridden,
 #'   it would be some kind of weighted mean of the rows. If \code{fac.reduce} is
 #'   nonlinear, bizarre results are likely, and EMMs will not be
@@ -119,30 +119,30 @@ emmeans.list = function(object, specs, ...) {
 #' @param weights Character value, numeric vector, or numeric matrix specifying
 #'   weights to use in averaging predictions. See \dQuote{Weights} section below.
 #'   Also, if \code{object} is not already a reference grid, \code{weights}
-#'   (if it is character) is passed to \code{ref_grid} as \code{wt.nuis} in case 
-#'   nuisance factors are specified. We can override this by specifying 
+#'   (if it is character) is passed to \code{ref_grid} as \code{wt.nuis} in case
+#'   nuisance factors are specified. We can override this by specifying
 #'   \code{wt.nuis} explicitly.
 #'   This more-or-less makes the weighting of nuisance factors consistent with
 #'   that of primary factors.
 #' @param offset Numeric vector or scalar. If specified, this adds an offset to
 #'   the predictions, or overrides any offset in the model or its
-#'   reference grid. If a vector of length differing from the number of rows in 
+#'   reference grid. If a vector of length differing from the number of rows in
 #'   the result, it is subsetted or cyclically recycled.
 #' @param ... When \code{object} is not already a \code{"emmGrid"}
 #'   object, these arguments are passed to \code{\link{ref_grid}}. Common
-#'   examples are \code{at}, \code{cov.reduce}, \code{data}, \code{type}, 
+#'   examples are \code{at}, \code{cov.reduce}, \code{data}, \code{type},
 #'   \code{regrid}, \code{df}, \code{nesting}, and \code{vcov.}.
 #'   Model-type-specific options (see
 #'   \href{../doc/models.html}{\code{vignette("models", "emmeans")}}), commonly
 #'   \code{mode}, may be used here as well. In addition, if the model formula
 #'   contains references to variables that are not predictors, you must provide
 #'   a \code{params} argument with a list of their names.
-#'   These arguments may also be used in lieu of \code{options}. See the 
+#'   These arguments may also be used in lieu of \code{options}. See the
 #'   \sQuote{Options} section below.
 #' @param tran Placeholder to prevent it from being included in \code{...}.
 #'   If non-missing, it is added to `options`. See the \sQuote{Options}
 #'   section.
-#'   
+#'
 #' @return   When \code{specs} is a \code{character} vector or one-sided formula,
 #'   an object of class \code{"emmGrid"}. A number of methods
 #'   are provided for further analysis, including
@@ -152,27 +152,27 @@ emmeans.list = function(object, specs, ...) {
 
 #' When \code{specs} is a \code{list} or a \code{formula} having a left-hand
 #' side, the return value is an \code{\link{emm_list}} object, which is simply a
-#' \code{list} of \code{emmGrid} objects. 
-#' 
+#' \code{list} of \code{emmGrid} objects.
+#'
 #' @section Overview:
 #' Estimated marginal means or EMMs (sometimes called least-squares means) are
 #' predictions from a linear model over a \emph{reference grid}; or marginal
 #' averages thereof. The \code{\link{ref_grid}} function identifies/creates the
 #' reference grid upon which \code{emmeans} is based.
-#' 
+#'
 #' For those who prefer the terms \dQuote{least-squares means} or
 #' \dQuote{predicted marginal means}, functions \code{lsmeans} and
 #' \code{pmmeans} are provided as wrappers. See \code{\link{wrappers}}.
-#' 
+#'
 #' If \code{specs} is a \code{formula}, it should be of the form \code{~ specs},
 #' \code{~ specs | by}, \code{contr ~ specs}, or \code{contr ~ specs | by}. The
 #' formula is parsed and the variables therein are used as the arguments
 #' \code{specs}, \code{by}, and \code{contr} as indicated. The left-hand side is
-#' optional (and we don't recommend it), but if specified it should be the 
+#' optional (and we don't recommend it), but if specified it should be the
 #' name of a contrast family (e.g., \code{pairwise}). Operators like
 #' \code{*} or \code{:} are needed in the formula to delineate names, but
 #' otherwise are ignored.
-#' 
+#'
 #' We now also allow using \code{.} in \code{specs}. If this is done, we run
 #' \code{\link{joint_tests}} on the side to determine all relevant model terms,
 #' then replace \code{specs} with a corresponding list of specifications. This is
@@ -181,24 +181,24 @@ emmeans.list = function(object, specs, ...) {
 #' via a \code{contr} argument or formula left-hand-side, we recommend instead
 #' doing this in a follow-up test with \code{\link{contrast.emm_list}}. \emph{Caution}:
 #' In models with nested fixed effects, using \code{.} creates results where
-#' nested factors interact with nesting factors; in those cases, any contrasts 
+#' nested factors interact with nesting factors; in those cases, any contrasts
 #' you specify will go across nests, which is likely not what is desired.
-#' 
+#'
 #' In the special case where the mean (or weighted mean) of all the predictions
 #' is desired, specify \code{specs} as \code{~ 1} or \code{"1"}.
-#' 
-#' A number of standard contrast families are provided. They can be identified 
+#'
+#' A number of standard contrast families are provided. They can be identified
 #' as functions having names ending in \code{.emmc} -- see the documentation
 #' for \code{\link{emmc-functions}} for details -- including how to write your
 #' own \code{.emmc} function for custom contrasts.
-#' 
+#'
 #' @section Weights:
 #' If \code{weights} is a vector, its length must equal
 #'   the number of predictions to be averaged to obtain each EMM.
 #'   If a matrix, each row of the matrix is used in turn, wrapping back to the
 #'   first row as needed.  When in doubt about what is being averaged (or how
 #'   many), first call \code{emmeans} with \code{weights = "show.levels"}.
-#'   
+#'
 #' If \code{weights} is a string, it should partially match one of the following:
 #' \describe{
 #' \item{\code{"equal"}}{Use an equally weighted average.}
@@ -224,75 +224,75 @@ emmeans.list = function(object, specs, ...) {
 #' data for the factors involved. Using \code{"flat"} is similar to
 #' \code{"cells"}, except nonempty cells are weighted equally and empty cells
 #' are ignored.
-#' 
+#'
 #' @section Counterfactuals:
 #' Counterfactual reference grids (see the documentation for \code{\link{ref_grid}})
 #' contain pairs of imputed and actual factor levels, and are handled in a special way.
-#' For starters, the \code{weights} argument is ignored and we always use 
+#' For starters, the \code{weights} argument is ignored and we always use
 #' \code{"cells"} weights.
-#' Our understanding is that if factors \code{A, B} are specified as counterfactuals, 
-#' the marginal means for \code{A} should still be the same as if \code{A} were the only 
+#' Our understanding is that if factors \code{A, B} are specified as counterfactuals,
+#' the marginal means for \code{A} should still be the same as if \code{A} were the only
 #' counterfactual. Accordingly, in computing these marginal means, we
 #' exclude all cases where \code{B != actual_B}, because if \code{A} were the only
 #' counterfactual, \code{B} will stay at its actual level.
-#' We also take special pains to "remember" information about actual and 
+#' We also take special pains to "remember" information about actual and
 #' imputed levels of counterfactuals so that appropriate results are obtained when
 #' \code{emmeans} is applied to a previous \code{emmeans} result.
-#' 
-#' 
+#'
+#'
 #' @section Offsets:
 #' Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values
-#' are supplied, they are cyclically recycled. For a vector of offsets, it is 
-#' important to understand that the ordering of results goes with the first 
+#' are supplied, they are cyclically recycled. For a vector of offsets, it is
+#' important to understand that the ordering of results goes with the first
 #' name in \code{specs} varying fastest. If there are any \code{by} factors,
 #' those vary slower than all the primary ones, but the first \code{by} variable
 #' varies the fastest within that hierarchy. See the examples.
-#' 
+#'
 #' @section Options and \code{...}:
 #'   Arguments that could go in \code{options} may instead be included in \code{...},
 #'   typically, arguments such as \code{type}, \code{infer}, etc. that in essence
-#'   are passed to \code{\link{summary.emmGrid}}. Arguments in both places are 
+#'   are passed to \code{\link{summary.emmGrid}}. Arguments in both places are
 #'   overridden by the ones in \code{...}.
-#'   
+#'
 #'   There is a danger that \code{...} arguments could partially match those used
 #'   by both \code{ref_grid} and \code{update.emmGrid}, creating a conflict.
-#'   If these occur, usually they can be resolved by providing complete (or at least 
+#'   If these occur, usually they can be resolved by providing complete (or at least
 #'   longer) argument names; or by isolating non-\code{ref_grid} arguments in
 #'   \code{options}; or by calling \code{ref_grid} separately and passing the
 #'   result as \code{object}. See a not-run example below.
-#'   
+#'
 #'   Also, when \code{specs} is a two-sided formula, or \code{contr} is specified,
 #'   there is potential confusion concerning which \code{...} arguments
 #'   apply to the means, and which to the contrasts. When such confusion is possible,
-#'   we suggest doing things separately 
-#'   (a call to \code{emmeans} with no contrasts, followed by a call to 
+#'   we suggest doing things separately
+#'   (a call to \code{emmeans} with no contrasts, followed by a call to
 #'   \code{\link{contrast}}). We treat
-#'   \code{adjust} as a special case: it is applied to the \code{emmeans} results 
+#'   \code{adjust} as a special case: it is applied to the \code{emmeans} results
 #'   \emph{only} if there are
 #'   no contrasts specified, otherwise it is passed only to \code{contrast}.
 
 #'
 #' @export
-#' 
-#' @seealso \code{\link{ref_grid}}, \code{\link{contrast}}, 
+#'
+#' @seealso \code{\link{ref_grid}}, \code{\link{contrast}},
 #' \href{../doc/models.html}{vignette("models", "emmeans")}
 #'
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 #' emmeans (warp.lm,  ~ wool | tension)
 #' # or equivalently emmeans(warp.lm, "wool", by = "tension")
-#' 
+#'
 #' # 'adjust' argument ignored in emmeans, passed to contrast part...
 #' emmeans (warp.lm, poly ~ tension | wool, adjust = "sidak")
-#' 
+#'
 #' # 'adjust' argument NOT ignored ...
 #' emmeans (warp.lm, ~ tension | wool, adjust = "sidak")
-#' 
+#'
 #' # Get all sets of EMMs for this model
 #' ( allsets <- emmeans(warp.lm, ".") )
 #' contrast(allsets, "eff")    # all effects
-#' 
-#' 
+#'
+#'
 #' \dontrun{
 #'   ### Offsets: Consider a silly example:
 #'   emmeans(warp.lm, ~ tension | wool, offset = c(17, 23, 47)) @ grid
@@ -301,11 +301,11 @@ emmeans.list = function(object, specs, ...) {
 #'   # But using the same offsets with ~ wool | tension will probably not
 #'   # be what you want because the ordering of combinations is different.
 #' }
-emmeans = function(object, specs, by = NULL, 
-                   fac.reduce = function(coefs) apply(coefs, 2, mean), 
-                   contr, options = get_emm_option("emmeans"), 
+emmeans = function(object, specs, by = NULL,
+                   fac.reduce = function(coefs) apply(coefs, 2, mean),
+                   contr, options = get_emm_option("emmeans"),
                    weights, offset, ..., tran) {
-    
+
     object = .chk.list(object, ...)
     if (!is(object, "emmGrid")) {
         args = .zap.args(object = object, ..., omit = "submodel")
@@ -313,50 +313,50 @@ emmeans = function(object, specs, by = NULL,
             args$wt.nuis = ifelse(!missing(weights) && is.character(weights), weights, "equal")
         object = do.call(ref_grid, args)
     }
-    
+
     # Check to see if we want all sets of means
     specs = .parse.specs.for.all(object, specs, by)
     if (!is.null(rtn <- attr(specs, "form.rtn"))) {
         if (length(rtn$by) > 0)
             by = rtn$by
-        if (length(rtn$lhs) > 0) 
+        if (length(rtn$lhs) > 0)
             contr = rtn$lhs
     }
-    
+
     if (is.list(specs)) {
-        return (emmeans.list(object, specs, by = by, 
-                             contr = contr, weights = weights, 
+        return (emmeans.list(object, specs, by = by,
+                             contr = contr, weights = weights,
                              offset = offset, ...))
     }
     if (inherits(specs, "formula")) {
         spc = .parse.by.formula(specs)
         specs = spc$rhs
-        if (length(spc$by) > 0) 
+        if (length(spc$by) > 0)
             by = setdiff(union(spc$by, by), spc$rhs)
-        if (length(spc$lhs) > 0) 
+        if (length(spc$lhs) > 0)
             contr = spc$lhs
     }
-    
+
     if (!missing(tran)) {
         options $tran = tran
     }
-    
-    if (is.null(nesting <- object@model.info$nesting)) 
+
+    if (is.null(nesting <- object@model.info$nesting))
         {
         RG = object
         facs = union(specs, by)
-        
+
         # Check that grid is complete
         # This isn't a 100% reliable check, but...
         if (nrow(RG@grid) != prod(sapply(RG@levels, length)))
             stop("Irregular reference grid: Marginal means cannot be determined.\n",
                  "You can possibly fix this with the 'force_regular' function.")
-        
+
         if (!is.null(RG@misc$display)) {
             RG@misc$display = NULL
             warning("emmeans() results may be corrupted by removal of a nesting structure")
         }
-        
+
         ## Handle counterfactuals...
         # cf.grid is either NULL, logical, or a "parent" grid that should replace RG
         if (!is.null(cf.grid <- RG@misc$cf.grid)) {
@@ -382,19 +382,19 @@ emmeans = function(object, specs, by = NULL,
                     RG@misc$cf.grid = RG   # save this as "parent" grid
             }
         }
-        
+
         # Ensure object is in standard order
         ord = .std.order(RG@grid, RG@levels) ###do.call(order, unname(RG@grid[rev(names(RG@levels))]))
         if (any(ord != seq_along(ord)))
             RG = RG[ord]
-        
+
         # xxx if ((length(facs) == 1) && (facs == "1")) {  ### just want grand mean
         if ("1" %in% facs) {
             RG@levels[["1"]] = "overall"
             RG@grid[ ,"1"] = 1
         }
 
-        
+
         # Figure out the structure of the grid
         wgt = RG@grid[[".wgt."]]
         if (!is.null(wgt) && all(zapsmall(wgt) == 0)) wgt = wgt + 1 ### repl all zero wgts with 1
@@ -402,7 +402,7 @@ emmeans = function(object, specs, by = NULL,
         row.idx = array(seq_len(nrow(RG@linfct)), dims)
         use.mars = match(facs, names(RG@levels)) # which margins to use
         avgd.mars = setdiff(seq_along(dims)[dims>1], use.mars) # margins that we average over
-        
+
         # Reconcile weights, if there are any margins left
         if ((length(avgd.mars) > 0) && !missing(weights)) {
             if (is.character(weights)) {
@@ -453,7 +453,7 @@ emmeans = function(object, specs, by = NULL,
                 }
             }
         }
-        
+
         # Get the required factor combs
         levs = list()
         for (f in facs) {
@@ -473,39 +473,39 @@ emmeans = function(object, specs, by = NULL,
             K = apply(row.idx, use.mars, function(idx) {
                 fac.reduce(RG@linfct[idx, , drop=FALSE])
             })
-        
+
         linfct = t(matrix(K, nrow = ncol(RG@linfct),
                           dimnames = list(colnames(RG@linfct), NULL)))
 
         if (.some.term.contains(union(facs, RG@roles$trend), RG@model.info$terms))
             if (get_emm_option("msg.interaction"))
-                message("NOTE: Results may be misleading due ", 
+                message("NOTE: Results may be misleading due ",
                         "to involvement in interactions")
-        
+
         # Figure offset, if any
         if (hasName(RG@grid, ".offset.")) {
             combs[[".offset."]] = as.numeric(apply(row.idx, use.mars, function(idx)
                 fac.reduce(as.matrix(RG@grid[idx, ".offset.", drop = FALSE]))))
         }
-        
+
         avgd.over = names(RG@levels[avgd.mars])
-        
+
         # add/override .offset. column if requested
         if (!missing(offset)) {
             combs[[".offset."]] = rep(offset, nrow(combs))[seq_len(nrow(combs))]
-            
+
         }
-        
+
         # Update .wgt column of grid, if it exists
         if (!is.null(wgt)) {
-            combs[[".wgt."]] = as.numeric(apply(row.idx, use.mars, 
+            combs[[".wgt."]] = as.numeric(apply(row.idx, use.mars,
                                                       function(idx) sum(wgt[idx])))
         }
-        
+
         RG@roles$responses = character()
         RG@misc$is.new.rg = NULL
         RG@misc$famSize = nrow(linfct)
-        if (RG@misc$estName == "prediction") 
+        if (RG@misc$estName == "prediction")
             RG@misc$estName = "emmean"
         RG@misc$adjust = "none"
         RG@misc$infer = c(TRUE,FALSE)
@@ -514,47 +514,47 @@ emmeans = function(object, specs, by = NULL,
         RG@misc$avgd.over = union(RG@misc$avgd.over, avgd.over)
         RG@misc$methDesc = "emmeans"
         RG@roles$predictors = setdiff(names(levs), RG@roles$multresp)
-        # if ((length(RG@roles$multresp) > 0) && !(RG@roles$multresp %in% names(levs))) 
+        # if ((length(RG@roles$multresp) > 0) && !(RG@roles$multresp %in% names(levs)))
         #     RG@roles$multresp = character(0)
         # REPLACED BY:
         RG@roles$multresp = intersect(RG@roles$multresp, names(levs))
-        
+
         result = as.emmGrid(RG)
         result@linfct = linfct
         result@levels = levs
         result@grid = combs
-        
+
         result = if (missing(contr))
             .update.options(result, options, ...)
         else
             .update.options(result, options, ..., exclude.opts = "adjust")
     }
-    
+
     else {  # handle a nested structure
         object@model.info$nesting = NULL
-        result = .nested_emm(object, specs, by = by, fac.reduce = fac.reduce, 
+        result = .nested_emm(object, specs, by = by, fac.reduce = fac.reduce,
                        options = options, weights = weights, offset = offset, nesting = nesting)
         if (!is.null(type <- list(...)$type))
             result = update(result, type = type)
     }
-    
+
 
     if (!missing(contr)) { # return a list with emmeans and contrasts
         # # skip doing contrasts when we have no primary factor
-        # if (length(result@misc$pri.vars) == 0) 
+        # if (length(result@misc$pri.vars) == 0)
         #     return(result)
-        warn.contr = interactive() && (sys.parent() == 0) && is.character(contr) && 
+        warn.contr = interactive() && (sys.parent() == 0) && is.character(contr) &&
             (length(result@misc$pri.vars) > 1)
-        # NULL-out a bunch of arguments to not pass. 
+        # NULL-out a bunch of arguments to not pass.
         dontpass = c("data", "avgd.over", "by.vars", "df", "initMesg", "estName", "estType",
-                     "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars", 
+                     "famSize", "inv.lbl", "methDesc", "nesting", "pri.vars",
                      "tran", "tran.mult", "tran.offset", "tran2", "is.new.rg")
         args = .zap.args(object = result, method = contr, by = by, ..., omit = dontpass)
         ctrs = do.call(contrast, args)
         result = .cls.list("emm_list", emmeans = result, contrasts = ctrs)
         if (!is.null(lbl <- object@misc$methDesc))
             names(result)[1] = lbl
-        
+
         if (warn.contr && (nrow(result$contr@grid) > 21))
             warning("You may have generated more contrasts than you really wanted. In the future,\n",
                     "we suggest you avoid things like 'pairwise ~ fac1*fac2' when you have\n",
@@ -571,19 +571,19 @@ emmeans = function(object, specs, by = NULL,
 # Construct a new emmGrid object with given arguments
 
 #' Construct an \code{emmGrid} object from scratch
-#' 
+#'
 #' This allows the user to incorporate results obtained by some analysis
 #' into an \code{emmGrid} object, enabling the use of \code{emmGrid} methods
 #' to perform related follow-up analyses.
-#' 
+#'
 #'  The arguments must be conformable. This includes that the length of
 #'  \code{bhat}, the number of columns of \code{linfct}, and the number of
 #'  columns of \code{post.beta} must all be equal. And that the product of
 #'  lengths in \code{levels} must be equal to the number of rows of
-#'  \code{linfct}. The \code{grid} slot of the returned object is generated 
+#'  \code{linfct}. The \code{grid} slot of the returned object is generated
 #'  by \code{\link{expand.grid}} using \code{levels} as its arguments. So the
 #'  rows of \code{linfct} should be in corresponding order.
-#'  
+#'
 #' The functions \code{qdrg} and \code{\link{emmobj}} are close cousins, in that
 #' they both produce \code{emmGrid} objects. When starting with summary
 #' statistics for an existing grid, \code{emmobj} is more useful, while
@@ -595,8 +595,8 @@ emmeans = function(object, specs, by = NULL,
 #' @param levels Named list or vector. Levels of factor(s) that define the
 #'   estimates defined by \code{linfct}. If not a list, we assume one factor
 #'   named \code{"level"}
-#' @param linfct Matrix. Linear functions of \code{bhat} for each combination 
-#'   of \code{levels}. 
+#' @param linfct Matrix. Linear functions of \code{bhat} for each combination
+#'   of \code{levels}.
 #' @param df Numeric value or function with arguments \code{(x, dfargs)}. If a
 #'   number, that is used for the degrees of freedom. If a function, it should
 #'   return the degrees of freedom for \code{sum(x*bhat)}, with any additional
@@ -618,15 +618,15 @@ emmeans = function(object, specs, by = NULL,
 #'   of \code{se.bhat}, and its elements should be in the order \code{12,13,...,1k,23,...2k,...}.
 #'   If \code{se.diff} is missing, \code{V} is computed as if the \code{bhat} are independent.
 #' @param ... Arguments passed to \code{\link{update.emmGrid}}
-#' 
-#' @seealso \code{\link{qdrg}}, an alternative that is useful when starting 
+#'
+#' @seealso \code{\link{qdrg}}, an alternative that is useful when starting
 #'   with a fitted model not supported in \pkg{emmeans}.
 #'
 #' @return An \code{emmGrid} object
 #' @export
 #'
 #' @examples
-#' # Given summary statistics for 4 cells in a 2 x 2 layout, obtain 
+#' # Given summary statistics for 4 cells in a 2 x 2 layout, obtain
 #' # marginal means and comparisons thereof. Assume heteroscedasticity
 #' # and use the Satterthwaite method
 #' levels <- list(trt = c("A", "B"), dose = c("high", "low"))
@@ -636,27 +636,27 @@ emmeans = function(object, specs, by = NULL,
 #' se2 = s^2 / n
 #' Satt.df <- function(x, dfargs)
 #'     sum(x * dfargs$v)^2 / sum((x * dfargs$v)^2 / (dfargs$n - 1))
-#'     
+#'
 #' expt.emm <- emmobj(bhat = ybar, V = diag(se2),
 #'     levels = levels, linfct = diag(c(1, 1, 1, 1)),
 #'     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
-#' 
+#'
 #' ( trt.emm <- emmeans(expt.emm, "trt") )
 #' ( dose.emm <- emmeans(expt.emm, "dose") )
-#' 
+#'
 #' rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
-#' 
+#'
 #' ### Create an emmobj from means and SEs
 #' ### (This illustration reproduces the MOats example for Variety = "Victory")
 #' means = c(71.50000,  89.66667, 110.83333, 118.50000)
 #' semeans = c(5.540591, 6.602048, 8.695358, 7.303221)
 #' sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
-#' foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
+#' foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs,
 #'              levels = list(nitro = seq(0, .6, by = .2)), df = 10)
 #' plot(foo, comparisons = TRUE)
-#' 
-emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(), 
-                  post.beta = matrix(NA), nesting = NULL, 
+#'
+emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, dfargs = list(),
+                  post.beta = matrix(NA), nesting = NULL,
                   se.bhat, se.diff, ...) {
     if (!missing(se.bhat)) {
         V = D = diag(vb <- se.bhat^2)
@@ -677,9 +677,9 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
     dotargs = list(...)
     model.info = dotargs$model.info
     if (is.null(model.info))
-        model.info = list(call = str2lang("emmobj"), xlev = levels, 
+        model.info = list(call = str2lang("emmobj"), xlev = levels,
                           nesting = .parse_nest(nesting))
-    roles = list(predictors= names(grid), responses=character(0), 
+    roles = list(predictors= names(grid), responses=character(0),
                  multresp=character(0))
     for (nm in names(dotargs$extras))
         grid[[nm]] = dotargs$extras[[nm]]
@@ -687,14 +687,14 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
         df = dffun
     if (is.function(df)) {
         dffun = df
-    } 
+    }
     else {
         dffun = function(x, dfargs) dfargs$df
         dfargs = list(df = df)
     }
     ### let's not be so brute-force about what's needed in misc
     # misc = list(estName = "estimate", estType = "prediction", infer = c(TRUE,FALSE), level = .95,
-    #             adjust = "none", famSize = nrow(linfct), 
+    #             adjust = "none", famSize = nrow(linfct),
     #             avgd.over = character(0), pri.vars = pri.vars,
     #             methDesc = "emmobj", display = dotargs$display, .pairby = dotargs$.pairby)
     dflt = list(estName = "estimate", estType = "prediction", infer = c(TRUE,FALSE), level = .95,
@@ -704,7 +704,7 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
     misc = dflt[setdiff(names(dflt), names(dotargs))]  # use defaults when not specified
     nm = setdiff(names(dotargs), c(names(misc), "extras", "model.info")) # otherwise use dots
     misc = c(misc, dotargs[nm])
-    
+
     result = new("emmGrid", model.info=model.info, roles=roles, grid=grid,
                  levels = levels, matlevs=list(),
                  linfct=linfct, bhat=bhat, nbasis=all.estble, V=V,
@@ -714,40 +714,40 @@ emmobj = function(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun, 
 }
 
 #' Convert to and from \code{emmGrid} objects
-#' 
+#'
 #' These are useful utility functions for creating a compact version of an
 #' \code{emmGrid} object that may be saved and later reconstructed, or for
 #' converting old \code{ref.grid} or \code{lsmobj} objects into \code{emmGrid}
 #' objects.
-#' 
+#'
 #' An \code{emmGrid} object is an S4 object, and as such cannot be saved in a
 #' text format or saved without a lot of overhead. By using \code{as.list},
 #' the essential parts of the object are converted to a list format that can be
 #' easily and compactly saved for use, say, in another session or by another user.
-#' Providing this list as the arguments for \code{\link{emmobj}} allows the user 
+#' Providing this list as the arguments for \code{\link{emmobj}} allows the user
 #' to restore a working \code{emmGrid} object.
-#' 
+#'
 #' @param object Object to be converted to class \code{emmGrid}. It may
 #'   be a \code{list} returned by \code{as.list.emmGrid}, or a \code{ref.grid}
-#'   or \code{lsmobj} object created by \pkg{emmeans}'s predecessor, the 
+#'   or \code{lsmobj} object created by \pkg{emmeans}'s predecessor, the
 #'   \pkg{lsmeans} package. An error is thrown if \code{object} cannot
 #'   be converted.
-#' @param ... In \code{as.emmGrid}, additional arguments passed to 
+#' @param ... In \code{as.emmGrid}, additional arguments passed to
 #'   \code{\link{update.emmGrid}} before returning the object. This
 #'   argument is ignored in \code{as.list.emmGrid}
-#'   
-#' @return \code{as.emmGrid} returns an object of class \code{emmGrid}. 
+#'
+#' @return \code{as.emmGrid} returns an object of class \code{emmGrid}.
 #'     However, in fact, both \code{as.emmGrid} and \code{as.emm_list} check for an
-#'     attribute in \code{object} to decide whether to return an \code{emmGrid} 
+#'     attribute in \code{object} to decide whether to return an \code{emmGrid}
 #'     or \code{emm_list)} object.
-#' 
+#'
 #' @seealso \code{\link{emmobj}}
 #' @export
-#' 
+#'
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 #' pigs.sav <- as.list(ref_grid(pigs.lm))
-#' 
+#'
 #' pigs.anew <- as.emmGrid(pigs.sav)
 #' emmeans(pigs.anew, "source")
 as.emmGrid = function(object, ...) {
@@ -776,7 +776,7 @@ as.emmGrid = function(object, ...) {
 #' @order 2
 #' @param x An \code{emmGrid} object
 #' @param model.info.slot Logical value: Include the \code{model.info} slot?
-#'   Set this to \code{TRUE} if you want to preserve the original call and 
+#'   Set this to \code{TRUE} if you want to preserve the original call and
 #'   information needed by the \code{submodel} option.
 #'   If \code{FALSE}, only the nesting information (if any) is saved
 #' @return \code{as.list.emmGrid} returns an object of class \code{list}.
@@ -807,13 +807,13 @@ as.list.emmGrid = function(x, model.info.slot = FALSE, ...) {
 .some.term.contains = function(facs, terms) {
     for (trm in attr(terms, "term.labels")) {
         if (all(sapply(facs, function(f) length(grep(f,trm))>0)))
-            if (length(.all.vars(as.formula(paste("~",trm)))) > length(facs)) 
+            if (length(.all.vars(as.formula(paste("~",trm)))) > length(facs))
                 return(TRUE)
     }
     return(FALSE)
 }
 
-### Sort grid in standard order according to ordering of entries in levels. 
+### Sort grid in standard order according to ordering of entries in levels.
 ### Thus .std.order(do.call(expand.grid, levels), levels) --> 1,2,...,nrow
 .std.order = function(grid, levels) {
     tmp = lapply(rev(names(levels)), function(nm) {

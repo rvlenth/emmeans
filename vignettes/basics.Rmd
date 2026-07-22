@@ -37,7 +37,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
   4. [P values, "significance", and recommendations](#pvalues)
   5. [Summary](#summary)
   6. [Further reading](#more)
-  
+
 [Index of all vignette topics](vignette-topics.html)
 
 ## Foundations {#found}
@@ -45,10 +45,10 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 
 ### Emphasis on experimental data {#exper}
 <!-- @index Experimental versus observational data;
-            Observational versus experimental data;  
+            Observational versus experimental data;
             Controlled experiments; Latin squares; Balanced allocation;
             Weighting!Equal weights; -->
-To start off with, we should emphasize that the underpinnings of estimated marginal 
+To start off with, we should emphasize that the underpinnings of estimated marginal
 means -- and much of what the **emmeans** package offers -- relate more to
 *experimental* data than to *observational* data. In observational data,
 we sample from some population, and the goal of statistical analysis is to
@@ -56,7 +56,7 @@ characterize that population in some way. In contrast, with experimental data,
 the experimenter controls the environment under which test runs are conducted,
 and in which responses are observed and recorded. Thus with experimentation,
 the population is an abstract entity consisting of potential outcomes of test
-runs made under conditions we enforce, rather than a physical entity that we 
+runs made under conditions we enforce, rather than a physical entity that we
 observe without changing it.
 
 We say this because the default behavior of the `emmeans()` function is to average
@@ -102,20 +102,20 @@ fit a good model.
 
 
 ### Illustration: `pigs` experiment {#pigs}
-<!-- @index Examples!`pigs`; Examples!Unbalanced data; 
-            Modeling!Response transformation; Modeling!`pigs` example; 
+<!-- @index Examples!`pigs`; Examples!Unbalanced data;
+            Modeling!Response transformation; Modeling!`pigs` example;
             `inverse()`; Residual plots; R-squared; Adjusted R-squared -->
 Consider the `pigs` dataset provided with the package (`help("pigs")` provides
 details). These data come from an experiment where pigs are given
 different percentages of protein (`percent`) from different sources (`source`)
 in their diet, and later we measured the concentration (`conc`) of leucine.
 The `percent` values are quantitative, but we chose those particular values
-deliberately, and (at least initially) we want separate estimates at each `percent` 
+deliberately, and (at least initially) we want separate estimates at each `percent`
 level; that is, we want to view `percent` as a factor, not a quantitative predictor.
 
 As discussed, our first task is to come up with a good model. Doing so requires
-a lot of skill, and we don't want to labor too much over the details; you really 
-need other references to deal with this aspect adequately. But we will briefly 
+a lot of skill, and we don't want to labor too much over the details; you really
+need other references to deal with this aspect adequately. But we will briefly
 discuss five models and settle on one of them:
 ```{r}
 mod1 <- lm(conc ~ source * factor(percent), data = pigs)
@@ -125,7 +125,7 @@ These models have $R^2$ values of 0.808 and 0.700, and adjusted $R^2$ values of
 0.684 and 0.634. `mod1` is preferable to `mod2`, suggesting we need the
 interaction term. However, a residual-vs-predicted plot of `mod2` has a classic
 "horn" shape (curving and fanning out), indicating a situation where a response
-transformation might help better than including the interaction. 
+transformation might help better than including the interaction.
 
 It turns out that an inverse transformation, (`1/conc`) really serves us well.
 (Perhaps this isn't too surprising, as concentrations are typically determined
@@ -149,7 +149,7 @@ and 0.749, respectively; and the adjusted $R^2$s are 0.700, 0.740, and 0.719.
 
 
 ### Estimated marginal means {#emms}
-<!-- @index Estimated marginal means!Demonstrated; 
+<!-- @index Estimated marginal means!Demonstrated;
             Estimated marginal means!Reference grid; Reference grid;
             Estimated marginal means!vs. ordinary marginal means;
             Simpson's paradox; Confounding;  `emmeans()`; -->
@@ -169,7 +169,7 @@ please note that the EMMs for `percent` form a decreasing sequence, while
 the the OMMs decrease but then increase at the end.
 
 ### The reference grid, and definition of EMMs {#refgrid}
-<!-- @index Estimated marginal means!Definition of; 
+<!-- @index Estimated marginal means!Definition of;
             Reference grid!Predictions on;
             Estimated marginal means!Manually computed; -->
 Estimated marginal means are defined as marginal means of model predictions
@@ -216,9 +216,9 @@ that is fitted to the data.
 
 
 ### More on the reference grid {#RG}
-<!-- @index Reference grid!Defined; `ref_grid()`; 
+<!-- @index Reference grid!Defined; `ref_grid()`;
             `ref_grid()`!`at`; `ref_grid()`!`cov.reduce`;
-            Reference grid!Covariates; Adjusted means; 
+            Reference grid!Covariates; Adjusted means;
             Reference grid!Indicator variables; Indicator variables;  -->
 In the previous section, we discussed the reference grid as being the set of all
 factor combinations. It is slightly more complicated than that when we have
@@ -262,7 +262,7 @@ via the `emmip()` function
 emmip(RG4, source ~ percent, style = "factor")
 emmip(RG5, source ~ percent, style = "factor")
 ```
-Both plots show three parallel trends, because neither model includes an 
+Both plots show three parallel trends, because neither model includes an
 interaction term; but of course for `mod5`, those trends are straight lines.
 
 
@@ -282,7 +282,7 @@ Thus we can obtain EMMs for `mod5` directly from `RG5`, e.g.
 emmeans(RG5, "source")
 ```
 These are slightly different results than we had earlier for `mod4`.
-In these functions where the model and the reference grid are interchangeable, 
+In these functions where the model and the reference grid are interchangeable,
 the first thing the function does is to check which it is; and if it is a model
 object, it constructs the reference grid. When it does that, it passes
 its arguments to `ref_grid()` in case they are needed. For instance, the
@@ -295,7 +295,7 @@ It is a great convenience to be able to pass arguments to `ref_grid()`, but it
 also can confuse new users, because if we look at the help page for `emmeans()`,
 it does not list `at` as a possible argument. It is mentioned, though, if you
 look at the `...` argument. So develop a habit of looking at documentation for
-other functions, especially `ref_grid()`, for other arguments that may affect 
+other functions, especially `ref_grid()`, for other arguments that may affect
 your results.
 
 
@@ -304,7 +304,7 @@ your results.
 
 ### Transformations {#transf}
 <!-- @index Transformations; Response transformations; Back-transforming;
-            `type = "response"`; --> 
+            `type = "response"`; -->
 In our running example with `pigs`, by now you are surely tired of seeing
 all the answers on the `inverse(conc)` scale. What about estimating things on the
 `conc` scale? You may have noticed that the `inverse` transformation has not
@@ -337,7 +337,7 @@ illustrate using the `datasets::mtcars` data, suppose we want to predict `mpg` u
 include a quadratic term for `disp`. Here are two equivalent models:
 ```{r}
 mcmod1 <- lm(mpg ~ factor(cyl) + disp + I(disp^2), data = mtcars)
-mtcars <- transform(mtcars, 
+mtcars <- transform(mtcars,
                     dispsq = disp^2)
 mcmod2 <- lm(mpg ~ factor(cyl) + disp + dispsq, data = mtcars)
 ```
@@ -354,7 +354,7 @@ ref_grid(mcmod1)
 ref_grid(mcmod2)
 ```
 For both models, the reference grid uses the `disp` mean of 230.72. But for
-`mcmod2`, `dispsq` is a separate covariate, and it is set to its mean of 68113. 
+`mcmod2`, `dispsq` is a separate covariate, and it is set to its mean of 68113.
 This is not right, because it is impossible to have `disp` equal to 230.72 and its
 square equal to 68113 at the same time!
 If we use consistent values of `disp` and`dispsq`, we get the same results as for `mcmod1`:
@@ -391,11 +391,11 @@ emmeans(mod, ~ treat | x, at = list(x = 1:3), params = "deg")
 [Back to Contents](#contents)
 
 ### Graphical displays {#plots}
-<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style; 
+<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style;
             `emmip()`; `plot()`;  -->
 The results of `ref_grid()` or `emmeans()` (these are objects of class `emmGrid`)
-may be plotted in two different 
-ways. One we have already seen is an interaction-style plot, using `emmip()`. 
+may be plotted in two different
+ways. One we have already seen is an interaction-style plot, using `emmip()`.
 
 The formula
 specification we used in `emmip(RG4, source ~ percent)` sets the *x* variable to be the one on the right-hand side and the "trace"
@@ -404,7 +404,7 @@ factor (what is used to define the different curves) on the left.
 ###### {#plot.emmGrid}
 <!-- @index Plots!of confidence intervals@conf; `plot.emmGrid()`;
             `ref_grid()`!`cov.reduce`; -->
-The other graphics option offered is the `plot()` method for `emmGrid` objects. 
+The other graphics option offered is the `plot()` method for `emmGrid` objects.
 Let's consider a different model for the `mtcars` data with both `cyl` and `disp`
 as covariates
 ```{r}
@@ -416,7 +416,7 @@ the following, we display the estimates and 95% confidence intervals for
 
 
 ```{r fig.alt = "Plot of side-by-side confidence intervals for 'cyl' means, in 3 panels corresponding to 'disp' values of 100, 200, and 300. The values plotted here are those in 'summary(EMM3)'"}
-EMM3 <- emmeans(mcmod3, ~ cyl | disp, 
+EMM3 <- emmeans(mcmod3, ~ cyl | disp,
                 at = list(cyl = c(4,6,8), disp = c(100,200,300)))
 plot(EMM3)
 ```
@@ -425,17 +425,17 @@ This plot illustrates, as much as anything else, how silly it is to try to
 predict mileage for a 4-cylinder car having high displacement, or an 8-cylinder
 car having low displacement. The widths of the intervals give us a clue that we
 are extrapolating. A better idea is to acknowledge that displacement largely
-depends on the number of cylinders. So here is yet another way to 
+depends on the number of cylinders. So here is yet another way to
 use `cov.reduce` to modify the reference grid:
 ```{r}
 mcrg <- ref_grid(mcmod3, at = list(cyl = c(4,6,8)),
                          cov.reduce = disp ~ cyl)
 mcrg @ grid
 ```
-The `ref_grid` call specifies that `disp` depends on `cyl`; so a linear model 
+The `ref_grid` call specifies that `disp` depends on `cyl`; so a linear model
 is fitted with the given formula and its fitted values are used as the `disp`
-values -- only one for each `cyl`. If we plot this grid, the results are 
-sensible, reflecting what the model predicts for typical cars with each 
+values -- only one for each `cyl`. If we plot this grid, the results are
+sensible, reflecting what the model predicts for typical cars with each
 number of cylinders:
 ```{r fig.height = 1.5, fig.alt = "Side-by-side CIs for cyl marginal means. The values plotted are obtainable via 'summary(mcrg)'"}
 plot(mcrg)
@@ -443,9 +443,9 @@ plot(mcrg)
 
 ###### {#ggplot}
 <!-- @index **ggplot2** package; Plots!Enhancing with **ggplot2** functions -->
-Wizards with the **ggplot2** package can further enhance these plots if 
+Wizards with the **ggplot2** package can further enhance these plots if
 they like. For example, we can add the data to an interaction plot -- this
-time we opt to include confidence intervals and put the three sources 
+time we opt to include confidence intervals and put the three sources
 in separate panels:
 ```{r fig.alt = "Enhanced interaction plot with CIs and observed data added; we have separate panels for the 3 diets, and the 4 percent conentrations in each panel"}
 require("ggplot2")
@@ -457,13 +457,13 @@ emmip(mod4, ~ percent | source, CIs = TRUE, type = "response") +
 
 
 ### Formatting results {#formatting}
-<!-- @index Formatting results; `kable`; Exporting output; `xtable` method; 
+<!-- @index Formatting results; `kable`; Exporting output; `xtable` method;
   RMarkdown; -->
 If you want to include `emmeans()` results in a report, you might want to have it
 in a nicer format than just the printed output. We provide a little bit of help for this,
-especially if you are using RMarkdown or SWeave to prepare the report. 
+especially if you are using RMarkdown or SWeave to prepare the report.
 There is an `xtable` method for exporting these results, which we do not illustrate
-here but it works similarly to `xtable()` in other contexts. Also, the `export` option 
+here but it works similarly to `xtable()` in other contexts. Also, the `export` option
 the `print()` method allows the user to save exactly what is seen in the printed
 output as text, to be saved or formatted as the user likes (see the documentation for `print.emmGrid` for details).
 Here is an example using one of the objects above:
@@ -505,8 +505,8 @@ interesting to compare this with the results for a model that includes only
 mod6 <- lm(inverse(conc) ~ factor(percent), data = pigs)
 emmeans(mod6, "percent")
 ```
-The EMMs in these two tables are identical, so in some sense, 
-`weights = "cells"` amounts to throwing-out the uninvolved factors. 
+The EMMs in these two tables are identical, so in some sense,
+`weights = "cells"` amounts to throwing-out the uninvolved factors.
 However, note that these
 outputs show markedly different standard errors. That is because the model
 `mod4` accounts for variations due to `source` while `mod6` does not. The lesson
@@ -564,7 +564,7 @@ str(EMM.source)
 ```
 <!-- @index `str()`; `summary()`; `summary_emm` object; `print.summary_emm()` -->
 The most important method for `emmGrid` objects is `summary()`. It is used as the
-print method for displaying an `emmeans()` result. For this reason, arguments for 
+print method for displaying an `emmeans()` result. For this reason, arguments for
 `summary()` may also be specified within most functions that produce `these kinds of
 results.`emmGrid` objects. For example:
 ```{r}
@@ -574,7 +574,7 @@ emmeans(mod4, "percent", level = 0.90, infer = TRUE)
 
 
 This `summary()`
-method for `emmGrid` objects) actually produces a `data.frame`, but with extra bells 
+method for `emmGrid` objects) actually produces a `data.frame`, but with extra bells
 and whistles:
 ```{r}
 class(summary(EMM.source))
@@ -594,11 +594,11 @@ annotations.
 
 
 ## P values, "significance", and recommendations {#pvalues}
-<!-- @index Significance!Assessing; 
-    *P* values!Interpreting; ATOM; 
+<!-- @index Significance!Assessing;
+    *P* values!Interpreting; ATOM;
     ASA Statement on *P* values -->
 There is some debate among statisticians and researchers about the appropriateness
-of *P* values, and that the term "statistical significance" can be misleading. 
+of *P* values, and that the term "statistical significance" can be misleading.
 If you have a small *P* value, it *only* means that the
 effect being tested is unlikely to be explained by chance variation alone, in
 the context of the current study and the current statistical model underlying
@@ -608,7 +608,7 @@ there is no effect.
 
 The American Statistical Association has for some time been advocating very
 cautious use of *P* values (Wasserstein *et al.* 2014) because it is
-too often misinterpreted, and too often used carelessly. Wasserstein *et al.* (2019) 
+too often misinterpreted, and too often used carelessly. Wasserstein *et al.* (2019)
 even goes so far as to advise against *ever* using the term "statistically significant".
 The 43 articles it accompanies in the same issue of *TAS*, recommend a
 number of alternatives. I do not agree with all that is said in the main
@@ -622,7 +622,7 @@ at $P=.05$ or some other value.
 For some time I included a summary of Wasserstein *et al.*'s
 recommendations and their *ATOM* paradigm (Acceptance of uncertainty, Thoughtfulness, Openness,
 Modesty). But in the meantime, I have handled a large number of user questions, and many of
-those have made it clear to me that there are more important fish to fry in  a vignette 
+those have made it clear to me that there are more important fish to fry in  a vignette
 section like this. It is just a fact that *P* values are used, and are useful. So I have my own set of recommendations regarding them.
 
 #### A set of comparisons or well-chosen contrasts is more useful and interpretable than an omnibus *F* test {#recs1}
@@ -633,11 +633,11 @@ even necessarily imply that any two means differ statistically.
 
 #### Use *adjusted* *P* values
 When you run a bunch of tests, there is a risk of
-making too many type-I errors, and adjusted *P* values (e.g., the Tukey adjustment 
+making too many type-I errors, and adjusted *P* values (e.g., the Tukey adjustment
 for pairwise comparisons) keep you from making too many mistakes. That said,
 it is possible to go overboard; and it's usually reasonable to regard each
 "by" group as a separate family of tests for purposes of adjustment.
-    
+
 #### It is *not* necessary to have a significant *F* test as a prerequisite to doing comparisons or contrasts {#recs2}
 <!-- @index LSD!protected; Model!Get it right first -->
 
@@ -661,7 +661,7 @@ We began this vignette by emphasizing we need to start with a good model; that
 is an artful task, and certainly what is shown here only hints at
 what is required; you may need help with it.
 It is *your* research; is it important that it be done right?
-Many academic statistics and biostatistics departments can refer you to someone 
+Many academic statistics and biostatistics departments can refer you to someone
 who can help.
 
 
@@ -685,10 +685,10 @@ who can help.
     plot).
   * Be cautious with the terms "significant" and "nonsignificant", and don't ever
     interpret a "nonsignificant" result as saying that there is no effect.
-  * Follow good statistical practices such as getting the model right first, 
+  * Follow good statistical practices such as getting the model right first,
     and using adjusted *P* values
     for appropriately chosen families of comparisons or contrasts.
-    
+
 [Back to Contents](#contents)
 
 ### References
@@ -696,7 +696,7 @@ who can help.
    "The ASA's Statement on *p*-Values: Context, Process, and Purpose,"
    *The American Statistician*, **70**, 129--133,
    https://doi.org/10.1080/00031305.2016.1154108
- 
+
  Wasserstein RL, Schirm AL, Lazar, NA (2019)
    "Moving to a World Beyond 'p < 0.05',"
    *The American Statistician*, **73**, 1--19,
@@ -711,7 +711,7 @@ also be accessed via `vignette("`*name*`", "emmeans")`
 
   * Models that are supported in **emmeans** (there are lots of them)
     ["models"](models.html)
-  * Confidence intervals and tests: 
+  * Confidence intervals and tests:
     ["confidence-intervals"](confidence-intervals.html)
   * Often, users want to compare or contrast EMMs: ["comparisons"](comparisons.html)
   * Working with response transformations and link functions:

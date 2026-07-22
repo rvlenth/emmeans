@@ -29,17 +29,17 @@ This vignette covers the intricacies of transformations and link functions in **
      a. [Faking other transformations](#faking)
      b. [Alternative scale](#altscale)
   8. [Bias adjustment](#bias-adj)
-  
-[Index of all vignette topics](vignette-topics.html) 
+
+[Index of all vignette topics](vignette-topics.html)
 
 ## Overview {#overview}
 <!-- @index Transformations!Overview; Examples!`pigs` -->
-Consider an example with the `pigs` dataset that is used in many of 
+Consider an example with the `pigs` dataset that is used in many of
 these vignettes; but this time, we use a `log` transformation of the response:
 ```{r}
 pigs.lm <- lm(log(conc) ~ source + factor(percent), data = pigs)
 ```
-This model has two factors, `source` and `percent` (coerced to a factor), as 
+This model has two factors, `source` and `percent` (coerced to a factor), as
 predictors; and log-transformed `conc` as the response. Here we obtain the EMMs
 for `source`, examine its structure, and finally produce a summary, including a
 test against a null value of log(35):
@@ -50,18 +50,18 @@ str(emm.src)
 ```{r}
 summary(emm.src, infer = TRUE, null = log(35))
 ```
-Now suppose that we want the EMMs expressed on the same scale as `conc`. This 
-can be done by adding `type = "response"` to the `summary()` call: 
+Now suppose that we want the EMMs expressed on the same scale as `conc`. This
+can be done by adding `type = "response"` to the `summary()` call:
 ```{r}
 summary(emm.src, infer = TRUE, null = log(35), type = "response")
 ```
 
-Note: Looking ahead, this output is compared later in this vignette with a 
+Note: Looking ahead, this output is compared later in this vignette with a
 [bias-adjusted version](#pigs-biasadj).
 
 ### Timing is everything {#timing}
 <!-- @index Transformations!Timing is everything -->
-Dealing with transformations in **emmeans** is somewhat complex, due to the 
+Dealing with transformations in **emmeans** is somewhat complex, due to the
 large number of possibilities. But the key is understanding what happens, when.
 These results come from a sequence of steps. Here is what happens (and doesn't
 happen) at each step:
@@ -79,7 +79,7 @@ happen) at each step:
      b. The endpoints of the confidence intervals are back-transformed.
      c. The *t* tests and *P* values are left as-is.
      d. The standard errors are converted to the `conc` scale using the
-        delta method. These SEs were *not* used in constructing the 
+        delta method. These SEs were *not* used in constructing the
         tests and confidence intervals.
 
 ### The model is our best guide
@@ -115,7 +115,7 @@ it is no longer relevant; the reference grid is on the `conc` scale, and how we 
     identical. This is because, this time, the SEs shown in the table
     are the ones actually used to construct the tests and intervals.
 
-Understood, right? But think carefully about how these EMMs were obtained. 
+Understood, right? But think carefully about how these EMMs were obtained.
 They are back-transformed from `emm.src`, in which *the marginal averaging
 was done on the log scale*. If we want to back-transform *before* doing the
 averaging, we need to call `regrid()` after the reference grid is constructed but
@@ -126,7 +126,7 @@ remm.src <- emmeans(regrid(pigs.rg), "source")
 summary(remm.src, infer = TRUE, null = 35)
 ```
 These results all differ from either of the previous two summaries -- again,
-because the averaging is done on the `conc` scale rather than the `log(conc)` 
+because the averaging is done on the `conc` scale rather than the `log(conc)`
 scale.
 
 ###### {#regrid2}
@@ -137,21 +137,21 @@ steps above could have been done more easily as follows:
 ```{r eval = FALSE}
 remm.src <- emmeans(pigs.lm, "source", regrid = "response")
 ```
-But don't get `regrid` and `type` confused. The `regrid` argument is 
+But don't get `regrid` and `type` confused. The `regrid` argument is
 passed to `regrid()` (as the `transform` argument) after the reference grid is constructed, whereas the `type`
 argument is simply remembered and used by `summary()`. So a similar-looking
 call:
 ```{r eval = FALSE}
 emmeans(pigs.lm, "source", type = "response")
 ```
-will compute the results we have seen for `emm.src` -- back-transformed 
+will compute the results we have seen for `emm.src` -- back-transformed
 *after* averaging on the log scale.
 
 Remember again: When it comes to transformations, timing is everything.
 
 ### Implied regridding with certain modes {#regrid3}
-<!-- @index Transformations|Special modes; 
-             `mode` argument!implied re-gridding; 
+<!-- @index Transformations|Special modes;
+             `mode` argument!implied re-gridding;
              Transformations|Implied re-gridding;
              Re-gridding!Implied  -->
 Some model classes provide special argument(s) (typically `mode`) that may cause
@@ -169,7 +169,7 @@ grid; so they will be different than what you would have obtained by keeping
 things on the link scale and then computing the probabilities after averaging on
 the link scale.
 
-Similar things happen with certain options with multinomial models, 
+Similar things happen with certain options with multinomial models,
 zero-inflated, or hurdle models. Those special modes are a great convenience
 for getting estimates on a scale that is desired, but they also force
 you to obtain marginal means of measurements already on that scale.
@@ -184,7 +184,7 @@ Exactly the same ideas we have presented for response transformations apply to
 generalized linear models having non-identity link functions. As far as
 **emmeans** is concerned, there is no difference at all.
 
-To illustrate, consider the `neuralgia` dataset provided in the package. These 
+To illustrate, consider the `neuralgia` dataset provided in the package. These
 data come from an experiment reported in a SAS technical report where different
 treatments for neuralgia are compared. The patient's sex is an additional
 factor, and their age is a covariate. The response is `Pain`, a binary variable
@@ -199,17 +199,17 @@ neuralgia.emm
 
 ###### {#oddsrats}
 <!-- @index Odds ratios; Logistic regression!Odds ratios -->
-(The note about the interaction is discussed shortly.) Note that the averaging 
+(The note about the interaction is discussed shortly.) Note that the averaging
 over `Sex` is done on the logit scale, *before* the results are back-transformed
-for the summary. We may use `pairs()` to compare these estimates; note that 
+for the summary. We may use `pairs()` to compare these estimates; note that
 logits are logs of odds; so this is another instance where log-differences are
 back-transformed -- in this case to odds ratios:
 ```{r}
 pairs(neuralgia.emm, reverse = TRUE)
 ```
-So there is evidence of considerably more pain being reported with placebo 
+So there is evidence of considerably more pain being reported with placebo
 (treatment `P`) than with either of the other two treatments. The estimated odds
-of pain with `B` are about half that for `A`, but this finding is not 
+of pain with `B` are about half that for `A`, but this finding is not
 statistically significant. (The odds that this is a made-up dataset seem quite
 high, but that finding is strictly this author's impression.)
 
@@ -225,8 +225,8 @@ There is no practical difference between females and males in the patterns of
 response to `Treatment`; so I think most people would be quite comfortable with
 the marginal results that are reported here.
 
-Some users prefer risk ratios (ratios of probabilities) rather than odds 
-ratios. We will revisit this example [below](#riskrats) after we have discussed 
+Some users prefer risk ratios (ratios of probabilities) rather than odds
+ratios. We will revisit this example [below](#riskrats) after we have discussed
 some more tools.
 
 [Back to Contents](#contents)
@@ -235,7 +235,7 @@ some more tools.
 ## Graphing transformations and links {#trangraph}
 <!-- @index Transformations!Graphical display; Examples!`neuralgia`;
     `type = "scale"`; `"scale"` type@scale; -->
-There are a few options for displaying transformed results graphically. First, the `type` 
+There are a few options for displaying transformed results graphically. First, the `type`
 argument works just as it does in displaying a tabular summary. Following through with
 the `neuralgia` example, let us display the marginal `Treatment` EMMs on both the
 link scale and the response scale (we are opting to do the averaging on the link scale):
@@ -248,7 +248,7 @@ plot(neur.Trt.emm, type = "response")
 Besides whether or not we see response values, there is a dramatic difference
 in the symmetry of the intervals.
 
-For `emmip()` and `plot()` *only* (and currently only with the "ggplot" engine), 
+For `emmip()` and `plot()` *only* (and currently only with the "ggplot" engine),
 there is also the option of specifying `type = "scale"`,
 which causes the response values to be calculated but plotted on a nonlinear scale
 corresponding to the transformation or link:
@@ -299,7 +299,7 @@ What happened here is first the linear predictor was back-transformed from the l
 ```{r}
 emmeans(warp.glm, ~ tension | wool, type = "unlink")
 ```
-It is *not* possible to undo the response transformation and leave the link 
+It is *not* possible to undo the response transformation and leave the link
 in place, because the response was transform first, then the link model was applied;
 we have to undo those in reverse order to make sense.
 
@@ -313,24 +313,24 @@ One may also use `"unlink"` as a `transform` argument in `regrid()` or through
 ## Special transformations {#special}
 <!-- @index Transformations!Custom; `make.tran()` -->
 The `make.tran()` function provides several special transformations and sets
-things up so they can be handled in **emmeans** with relative ease. 
+things up so they can be handled in **emmeans** with relative ease.
 (See `help("make.tran", "emmeans")` for descriptions
 of what is available.) `make.tran()` works much like `stats::make.link()` in
 that it returns a list of functions `linkfun()`, `linkinv()`, etc. that serve
-in managing results on a transformed scale. The difference is that most 
+in managing results on a transformed scale. The difference is that most
 transformations with `make.tran()` require additional arguments.
 
-To use this capability in `emmeans()`, it is fortuitous to first obtain the 
+To use this capability in `emmeans()`, it is fortuitous to first obtain the
 `make.tran()` result, and then to use it as the enclosing environment
-for fitting the model, with `linkfun` as the transformation. 
+for fitting the model, with `linkfun` as the transformation.
 For example, suppose the response variable is a percentage and we want to use the response
 transformation $\sin^{-1}\sqrt{y/100}$. Then proceed like this:
 ```{r eval = FALSE}
 tran <- make.tran("asin.sqrt", 100)
-my.model <- with(tran, 
+my.model <- with(tran,
     lmer(linkfun(percent) ~ treatment + (1|Block), data = mydata))
 ```
-Subsequent calls to `ref_grid()`, `emmeans()`, `regrid()`, etc. will then 
+Subsequent calls to `ref_grid()`, `emmeans()`, `regrid()`, etc. will then
 be able to access the transformation information correctly.
 
 The help page for `make.tran()` has an example like this
@@ -372,8 +372,8 @@ directly in the model formula:
 my.better.model <- lmer(log(yield + 0.5) ~ treatment + (1|Block), data = mydata)
 ```
 The transformation would be auto-detected, saving you the trouble of adding it later.
-Similarly, a response transformation of `2 * sqrt(y + 1)` would be correctly 
-auto-detected. A model with a linearly transformed response, e.g. `4*(y - 1)`, 
+Similarly, a response transformation of `2 * sqrt(y + 1)` would be correctly
+auto-detected. A model with a linearly transformed response, e.g. `4*(y - 1)`,
 would *not* be auto-detected, but `4*I(y + -1)` would be interpreted as `4*identity(y + -1)`.
 Parsing is such that the response expression must be of the form `mult * fcn(resp + const)`;
 operators of `-` and `/` are not recognized.
@@ -409,7 +409,7 @@ regrid(emm, transform = "probit")
 would re-grid the existing `emm` to the probit scale. Note that any estimates in `emm`
 outside of the interval $(0,1)$ will be flagged as non-estimable.
 
-The [section on standardized responses](#stdize) gives an example of reverse-engineering 
+The [section on standardized responses](#stdize) gives an example of reverse-engineering
 a standardized response transformation in this way.
 
 
@@ -421,7 +421,7 @@ The additional machinery of `regrid()` makes this possible. First, do
 ```{r}
 log.emm <- regrid(neuralgia.emm, "log")
 ```
-While each node of `neuralgia.emm` is an estimate of the logit of a probability, the corresponding 
+While each node of `neuralgia.emm` is an estimate of the logit of a probability, the corresponding
 nodes of `log.emm` are estimates of the log of the same probability. Thus, pairwise comparisons
 are differences of logs, which are logs of ratios. The risk ratios are thus
 obtainable by
@@ -433,7 +433,7 @@ The test statistics and P values differ somewhat from those for the odds ratios 
 
 
 ###### {#not-logit}
-<!-- @index Logistic-like regression!Non-logit links; 
+<!-- @index Logistic-like regression!Non-logit links;
    `regrid()`!probit or other non-logit models;
   Probit regression!Odds or risk ratios -->
 We were able to obtain both odds ratios and risk ratios for `neuralgia.glm`.
@@ -442,7 +442,7 @@ just fall out naturally. However, we can `regrid()` to the
 `"logit"` scale if we want odds
 ratios, or to `"log"` scale if we want risk ratios. For example,
 ```{r}
-neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"), 
+neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"),
                      data = neuralgia)
 prb.emm <- suppressMessages(emmeans(neuralgia.prb, "Treatment"))
 pairs(regrid(prb.emm, "logit"), type = "response", reverse = TRUE)
@@ -466,7 +466,7 @@ pct.diff.tran <- list(
     name = "log(pct.diff)"
 )
 
-update(pairs(logemm.src, type = "response"), 
+update(pairs(logemm.src, type = "response"),
        tran = pct.diff.tran, inv.lbl = "pct.diff", adjust = "none",
        infer = c(TRUE, TRUE))
 ```
@@ -485,7 +485,7 @@ rather than on the link scale as in the first results.
     `scale()`; Standardized response; Examples!`fiber`; `regrid` argument -->
 In some disciplines, it is common to fit a model to a standardized response variable.
 R's base function `scale()` makes this easy to do; but it is important to notice that
-`scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires 
+`scale(y)` is more complicated than, say, `sqrt(y)`, because `scale(y)` requires
 all the values of `y` in order to determine the centering and scaling parameters.
 The `ref_grid()` function (called by `emmeans() and others) tries to detect
 the scaling parameters. To illustrate:
@@ -519,11 +519,11 @@ There is a fourth possibility, (change in `strength`) / (change in `scale(diamet
 that I leave to the reader.
 
 ### What to do if auto-detection fails
-Auto-detection of standardized responses is a bit tricky, and doesn't always succeed. 
-If it fails, 
+Auto-detection of standardized responses is a bit tricky, and doesn't always succeed.
+If it fails,
 a message is displayed and the transformation is ignored. In cases where it doesn't work,
-we need to explicitly specify the transformation using `make.tran()`. The methods are exactly 
-as shown earlier in this vignette, so we show the code but not the results for 
+we need to explicitly specify the transformation using `make.tran()`. The methods are exactly
+as shown earlier in this vignette, so we show the code but not the results for
 a hypothetical example.
 
 One method is to fit the model and then add the transformation information later.
@@ -534,7 +534,7 @@ mod <- some.fcn(scale(RT) ~ group + (1|subject), data = mydata)
 emmeans(mod, "group", type = "response",
         tran = make.tran("scale", y = mydata$RT))
 ```
-The other, equivalent, method is to create the transformation object first 
+The other, equivalent, method is to create the transformation object first
 and use it in fitting the model:
 ```{r, eval = FALSE}
 mod <- with(make.tran("scale", y = mydata$RT),
@@ -543,7 +543,7 @@ emmeans(mod, "group", type = "response")
 ```
 
 ### Reverse-engineering a standardized response
-An interesting twist on all this is the reverse situation: Suppose we fitted the model 
+An interesting twist on all this is the reverse situation: Suppose we fitted the model
 *without* the standardized response, but we want to know what the results would be if
 we had standardized. Here we reverse-engineer the `fiber.lm` example above:
 ```{r, message = FALSE}
@@ -579,7 +579,7 @@ However, sometimes it is important to report results that actually do reflect
 expected values of the untransformed response. An example is a financial study,
 where the response is in some monetary unit. It may be convenient to use a
 response transformation for modeling purposes, but ultimately we may want to
-make financial projections in those same units. 
+make financial projections in those same units.
 
 In such settings, we need to
 make a bias adjustment when we back-transform, because any nonlinear
@@ -587,8 +587,8 @@ transformation biases the expected values of statistical quantities. More
 specifically, suppose that we have a response $Y$ and the transformed
 response is $U$. To back-transform, we use $Y = h(U)$; and using a Taylor
 approximation, $Y \approx h(\eta) + h'(\eta)(U-\eta) +
-\frac12h''(\eta)(U-\eta)^2$, so that 
-$E(Y) \approx h(\eta) + \frac12h''(\eta)Var(U)$. 
+\frac12h''(\eta)(U-\eta)^2$, so that
+$E(Y) \approx h(\eta) + \frac12h''(\eta)Var(U)$.
 This shows that the amount of needed bias adjustment is approximately
 $\frac12h''(\eta)\sigma^2$ where $\sigma$ is the error SD in the model for $U$.
 It depends on $\sigma$, and the larger this is, the greater the bias adjustment
@@ -619,10 +619,10 @@ adding a `sigma =` argument to the above call.
 At this point, it is important to point out that the above discussion focuses on
 *response* transformations, as opposed to link functions used in generalized linear
 models (GLMs). In an ordinary GLM, no bias adjustment is needed, nor is it
-appropriate, 
+appropriate,
 because the link function is just used to define a nonlinear relationship
-between the actual response mean $\eta$ and the linear predictor. That is, the 
-back-transformed parameter is already the mean. 
+between the actual response mean $\eta$ and the linear predictor. That is, the
+back-transformed parameter is already the mean.
 
 
 #### InsectSprays example {#insects}
@@ -658,16 +658,16 @@ adjustment becomes appropriate.
 
 #### CBPP example {#cbpp}
 <!-- @index Examples!`cbpp`; Bias adjustment!In GLMMs and GEE models; -->
-Consider an example adapted from the help page for `lme4::cbpp`. 
+Consider an example adapted from the help page for `lme4::cbpp`.
 Contagious bovine pleuropneumonia (CBPP) is a disease in African cattle,
 and the dataset contains data on incidence of CBPP in several herds of cattle
 over four time periods. We will fit a mixed model that accounts for herd variations
-as well as overdispersion (variations larger than expected with a simple binomial model): 
+as well as overdispersion (variations larger than expected with a simple binomial model):
 
 ```{r, message = FALSE}
 require(lme4)
 cbpp <- transform(cbpp, unit = 1:nrow(cbpp))
-cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period + 
+cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period +
                           (1 | herd) +  (1 | unit),
                     family = binomial, data = cbpp)
 
@@ -705,5 +705,5 @@ is only one random effect.
 
 [Back to Contents](#contents)
 
-[Index of all vignette topics](vignette-topics.html) 
+[Index of all vignette topics](vignette-topics.html)
 

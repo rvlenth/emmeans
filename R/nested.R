@@ -31,7 +31,7 @@
 
 ### ----- Rest of this file is used only internally ---------
 
-# Internal function to deal with nested structures. 
+# Internal function to deal with nested structures.
 #   rgobj        -- an emmGrid object
 #   specs, ...   -- arguments for emmeans
 #   nesting      -- a named list of nesting info
@@ -58,14 +58,14 @@
     avg.over = setdiff(names(rgobj@levels), union(specs, by))
     afacs = intersect(names(nesting), avg.over) ### DUH!names(nesting)[names(nesting) %in% avg.over]
     rgobj@misc$display = NULL  ## suppress warning messages from emmeans
-    
+
     if (length(afacs) == 0)  { # no nesting issues; just use emmeans
         result = emmeans(rgobj, specs, by = by, ...)
     }
     else { # we need to handle each group separately
         sz = sapply(afacs, function(nm) length(nesting[[nm]]))
         # use highest-order one first: potentially, we end up calling this recursively
-        afac = afacs[rev(order(sz))][1] 
+        afac = afacs[rev(order(sz))][1]
         otrs = setdiff(afacs, afac)   # other factors than afac
         grpfacs = union(nesting[[afac]], otrs)
         gspecs = union(specs, union(by, grpfacs))
@@ -101,7 +101,7 @@
         }
         for (j in seq_along(grpfacs))
             result@levels[grpfacs[j]] = rgobj@levels[grpfacs[j]]
-        
+
         result@misc$avgd.over = setdiff(actually.avgd.over, gspecs)
         result@misc$display = NULL
         nkeep = intersect(names(nesting), names(result@levels))
@@ -109,24 +109,24 @@
             result@model.info$nesting = nesting[nkeep]
         else
             result@model.info$nesting = NULL
-        
+
         # Note: if any nesting remains, this next call recurs back to this function
         result = emmeans(result, specs, by = by, ...)
     }
-    
+
     if (length(xspecs) > 0)
         result@misc$display = .find.nonempty.nests(result, xspecs, nesting)
 
     # preserve any nesting that still exists
     nesting = nesting[names(nesting) %in% names(result@levels)]
     result@model.info$nesting =   if (length(nesting) > 0) nesting    else NULL
-    
+
     # resolve 'by'
     by = orig.by
     if (length(xspecs <- intersect(by, names(nesting))))
         by = union(unlist(nesting[xspecs]), by)
     result@misc$by.vars = by
-    
+
     result
 }
 
@@ -144,10 +144,10 @@
 
     if (!is.character(method))
         stop ("Non-character contrast methods are not supported with nested objects")
-    
+
     testcon = try(get(paste0(method, ".emmc"))(1:3), silent = TRUE)
     if (inherits(testcon, "try-error")) testcon = NULL
-    if (missing(adjust)) 
+    if (missing(adjust))
         adjust = attr(testcon, "adjust")
     estType = attr(testcon, "type")
 
@@ -163,7 +163,7 @@
         result = contrast.emmGrid(wkrg, method = method, interaction = interaction, by = by, adjust = adjust, ...)
     else {
         result = lapply(by.rows, function(rows) {
-            contrast.emmGrid(wkrg[rows, drop.levels = TRUE], method = method, 
+            contrast.emmGrid(wkrg[rows, drop.levels = TRUE], method = method,
                              interaction = interaction, by = by, adjust = adjust, ...)
         })
         # set up coef matrix
@@ -180,11 +180,11 @@
         result = do.call(rbind.emmGrid, result)
         result@misc$con.coef = con.coef
         result@misc$orig.grid = wkrg@grid[names(wkrg@levels)]
-        result = update(result, by = by, 
+        result = update(result, by = by,
                         estType = ifelse(is.null(estType), "contrast", estType))
         cname = setdiff(names(result@levels), by)
         if (!is.null(result@model.info$nesting))
-            for (nm in cname) 
+            for (nm in cname)
                 result@model.info$nesting[[nm]] = by
     }
 ##    result@misc$orig.grid = result@misc$con.coef = NULL # we now provide these
@@ -195,14 +195,14 @@
     }
     if (!is.na(ET <- result@misc$estType) && (ET == "pairs")) # internal flag to keep track of original by vars for paired comps
         result@misc$.pairby = paste(c("", by), collapse = ",")
-    
+
     result
 }
 
 
 # Internal function to find nonempty cells in nested structures in rgobj for xfacs
 # Returns logical vector, FALSE are rows of the grid we needn't display
-.find.nonempty.nests = function(rgobj, xfacs = union(names(nesting), unlist(nesting)), 
+.find.nonempty.nests = function(rgobj, xfacs = union(names(nesting), unlist(nesting)),
                                 nesting = rgobj@model.info$nesting) {
     grid = rgobj@grid
     keep = rep(TRUE, nrow(grid))
@@ -211,7 +211,7 @@
         combs = do.call(expand.grid, rgobj@levels[facs])
         levs = as.character(interaction(combs))
         glevs = as.character(interaction(grid[facs]))
-        
+
         for (lev in levs) {
             idx = which(glevs == lev)
             if (all(grid$.wgt.[idx] == 0)) {
@@ -228,12 +228,12 @@
 #' @rdname rbind.emmGrid
 #' @order 50
 #' @return \code{force_regular} adds extra (invisible) rows to an \code{emmGrid} object
-#'   to make it a regular grid (all combinations of factors). This regular structure is 
+#'   to make it a regular grid (all combinations of factors). This regular structure is
 #'   needed by \code{emmeans}. An object can become irregular by, for example,
 #'   subsetting rows, or by obtaining contrasts of a nested structure.
 #' @export
 #' @examples
-#' 
+#'
 #' ### Irregular object
 #' tmp <- warp.rg[-1]
 #' ## emmeans(tmp, "tension")   # will fail because tmp is irregular
@@ -242,14 +242,14 @@ force_regular = function(object) {
     newgrid = do.call(expand.grid, object@levels)
     newkey = do.call(paste, newgrid)
     newlf = matrix(NA, nrow = nrow(newgrid), ncol = ncol(object@linfct))
-    colnames(newlf) = colnames(object@linfct) 
+    colnames(newlf) = colnames(object@linfct)
     newdisp = rep(FALSE, nrow(newgrid))
-    
+
     oldgrid = object@grid
     oldkey = do.call(paste, oldgrid[setdiff(names(oldgrid), c(".wgt.", ".offset."))])
-    if (wtd <- (".wgt." %in% names(oldgrid))) 
+    if (wtd <- (".wgt." %in% names(oldgrid)))
         newgrid$.wgt. = 0
-    if (ofs <- (".offset." %in% names(oldgrid))) 
+    if (ofs <- (".offset." %in% names(oldgrid)))
         newgrid$.offset. = NA
     for (j in seq_along(oldkey)) {
         key = oldkey[j]
@@ -274,15 +274,15 @@ force_regular = function(object) {
 #     factors A and B for which each level of A occurs with one and only one
 #     level of B. If so, we deem A %in% B.
 # (2) Model-term nesting - cases where a factor appears not as a main effect
-#     but only in higher-order terms. This is discovered using the 1s and 2s in 
+#     but only in higher-order terms. This is discovered using the 1s and 2s in
 #     trms$factors
 # The function returns a named list, e.g., list(A = "B")
 # If none found, an empty list is returned.
-# 
+#
 # Added ver 1.5.3+ : if trms is NULL, we skip that part
 .find_nests = function(grid, trms, coerce, levels) {
     result = list()
-    
+
     # only consider cases where levels has length > 1
     lng = sapply(levels, length)
     nms = names(levels[lng > 1])
@@ -298,23 +298,23 @@ force_regular = function(object) {
         max.levs = sapply(otrs, function(n) {
             max(sapply(x, function(lev) length(unique(g[[n]][g[[nm]] == lev]))))
         })
-        if (any(max.levs == 1)) 
+        if (any(max.levs == 1))
             result[[nm]] = otrs[max.levs == 1]
     }
-    
+
     if (!is.null(trms)) {
-        
+
         # Now look at factors attribute
         fac = attr(trms, "factors")
         if (length(fac) > 0) {
             if (!is.null(coerce)) for (stg in coerce) {
                 subst = paste(.all.vars(stats::reformulate(stg)), collapse = ":")
                 for (i in 1:2)
-                    dimnames(fac)[[i]] = gsub(stg, subst, dimnames(fac)[[i]], 
+                    dimnames(fac)[[i]] = gsub(stg, subst, dimnames(fac)[[i]],
                                               fixed = TRUE)
             }
             fac = fac[intersect(nms, row.names(fac)), , drop = FALSE]
-            
+
             ### new code
             nms = row.names(fac)
             cols = dimnames(fac)[[2]]
@@ -330,9 +330,9 @@ force_regular = function(object) {
                     result[[nm]] = union(result[[nm]], nst)
             }
         }
-        
+
     }  # [end if (!is.null(trms))]
-    
+
     # include nesting factors that are themselves nested
     for (nm in names(result))
         result[[nm]] = union(unlist(result[result[[nm]]]), result[[nm]])
@@ -341,8 +341,8 @@ force_regular = function(object) {
     for (nm in names(result))
         if (nm %in% result[[nm]])
             result[[nm]] = NULL
-    
-    
+
+
     result
 }
 
@@ -364,7 +364,7 @@ force_regular = function(object) {
     if (length(nlist) == 0)
         "none"
     else {
-        tmp = lapply(nlist, function(x) 
+        tmp = lapply(nlist, function(x)
             if (length(x) == 1) x
             else                paste0("(", paste(x, collapse = "*"), ")")
         )

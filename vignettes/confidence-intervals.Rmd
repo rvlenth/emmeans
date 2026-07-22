@@ -25,19 +25,19 @@ This vignette describes various ways of summarizing `emmGrid` objects.
   5. [Joint (omnibus) tests](#joint)
   6. [Testing equivalence, noninferiority, nonsuperiority](#equiv)
   7. Graphics (in ["basics" vignette](basics.html#plots))
-  
+
 [Index of all vignette topics](vignette-topics.html)
 
 ## `summary()`, `confint()`, and `test()` {#summary}
-<!-- @index `summary()`; `summary()`!`infer`; `confint()`; `test()`; 
-    Confidence intervals; `summary()`!Calculated columns; 
+<!-- @index `summary()`; `summary()`!`infer`; `confint()`; `test()`;
+    Confidence intervals; `summary()`!Calculated columns;
     `summary()`!Show sample size; Sample size, displaying;
             Tests!One- and two-sided; Tests!Nonzero null;
             `summary()`!Bayesian models; `summary()`!`hpd.summary()`;
             Examples!`pigs` -->
 The most important method for `emmGrid` objects is `summary()`. For one thing, it is
 called by default when you display an `emmeans()` result.
-The `summary()` function has a lot of options, and the detailed documentation via 
+The `summary()` function has a lot of options, and the detailed documentation via
 `help("summary.emmGrid")` is worth a look.
 
 For ongoing illustrations, let's re-create some of the objects in the ["basics" vignette](basics.html) for the `pigs` example:
@@ -49,9 +49,9 @@ EMM.source <- emmeans(RG, "source")
 
 Just `summary(<object>)` by itself will produce a summary that varies somewhat
 according to context. It does this by setting different defaults for the `infer`
-argument, which consists of two logical values, specifying confidence intervals 
+argument, which consists of two logical values, specifying confidence intervals
 and tests, respectively. [The exception is models fitted using MCMC methods,
-where `summary()` is diverted to the `hpd.summary()` function, a 
+where `summary()` is diverted to the `hpd.summary()` function, a
 preferable summary for many Bayesians.]
 
 The summary of a newly made reference grid will show just estimates and
@@ -65,7 +65,7 @@ TRUE)`). There are courtesy methods `confint()` and `test()` that just call
 ```{r}
 test(EMM.source)
 ```
-It is not particularly useful, though, to test these EMMs against the default of 
+It is not particularly useful, though, to test these EMMs against the default of
 zero -- which is why tests are not usually shown. It makes a lot more sense
 to test them against some target concentration, say 40. And suppose we want to do a one-sided test to see if the concentration is greater than 40. Remembering that the
 response is inverse-transformed in this model, and that the inverse transformation
@@ -74,9 +74,9 @@ becomes a *left*-tailed test on the `inverse(conc)` scale,
 ```{r}
 test(EMM.source, null = inverse(40), side = "<")
 ```
-It is also possible to add calculated columns to the summary, via the `calc` 
+It is also possible to add calculated columns to the summary, via the `calc`
 argument. The calculations can include any columns up through `df` in the summary,
-as well as any variable in the object's `grid` slot. Among the latter are 
+as well as any variable in the object's `grid` slot. Among the latter are
 usually weights in a column named `.wgt.`, and we can use that to include
 sample size in the summary:
 ```{r}
@@ -115,17 +115,17 @@ With `side = "<"`, an *upper* confidence limit is computed on the inverse scale,
 then that limit is back-transformed to the response scale; and since `inverse`
 reverses everything, those upper confidence limits become lower ones on the
 response scale.
-(We have also illustrated 
+(We have also illustrated
 how to change the confidence level.)
 
 [Back to Contents](#contents)
 
 
 ## Multiplicity adjustments {#adjust}
-<!-- @index Multiplicity adjustments; `adjust`; 
+<!-- @index Multiplicity adjustments; `adjust`;
      Tukey adjustment; Sidak adjustment -->
-Both tests and confidence intervals may be adjusted for simultaneous inference. 
-Such adjustments ensure that the confidence coefficient for a whole set of 
+Both tests and confidence intervals may be adjusted for simultaneous inference.
+Such adjustments ensure that the confidence coefficient for a whole set of
 intervals is at least the specified level, or to control for multiplicity
 in a whole family of tests. This is done via the `adjust`
 argument. For `ref_grid()` and `emmeans()` results, the default is `adjust =
@@ -137,7 +137,7 @@ For example, with
 ```{r}
 confint(EMM.source, adjust = "tukey")
 ```
-the adjustment is changed to the Sidak method because the Tukey adjustment is 
+the adjustment is changed to the Sidak method because the Tukey adjustment is
 inappropriate unless you are doing pairwise comparisons.
 
 ####### {#adjmore}
@@ -169,7 +169,7 @@ purpose, the `by` argument in `summary()` is useful. For example,
 ```{r}
 confint(RG, by = "source")
 ```
-If there is also an `adjust` in force when `by` variables are used, by default, the 
+If there is also an `adjust` in force when `by` variables are used, by default, the
 adjustment is made *separately* on each `by` group; e.g., in the above, we would
 be adjusting for sets of 4 intervals, not all 12 together (but see "cross-adjustments" below.)
 
@@ -217,9 +217,9 @@ we would have obtained the same adjusted *P* values as we obtained with `by = NU
 
 ### Simple comparisons {#simple}
 <!-- @index Simple comparisons; `contrast()`!`simple`; `simple = "each"` -->
-There is also a `simple` argument for `contrast()` that is in essence 
+There is also a `simple` argument for `contrast()` that is in essence
 the inverse of `by`; the contrasts are run using everything *except* the
-specified variables as `by` variables. To illustrate, let's consider 
+specified variables as `by` variables. To illustrate, let's consider
 the model for `pigs` that includes the interaction (so that the levels
 of one factor compare differently at levels of the other factor).
 ```{r}
@@ -267,13 +267,13 @@ a "Type-III ANOVA", but may differ in situations where there are empty cells or
 other non-estimability issues, or if generalizations are present such as unequal
 weighting. (Another distinction is that sums of squares and mean squares are not
 shown; that is because these really are tests of contrasts among predictions,
-and they may or may not correspond to model sums of squares.) 
+and they may or may not correspond to model sums of squares.)
 
 One may use `by` variables with `joint_tests`. For example:
 ```{r}
 joint_tests(RG5, by = "source")
 ```
-In some models, it is possible to specify `submodel = "type2"`, thereby obtaining 
+In some models, it is possible to specify `submodel = "type2"`, thereby obtaining
 something akin to a Type II analysis of variance. See the [messy-data vignette](messy-data.html#type2submodel) for an example.
 
 
@@ -283,18 +283,18 @@ something akin to a Type II analysis of variance. See the [messy-data vignette](
 ## Testing equivalence, noninferiority, and nonsuperiority {#equiv}
 <!-- @index Tests!Equivalence; Tests!Non-inferiority; `test()`!`delta` -->
 The `delta` argument in `summary()` or `test()` allows the user to
-specify a threshold value to use in a test of equivalence, non-inferiority, 
-or non-superiority. An equivalence test is kind of a backwards significance 
-test, where small *P* values are associated with small differences relative 
+specify a threshold value to use in a test of equivalence, non-inferiority,
+or non-superiority. An equivalence test is kind of a backwards significance
+test, where small *P* values are associated with small differences relative
 to a specified threshold value `delta`.
-The help page for `summary.emmGrid` gives the details of 
+The help page for `summary.emmGrid` gives the details of
 these tests.
-Suppose in the present example, we consider two sources to be equivalent if they 
+Suppose in the present example, we consider two sources to be equivalent if they
 are within 0.005 of each other. We can test this as follows:
 ```{r}
 test(PRS.source, delta = 0.005, adjust = "none")
 ```
-Using the 0.005 threshold, the *P* value is quite small for comparing soy and skim, 
+Using the 0.005 threshold, the *P* value is quite small for comparing soy and skim,
 providing some statistical evidence that their difference is enough smaller than the
 threshold to consider them equivalent.
 
@@ -302,7 +302,7 @@ threshold to consider them equivalent.
 
 
 ## Graphics {#graphics}
-Graphical displays of `emmGrid` objects are described in the 
+Graphical displays of `emmGrid` objects are described in the
 ["basics" vignette](basics.html#plots)
 
 [Index of all vignette topics](vignette-topics.html)

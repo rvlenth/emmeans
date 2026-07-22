@@ -7,14 +7,14 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-```{r, echo = FALSE, results = "hide", message = FALSE} 
-require("emmeans") 
-options(show.signif.stars = FALSE, width = 100) 
-knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
+```{r, echo = FALSE, results = "hide", message = FALSE}
+require("emmeans")
+options(show.signif.stars = FALSE, width = 100)
+knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 ```
 
 <!-- @index Vignettes!Predictions -->
-In this vignette, we discuss **emmeans**'s rudimentary capabilities for constructing prediction intervals. 
+In this vignette, we discuss **emmeans**'s rudimentary capabilities for constructing prediction intervals.
 
 ## Contents {#contents}
 
@@ -24,7 +24,7 @@ In this vignette, we discuss **emmeans**'s rudimentary capabilities for construc
  4. [Predictions on particular strata](#strata)
  5. [Predictions with Bayesian models](#bayes)
 
-[Index of all vignette topics](vignette-topics.html) 
+[Index of all vignette topics](vignette-topics.html)
 
 ##  Focus on reference grids {#ref-grid}
 <!-- @index Predictions!Reference grid; Reference grids!Prediction on -->
@@ -32,9 +32,9 @@ Prediction is not the central purpose of the **emmeans** package. Even its name
 refers to the idea of obtaining marginal averages of fitted values; and it is a
 rare situation where one would want to make a prediction of the average of
 several observations. We can certainly do that if it is truly desired,
-but almost always, predictions should be based on the reference grid itself 
+but almost always, predictions should be based on the reference grid itself
 (i.e., *not* the result of an `emmeans()` call),
-inasmuch as a reference grid comprises combinations of model predictors. 
+inasmuch as a reference grid comprises combinations of model predictors.
 
 
 ## Need for an SD estimate {#sd-estimate}
@@ -46,7 +46,7 @@ we save the value (if any) returned by `stats::sigma(object)` when a reference g
 in which case an error is thrown if the error SD is not manually specified.
 Also, in many cases, there may be a `sigma()` method, but it does not
 return the appropriate value(s) in the context of the needed predictions.
-(In an object returned by `lme4::glmer(), for example, `sigma()` seems to always 
+(In an object returned by `lme4::glmer(), for example, `sigma()` seems to always
 returns 1.0.) Indeed, as will be seen in the example that follows,
 one usually needs to construct a manual SD estimate when the model is a mixed-effects model.
 
@@ -64,7 +64,7 @@ fitted by `nlme::gls()` with some kind of non-homogeneous error structure. It ma
 some effort, as well as a clear understanding of the model and its structure, to
 obtain suitable SD estimates. It was suggested to me that the function
 `insight::get_variance()` may be helpful -- especially when working with
-an unfamiliar model class. Personally, I prefer to make sure I understand the 
+an unfamiliar model class. Personally, I prefer to make sure I understand the
 structure of the model object and/or its summary to ensure I am not going astray.
 
 [Back to Contents](#contents)
@@ -91,7 +91,7 @@ Now, as advised, let's look at the SDs involved in this model:
 lme4::VarCorr(feedlot.lmer)  ## for the model
 feedlot.rg@misc$sigma  ## default in the ref. grid
 ```
-So the residual SD will be assumed in our prediction intervals 
+So the residual SD will be assumed in our prediction intervals
 if we don't specify something else. And we *do* want something else,
 because in order to predict the slaughter weight of an arbitrary animal,
 without regard to its herd, we need to account for the variation among
@@ -103,7 +103,7 @@ We will update the reference grid with the new value:
 feedlot.rg <- update(feedlot.rg, sigma = sqrt(77.087^2 + 57.832^2))
 ```
 
-We are now ready to form prediction intervals. To do so, simply call the 
+We are now ready to form prediction intervals. To do so, simply call the
 `predict()` function with an `interval` argument:
 ```{r}
 predict(feedlot.rg, interval = "prediction")
@@ -113,7 +113,7 @@ These results may also be displayed graphically:
 plot(feedlot.rg, PIs = TRUE)
 ```
 
-The inner intervals are confidence intervals, and the outer ones are the 
+The inner intervals are confidence intervals, and the outer ones are the
 prediction intervals.
 
 Note that the SEs for prediction are considerably greater than the SEs for
@@ -160,4 +160,4 @@ observations from the posterior predictive distribution. This is done via `as.mc
 
 [Back to Contents](#contents)
 
-[Index of all vignette topics](vignette-topics.html) 
+[Index of all vignette topics](vignette-topics.html)

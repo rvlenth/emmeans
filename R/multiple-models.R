@@ -85,7 +85,7 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
         bnms[bnms == "(Int)"] = "(Intercept)"  # covers a peculiarity in glmmTMB
         V = V[subset, subset]
     }
-    
+
     # we're gonna assemble all the main-effects model-matrix components
     # and build the model matrix to match the names of the coefs
     fcts = rownames(attr(trms, "factors"))
@@ -111,8 +111,8 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
         zap = which(srt == nm)[-1]   # indices of all but the first
         bhat[zap] = 0
     }
-    
-    
+
+
     nbasis = estimability::all.estble
     ml = attr(object, "modelList")
     ml1 = ml[[1]]
@@ -128,7 +128,7 @@ emm_basis.averaging = function(object, trms, xlev, grid, subset, ...) {
         dffun = function(k, dfargs) Inf
         dfargs = list()
     }
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
@@ -149,7 +149,7 @@ recover_data.mira = function(object, data = NULL, ...) {
     rd
 }
 
-#' @exportS3Method emm_basis mira         
+#' @exportS3Method emm_basis mira
 emm_basis.mira = function(object, trms, xlev, grid, ...) {
     # In case our method did a "pass it on" with the data, we need to add that attribute
     data = list(...)$misc$data
@@ -173,13 +173,13 @@ emm_basis.mira = function(object, trms, xlev, grid, ...) {
     bas$V = bas$dfargs$T = V + (k + 1)/k * bas$dfargs$B   # pooled via Rubin's rules
     bas$dffun = function(a, dfargs) { # pretty much copied from mice:::barnard.rubin
         dfcom = dfargs$df1(a, dfargs)
-        with(dfargs, { 
+        with(dfargs, {
              b = sum(a * (B %*% a))
              t = sum(a * (T %*% a))
              lambda = (1 + 1/m) * b / t
              dfold = (m - 1)/lambda^2
              dfobs = (dfcom + 1)/(dfcom + 3) * dfcom * (1 - lambda)
-             ifelse(is.infinite(dfcom), dfold, 
+             ifelse(is.infinite(dfcom), dfold,
                     dfold * dfobs/(dfold + dfobs))
         }) }
     bas

@@ -20,8 +20,8 @@
 ##############################################################################
 
 #' Support functions for model extensions
-#' 
-#' This documents some functions and methods that may be useful to package 
+#'
+#' This documents some functions and methods that may be useful to package
 #' developers wishing to add support for \pkg{emmeans} for their model objects.A user
 #' or package developer may add \pkg{emmeans} support for a model
 #' class by writing \code{recover_data} and \code{emm_basis} methods
@@ -29,12 +29,12 @@
 #' that is not supported may be better served by the \code{\link{qdrg}} function.)
 #' There are several other exported functions that may be useful. See the
 #' "xtending" vignette for more details.
-#' 
+#'
 ## #' @rdname extending-emmeans
 #' @name extending-emmeans
 #' @param object An object of the same class as is supported by a new method.
 #' @param ... Additional parameters that may be supported by the method.
-#' 
+#'
 #' @section Details:
 #' To create a reference grid, the \code{ref_grid} function needs to reconstruct
 #' the data used in fitting the model, and then obtain a matrix of linear
@@ -42,7 +42,7 @@
 #' values. These tasks are performed by calls to \code{recover_data} and
 #' \code{emm_basis} respectively. A vignette giving details and examples
 #' is available via \href{../doc/xtending.html}{vignette("xtending", "emmeans")}
-#' 
+#'
 #' To extend \pkg{emmeans}'s support to additional model types, one need only
 #' write S3 methods for these two functions. The existing methods serve as
 #' helpful guidance for writing new ones.  Most of the work for
@@ -56,18 +56,18 @@
 #' may be that all that is needed is to call one of these exported methods and
 #' perhaps make modifications to the results. Contact the developer if you need
 #' others of these exported.
-#' 
+#'
 #' If the model has a multivariate response, \code{bhat} needs to be
 #' \dQuote{flattened} into a single vector, and \code{X} and \code{V} must be
 #' constructed consistently.
-#' 
+#'
 #' In models where a non-full-rank result is possible (often, you can tell by
 #' seeing if there is a \code{singular.ok} argument in the model-fitting
 #' function), \code{\link{summary.emmGrid}} and its relatives check the
 #' estimability of each
 #' prediction, using the \code{\link[estimability]{nonest.basis}} function in
 #' the \pkg{estimability} package.
-#' 
+#'
 #' The models already supported are detailed in \href{../doc/models.html}{the
 #' "models" vignette}. Some packages may provide additional \pkg{emmeans}
 #' support for its object classes.
@@ -76,9 +76,9 @@
 #' @return The \code{recover_data} method must return a \code{\link{data.frame}}
 #'   containing all the variables that appear as predictors in the model,
 #'   and attributes \code{"call"}, \code{"terms"}, \code{"predictors"},
-#'   and \code{"responses"}. (\code{recover_data.call} will 
+#'   and \code{"responses"}. (\code{recover_data.call} will
 #'   provide these attributes.)
-#' 
+#'
 #' @note Without an explicit \code{data} argument, \code{recover_data} returns
 #'    the \emph{current version} of the dataset. If the dataset has changed
 #'    since the model was fitted, then this will not be the data used to fit
@@ -87,9 +87,9 @@
 #'    several datasets are processed in one step (e.g., using \code{dplyr}).
 #'    In those cases, users should be careful to provide the actual data
 #'    used to fit the model in the \code{data} argument.
-#'   
+#'
 #' @seealso \href{../doc/xtending.html}{Vignette on extending emmeans}
-#' 
+#'
 #' @export
 #' @order 1
 recover_data = function(object, ...) {
@@ -97,11 +97,11 @@ recover_data = function(object, ...) {
     if (!is.null(mth))
         return(mth(object, ...))
     UseMethod("recover_data")  ## This call has to be here to establish recover_data as a generic
-    
+
 }
 
 # get classes that are OK for external code to modify
-# We don't allow overriding certain anchor classes, 
+# We don't allow overriding certain anchor classes,
 # nor ones in 3rd place or later in inheritance
 .chk.cls = function(cls) {
     sacred = c("default", "call", "lm", "glm", "mlm", "aovlist", "lme", "qdrg")
@@ -115,7 +115,7 @@ recover_data = function(object, ...) {
     # is it an S4 class? If so, replace cls with its inheritance chain
     if (!inherits(classes <- try(getClass(cls[[1]]), silent = TRUE), "try-error"))
         cls = c(cls[[1]], names(classes@contains))
-    
+
     for (cl in .chk.cls(cls)) { # Look for user-provided method if not buried too deep
         mth <- .get.outside.method(generic, cl)
         if (!is.null(mth))
@@ -172,8 +172,8 @@ recover_data = function(object, ...) {
 #'   and the default value \code{"pi"} (the only numeric constant in base R)
 #'   is provided in case the model involves it. An example involving splines
 #'   may be found at \url{https://github.com/rvlenth/emmeans/issues/180}.
-#' @param frame Optional \code{data.frame}. Many model objects contain the 
-#'   model frame used when fitting the model. In cases where there are no 
+#' @param frame Optional \code{data.frame}. Many model objects contain the
+#'   model frame used when fitting the model. In cases where there are no
 #'   predictor transformations, this model frame has all the original predictor
 #'   values and so is usable for recovering the data. Thus, if \code{frame} is
 #'   non-missing and \code{data} is \code{NULL}, a check is made on \code{trms}
@@ -183,19 +183,19 @@ recover_data = function(object, ...) {
 #'   altered or removed.
 #' @param pwts Optional vector of prior weights. Typically, this may be obtained
 #'   from the fitted \code{model} via \code{weights(model)}. If this is provided,
-#'   it is used to set weights as long as it is non-\code{NULL} and the same length 
+#'   it is used to set weights as long as it is non-\code{NULL} and the same length
 #'   as the number of rows of the data.
 #' @param addl.vars Character value or vector specifying additional predictors
 #'   to include in the reference grid. These must be names of variables that
-#'   exist, or you will get an error. 
+#'   exist, or you will get an error.
 #'   This may be useful if you need to do
-#'   additional computations later on that depend on these variables; e.g., 
+#'   additional computations later on that depend on these variables; e.g.,
 #'   bias adjustments for random slopes of variables not among the fixed predictors.
-#' 
+#'
 #' @exportS3Method recover_data call
 #' @export
 #' @order 2
-recover_data.call = function(object, trms, na.action, data = NULL, 
+recover_data.call = function(object, trms, na.action, data = NULL,
                              params = "pi", frame, pwts, addl.vars, ...) {
     fcall = object # because I'm easily confused
     vars = setdiff(.all.vars(trms), params)
@@ -203,17 +203,17 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     if (missing(addl.vars))
         addl.vars = character(0)
     vars = union(vars, addl.vars)
-        
+
     if (!missing(frame)) {
         if (is.null(data) && !.has.fcns(trms))
             data = frame
-        if ("(offset)" %in% names(data)) 
+        if ("(offset)" %in% names(data))
             vars = union(vars, "(offset)")
     }
     else if (!is.null(offarg))
         vars = union(vars, .all.vars(reformulate(deparse(offarg))))
-    
-    
+
+
     tbl = data
     if (length(vars) == 0 || vars[1] == "1") {
         tbl = data.frame(c(1,1))
@@ -223,27 +223,27 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         possibly.random = FALSE
         m = match(c("formula", "data", "subset", "weights"), names(fcall), 0L)
         fcall = fcall[c(1L, m)]
-        
+
         # check to see if there are any function calls to worry about
-        # [e.g., subset = sample(1:n, 50) will give us a 
+        # [e.g., subset = sample(1:n, 50) will give us a
         #    different subset than model used]
         mm = match(c("data", "subset"), names(fcall), 0L)
         if (any(mm > 0)) {
             # Flag cases where there is a function call in data or subset
             # May indicate a situation where data are randomized
-            fcns = unlist(lapply(fcall[mm], 
-                     function(x) setdiff(all.names(x), 
+            fcns = unlist(lapply(fcall[mm],
+                     function(x) setdiff(all.names(x),
                                          c("::",":::","[[","]]",all.vars(x)))))
             possibly.random = (max(nchar(c("", fcns))) > 1)
         }
-        
+
         fcall$drop.unused.levels = TRUE
         fcall[[1L]] = quote(stats::model.frame)
         fcall$xlev = NULL # we'll ignore xlev
-        
+
         if (!is.numeric(na.action))   ### In case na.action is not a vector of indices
             na.action = NULL
-        
+
         # If we have an explicit list of cases to exclude, let everything through now
         if (!is.null(na.action))
             fcall$na.action = na.pass
@@ -260,17 +260,17 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         if (possibly.random) {
             chk = eval(fcall, env, parent.frame())
             if (!all(chk == tbl))
-                stop("Data appear to be randomized -- ", 
+                stop("Data appear to be randomized -- ",
                      "cannot consistently recover the data\n",
                      "Move the randomization ",
                      "outside of the model-fitting call.")
         }
-        
+
         # Now we can drop na.action's rows
         if (!is.null(na.action))
             tbl = tbl[-(na.action),  , drop=FALSE]
     }
-    
+
     else {
         tbl = tbl[, vars, drop = FALSE] # consider only the variables actually needed
         tbl = tbl[complete.cases(tbl), , drop=FALSE]
@@ -289,7 +289,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         }
     }
 
-    
+
     if (!missing(pwts) && !is.null(pwts)) {
         if ((npw <- length(pwts)) == nrow(tbl))
             tbl[["(weights)"]] = pwts
@@ -298,7 +298,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
                     nrow(tbl), " rows of data.\nSo prior weights were ignored.",
                     call. = FALSE)
     }
-    
+
     attr(tbl, "call") = object # the original call
     attr(tbl, "terms") = trms
     attr(tbl, "predictors") = setdiff(.all.vars(delete.response(trms)), params)
@@ -312,7 +312,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 
 # error message for recover_data.call
 .rd.error = function(vars, fcall) {
-    if ("pi" %in% vars) 
+    if ("pi" %in% vars)
         return("\nTry re-running with 'params = c\"pi\", ...)'")
     if (is.list(fcall$data)) fcall$data = "(raw data structure)"
     dataname = as.character(fcall$data)[1]
@@ -324,7 +324,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
            "Are any of these actually constants? (specify via 'params = ')\n")
     if (is.na(dataname))
         mesg = paste(mesg, "Try re-running with 'data = \"<name of dataset>\"'\n")
-    else 
+    else
         mesg = paste0(mesg, "The dataset name is:\n\t", dataname, "\n",
            "Does the data still exist? Or you can specify a dataset via 'data = '\n")
     mesg
@@ -357,9 +357,9 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 
 #' @rdname extending-emmeans
 #' @order 11
-#' @param xlev Named list of factor levels (\emph{excluding} ones coerced to 
+#' @param xlev Named list of factor levels (\emph{excluding} ones coerced to
 #'   factors in the model formula)
-#' @param grid A \code{data.frame} (provided by \code{ref_grid}) containing 
+#' @param grid A \code{data.frame} (provided by \code{ref_grid}) containing
 #'   the predictor settings needed in the reference grid
 #'
 #' @return The \code{emm_basis} method should return a \code{list} with the
@@ -379,20 +379,20 @@ recover_data.call = function(object, trms, na.action, data = NULL,
 #'   \code{dffun}}.
 #' } %%% end of describe
 #' @export
-#' 
+#'
 #' @section Communication between methods:
 #' If the \code{recover_data} method generates information needed by \code{emm_basis},
 #' that information may be incorporated by creating a \code{"misc"} attribute in the
-#' returned recovered data. That information is then passed as the \code{misc} 
+#' returned recovered data. That information is then passed as the \code{misc}
 #' argument when \code{ref_grid} calls \code{emm_basis}.
-#' 
+#'
 #' @section Optional hooks:
 #' Some models may need something other than standard linear estimates and
 #' standard errors. If so, custom functions may be pointed to via the items
 #' \code{misc$estHook}, \code{misc$vcovHook} and \code{misc$postGridHook}. If
 #' just the name of the hook function is provided as a character string, then it
 #' is retrieved using \code{\link{get}}.
-#' 
+#'
 #' The \code{estHook} function should have arguments \samp{(object, do.se, tol,
 #' ...)} where \code{object} is the \code{emmGrid} object,
 #' \code{do.se} is a logical flag for whether to return the standard error, and
@@ -424,13 +424,13 @@ emm_basis = function(object, trms, xlev, grid, ...) {
 # Hidden courtesy function that provides access to all emm_basis methods
 # #' @rdname extending-emmeans
 # #' @order 22
-# #' @return \code{.recover_data} and \code{.emm_basis} are hidden exported versions of 
+# #' @return \code{.recover_data} and \code{.emm_basis} are hidden exported versions of
 # #'   \code{recover_data} and \code{emm_basis}, respectively. They run in \pkg{emmeans}'s
 # #'   namespace, thus providing access to all existing methods.
 # #' @export
 # .emm_basis = function(object, trms, xlev, grid, ...)
 #     emm_basis(object, trms, xlev, grid, ...)
- 
+
 
 
 
@@ -438,7 +438,7 @@ emm_basis = function(object, trms, xlev, grid, ...) {
 ### DEFAULT METHODS (we hit these when a model is NOT supported)
 # I'll have it return the message if we caught the error in this way
 # Then caller can use try() to check for other types of errors,
-# and just print this message otherwise 
+# and just print this message otherwise
 # NOT @exported
 #' @exportS3Method recover_data default
 recover_data.default = function(object, ...) {
@@ -446,7 +446,7 @@ recover_data.default = function(object, ...) {
           paste(.show_supported(), collapse=""))
 }
 # NOT @exported
-#' @exportS3Method emm_basis default      
+#' @exportS3Method emm_basis default
 emm_basis.default = function(object, trms, xlev, grid, ...) {
     stop("Can't handle an object of class", dQuote(class(object)[1]), "\n",
          .show_supported())

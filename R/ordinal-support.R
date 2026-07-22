@@ -55,19 +55,19 @@ recover_data.clmm = function(object, ...) {
 # opt arg 'mode' - determines what goes into ref_grid
 #         'rescale' - (loc, scale) for linear transformation of latent result
 
-#' @exportS3Method emm_basis clm          
-emm_basis.clm = function (object, trms, xlev, grid, 
-                          mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class", "scale"), 
+#' @exportS3Method emm_basis clm
+emm_basis.clm = function (object, trms, xlev, grid,
+                          mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class", "scale"),
                           rescale = c(0,1), ...) {
     # general stuff
     mode = match.arg(mode)
     if (mode == "scale")
         return (.emm_basis.clm.scale(object, trms, xlev, grid, ...))
-    
+
     # if (is.null(object$contrasts))
     #     warning("Contrasts used to fit the model are unknown.\n",
     #             "Defaulting to system option, but results may be wrong.")
-    
+
     bhat = coef(object)
     V = .my.vcov(object, ...)
     tJac = object$tJac
@@ -77,10 +77,10 @@ emm_basis.clm = function (object, trms, xlev, grid,
     if (is.null(cnm))
         cnm = paste(seq_len(nrow(tJac)), "|", 1 + seq_len(nrow(tJac)), sep = "")
     misc = list()
-    
+
     # My strategy is to piece together the needed matrices for each threshold parameter
     # Then assemble the results
-    
+
     ### ----- Location part ----- ###
     contrasts = object$contrasts
     # Remember trms was trumped-up to include scale and nominal predictors.
@@ -101,7 +101,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     if (xint > 0L) {
         X = X[, -xint, drop = FALSE]
     }
-    
+
     ### ----- Nominal part ----- ###
     if (is.null(object$nom.terms))
         NOM = matrix(1, nrow = nrow(X))
@@ -113,7 +113,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     # cols are in wrong order... I'll get the indexes by transposing a matrix of subscripts
     if (ncol(NOM) > 1)
         bigNom = bigNom[, as.numeric(t(matrix(seq_len(ncol(bigNom)), nrow=ncol(NOM))))]
-    
+
     ### ----- Scale part ----- ###
     if (!is.null(object$S.terms)) {
         ms = model.frame(object$S.terms, grid, na.action = na.pass, xlev = object$S.xlevels)
@@ -134,7 +134,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     }
     else
         S = NULL
-    
+
     ### ----- Get non-estimability basis ----- ###
     nbasis = snbasis = estimability::all.estble
     if (any(is.na(bhat))) {
@@ -144,7 +144,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
         if (inherits(mm, "try-error"))
             stop("Currently, it is not possible to construct a reference grid for this\n",
                  "object, because it is rank-deficient and no model matrix is available.")
-        
+
         # note: mm has components X, NOM, and S
         if (any(is.na(c(object$alpha, object$beta)))) {
             NOMX = if (is.null(mm$NOM)) mm$X
@@ -173,14 +173,14 @@ emm_basis.clm = function (object, trms, xlev, grid,
         }
         if (is.na(nbasis[1])) # then only nonest part is scale
             nbasis = snbasis
-        else { 
+        else {
             if (!is.null(S)) # pad nbasis with zeros when there's a scale model
                 nbasis = rbind(nbasis, matrix(0, nrow=length(si), ncol=ncol(nbasis)))
             if (!is.na(snbasis[1]))
                 nbasis = cbind(nbasis, snbasis)
         }
     }
-    
+
     if (mode == "latent") {
         # Create constant columns for means of scale and nominal parts
         J = matrix(1, nrow = nrow(X))
@@ -202,8 +202,8 @@ emm_basis.clm = function (object, trms, xlev, grid,
             setLinks = get("setLinks", asNamespace("ordinal"))
             env = new.env()
             setLinks(env, link)
-            link = list(linkfun = quote(stop), 
-                        linkinv=env$pfun, mu.eta = env$dfun, name = env$link, 
+            link = list(linkfun = quote(stop),
+                        linkinv=env$pfun, mu.eta = env$dfun, name = env$link,
                         lambda = env$lambda)
         }
         misc$tran = link
@@ -219,10 +219,10 @@ emm_basis.clm = function (object, trms, xlev, grid,
             misc$postGridHook = ".clm.postGrid"
         }
     }
-    
+
     dimnames(bigX)[[2]] = names(bhat)
-    
-    list(X = bigX, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
+
+    list(X = bigX, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun,
          dfargs = list(), misc = misc)
 }
 
@@ -249,7 +249,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
         object@bhat = 1 - object@bhat
         if (!is.null(object@post.beta[1]))
             object@post.beta = 1 - object@post.beta
-        object@misc$estName = "exc.prob"        
+        object@misc$estName = "exc.prob"
     }
     # (else mode == "cum.prob" and it's all OK)
     object@misc$respName = NULL # cleanup
@@ -290,7 +290,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
 }
 
 # special 'contrast' fcn used by .clm.mean.class
-.meanclass.emmc = function(levs, lf, ...) 
+.meanclass.emmc = function(levs, lf, ...)
     data.frame(mean = lf)
 
 .clm.mean.class = function(object, ...) {
@@ -298,7 +298,7 @@ emm_basis.clm = function (object, trms, xlev, grid,
     byv = setdiff(names(prg@levels), "class")
     lf = as.numeric(prg@levels$class)
     newrg = contrast(prg, ".meanclass", lf = lf, by = byv, ...)
-    newrg = update(newrg, infer = c(FALSE, FALSE), 
+    newrg = update(newrg, infer = c(FALSE, FALSE),
         pri.vars = NULL, by.vars = NULL, estName = "mean.class")
     newrg@levels$contrast = newrg@grid$contrast = NULL
     prg@roles$multresp = NULL
@@ -373,11 +373,11 @@ emm_basis.clm = function (object, trms, xlev, grid,
     V = V[pick, pick, drop = FALSE]
     V = cbind(0, rbind(0,V))
     misc = list(tran = "log")
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = function(...) Inf, dfargs = list(), misc = misc)
 }
 
-#' @exportS3Method emm_basis clmm          
+#' @exportS3Method emm_basis clmm
 emm_basis.clmm = function (object, trms, xlev, grid, ...) {
     if (is.null(object$Hessian)) {
         message("Updating the model to obtain the Hessian...")
@@ -407,7 +407,7 @@ recover_data.svyolr = function(object, data = NULL, ...) {
     class(object) = "polr"
     recover_data(object, data = data, ...)
 }
-#' @exportS3Method emm_basis svyolr       
+#' @exportS3Method emm_basis svyolr
 emm_basis.svyolr = function(object, ...) {
     class(object) = "polr"
     emm_basis(object, ...)

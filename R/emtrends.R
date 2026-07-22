@@ -32,8 +32,8 @@
 #' those trends. Analogous to the \code{\link{emmeans}} setting, we construct a
 #' reference grid of these predicted trends, and then possibly average them over
 #' some of the predictors in the grid.
-#' 
-#' The function works by constructing reference grids for \code{object} with 
+#'
+#' The function works by constructing reference grids for \code{object} with
 #' various values of \code{var}, and then calculating difference quotients of predictions
 #' from those reference grids. Finally, \code{\link{emmeans}} is called with
 #' the given \code{specs}, thus computing marginal averages as needed of
@@ -44,14 +44,14 @@
 #' \code{cov.reduce}, \code{mult.names}, \code{nesting}, or \code{transform};
 #' and \code{emmeans} options such as \code{weights} (but please avoid
 #' \code{trend} or \code{offset}.
-#' 
-#' 
+#'
+#'
 #' @param object A supported model object (\emph{not} a reference grid)
 #' @param specs Specifications for what marginal trends are desired -- as in
 #'   \code{\link{emmeans}}. If \code{specs} is missing or \code{NULL},
 #'   \code{emmeans} is not run and the reference grid for specified trends
 #'   is returned.
-#' @param var Character value giving the name of a variable with respect to 
+#' @param var Character value giving the name of a variable with respect to
 #'   which a difference quotient of the linear predictors is computed. In order
 #'   for this to be useful, \code{var} should be a numeric predictor that
 #'   interacts with at least one factor in \code{specs}. Then instead of
@@ -67,11 +67,11 @@
 #' @param max.degree Integer value. The maximum degree of trends to compute (this
 #'   is capped at 5). If greater than 1, an additional factor \code{degree} is
 #'   added to the grid, with corresponding levels for orders
-#'   \code{1, 2, ..., max.degree}. The estimates at \eqn{\mathtt{var} = x_0} are 
+#'   \code{1, 2, ..., max.degree}. The estimates at \eqn{\mathtt{var} = x_0} are
 #' equal to the coefficients of \eqn{(x – x_0)^{degree}} based on interpolating over
 #' the \eqn{degree + 1} fitted values centered at \eqn{x_0} and spaced \eqn{h} apart.
 #' These are also known as Newton divided differences.
-#' @param ... Additional arguments passed to \code{\link{ref_grid}} or 
+#' @param ... Additional arguments passed to \code{\link{ref_grid}} or
 #'   \code{\link{emmeans}} as appropriate. See Details.
 #'
 #' @section Generalizations:
@@ -82,19 +82,19 @@
 #' that model, whereas specifying \code{var = "dose"} would perform a
 #' transformation of those slopes, making the predicted trends vary depending on
 #' \code{dose}.
-#' 
+#'
 #' @return An \code{emmGrid} or \code{emm_list} object, according to \code{specs}.
 #' See \code{\link{emmeans}} for more details on when a list is returned.
-#' 
+#'
 #' @seealso \code{\link{emmeans}}, \code{\link{ref_grid}}
-#' 
+#'
 #' @note
 #' In earlier versions of \code{emtrends}, the first argument was named
 #' \code{model} rather than \code{object}. (The name was changed because of
 #' potential mis-matching with a \code{mode} argument, which is an option for
 #' several types of models.) For backward compatibility, \code{model} still works
 #' \emph{provided all arguments are named}.
-#' 
+#'
 #' @note
 #' It is important to understand that trends computed by \code{emtrends} are
 #' \emph{not} equivalent to polynomial contrasts in a parallel model where
@@ -103,15 +103,15 @@
 #' trends reflect \emph{local} behavior at particular value(s) of \code{var};
 #' whereas when \code{var} is modeled as a factor and polynomial contrasts are
 #' computed, those contrasts represent the \emph{global} pattern of changes over
-#' \emph{all} levels of \code{var}. 
-#' 
+#' \emph{all} levels of \code{var}.
+#'
 #' See the \code{pigs.poly} and \code{pigs.fact} examples below for an
-#' illustration. The linear and quadratic trends depend on the value of 
+#' illustration. The linear and quadratic trends depend on the value of
 #' \code{percent}, but the cubic trend is constant (because that is true of
 #' a cubic polynomial, which is the underlying model). The cubic contrast
 #' in the factorial model has the same P value as for the cubic trend,
 #' again because the cubic trend is the same everywhere.
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -120,54 +120,54 @@
 #' ( fiber.emt <- emtrends(fiber.lm, "machine", var = "diameter") )
 #' # ... and pairwise comparisons thereof
 #' pairs(fiber.emt)
-#' 
+#'
 #' # Suppose we want trends relative to sqrt(diameter)...
-#' emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
+#' emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)",
 #'          at = list(diameter = c(20, 30)))
 #'
 #' # Obtaining a reference grid
 #' mtcars.lm <- lm(mpg ~ poly(disp, degree = 2) * (factor(cyl) + factor(am)), data = mtcars)
-#' 
+#'
 #' # Center trends at mean disp for each no. of cylinders
-#' mtcTrends.rg <- emtrends(mtcars.lm, var = "disp", 
+#' mtcTrends.rg <- emtrends(mtcars.lm, var = "disp",
 #'                           cov.reduce = disp ~ factor(cyl))
 #' summary(mtcTrends.rg)  # estimated trends at grid nodes
 #' emmeans(mtcTrends.rg, "am", weights = "prop")
-#' 
-#' 
+#'
+#'
 #' ### Higher-degree trends ...
-#' 
+#'
 #' pigs.poly <- lm(conc ~ poly(percent, degree = 3), data = pigs)
 #' emt <- emtrends(pigs.poly, ~ degree | percent, "percent", max.degree = 3,
 #'                 at = list(percent = c(9, 13.5, 18)))
 #'        # note: 'degree' is an extra factor created by 'emtrends'
-#'        
+#'
 #' summary(emt, infer = c(TRUE, TRUE))
-#' 
+#'
 #' # Compare above results with poly contrasts when 'percent' is modeled as a factor ...
 #' pigs.fact <- lm(conc ~ factor(percent), data = pigs)
 #' emm <- emmeans(pigs.fact, "percent")
-#' 
+#'
 #' contrast(emm, "poly")
 #' # Some P values are comparable, some aren't! See Note in documentation
 emtrends = function(object, specs, var, delta.var=.001*rng,
                     max.degree = 1, ...) {
     estName = paste(var, "trend", sep=".") # Do now as I may replace var later
-    
+
     # construct our first call to ref_grid() to get the data...
     rgargs = list(object = object, ...)
     if (is.null(rgargs$options))
         rgargs$options = list()
-    
+
     # backward compatibility for when 1st argument was "model"
     if (missing(object) && ("model" %in% names(rgargs))) {
         names(rgargs)[names(rgargs) == "model"] = "object"
     }
-    
+
     rgargs$options$just.data = TRUE
     data = do.call("ref_grid", c(rgargs))
     rgargs$options$just.data = rgargs$data = NULL
-    
+
     x = data[[var]]
     fcn = NULL   # differential
     if (is.null(x)) {
@@ -177,25 +177,25 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
             stop("Can only support a function of one variable")
         else {
             x = data[[var]]
-            if (is.null(x)) stop("Variable '", var, "' is not in the dataset")      
+            if (is.null(x)) stop("Variable '", var, "' is not in the dataset")
         }
     }
     rng = diff(range(x))
     if (delta.var == 0)  stop("Provide a nonzero value of 'delta.var'")
-    
+
     max.degree = max(1, min(5, as.integer(max.degree + .1)))
 
         # create a vector of delta values, such that a middle one has value 0
     delts = delta.var * (0:max.degree)
     idx.base = as.integer((2 + max.degree)/2)
     delts = delts - delts[idx.base]
-    
+
     # set up call for ref_grid
     # ref_grid hook -- expand grid by these increments of var
     rgargs$options = c(rgargs$options, list(var = var, delts = delts))
     rgargs$data = data
     bigRG = do.call("ref_grid", rgargs)
-    
+
     ### create var.subs -- list of indexes for each value of delts
     ## Since var was created as slowest-varying, only multivariate factors will vary slower
     gdim = nrow(bigRG@linfct) / length(delts)
@@ -208,20 +208,20 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
             mdim = mdim * length(bigRG@levels[[v]])
     arr = array(seq_len(nrow(bigRG@linfct)), c(gdim / mdim, length(delts), mdim))
     var.subs = lapply(seq_along(delts), function(i) as.numeric(arr[,i,]))
-    
+
     RG = orig.rg = bigRG[var.subs[[idx.base]]]  # the subset that corresponds to reference values
 
     row.names(RG@grid) = seq_along(RG@grid[[1]])
 
     linfct = lapply(seq_along(delts), function(i) bigRG@linfct[var.subs[[i]], , drop = FALSE])
-    
+
     if (!is.null(fcn)) { # need a different "h" when diff wrt a function
         tmp = sapply(seq_along(delts), function(i)
             eval(parse(text = fcn), envir = bigRG@grid[var.subs[[i]], , drop = FALSE]))
         if (!is.matrix(tmp)) tmp = matrix(tmp, nrow = 1)
         delta.var = apply(tmp, 1, function(.) mean(diff(.)))
     }
-    
+
     newlf = numeric(0)
     h = 1
     for (i in 1:max.degree) { # successively difference linfct
@@ -230,11 +230,11 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
         what = as.integer((length(linfct) + 1) / 2) # pick out one in the middle
         newlf = rbind(newlf, linfct[[what]] / h)
     }
-    
+
     # Now replace linfct w/ difference quotient(s)
     RG@linfct = newlf
     RG@roles$trend = var
-    
+
     if (max.degree > 1) {
         degnms = c("linear", "quadratic", "cubic", "quartic", "quintic")
         RG@grid$degree = degnms[1]
@@ -250,12 +250,12 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
     RG@misc$tran = RG@misc$tran.mult = NULL
     RG@misc$estName = estName
     RG@misc$methDesc = "emtrends"
-    
+
     .save.ref_grid(RG)  # save in .Last.ref_grid, if enabled
-    
+
     if (missing(specs) || is.null(specs))
         return (RG)
-    
+
     # args for emmeans calls
     args = list(object = NULL, specs = specs, ...)
     args$at = args$cov.reduce = args$mult.levs = args$vcov. = args$data = args$trend =
@@ -265,8 +265,8 @@ emtrends = function(object, specs, var, delta.var=.001*rng,
         if (!("degree" %in% chk))
             args$by = c("degree", args$by)
     }
-    
-    
+
+
     args$object = RG
     do.call("emmeans", args)
 }

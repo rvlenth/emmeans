@@ -17,7 +17,7 @@ knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro", class.message = "re"
 
 Models in which predictors interact seem to create a lot of confusion
 concerning what kinds of *post hoc* methods should be used. It is hoped that
-this vignette will be helpful in shedding some light on how to use the 
+this vignette will be helpful in shedding some light on how to use the
 **emmeans** package effectively in such situations.
 
 ## Contents {#contents}
@@ -34,9 +34,9 @@ this vignette will be helpful in shedding some light on how to use the
 
 
 ## Interacting factors {#factors}
-<!-- @index Examples!`auto.noise`; Interactions!Possible inappropriateness of marginal means 
+<!-- @index Examples!`auto.noise`; Interactions!Possible inappropriateness of marginal means
   Interactions!Plotting; `emmip()` -->
-As an example for this topic, consider the `auto.noise` dataset included with 
+As an example for this topic, consider the `auto.noise` dataset included with
 the package. This is a balanced 3x2x2 experiment with three replications. The
 response -- noise level -- is evaluated with different sizes of cars, types of
 anti-pollution filters, on each side of the car being measured.[^1]
@@ -46,30 +46,30 @@ collected; for example, are these independent experimental runs, or are some
 cars measured more than once? The model is based on the independence assumption,
 but I have my doubts.
 
-Let's fit a model and obtain the ANOVA table (because of the scale of the data, 
-we believe that the response is recorded in tenths of decibels; 
+Let's fit a model and obtain the ANOVA table (because of the scale of the data,
+we believe that the response is recorded in tenths of decibels;
 so we compensate for this by scaling the response):
 ```{r}
 noise.lm <- lm(noise/10 ~ size * type * side, data = auto.noise)
 anova(noise.lm)
 ```
-There are statistically strong 2- and 3-way interactions. 
+There are statistically strong 2- and 3-way interactions.
 
 One mistake that a lot of people seem to make is to proceed too hastily to
-estimating marginal means (even in the face of all these interactions!). 
+estimating marginal means (even in the face of all these interactions!).
 They would go straight to analyses like this:
 ```{r}
 emmeans(noise.lm, pairwise ~ size)
 ```
 The analyst-in-a-hurry would thus conclude that the noise level is
-higher for medium-sized cars than for small or large ones. 
+higher for medium-sized cars than for small or large ones.
 
 But as is seen in the message before the output, `emmeans()` valiantly tries
 to warn you that it may not be a good idea to average over factors that interact
 with the factor of interest. It isn't *always* a bad idea to do this, but
 sometimes it definitely is.
 
-What about this time? 
+What about this time?
 I think a good first step is always to try to visualize the nature of the
 interactions before doing any statistical comparisons. The following plot helps.
 ```{r fig.alt = "emmip plot of type and size, with separate panels for each side. To see the same numerical information, do emmeans(noise.lm, ~ type:size|side)"}
@@ -95,13 +95,13 @@ For comparing the levels of other factors, similar judgments must be made. It
 may help to construct other interaction plots with the factors in different
 roles. In my opinion, almost all meaningful statistical analysis should be
 grounded in evaluating the practical impact of the
-estimated effects *first*, and seeing if the statistical evidence backs it up. 
+estimated effects *first*, and seeing if the statistical evidence backs it up.
 Those who put all their attention on how many asterisks
-(I call these people "`*` gazers") are ignoring the fact that these don't measure 
+(I call these people "`*` gazers") are ignoring the fact that these don't measure
 the sizes of the effects on a practical scale.[^2]
-An effect can be practically negligible and still have a very small *P* value -- 
+An effect can be practically negligible and still have a very small *P* value --
 or practically important but have a large *P* value -- depending on sample size and error variance.
-Failure to describe what is actually going on in the data is a failure to do an adequate analysis. 
+Failure to describe what is actually going on in the data is a failure to do an adequate analysis.
 Use lots of plots, and *think* about the results. For more on this, see the discussion
 of *P* values in the ["basics" vignette](basics.html#pvalues).
 
@@ -117,7 +117,7 @@ specifying which factors are *not* used as `by` variables. For example, consider
 ```{r}
 noise.emm <- emmeans(noise.lm, ~ size * side * type)
 ```
-Then `pairs(noise.emm, simple = "size")` is the same as 
+Then `pairs(noise.emm, simple = "size")` is the same as
 `pairs(noise.emm, by = c("side", "type"))`.
 
 One may specify a list for `simple`, in which case separate runs are made with
@@ -143,13 +143,13 @@ multiplicity-adjusted (a total of 16 different tables).
 [Back to Contents](#contents)
 
 ## Interaction contrasts {#contrasts}
-<!-- @index Interactions!Contrasts; `contrast()`!`interaction` 
+<!-- @index Interactions!Contrasts; `contrast()`!`interaction`
      Contrasts!of other contrasts@cont -->
 An interaction contrast is a contrast of contrasts. For instance, in the auto-noise
 example, we may want to obtain the linear and quadratic contrasts of `size` separately
 for each `type`, and compare them. Here are estimates of those contrasts:
 ```{r}
-contrast(emm_s.t[[1]], "poly")   ## 'by = "type"' already in previous result 
+contrast(emm_s.t[[1]], "poly")   ## 'by = "type"' already in previous result
 ```
 The comparison of these contrasts may be done using the `interaction`
 argument in `contrast()` as follows:
@@ -157,7 +157,7 @@ argument in `contrast()` as follows:
 IC_st <- contrast(emm_s.t[[1]], interaction = c("poly", "consec"), by = NULL)
 IC_st
 ```
-(Using `by = NULL` restores `type` to a primary factor in these contrasts.) 
+(Using `by = NULL` restores `type` to a primary factor in these contrasts.)
 The practical meaning of this is that there isn't a statistical difference in
 the linear trends, but the quadratic trend for Octel is greater than for
 standard filter types. (Both quadratic trends are negative, so in fact it is the
@@ -173,7 +173,7 @@ By the way, "type III" tests of interaction effects can be obtained via interact
 ```{r}
 test(IC_st, joint = TRUE)
 ```
-This result is exactly the same as the *F* test of `size:type` in the `anova` 
+This result is exactly the same as the *F* test of `size:type` in the `anova`
 output.
 
 The three-way interaction may be explored via interaction contrasts too:
@@ -181,8 +181,8 @@ The three-way interaction may be explored via interaction contrasts too:
 emmeans(noise.lm, ~ size*type*side) |>
     contrast(interaction = c("poly", "consec", "consec"))
 ```
-One interpretation of this is that the comparison by `type` of the linear 
-contrasts for `size` is different on the left side than on the right side; but 
+One interpretation of this is that the comparison by `type` of the linear
+contrasts for `size` is different on the left side than on the right side; but
 the comparison of that comparison of the quadratic contrasts, not so much. Refer
 again to the plot, and this can be discerned as a comparison of the interaction
 in the left panel versus the interaction in the right panel.
@@ -206,12 +206,12 @@ joint_tests(noise.lm, by = "side")
 <!-- @index Multivariate contrasts; Contrasts!Multivariate; Hotelling's $T^2$;
             `mvcontrast()`    -->
 In the preceding sections, the way we addressed interacting factors was to do
-comparisons or contrasts of some factors()) separately at levels of other factor(s). 
+comparisons or contrasts of some factors()) separately at levels of other factor(s).
 This leads to a lot of estimates and associated tests.
 
 Another approach is to compare things in a multivariate way. In the auto-noise example,
 for example, we have four means (corresponding to the four combinations of `type` and `size`)
-with each size of car, and we could consider comparing 
+with each size of car, and we could consider comparing
 these *sets* of means. Such multivariate comparisons can be done via the *Mahalanobis distance*
 (a kind of standardized distance measure) between one set of four means and another.
 This is facilitated by the `mvcontrast()` function:
@@ -219,16 +219,16 @@ This is facilitated by the `mvcontrast()` function:
 mvcontrast(noise.emm, "pairwise", mult.name = c("type", "side"))
 ```
 In this output, the `T.square` values are Hotelling's $T^2$ statistics, which are
-the squared Mahalanobis distances among the sets of four means. These results thus 
+the squared Mahalanobis distances among the sets of four means. These results thus
 accomplish a similar objective as the initial comparisons presented in this vignette,
-but are not complicated by the issue that the factors interact. (Instead, we lose the 
+but are not complicated by the issue that the factors interact. (Instead, we lose the
 directionality of the comparisons.) While all comparisons are "significant," the `T.square`
 values indicate that large cars are statistically most different from the other sizes.
 
-We may still break things down using `by` variables. Suppose, for example, we wish to 
+We may still break things down using `by` variables. Suppose, for example, we wish to
 compare the two filter types for each size of car, without regard to which side:
 ```{r}
-update(mvcontrast(noise.emm, "consec", mult.name = "side", by = "size"), 
+update(mvcontrast(noise.emm, "consec", mult.name = "side", by = "size"),
        by = NULL)
 ```
 
@@ -236,7 +236,7 @@ One detail to note about multivariate comparisons: in order to make complete sen
 all the factors involved must interact. Suppose we were to repeat the initial multivariate
 comparison after removing all interactions:
 ```{r}
-mvcontrast(update(noise.emm, submodel = ~ side + size + type), 
+mvcontrast(update(noise.emm, submodel = ~ side + size + type),
            "pairwise", mult.name = c("type", "side"))
 ```
 Note that each $F$ ratio now has 1 d.f. Also, note that `T.square = F.ratio`,
@@ -300,23 +300,23 @@ predict sales of each variety at each observed values of the prices:
 emmip(org.quad, price2 ~ price1 | variety, mult.name = "variety", cov.reduce = FALSE)
 ```
 
-The trends portrayed here are quite sensible: In the left panel, as we increase 
-the price of variety 1, sales of that variety will tend to decrease -- and the 
+The trends portrayed here are quite sensible: In the left panel, as we increase
+the price of variety 1, sales of that variety will tend to decrease -- and the
 decrease will be faster when the other variety of oranges is low-priced. In the
-right panel, as price of variety 1 increases, sales of variety 2 will increase 
+right panel, as price of variety 1 increases, sales of variety 2 will increase
 when it is low-priced, but could decrease also at high prices because oranges in
-general are just too expensive. A plot like this for `org.int` will be similar 
-but all the curves will be straight lines; and the one for `plot.add` will have 
+general are just too expensive. A plot like this for `org.int` will be similar
+but all the curves will be straight lines; and the one for `plot.add` will have
 all lines parallel. In all models, though, there are implied `price1:variety`
 and `price2:variety` interactions, because we have different regression
 coefficients for the two responses.
 
-Which model should we use? They are nested models, so they can be compared by 
+Which model should we use? They are nested models, so they can be compared by
 `anova()`:
 ```{r}
 anova(org.quad, org.int, org.add)
 ```
-It seems like the full-quadratic model has little advantage over the 
+It seems like the full-quadratic model has little advantage over the
 interaction model. There truly is nothing magical about a *P* value of 0.05,
 and we have enough data that over-fitting is not a hazard; so I like `org.int`.
 However, what follows could be done with any of these models.
@@ -336,7 +336,7 @@ emtrends(org.int, pairwise ~ variety, var = "price1", mult.name = "variety")
 From this, we can say that, starting with `price1` and `price2` both at their
 average values, we expect `sales1` to decrease by about .75 per unit
 increase in `price1`; meanwhile, there is a suggestion of a slight increase of `sales2`,
-but without much statistical evidence. 
+but without much statistical evidence.
 Marginally, the first variety has a 0.89 disadvantage relative to
 sales of the second variety.
 
@@ -357,7 +357,7 @@ difference of about .92.
 [Back to Contents](#contents)
 
 ## Summary {#summary}
-Interactions, by nature, make things more complicated. One must resist pressures 
+Interactions, by nature, make things more complicated. One must resist pressures
 and inclinations to try to produce simple bottom-line conclusions. Interactions
 require more work and more patience; they require presenting more cases -- more
 than are presented in the examples in this vignette -- in order to provide a

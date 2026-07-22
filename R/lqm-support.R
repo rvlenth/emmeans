@@ -28,7 +28,7 @@ recover_data.lqmm = function(object, data = object$mfArgs$data, ...) {
     recover_data(fcall, trms, object$mfArgs$na.action, data = data, ...)
 }
 
-#' @exportS3Method emm_basis lqmm         
+#' @exportS3Method emm_basis lqmm
 emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
     taudiff = abs(object$tau - tau)
     col = which(taudiff < 0.0001)
@@ -48,7 +48,7 @@ emm_basis.lqmm = function(object, trms, xlev, grid, tau = 0.5, ...) {
     nbasis = estimability::all.estble
     dfargs = list(df = object$rdf)
     dffun = function(k, dfargs) dfargs$df
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = list())
 }
 
@@ -59,7 +59,7 @@ recover_data.lqm = function(object, ...) {
     recover_data.lm(object, frame = NULL, ...)
 }
 
-#' @exportS3Method emm_basis lqm          
+#' @exportS3Method emm_basis lqm
 emm_basis.lqm = function(object, ...)
     emm_basis.lqmm(object, ...)
 
@@ -71,8 +71,8 @@ emm_basis.lqm = function(object, ...)
 recover_data.rq = function(object, ...) {
     recover_data.lm(object, frame = object$model, ...)
 }
-    
-#' @exportS3Method emm_basis rq           
+
+#' @exportS3Method emm_basis rq
 emm_basis.rq = function(object, trms, xlev, grid, tau = object$tau, ...) {
     taucols = sapply(tau, \(t) {
         w = which(abs(object$tau - t) < 0.0001)
@@ -109,7 +109,7 @@ emm_basis.rq = function(object, trms, xlev, grid, tau = object$tau, ...) {
     misc = list(ylevs = list(tau = tau))
     dfargs = list(df = df)
     dffun = function(k, dfargs) dfargs$df
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
@@ -117,6 +117,6 @@ emm_basis.rq = function(object, trms, xlev, grid, tau = object$tau, ...) {
 #' @exportS3Method recover_data rqs
 recover_data.rqs = recover_data.rq
 
-#' @exportS3Method emm_basis rqs          
+#' @exportS3Method emm_basis rqs
 emm_basis.rqs = function(object, ...)
     emm_basis.rq(object, ...)

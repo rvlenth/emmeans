@@ -26,7 +26,7 @@
 
 
 #' The \code{emm_list} class
-#' 
+#'
 #' An \code{emm_list} object is simply a list of
 #' \code{\link[=emmGrid-class]{emmGrid}} objects. Such a list is returned,
 #' for example, by \code{\link{emmeans}} with a two-sided formula or a list as its
@@ -35,7 +35,7 @@
 #' methods, using the first element of the list. You can specify \code{which}
 #' to select a different element, or just run the corresponding \code{emmGrid}
 #' method on \code{object[[k]]}.
-#' 
+#'
 #' @param object,x an object of class \code{emm_list}
 #' @param ... additional arguments passed to corresponding \code{emmGrid}
 #'   method. In addition, the user may include a logical argument \code{drop}
@@ -45,28 +45,28 @@
 #'   \code{list} structure is removed.
 #' @param which integer vector specifying which elements to select;
 #'   if \code{NULL},
-#'   we try to guess which elements make sense. Usually, this is all elements having 
+#'   we try to guess which elements make sense. Usually, this is all elements having
 #'   names that start with \sQuote{em} or \sQuote{ls},
 #'   or the first element if no matches are found. However, in \code{coef.emm_list},
 #'   these are the ones we \emph{exclude}.
-#' 
+#'
 #' @return a \code{list} of objects returned by the corresponding \code{emmGrid}
 #'   method (thus, often, another \code{emm_list} object). However, if
 #'   \code{which} has length 1, the one result is not wrapped in a list.
-#' 
+#'
 #' @rdname emm_list-object
 #' @name emm_list
 #' @order 1
 #' @examples
 #' mod <- lm(conc ~ source, data = pigs)
 #' obj <- emmeans(mod, pairwise ~ source)
-#' 
+#'
 #' linfct(obj)
-#' 
+#'
 #' coef(obj)     # done only for the contrasts
-#' 
+#'
 #' contrast(obj, "consec")  # done only for the means
-#' 
+#'
 #' contrast(obj, "eff", drop = FALSE)   # kept as a list
 NULL
 
@@ -154,7 +154,7 @@ print.summary_eml = function(x, ...) {
 #' @rdname emm_list-object
 #' @order 14
 #' @note No \code{export} option is provided for printing an \code{emm_list}
-#' (see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
+#' (see \code{\link{print.emmGrid}}). If you wish to export these objects, you
 #' must do so separately for each element in the list.
 #'
 print.emm_list = function(x, ...) {
@@ -245,15 +245,15 @@ plot.emm_list = function(x, ..., which = 1) {
 #' @rdname rbind.emmGrid
 #' @order 23
 #' @param which Integer vector of subset of elements to use;
-#' if missing, we use all elements. 
-#' @return The \code{rbind} method for \code{emm_list} objects simply combines 
+#' if missing, we use all elements.
+#' @return The \code{rbind} method for \code{emm_list} objects simply combines
 #' the \code{emmGrid} objects comprising the first element of \code{...}.
 #' Note that the returned object is not yet summarized, so any \code{adjust}
 #' parameters apply to the combined \code{emmGrid}.
 #' @export
 #' @method rbind emm_list
 #' @examples
-#' 
+#'
 #' ### Working with 'emm_list' objects
 #' mod <- lm(conc ~ source + factor(percent), data = pigs)
 #' all <- emmeans(mod, list(src = pairwise ~ source, pct = consec ~ percent))
@@ -284,7 +284,7 @@ rbind.summary_emm = function(..., which) {
     rbind.summary_eml(slobj, which = which)
 }
 
-#' 
+#'
 #' @export
 #' @method rbind summary_eml
 rbind.summary_eml = function(..., which) {
@@ -321,7 +321,7 @@ rbind.summary_eml = function(..., which) {
         otr.mesg = union(otr.mesg, attr(x[[i]], "mesg"))
     }
     otr.mesg = setdiff(otr.mesg, mesg)
-    if (length(otr.mesg) > 0) 
+    if (length(otr.mesg) > 0)
         mesg = c(mesg, "The following messages apply only to some rows:",
                  paste("*", otr.mesg))
     attr(rtn, "mesg") = mesg
@@ -354,7 +354,7 @@ as.list.emm_list = function(x, ...) {
 
 #' @export
 #' @return \code{as.emm_list} returns an object of class \code{emm_list}.
-#' 
+#'
 #' @rdname as.emmGrid
 #' @order 3
 as.emm_list = function(object, ...) {

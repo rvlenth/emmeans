@@ -39,7 +39,7 @@ and alternatives that may be less prone to misinterpretation.
 
 ### Grouping by underlining {#underlining}
 <!-- @index CLDs!Relation to underlining; Underlining, grouping by -->
-CLDs generalize an "underlining" technique shown in some old experimental 
+CLDs generalize an "underlining" technique shown in some old experimental
 design and analysis textbooks, where results may be displayed something like this:
 ```
     trt1  ctrl   trt3   trt2   trt4
@@ -79,7 +79,7 @@ deemed to not be statistically different. Using symbols, it is possible to have
 non-contiguous groupings, e.g., it is possible for two means to share a symbol
 while an intervening one does not share the same symbol. Such a display is
 called a *compact letter display*. We do not absolutely require actual letters,
-just symbols that can be distinguished from one another. In the case where 
+just symbols that can be distinguished from one another. In the case where
 all the differences have equal SEs, the CLD will be the "same" as the result
 of grouping lines, in that each distinct symbol will span a contiguous
 range of means that can be interpreted as a grouping line.
@@ -89,14 +89,14 @@ The R package
 **multcompView** (Graves *et al.*, 2019) provides an implementation of the
 Piepho algorithm.  The multcomp package (Hothorn *et al.* 2008) provides a
 generic `cld()` function, and the **emmeans** package provides a
-`cld()` method for `emmGrid` objects. 
+`cld()` method for `emmGrid` objects.
 
 [Back to Contents](#contents)
 
 
 ### Simulated example {#CLD-example}
 <!-- @index Examples!CLDs (simulated); CLDs!Simulated example -->
-As a moving example, we simulate some data from an unbalanced design with 7 
+As a moving example, we simulate some data from an unbalanced design with 7
 treatments labeled A, B, ..., G; and fit a model to those
 ```{r}
 set.seed(22.10)
@@ -180,7 +180,7 @@ to know that we *cannot* say that means in different groups are significantly
 different.
 
 Unlike CLD #1, we are showing only groupings of means that
-we can *show* to be the same. The first four means, which were grouped together 
+we can *show* to be the same. The first four means, which were grouped together
 earlier, are now assigned to two equivalence groupings. And treatment `F` is not
 grouped with any other mean -- which makes sense because we have so little
 data on that treatment that we can hardly say anything.
@@ -222,11 +222,11 @@ comparisons among means.
 Graves, Spencer, Piepho Hans-Pieter, Selzer, Luciano, and Dorai-Raj, Sundar
 (2019). **multcompView**: Visualizations of Paired Comparisons. R package
 version 0.1-8, `https://CRAN.R-project.org/package=multcompView`
- 
+
 Hothorn, Torsten, Bretz, Frank, and Westfall, Peter (2008). Simultaneous
  Inference in General Parametric Models. *Biometrical Journal* **50(3)**,
  346--363.
-  
+
 Piepho, Hans-Peter (2004). An algorithm for a letter-based representation of all
 pairwise comparisons, *Journal of Computational and Graphical Statistics*
 **13(2)** 456--466.

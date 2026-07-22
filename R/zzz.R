@@ -21,30 +21,30 @@
 
 ### Encouragement to wean ourselvs from the titdyverse
 #' Dare to be un-"tidy"!
-#' 
-#' Users who use \pkg{emmeans} functions as part of a pipeline -- or post-process 
-#' those results in some other way -- are likely missing some important information. 
-#' 
+#'
+#' Users who use \pkg{emmeans} functions as part of a pipeline -- or post-process
+#' those results in some other way -- are likely missing some important information.
+#'
 #' Your best bet is to display the actual results without any post-processing.
-#' That's because \code{emmeans} and its relatives have their own \code{summary} 
+#' That's because \code{emmeans} and its relatives have their own \code{summary}
 #' and \code{print} methods that display annotations that may be helpful in
 #' explaining what you have. If you just pipe the results into the next step,
 #' those annotations are stripped away and you never see them. Statistical
 #' analysis is not just a workflow; it is a discipline that involves care in
-#' interpreting intermediate results, and thinking before moving on. 
-#' 
+#' interpreting intermediate results, and thinking before moving on.
+#'
 #' @examples
 #' neur.glm <- glm(Pain ~ Treatment + Sex + Age, family = binomial(),
 #'             data = neuralgia)
-#'             
+#'
 #' ### The actual results with annotations (e.g. ests are on logit scale):
 #' emmeans(neur.glm, "Treatment")
-#' 
+#'
 #' ### Post-processed results lose the annotations
 #' if (requireNamespace("tibble")) {
 #'     emmeans(neur.glm, "Treatment") |> tibble::as_tibble()
 #' }
-#' 
+#'
 #' @name untidy
 NULL
 
@@ -52,7 +52,7 @@ NULL
 
 # NOTE: Excluded from documentation
 # Custom Vignette format
-# 
+#
 # This is used to format HTML vignettes the way its developer wants them.
 #
 # @param ... Arguments passed to \code{rmarkdown::html_document}
@@ -65,11 +65,11 @@ NULL
 #' as the output style of a Markdown file. All the vignettes in the
 #' \pkg{emmeans} package use this output style.
 #' @export
-.emm_vignette = function(css = system.file("css", "clean-simple.css", package = "emmeans"), 
+.emm_vignette = function(css = system.file("css", "clean-simple.css", package = "emmeans"),
                          highlight = NULL,  ...) {
     rmarkdown::html_document(theme = NULL, highlight = highlight,
-                             fig_width = 3, fig_height = 3, 
-                             css = css, ###pandoc_args = "", 
+                             fig_width = 3, fig_height = 3,
+                             css = css, ###pandoc_args = "",
                              ...)
 ###    css = css, pandoc_args = "--strip-comments", ...)
 }
@@ -125,7 +125,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 #' @rdname extending-emmeans
 #' @order 29
 #' @section Registering S3 methods for a model class:
-#' The \code{.emm_register} function is provided as a convenience to conditionally 
+#' The \code{.emm_register} function is provided as a convenience to conditionally
 #' register your
 #' S3 methods for a model class, \code{recover_data.foo} and \code{emm_basis.foo},
 #' where \code{foo} is the class name. Your package should implement an
@@ -155,7 +155,7 @@ register_s3_method = function(pkg, generic, class, envir = parent.frame()) {
 .emm_register = function(classes, pkgname, qdrg = FALSE) {
     envir = asNamespace(pkgname)
     for (class in classes) {
-        if (qdrg) 
+        if (qdrg)
             register_s3_method("emmeans", "recover_data", class, envir)
         else {
             register_s3_method("emmeans", "recover_data", class, envir)

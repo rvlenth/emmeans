@@ -29,32 +29,32 @@
 # all we need to do is class it and save the arguments
 
 #' Support for \code{multcomp::glht}
-#' 
+#'
 #' These functions and methods provide an interface between \pkg{emmeans} and
 #' the \code{multcomp::glht} function for simultaneous inference provided
 #' by the \pkg{multcomp} package.
-#' 
-#' 
+#'
+#'
 #' @rdname glht-support
 #' @aliases glht-support glht.emmGrid glht.emmlf modelparm.emmwrap
 #' @param ... In \code{emm}, the \code{specs}, \code{by}, and \code{contr}
 #'   arguments you would normally supply to \code{\link{emmeans}}. Only
 #'   \code{specs} is required. Otherwise, arguments are passed to other
 #'   methods. You may also include a \code{which} argument; see Details.
-#'   
-#' @section Details for \code{emm}:  
+#'
+#' @section Details for \code{emm}:
 #' \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
 #' (\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
 #' except with \code{specs} (and optionally \code{by} and \code{contr}
 #' arguments) provided as in a call to \code{\link{emmeans}}.
-#' 
+#'
 #' If the specifications in \code{...} would result in a list (i.e., an
 #' \code{emm_list} object), then by default, only the last element of that list
 #' is passed to \code{glht}. However, if \code{...} contains a \code{which}
 #' argument consisting of integer values, the list elements with those indexes
 #' are selected and combined and passed on to \code{glht}. No checking is done
 #' on whether the indexes are valid, and the keyword \code{which} must be spelled-out.
-#' 
+#'
 #'
 #' @return \code{emm} returns an object of an intermediate class for which
 #'   there is a \code{multcomp::glht} method.
@@ -91,10 +91,10 @@ glht.emmlf <- function(model, linfct, ...) {
 # Note: model is redundant, really, so can be omitted
 # See related roxygen stuff just before glht.emmlf
 glht.emmGrid <- function(model, linfct, by, ...) {
-    .requireNS("multcomp", sQuote("glht")," requires ", dQuote("multcomp"), 
+    .requireNS("multcomp", sQuote("glht")," requires ", dQuote("multcomp"),
                " to be installed", call. = FALSE)
     object = linfct # so I don't get confused
-    if (missing(model)) 
+    if (missing(model))
         model = .cls.list("emmwrap", object = object)
     args = list(model = model, ...)
     # add a df value if not supplied
@@ -108,19 +108,19 @@ glht.emmGrid <- function(model, linfct, by, ...) {
         }
     }
     if (missing(by)) by = object@misc$by.vars
-    
+
     nms = setdiff(names(object@grid), c(by, ".offset.", ".freq.", ".wgt."))
     if (is.null(object@misc$estHook))
         lf = object@linfct
     else # custom estimation setup - use the grid itself as the parameterization
         lf = diag(1, nrow(object@linfct))
     dimnames(lf)[[1]] = as.character(interaction(object@grid[, nms], sep=", "))
-    
+
     if (is.null(by)) {
         args$linfct = lf
         return(do.call(multcomp::glht, args))
     }
-    
+
     # (else...)
     by.rows = .find.by.rows(object@grid, by)
     result = lapply(by.rows, function(r) {
@@ -140,29 +140,29 @@ glht.emmGrid <- function(model, linfct, by, ...) {
 ### as. glht -- convert my object to glht object
 #' @rdname glht-support
 #' @param object An object of class \code{emmGrid} or \code{emm_list}
-#' 
+#'
 #' @return \code{as.glht} returns an object of class \code{glht} or \code{glht_list}
-#'   according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}. 
+#'   according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}.
 #'   See Details below for more on \code{glht_list}s.
-#'   
+#'
 #' @section Details for \code{as.glht}:
 #' When no \code{by} variable is in force, we obtain a \code{glht} object; otherwise
 #' it is a \code{glht_list}. The latter is defined in \pkg{emmeans}, not \pkg{multcomp},
-#' and is simply a \code{list} of \code{glht} objects. 
+#' and is simply a \code{list} of \code{glht} objects.
 #' Appropriate convenience methods \code{coef},
 #' \code{confint}, \code{plot}, \code{summary}, and \code{vcov} are provided,
 #' which simply apply the corresponding \code{glht} methods to each member.
-#' 
+#'
 #' @note The multivariate-\eqn{t} routines used by \code{glht} require that all
 #'   estimates in the family have the same integer degrees of freedom. In cases
 #'   where that is not true, a message is displayed that shows what df is used.
 #'   The user may override this via the \code{df} argument.
-#' 
+#'
 #' @examples
-#' if (require(multcomp, quietly = TRUE)) 
-#'     emm_example("glht-multcomp") 
+#' if (require(multcomp, quietly = TRUE))
+#'     emm_example("glht-multcomp")
 #'     # Use emm_example("glht-multcomp", list = TRUE) # to see just the code
-#'     
+#'
 #' @export
 as.glht <- function(object, ...) {
     UseMethod("as.glht")

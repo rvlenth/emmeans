@@ -97,7 +97,7 @@
 
 ### returns TRUE iff there is one or more function call in a formula
 .has.fcns = function(form) {
-    fcns = setdiff(.all.vars(form, functions = TRUE), 
+    fcns = setdiff(.all.vars(form, functions = TRUE),
                    c("~", "+", "-", "*", "/", ":", "(", "|", .all.vars(form)))
     length(fcns) > 0
 }
@@ -144,7 +144,7 @@
     # now we have is.character(specs) ...
     if ((length(specs) != 1) || (specs[1] != all.key))
         return(specs)
-    # hack the object to bypass estimability checking. 
+    # hack the object to bypass estimability checking.
     # Doesn't matter what stats are as we use only the labels
     if (any(is.na(object@bhat))) {
         k = ncol(object@linfct)
@@ -162,7 +162,7 @@
     }
     if (length(stgs) == 0)
         stop("'", all.key, "' specification yielded no terms", call. = FALSE)
-    
+
     result = strsplit(stgs, ":")
     if (!is.null(rtn))
         attr(result, "form.rtn") = rtn
@@ -187,22 +187,22 @@
     result
 }
 
-### Not-so-damn-smart replacement of diag() that will 
+### Not-so-damn-smart replacement of diag() that will
 ### not be so quick to assume I want an identity matrix
 ### returns matrix(x) when x is a scalar
 #' @rdname extending-emmeans
 #' @order 42
-#' @param x,nrow,ncol Arguments for \code{.diag}, which is an alternative to 
+#' @param x,nrow,ncol Arguments for \code{.diag}, which is an alternative to
 #'   \code{\link{diag}} that lacks its idiosyncrasy of returning an
 #'   identity matrix when \code{x} is of length 1.
 #' @export
-#' 
+#'
 .diag = function(x, nrow, ncol) {
     if (is.matrix(x))
         diag(x)
-    else if ((length(x) == 1) && missing(nrow) && missing(ncol)) 
+    else if ((length(x) == 1) && missing(nrow) && missing(ncol))
         matrix(x)
-    else 
+    else
         diag(x, nrow, ncol)
 }
 
@@ -220,7 +220,7 @@
     if (is.null(by))
         return(list(seq_len(nrow(tbl))))
     if (any(is.na(match(by, names(tbl)))))
-        stop("'by' variables are not all in the grid")    
+        stop("'by' variables are not all in the grid")
     bylevs = tbl[ , by, drop = FALSE]
     by.id = do.call("paste", unname(bylevs))
     uids = unique(by.id)
@@ -233,7 +233,7 @@
 #' @rdname extending-emmeans
 #' @order 35
 #' @param terms A \code{terms} component
-#' @return \code{.get.offset} returns the values, based on \code{grid}, of 
+#' @return \code{.get.offset} returns the values, based on \code{grid}, of
 #' any \code{offset} component in \code{terms}
 #' @export
 .get.offset = function(terms, grid) {
@@ -273,10 +273,10 @@
     if (!is.character(termlabels) || !length(termlabels))
         stop("'termlabels' must be a character vector of length at least one")
     has.resp = !is.null(response)
-    termlabels = sapply(trimws(termlabels), function(x) 
+    termlabels = sapply(trimws(termlabels), function(x)
         if (length(grep("\\$|\\[\\[", x)) > 0) x
         else paste0("`", x, "`"))
-    termtext = paste(if (has.resp) "response", "~", 
+    termtext = paste(if (has.resp) "response", "~",
                      paste(termlabels, collapse = "+"), collapse = "")
 # prev version:                     paste0("`", trimws(termlabels), "`", collapse = "+"), collapse = "")
     if (!intercept)
@@ -345,7 +345,7 @@
 
 # my own model.frame function. Intercepts compound names
 # and fixes up the data component accordingly. We do this
-# by creating data.frames within data having required variables of simple names 
+# by creating data.frames within data having required variables of simple names
 model.frame = function(formula, data, ...) {
     if (is.null(data))
         return (stats::model.frame(formula, ...))
@@ -387,7 +387,7 @@ model.frame = function(formula, data, ...) {
 # utility to make all names in a summary syntactically valid
 .validate.names = function(object) {
     for (a in c("names", "pri.vars", "by.vars"))
-        if (!is.null(att <- attr(object, a))) 
+        if (!is.null(att <- attr(object, a)))
             attr(object, a) = make.names(att)
     object
 }
@@ -425,7 +425,7 @@ model.frame = function(formula, data, ...) {
 # format a transformation for messages
 .fmt.tran = function(misc) {
     tran = misc$tran
-    if (is.list(tran)) 
+    if (is.list(tran))
         tran = ifelse(is.null(tran$name), "custom", tran$name)
     if (!is.null(mul <- misc$tran.mult))
         tran = paste0(mul, "*", tran)
@@ -547,7 +547,7 @@ model.frame = function(formula, data, ...) {
     subtbl = attr(terms(update(object@model.info$terms, submodel)), "factors")
     com = intersect(rownames(tbl), rownames(subtbl))
     if (length(com) == 0) { # No matching factors at all
-        com = 1; 
+        com = 1;
         subtbl = matrix(0)
     }
     sublab = apply(subtbl[com, , drop = FALSE], 2, function(x) paste(com[x > 0], collapse = ":"))

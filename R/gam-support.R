@@ -50,7 +50,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
         bsel = matrix(0, nrow = length(sig), ncol = length(usig))
         for (j in seq_along(rows))
             bsel[rows[[j]], j] = 1
-        
+
         cl = attr(data[[i]], "call")
         cl$xeval = substitute(xeval)
         z = resid + old.smooth[, lab]
@@ -63,7 +63,7 @@ emm_basis.Gam = function(object, trms, xlev, grid, nboot = 800, ...) {
                 z = sample(resid, replace = TRUE) + old.smooth[, lab]
                 as.numeric(eval(cl))
             })
-        covar = if (m == 1) var(boot) 
+        covar = if (m == 1) var(boot)
                 else       cov(t(boot))
         result$V = rbind(cbind(result$V, matrix(0, nrow = n, ncol = m)),
                          cbind(matrix(0, nrow = m, ncol = n), covar))
@@ -140,12 +140,12 @@ recover_data.gam = function(object, ...) {
 
 ### emm_basis method for mgcv::gam objects
 ### extra arg `unconditional` and `freq` as in `vcov.gam`
-#' @exportS3Method emm_basis gam          
+#' @exportS3Method emm_basis gam
 emm_basis.gam = function(object, trms, xlev, grid,
                          freq = FALSE, unconditional = FALSE,
-                         what = c("location", "scale", "shape", "rate", "prob.gt.0"), 
+                         what = c("location", "scale", "shape", "rate", "prob.gt.0"),
                          ...) {
-    if (length(object$smooth) > 0) { # get rid of random terms 
+    if (length(object$smooth) > 0) { # get rid of random terms
         rand = sapply(object$smooth, function(s) {ifelse(.smooth.is.random(s), s$label, NA)})
         rand = if (all(is.na(rand))) NULL else rand[!is.na(rand)]
     }
@@ -160,7 +160,7 @@ emm_basis.gam = function(object, trms, xlev, grid,
 
     fam_name = object$family$family
     what_num = what
-    
+
     if (fam_name == "multinom") {
         return(.emm_basis.gam_multinom(object, trms, xlev, grid, freq,
                                        unconditional, ...))
@@ -169,29 +169,29 @@ emm_basis.gam = function(object, trms, xlev, grid,
         if (!is.numeric(what)) {
             stop("Family 'mvn' requires a numeric argument 'what'")
         }
-    } 
+    }
     else if (is.character(what)) {
         what = match.arg(what)
         if (fam_name == "ziplss") {
             what_num = switch(what, location = 1, rate = 1, prob.gt.0 = 2)
-        } 
+        }
         else {
             what_num = switch(what, location = 1, scale = 2, shape = 3)
         }
     }
-    
+
     select = attr(X, "lpi")
     if (is.null(select)) select = list(seq_along(bhat))
     select = try(select[[what_num]], silent = TRUE)
-    
+
     if (inherits(select, "try-error")) {
         stop("Model does not have a linear predictor 'what = ", what, "'")
     }
-    
+
     bhat = bhat[select]
     X = X[, select, drop = FALSE]
     V = V[select, select, drop = FALSE]
-    
+
     nbasis = estimability::all.estble
     link = object$family$link[what_num]
     if (link == "identity") # they may be lying
@@ -203,7 +203,7 @@ emm_basis.gam = function(object, trms, xlev, grid,
                       gevlss = c("identity", "log", "logit")[what_num],
                       "identity")
     misc = .std.link.labels(list(link = link, family = fam_name), list())
-    
+
     if (!is.null(misc$tran) && misc$tran == "logb")  # the way this is documented is truly bizarre but I think this is right
         misc$tran = make.tran("genlog", - environment(object$family$linfo[[what_num]]$linkfun)$b)
 
@@ -230,7 +230,7 @@ recover_data.gamm = function(object, data = NULL, call = object$gam$call, ...) {
     }
 }
 
-#' @exportS3Method emm_basis gamm         
+#' @exportS3Method emm_basis gamm
 emm_basis.gamm = function(object, ...)
     emm_basis(object$gam, ...)
 
@@ -247,15 +247,15 @@ recover_data.gamlss = function(object, what = c("mu", "sigma", "nu", "tau"), ...
     recover_data(fcall, delete.response(trms), object$na.action, ...)
 }
 
-#' @exportS3Method emm_basis gamlss       
-emm_basis.gamlss = function(object, trms, xlev, grid, 
+#' @exportS3Method emm_basis gamlss
+emm_basis.gamlss = function(object, trms, xlev, grid,
                             what = c("mu", "sigma", "nu", "tau"), vcov., ...) {
     what = match.arg(what)
     smo.mat = object[[paste0(what, ".s")]]
     if (!is.null(smo.mat))
         stop("gamlss models with smoothing are not yet supported in 'emmeans'",
              call. = NULL)
-    
+
     object$coefficients = object[[paste0(what, ".coefficients")]]
     if (missing(vcov.)) {
         # tedious code to pull needed vcov elements
@@ -270,7 +270,7 @@ emm_basis.gamlss = function(object, trms, xlev, grid,
     if (!is.null(link <- object[[paste0(what, ".link")]])) {
         # Decide whether to use d.f. or not
         use.df = c("BCCG", "BCPE", "BCT", "GA", "GT", "NO", "NOF", "TF")
-        fam = ifelse((what == "mu") && (object$family[1] %in% use.df), 
+        fam = ifelse((what == "mu") && (object$family[1] %in% use.df),
                      "gaussian", "other")
         object$family = list(family = fam, link = link)
     }
