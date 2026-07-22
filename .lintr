@@ -1,6 +1,8 @@
 
 linters: linters_with_defaults(
-    object_name_linter(styles = c("dotted.case", "snake_case"),
+    object_name_linter(styles = c("dotted.case", "snake_case", "UPPERCASE")),
     assignment_linter(operator = c("<-", "=", "<<-")),
-    indentation linter(indent = 4L)
+    indentation_linter(indent = 4L),
+    infix_spaces_linter(exclude_operators = c("|"), allow_multiple_spaces = TRUE),
+    line_length_linter(length = 90L)
   )
