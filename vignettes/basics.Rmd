@@ -252,11 +252,13 @@ We could also have done this using
 ... which tells `ref_grid()` to set covariate levels using unique values.
 It's safer to use `at` because `cov.reduce` affects *all* covariates
 instead of specific ones.
+
 ###### {#emmip}
+
 <!-- @index `emmip()`; Interaction-style plots; -->
 The two models' predictions can be compared using interaction-style plots
 via the `emmip()` function
-```{r fig.alt = "interaction-style plots of 'RG4' and 'RG5'. These show parallel trends along 'percent' for each 'source'. The one for 'RG5' consists of parallel straigt lines. The values plotted here can be obtained via 'summary(RG4)' and 'summary(RG5)'"}
+```{r fig.alt = "interaction-style plots of 'RG4' and 'RG5'. These show parallel trends along 'percent' for each 'source'. The one for 'RG5' consists of parallel straight lines. The values plotted here can be obtained via 'summary(RG4)' and 'summary(RG5)'"}
 emmip(RG4, source ~ percent, style = "factor")
 emmip(RG5, source ~ percent, style = "factor")
 ```
@@ -312,10 +314,11 @@ response variable in the model has made it easier to sort things out, because
 `inverse()` is a named transformation that `emmeans()` can work with.]
 We can back-transform the results by specifying `type = "response"` in any
 function call where it makes sense. For instance,
-```{r fig.alt = "interaction-style plots for 'RG4' after back-transforming. Compared to the plots of 'RG4' without back-transforming, these trends increase rather than decrease (due to the inverse transformation) and they fan-out somewhat as 'percent' increases. The values plotted here are obtainable via 'summary(RG4, type = \"response\")'"}
+```{r fig.alt = "interaction-style plots for 'RG4' after back-transforming. Compared to the plots of 'RG4' without back-transforming, these trends increase rather than decrease (due to the inverse transformation) and they fan-out somewhat as 'percent' increases. The values plotted here are obtainable via summary(RG4, type = 'response')"}
 emmeans(RG4, "source", type = "response")
 emmip(RG4, source ~ percent, type = "response")
 ```
+
 We are now on the `conc` scale, and that will likely be less confusing. Compared with the earlier plots in which the trends were decreasing and parallel, this plot has them increasing (because of the inverse relationship) and non-parallel. An interaction that
 occurs on the response scale is pretty well explained by a model with no interactions on the inverse scale.
 

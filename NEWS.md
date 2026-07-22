@@ -17,8 +17,8 @@ title: "NEWS for the emmeans package"
   * `cross.adjust` is now correctly ignored (as documented) when the `by`
     groups are not all the same size, rather than silently producing
     mis-shaped (recycled) adjusted P values
-  * `emmip(..., engine = "lattice")` now uses the axis/trace labels again
-    (a typo referenced the wrong object, so the labels were silently dropped)
+  * `emmip(..., engine = "lattice")` now uses the axis/trace labels again (a typo referenced the wrong object, so the labels were silently dropped)
+  * Bug fix regarding cls class assignment
 
 
 ## emmeans 2.0.3

@@ -118,7 +118,7 @@ If there is a problem, contact the package developer. These issues need to be re
 In an R session: 
 
 ```
-devtools::build(manual)
+devtools::build()
 ```
 
 ### Check against R-Devel

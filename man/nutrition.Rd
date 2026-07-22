@@ -23,7 +23,7 @@ Milliken, G. A. and Johnson, D. E. (1984)
 Van Nostrand, ISBN 0-534-02713-7.
 }
 \usage{
-data(nutrition)
+nutrition
 }
 \description{
 This observational dataset involves three factors, but where several factor 

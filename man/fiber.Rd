@@ -18,7 +18,7 @@ Montgomery, D. C. (2013) \emph{Design and Analysis of Experiments}
   (8th ed.). John Wiley and Sons, ISBN 978-1-118-14692-7.
 }
 \usage{
-data(fiber)
+fiber
 }
 \description{
 Fiber data from Montgomery Design (8th ed.), p.656 (Table 15.10). Useful as a
