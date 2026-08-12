@@ -43,7 +43,7 @@ Suppose you want to use **emmeans** for some type of model that it doesn't (yet)
 
 The first thing to do is to look at the help page for extending the package:
 ```{r eval=FALSE}
-help("extending-emmeans", package = "emmeans")
+help("extending-emmeans", package="emmeans")
 ```
 It gives details about the fact that you need to write two S3 methods, `recover_data` and `emm_basis`, for the class of object that your model-fitting function returns. The `recover_data`  method is needed to recreate the dataset so that the reference grid can be identified. The `emm_basis` method then determines the linear functions needed to evaluate each point in the reference grid and to obtain associated information---such as the variance-covariance matrix---needed to do estimation and testing.
 
@@ -59,10 +59,10 @@ This vignette presents an example where suitable methods are developed, and disc
 ## Data example {#dataex}
 The **MASS** package contains various functions that do robust or outlier-resistant model fitting. We will cobble together some **emmeans** support for these. But first, let's create a suitable dataset (a simulated two-factor experiment) for testing.
 ```{r}
-fake = expand.grid(rep = 1:5, A = c("a1", "a2"), B = c("b1", "b2", "b3"))
-fake$y = c(11.46, 2.93, 1.87, 1.01, 1.92, 7.80, 3.41, 3.96, 4.27, 5.82,
-           23.14, 3.75, -2.09, 8.43, 3.01, 4.11, 5.51, 4.11, 3.95, 0.37,
-           17.75, 8.28, 7.82, 8.52, 6.33, 0.58, 0.55, 0.77, 1.21, 0.10)
+fake = expand.grid(rep = 1:5, A = c("a1","a2"), B = c("b1","b2","b3"))
+fake$y = c(11.46,12.93,11.87,11.01,11.92,17.80,13.41,13.96,14.27,15.82,
+           23.14,23.75,-2.09,28.43,23.01,24.11,25.51,24.11,23.95,30.37,
+           17.75,18.28,17.82,18.52,16.33,20.58,20.55,20.77,21.21,20.10)
 ```
 The `y` values were generated using predetermined means and Cauchy-distributed errors. There are some serious outliers in these data.
 
@@ -203,12 +203,12 @@ Based on this, here is a listing of an `emm_basis` method for `lqs` objects:
 ```{r}
 emm_basis.lqs = function(object, trms, xlev, grid, ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
-    X = model.matrix(trms, m, contrasts.arg = object$contrasts)
-    bhat = coef(object)
-    xmat = model.matrix(trms, data = object$model)                      # 5
-    V = rev(object$scale)[1]^2 * solve(t(xmat) %*% xmat)
-    nbasis = matrix(NA)
-    dfargs = list(df = nrow(xmat) - ncol(xmat))
+    X = model.matrix(trms, m, contrasts.arg = object$contrasts) 
+    bhat = coef(object) 
+    Xmat = model.matrix(trms, data=object$model)                      # 5
+    V = rev(object$scale)[1]^2 * solve(t(Xmat) %*% Xmat)
+    nbasis = matrix(NA) 
+    dfargs = list(df = nrow(Xmat) - ncol(Xmat))
     dffun = function(k, dfargs) dfargs$df
     list(X = X, bhat = bhat, nbasis = nbasis, V = V,                  #10
          dffun = dffun, dfargs = dfargs)
@@ -245,8 +245,8 @@ Let's go through the listing of this method, line-by-line:
     setting `nbasis` equal to a 1 x 1 matrix of `NA`. If rank deficiency were
     possible, the **estimability** package (which is required by **emmeans**)
     provides a `nonest.basis` function that makes this fairly painless---I would
-    have coded `nbasis = estimability::nonest.basis(xmat)`.
-
+    have coded `nbasis = estimability::nonest.basis(Xmat)`. 
+    
     There some subtleties you need to know regarding estimability. Suppose the model
     is rank-deficient, so that the design matrix **X** has *p* columns but
     rank *r* < *p*. In that case, `bhat` should be of length *p* (not *r*), and there
@@ -387,8 +387,9 @@ recover_data.rsm = function(object, data, mode = c("asis", "coded", "decoded"), 
     cod = rsm::codings(object)
     fcall = object$call
     if (is.null(data))                                                 # 5
-        data = emmeans::recover_data(fcall, delete.response(terms(object)),
-                                     object$na.action, weights = weights(object), ...)
+        data = emmeans::recover_data(fcall, 
+                   delete.response(terms(object)), object$na.action, 
+                   weights = weights(object), ...)
     if (!is.null(cod) && (mode == "decoded")) {
         pred = cpred = attr(data, "predictors")
         trms = attr(data, "terms")                                    #10
