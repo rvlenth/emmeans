@@ -245,7 +245,7 @@ emmeans:::recover_data.lm
 ##     recover_data(fcall, delete.response(terms(object)), object$na.action, 
 ##         frame = frame, pwts = weights(object), ...)
 ## }
-## <bytecode: 0x55874f20fcb8>
+## <bytecode: 0x55f478910e50>
 ## <environment: namespace:emmeans>
 ```
 
@@ -379,7 +379,7 @@ MASS:::predict.lqs
 ##     X <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
 ##     drop(X %*% object$coefficients)
 ## }
-## <bytecode: 0x5587516c3168>
+## <bytecode: 0x55f47ae97158>
 ## <environment: namespace:MASS>
 ```
 
@@ -390,7 +390,7 @@ objects:
 
 ``` r
 
-emm_basis.lqs = function(object, trms, xlev, grid, ...) { 
+emm_basis.lqs = function(object, trms, xlev, grid, ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts) 
     bhat = coef(object) 
@@ -671,7 +671,7 @@ recover_data.rsm = function(object, data, mode = c("asis", "coded", "decoded"), 
     mode = match.arg(mode)
     cod = rsm::codings(object)
     fcall = object$call
-    if(is.null(data))                                                 # 5
+    if (is.null(data))                                                 # 5
         data = emmeans::recover_data(fcall, 
                    delete.response(terms(object)), object$na.action, 
                    weights = weights(object), ...)
@@ -681,7 +681,7 @@ recover_data.rsm = function(object, data, mode = c("asis", "coded", "decoded"), 
         data = rsm::decode.data(rsm::as.coded.data(data, formulas = cod))
         for (form in cod) {
             vn = all.vars(form)
-            if (!is.na(idx <- grep(vn[1], pred))) { 
+            if (!is.na(idx <- grep(vn[1], pred))) {
                 pred[idx] = vn[2]                                     #15
                 cpred = setdiff(cpred, vn[1])
             }
@@ -746,20 +746,20 @@ defined. It is listed below:
 
 ``` r
 
-emm_basis.rsm = function(object, trms, xlev, grid, 
+emm_basis.rsm = function(object, trms, xlev, grid,
                          mode = c("asis", "coded", "decoded"), misc, ...) {
     mode = match.arg(mode)
     cod = misc
-    if(!is.null(cod) && mode == "decoded") {                          # 5
+    if (!is.null(cod) && mode == "decoded") {                          # 5
         grid = rsm::coded.data(grid, formulas = cod)
         trms = attr(trms, "orig")
     }
-    
+
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)     #10
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
-    bhat = as.numeric(object$coefficients) 
+    bhat = as.numeric(object$coefficients)
     V = emmeans::.my.vcov(object, ...)
-    
+
     if (sum(is.na(bhat)) > 0)                                         #15
         nbasis = estimability::nonest.basis(object$qr)
     else
@@ -767,7 +767,7 @@ emm_basis.rsm = function(object, trms, xlev, grid,
     dfargs = list(df = object$df.residual)
     dffun = function(k, dfargs) dfargs$df                             #20
 
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = list())
 }
 ```
@@ -799,7 +799,7 @@ as for an ordinary `lm` object.
 
 ``` r
 
-emmeans(CR.rs2, ~ x1 * x2, mode = "coded", 
+emmeans(CR.rs2, ~ x1 * x2, mode = "coded",
         at = list(x1 = c(-1, 0, 1), x2 = c(-2, 2)))
 ```
 
@@ -838,7 +838,7 @@ Note that the `at` list must now be given in terms of `Time` and `Temp`:
 
 ``` r
 
-emmeans(CR.rs2, ~ Time * Temp, mode = "decoded", 
+emmeans(CR.rs2, ~ Time * Temp, mode = "decoded",
         at = list(Time = c(80, 85, 90), Temp = c(165, 185)))
 ```
 

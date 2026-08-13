@@ -90,7 +90,7 @@ and any `...` arguments are passed there.
 ## Examples
 
 ``` r
-if(requireNamespace("xtable"))
+if (requireNamespace("xtable"))
     emm_example("xtable")
 #> 
 #> --- Running code from 'system.file("extexamples", "xtable.R", package = "emmeans")'
@@ -102,7 +102,7 @@ if(requireNamespace("xtable"))
 #> 
 #> > xtable::xtable(pigsint.emm, type = "response")
 #> % latex table generated in R 4.6.1 by xtable 1.8-8 package
-#> % Fri Jul 17 16:13:52 2026
+#> % Thu Aug 13 19:50:46 2026
 #> \begin{table}[ht]
 #> \centering
 #> \begin{tabular}{rrrrrr}

@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Sophisticated models in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.4</h4>
+package, Version 2.0.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/main/vignettes/sophisticated.Rmd" class="external-link"><code>vignettes/sophisticated.Rmd</code></a></small>
@@ -310,7 +310,7 @@ t)\)</span> for each <span class="math inline">\(t\)</span>.</p>
 <span>    <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="va">t</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">a</span> <span class="op">*</span> <span class="va">V</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">a</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="va">sig</span>  </span></code></pre></div>
+<span><span class="va">sig</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## [1] 0.5714931 1.0315769 1.5995606 2.1931561</span></span></code></pre>
 <p>As expected, these values increase with <span class="math inline">\(t\)</span>. Finally, we obtain the bias-adjusted
 estimated weights. We can use <code>sigma = sig</code> as-is since the
@@ -393,7 +393,7 @@ variable.</p>
 <span>    size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>,<span class="st">"M"</span>,<span class="st">"L"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    claims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">37</span>, <span class="fl">1</span>, <span class="fl">101</span>, <span class="fl">73</span>, <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">ins.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">claims</span> <span class="op">~</span> <span class="va">size</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html" class="external-link">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>, </span>
+<span><span class="va">ins.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">claims</span> <span class="op">~</span> <span class="va">size</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html" class="external-link">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               data <span class="op">=</span> <span class="va">ins</span>, family <span class="op">=</span> <span class="st">"poisson"</span><span class="op">)</span></span></code></pre></div>
 <p>First, let’s look at the reference grid obtained by default:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -691,7 +691,7 @@ the summary is actually rerouted to the <code><a href="../reference/hpd.summary.
 function.</p>
 <div class="section level6">
 <h6 id="bayesxtra"></h6>
-<!-- @index `as.mcmc()`; **coda** package; **bayesplot** package; 
+<!-- @index `as.mcmc()`; **coda** package; **bayesplot** package;
     **bayestestR** package; Bayes factor; Region of practical equivalence; ROPE -->
 <p>We can access the posterior EMMs via the <code>as.mcmc</code> method
 for <code>emmGrid</code> objects. This gives us an object of class
@@ -829,7 +829,7 @@ neighbor:</p>
 <div class="section level3">
 <h3 id="predict-mcmc">Bayesian prediction<a class="anchor" aria-label="anchor" href="#predict-mcmc"></a>
 </h3>
-<!-- @index Predictions!Bayesian models; 
+<!-- @index Predictions!Bayesian models;
             Predictions!Posterior predictive distribution -->
 <p>To predict from an MCMC model, just specify the
 <code>likelihood</code> argument in <code>as.mcmc</code>. Doing so

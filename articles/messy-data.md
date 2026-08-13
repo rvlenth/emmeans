@@ -41,7 +41,7 @@ interactions, and obtain its “type II” ANOVA:
 
 ``` r
 
-nutr.lm <- lm(gain ~ (age + group + race)^2, data = nutrition) 
+nutr.lm <- lm(gain ~ (age + group + race)^2, data = nutrition)
 car::Anova(nutr.lm)
 ```
 
@@ -164,7 +164,7 @@ labels for `educ` to shorter strings.
 
 ``` r
 
-framing <- mediation::framing 
+framing <- mediation::framing
 ```
 
     ## Registered S3 method overwritten by 'lme4':
@@ -173,8 +173,8 @@ framing <- mediation::framing
 
 ``` r
 
-levels(framing$educ) <- c("NA","Ref","< HS", "HS", "> HS","Coll +") 
-framing.glm <- glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat), 
+levels(framing$educ) <- c("NA","Ref","< HS", "HS", "> HS","Coll +")
+framing.glm <- glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat),
     family = binomial, data = framing)
 ```
 
@@ -184,7 +184,7 @@ These adjusted means are shown in the following plot.
 
 ``` r
 
-emmip(framing.glm, treat ~ educ | gender, type = "response") 
+emmip(framing.glm, treat ~ educ | gender, type = "response")
 ```
 
 ![Two panels, each showing a decreasing trend with educ except they
@@ -209,7 +209,7 @@ different impression:
 
 ``` r
 
-emmip(framing.glm, treat ~ educ | gender, type = "response", 
+emmip(framing.glm, treat ~ educ | gender, type = "response",
     cov.reduce = emo ~ treat*gender + age + educ + income)
 ```
 
@@ -291,8 +291,8 @@ following two would yield the same results:
 
 ``` r
 
-emmeans(model, "A", weights = "outer") 
-emmeans(model, c("A", "B"), weights = "prop") |>  emmeans(weights = "prop") 
+emmeans(model, "A", weights = "outer")
+emmeans(model, c("A", "B"), weights = "prop") |>  emmeans(weights = "prop")
 ```
 
 Using `"cells"` weights gives each prediction the same weight as occurs
@@ -380,7 +380,7 @@ the model
 
 ``` r
 
-mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs + 
+mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs +
                   factor(gear) + factor(carb), data = mtcars)
 ```
 
@@ -487,7 +487,7 @@ estimates differ:
 
 ``` r
 
-predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"), 
+predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"),
                 wt.nuis = "prop"))
 ```
 
@@ -687,7 +687,7 @@ before, after removing interactions involving `age`:
 
 ``` r
 
-emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race) |> 
+emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race) |>
         summary(by = NULL)
 ```
 
@@ -806,7 +806,7 @@ follow:
 
 cows <- data.frame (
     route = factor(rep(c("injection", "oral"), c(5, 9))),
-    drug = factor(rep(c("Bovineumab", "Charloisazepam", 
+    drug = factor(rep(c("Bovineumab", "Charloisazepam",
               "Angustatin", "Herefordmycin", "Mollycoddle"), c(3,2,  4,2,3))),
     resp = c(34, 35, 34,   44, 43,      36, 33, 36, 32,   26, 25,   25, 24, 24)
 )
@@ -926,7 +926,7 @@ drug levels so there is less clutter:
 ``` r
 
 require(ggplot2)
-emmip(cows.rg, ~ drug, abbr.len = 6) + 
+emmip(cows.rg, ~ drug, abbr.len = 6) +
   facet_wrap(~ route, scales = "free_x", space = "free_x")
 ```
 
@@ -942,7 +942,7 @@ Similarly with
 
 ``` r
 
-plot(drug.emm, by = "route", PIs = TRUE) + 
+plot(drug.emm, by = "route", PIs = TRUE) +
     facet_wrap(~ route, scales = "free_y", space = "free_y")
 ```
 

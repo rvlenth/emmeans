@@ -549,7 +549,7 @@ term for `disp`. Here are two equivalent models:
 ``` r
 
 mcmod1 <- lm(mpg ~ factor(cyl) + disp + I(disp^2), data = mtcars)
-mtcars <- transform(mtcars, 
+mtcars <- transform(mtcars,
                     dispsq = disp^2)
 mcmod2 <- lm(mpg ~ factor(cyl) + disp + dispsq, data = mtcars)
 ```
@@ -699,7 +699,7 @@ for `RG4` in separate panels for each `source`.
 
 ``` r
 
-EMM3 <- emmeans(mcmod3, ~ cyl | disp, 
+EMM3 <- emmeans(mcmod3, ~ cyl | disp,
                 at = list(cyl = c(4,6,8), disp = c(100,200,300)))
 plot(EMM3)
 ```

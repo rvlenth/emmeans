@@ -70,7 +70,7 @@ Currently, no bias-adjustment option is available.
 ## Examples
 
 ``` r
-if(requireNamespace("compositions"))
+if (requireNamespace("compositions"))
     emm_example("mvregrid")
 #> Loading required namespace: compositions
 #> 

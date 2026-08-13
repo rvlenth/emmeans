@@ -493,7 +493,7 @@ treatment. The following function provides for this:
 ``` r
 
 skip_comp.emmc <- function(levels, skip = 1, reverse = FALSE, ...) {
-    if((k <- length(levels)) < skip + 1)
+    if ((k <- length(levels)) < skip + 1)
         stop("Need at least ", skip + 1, " levels")
     coef <- data.frame()
     coef <- as.data.frame(lapply(seq_len(k - skip - 1), function(i) {
@@ -565,7 +565,7 @@ list, and the added constants in the `offset` argument:
 
 ``` r
 
-LF <- contrast(pigs.emm.s, 
+LF <- contrast(pigs.emm.s,
                list(lambda1 = c(1, 2, 0), lambda2 = c(0, 3, -2)),
                offset = c(-7, 1))
 confint(LF, adjust = "bonferroni")

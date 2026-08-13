@@ -290,8 +290,8 @@ pairs(warp.emm)
 #> P value adjustment: tukey method for comparing a family of 3 estimates 
 
 # Effects (dev from mean) of the 6 factor combs, with enhanced levels:
-contrast(warp.emm, "eff", by = NULL, 
-    enhance.levels = c("wool", "tension"))  
+contrast(warp.emm, "eff", by = NULL,
+    enhance.levels = c("wool", "tension"))
 #>  contrast              estimate   SE df t.ratio p.value
 #>  tensionL woolA effect  16.4074 3.33 48   4.929 <0.0001
 #>  tensionM woolA effect  -4.1481 3.33 48  -1.246  0.4289
@@ -301,7 +301,7 @@ contrast(warp.emm, "eff", by = NULL,
 #>  tensionH woolB effect  -9.3704 3.33 48  -2.815  0.0212
 #> 
 #> P value adjustment: fdr method for 6 tests 
-    
+
 pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
 #> tension = L:
 #>  contrast estimate   SE df t.ratio p.value
@@ -338,12 +338,12 @@ contrast(warp.emm, simple = c("wool", "tension"))
 contrast(warp.emm, simple = list("wool", "tension"))
 ## The first generates contrasts for combinations of wool and tension
 ##   (same as by = NULL)
-## The second generates contrasts for wool by tension, and for 
+## The second generates contrasts for wool by tension, and for
 ##   tension by wool, respectively.
 } # }
 
 # An interaction contrast for tension:wool
-tw.emm <- contrast(warp.emm, interaction = c(tension = "poly", wool = "consec"), 
+tw.emm <- contrast(warp.emm, interaction = c(tension = "poly", wool = "consec"),
                    by = NULL)
 tw.emm          # see the estimates
 #>  tension_poly wool_consec estimate    SE df t.ratio p.value

@@ -20,7 +20,7 @@ before moving on.
 ``` r
 neur.glm <- glm(Pain ~ Treatment + Sex + Age, family = binomial(),
             data = neuralgia)
-            
+
 ### The actual results with annotations (e.g. ests are on logit scale):
 emmeans(neur.glm, "Treatment")
 #>  Treatment emmean    SE  df asymp.LCL asymp.UCL
@@ -33,7 +33,7 @@ emmeans(neur.glm, "Treatment")
 #> Confidence level used: 0.95 
 
 ### Post-processed results lose the annotations
-if(requireNamespace("tibble")) {
+if (requireNamespace("tibble")) {
     emmeans(neur.glm, "Treatment") |> tibble::as_tibble()
 }
 #> # A tibble: 3 × 6

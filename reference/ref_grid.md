@@ -321,7 +321,7 @@ parameter order of the fixed effects. If a function, must return a
 suitable matrix when it is called with arguments `(object, ...)`. Be
 careful with possible unintended conflicts with arguments in `...`; for
 example,
-[`sandwich::vcovHAC()`](https://sandwich.R-Forge.R-project.org/reference/vcovHAC.html)
+[`sandwich::vcovHAC()`](https://zeileis.codeberg.page/sandwich/reference/vcovHAC.html)
 has optional arguments `adjust` and `weights` that may be intended for
 [`emmeans()`](https://rvlenth.github.io/emmeans/reference/emmeans.md)
 but will also be passed to `vcov.()`.
@@ -717,7 +717,7 @@ ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 #> 
 
 # Comparing estimates with and without counterfactuals
-neuralgia.glm <- glm(Pain ~ Treatment + Sex + Age + Duration, 
+neuralgia.glm <- glm(Pain ~ Treatment + Sex + Age + Duration,
                      family = binomial(), data = neuralgia)
 emmeans(neuralgia.glm, "Treatment", type = "response")
 #>  Treatment  prob     SE  df asymp.LCL asymp.UCL
@@ -745,7 +745,7 @@ require("splines")
 my.knots = c(2.5, 3, 3.5)
 mod = lm(Sepal.Length ~ Species * ns(Sepal.Width, knots = my.knots), data = iris)
 ## my.knots is not a predictor, so need to name it in 'params'
-ref_grid(mod, params = "my.knots") 
+ref_grid(mod, params = "my.knots")
 #>  Species    Sepal.Width prediction     SE  df
 #>  setosa            3.06       4.71 0.1100 135
 #>  versicolor        3.06       6.30 0.1070 135

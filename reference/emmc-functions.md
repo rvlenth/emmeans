@@ -230,7 +230,7 @@ contrast(warp.emm, "trt.vs.ctrl", ref = "M")
 #> P value adjustment: dunnettx method for 2 tests 
 if (FALSE) { # \dontrun{
 ## Same when enhanced labeling is used:
-contrast(warp.emm, "trt.vs.ctrl", 
+contrast(warp.emm, "trt.vs.ctrl",
          enhance.levels = "tension", ref = "tensionM")} # }
 
 # Comparisons with grand mean

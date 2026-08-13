@@ -15,7 +15,7 @@ those results in some other way – are likely missing some important informatio
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@ interpreting intermediate results, and thinking before moving on.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">neur.glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">Pain</span> <span class="op">~</span> <span class="va">Treatment</span> <span class="op">+</span> <span class="va">Sex</span> <span class="op">+</span> <span class="va">Age</span>, family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>            data <span class="op">=</span> <span class="va">neuralgia</span><span class="op">)</span></span></span>
-<span class="r-in"><span>            </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### The actual results with annotations (e.g. ests are on logit scale):</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neur.glm</span>, <span class="st">"Treatment"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Treatment emmean    SE  df asymp.LCL asymp.UCL</span>
@@ -93,7 +93,7 @@ interpreting intermediate results, and thinking before moving on.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confidence level used: 0.95 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Post-processed results lose the annotations</span></span></span>
-<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"tibble"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"tibble"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">neur.glm</span>, <span class="st">"Treatment"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 6</span></span>

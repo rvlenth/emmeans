@@ -148,7 +148,7 @@ pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
 
 
 # custom aesthetics:
-my.aes <- list(point = list(shape = "square"), 
+my.aes <- list(point = list(shape = "square"),
                segment = list(linetype = "dashed", color = "red"),
                label = list(family = "serif", fontface = "italic"))
 my.pal <- c("darkgreen", "blue", "magenta", "orange")

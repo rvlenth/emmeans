@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Interaction analysis in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.4</h4>
+package, Version 2.0.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/main/vignettes/interactions.Rmd" class="external-link"><code>vignettes/interactions.Rmd</code></a></small>
@@ -118,7 +118,7 @@ situations.</p>
 <div class="section level2">
 <h2 id="factors">Interacting factors<a class="anchor" aria-label="anchor" href="#factors"></a>
 </h2>
-<!-- @index Examples!`auto.noise`; Interactions!Possible inappropriateness of marginal means 
+<!-- @index Examples!`auto.noise`; Interactions!Possible inappropriateness of marginal means
   Interactions!Plotting; `emmip()` -->
 <p>As an example for this topic, consider the <code>auto.noise</code>
 dataset included with the package. This is a balanced 3x2x2 experiment
@@ -311,14 +311,14 @@ multiplicity-adjusted (a total of 16 different tables).</p>
 <div class="section level2">
 <h2 id="contrasts">Interaction contrasts<a class="anchor" aria-label="anchor" href="#contrasts"></a>
 </h2>
-<!-- @index Interactions!Contrasts; `contrast()`!`interaction` 
+<!-- @index Interactions!Contrasts; `contrast()`!`interaction`
      Contrasts!of other contrasts@cont -->
 <p>An interaction contrast is a contrast of contrasts. For instance, in
 the auto-noise example, we may want to obtain the linear and quadratic
 contrasts of <code>size</code> separately for each <code>type</code>,
 and compare them. Here are estimates of those contrasts:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm_s.t</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"poly"</span><span class="op">)</span>   <span class="co">## 'by = "type"' already in previous result </span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">emm_s.t</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"poly"</span><span class="op">)</span>   <span class="co">## 'by = "type"' already in previous result</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## type = Std:</span></span>
 <span><span class="co">##  contrast  estimate    SE df t.ratio p.value</span></span>
 <span><span class="co">##  linear       -5.08 0.220 24 -23.056 &lt;0.0001</span></span>
@@ -452,7 +452,7 @@ most different from the other sizes.</p>
 Suppose, for example, we wish to compare the two filter types for each
 size of car, without regard to which side:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"consec"</span>, mult.name <span class="op">=</span> <span class="st">"side"</span>, by <span class="op">=</span> <span class="st">"size"</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="va">noise.emm</span>, <span class="st">"consec"</span>, mult.name <span class="op">=</span> <span class="st">"side"</span>, by <span class="op">=</span> <span class="st">"size"</span><span class="op">)</span>,</span>
 <span>       by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast    size T.square df1 df2 F.ratio p.value</span></span>
 <span><span class="co">##  Octel - Std S      11.429   2  23   5.476  0.0113</span></span>
@@ -465,7 +465,7 @@ complete sense, all the factors involved must interact. Suppose we were
 to repeat the initial multivariate comparison after removing all
 interactions:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">noise.emm</span>, submodel <span class="op">=</span> <span class="op">~</span> <span class="va">side</span> <span class="op">+</span> <span class="va">size</span> <span class="op">+</span> <span class="va">type</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/mvcontrast.html">mvcontrast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">noise.emm</span>, submodel <span class="op">=</span> <span class="op">~</span> <span class="va">side</span> <span class="op">+</span> <span class="va">size</span> <span class="op">+</span> <span class="va">type</span><span class="op">)</span>,</span>
 <span>           <span class="st">"pairwise"</span>, mult.name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"type"</span>, <span class="st">"side"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">##  contrast T.square df1 df2  F.ratio p.value</span></span>
 <span><span class="co">##  S - M      37.786   1  24   37.786 &lt;0.0001</span></span>

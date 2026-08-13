@@ -80,6 +80,6 @@ emmeans(oranges.lm, "day", at = list(price1 = 0))
 #> Confidence level used: 0.95 
 
 # A more sensible model to consider, IMHO (see vignette("interactions"))
-org.mlm <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, 
+org.mlm <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store,
               data = oranges)
 ```

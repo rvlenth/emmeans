@@ -146,7 +146,7 @@ eff_size(pairs(emm), sigma(fiber.lm), df.residual(fiber.lm), method = "identity"
 
 ### Mixed model example:
 if (require(nlme)) withAutoprint({
-  Oats.lme <- lme(yield ~ Variety + factor(nitro), 
+  Oats.lme <- lme(yield ~ Variety + factor(nitro),
                   random = ~ 1 | Block / Variety,
                   data = Oats)
   # Combine variance estimates

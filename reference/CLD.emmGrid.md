@@ -60,7 +60,7 @@ cld(object, ..., which = 1)
 - reversed, decreasing:
 
   Logical value (passed to
-  [`multcompView::multcompLetters`](https://rdrr.io/pkg/multcompView/man/multcompLetters.html).)
+  [`multcompView::multcompLetters`](https://lselzer.github.io/multcompView/reference/multcompLetters.html).)
   If `TRUE`, the order of use of the letters is reversed. Either
   `reversed` or `decreasing` may be specified, thus providing
   compatibility with both
@@ -137,7 +137,7 @@ Statistics, 13(2), 456-466.
 ## Examples
 
 ``` r
-if(requireNamespace("multcomp"))
+if (requireNamespace("multcomp"))
     emm_example("cld-multcomp")
 #> 
 #> --- Running code from 'system.file("extexamples", "cld-multcomp.R", package = "emmeans")'

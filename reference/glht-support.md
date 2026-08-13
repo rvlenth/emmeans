@@ -73,8 +73,8 @@ simply apply the corresponding `glht` methods to each member.
 ## Examples
 
 ``` r
-if(require(multcomp, quietly = TRUE)) 
-    emm_example("glht-multcomp") 
+if (require(multcomp, quietly = TRUE))
+    emm_example("glht-multcomp")
 #> 
 #> Attaching package: ‘TH.data’
 #> The following object is masked from ‘package:MASS’:
@@ -206,5 +206,4 @@ if(require(multcomp, quietly = TRUE))
 #> 
 #> 
     # Use emm_example("glht-multcomp", list = TRUE) # to see just the code
-    
 ```

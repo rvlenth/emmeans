@@ -263,7 +263,7 @@ sig <- sapply(c(5, 10, 15, 20), function(t) {
     a <- c(1, 1, t)
     sqrt(sum(a * V %*% a))
 })
-sig  
+sig
 ```
 
 ``` ro
@@ -359,7 +359,7 @@ ins <- data.frame(
     size = factor(rep(1:3,2), labels = c("S","M","L")),
     age = factor(rep(1:2, each = 3)),
     claims = c(42, 37, 1, 101, 73, 14))
-ins.glm <- glm(claims ~ size + age + offset(log(n)), 
+ins.glm <- glm(claims ~ size + age + offset(log(n)),
                data = ins, family = "poisson")
 ```
 

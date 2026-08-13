@@ -17,7 +17,7 @@ Chapter 17, p.202. (You may also find it in the second edition, p.278.)"><meta p
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,7 +112,7 @@ nutrition.” This is a messy dataset with several empty cells.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summarize predictions for age group 3</span></span></span>
 <span class="r-in"><span><span class="va">nutr.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">nutr.aov</span>, <span class="op">~</span> <span class="va">race</span> <span class="op">*</span> <span class="va">group</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age<span class="op">=</span><span class="st">"3"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>                   </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="emmip.html">emmip</a></span><span class="op">(</span><span class="va">nutr.emm</span>, <span class="va">race</span> <span class="op">~</span> <span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nutrition-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

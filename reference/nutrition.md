@@ -52,7 +52,7 @@ nutr.aov <- aov(gain ~ (group + age + race)^2, data = nutrition)
 
 # Summarize predictions for age group 3
 nutr.emm <- emmeans(nutr.aov, ~ race * group, at = list(age="3"))
-                   
+
 emmip(nutr.emm, race ~ group)
 
 

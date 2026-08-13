@@ -281,7 +281,7 @@ emm_options(ref_grid = list(level = .90),
             contrast = list(infer = c(TRUE,FALSE)),
             estble.tol = 1e-6)
 # Sets default confidence level to .90 for objects created by ref.grid
-# AS WELL AS emmeans called with a model object (since it creates a 
+# AS WELL AS emmeans called with a model object (since it creates a
 # reference grid). In addition, when we call 'contrast', 'pairs', etc.,
 # confidence intervals rather than tests are displayed by default.
 } # }

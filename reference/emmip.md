@@ -260,7 +260,7 @@ emmip(noise.lm, type ~ side * size, CIs = TRUE,
     CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
     dotarg = list(size = 2, shape = "square", color = "black"))
 
-    
+
 # Same using legacy theme
 with_emm_options(gg.theme = 1,
     emmip(noise.lm, type ~ side * size, CIs = TRUE,
@@ -295,8 +295,8 @@ emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 # in the section on nested models.
 
 ### Options with transformations or link functions
-neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), 
-                     data = neuralgia) 
+neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(),
+                     data = neuralgia)
 
 # On link scale:
 emmip(neuralgia.glm, Treatment ~ Sex)

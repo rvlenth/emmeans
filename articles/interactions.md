@@ -263,7 +263,7 @@ are estimates of those contrasts:
 
 ``` r
 
-contrast(emm_s.t[[1]], "poly")   ## 'by = "type"' already in previous result 
+contrast(emm_s.t[[1]], "poly")   ## 'by = "type"' already in previous result
 ```
 
 ``` ro
@@ -454,7 +454,7 @@ without regard to which side:
 
 ``` r
 
-update(mvcontrast(noise.emm, "consec", mult.name = "side", by = "size"), 
+update(mvcontrast(noise.emm, "consec", mult.name = "side", by = "size"),
        by = NULL)
 ```
 
@@ -474,7 +474,7 @@ interactions:
 
 ``` r
 
-mvcontrast(update(noise.emm, submodel = ~ side + size + type), 
+mvcontrast(update(noise.emm, submodel = ~ side + size + type),
            "pairwise", mult.name = c("type", "side"))
 ```
 

@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Comparisons and contrasts in emmeans</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.4</h4>
+package, Version 2.0.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/main/vignettes/comparisons.Rmd" class="external-link"><code>vignettes/comparisons.Rmd</code></a></small>
@@ -483,7 +483,7 @@ call.</p>
 treatment. The following function provides for this:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">skip_comp.emmc</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">levels</span>, <span class="va">skip</span> <span class="op">=</span> <span class="fl">1</span>, <span class="va">reverse</span> <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="op">(</span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">levels</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">skip</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">(</span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">levels</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">skip</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>        <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Need at least "</span>, <span class="va">skip</span> <span class="op">+</span> <span class="fl">1</span>, <span class="st">" levels"</span><span class="op">)</span></span>
 <span>    <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">k</span> <span class="op">-</span> <span class="va">skip</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
@@ -534,7 +534,7 @@ estimate the quantities <span class="math inline">\(\lambda_1 =
 done by providing the coefficients in a list, and the added constants in
 the <code>offset</code> argument:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">LF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>, </span>
+<code class="sourceCode R"><span><span class="va">LF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">pigs.emm.s</span>,</span>
 <span>               <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lambda1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, lambda2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">7</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">LF</span>, adjust <span class="op">=</span> <span class="st">"bonferroni"</span><span class="op">)</span></span></code></pre></div>

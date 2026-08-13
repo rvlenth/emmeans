@@ -191,25 +191,25 @@ plot(warp.emm)
 plot(warp.emm, PIs = TRUE, comparisons = TRUE)
 
 
-with_emm_options(gg.theme = ggplot2::theme_dark(), 
+with_emm_options(gg.theme = ggplot2::theme_dark(),
     plot(warp.emm, PIs = TRUE, comparisons = TRUE))
 
 
-plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
+plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none",
      horizontal = FALSE, colors = "blue")
 
 
 ### Using a transformed scale (also demonstrating 'facetlab' argument)
 pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
 pigs.emm <- emmeans(pigs.lm, ~ percent | source)
-plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10), 
+plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10),
      facetlab = "label_value")
 
 
-# Based on a summary. 
+# Based on a summary.
 # To get a transformed axis, must specify 'scale'; but it does not necessarily
 # have to be the same as the actual response transformation
 pigs.ci <- confint(pigs.emm, type = "response")
-plot(pigs.ci, scale = scales::log10_trans(), 
+plot(pigs.ci, scale = scales::log10_trans(),
      facetlab = \(x) ggplot2::label_both(x, sep = " = "))
 ```

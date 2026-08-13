@@ -48,7 +48,6 @@ the first entry is the cell with the lowest frequency.
 
 ``` r
  # Omit the three lowest-frequency cells
- low3 <- unlist(attr(ubds, "cells")[1:3]) 
+ low3 <- unlist(attr(ubds, "cells")[1:3])
  messy.lm <- lm(y ~ (x + A + B + C)^3, data = ubds, subset = -low3)
-  
 ```

@@ -49,8 +49,8 @@ Analysis of Linear Models*, SAS Institute, Inc. Technical paper
 ``` r
 # Model and analysis shown in the SAS report:
 neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(),
-   data = neuralgia) 
-pairs(emmeans(neuralgia.glm, ~ Treatment, at = list(Sex = "F")), 
+   data = neuralgia)
+pairs(emmeans(neuralgia.glm, ~ Treatment, at = list(Sex = "F")),
     reverse = TRUE, type = "response", adjust = "bonferroni")
 #> NOTE: Results may be misleading due to involvement in interactions
 #>  contrast odds.ratio     SE  df null z.ratio p.value

@@ -21,7 +21,7 @@ back-transform and then average?"><meta property="og:image" content="https://rvl
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,19 +91,19 @@ back-transform and then average?</p>
 
 <dt id="arg-transform">transform<a class="anchor" aria-label="anchor" href="#arg-transform"></a></dt>
 <dd><p>Character, list, or logical value. If <code>"response"</code>,
-<code>"mu"</code>, or <code>TRUE</code>, the inverse transformation is applied to the
-estimates in the grid (but if there is both a link function and a response
-transformation, <code>"mu"</code> back-transforms only the link part); if
-<code>"none"</code> or <code>FALSE</code>, <code>object</code> is re-gridded so that its
-<code>bhat</code> slot contains <code>predict(object)</code> and its <code>linfct</code> slot
-is the identity. Any internal transformation information is preserved. If
-<code>transform = "pass"</code>, the object is not re-gridded in any way (this
-may be useful in conjunction with <code>N.sim</code>).</p>
+  <code>"mu"</code>, or <code>TRUE</code>, the inverse transformation is applied to the
+  estimates in the grid (but if there is both a link function and a response
+  transformation, <code>"mu"</code> back-transforms only the link part); if
+  <code>"none"</code> or <code>FALSE</code>, <code>object</code> is re-gridded so that its
+  <code>bhat</code> slot contains <code>predict(object)</code> and its <code>linfct</code> slot
+  is the identity. Any internal transformation information is preserved. If
+  <code>transform = "pass"</code>, the object is not re-gridded in any way (this
+  may be useful in conjunction with <code>N.sim</code>).</p>
 <p>If <code>transform</code> is a character value in <code>links</code> (which is the set
-of valid arguments for the <code><a href="https://rdrr.io/r/stats/make.link.html" class="external-link">make.link</a></code> function, excepting
-<code>"identity"</code>), or if <code>transform</code> is a list of the same form as
-returned by <code>make.links</code> or <code><a href="make.tran.html">make.tran</a></code>, the results are
-formulated as if the response had been transformed with that link function.</p></dd>
+  of valid arguments for the <code><a href="https://rdrr.io/r/stats/make.link.html" class="external-link">make.link</a></code> function, excepting
+  <code>"identity"</code>), or if <code>transform</code> is a list of the same form as
+  returned by <code>make.links</code> or <code><a href="make.tran.html">make.tran</a></code>, the results are
+  formulated as if the response had been transformed with that link function.</p></dd>
 
 
 <dt id="arg-inv-link-lbl">inv.link.lbl<a class="anchor" aria-label="anchor" href="#arg-inv-link-lbl"></a></dt>

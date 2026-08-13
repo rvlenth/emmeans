@@ -117,7 +117,7 @@ mvcontrast(MOats.emm, "consec", show.ests = TRUE)  # mult.name defaults to rep.m
 #> 
 
 # Test each mean against a specified null vector
-mvcontrast(MOats.emm, "identity", name = "Variety", 
+mvcontrast(MOats.emm, "identity", name = "Variety",
            null = c(80, 100, 120, 140), adjust = "none")
 #>  Variety     T.square df1 df2 F.ratio p.value
 #>  Golden Rain   10.001   4   7   1.750  0.2430

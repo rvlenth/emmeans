@@ -147,7 +147,7 @@ pairs(fiber.emt)
 #> P value adjustment: tukey method for comparing a family of 3 estimates 
 
 # Suppose we want trends relative to sqrt(diameter)...
-emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
+emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)",
          at = list(diameter = c(20, 30)))
 #> diameter = 20:
 #>  machine sqrt(diameter).trend   SE df lower.CL upper.CL
@@ -167,7 +167,7 @@ emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)",
 mtcars.lm <- lm(mpg ~ poly(disp, degree = 2) * (factor(cyl) + factor(am)), data = mtcars)
 
 # Center trends at mean disp for each no. of cylinders
-mtcTrends.rg <- emtrends(mtcars.lm, var = "disp", 
+mtcTrends.rg <- emtrends(mtcars.lm, var = "disp",
                           cov.reduce = disp ~ factor(cyl))
 summary(mtcTrends.rg)  # estimated trends at grid nodes
 #>  disp cyl am disp.trend     SE df
@@ -193,7 +193,7 @@ pigs.poly <- lm(conc ~ poly(percent, degree = 3), data = pigs)
 emt <- emtrends(pigs.poly, ~ degree | percent, "percent", max.degree = 3,
                 at = list(percent = c(9, 13.5, 18)))
        # note: 'degree' is an extra factor created by 'emtrends'
-       
+
 summary(emt, infer = c(TRUE, TRUE))
 #> percent =  9.0:
 #>  degree    percent.trend     SE df lower.CL upper.CL t.ratio p.value

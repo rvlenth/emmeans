@@ -568,7 +568,7 @@ transformation \\\sin^{-1}\sqrt{y/100}\\. Then proceed like this:
 ``` r
 
 tran <- make.tran("asin.sqrt", 100)
-my.model <- with(tran, 
+my.model <- with(tran,
     lmer(linkfun(percent) ~ treatment + (1|Block), data = mydata))
 ```
 
@@ -765,7 +765,7 @@ want risk ratios. For example,
 
 ``` r
 
-neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"), 
+neuralgia.prb <- glm(Pain ~ Treatment * Sex + Age, family = binomial(link = "probit"),
                      data = neuralgia)
 prb.emm <- suppressMessages(emmeans(neuralgia.prb, "Treatment"))
 pairs(regrid(prb.emm, "logit"), type = "response", reverse = TRUE)
@@ -805,7 +805,7 @@ pct.diff.tran <- list(
     name = "log(pct.diff)"
 )
 
-update(pairs(logemm.src, type = "response"), 
+update(pairs(logemm.src, type = "response"),
        tran = pct.diff.tran, inv.lbl = "pct.diff", adjust = "none",
        infer = c(TRUE, TRUE))
 ```
@@ -1212,7 +1212,7 @@ with a simple binomial model):
 
 require(lme4)
 cbpp <- transform(cbpp, unit = 1:nrow(cbpp))
-cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period + 
+cbpp.glmer <- glmer(cbind(incidence, size - incidence) ~ period +
                           (1 | herd) +  (1 | unit),
                     family = binomial, data = cbpp)
 

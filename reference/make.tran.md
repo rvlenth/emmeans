@@ -191,9 +191,9 @@ will be the variable that is scaled.
 ``` r
 # Fit a model using an oddball transformation:
 bctran <- make.tran("boxcox", 0.368)
-warp.bc <- with(bctran, 
+warp.bc <- with(bctran,
     lm(linkfun(breaks) ~ wool * tension, data = warpbreaks))
-# Obtain back-transformed LS means:    
+# Obtain back-transformed LS means:
 emmeans(warp.bc, ~ tension | wool, type = "response")
 #> wool = A:
 #>  tension response   SE df lower.CL upper.CL

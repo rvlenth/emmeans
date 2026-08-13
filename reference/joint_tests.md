@@ -224,7 +224,7 @@ toy.cov = lm(resp ~ treat * female, data = toy)
 ## treat            1    488.8928571    488.8928571    404.60   <.0001
 ## female           1     78.8928571     78.8928571     65.29   0.0002
 ## treat*female     1      1.7500000      1.7500000      1.45   0.2741
-# 
+#
 # -- SAS output we'd get with toy.cov --
 ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 ## treat            1    252.0833333    252.0833333    208.62   <.0001
@@ -270,7 +270,7 @@ joint_tests(toy.cov, cov.keep = 0, cov.reduce = range)
 #> 
 
 ### Example with empty cells and confounded effects
-low3 <- unlist(attr(ubds, "cells")[1:3]) 
+low3 <- unlist(attr(ubds, "cells")[1:3])
 ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
 
 # Show overall joint tests by C:

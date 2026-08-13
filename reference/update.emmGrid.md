@@ -336,7 +336,7 @@ pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 
 # Reference grid that knows about the transformation
 # and asks to include the sample size in any summaries:
-pigs.rg <- update(ref_grid(pigs.lm), tran = "log", 
+pigs.rg <- update(ref_grid(pigs.lm), tran = "log",
                     predict.type = "response",
                     calc = c(n = ~.wgt.))
 emmeans(pigs.rg, "source")
@@ -415,7 +415,7 @@ fibz.lm <- lm(strength ~ machine * zd, data = fiber)
 lev <- levels(fibz.rg)
 levels(fibz.rg) <- list (
     machine = lev$machine,
-    diameter = with(attributes(zd), 
+    diameter = with(attributes(zd),
                     `scaled:center` + `scaled:scale` * lev$zd) )
 fibz.rg
 #>  machine diameter prediction    SE df

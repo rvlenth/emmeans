@@ -1,5 +1,11 @@
 # Changelog
 
+## emmeans 2.0.5
+
+- Bug fix in how an image was rendered in the “Basics” vignette.
+- Updated logo that is canonically correct
+- Contributing guide added to the repository
+
 ## emmeans 2.0.4
 
 CRAN release: 2026-07-15

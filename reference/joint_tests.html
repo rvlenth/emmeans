@@ -27,7 +27,7 @@ each combination of them."><meta property="og:image" content="https://rvlenth.gi
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -291,7 +291,7 @@ really are zero.</p>
 <span class="r-in"><span><span class="co">## treat            1    488.8928571    488.8928571    404.60   &lt;.0001</span></span></span>
 <span class="r-in"><span><span class="co">## female           1     78.8928571     78.8928571     65.29   0.0002</span></span></span>
 <span class="r-in"><span><span class="co">## treat*female     1      1.7500000      1.7500000      1.45   0.2741</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
 <span class="r-in"><span><span class="co"># -- SAS output we'd get with toy.cov --</span></span></span>
 <span class="r-in"><span><span class="co">## Source          DF    Type III SS    Mean Square   F Value   Pr &gt; F</span></span></span>
 <span class="r-in"><span><span class="co">## treat            1    252.0833333    252.0833333    208.62   &lt;.0001</span></span></span>
@@ -337,7 +337,7 @@ really are zero.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Example with empty cells and confounded effects</span></span></span>
-<span class="r-in"><span><span class="va">low3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ubds</span>, <span class="st">"cells"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="va">low3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">ubds</span>, <span class="st">"cells"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ubds.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">A</span><span class="op">*</span><span class="va">B</span><span class="op">*</span><span class="va">C</span>, data <span class="op">=</span> <span class="va">ubds</span>, subset <span class="op">=</span> <span class="op">-</span><span class="va">low3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Show overall joint tests by C:</span></span></span>

@@ -105,7 +105,7 @@ supported in emmeans.
 ## Examples
 
 ``` r
-# Given summary statistics for 4 cells in a 2 x 2 layout, obtain 
+# Given summary statistics for 4 cells in a 2 x 2 layout, obtain
 # marginal means and comparisons thereof. Assume heteroscedasticity
 # and use the Satterthwaite method
 levels <- list(trt = c("A", "B"), dose = c("high", "low"))
@@ -115,7 +115,7 @@ n <-    c(44,   11,   37,   24)
 se2 = s^2 / n
 Satt.df <- function(x, dfargs)
     sum(x * dfargs$v)^2 / sum((x * dfargs$v)^2 / (dfargs$n - 1))
-    
+
 expt.emm <- emmobj(bhat = ybar, V = diag(se2),
     levels = levels, linfct = diag(c(1, 1, 1, 1)),
     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
@@ -148,7 +148,7 @@ rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
 means = c(71.50000,  89.66667, 110.83333, 118.50000)
 semeans = c(5.540591, 6.602048, 8.695358, 7.303221)
 sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
-foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
+foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs,
              levels = list(nitro = seq(0, .6, by = .2)), df = 10)
 plot(foo, comparisons = TRUE)
 

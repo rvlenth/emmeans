@@ -125,7 +125,7 @@ character value. They are:
 ## Examples
 
 ``` r
-if(requireNamespace("coda")) 
+if (requireNamespace("coda"))
     emm_example("as.mcmc-coda")
 #> 
 #> --- Running code from 'system.file("extexamples", "as.mcmc-coda.R", package = "emmeans")'
@@ -162,5 +162,4 @@ if(requireNamespace("coda"))
 #> 
 #> 
     # Use emm_example("as.mcmc-coda", list = TRUE) # to see just the code
-    
 ```

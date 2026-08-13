@@ -19,7 +19,7 @@ covariate, and the weight at slaughter is the response."><meta property="og:imag
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,7 +115,7 @@ different genetic backgrounds, breeding history, etc. The levels of
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">feedlot.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">swt</span> <span class="op">~</span> <span class="va">ewt</span> <span class="op">+</span> <span class="va">herd</span><span class="op">*</span><span class="va">diet</span>, data <span class="op">=</span> <span class="va">feedlot</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Obtain EMMs with a separate reference value of ewt for each </span></span></span>
+<span class="r-in"><span><span class="co"># Obtain EMMs with a separate reference value of ewt for each</span></span></span>
 <span class="r-in"><span><span class="co"># herd. This reproduces the last part of Table 2 in the reference</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">feedlot.lm</span>,  <span class="op">~</span> <span class="va">diet</span> <span class="op">|</span> <span class="va">herd</span>,  cov.reduce <span class="op">=</span> <span class="va">ewt</span> <span class="op">~</span> <span class="va">herd</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> herd = 9:</span>

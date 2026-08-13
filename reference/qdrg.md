@@ -161,7 +161,7 @@ alternative way to construct an `emmGrid`.
 ``` r
 # In these examples, use emm_example(..., list = TRUE) # to see just the code
 
-if (require(biglm, quietly = TRUE)) 
+if (require(biglm, quietly = TRUE))
     emm_example("qdrg-biglm")
 #> 
 #> --- Running code from 'system.file("extexamples", "qdrg-biglm.R", package = "emmeans")'
@@ -182,8 +182,8 @@ if (require(biglm, quietly = TRUE))
 #> Confidence level used: 0.95 
 #> Intervals are back-transformed from the log scale 
 #> 
-    
-if(require(coda, quietly = TRUE) && require(lme4, quietly = TRUE)) 
+
+if (require(coda, quietly = TRUE) && require(lme4, quietly = TRUE))
     emm_example("qdrg-coda")
 #> Registered S3 method overwritten by 'lme4':
 #>   method           from
@@ -213,8 +213,8 @@ if(require(coda, quietly = TRUE) && require(lme4, quietly = TRUE))
 #> Results are back-transformed from the logit scale 
 #> HPD interval probability: 0.95 
 #> 
-    
-if(require(ordinal, quietly = TRUE)) 
+
+if (require(ordinal, quietly = TRUE))
     emm_example("qdrg-ordinal")
 #> 
 #> --- Running code from 'system.file("extexamples", "qdrg-ordinal.R", package = "emmeans")'

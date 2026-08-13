@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Basics of estimated marginal means</h1>
                         <h4 data-toc-skip class="author">emmeans
-package, Version 2.0.4</h4>
+package, Version 2.0.5</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/rvlenth/emmeans/blob/main/vignettes/basics.Rmd" class="external-link"><code>vignettes/basics.Rmd</code></a></small>
@@ -138,7 +138,7 @@ recommendations</a></li>
 <h3 id="exper">Emphasis on experimental data<a class="anchor" aria-label="anchor" href="#exper"></a>
 </h3>
 <!-- @index Experimental versus observational data;
-            Observational versus experimental data;  
+            Observational versus experimental data;
             Controlled experiments; Latin squares; Balanced allocation;
             Weighting!Equal weights; -->
 <p>To start off with, we should emphasize that the underpinnings of
@@ -200,8 +200,8 @@ step is to fit a good model.</p>
 <div class="section level3">
 <h3 id="pigs">Illustration: <code>pigs</code> experiment<a class="anchor" aria-label="anchor" href="#pigs"></a>
 </h3>
-<!-- @index Examples!`pigs`; Examples!Unbalanced data; 
-            Modeling!Response transformation; Modeling!`pigs` example; 
+<!-- @index Examples!`pigs`; Examples!Unbalanced data;
+            Modeling!Response transformation; Modeling!`pigs` example;
             `inverse()`; Residual plots; R-squared; Adjusted R-squared -->
 <p>Consider the <code>pigs</code> dataset provided with the package
 (<code><a href="../reference/pigs.html">help("pigs")</a></code> provides details). These data come from an
@@ -250,7 +250,7 @@ random scatter of points (and that is good). The <span class="math inline">\(R^2
 <div class="section level3">
 <h3 id="emms">Estimated marginal means<a class="anchor" aria-label="anchor" href="#emms"></a>
 </h3>
-<!-- @index Estimated marginal means!Demonstrated; 
+<!-- @index Estimated marginal means!Demonstrated;
             Estimated marginal means!Reference grid; Reference grid;
             Estimated marginal means!vs. ordinary marginal means;
             Simpson's paradox; Confounding;  `emmeans()`; -->
@@ -296,7 +296,7 @@ the end.</p>
 <div class="section level3">
 <h3 id="refgrid">The reference grid, and definition of EMMs<a class="anchor" aria-label="anchor" href="#refgrid"></a>
 </h3>
-<!-- @index Estimated marginal means!Definition of; 
+<!-- @index Estimated marginal means!Definition of;
             Reference grid!Predictions on;
             Estimated marginal means!Manually computed; -->
 <p>Estimated marginal means are defined as marginal means of model
@@ -368,9 +368,9 @@ unlike OMMs, EMMs are based on a model that is fitted to the data.</p>
 <div class="section level3">
 <h3 id="RG">More on the reference grid<a class="anchor" aria-label="anchor" href="#RG"></a>
 </h3>
-<!-- @index Reference grid!Defined; `ref_grid()`; 
+<!-- @index Reference grid!Defined; `ref_grid()`;
             `ref_grid()`!`at`; `ref_grid()`!`cov.reduce`;
-            Reference grid!Covariates; Adjusted means; 
+            Reference grid!Covariates; Adjusted means;
             Reference grid!Indicator variables; Indicator variables;  -->
 <p>In the previous section, we discussed the reference grid as being the
 set of all factor combinations. It is slightly more complicated than
@@ -532,7 +532,7 @@ covariate, and include a quadratic term for <code>disp</code>. Here are
 two equivalent models:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mcmod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">disp</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="va">mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">mtcars</span>, </span>
+<span><span class="va">mtcars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">mtcars</span>,</span>
 <span>                    dispsq <span class="op">=</span> <span class="va">disp</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">mcmod2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">+</span> <span class="va">dispsq</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
 <p>These two models have exactly the same predicted values. But look at
@@ -612,7 +612,7 @@ things to work correctly, you need to name <code>deg</code> in a
 <div class="section level3">
 <h3 id="plots">Graphical displays<a class="anchor" aria-label="anchor" href="#plots"></a>
 </h3>
-<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style; 
+<!-- @index Graphical displays; Plots!of EMMs@emms; Plots!Interaction-style;
             `emmip()`; `plot()`;  -->
 <p>The results of <code><a href="../reference/ref_grid.html">ref_grid()</a></code> or <code><a href="../reference/emmeans.html">emmeans()</a></code>
 (these are objects of class <code>emmGrid</code>) may be plotted in two
@@ -636,7 +636,7 @@ the <code>mtcars</code> data with both <code>cyl</code> and
 intervals for <code>RG4</code> in separate panels for each
 <code>source</code>.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EMM3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mcmod3</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">|</span> <span class="va">disp</span>, </span>
+<code class="sourceCode R"><span><span class="va">EMM3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">mcmod3</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">|</span> <span class="va">disp</span>,</span>
 <span>                at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">6</span>,<span class="fl">8</span><span class="op">)</span>, disp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">200</span>,<span class="fl">300</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">EMM3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="basics_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="Plot of side-by-side confidence intervals for 'cyl' means, in 3 panels corresponding to 'disp' values of 100, 200, and 300. The values plotted here are those in 'summary(EMM3)'" width="432"></p>
@@ -683,7 +683,7 @@ put the three sources in separate panels:</p>
 <div class="section level3">
 <h3 id="formatting">Formatting results<a class="anchor" aria-label="anchor" href="#formatting"></a>
 </h3>
-<!-- @index Formatting results; `kable`; Exporting output; `xtable` method; 
+<!-- @index Formatting results; `kable`; Exporting output; `xtable` method;
   RMarkdown; -->
 <p>If you want to include <code><a href="../reference/emmeans.html">emmeans()</a></code> results in a report,
 you might want to have it in a nicer format than just the printed
@@ -912,8 +912,8 @@ data frame with extra annotations.</p>
 <div class="section level2">
 <h2 id="pvalues">P values, “significance”, and recommendations<a class="anchor" aria-label="anchor" href="#pvalues"></a>
 </h2>
-<!-- @index Significance!Assessing; 
-    *P* values!Interpreting; ATOM; 
+<!-- @index Significance!Assessing;
+    *P* values!Interpreting; ATOM;
     ASA Statement on *P* values -->
 <p>There is some debate among statisticians and researchers about the
 appropriateness of <em>P</em> values, and that the term “statistical

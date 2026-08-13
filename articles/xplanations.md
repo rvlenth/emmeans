@@ -481,7 +481,7 @@ mod1 <- glm(Claims ~ District + Group + Age + offset(log(Holders)),
             family = poisson)
 mod2 <- glm(Claims ~ District + Group + Age,
             offset = log(Holders),
-            data = Insurance, 
+            data = Insurance,
             family = poisson)
 ```
 

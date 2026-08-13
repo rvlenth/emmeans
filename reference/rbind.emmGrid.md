@@ -117,7 +117,7 @@ keep any “by” variables, you should follow-up with
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.rg <- ref_grid(warp.lm)
 
-# Do all pairwise comparisons within rows or within columns, 
+# Do all pairwise comparisons within rows or within columns,
 # all considered as one faily of tests:
 w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
 t.w <- pairs(emmeans(warp.rg, ~ tension | wool))

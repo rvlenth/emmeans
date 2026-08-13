@@ -21,7 +21,7 @@ or larger families of tests or confidence intervals."><meta property="og:image" 
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -178,7 +178,7 @@ with <code><a href="update.emmGrid.html">update.emmGrid</a></code>.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">warp.lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">breaks</span> <span class="op">~</span> <span class="va">wool</span> <span class="op">*</span> <span class="va">tension</span>, data <span class="op">=</span> <span class="va">warpbreaks</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">warp.rg</span> <span class="op">&lt;-</span> <span class="fu"><a href="ref_grid.html">ref_grid</a></span><span class="op">(</span><span class="va">warp.lm</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Do all pairwise comparisons within rows or within columns, </span></span></span>
+<span class="r-in"><span><span class="co"># Do all pairwise comparisons within rows or within columns,</span></span></span>
 <span class="r-in"><span><span class="co"># all considered as one faily of tests:</span></span></span>
 <span class="r-in"><span><span class="va">w.t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">warp.rg</span>, <span class="op">~</span> <span class="va">wool</span> <span class="op">|</span> <span class="va">tension</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">t.w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="fu"><a href="emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">warp.rg</span>, <span class="op">~</span> <span class="va">tension</span> <span class="op">|</span> <span class="va">wool</span><span class="op">)</span><span class="op">)</span></span></span>

@@ -289,7 +289,7 @@ file could contain the line
 
 ``` r
 
-options(emmeans = list(lmer.df = "satterthwaite", 
+options(emmeans = list(lmer.df = "satterthwaite",
                        contrast = list(infer = c(TRUE, FALSE))))
 ```
 

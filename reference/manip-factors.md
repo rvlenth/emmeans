@@ -199,7 +199,7 @@ mtcars.lm <- lm(mpg ~ factor(vs)+factor(cyl)*factor(gear), data = mtcars)
 #>   0 8:5            15.4 2.420 23
 #>   1 8:5            15.2 3.690 23
 #> 
-  
+
 # One use is obtaining a single test for the joint contributions of two factors:
 joint_tests(v.c.g)
 #>  model term   df1 df2 F.ratio p.value note
@@ -285,7 +285,7 @@ emmeans(gfrg, "brand")
 
 ### More than one reference factor
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-gwrg <- add_grouping(ref_grid(warp.lm), 
+gwrg <- add_grouping(ref_grid(warp.lm),
     "prod",  c("tension", "wool"),  c(2, 1, 1,  1, 2, 1))
         # level combinations:         LA MA HA  LB MB HB
 
@@ -314,7 +314,7 @@ emmeans(gwrg, "prod")
 
 ## Using 'add_submodels' to compare adjusted and unadjusted means
 fibint.lm <- lm(strength ~ machine * diameter, data = fiber)
-fibsub <- add_submodels(emmeans(fibint.lm, "machine"), 
+fibsub <- add_submodels(emmeans(fibint.lm, "machine"),
     full = ~ ., additive = ~ . - machine:diameter, unadj = ~ machine)
 #> NOTE: Results may be misleading due to involvement in interactions
 emmeans(fibsub, pairwise ~ model | machine, adjust = "none")

@@ -17,7 +17,7 @@ also be used to compute arbitrary linear functions of predictions or EMMs."><met
 
     <a class="navbar-brand me-2" href="../index.html">emmeans</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -345,8 +345,8 @@ is most useful for understanding interaction contrasts.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: tukey method for comparing a family of 3 estimates </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Effects (dev from mean) of the 6 factor combs, with enhanced levels:</span></span></span>
-<span class="r-in"><span><span class="fu">contrast</span><span class="op">(</span><span class="va">warp.emm</span>, <span class="st">"eff"</span>, by <span class="op">=</span> <span class="cn">NULL</span>, </span></span>
-<span class="r-in"><span>    enhance.levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wool"</span>, <span class="st">"tension"</span><span class="op">)</span><span class="op">)</span>  </span></span>
+<span class="r-in"><span><span class="fu">contrast</span><span class="op">(</span><span class="va">warp.emm</span>, <span class="st">"eff"</span>, by <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>    enhance.levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wool"</span>, <span class="st">"tension"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast              estimate   SE df t.ratio p.value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  tensionL woolA effect  16.4074 3.33 48   4.929 &lt;0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  tensionM woolA effect  -4.1481 3.33 48  -1.246  0.4289</span>
@@ -356,7 +356,7 @@ is most useful for understanding interaction contrasts.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  tensionH woolB effect  -9.3704 3.33 48  -2.815  0.0212</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> P value adjustment: fdr method for 6 tests </span>
-<span class="r-in"><span>    </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">warp.emm</span>, simple <span class="op">=</span> <span class="st">"wool"</span><span class="op">)</span> <span class="co"># same as pairs(warp.emm, by = "tension")</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> tension = L:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  contrast estimate   SE df t.ratio p.value</span>
@@ -393,12 +393,12 @@ is most useful for understanding interaction contrasts.</p>
 <span class="r-in"><span><span class="fu">contrast</span><span class="op">(</span><span class="va">warp.emm</span>, simple <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"wool"</span>, <span class="st">"tension"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co">## The first generates contrasts for combinations of wool and tension</span></span></span>
 <span class="r-in"><span><span class="co">##   (same as by = NULL)</span></span></span>
-<span class="r-in"><span><span class="co">## The second generates contrasts for wool by tension, and for </span></span></span>
+<span class="r-in"><span><span class="co">## The second generates contrasts for wool by tension, and for</span></span></span>
 <span class="r-in"><span><span class="co">##   tension by wool, respectively.</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># An interaction contrast for tension:wool</span></span></span>
-<span class="r-in"><span><span class="va">tw.emm</span> <span class="op">&lt;-</span> <span class="fu">contrast</span><span class="op">(</span><span class="va">warp.emm</span>, interaction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>tension <span class="op">=</span> <span class="st">"poly"</span>, wool <span class="op">=</span> <span class="st">"consec"</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span><span class="va">tw.emm</span> <span class="op">&lt;-</span> <span class="fu">contrast</span><span class="op">(</span><span class="va">warp.emm</span>, interaction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>tension <span class="op">=</span> <span class="st">"poly"</span>, wool <span class="op">=</span> <span class="st">"consec"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tw.emm</span>          <span class="co"># see the estimates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  tension_poly wool_consec estimate    SE df t.ratio p.value</span>

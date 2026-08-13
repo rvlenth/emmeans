@@ -115,7 +115,7 @@ summary.emmGrid
 ## Examples
 
 ``` r
-if(require("coda")) 
+if (require("coda"))
     emm_example("hpd.summary-coda")
 #> Loading required package: coda
 #> 
