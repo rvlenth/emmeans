@@ -241,28 +241,38 @@ exportClasses(emmGrid)
 import(estimability)
 import(mvtnorm)
 import(stats)
-importFrom(grDevices,col2rgb)
-importFrom(grDevices,hcl)
-importFrom(grDevices,palette.colors)
-importFrom(grDevices,rgb)
-importFrom(grDevices,rgb2hsv)
-importFrom(graphics,pairs)
-importFrom(graphics,plot)
-importFrom(methods,"slot<-")
-importFrom(methods,as)
-importFrom(methods,getClass)
-importFrom(methods,is)
-importFrom(methods,new)
-importFrom(methods,show)
-importFrom(methods,slot)
-importFrom(methods,slotNames)
+importFrom(grDevices,
+  col2rgb,
+  hcl,
+  palette.colors,
+  rgb,
+  rgb2hsv
+)
+importFrom(graphics,
+  pairs,
+  plot
+)
+importFrom(methods,
+  "slot<-",
+  as,
+  getClass,
+  is,
+  new,
+  show,
+  slot,
+  slotNames
+)
 importFrom(rlang,.data)
-importFrom(stats,coef)
-importFrom(stats,weights)
-importFrom(utils,getS3method)
-importFrom(utils,hasName)
-importFrom(utils,head)
-importFrom(utils,installed.packages)
-importFrom(utils,methods)
-importFrom(utils,str)
-importFrom(utils,tail)
+importFrom(stats,
+  coef,
+  weights
+)
+importFrom(utils,
+  getS3method,
+  hasName,
+  head,
+  installed.packages,
+  methods,
+  str,
+  tail
+)
