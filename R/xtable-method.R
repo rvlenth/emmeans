@@ -115,6 +115,7 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
 #' @param include.rownames Passed to \code{print.xtable}
 #' @param sanitize.message.function Passed to \code{print.xtable}
 #' @method print xtable_emm
+#' @export
 print.xtable_emm = function(x, type = getOption("xtable.type", "latex"),
                             include.rownames = FALSE,
                             sanitize.message.function = footnotesize,
