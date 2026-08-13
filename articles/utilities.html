@@ -507,13 +507,13 @@ model:</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
 <span><span class="va">warp.gls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/gls.html" class="external-link">gls</a></span><span class="op">(</span><span class="va">breaks</span> <span class="op">~</span> <span class="va">treat</span>, weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/varIdent.html" class="external-link">varIdent</a></span><span class="op">(</span>form <span class="op">=</span> <span class="op">~</span> <span class="fl">1</span><span class="op">|</span><span class="va">treat</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">warp</span><span class="op">)</span></span>
 <span><span class="op">(</span> <span class="va">warp.emm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/emmeans.html">emmeans</a></span><span class="op">(</span><span class="va">warp.gls</span>, <span class="st">"treat"</span><span class="op">)</span> <span class="op">)</span></span></code></pre></div>
-<pre class="ro"><code><span><span class="co">##  treat emmean   SE   df lower.CL upper.CL</span></span>
-<span><span class="co">##  A.L     44.6 6.03 7.97     30.6     58.5</span></span>
-<span><span class="co">##  B.L     28.2 3.29 8.00     20.6     35.8</span></span>
-<span><span class="co">##  A.M     24.0 2.89 8.00     17.3     30.7</span></span>
-<span><span class="co">##  B.M     28.8 3.14 8.00     21.5     36.0</span></span>
-<span><span class="co">##  A.H     24.6 3.42 8.00     16.7     32.5</span></span>
-<span><span class="co">##  B.H     18.8 1.63 8.00     15.0     22.5</span></span>
+<pre class="ro"><code><span><span class="co">##  treat emmean   SE df lower.CL upper.CL</span></span>
+<span><span class="co">##  A.L     44.6 6.03  8     30.6     58.5</span></span>
+<span><span class="co">##  B.L     28.2 3.29  8     20.6     35.8</span></span>
+<span><span class="co">##  A.M     24.0 2.89  8     17.3     30.7</span></span>
+<span><span class="co">##  B.M     28.8 3.14  8     21.5     36.0</span></span>
+<span><span class="co">##  A.H     24.6 3.42  8     16.7     32.5</span></span>
+<span><span class="co">##  B.H     18.8 1.63  8     15.0     22.5</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Degrees-of-freedom method: satterthwaite </span></span>
 <span><span class="co">## Confidence level used: 0.95</span></span></code></pre>
@@ -533,7 +533,7 @@ factors:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/contrast.html">contrast</a></span><span class="op">(</span><span class="va">warp.fac</span>, <span class="st">"consec"</span>, by <span class="op">=</span> <span class="st">"wool"</span><span class="op">)</span></span></code></pre></div>
 <pre class="ro"><code><span><span class="co">## wool = A:</span></span>
 <span><span class="co">##  contrast estimate   SE   df t.ratio p.value</span></span>
-<span><span class="co">##  M - L     -20.556 6.69 11.4  -3.074  0.0203</span></span>
+<span><span class="co">##  M - L     -20.556 6.69 11.5  -3.074  0.0203</span></span>
 <span><span class="co">##  H - M       0.556 4.48 15.6   0.124  0.9899</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## wool = B:</span></span>
