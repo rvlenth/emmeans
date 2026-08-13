@@ -53,7 +53,7 @@ default), then when the result is a \code{list} of length 1, the
 
 \item{which}{integer vector specifying which elements to select;
 if \code{NULL},
-we try to guess which elements make sense. Usually, this is all elements having 
+we try to guess which elements make sense. Usually, this is all elements having
 names that start with \sQuote{em} or \sQuote{ls},
 or the first element if no matches are found. However, in \code{coef.emm_list},
 these are the ones we \emph{exclude}.}
@@ -87,7 +87,7 @@ method on \code{object[[k]]}.
 The \code{plot} method uses only the first element of \code{which}; the others are ignored.
 
 No \code{export} option is provided for printing an \code{emm_list}
-(see \code{\link{print.emmGrid}}). If you wish to export these objects, you 
+(see \code{\link{print.emmGrid}}). If you wish to export these objects, you
 must do so separately for each element in the list.
 }
 \examples{

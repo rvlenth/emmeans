@@ -1,24 +1,24 @@
---- 
-title: "Working with messy data" 
+---
+title: "Working with messy data"
 author: "emmeans package, Version `r packageVersion('emmeans')`"
 output: emmeans::.emm_vignette
-vignette: > 
-  %\VignetteIndexEntry{Working with messy data} 
-  %\VignetteEngine{knitr::rmarkdown} 
+vignette: >
+  %\VignetteIndexEntry{Working with messy data}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
---- 
-```{r, echo = FALSE, results = "hide", message = FALSE} 
+---
+```{r, echo = FALSE, results = "hide", message = FALSE}
 require("emmeans")
 require("ggplot2")
-options(show.signif.stars = FALSE) 
-knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro") 
+options(show.signif.stars = FALSE)
+knitr::opts_chunk$set(fig.width = 4.5, class.output = "ro")
 ```
 <!-- @index Vignettes!Messy data -->
 
 ## Contents {#contents}
 
-  1. [Issues with observational data](#issues) 
-  2. [Mediating covariates](#mediators) 
+  1. [Issues with observational data](#issues)
+  2. [Mediating covariates](#mediators)
   3. [Mediating factors and weights](#weights)
   3. [Nuisance factors](#nuisance)
   3. [Counterfactuals and G-Computation](#counterfact)
@@ -44,16 +44,16 @@ effects after carefully considering the ways in which they can be confounded.
 
 ####### {#nutrex}
 <!-- @index Examples!`nutrition` -->
-As an illustration, consider the `nutrition` dataset provided with the package. 
-These data are used as an example in Milliken and Johnson (1992), *Analysis of 
-Messy Data*, and contain the results of an observational study on nutrition 
-education. Low-income mothers are classified by race, age category, and whether 
+As an illustration, consider the `nutrition` dataset provided with the package.
+These data are used as an example in Milliken and Johnson (1992), *Analysis of
+Messy Data*, and contain the results of an observational study on nutrition
+education. Low-income mothers are classified by race, age category, and whether
 or not they received food stamps (the `group` factor); and the response variable
-is a gain score (post minus pre scores) after completing a nutrition training 
-program. First, let's fit a model than includes all main effects and 2-way 
+is a gain score (post minus pre scores) after completing a nutrition training
+program. First, let's fit a model than includes all main effects and 2-way
 interactions, and obtain its "type II" ANOVA:
 ```{r}
-nutr.lm <- lm(gain ~ (age + group + race)^2, data = nutrition) 
+nutr.lm <- lm(gain ~ (age + group + race)^2, data = nutrition)
 car::Anova(nutr.lm)
 ```
  There is definitely a
@@ -66,7 +66,7 @@ emmeans(nutr.lm, ~ group * race, calc = c(n = ".wgt."))
 ####### {#nonest}
 <!-- @index Non-estimability; Estimability -->
 Hmmmm. The EMMs
-when `race` is "Hispanic" are not given; instead they are flagged as 
+when `race` is "Hispanic" are not given; instead they are flagged as
 non-estimable. What does that mean? Well, when using a model to make
 predictions, it is impossible to do that beyond the linear space of the data
 used to fit the model. And we have no data for three of the age groups in the
@@ -87,12 +87,12 @@ emmeans(nutr.lm, pairwise ~ group | race, at = list(age = "3")) |>
 ```
  (We used trickery with providing a `by` variable, and then taking it
 away, to make the output more compact.) Evidently, the training program has been
-beneficial to the Black and White groups in that age category. There is no 
+beneficial to the Black and White groups in that age category. There is no
 conclusion for the Hispanic group -- for which we have very little data.
 
 [Back to Contents](#contents)
 
-## Mediating covariates {#mediators} 
+## Mediating covariates {#mediators}
 <!-- @index Mediating covariates; Examples!`framing`; Covariates!Mediating -->
 The `framing` data in the **mediation**
 package has the results of an experiment conducted by Brader et al. (2008) where
@@ -103,60 +103,60 @@ the binary response (whether or not they elected to send a message), the
 experimenters also measured `emo`, the subjects' emotional state after the
 treatment was applied. There are various demographic variables as well. Let's a
 logistic regression model, after changing the labels for `educ` to shorter
-strings. 
+strings.
 ```{r}
-framing <- mediation::framing 
-levels(framing$educ) <- c("NA","Ref","< HS", "HS", "> HS","Coll +") 
-framing.glm <- glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat), 
+framing <- mediation::framing
+levels(framing$educ) <- c("NA","Ref","< HS", "HS", "> HS","Coll +")
+framing.glm <- glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat),
     family = binomial, data = framing)
 ```
- 
+
 The conventional way to handle covariates like `emo` is to set them at their
-means and use those means for purposes of predictions and EMMs. These adjusted 
-means are shown in the following plot. 
+means and use those means for purposes of predictions and EMMs. These adjusted
+means are shown in the following plot.
 ```{r fig.alt = "Two panels, each showing a decreasing trend with educ except they increase again with educ=Coll+. In the male panel, the curve for treat 1 is higher than that for treat 2, while the reverse is true in the female panel"}
-emmip(framing.glm, treat ~ educ | gender, type = "response") 
+emmip(framing.glm, treat ~ educ | gender, type = "response")
 ```
 
 
-This plot gives the impression that the effect of `treat` is reversed between 
+This plot gives the impression that the effect of `treat` is reversed between
 male and female subjects; and also that the effect of education is not monotone.
 Both of these are counter-intuitive.
 
 ###### {#med.covred}
 <!-- @index `cov.reduce` -->
-However, note that the covariate `emo` is measured *post*-treatment. That 
+However, note that the covariate `emo` is measured *post*-treatment. That
 suggests that in fact `treat` (and perhaps other factors) could affect the value
-of `emo`; and if that is true (as is in fact established by mediation analysis 
-techniques), we should not pretend that `emo` can be set independently of 
+of `emo`; and if that is true (as is in fact established by mediation analysis
+techniques), we should not pretend that `emo` can be set independently of
 `treat` as was done to obtain the EMMs shown above. Instead, let `emo` depend on
-`treat` and the other predictors -- easily done using `cov.reduce` -- and we 
+`treat` and the other predictors -- easily done using `cov.reduce` -- and we
 obtain an entirely different impression:
 ```{r fig.alt = "Similar to previous figure but now the curves flatten out with >HS about the same as Coll+. For the maile panel, we still have the trace for treat 1 higher than for treat 0; but in the female panel, they are about the same as each other, and a bit lower than treat 0 for males. To see these results in numerical form, call emmeans() with the same arguments *except* replace the second argument with ~treat*educ|gender"}
-emmip(framing.glm, treat ~ educ | gender, type = "response", 
+emmip(framing.glm, treat ~ educ | gender, type = "response",
     cov.reduce = emo ~ treat*gender + age + educ + income)
 ```
 
-The reference grid underlying this plot has different `emo` values for each 
+The reference grid underlying this plot has different `emo` values for each
 factor combination. The plot suggests that, after taking emotional response into
-account, male (but not female) subjects exposed to the negative news story are 
-more likely to send the message than are females or those not seeing the 
+account, male (but not female) subjects exposed to the negative news story are
+more likely to send the message than are females or those not seeing the
 negative news story. Also, the effect of `educ` is now nearly monotone.
 
 ###### {#adjcov}
 <!-- @index Covariates!Adjusted -->
 By the way, the results in this plot are the same is what you would obtain by
 refitting the model with an adjusted covariate
-```{r eval = FALSE} 
+```{r eval = FALSE}
 emo.adj <- resid(lm(emo ~ treat*gender + age + educ + income, data = framing))
 ```
-... and then using ordinary covariate-adjusted means at the means of `emo.adj`. 
+... and then using ordinary covariate-adjusted means at the means of `emo.adj`.
 This is a technique that is often recommended.
 
 If there is more than one mediating covariate, their settings may be defined in
 sequence; for example, if `x1`, `x2`, and `x3` are all mediating covariates, we
 might use
-```{r eval = FALSE} 
+```{r eval = FALSE}
 emmeans(..., cov.reduce = list(x1 ~ trt, x2 ~ trt + x1, x3 ~ trt + x1 + x2))
 ```
  (or possibly with some interactions included as well).
@@ -177,10 +177,10 @@ frequencies of mediating factor(s). Usually, the `"cells"` weighting scheme
 described later in this section is the right approach. In complex situations, it
 may be necessary to compute EMMs in stages.
 
-As described in [the "basics" vignette](basics.html#emmeans), EMMs are usually 
-defined as *equally-weighted* means of reference-grid predictions. However, 
-there are several built-in alternative weighting schemes that are available by 
-specifying a character value for `weights` in a call to `emmeans()` or related 
+As described in [the "basics" vignette](basics.html#emmeans), EMMs are usually
+defined as *equally-weighted* means of reference-grid predictions. However,
+there are several built-in alternative weighting schemes that are available by
+specifying a character value for `weights` in a call to `emmeans()` or related
 function. The options are `"equal"` (the default), `"proportional"`, `"outer"`,
 `"cells"`, and `"flat"`.
 
@@ -195,10 +195,10 @@ proportionally to the product of these for each combination of `B` and `C`. The
 latter weights are like the "expected" counts used in a chi-square test for
 independence. Put another way, outer weighting is the same as proportional
 weighting applied one factor at a time; the following two would yield the same
-results: 
-```{r eval = FALSE} 
-emmeans(model, "A", weights = "outer") 
-emmeans(model, c("A", "B"), weights = "prop") |>  emmeans(weights = "prop") 
+results:
+```{r eval = FALSE}
+emmeans(model, "A", weights = "outer")
+emmeans(model, c("A", "B"), weights = "prop") |>  emmeans(weights = "prop")
 ```
 
 
@@ -254,20 +254,20 @@ any other factors -- not even other nuisance factors. And a multivariate
 response (or an implied multivariate response, e.g., in an ordinal model) can
 never be a nuisance factor. Under that condition, the average effects of a
 nuisance factor are the same regardless of the levels of other factors, making
-it possible to pre-average them by considering just one case. 
+it possible to pre-average them by considering just one case.
 
-We specify nuisance factors by listing their names in a `nuisance` argument to 
+We specify nuisance factors by listing their names in a `nuisance` argument to
 `ref_grid()` (in `emmeans()`, this argument is passed to `ref_grid)`). Often,
-it is much more convenient to give the factors that are *not* nuisance factors, 
+it is much more convenient to give the factors that are *not* nuisance factors,
 via a `non.nuisance` argument. If you do specify
-a nuisance factor that does interact with others, or doesn't exist, it is 
-quietly excluded from the nuisance list. 
+a nuisance factor that does interact with others, or doesn't exist, it is
+quietly excluded from the nuisance list.
 
 ###### {#nuis.example}
 <!-- @index Examples!`mtcars` -->
 Time for an example. Consider the `mtcars` dataset standard in R, and the model
 ```{r}
-mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs + 
+mtcars.lm <- lm(mpg ~ factor(cyl)*am + disp + hp + drat + log(wt) + vs +
                   factor(gear) + factor(carb), data = mtcars)
 ```
 And let's construct two different reference grids:
@@ -294,7 +294,7 @@ By default, the pre-averaging is done with equal weights. If we specify
 described above, this really amounts to `"outer"` weights since they are
 averaged separately. Let's try it to see how the estimates differ:
 ```{r}
-predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"), 
+predict(emmeans(mtcars.lm, ~ cyl * am, non.nuis = c("cyl", "am"),
                 wt.nuis = "prop"))
 predict(emmeans(mtcars.lm, ~ cyl * am, weights = "outer"))
 ```
@@ -303,8 +303,8 @@ we obtained before. By the way, to help make things consistent, if `weights` is
 character, `emmeans()` passes `wt.nuis = weights` to `ref_grid` (if it is
 called), unless `wt.nuis` is also specified.
 
-There is a trick to get `emmeans` to use the smallest possible reference grid: 
-Pass the `specs` argument to `ref_grid()` as `non.nuisance`. 
+There is a trick to get `emmeans` to use the smallest possible reference grid:
+Pass the `specs` argument to `ref_grid()` as `non.nuisance`.
 But we have to quote it
 to delay evaluation, and also use `all.vars()` if (and only if)
 `specs` is a formula:
@@ -319,14 +319,14 @@ another factor.
 
 We have just seen how easily the size of a reference grid can get out of hand.
 The `rg.limit` option (set via `emm_options()` or as an optional argument in `ref_grid()` or `emmeans()`) serves to guard against excessive memory demands. It specifies the number
-of allowed rows in the reference grid. But because of the way `ref_grid()` works, this 
+of allowed rows in the reference grid. But because of the way `ref_grid()` works, this
 check is made *before* any multivariate-response levels are taken into account.
 If the limit is exceeded, an error is thrown:
 ```{r, error = TRUE}
 ref_grid(mtcars.lm, rg.limit = 200)
 ```
-The default `rg.limit` is 10,000. With this limit, and if we have 1,000 columns 
-in the model matrix, then the size of `linfct` is limited to about 80MB. 
+The default `rg.limit` is 10,000. With this limit, and if we have 1,000 columns
+in the model matrix, then the size of `linfct` is limited to about 80MB.
 If in addition, there is a 5-level multivariate response, the limit is 2GB --
 darn big, but perhaps manageable. Even so, I suspect that the 10000-row default may be
 to loose to guard against some users getting into a tight situation.
@@ -339,12 +339,12 @@ to loose to guard against some users getting into a tight situation.
 <!-- @index Counterfactuals; Causal inference; G-Computation; -->
 G-computation is a method for model-based causal inference originated by JM Robins
 (*Mathematical Modelling*, 1986), and we want to remove confounding of treatment effects due to time-varying covariates and such.
-The idea is that, under certain assumptions, we can use the model to predict 
-*every* subject's response to each treatment -- not just the treatment they 
+The idea is that, under certain assumptions, we can use the model to predict
+*every* subject's response to each treatment -- not just the treatment they
 received. To do this, we make several copies of the whole dataset, substituting
 the actual treatment(s) with each of the possible treatment levels; these
 provide us with *counterfactual* predictions. We then average those predictions
-over each copy of the dataset. Typically, this averaging is done on the response 
+over each copy of the dataset. Typically, this averaging is done on the response
 scale; that is the interesting case because on the link scale, everything is linear
 and we can obtain basically the same results using ordinary `emmeans()` computations
 with proportional weights.
@@ -355,9 +355,9 @@ than conditioning on the cases in the dataset. So it is a good idea to broaden
 the covariance estimate using, say, a sandwich estimate.
 
 This kind of computation has just a little bit in common with nuisance variables,
-in that the net result is that we can sweep several predictors out of the 
+in that the net result is that we can sweep several predictors out of the
 reference grid just by averaging them away. For this to make sense, the predictors
-averaged-away will have been observed *before* treatment so that their effects are 
+averaged-away will have been observed *before* treatment so that their effects are
 separate from the treatment effects.
 
 The implementation of this in **emmeans** is via the `counterfactuals` argument
@@ -372,7 +372,7 @@ averaging) consists of every observation of the dataset in combination with the
     Examples!`neuralgia`!`counterfactuals` -->
 As an example, consider the `neuralgia` data, where we have a binary response,
 pain, a treatment of interest (two active treatments and placebo), and
-pre-treatment predictors of sex, age, and duration of the condition. 
+pre-treatment predictors of sex, age, and duration of the condition.
 We will include the `vcovHC()` covariance estimate in the **sandwich** package.
 ```{r}
 neuralgia.glm <- glm(Pain ~ Sex + Age + Duration + Treatment,
@@ -392,7 +392,7 @@ smaller differences between each of the active treatments and placebo.
 
 
 ## Sub-models {#submodels}
-<!-- @index `submodel`; Models!Constrained 
+<!-- @index `submodel`; Models!Constrained
              Examples!`nutrition`!`submodel` -->
 We have just seen that we can assign different weights to the levels of containing
 factors. Another option is to constrain the effects of those containing factors
@@ -402,7 +402,7 @@ with a `submodel` specification so as to impose such a constraint. For illustrat
 return again to the nutrition example, and consider the analysis of `group`
 and `race` as before, after removing interactions involving `age`:
 ```{r}
-emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race) |> 
+emmeans(nutr.lm, pairwise ~ group | race, submodel = ~ age + group*race) |>
         summary(by = NULL)
 ```
 If you like, you may confirm that we would obtain exactly the same
@@ -430,10 +430,10 @@ effects of the factors involved. This is most useful with `joint_tests()`:
 ```{r}
 joint_tests(nutr.lm, submodel = "type2")
 ```
-These results are identical to the type II anova obtained 
+These results are identical to the type II anova obtained
 [at the beginning of this example](#nutrex).
 
-More details on how `submodel` works may be found in 
+More details on how `submodel` works may be found in
 [`vignette("xplanations")`](xplanations.html#submodels)
 
 
@@ -460,7 +460,7 @@ for each drug. The data and model follow:
 ```{r}
 cows <- data.frame (
     route = factor(rep(c("injection", "oral"), c(5, 9))),
-    drug = factor(rep(c("Bovineumab", "Charloisazepam", 
+    drug = factor(rep(c("Bovineumab", "Charloisazepam",
               "Angustatin", "Herefordmycin", "Mollycoddle"), c(3,2,  4,2,3))),
     resp = c(34, 35, 34,   44, 43,      36, 33, 36, 32,   26, 25,   25, 24, 24)
 )
@@ -505,7 +505,7 @@ We can instead remove `route` from the call and instead handle it with **ggplot2
 code to use separate *x* scales; and also abbreviate the drug levels so there is less clutter:
 ```{r, fig.width = 5.5, fig.alt = "This plot shows the same means as the previous one, but each panel shows only the drugs that are nested in each route"}
 require(ggplot2)
-emmip(cows.rg, ~ drug, abbr.len = 6) + 
+emmip(cows.rg, ~ drug, abbr.len = 6) +
   facet_wrap(~ route, scales = "free_x", space = "free_x")
 ```
 
@@ -513,7 +513,7 @@ The `space` argument causes the panels to be sized according to the number of me
 
 Similarly with `plot.emmGrid()`:
 ```{r, fig.height = 2.5, fig.width = 5.5, fig.alt = "side-by-side CIs and PIs for drugs in each route. Again, with free_y scaling, each panel contains only the drugs involved"}
-plot(drug.emm, by = "route", PIs = TRUE) + 
+plot(drug.emm, by = "route", PIs = TRUE) +
     facet_wrap(~ route, scales = "free_y", space = "free_y")
 ```
 
@@ -529,7 +529,7 @@ in the model but `A` is not present as a main effect, then `A` is deemed to
 be nested in `B`. Note that this can create a trap: some users take shortcuts
 by omitting some fixed effects, knowing that this won't affect the fitted
 values. But such shortcuts *do* affect the interpretation of model parameters,
-ANOVA tables, etc., and I advise against ever taking such shortcuts. 
+ANOVA tables, etc., and I advise against ever taking such shortcuts.
 Here are some ways you may notice mistakenly-identified nesting:
 
   * A message is displayed when nesting is detected
@@ -541,7 +541,7 @@ Here are some ways you may notice mistakenly-identified nesting:
 
 To override the auto-detection of nested effects, use the `nesting` argument
 in `ref_grid()` or `emmeans()`. Specifying `nesting = NULL` will ignore
-all nesting. Incorrectly-discovered nesting can be overcome by specifying 
+all nesting. Incorrectly-discovered nesting can be overcome by specifying
 something akin to `nesting = "A %in% B, C %in% (A * B)"` or, equivalently,
 `nesting = list(A = "B",  C = c("A", "B"))`.
 

@@ -53,34 +53,34 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
     }
     X = model.matrix(trms, m, contrasts.arg = contr)
     xnms = dimnames(X)[[2]]
-    
+
     # Check for situations we can't handle...
     colsums = apply(X[, setdiff(xnms, "(Intercept)"), drop=FALSE], 2, sum)
     if (any(round(colsums,3) != 0))
         warning("Some predictors are correlated with the intercept - results may be very biased")
     if (length(unlist(lapply(object, function(x) names(coef(x))))) > length(xnms))
         message("NOTE: Results are based on intra-block estimates and are biased.")
-    
+
     # initialize arrays
     nonint = setdiff(names(object), "(Intercept)")
-    
+
     k = npar = length(xnms)
     bhat1 = rep(NA, k) # I'll use NAs in 1st dim of bhat to track which slots I've filled
     # check for multivariate response
     m = ifelse (is.matrix(coefm <- object[[1]]$coefficients), ncol(coefm), 1)
     bhat = rep(NA, k*m)
     zmm1 = seq_len(m) - 1   # seq 0 : (m-1)
-    
-    
+
+
     #### utility functions...
     # return indices of as.numeric(x[i, ]) where x has nr rows
-    indx = function(i, nr = npar) 
+    indx = function(i, nr = npar)
         as.numeric(sapply(zmm1, function(j) nr * j + i))
-    
+
     # get names or rownames
     mynames = function(x)
         if (m == 1) names(x) else rownames(x)
-    
+
     V = matrix(0, nrow = k*m, ncol = k*m)
     names(bhat1) = xnms
     allxnms = xnms
@@ -108,7 +108,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         bi = bi[indx(idx, nr)]
         ii = match(rn[idx], xnms)
         use = setdiff(ii, which(!is.na(bhat1))) #++ omit elts already filled
-        if(length(use) > 0) {
+        if (length(use) > 0) {
             ii.left = seq_along(ii)[!is.na(match(ii,use))]
             wts[nm, indx(use)] = 1
             bhat1[use] = bi[ii.left]
@@ -124,11 +124,11 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
             Vmats[[nm]] = matrix(0, nrow=0, ncol=0)
             Vidx[[nm]] = integer(0)
         }
-        # Any cases with 0 df will have NaN for covariances. I make df = -1 
+        # Any cases with 0 df will have NaN for covariances. I make df = -1
         # in those cases so I don't divide by 0 later in Satterthwaite calcs
         Vdf[[nm]] = ifelse(x$df > 0, x$df, -1)
     }
-    
+
     x <- object[["(Intercept)"]]
     if (!is.null(x)) {
         # The intercept belongs in the 1st error stratum
@@ -154,7 +154,7 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         Vmats[[1]] = vv
     }
     # override V if vcov. is supplied
-    if(!missing(vcov.)) {
+    if (!missing(vcov.)) {
         V = .my.vcov(object, vcov.)
         dfargs = list()
         dffun = function(k, dfargs) Inf
@@ -171,34 +171,34 @@ emm_basis.aovlist = function (object, trms, xlev, grid, vcov., ...) {
         misc$ylevs = list(rep.meas = ylevs)
         X = kronecker(diag(1, m), X)
     }
-    
+
     # submodel support
     mm = NULL
-    if(!is.null(dat <- attr(object, "data"))) {
+    if (!is.null(dat <- attr(object, "data"))) {
         m = model.frame(trms, dat, na.action = na.pass, xlev = xlev)
         mm = model.matrix(trms, m, contrasts.arg = contr)
         mm = .cmpMM(mm, assign = attr(mm, "assign"))
     }
-    
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
+
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun,
          dfargs = dfargs, misc = misc, model.matrix = mm)
 }
 
 #' @rdname extending-emmeans
 #' @order 32
-#' @param k,dfargs Arguments to \code{.aovlist.dffun}, which is made available as a 
-#'   convenience to developers providing support similar to that provided for 
+#' @param k,dfargs Arguments to \code{.aovlist.dffun}, which is made available as a
+#'   convenience to developers providing support similar to that provided for
 #'   \code{aovlist} objects
 #' @export
 .aovlist.dffun = function(k, dfargs) {
-    if(is.matrix(k) && (nrow(k) > 1)) {
+    if (is.matrix(k) && (nrow(k) > 1)) {
         dfs = apply(k, 1, .aovlist.dffun, dfargs)
         min(dfs)
     }
     else {
         v = sapply(seq_along(dfargs$Vdf), function(j) {
             ii = dfargs$Vidx[[j]]
-            kk = (k * dfargs$wts[j, ])[ii]            
+            kk = (k * dfargs$wts[j, ])[ii]
             #sum(kk * .mat.times.vec(dfargs$Vmats[[j]], kk))
             .qf.non0(dfargs$Vmats[[j]], kk)
         })

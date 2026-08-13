@@ -26,7 +26,7 @@ emmip_lattice(emms, style = "factor", xlab = labs$xlab, ylab = labs$ylab,
 \item{object}{An object of class \code{emmGrid}, or a fitted model of a class
 supported by the \pkg{emmeans} package}
 
-\item{formula}{Formula of the form 
+\item{formula}{Formula of the form
 \code{trace.factors ~ x.factors | by.factors}. The EMMs are
 plotted against \code{x.factor} for each level of \code{trace.factors}.
 \code{by.factors} is optional, but if present, it determines separate
@@ -35,7 +35,7 @@ or a combination of factors using the \code{*} operator.}
 
 \item{...}{Additional arguments passed to \code{\link{emmeans}} (when
 \code{object} is not already an \code{emmGrid} object),
-\code{predict.emmGrid}, 
+\code{predict.emmGrid},
 \code{emmip_ggplot}, or \code{emmip_lattice}.}
 
 \item{type}{As in \code{\link{predict.emmGrid}}, this determines
@@ -44,21 +44,21 @@ whether we want to inverse-transform the predictions
 \code{"link"}, unless the \code{"predict.type"} option is in force; see
 \code{\link{emm_options}}.
 In addition, the user may specify \code{type = "scale"} to create a
-transformed scale for the vertical axis based on \code{object}'s response 
+transformed scale for the vertical axis based on \code{object}'s response
 transformation or link function.}
 
 \item{CIs}{Logical value. If \code{TRUE}, confidence intervals (or HPD intervals
-for Bayesian models) are added to the plot 
+for Bayesian models) are added to the plot
 (works only with \code{engine = "ggplot"}).}
 
-\item{PIs}{Logical value. If \code{TRUE}, prediction intervals are added to the plot 
+\item{PIs}{Logical value. If \code{TRUE}, prediction intervals are added to the plot
 (works only with \code{engine = "ggplot"}). This is allowed only if the
 underlying model family is \code{"gaussian"}.
 If both \code{CIs} and
 \code{PIs} are \code{TRUE}, the prediction intervals will be somewhat
 longer, lighter, and thinner than the confidence intervals. Additional
 parameters to \code{\link{predict.emmGrid}} (e.g., \code{sigma}) may be passed via
-\code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and 
+\code{...}. For Bayesian models, PIs require \code{frequentist = TRUE} and
 a value for \code{sigma}.}
 
 \item{style}{Optional character value. This has an effect only when the
@@ -70,7 +70,7 @@ curves are plotted using lines (and no symbols). With \code{style =
 lines and symbols. When the horizontal variable is character or factor, or
 a combination of more than one predictor, \code{"factor"} style is always used.}
 
-\item{engine}{Character value matching \code{"ggplot"} (default), 
+\item{engine}{Character value matching \code{"ggplot"} (default),
 \code{"lattice"}, or \code{"none"}. The graphics engine to be used to produce the plot.
 These require, respectively, the \pkg{ggplot2} or \pkg{lattice} package to
 be installed. Specifying \code{"none"} is equivalent to setting \code{plotit = FALSE}.}
@@ -86,7 +86,7 @@ variables in \code{formula} are used to order the variables.}
 
 \item{abbr.len}{Integer vector of length 1 or 2 used to specify that factor levels
 be abbreviated to the specified lengths, using \code{\link{abbreviate}}. Any values
-less than 1 are ignored. \code{abbr.len[1]} applies to a factor plotted along the 
+less than 1 are ignored. \code{abbr.len[1]} applies to a factor plotted along the
 horizontal axis, and \code{abbr.len[2]} (if present) applies to trace factors (shown in a legend)
 or by factors (shown in facet labels).}
 
@@ -94,12 +94,12 @@ or by factors (shown in facet labels).}
 \code{plotit = FALSE}. Certain variables and attributes are expected
 to exist in this data frame; see the section detailing the rendering functions.}
 
-\item{dodge}{Numerical amount passed to \code{ggplot2::position_dodge} 
+\item{dodge}{Numerical amount passed to \code{ggplot2::position_dodge}
 by which points and intervals are offset so they do not collide.}
 
 \item{xlab, ylab, tlab}{Character labels for the horizontal axis, vertical
 axis, and traces (the different curves), respectively. The \code{emmip}
-function generates these automatically and provides therm via the \code{labs} 
+function generates these automatically and provides therm via the \code{labs}
 attribute, but the user may override these if desired.}
 
 \item{facetlab}{Labeller for facets (when by variables are in play). Use
@@ -109,7 +109,7 @@ decides which based on how many \code{by} factors there are. See the
 documentation for \code{ggplot2::labellers}.}
 
 \item{scale}{If not missing, an object of class \code{scales::trans} specifying
-a (usually) nonlinear scaling for the vertical axis. For example, 
+a (usually) nonlinear scaling for the vertical axis. For example,
 \code{scales = scales::log_trans()} specifies a logarithmic scale. For
 fine-tuning purposes, additional
 arguments to \code{ggplot2::scale_y_continuous} may be included in \code{...} .}
@@ -130,7 +130,7 @@ of arguments passed to \code{geom_linerange} to customize appearance of interval
 
 \item{col}{With \code{emmip_ggplot}, this adds \code{color = col} (not
 \code{colour}) to all of the \code{*arg} lists. This is intended for setting a
-common color for everything, such as a black-and-white plot. 
+common color for everything, such as a black-and-white plot.
 With \code{emmip_lattice}, \code{col} specifies the colors to use
 for each group, recycled as needed. If not specified, the default trellis
 colors are used.}
@@ -158,18 +158,18 @@ Creates an interaction plot of EMMs based on a fitted model and a simple
 formula specification.
 }
 \note{
-Conceptually, this function is equivalent to 
-  \code{\link{interaction.plot}} where the summarization function is thought 
+Conceptually, this function is equivalent to
+  \code{\link{interaction.plot}} where the summarization function is thought
   to return the EMMs.
 }
 \section{Details}{
 
 If \code{object} is a fitted model, \code{\link{emmeans}} is called with an
 appropriate specification to obtain estimated marginal means for each
-combination of the factors present in \code{formula} (in addition, any 
-arguments in \code{\dots} that match \code{at}, \code{trend}, 
-\code{cov.reduce}, or \code{fac.reduce} are passed to \code{emmeans}). 
-Otherwise, if \code{object} is an \code{emmGrid} object, its first element is 
+combination of the factors present in \code{formula} (in addition, any
+arguments in \code{\dots} that match \code{at}, \code{trend},
+\code{cov.reduce}, or \code{fac.reduce} are passed to \code{emmeans}).
+Otherwise, if \code{object} is an \code{emmGrid} object, its first element is
 used, and it must contain one estimate for each combination of the factors
 present in \code{formula}.
 }
@@ -177,7 +177,7 @@ present in \code{formula}.
 \section{Rendering functions}{
 
 The functions \code{emmip_ggplot} and \code{emmip_lattice}
-are called when \code{plotit == TRUE} to render the plots; 
+are called when \code{plotit == TRUE} to render the plots;
 but they may also be called later on an object saved via \code{plotit = FALSE}
 (or \code{engine = "none"}). The functions require that \code{emms} contains variables
 \code{xvar}, \code{yvar}, and \code{tvar}, and attributes \code{"labs"} and \code{"vars"}.
@@ -186,7 +186,7 @@ and prediction intervals are plotted if \code{LPL} and \code{UPL} exist.
 Finally, it must contain the variables named in \code{attr(emms, "vars")}.
 
 In \code{emmip_ggplot}, colors, linetypes, and shapes are all assigned to
-groups (according to \code{tvar}) unless overridden. So, for example, one may 
+groups (according to \code{tvar}) unless overridden. So, for example, one may
 have different symbols for each group by simply specifying \code{dotarg = list()}.
 }
 
@@ -205,7 +205,7 @@ emmip(noise.lm, type ~ size | side, engine = "lattice")
 emmip(noise.lm, type ~ side * size, CIs = TRUE,
     CIarg = list(linewidth = 1.5, alpha = 1, color = "orange"),
     dotarg = list(size = 2, shape = "square", color = "black"))
-    
+
 # Same using legacy theme
 with_emm_options(gg.theme = 1,
     emmip(noise.lm, type ~ side * size, CIs = TRUE,
@@ -234,8 +234,8 @@ emmip(fib.rg, machine ~ diameter, style = "factor")  # points and lines
 # in the section on nested models.
 
 ### Options with transformations or link functions
-neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(), 
-                     data = neuralgia) 
+neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(),
+                     data = neuralgia)
 
 # On link scale:
 emmip(neuralgia.glm, Treatment ~ Sex)

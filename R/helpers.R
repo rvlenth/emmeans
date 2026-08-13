@@ -25,13 +25,13 @@
 
 #--------------------------------------------------------------
 ### lm objects (and also aov, rlm, others that inherit) -- but NOT aovList
-### Recent additional arhument 'frame' should point to where the model frame 
+### Recent additional arhument 'frame' should point to where the model frame
 ###   might be available, or NULL otherwise
 #' @exportS3Method recover_data lm
 #' @export
 recover_data.lm = function(object, frame = object$model, ...) {
         fcall = object$call
-    recover_data(fcall, delete.response(terms(object)), object$na.action, 
+    recover_data(fcall, delete.response(terms(object)), object$na.action,
                  frame = frame, pwts = weights(object), ...)
 }
 
@@ -39,15 +39,15 @@ recover_data.lm = function(object, frame = object$model, ...) {
 emm_basis.lm = function(object, trms, xlev, grid, ...) {
     # coef() works right for lm but coef.aov tosses out NAs
     bhat = object$coefficients
-    nm = if(is.null(names(bhat))) row.names(bhat) else names(bhat)
+    nm = if (is.null(names(bhat))) row.names(bhat) else names(bhat)
     m = suppressWarnings(model.frame(trms, grid, na.action = na.pass, xlev = xlev))
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     assign = attr(X, "assign")
     X = X[, nm, drop = FALSE]
-    bhat = as.numeric(bhat) 
+    bhat = as.numeric(bhat)
     # stretches it out if multivariate - see mlm method
     V = .my.vcov(object, ...)
-    
+
     if (sum(is.na(bhat)) > 0)
         nbasis = estimability::nonest.basis(object$qr)
     else
@@ -56,7 +56,7 @@ emm_basis.lm = function(object, trms, xlev, grid, ...) {
     if (inherits(object, "glm")) {
         misc = .std.link.labels(object$family, misc)
         dffun = function(k, dfargs) dfargs$df
-        dfargs = list(df = ifelse(object$family$family %in% c("gaussian", "Gamma"), 
+        dfargs = list(df = ifelse(object$family$family %in% c("gaussian", "Gamma"),
                                   object$df.residual, Inf))
     }
     else {
@@ -92,7 +92,7 @@ emm_basis.mlm = function(object, trms, xlev, grid, ...) {
 #' @exportS3Method recover_data manova
 recover_data.manova = function(object, ...) {
     fcall = match.call(aov, object$call)   # need to borrow arg matching from aov()
-    recover_data(fcall, delete.response(terms(object)), object$na.action, 
+    recover_data(fcall, delete.response(terms(object)), object$na.action,
                  frame = object$model, ...)
 }
 
@@ -103,42 +103,42 @@ recover_data.manova = function(object, ...) {
 ### merMod objects (lme4 package)
 #' @export
 recover_data.merMod = function(object, ...) {
-    if(!lme4::isLMM(object) && !lme4::isGLMM(object)) 
+    if (!lme4::isLMM(object) && !lme4::isGLMM(object))
         return("Can't handle a nonlinear mixed model")
     fcall = object@call
-    recover_data(fcall, delete.response(terms(object)), 
+    recover_data(fcall, delete.response(terms(object)),
                  attr(object@frame, "na.action"), frame = object@frame, pwts = weights(object), ...)
 }
 
 #' @export
-emm_basis.merMod = function(object, trms, xlev, grid, 
-                            mode = get_emm_option("lmer.df"), lmer.df, 
-                            disable.pbkrtest = get_emm_option("disable.pbkrtest"), 
-                            pbkrtest.limit = get_emm_option("pbkrtest.limit"), 
-                            disable.lmerTest = get_emm_option("disable.lmerTest"), 
-                            lmerTest.limit = get_emm_option("lmerTest.limit"), 
+emm_basis.merMod = function(object, trms, xlev, grid,
+                            mode = get_emm_option("lmer.df"), lmer.df,
+                            disable.pbkrtest = get_emm_option("disable.pbkrtest"),
+                            pbkrtest.limit = get_emm_option("pbkrtest.limit"),
+                            disable.lmerTest = get_emm_option("disable.lmerTest"),
+                            lmerTest.limit = get_emm_option("lmerTest.limit"),
                             options, ...) {
     V = .my.vcov(object, ...)
     dfargs = misc = list()
-    
+
     if (lme4::isLMM(object)) {
         # Allow lmer.df in lieu of mode
         if (!missing(lmer.df))
             mode = lmer.df
 
         mode = match.arg(tolower(mode), c("satterthwaite", "kenward-roger", "asymptotic"))
-        # if we're gonna override the df anyway, keep it simple 
+        # if we're gonna override the df anyway, keep it simple
         # OTOH, if K-R, documentation promises we'll adjust V
-        if (!is.null(options$df) && (mode != "kenward-roger")) 
+        if (!is.null(options$df) && (mode != "kenward-roger"))
             mode = "asymptotic"
-        
-        
+
+
         # set flags
         objN = lme4::getME(object, "N")
         tooBig.k = (objN > pbkrtest.limit)
         tooBig.s = (objN > lmerTest.limit)
-        
-        tooBigMsg = function(pkg, limit) {  
+
+        tooBigMsg = function(pkg, limit) {
             message("Note: D.f. calculations have been",
                     " disabled because the number of observations exceeds ", limit, ".\n",
                     "To enable adjustments, add the argument '", pkg, ".limit = ", objN, "' (or larger)\n",
@@ -148,32 +148,32 @@ emm_basis.merMod = function(object, trms, xlev, grid,
 
         # pick the lowest-hanging apples first
         if (mode == "kenward-roger") {
-            if (disable.pbkrtest || tooBig.k || !.requireNS("pbkrtest", 
-                    "Cannot use mode = \"kenward-roger\" because *pbkrtest* package is not installed", 
+            if (disable.pbkrtest || tooBig.k || !.requireNS("pbkrtest",
+                    "Cannot use mode = \"kenward-roger\" because *pbkrtest* package is not installed",
                     fail = message))
                 mode = "satterthwaite"
             if (!disable.pbkrtest && tooBig.k)
                 tooBigMsg("pbkrtest", pbkrtest.limit)
         }
         if (mode == "satterthwaite") {
-            if (disable.lmerTest || tooBig.s || !.requireNS("lmerTest", 
-                    "Cannot use mode = \"satterthwaite\" because *lmerTest* package is not installed", 
+            if (disable.lmerTest || tooBig.s || !.requireNS("lmerTest",
+                    "Cannot use mode = \"satterthwaite\" because *lmerTest* package is not installed",
                     fail = message))
-                mode = ifelse(!disable.pbkrtest && !tooBig.k && 
-                                  .requireNS("pbkrtest", fail = .nothing), 
+                mode = ifelse(!disable.pbkrtest && !tooBig.k &&
+                                  .requireNS("pbkrtest", fail = .nothing),
                               "kenward-roger", "asymptotic")
             if (!disable.lmerTest && tooBig.s)
                 tooBigMsg("lmerTest", lmerTest.limit)
         }
         # if my logic isn't flawed, we are guaranteed that mode is both desired and possible
-        
+
         if (mode == "kenward-roger") {
             if ((\(vcov., ...) missing(vcov.))(...)) {   # if (vcov. not in ...)
-                dfargs = list(unadjV = V, 
+                dfargs = list(unadjV = V,
                               adjV = pbkrtest::vcovAdj.lmerMod(object, 0))
                 V = as.matrix(dfargs$adjV)
                 tst = try(pbkrtest::Lb_ddf)
-                if(!inherits(tst, "try-error"))
+                if (!inherits(tst, "try-error"))
                     dffun = function(k, dfargs) pbkrtest::Lb_ddf (k, dfargs$unadjV, dfargs$adjV)
                 else {
                     mode = "asymptotic"
@@ -186,31 +186,31 @@ emm_basis.merMod = function(object, trms, xlev, grid,
                 mode = "satterthwaite"
             }
         }
-        
+
         if (mode == "satterthwaite") {
             dfargs = list(object = object)
-            dffun = function(k, dfargs) 
+            dffun = function(k, dfargs)
                 suppressMessages(lmerTest::calcSatterth(dfargs$object, k)$denom)
         }
-        
+
         if (mode == "asymptotic") {
             dffun = function(k, dfargs) Inf
         }
-        
+
         attr(dffun, "mesg") = mode
     }
     else if (lme4::isGLMM(object)) {
         dffun = function(k, dfargs) Inf
         misc = .std.link.labels(family(object), misc)
     }
-    else 
+    else
         stop("Can't handle a nonlinear mixed model")
-    
+
     contrasts = attr(object@pp$X, "contrasts")
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = lme4::fixef(object)
-    
+
     if (length(bhat) < ncol(X)) {
         # Newer versions of lmer can handle rank deficiency, but we need to do a couple of
         # backflips to put the pieces together right,
@@ -225,10 +225,10 @@ emm_basis.merMod = function(object, trms, xlev, grid,
     }
     else
         nbasis=estimability::all.estble
-    
+
     mm = .cmpMM(object@pp$X, object@pp$Xwts^2,
                 attr(object@pp$X, "assign"))
-    
+
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc,
          model.matrix = mm)
 }
@@ -257,8 +257,8 @@ recover_data.lme = function(object, data, ...) {
 }
 
 #' @export
-emm_basis.lme = function(object, trms, xlev, grid, 
-        mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite", "asymptotic"), 
+emm_basis.lme = function(object, trms, xlev, grid,
+        mode = c("containment", "satterthwaite", "appx-satterthwaite", "auto", "boot-satterthwaite", "asymptotic"),
         sigmaAdjust = TRUE, options, extra.iter = 0, ...) {
     mode = match.arg(mode)
     if (mode == "boot-satterthwaite") mode = "appx-satterthwaite"  # backward compatibility
@@ -275,14 +275,14 @@ emm_basis.lme = function(object, trms, xlev, grid,
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     bhat = nlme::fixef(object)
     V = .my.vcov(object, ...)
-    if (sigmaAdjust && object$method == "ML") 
+    if (sigmaAdjust && object$method == "ML")
         V = V * object$dims$N / (object$dims$N - nrow(V))
     misc = list()
     if (!is.null(object$family)) {
         misc = .std.link.labels(object$family, misc)
     }
     nbasis = estimability::all.estble
-    
+
     if (mode == "fixed") { # hack to just put in df from options
         dfargs = list(df = options$df)
         dffun = function(k, dfargs) dfargs$df
@@ -313,13 +313,13 @@ emm_basis.lme = function(object, trms, xlev, grid,
         dfargs = list(dfx = dfx)
     }
     attr(dffun, "mesg") = mode
-    
+
     # submodel support (not great -- omits any weights)
     m = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
     mm = model.matrix(trms, m, contrasts.arg = contrasts)
     mm = .cmpMM(mm, assign = attr(mm, "assign"))
-    
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = misc,
          model.matrix = mm)
 }
@@ -327,9 +327,9 @@ emm_basis.lme = function(object, trms, xlev, grid,
 # Here is a total hack, but it works pretty well
 # We estimate the gradient of the V matrix by fitting the
 # model with a few random perturbations of y, then
-# regressing the changes in V against the changes in the 
+# regressing the changes in V against the changes in the
 # covariance parameters
-gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms), 
+gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
                         data = object$data, extra.iter = 0) {
     # check consistency of contrasts
     #### This code doesn't work with coerced factors. Hardly seems messing with, so I commented it out
@@ -339,8 +339,8 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
     #     message("Contrasts don't match those used when the model was fitted. Fix this and re-run")
     #     stop()
     # }
-    
-    if(is.null(data)) {
+
+    if (is.null(data)) {
         vars = all.vars(eval(object$call[[2]]))
         lst = lapply(vars, get)
         names(lst) = vars
@@ -362,7 +362,7 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
     dat = t(replicate(nsim, {
         simt = simv = numeric(0)
         niter = niter + 1
-        while((niter < 3 * nsim) && 
+        while((niter < 3 * nsim) &&
               ((length(simv) != length(V)) || (length(simt) != length(theta)))) {
             data[[yname]] = y + sig * rnorm(n)
             mod = update(object, data = data)
@@ -370,7 +370,7 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
             simv = mod[[Vname]]
         }
         niter = niter + 1
-        if (niter > 3 * nsim) 
+        if (niter > 3 * nsim)
             stop("Too many simulations due to inconsistency")
         c(simt - theta, as.numeric(simv - V))
     }))
@@ -410,7 +410,7 @@ gradV.kludge = function(object, Vname = "varFix", call = formula(object$terms),
 
 ### new way to get jacobians for gls models
 gls_grad = function(object, call, data, V) {
-    if (is.null(data)) 
+    if (is.null(data))
         data = environment(eval(call$model))
     obj = object$modelStruct
     conLin = object
@@ -441,7 +441,7 @@ recover_data.gls = function(object, data, ...) {
     trms = delete.response(terms(nlme::getCovariateFormula(object)))
     attr(trms, "predvars") = attr(delete.response(terms(object)), "predvars")
     # above copies scaling info for scale() and poly() terms
-    
+
     result = recover_data.call(fcall, trms, object$na.action, data = data, ...)
     if (!is.null(wts))
         result[["(weights)"]] = wts
@@ -451,9 +451,9 @@ recover_data.gls = function(object, data, ...) {
     result
 }
 
-#' @exportS3Method emm_basis gls          
-emm_basis.gls = function(object, trms, xlev, grid, 
-                         mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite", "asymptotic"), 
+#' @exportS3Method emm_basis gls
+emm_basis.gls = function(object, trms, xlev, grid,
+                         mode = c("auto", "df.error", "satterthwaite", "appx-satterthwaite", "boot-satterthwaite", "asymptotic"),
                          extra.iter = 0, options, misc, ...) {
     contrasts = object$contrasts
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
@@ -463,7 +463,7 @@ emm_basis.gls = function(object, trms, xlev, grid,
     mf = model.frame(trms, attr(object, "data"), na.action = na.pass, xlev = xlev)
     mm = model.matrix(trms, mf, contrasts.arg = contrasts)
     mm = .cmpMM(mm, assign = attr(mm, "assign"))
-    
+
     tmp = coef(object)
     bhat = rep(NA, ncol(X))
     bhat[match(names(tmp), colnames(X), nomatch = 0)] = tmp
@@ -481,13 +481,13 @@ emm_basis.gls = function(object, trms, xlev, grid,
     if (!is.matrix(object$apVar))
         mode = "df.error"
     if (mode %in% c("satterthwaite", "appx-satterthwaite")) {
-        data = if(is.null(misc$data))
+        data = if (is.null(misc$data))
             eval(object$call$data, parent.frame(2))
         else
             misc$data
         misc = list()
         chk = attr(object$apVar, "Pars")
-        if(max(abs(coef(object$modelStruct) - chk[-length(chk)])) > .001) {
+        if (max(abs(coef(object$modelStruct) - chk[-length(chk)])) > .001) {
             message("Analytical Satterthwaite method not available; using appx-satterthwaite")
             mode = "appx-satterthwaite"
         }
@@ -513,13 +513,13 @@ emm_basis.gls = function(object, trms, xlev, grid,
     }
     else if (mode %in%  c("df.error", "asymptotic")) {
         df = ifelse(mode == "asymptotic",
-                    Inf, 
+                    Inf,
                     object$dims$N - object$dims$p - length(unlist(object$modelStruct)))
         dfargs = list(df = df)
         dffun = function(k, dfargs) dfargs$df
     }
     attr(dffun, "mesg") = mode
-    
+
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc,
          model.matrix = mm)
 }
@@ -532,9 +532,9 @@ emm_basis.gls = function(object, trms, xlev, grid,
 recover_data.polr = function(object, ...)
     recover_data.clm(object, ...)
 
-#' @exportS3Method emm_basis polr         
-emm_basis.polr = function(object, trms, xlev, grid, 
-                          mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
+#' @exportS3Method emm_basis polr
+emm_basis.polr = function(object, trms, xlev, grid,
+                          mode = c("latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"),
                           rescale = c(0,1), ...) {
     mode = match.arg(mode)
     contrasts = object$contrasts
@@ -542,7 +542,7 @@ emm_basis.polr = function(object, trms, xlev, grid,
     X = model.matrix(trms, m, contrasts.arg = contrasts)
     # Strip out the intercept (borrowed code from predict.polr)
     xint = match("(Intercept)", colnames(X), nomatch = 0L)
-    if (xint > 0L) 
+    if (xint > 0L)
         X = X[, -xint, drop = FALSE]
     bhat = c(coef(object), object$zeta)
     V = .my.vcov(object, ...)
@@ -558,7 +558,7 @@ emm_basis.polr = function(object, trms, xlev, grid,
         X = cbind(kronecker(-j, X), kronecker(diag(1,k), J))
         link = object$method
         if (link == "logistic") link = "logit"
-        misc = list(ylevs = list(cut = names(object$zeta)), 
+        misc = list(ylevs = list(cut = names(object$zeta)),
                     tran = link, inv.lbl = "cumprob", offset.mult = -1)
         if (mode != "linear.predictor") {
             # just use the machinery we already have for the 'ordinal' package
@@ -590,9 +590,9 @@ recover_data.survreg = function(object, ...) {
 }
 
 # Seems to work right in a little testing.
-# However, it fails sometimes if I update the model 
+# However, it fails sometimes if I update the model
 # with a subset argument. Workaround: just fitting a new model
-#' @exportS3Method emm_basis survreg      
+#' @exportS3Method emm_basis survreg
 emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     # Much of this code is adapted from predict.survreg
     bhat = object$coefficients
@@ -601,7 +601,7 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     # ??? not used... is.fixeds = (k == ncol(object$var))
     ### zap-out factors in xlev not needed by model.frame
     xlev[setdiff(names(xlev), rownames(attr(trms, "factors")))] = NULL
-    m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)    
+    m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     # X = model.matrix(object, m) # This is what predict.survreg does
     # But I have manipulated trms, so need to make sure things are consistent
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
@@ -611,9 +611,9 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
     nbasis = estimability::nonest.basis(model.matrix(object)[, usecols, drop = FALSE])
     dfargs = list(df = object$df.residual)
     dffun = function(k, dfargs) dfargs$df
-    if (object$dist %in% c("exponential","weibull","loglogistic","loggaussian","lognormal")) 
+    if (object$dist %in% c("exponential","weibull","loglogistic","loggaussian","lognormal"))
         misc = list(tran = "log", inv.lbl = "response")
-    else 
+    else
         misc = list()
     misc$postGridHook = .notran2   # removes "Surv()" as response transformation
     list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, misc=misc)
@@ -624,11 +624,11 @@ emm_basis.survreg = function(object, trms, xlev, grid, ...) {
 #--------------------------------------------------------------
 ###  coxph objects (survival package)
 #' @exportS3Method recover_data coxph
-recover_data.coxph = function(object, ...) 
+recover_data.coxph = function(object, ...)
     recover_data.survreg(object, ...)
 
-#' @exportS3Method emm_basis coxph        
-emm_basis.coxph = function (object, trms, xlev, grid, ...) 
+#' @exportS3Method emm_basis coxph
+emm_basis.coxph = function (object, trms, xlev, grid, ...)
 {
     object$dist = "doesn't matter"
     result = emm_basis.survreg(object, trms, xlev, grid, ...)
@@ -636,7 +636,7 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
     nms = colnames(result$X)
     # delete columns for intercept and main effects of strata
     zaps = which(nms %in% setdiff(nms, names(result$bhat)))
-    if(length(zaps) > 0)
+    if (length(zaps) > 0)
         result$X = result$X[, -zaps, drop = FALSE]
     ### result$X = result$X - rep(object$means, each = nrow(result$X))
     result$misc$tran = "log"
@@ -646,7 +646,7 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
 
 .notran2 = function(object, ...) {
     for (nm in c("tran", "tran2"))
-        if(!is.null(object@misc[[nm]]) && object@misc[[nm]] == "Surv") object@misc[[nm]] = NULL
+        if (!is.null(object@misc[[nm]]) && object@misc[[nm]] == "Surv") object@misc[[nm]] = NULL
     object
 }
 
@@ -658,10 +658,10 @@ emm_basis.coxph = function (object, trms, xlev, grid, ...)
 ###  coxme objects ####
 ### Greatly revised 6-15-15 (after version 2.18)
 #' @exportS3Method recover_data coxme
-recover_data.coxme = function(object, ...) 
+recover_data.coxme = function(object, ...)
     recover_data.survreg(object, ...)
 
-#' @exportS3Method emm_basis coxme        
+#' @exportS3Method emm_basis coxme
 emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     bhat = coxme::fixef(object)
     k = length(bhat)
@@ -676,7 +676,7 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     dffun = function(k, dfargs) Inf
     misc = list(tran = "log", inv.lbl = "hazard")
     misc$postGridHook = .notran2   # removes "Surv()" as response transformation
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V, dffun = dffun,
          dfargs = list(), misc = misc)
 }
 
@@ -686,7 +686,7 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
 .named.vcov = function(object, method, ...)
     UseMethod(".named.vcov")
 
-# default has optional idx of same length as valid and if so, idx indicating 
+# default has optional idx of same length as valid and if so, idx indicating
 #   which elt of valid to use if matched
 # Ex: valid = c("mammal", "fish", "rat", "dog", "trout", "perch")
 #     idx   = c(   1,        2,     1,     1,       2,       2)
@@ -712,12 +712,12 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     bhat = coef(object)
     V = .named.vcov(object, vcov.method, valid, idx, ...)
-    
+
     if (sum(is.na(bhat)) > 0)
         nbasis = estimability::nonest.basis(object$qr)
     else
         nbasis = estimability::all.estble
-    
+
     misc = .std.link.labels(object$family, list())
     misc$initMesg = attr(V, "methMesg")
     dffun = function(k, dfargs) Inf
@@ -733,9 +733,9 @@ emm_basis.coxme = function(object, trms, xlev, grid, ...) {
 recover_data.gee = function(object, ...)
     recover_data.lm(object, frame = NULL, ...)
 
-#' @exportS3Method emm_basis gee          
+#' @exportS3Method emm_basis gee
 emm_basis.gee = function(object, trms, xlev, grid, vcov.method = "robust.variance", ...)
-    .emmb.geeGP(object, trms, xlev, grid, vcov.method, 
+    .emmb.geeGP(object, trms, xlev, grid, vcov.method,
                 valid = c("robust.variance", "naive.variance"))
 
 ###  geepack objects  ####
@@ -743,20 +743,20 @@ emm_basis.gee = function(object, trms, xlev, grid, vcov.method = "robust.varianc
 recover_data.geeglm = function(object, ...)
     recover_data.lm(object, ...)
 
-#' @exportS3Method emm_basis geeglm       
+#' @exportS3Method emm_basis geeglm
 emm_basis.geeglm = function(object, trms, xlev, grid, vcov.method = "vbeta", ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     bhat = coef(object)
-    V = .named.vcov(object$geese, vcov.method, 
-                    valid = c("vbeta", "vbeta.naiv","vbeta.j1s","vbeta.fij","robust","naive"), 
+    V = .named.vcov(object$geese, vcov.method,
+                    valid = c("vbeta", "vbeta.naiv","vbeta.j1s","vbeta.fij","robust","naive"),
                     idx = c(1,2,3,4,1,2))
-    
+
     if (sum(is.na(bhat)) > 0)
         nbasis = estimability::nonest.basis(object$qr)
     else
         nbasis = estimability::all.estble
-    
+
     misc = .std.link.labels(object$family, list())
     misc$initMesg = attr(V, "methMesg")
     dffun = function(k, dfargs) dfargs$df
@@ -781,13 +781,13 @@ recover_data.geese = function(object, ...) {
     recover_data(fcall, delete.response(trms), na.action, ...)
 }
 
-#' @exportS3Method emm_basis geese        
+#' @exportS3Method emm_basis geese
 emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...) {
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
     X = model.matrix(trms, m, contrasts.arg = object$contrasts)
     bhat = object$beta
-    V = .named.vcov(object, vcov.method, 
-                    valid = c("vbeta", "vbeta.naiv","vbeta.j1s","vbeta.fij","robust","naive"), 
+    V = .named.vcov(object, vcov.method,
+                    valid = c("vbeta", "vbeta.naiv","vbeta.j1s","vbeta.fij","robust","naive"),
                     idx = c(1,2,3,4,1,2))
 
     # We don't have the qr component - I'm gonna punt for now
@@ -796,7 +796,7 @@ emm_basis.geese = function(object, trms, xlev, grid, vcov.method = "vbeta", ...)
 #         nbasis = estimability::nonest.basis(object$qr)
 #     else
         nbasis = estimability::all.estble
-    
+
     misc = list()
     if (!is.null(fam <- object$call$family))
         misc = .std.link.labels(eval(fam)(), misc)
@@ -816,7 +816,7 @@ recover_data.glmgee = function(object, ...) {
 
 #' @exportS3Method emm_basis glmgee
 emm_basis.glmgee = function(object, trms, xlev, grid, vcov.method = "robust", ...) {
-    vcov. = if(is.character(vcov.method))
+    vcov. = if (is.character(vcov.method))
         vcov(object, type = vcov.method, ...)
     else
         vcov.method
@@ -855,8 +855,8 @@ recover_data.svyglm = function(object, data = NULL, ...) {
 #' @rdname extending-emmeans
 #' @order 36
 #' @param vcov. Function or matrix that returns a suitable covariance matrix.
-#' The default is \code{.statsvcov} which is \code{stats::vcov}. The \code{.my.vcov} 
-#' function should be called in place of \code{\link{vcov}}, and it supports the user 
+#' The default is \code{.statsvcov} which is \code{stats::vcov}. The \code{.my.vcov}
+#' function should be called in place of \code{\link{vcov}}, and it supports the user
 #' being able to specify a different matrix or function via the
 #' optional \code{vcov.} argument.
 #' @export
@@ -887,7 +887,7 @@ recover_data.svyglm = function(object, data = NULL, ...) {
         misc$inv.lbl = "prob"
     else if (length(grep("poisson", fam$family)) == 1)
         misc$inv.lbl = "rate"
-    if(length(grep("gaussian", fam$family)) == 0)
+    if (length(grep("gaussian", fam$family)) == 0)
         misc$sigma = NA
     misc
 }

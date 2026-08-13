@@ -18,27 +18,27 @@ the current \code{level} option is used; see \code{\link{emm_options}})}
 
 \item{type}{prediction type as in \code{\link{summary.emmGrid}}}
 
-\item{point.est}{function to use to compute the point estimates from the 
+\item{point.est}{function to use to compute the point estimates from the
 posterior sample for each grid point}
 
 \item{ci.method}{character value matching \code{"HPD"} (default) or \code{"quantile"}
 (but actually not case-sensitive).
-The default is to use HPD intervals (which are the shortest possible intervals). 
+The default is to use HPD intervals (which are the shortest possible intervals).
 Alternatively, choosing \code{"quantile"} uses the quantiles of the posterior
 having equal tail probabilities.}
 
-\item{delta}{Numeric equivalence threshold (on the linear predictor scale 
+\item{delta}{Numeric equivalence threshold (on the linear predictor scale
 regardless of \code{type}).
 See the section below on equivalence testing.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
-back-transforming (\code{type = "response"}). This requires a value of 
+back-transforming (\code{type = "response"}). This requires a value of
 \code{sigma} to exist in the object or be specified.}
 
-\item{sigma}{Error SD assumed for bias correction (when 
+\item{sigma}{Error SD assumed for bias correction (when
 \code{type = "response"}. If not specified,
 \code{object@misc$sigma} is used, and a warning if it is not found or invalid.
-\emph{Note:} \code{sigma} may be a vector, as long as it conforms to the 
+\emph{Note:} \code{sigma} may be a vector, as long as it conforms to the
 number of observations in the posterior sample.}
 
 \item{...}{required but not used}
@@ -55,7 +55,7 @@ may be called independently, it is called automatically by the S3 method
 }
 \note{
 HPD intervals require the \pkg{coda} package to be installed on your system;
-otherwise an error is thrown. (So one way to sidestep that error is to specify 
+otherwise an error is thrown. (So one way to sidestep that error is to specify
 \code{ci.method = "quantile"}).
 }
 \section{Equivalence testing note}{
@@ -65,7 +65,7 @@ otherwise an error is thrown. (So one way to sidestep that error is to specify
   of posterior estimates having absolute values less than \code{delta}. The
   \code{odds.eq} column is just \code{p.equiv} converted to an odds ratio; so
   it is the posterior odds of equivalence.
-  
+
   A high value of \code{p.equiv} is evidence
   in favor of equivalence. It can be used to obtain something equivalent
   (in spirit) to the frequentist Schuirmann (TOST) procedure, whereby we would
@@ -73,19 +73,19 @@ otherwise an error is thrown. (So one way to sidestep that error is to specify
   confidence interval falls entirely in the interval \eqn{[-\delta, \delta]}.
   Similarly in the Bayesian context, an equally strong argument for
   equivalence is obtained if \code{p.equiv} exceeds \eqn{1 - 2\alpha}.
-  
+
   A closely related quantity is the ROPE (region of practical equivalence),
   obtainable via \code{bayestestR::rope(object, range = c(-delta, delta))}.
   Its value is approximately \code{100 * p.equiv / 0.95} if the default
-  \code{ci = 0.95} is used. See also \pkg{bayestestR}'s 
+  \code{ci = 0.95} is used. See also \pkg{bayestestR}'s
   \href{https://github.com/easystats/bayestestR/issues/567}{issue #567}.
-  
-  Finally, a Bayes factor for equivalence is obtainable by dividing 
+
+  Finally, a Bayes factor for equivalence is obtainable by dividing
   \code{odds.eq} by the prior odds of equivalence, assessed or elicited separately.
 }
 
 \examples{
-if(require("coda")) 
+if (require("coda"))
     emm_example("hpd.summary-coda")
     # Use emm_example("hpd.summary-coda", list = TRUE) # to see just the code
 

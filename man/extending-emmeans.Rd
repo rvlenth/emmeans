@@ -83,8 +83,8 @@ and the default value \code{"pi"} (the only numeric constant in base R)
 is provided in case the model involves it. An example involving splines
 may be found at \url{https://github.com/rvlenth/emmeans/issues/180}.}
 
-\item{frame}{Optional \code{data.frame}. Many model objects contain the 
-model frame used when fitting the model. In cases where there are no 
+\item{frame}{Optional \code{data.frame}. Many model objects contain the
+model frame used when fitting the model. In cases where there are no
 predictor transformations, this model frame has all the original predictor
 values and so is usable for recovering the data. Thus, if \code{frame} is
 non-missing and \code{data} is \code{NULL}, a check is made on \code{trms}
@@ -95,20 +95,20 @@ altered or removed.}
 
 \item{pwts}{Optional vector of prior weights. Typically, this may be obtained
 from the fitted \code{model} via \code{weights(model)}. If this is provided,
-it is used to set weights as long as it is non-\code{NULL} and the same length 
+it is used to set weights as long as it is non-\code{NULL} and the same length
 as the number of rows of the data.}
 
 \item{addl.vars}{Character value or vector specifying additional predictors
 to include in the reference grid. These must be names of variables that
-exist, or you will get an error. 
+exist, or you will get an error.
 This may be useful if you need to do
-additional computations later on that depend on these variables; e.g., 
+additional computations later on that depend on these variables; e.g.,
 bias adjustments for random slopes of variables not among the fixed predictors.}
 
-\item{xlev}{Named list of factor levels (\emph{excluding} ones coerced to 
+\item{xlev}{Named list of factor levels (\emph{excluding} ones coerced to
 factors in the model formula)}
 
-\item{grid}{A \code{data.frame} (provided by \code{ref_grid}) containing 
+\item{grid}{A \code{data.frame} (provided by \code{ref_grid}) containing
 the predictor settings needed in the reference grid}
 
 \item{classes}{Character names of one or more classes to be registered.
@@ -126,8 +126,8 @@ method for each class is registered instead.}
 
 \item{misc}{A \code{list} intended for the \code{@misc} slot of an \code{emmGrid} object}
 
-\item{k, dfargs}{Arguments to \code{.aovlist.dffun}, which is made available as a 
-convenience to developers providing support similar to that provided for 
+\item{k, dfargs}{Arguments to \code{.aovlist.dffun}, which is made available as a
+convenience to developers providing support similar to that provided for
 \code{aovlist} objects}
 
 \item{X, weights, assign}{Arguments for \code{.cmpMM}, which compacts a model
@@ -148,16 +148,17 @@ or specifying which levels to use.}
 \item{terms}{A \code{terms} component}
 
 \item{vcov.}{Function or matrix that returns a suitable covariance matrix.
-The default is \code{.statsvcov} which is \code{stats::vcov}. The \code{.my.vcov} 
-function should be called in place of \code{\link{vcov}}, and it supports the user 
+The default is \code{.statsvcov} which is \code{stats::vcov}. The \code{.my.vcov}
+function should be called in place of \code{\link{vcov}}, and it supports the user
 being able to specify a different matrix or function via the
 optional \code{vcov.} argument.}
 
-\item{expr, retain}{Arguments for \code{.all.vars}, which is an alternative to \code{\link{all.vars}}
-that has special provisions for retaining the special characters in \code{retain},
-thus allowing model specifications like \code{y ~ data$trt * df[["dose"]]}}
+\item{expr, retain}{Arguments for \code{.all.vars}, which is an alternative to
+\code{\link{all.vars}} that has special provisions for retaining the special characters
+in \code{retain}, thus allowing model specifications like 
+\code{y ~ data$trt * df[["dose"]]}}
 
-\item{x, nrow, ncol}{Arguments for \code{.diag}, which is an alternative to 
+\item{x, nrow, ncol}{Arguments for \code{.diag}, which is an alternative to
 \code{\link{diag}} that lacks its idiosyncrasy of returning an
 identity matrix when \code{x} is of length 1.}
 
@@ -166,8 +167,8 @@ a clean and simple alternative to such as \code{html_document} for use
 as the output style of a Markdown file. All the vignettes in the
 \pkg{emmeans} package use this output style.}
 
-\item{cmu, zmu}{In \code{.hurdle.support} and \code{.zi.support}, 
-these specify a vector of back-transformed 
+\item{cmu, zmu}{In \code{.hurdle.support} and \code{.zi.support},
+these specify a vector of back-transformed
 estimates for the count and zero model, respectively}
 
 \item{cshape, zshape}{Shape parameter for the count and zero model, respectively}
@@ -182,7 +183,7 @@ count model. Typically, this just returns \code{mu}}
 The \code{recover_data} method must return a \code{\link{data.frame}}
   containing all the variables that appear as predictors in the model,
   and attributes \code{"call"}, \code{"terms"}, \code{"predictors"},
-  and \code{"responses"}. (\code{recover_data.call} will 
+  and \code{"responses"}. (\code{recover_data.call} will
   provide these attributes.)
 
 The \code{emm_basis} method should return a \code{list} with the
@@ -208,7 +209,7 @@ The \code{emm_basis} method should return a \code{list} with the
 \code{combine.terms} returns a \code{terms} object resulting
   from combining all the terms or formulas in \code{...}.
 
-\code{.get.offset} returns the values, based on \code{grid}, of 
+\code{.get.offset} returns the values, based on \code{grid}, of
 any \code{offset} component in \code{terms}
 
 \code{.hurdle.support} returns a matrix with 3 rows containing the
@@ -220,7 +221,7 @@ any \code{offset} component in \code{terms}
       See the section on hurdle and zero-inflated models.
 }
 \description{
-This documents some functions and methods that may be useful to package 
+This documents some functions and methods that may be useful to package
 developers wishing to add support for \pkg{emmeans} for their model objects.A user
 or package developer may add \pkg{emmeans} support for a model
 class by writing \code{recover_data} and \code{emm_basis} methods
@@ -282,7 +283,7 @@ support for its object classes.
 
 If the \code{recover_data} method generates information needed by \code{emm_basis},
 that information may be incorporated by creating a \code{"misc"} attribute in the
-returned recovered data. That information is then passed as the \code{misc} 
+returned recovered data. That information is then passed as the \code{misc}
 argument when \code{ref_grid} calls \code{emm_basis}.
 }
 
@@ -310,7 +311,7 @@ should return a suitably modified \code{emmGrid} object.
 
 \section{Registering S3 methods for a model class}{
 
-The \code{.emm_register} function is provided as a convenience to conditionally 
+The \code{.emm_register} function is provided as a convenience to conditionally
 register your
 S3 methods for a model class, \code{recover_data.foo} and \code{emm_basis.foo},
 where \code{foo} is the class name. Your package should implement an
@@ -327,16 +328,16 @@ installed. See the example.
   differentials for the count and zero models, which needed for delta-method
   calculations. To use these, regard the \code{@linfct} slot as comprising
   two sets of columns, for the count and zero models respectively. To do
-  the delta method calculations, multiply the rows of the count part by its 
+  the delta method calculations, multiply the rows of the count part by its
   differentials times \code{link$mu.eta} evcaluated at that part of the linear predictor.
   Do the same for the zero part, using its differentials and \code{mu.eta}.
   If the resulting matrix is \bold{A}, then the covariance of the mean response
   is \bold{AVA'} where \bold{V}is the \code{@V} slot of the object.
-  
+
   The function \code{zi.support} works the same way, only it is much simpler,
-  and is used to estimate the probability of 0 and its differential for either 
+  and is used to estimate the probability of 0 and its differential for either
   part of a zero-inflated model or hurdle model.
-  
+
   See the code for \code{emm_basis.zeroinfl} and \code{emm_basis.hurdle}
   for how these are used with models fitted by the \pkg{pscl} package.
 }

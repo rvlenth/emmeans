@@ -30,7 +30,7 @@
 # will return comparable results to predict(..., type = mode)
 # with mode = "prob0", same results as predict(..., type = "prob")[, 1]
 #
-# lin.pred only affects results for mode %in% c("count", "zero"). 
+# lin.pred only affects results for mode %in% c("count", "zero").
 # When lin.pred = TRUE, we get the actual linear predictor and link function
 # for that part of the model.
 
@@ -54,9 +54,9 @@ recover_data.zeroinfl = function(object, mode = c("response", "count", "zero", "
 }
 
 
-#' @exportS3Method emm_basis zeroinfl     
-emm_basis.zeroinfl = function(object, trms, xlev, grid, 
-        mode = c("response", "count", "zero", "prob0"), lin.pred = FALSE, ...) 
+#' @exportS3Method emm_basis zeroinfl
+emm_basis.zeroinfl = function(object, trms, xlev, grid,
+        mode = c("response", "count", "zero", "prob0"), lin.pred = FALSE, ...)
 {
     mode = match.arg(mode)
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
@@ -88,7 +88,7 @@ emm_basis.zeroinfl = function(object, trms, xlev, grid,
         b1 = coef(object, model = "count")
         lp1 = as.numeric(X1 %*% b1 + off1)
         mu1 = exp(lp1)
-        
+
         trms2 = delete.response(terms(object, model = "zero"))
         off2 = .get.offset(trms2, grid)
         contr2 = object$contrasts[["zero"]]
@@ -97,9 +97,9 @@ emm_basis.zeroinfl = function(object, trms, xlev, grid,
         lp2 = as.numeric(X2 %*% b2) + off2
         mu2 = object$linkinv(lp2)
         mu2prime = stats::make.link(object$link)$mu.eta(lp2)
-        
-        if(mode == "response") {
-            delta = cbind(sweep(X1, 1, mu1 * (1 - mu2), "*"), 
+
+        if (mode == "response") {
+            delta = cbind(sweep(X1, 1, mu1 * (1 - mu2), "*"),
                           sweep(X2, 1, -mu1 * mu2prime, "*"))
             bhat = (1 - mu2) * mu1
         }
@@ -117,7 +117,7 @@ emm_basis.zeroinfl = function(object, trms, xlev, grid,
     nbasis = estimability::all.estble
     dffun = function(k, dfargs) Inf
     dfargs = list()
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
@@ -141,10 +141,10 @@ recover_data.hurdle = function(object, mode = c("response", "count", "zero", "pr
 }
 
 # see expl notes afterward for notations in some of this
-#' @exportS3Method emm_basis hurdle       
-emm_basis.hurdle = function(object, trms, xlev, grid, 
-                            mode = c("response", "count", "zero", "prob0"), 
-                            lin.pred = FALSE, ...) 
+#' @exportS3Method emm_basis hurdle
+emm_basis.hurdle = function(object, trms, xlev, grid,
+                            mode = c("response", "count", "zero", "prob0"),
+                            lin.pred = FALSE, ...)
 {
     mode = match.arg(mode)
     m = model.frame(trms, grid, na.action = na.pass, xlev = xlev)
@@ -162,8 +162,8 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
             lnk = make.link(misc$tran)
             bhat = lnk$linkinv(lp)
             mult = lnk$mu.eta(lp)
-            if(mode == "prob0") {
-                shape = 
+            if (mode == "prob0") {
+                shape =
                 tmp = .zi.support(bhat, object$theta["zero"], .make.p0(object$dist$zero))
                 bhat = tmp[1, ]
                 mult = mult * tmp[2, ]
@@ -189,15 +189,15 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
         X2 = model.matrix(trms2, m, contrasts.arg = contr2)
         b2 = coef(object, model = "zero")
         lp2 = as.numeric(X2 %*% b2 + off2)
-        mu2 = switch(object$dist$zero, 
+        mu2 = switch(object$dist$zero,
                      binomial = object$linkinv(lp2),
                      exp(lp2)  )
         theta2 = object$theta["zero"]
-        mu2prime = switch(object$dist$zero, 
+        mu2prime = switch(object$dist$zero,
                           binomial = stats::make.link("logit")$mu.eta(lp2),
                           exp(lp2) )
         if (mode == "response") {
-            tmp = .hurdle.support(mu1, theta1, .make.p0(object$dist$count), \(mu, shape) mu, 
+            tmp = .hurdle.support(mu1, theta1, .make.p0(object$dist$count), \(mu, shape) mu,
                                   mu2, theta2, .make.p0(object$dist$zero))
             bhat = tmp[1, ]
             delta = cbind(sweep(X1, 1, tmp[2, ] * mu1prime, "*"),
@@ -216,13 +216,13 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
         }
         V = delta %*% tcrossprod(.pscl.vcov(object, model = "full", ...), delta)
         X = .diag(1, length(bhat))
-        
+
         misc = list(estName = mode, offset.mult = 0)
     }
     nbasis = estimability::all.estble
     dffun = function(k, dfargs) dfargs$df
     dfargs = list(df = object$df.residual)
-    list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    list(X = X, bhat = bhat, nbasis = nbasis, V = V,
          dffun = dffun, dfargs = dfargs, misc = misc)
 }
 
@@ -230,10 +230,10 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 #' @rdname extending-emmeans
 #' @order 93
 #'
-#' @param cmu,zmu In \code{.hurdle.support} and \code{.zi.support}, 
-#'   these specify a vector of back-transformed 
+#' @param cmu,zmu In \code{.hurdle.support} and \code{.zi.support},
+#'   these specify a vector of back-transformed
 #'   estimates for the count and zero model, respectively
-#' @param cshape,zshape Shape parameter for the count and zero model, respectively 
+#' @param cshape,zshape Shape parameter for the count and zero model, respectively
 #' @param cp0,zp0 Function of \code{(mu, shape)} for computing Prob(Y = 0)
 #'        for the count and zero model, respectively
 #' @param cmean Function of \code{(mu, shape)} for computing the mean of the
@@ -241,13 +241,13 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 #'
 #' @return \code{.hurdle.support} returns a matrix with 3 rows containing the
 #'       estimated mean responses and the differentials wrt \code{cmu} and \code{zmu},
-#'       resp. 
+#'       resp.
 #' @export
-.hurdle.support = function(cmu, cshape, cp0, cmean, 
+.hurdle.support = function(cmu, cshape, cp0, cmean,
                            zmu, zshape, zp0) {
     if (is.null(cshape) || is.na(cshape)) cshape = 1
     if (is.null(zshape) || is.na(zshape)) zshape = 1
-    mfcn = function(x) (1 - zp0(x[2], zshape)) * cmean(x[1], cshape) / 
+    mfcn = function(x) (1 - zp0(x[2], zshape)) * cmean(x[1], cshape) /
         (1 - cp0(x[1], cshape))
     result = sapply(seq_along(cmu), function(i) {
         x = c(cmu[i], zmu[i])
@@ -271,16 +271,16 @@ emm_basis.hurdle = function(object, trms, xlev, grid,
 #'   differentials for the count and zero models, which needed for delta-method
 #'   calculations. To use these, regard the \code{@linfct} slot as comprising
 #'   two sets of columns, for the count and zero models respectively. To do
-#'   the delta method calculations, multiply the rows of the count part by its 
+#'   the delta method calculations, multiply the rows of the count part by its
 #'   differentials times \code{link$mu.eta} evcaluated at that part of the linear predictor.
 #'   Do the same for the zero part, using its differentials and \code{mu.eta}.
 #'   If the resulting matrix is \bold{A}, then the covariance of the mean response
 #'   is \bold{AVA'} where \bold{V}is the \code{@V} slot of the object.
-#'   
+#'
 #'   The function \code{zi.support} works the same way, only it is much simpler,
-#'   and is used to estimate the probability of 0 and its differential for either 
+#'   and is used to estimate the probability of 0 and its differential for either
 #'   part of a zero-inflated model or hurdle model.
-#'   
+#'
 #'   See the code for \code{emm_basis.zeroinfl} and \code{emm_basis.hurdle}
 #'   for how these are used with models fitted by the \pkg{pscl} package.
 #' @export

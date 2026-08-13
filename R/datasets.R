@@ -23,19 +23,19 @@
 
 ### auto.noise ###
 #' Auto Pollution Filter Noise
-#' 
+#'
 #' Three-factor experiment comparing pollution-filter noise for two filters,
 #' three sizes of cars, and two sides of the car.
-#' 
+#'
 #' The data are from a statement by Texaco, Inc., to the Air and Water Pollution
-#' Subcommittee of the Senate Public Works Committee on June 26, 1973.    
+#' Subcommittee of the Senate Public Works Committee on June 26, 1973.
 #' Mr. John McKinley, President of Texaco, cited an automobile filter developed
-#' by Associated Octel Company as effective in reducing pollution. However, 
-#' questions had been raised about the effects of filters on vehicle performance, 
-#' fuel consumption, exhaust gas back pressure, and silencing. On the last 
+#' by Associated Octel Company as effective in reducing pollution. However,
+#' questions had been raised about the effects of filters on vehicle performance,
+#' fuel consumption, exhaust gas back pressure, and silencing. On the last
 #' question, he referred to the data included here as evidence that the silencing
 #' properties of the Octel filter were at least equal to those of standard silencers.
-#'  
+#'
 #' @format A data frame with 36 observations on the following 4 variables.
 #'   \describe{
 #'   \item{\code{noise}}{Noise level in decibels (but see note) - a numeric vector.}
@@ -53,20 +53,20 @@
 #'   of the experiment.
 #' @note While the data source claims that \code{noise} is measured in decibels,
 #'   the values are implausible. I believe that these measurements are actually
-#'   in tenths of dB (centibels?). Looking at the values in the dataset, note 
+#'   in tenths of dB (centibels?). Looking at the values in the dataset, note
 #'   that every measurement ends in 0 or 5, and it is reasonable to believe that
 #'   measurements are accurate to the nearest half of a decibel.
 #'   %%% Thanks to an email communication from a speech/hearing scientist
 #' @examples
 #' # (Based on belief that noise/10 is in decibel units)
 #' noise.lm <- lm(noise/10 ~ size * type * side, data = auto.noise)
-#' 
+#'
 #' # Interaction plot of predictions
 #' emmip(noise.lm, type ~ size | side)
-#' 
+#'
 #' # Confidence intervals
 #' plot(emmeans(noise.lm, ~ size | side*type))
-#' 
+#'
 "auto.noise"
 
 # This is where it used to be...
@@ -75,20 +75,20 @@
 
 ### feedlot ###
 #' Feedlot data
-#' 
+#'
 #' This is an unbalanced analysis-of-covariance example, where one covariate is
 #' affected by a factor. Feeder calves from various herds enter a feedlot, where
 #' they are fed one of three diets. The weight of the animal at entry is the
 #' covariate, and the weight at slaughter is the response.
-#' 
+#'
 #' The data arise from a Western Regional Research Project conducted at New
 #' Mexico State University. Calves born in 1975 in commercial herds entered a
 #' feedlot as yearlings. Both diets and herds are of interest as factors. The
 #' covariate, \code{ewt}, is thought to be dependent on \code{herd} due to
 #' different genetic backgrounds, breeding history, etc. The levels of
 #' \code{herd} ordered to similarity of genetic background.
-#' 
-#' Note: There are some empty cells in the cross-classification of 
+#'
+#' Note: There are some empty cells in the cross-classification of
 #' \code{herd} and \code{diet}.
 #' @format A data frame with 67 observations and 4 variables:
 #' \describe{
@@ -104,11 +104,11 @@
 #'   the covariate. \emph{Biometrics} 38, 651-660.
 #' @examples
 #' feedlot.lm <- lm(swt ~ ewt + herd*diet, data = feedlot)
-#' 
-#' # Obtain EMMs with a separate reference value of ewt for each 
+#'
+#' # Obtain EMMs with a separate reference value of ewt for each
 #' # herd. This reproduces the last part of Table 2 in the reference
 #' emmeans(feedlot.lm,  ~ diet | herd,  cov.reduce = ewt ~ herd)
-#' 
+#'
 "feedlot"
 
 
@@ -116,17 +116,17 @@
 
 ### fiber ###
 #' Fiber data
-#' 
+#'
 #' Fiber data from Montgomery Design (8th ed.), p.656 (Table 15.10). Useful as a
 #' simple analysis-of-covariance example.
-#' 
+#'
 #' The goal of the experiment is to compare the mean breaking strength of fibers
 #' produced by the three machines. When testing this, the technician also
 #' measured the diameter of each fiber, and this measurement may be used as a
 #' concomitant variable to improve precision of the estimates.
 #' @format A data frame with 15 observations and 3 variables:
 #' \describe{
-#'   \item{\code{machine}}{a factor with levels \code{A} \code{B} \code{C}. 
+#'   \item{\code{machine}}{a factor with levels \code{A} \code{B} \code{C}.
 #'     This is the primary factor of interest.}
 #'   \item{\code{strength}}{a numeric vector. The response variable.}
 #'   \item{\code{diameter}}{a numeric vector. A covariate.}
@@ -136,10 +136,10 @@
 #' @examples
 #' fiber.lm <- lm(strength ~ diameter + machine, data=fiber)
 #' ref_grid(fiber.lm)
-#' 
+#'
 #' # Covariate-adjusted means and comparisons
 #' emmeans(fiber.lm, pairwise ~ machine)
-#' 
+#'
 "fiber"
 
 
@@ -147,10 +147,10 @@
 
 ### MOats ###
 #' Oats data in multivariate form
-#' 
+#'
 #' This is the \code{Oats} dataset provided in the \pkg{nlme} package, but it is
 #' rearranged as one multivariate observation per plot.
-#' 
+#'
 #' These data arise from a split-plot experiment reported by Yates (1935) and
 #' used as an example in Pinheiro and Bates (2000) and other texts. Six blocks
 #' were divided into three whole plots, randomly assigned to the three varieties
@@ -169,7 +169,7 @@
 #' @references
 #' Pinheiro, J. C. and Bates D. M. (2000) \emph{Mixed-Effects Models in S and
 #' S-PLUS}, Springer, New York. (Appendix A.15)
-#' 
+#'
 #' Yates, F. (1935) Complex experiments, \emph{Journal of the Royal Statistical
 #' Society} Suppl. 2, 181-247
 #' @examples
@@ -182,13 +182,13 @@
 
 ### neuralgia ###
 #' Neuralgia data
-#' 
+#'
 #' These data arise from a study of analgesic effects of treatments of elderly
-#' patients who have neuralgia. Two treatments and a placebo are compared. The 
+#' patients who have neuralgia. Two treatments and a placebo are compared. The
 #' response variable is whether the patient reported pain or not. Researchers
 #' recorded the age and gender of 60 patients along with the duration of
 #' complaint before the treatment began.
-#' 
+#'
 #' @format A data frame with 60 observations and 5 variables:
 #' \describe{
 #'   \item{\code{Treatment}}{Factor with 3 levels \code{A}, \code{B}, and \code{P}.
@@ -199,26 +199,26 @@
 #'     beginning treatment}
 #'   \item{\code{Pain}}{Binary response factor with levels \code{No} and \code{Yes}}
 #' }
-#' @source Cai, Weijie (2014) \emph{Making Comparisons Fair: How LS-Means Unify 
+#' @source Cai, Weijie (2014) \emph{Making Comparisons Fair: How LS-Means Unify
 #'   the Analysis of Linear Models}, SAS Institute, Inc. Technical paper 142-2014,
-#'   page 12, 
+#'   page 12,
 #'   \url{http://support.sas.com/resources/papers/proceedings14/SAS060-2014.pdf}
 #' @examples
 #' # Model and analysis shown in the SAS report:
 #' neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(),
-#'    data = neuralgia) 
-#' pairs(emmeans(neuralgia.glm, ~ Treatment, at = list(Sex = "F")), 
+#'    data = neuralgia)
+#' pairs(emmeans(neuralgia.glm, ~ Treatment, at = list(Sex = "F")),
 #'     reverse = TRUE, type = "response", adjust = "bonferroni")
-#' 
+#'
 "neuralgia"
 
 ### nutrition ###
 #' Nutrition data
-#' 
-#' This observational dataset involves three factors, but where several factor 
+#'
+#' This observational dataset involves three factors, but where several factor
 #' combinations are missing. It is used as a case study in Milliken and Johnson,
 #' Chapter 17, p.202. (You may also find it in the second edition, p.278.)
-#' 
+#'
 #' A survey was conducted by home economists ``to study how much
 #' lower-socioeconomic-level mothers knew about nutrition and to judge the
 #' effect of a training program designed to increase their knowledge of
@@ -235,16 +235,16 @@
 #'     (posttest minus pretest) on knowledge of nutrition.}
 #' }
 #' @source Milliken, G. A. and Johnson, D. E. (1984)
-#' \emph{Analysis of Messy Data -- Volume I: Designed Experiments}. 
+#' \emph{Analysis of Messy Data -- Volume I: Designed Experiments}.
 #' Van Nostrand, ISBN 0-534-02713-7.
 #' @examples
 #' nutr.aov <- aov(gain ~ (group + age + race)^2, data = nutrition)
-#' 
+#'
 #' # Summarize predictions for age group 3
 #' nutr.emm <- emmeans(nutr.aov, ~ race * group, at = list(age="3"))
-#'                    
+#'
 #' emmip(nutr.emm, race ~ group)
-#' 
+#'
 #' # Hispanics seem exceptional; but this doesn't test out due to very sparse data
 #' pairs(nutr.emm, by = "group")
 #' pairs(nutr.emm, by = "race")
@@ -255,7 +255,7 @@
 
 ### oranges ###
 #' Sales of oranges
-#' 
+#'
 #' This example dataset on sales of oranges has two factors, two covariates, and
 #' two responses. There is one observation per factor combination.
 #' @format A data frame with 36 observations and 6 variables:
@@ -270,7 +270,7 @@
 #'   \item{\code{sales1}}{a numeric vector. Sales (per customer) of variety 1.}
 #'   \item{\code{sales2}}{a numeric vector. Sales (per customer) of variety 2.}
 #' }
-#' @source This is (or once was) available as a SAS sample dataset. 
+#' @source This is (or once was) available as a SAS sample dataset.
 #' @references
 #' Littell, R., Stroup W., Freund, R. (2002) \emph{SAS For Linear Models} (4th
 #' edition). SAS Institute. ISBN 1-59047-023-0.
@@ -278,12 +278,12 @@
 #' # Example on p.244 of Littell et al.
 #' oranges.lm <- lm(sales1 ~ price1*day, data = oranges)
 #' emmeans(oranges.lm, "day")
-#' 
+#'
 #' # Example on p.246 of Littell et al.
 #' emmeans(oranges.lm, "day", at = list(price1 = 0))
-#' 
+#'
 #' # A more sensible model to consider, IMHO (see vignette("interactions"))
-#' org.mlm <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, 
+#' org.mlm <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store,
 #'               data = oranges)
 "oranges"
 
@@ -292,12 +292,12 @@
 
 ### pigs ###
 #' Effects of dietary protein on free plasma leucine concentration in pigs
-#' 
+#'
 #' A two-factor experiment with some observations lost
-#' 
+#'
 #' @format A data frame with 29 observations and 3 variables:
 #' \describe{
-#'   \item{source}{Source of protein in the diet (factor with 3 levels: 
+#'   \item{source}{Source of protein in the diet (factor with 3 levels:
 #'     fish meal, soybean meal, dried skim milk)}
 #'   \item{percent}{Protein percentage in the diet (numeric with 4 values:
 #'     9, 12, 15, and 18)}
@@ -315,14 +315,14 @@
 
 ### ubds ###
 #' Unbalanced dataset
-#' 
+#'
 #' This is a simulated unbalanced dataset with three factors
 #' and two numeric variables. There are true relationships among these variables.
 #' This dataset can be useful in testing or illustrating messy-data situations.
-#' There are no missing data, and there is at least one observation for every 
+#' There are no missing data, and there is at least one observation for every
 #' factor combination; however, the \code{"cells"} attribute makes it simple
 #' to construct subsets that have empty cells.
-#' 
+#'
 #' @format A data frame with 100 observations, 5 variables,
 #'   and a special \code{"cells"} attribute:
 #' \describe{
@@ -333,14 +333,14 @@
 #'   \item{y}{A numeric variable}
 #' }
 #' In addition, \code{attr(ubds, "cells")} consists of a named list of length 27 with the row numbers for
-#' each combination of \code{A, B, C}. For example, 
+#' each combination of \code{A, B, C}. For example,
 #' \code{attr(ubds, "cells")[["213"]]} has the row numbers corresponding
 #' to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
 #' length, so the first entry is the cell with the lowest frequency.
 #' @examples
 #'  # Omit the three lowest-frequency cells
-#'  low3 <- unlist(attr(ubds, "cells")[1:3]) 
+#'  low3 <- unlist(attr(ubds, "cells")[1:3])
 #'  messy.lm <- lm(y ~ (x + A + B + C)^3, data = ubds, subset = -low3)
-#'   
+#'
 
 "ubds"

@@ -23,11 +23,11 @@
 # Modified from xtableLSMeans function provided by David Scott
 
 #' Using \code{xtable} for EMMs
-#' 
-#' These methods provide support for the \pkg{xtable} package, enabling 
+#'
+#' These methods provide support for the \pkg{xtable} package, enabling
 #' polished presentations of tabular output from \code{\link{emmeans}}
 #' and other functions.
-#' 
+#'
 #' The methods actually use \code{\link[xtable]{xtableList}},
 #' because of its ability to display messages such as those for P-value
 #' adjustments. These methods return an object of class \code{"xtable_emm"} --
@@ -48,24 +48,24 @@
 #'
 #' @return The \code{xtable} methods return an \code{xtable_emm}
 #' object, for which its print method is \code{print.xtable_emm} .
-#' 
+#'
 #' @method xtable emmGrid
 #' @examples
-#' if(requireNamespace("xtable"))
+#' if (requireNamespace("xtable"))
 #'     emm_example("xtable")
 #'     # Use emm_example("xtable", list = TRUE) # to just list the code
-xtable.emmGrid = function(x, caption = NULL, label = NULL, align = NULL, digits = 4, 
-    display = NULL, auto = FALSE, ...) 
+xtable.emmGrid = function(x, caption = NULL, label = NULL, align = NULL, digits = 4,
+    display = NULL, auto = FALSE, ...)
 {
-    xtable.summary_emm(summary(x, ...), caption = caption, label = label, align = align, digits = digits, 
+    xtable.summary_emm(summary(x, ...), caption = caption, label = label, align = align, digits = digits,
            display = display, auto = auto)
 }
 
 #' @rdname xtable.emmGrid
 #' @method xtable summary_emm
-xtable.summary_emm = function (x, caption = NULL, label = NULL, 
-          align = NULL, digits = 4, 
-          display = NULL, auto = FALSE, ...) 
+xtable.summary_emm = function (x, caption = NULL, label = NULL,
+          align = NULL, digits = 4,
+          display = NULL, auto = FALSE, ...)
 {
     if (!is.null(x$df)) x$df = round(x$df, 2)
     if (!is.null(x$t.ratio)) x$t.ratio = round(x$t.ratio, 3)
@@ -89,11 +89,11 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
         xList = list(data.frame(x))
     }
     attr(xList, "message") = attr(x, "mesg")
-    result = xtable::xtableList(xList, caption = caption, label = label, 
-       align = align, digits = digits, display = display, 
+    result = xtable::xtableList(xList, caption = caption, label = label,
+       align = align, digits = digits, display = display,
        auto = auto, ...)
     digits = xtable::digits(result[[1]])
-    
+
     # format df and t ratios
     digits = xtable::digits(result[[1]])
     i = which(names(x) == "df")
@@ -105,7 +105,7 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
     if (length(i) > 0) digits[i + 1 - length(byv)] = 3
     for (i in seq_along(result))
         xtable::digits(result[[i]]) = digits
-    
+
     class(result) = c("xtable_emm", "xtableList")
     result
 }
@@ -116,7 +116,7 @@ xtable.summary_emm = function (x, caption = NULL, label = NULL,
 #' @param sanitize.message.function Passed to \code{print.xtable}
 #' @method print xtable_emm
 print.xtable_emm = function(x, type = getOption("xtable.type", "latex"),
-                            include.rownames = FALSE, 
+                            include.rownames = FALSE,
                             sanitize.message.function = footnotesize,
                             ...)
 {
@@ -124,6 +124,6 @@ print.xtable_emm = function(x, type = getOption("xtable.type", "latex"),
         html = function(x) paste0("<font size = -1>", x, "</font>"),
         latex = function(x) paste0("{\\footnotesize ", x, "}"),
         function(x) x )
-    invisible(xtable::print.xtableList(x, type = type, include.rownames = include.rownames, 
+    invisible(xtable::print.xtableList(x, type = type, include.rownames = include.rownames,
         sanitize.message.function = sanitize.message.function, ...))
 }

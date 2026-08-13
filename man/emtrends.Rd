@@ -14,7 +14,7 @@ emtrends(object, specs, var, delta.var = 0.001 * rng, max.degree = 1, ...)
 \code{emmeans} is not run and the reference grid for specified trends
 is returned.}
 
-\item{var}{Character value giving the name of a variable with respect to 
+\item{var}{Character value giving the name of a variable with respect to
 which a difference quotient of the linear predictors is computed. In order
 for this to be useful, \code{var} should be a numeric predictor that
 interacts with at least one factor in \code{specs}. Then instead of
@@ -32,12 +32,12 @@ dataset.}
 \item{max.degree}{Integer value. The maximum degree of trends to compute (this
   is capped at 5). If greater than 1, an additional factor \code{degree} is
   added to the grid, with corresponding levels for orders
-  \code{1, 2, ..., max.degree}. The estimates at \eqn{\mathtt{var} = x_0} are 
+  \code{1, 2, ..., max.degree}. The estimates at \eqn{\mathtt{var} = x_0} are
 equal to the coefficients of \eqn{(x – x_0)^{degree}} based on interpolating over
 the \eqn{degree + 1} fitted values centered at \eqn{x_0} and spaced \eqn{h} apart.
 These are also known as Newton divided differences.}
 
-\item{...}{Additional arguments passed to \code{\link{ref_grid}} or 
+\item{...}{Additional arguments passed to \code{\link{ref_grid}} or
 \code{\link{emmeans}} as appropriate. See Details.}
 }
 \value{
@@ -54,7 +54,7 @@ reference grid of these predicted trends, and then possibly average them over
 some of the predictors in the grid.
 }
 \details{
-The function works by constructing reference grids for \code{object} with 
+The function works by constructing reference grids for \code{object} with
 various values of \code{var}, and then calculating difference quotients of predictions
 from those reference grids. Finally, \code{\link{emmeans}} is called with
 the given \code{specs}, thus computing marginal averages as needed of
@@ -80,10 +80,10 @@ here is assumed to fit a smooth function of \code{var}, and the estimated
 trends reflect \emph{local} behavior at particular value(s) of \code{var};
 whereas when \code{var} is modeled as a factor and polynomial contrasts are
 computed, those contrasts represent the \emph{global} pattern of changes over
-\emph{all} levels of \code{var}. 
+\emph{all} levels of \code{var}.
 
 See the \code{pigs.poly} and \code{pigs.fact} examples below for an
-illustration. The linear and quadratic trends depend on the value of 
+illustration. The linear and quadratic trends depend on the value of
 \code{percent}, but the cubic trend is constant (because that is true of
 a cubic polynomial, which is the underlying model). The cubic contrast
 in the factorial model has the same P value as for the cubic trend,
@@ -108,14 +108,14 @@ fiber.lm <- lm(strength ~ diameter*machine, data=fiber)
 pairs(fiber.emt)
 
 # Suppose we want trends relative to sqrt(diameter)...
-emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)", 
+emtrends(fiber.lm, ~ machine | diameter, var = "sqrt(diameter)",
          at = list(diameter = c(20, 30)))
 
 # Obtaining a reference grid
 mtcars.lm <- lm(mpg ~ poly(disp, degree = 2) * (factor(cyl) + factor(am)), data = mtcars)
 
 # Center trends at mean disp for each no. of cylinders
-mtcTrends.rg <- emtrends(mtcars.lm, var = "disp", 
+mtcTrends.rg <- emtrends(mtcars.lm, var = "disp",
                           cov.reduce = disp ~ factor(cyl))
 summary(mtcTrends.rg)  # estimated trends at grid nodes
 emmeans(mtcTrends.rg, "am", weights = "prop")
@@ -127,7 +127,7 @@ pigs.poly <- lm(conc ~ poly(percent, degree = 3), data = pigs)
 emt <- emtrends(pigs.poly, ~ degree | percent, "percent", max.degree = 3,
                 at = list(percent = c(9, 13.5, 18)))
        # note: 'degree' is an extra factor created by 'emtrends'
-       
+
 summary(emt, infer = c(TRUE, TRUE))
 
 # Compare above results with poly contrasts when 'percent' is modeled as a factor ...

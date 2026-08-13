@@ -43,7 +43,7 @@ The \code{xtable} methods return an \code{xtable_emm}
 object, for which its print method is \code{print.xtable_emm} .
 }
 \description{
-These methods provide support for the \pkg{xtable} package, enabling 
+These methods provide support for the \pkg{xtable} package, enabling
 polished presentations of tabular output from \code{\link{emmeans}}
 and other functions.
 }
@@ -58,7 +58,7 @@ uses \code{\link[xtable:xtableList]{print.xtableList}}, and any \code{\dots} arg
 passed there.
 }
 \examples{
-if(requireNamespace("xtable"))
+if (requireNamespace("xtable"))
     emm_example("xtable")
     # Use emm_example("xtable", list = TRUE) # to just list the code
 }

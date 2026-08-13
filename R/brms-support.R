@@ -1,4 +1,4 @@
-### Rudimentary support for brms. 
+### Rudimentary support for brms.
 ### Obviously this is way less than is needed, but it does support simpler models
 
 #xxxx' @importFrom brms parse_bf
@@ -26,7 +26,7 @@ emm_basis.brmsfit = function(object, trms, xlev, grid, vcov., ...) {
     misc = .std.link.labels(brms::parse_bf(formula(object))$dpars$mu$family, list())
     post.beta = as.matrix(object, pars = paste0("b_", nm), exact = TRUE)
     bhat = apply(post.beta, 2, mean)
-    
-    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs, 
+
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V, dffun=dffun, dfargs=dfargs,
          misc=misc, post.beta=post.beta)
 }

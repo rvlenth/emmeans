@@ -45,7 +45,7 @@ used unless overridden. Use \code{by = NULL} to use no by groups at all.}
 
 \item{offset, scale}{Numeric vectors of the same length as each \code{by} group.
 The \code{scale} values, if supplied, multiply their respective linear estimates, and
-any \code{offset} values are added. Scalar values are also allowed. 
+any \code{offset} values are added. Scalar values are also allowed.
 (These arguments are ignored when \code{interaction} is specified.)}
 
 \item{name}{Character name to use to override the default label for contrasts
@@ -74,27 +74,27 @@ and summarized with \code{type = "response"}, \code{contrast} results are
 back-transformed to ratios whenever we have true contrasts (coefficients
 sum to zero). For other transformations, there is no natural way to
 back-transform contrasts, so even when summarized with \code{type = "response"},
-contrasts are computed and displayed on the linear-predictor scale. Similarly, 
+contrasts are computed and displayed on the linear-predictor scale. Similarly,
 if \code{ratios = FALSE}, log and logit transforms are treated in the same way as
 any other transformation.}
 
 \item{parens}{character or \code{NULL}. If a character value, the labels for levels
-being contrasted are parenthesized if they match the regular expression in 
+being contrasted are parenthesized if they match the regular expression in
 \code{parens[1]} (via \code{\link{grep}}). The default is \code{emm_option("parens")}.
 Optionally, \code{parens} may contain second and third elements specifying
 what to use for left and right parentheses (default \code{"("} and \code{")"}).
 Specify \code{parens = NULL} or \code{parens = "a^"} (which won't match anything)
 to disable all parenthesization.}
 
-\item{enhance.levels}{character or logical. 
-If character, the levels of the named factors that are contrasted are enhanced 
+\item{enhance.levels}{character or logical.
+If character, the levels of the named factors that are contrasted are enhanced
 by appending the name of the factor; e.g., if a factor named \code{"trt"} has
 levels \code{A} and \code{B}, a \code{trt} comparison is labeled \code{trtA - trtB}.
-If \code{enhance.levels} is logical, then if \code{TRUE} (the default), 
+If \code{enhance.levels} is logical, then if \code{TRUE} (the default),
 only factors with numeric levels are enhanced; and of
 course if \code{FALSE}, no levels are enhanced.
-The levels of \code{by} variables are not enhanced, and any 
-names of factors that don't exist are silently ignored. 
+The levels of \code{by} variables are not enhanced, and any
+names of factors that don't exist are silently ignored.
 To enhance the labels beyond what is done here, change them
 directly via \code{\link[=update.emmGrid]{levels<-}}.}
 
@@ -117,7 +117,7 @@ are used in each group.}
   object is returned if \code{simple} is a list and \code{combine} is
   \code{FALSE}.
 
-\code{coef} returns a \code{data.frame} containing the "parent" object's grid, 
+\code{coef} returns a \code{data.frame} containing the "parent" object's grid,
 along with columns named \code{c.1, c.2, ...} containing the contrast coefficients
 used to produce the linear functions embodied in the object. \code{coef()} only
 returns coefficients if \code{object} is the result of a call to \code{contrast()},
@@ -156,9 +156,9 @@ When \code{object} has a nesting structure (this can be seen via
   result comprises contrasts of contrasts, or, equivalently, products of
   contrasts for the factors involved. Any named elements of \code{interaction}
   are assigned to contrast methods; others are assigned in order of
-  appearance in \code{object@levels}. The contrast factors in the resulting 
+  appearance in \code{object@levels}. The contrast factors in the resulting
   \code{emmGrid} object are ordered the same as in \code{interaction}.
-  
+
   \code{interaction} may be a character vector or list of valid contrast
   methods (as documented for the \code{method} argument). If the vector or
   list is shorter than the number needed, it is recycled. Alternatively, if
@@ -176,7 +176,7 @@ When \code{object} has a nesting structure (this can be seen via
   \code{simple = "each"} (this works unless there actually is a factor named
   \code{"each"}). Note that a non-missing \code{simple} will cause \code{by}
   to be ignored.
-  
+
   Ordinarily, when \code{simple} is a list or \code{"each"}, the return value
   is an \code{\link{emm_list}} object with each entry in correspondence with
   the entries of \code{simple}. However, with \code{combine = TRUE}, the
@@ -198,9 +198,9 @@ contrast(warp.emm, list(mid.vs.ends = c(-1,2,-1)/2, lo.vs.hi = c(1,0,-1)))
 pairs(warp.emm)
 
 # Effects (dev from mean) of the 6 factor combs, with enhanced levels:
-contrast(warp.emm, "eff", by = NULL, 
-    enhance.levels = c("wool", "tension"))  
-    
+contrast(warp.emm, "eff", by = NULL,
+    enhance.levels = c("wool", "tension"))
+
 pairs(warp.emm, simple = "wool") # same as pairs(warp.emm, by = "tension")
 
 # Do all "simple" comparisons, combined into one family
@@ -213,12 +213,12 @@ contrast(warp.emm, simple = c("wool", "tension"))
 contrast(warp.emm, simple = list("wool", "tension"))
 ## The first generates contrasts for combinations of wool and tension
 ##   (same as by = NULL)
-## The second generates contrasts for wool by tension, and for 
+## The second generates contrasts for wool by tension, and for
 ##   tension by wool, respectively.
 }
 
 # An interaction contrast for tension:wool
-tw.emm <- contrast(warp.emm, interaction = c(tension = "poly", wool = "consec"), 
+tw.emm <- contrast(warp.emm, interaction = c(tension = "poly", wool = "consec"),
                    by = NULL)
 tw.emm          # see the estimates
 coef(tw.emm)    # see the contrast coefficients

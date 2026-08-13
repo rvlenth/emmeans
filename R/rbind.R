@@ -26,20 +26,20 @@
 #'
 #' These functions provide methods for \code{\link[base:cbind]{rbind}} and
 #' \code{\link[base:Extract]{[}} that may be used to combine \code{emmGrid} objects
-#' together, or to extract a subset of cases. The primary reason for 
+#' together, or to extract a subset of cases. The primary reason for
 #' doing this would be to obtain multiplicity-adjusted results for smaller
-#' or larger families of tests or confidence intervals. 
-#' 
+#' or larger families of tests or confidence intervals.
+#'
 #' @param ... In \code{rbind}, object(s) of class \code{emmGrid} or \code{summary_emm}.
 #'   In others, additional arguments passed to other methods
 #' @param deparse.level (required but not used)
 #' @param adjust Character value passed to \code{\link{update.emmGrid}}
-#' 
+#'
 #' @note \code{rbind} throws an error if there are incompatibilities in
-#'   the objects' coefficients, covariance structures, etc. But they 
+#'   the objects' coefficients, covariance structures, etc. But they
 #'   are allowed to have different factors; a missing level \code{'.'}
 #'   is added to factors as needed.
-#' 
+#'
 #' @note These functions generally reset \code{by.vars} to \code{NULL};
 #' so if you want to keep any \dQuote{by} variables, you should follow-up
 #' with \code{\link{update.emmGrid}}.
@@ -51,8 +51,8 @@
 #' @examples
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 #' warp.rg <- ref_grid(warp.lm)
-#' 
-#' # Do all pairwise comparisons within rows or within columns, 
+#'
+#' # Do all pairwise comparisons within rows or within columns,
 #' # all considered as one faily of tests:
 #' w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
 #' t.w <- pairs(emmeans(warp.rg, ~ tension | wool))
@@ -64,12 +64,12 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
         stop("All objects must inherit from 'emmGrid'")
     bhats = lapply(objs, function(o) o@bhat)
     bhat = bhats[[1]]
-    if(!all(sapply(bhats, function(b) (length(b) == length(bhat)) 
+    if (!all(sapply(bhats, function(b) (length(b) == length(bhat))
                    && (sum((b - bhat)^2, na.rm = TRUE) == 0))))
         stop("All objects must have the same fixed effects")
     Vs = lapply(objs, function(o) o@V)
     V = Vs[[1]]
-    if(!all(sapply(Vs, function(v) sum((v - V)^2) == 0)))
+    if (!all(sapply(Vs, function(v) sum((v - V)^2) == 0)))
         stop("All objects must have the same covariances")
     obj = objs[[1]]
     linfcts = lapply(objs, function(o) o@linfct)
@@ -92,9 +92,9 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
         if (!is.null(g$.wgt.)) grid[rows, ".wgt."] = g$.wgt.
         if (!is.null(g$.offset.)) grid[rows, ".offset."] = g$.offset.
     }
-    if (all(grid$.wgt. == 0)) 
+    if (all(grid$.wgt. == 0))
         grid$.wgt. = 1
-    if (all(grid$.offset. == 0)) 
+    if (all(grid$.offset. == 0))
         grid$.offset. = NULL
     avgd.over = unique(unlist(lapply(objs, function(o) o@misc$avgd.over)))
     attr(avgd.over, "qualifier") = " some or all of"
@@ -115,7 +115,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' @method + emmGrid
 #' @export
 "+.emmGrid" = function(e1, e2) {
-    if(!is(e2, "emmGrid"))
+    if (!is(e2, "emmGrid"))
         stop("'+.emmGrid' works only when all objects are class `emmGrid`", call. = FALSE)
     rbind(e1, e2)
 }
@@ -128,7 +128,7 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' @param i Integer vector of indexes
 #' @param drop.levels Logical value. If \code{TRUE}, the \code{"levels"} slot in
 #'   the returned object is updated to hold only the predictor levels that actually occur
-#'   
+#'
 #' @method [ emmGrid
 #' @export
 #' @examples
@@ -137,13 +137,13 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' summary(warp.rg[c(2, 4, 5)])
 "[.emmGrid" = function(x, i, adjust, drop.levels = TRUE, ...) {
     x@linfct = x@linfct[i, , drop = FALSE]
-    x@grid = x@grid[i, , drop = FALSE]                  
+    x@grid = x@grid[i, , drop = FALSE]
     x = update(x, pri.vars = names(x@grid), famSize = length(i), estType = "[")
     x@misc$orig.grid = x@misc$con.coef = x@misc$.pairby = NULL
     x@misc$by.vars = NULL
-    if(!missing(adjust))
+    if (!missing(adjust))
         x@misc$adjust = adjust
-    if(!is.null(disp <- x@misc$display))
+    if (!is.null(disp <- x@misc$display))
         x@misc$display = disp[i]
     if (drop.levels) {
         for (nm in names(x@levels))
@@ -158,10 +158,10 @@ rbind.emmGrid = function(..., deparse.level = 1, adjust = "bonferroni") {
 #' @method subset emmGrid
 #' @export
 #' @examples
-#' 
+#'
 #' # After-the-fact 'at' specification
 #' subset(warp.rg, wool == "A")  ## or warp.rg |> subset(wool == "A")
-#' 
+#'
 subset.emmGrid = function(x, subset, ...) {
     sel = eval(substitute(subset), envir = x@grid, enclos = parent.frame())
     x[sel, ...]

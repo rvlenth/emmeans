@@ -28,7 +28,7 @@
     if (is.null(bnm <- names(bhat)) || is.null(colnames(X)))
         return(bhat)
     nm = intersect(bnm, (xnm <- colnames(X)))
-    if(length(nm) == length(xnm))
+    if (length(nm) == length(xnm))
         return(bhat[nm])
     tmp = rep(NA, length(xnm))
     names(tmp) = xnm
@@ -38,7 +38,7 @@
 
 ## %in%-style operator with partial matching
 ## e.g.,  ("bonf" %.pin% p.adjust.methods)  is TRUE
-"%.pin%" = function (x, table) pmatch(x, table, nomatch = 0L) > 0L
+"%.pin%" = function(x, table) pmatch(x, table, nomatch = 0L) > 0L
 
 ## Like is.numeric() but returns TRUE for character vectors like c("1", "3", "2")
 ## (but will return FALSE if any x is NA)
@@ -51,14 +51,14 @@
 .chk.predict = function(obj) {
     sig = obj@misc$sigma
     ok = (is.null(sig) || (!is.null(sig) && !is.na(sig)))
-    if(!ok)
+    if (!ok)
         warning("Prediction intervals are not available for this object", call. = FALSE)
     ok
 }
 
 ### Internal function to implement 'allow.na.levs' option
 .chk.fac = function(x) {
-    if(get_emm_option("allow.na.levs"))
+    if (get_emm_option("allow.na.levs"))
         factor(x, exclude = NULL)
     else
         factor(x)
@@ -70,34 +70,35 @@
 ##   Passes ... to all.vars
 #' @rdname extending-emmeans
 #' @order 41
-#' @param expr,retain Arguments for \code{.all.vars}, which is an alternative to \code{\link{all.vars}}
-#'   that has special provisions for retaining the special characters in \code{retain},
-#'   thus allowing model specifications like \code{y ~ data$trt * df[["dose"]]}
+#' @param expr,retain Arguments for \code{.all.vars}, which is an alternative to
+#' \code{\link{all.vars}} that has special provisions for retaining the special characters
+#' in \code{retain}, thus allowing model specifications like 
+#' \code{y ~ data$trt * df[["dose"]]}
 #' @export
 .all.vars = function(expr, retain = c("\\$", "\\[\\[", "\\]\\]", "'", '"'), ...) {
     if (is.null(expr) || length(expr) == 0)
         return(character(0))
     if (!inherits(expr, "formula")) {
         expr = try(eval(expr), silent = TRUE)
-        if(inherits(expr, "try-error")) {
+        if (inherits(expr, "try-error")) {
             return(character(0))
         }
     }
     repl = paste(".Av", seq_along(retain), ".", sep = "")
     for (i in seq_along(retain))
         expr = gsub(retain[i], repl[i], expr)
-    subs = switch(length(expr), 1, c(1,2), c(2,1,3))
+    subs = switch(length(expr), 1, c(1, 2), c(2, 1, 3))
     vars = all.vars(as.formula(paste(expr[subs], collapse = "")), ...)
     retain = gsub("\\\\", "", retain)
     for (i in seq_along(retain))
         vars = gsub(repl[i], retain[i], vars)
-    if(length(vars) == 0) vars = "1"   # no vars ---> intercept
+    if (length(vars) == 0) vars = "1"   # no vars ---> intercept
     vars
 }
 
-### returns TRUE iff there is one or more function call in a formula
+### returns TRUE if there is one or more function call in a formula
 .has.fcns = function(form) {
-    fcns = setdiff(.all.vars(form, functions = TRUE), 
+    fcns = setdiff(.all.vars(form, functions = TRUE),
                    c("~", "+", "-", "*", "/", ":", "(", "|", .all.vars(form)))
     length(fcns) > 0
 }
@@ -129,7 +130,7 @@
 # with 'form.rtn' attribute
 .parse.specs.for.all = function(object, specs, by) {
     all.key = "."  # The key to use to request all sets of means
-    if(is.list(specs))
+    if (is.list(specs))
         return(specs)
     rtn = NULL
     if (inherits(specs, "formula")) {
@@ -138,15 +139,15 @@
             return(specs)
         specs = rtn$rhs
         rtn$by = setdiff(rtn$by, specs)
-        if(length(rtn$by) > 0)
+        if (length(rtn$by) > 0)
             by = rtn$by
     }
     # now we have is.character(specs) ...
     if ((length(specs) != 1) || (specs[1] != all.key))
         return(specs)
-    # hack the object to bypass estimability checking. 
+    # hack the object to bypass estimability checking.
     # Doesn't matter what stats are as we use only the labels
-    if(any(is.na(object@bhat))) {
+    if (any(is.na(object@bhat))) {
         k = ncol(object@linfct)
         object@bhat = seq_len(k)
         object@V = diag(k)
@@ -160,11 +161,11 @@
                 stgs = c(stgs, fac)
         stgs = unique(stgs)
     }
-    if(length(stgs) == 0)
+    if (length(stgs) == 0)
         stop("'", all.key, "' specification yielded no terms", call. = FALSE)
-    
+
     result = strsplit(stgs, ":")
-    if(!is.null(rtn))
+    if (!is.null(rtn))
         attr(result, "form.rtn") = rtn
     result
 }
@@ -187,22 +188,22 @@
     result
 }
 
-### Not-so-damn-smart replacement of diag() that will 
+### Not-so-damn-smart replacement of diag() that will
 ### not be so quick to assume I want an identity matrix
 ### returns matrix(x) when x is a scalar
 #' @rdname extending-emmeans
 #' @order 42
-#' @param x,nrow,ncol Arguments for \code{.diag}, which is an alternative to 
+#' @param x,nrow,ncol Arguments for \code{.diag}, which is an alternative to
 #'   \code{\link{diag}} that lacks its idiosyncrasy of returning an
 #'   identity matrix when \code{x} is of length 1.
 #' @export
-#' 
+#'
 .diag = function(x, nrow, ncol) {
-    if(is.matrix(x))
+    if (is.matrix(x))
         diag(x)
-    else if((length(x) == 1) && missing(nrow) && missing(ncol)) 
+    else if ((length(x) == 1) && missing(nrow) && missing(ncol))
         matrix(x)
-    else 
+    else
         diag(x, nrow, ncol)
 }
 
@@ -220,7 +221,7 @@
     if (is.null(by))
         return(list(seq_len(nrow(tbl))))
     if (any(is.na(match(by, names(tbl)))))
-        stop("'by' variables are not all in the grid")    
+        stop("'by' variables are not all in the grid")
     bylevs = tbl[ , by, drop = FALSE]
     by.id = do.call("paste", unname(bylevs))
     uids = unique(by.id)
@@ -233,7 +234,7 @@
 #' @rdname extending-emmeans
 #' @order 35
 #' @param terms A \code{terms} component
-#' @return \code{.get.offset} returns the values, based on \code{grid}, of 
+#' @return \code{.get.offset} returns the values, based on \code{grid}, of
 #' any \code{offset} component in \code{terms}
 #' @export
 .get.offset = function(terms, grid) {
@@ -273,10 +274,10 @@
     if (!is.character(termlabels) || !length(termlabels))
         stop("'termlabels' must be a character vector of length at least one")
     has.resp = !is.null(response)
-    termlabels = sapply(trimws(termlabels), function(x) 
+    termlabels = sapply(trimws(termlabels), function(x)
         if (length(grep("\\$|\\[\\[", x)) > 0) x
         else paste0("`", x, "`"))
-    termtext = paste(if (has.resp) "response", "~", 
+    termtext = paste(if (has.resp) "response", "~",
                      paste(termlabels, collapse = "+"), collapse = "")
 # prev version:                     paste0("`", trimws(termlabels), "`", collapse = "+"), collapse = "")
     if (!intercept)
@@ -297,7 +298,7 @@
     comp = grep("\\$|\\[\\[", vars) # untick vars containing "$"
     if (length(comp) > 0) {
         attr(comp, "details") = gsub("\"", "",
-            sapply(strsplit(vars[comp], "\\$|\\[\\[|\\]\\]"), function(.) .[1:2]))
+                sapply(strsplit(vars[comp], "\\$|\\[\\[|\\]\\]"), function(.) .[1:2]))
     }
     comp
 }
@@ -305,7 +306,7 @@
 
 # returns a list of all matches to ... or lst with full names from args
 .match.dots.list = function(args, ..., lst) {
-    if(missing(lst))
+    if (missing(lst))
         lst = list(...)
     idx = pmatch(names(lst), args, nomatch = 0)
     rtn = lst[idx > 0]
@@ -345,10 +346,10 @@
 
 # my own model.frame function. Intercepts compound names
 # and fixes up the data component accordingly. We do this
-# by creating data.frames within data having required variables of simple names 
+# by creating data.frames within data having required variables of simple names
 model.frame = function(formula, data, ...) {
     if (is.null(data))
-        return (stats::model.frame(formula, ...))
+        return(stats::model.frame(formula, ...))
     idx = .find.comp.names(names(data))
     if (length(idx) > 0) {
         nm = names(data)[idx]
@@ -379,7 +380,7 @@ model.frame = function(formula, data, ...) {
 
 # Utility to simplify names. each elt of top row of tbl is changed to bottom row
 .simplify.names = function(nms, tbl) {
-    for (j in seq_along(tbl[1,]))
+    for (j in seq_along(tbl[1, ]))
         nms[nms == tbl[1, j]] = tbl[2, j]
     nms
 }
@@ -387,7 +388,7 @@ model.frame = function(formula, data, ...) {
 # utility to make all names in a summary syntactically valid
 .validate.names = function(object) {
     for (a in c("names", "pri.vars", "by.vars"))
-        if (!is.null(att <- attr(object, a))) 
+        if (!is.null(att <- attr(object, a)))
             attr(object, a) = make.names(att)
     object
 }
@@ -425,11 +426,11 @@ model.frame = function(formula, data, ...) {
 # format a transformation for messages
 .fmt.tran = function(misc) {
     tran = misc$tran
-    if (is.list(tran)) 
+    if (is.list(tran))
         tran = ifelse(is.null(tran$name), "custom", tran$name)
     if (!is.null(mul <- misc$tran.mult))
         tran = paste0(mul, "*", tran)
-    if(!is.null(off <- misc$tran.offset))
+    if (!is.null(off <- misc$tran.offset))
         tran = paste0(tran, "(mu + ", off, ")")
     tran
 }
@@ -488,8 +489,8 @@ model.frame = function(formula, data, ...) {
 .cmpMM = function(X, weights = rep(1, nrow(X)), assign = attr(X$qr, "assign")) {
     if (!get_emm_option("enable.submodel"))
         return(NULL)
-    if(!is.qr(X)) {
-        if(any(is.na(X)))
+    if (!is.qr(X)) {
+        if (any(is.na(X)))
             return(NULL)
         X = try({
             X = sweep(X, 1, sqrt(weights), "*") # scale rows by sqrt(weights)
@@ -538,7 +539,7 @@ model.frame = function(formula, data, ...) {
     tbl = attr(X, "factors")
     if (is.character(submodel)) {
         type2 = pmatch(submodel[1], "type2", nomatch = 0) # 1 if type2, 0 otherwise
-        submodel = as.formula(paste("~", paste(names(object@levels), collapse="*")))
+        submodel = as.formula(paste("~", paste(names(object@levels), collapse = "*")))
     }
     else
         type2 = 0
@@ -546,8 +547,8 @@ model.frame = function(formula, data, ...) {
     # create term labels in compatible factor order
     subtbl = attr(terms(update(object@model.info$terms, submodel)), "factors")
     com = intersect(rownames(tbl), rownames(subtbl))
-    if(length(com) == 0) { # No matching factors at all
-        com = 1; 
+    if (length(com) == 0) { # No matching factors at all
+        com = 1;
         subtbl = matrix(0)
     }
     sublab = apply(subtbl[com, , drop = FALSE], 2, function(x) paste(com[x > 0], collapse = ":"))

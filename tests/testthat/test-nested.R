@@ -6,7 +6,7 @@ foo = data.frame(
     bird = factor(rep(1:6, each=4)),
     m = rep(c(2,3,0,-1,-2,5), each=4),
     b = rep(c(0,-1,1,2,2,3), each=4),
-    x = 3 + 5*runif(24),
+    x = 3 + 5*runif (24),
     e = 0.3*rnorm(24)
 )
 foo = transform(foo, resp = m*x + b + e)

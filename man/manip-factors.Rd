@@ -27,9 +27,9 @@ permute_levels(object, fac, pos)
 \item{newname}{Character name of grouping factor to add (different from any
 existing factor in the grid)}
 
-\item{drop}{Logical value. If \code{TRUE}, any levels of the new factor that 
-are dropped if all occurrences in the newly reconstructed object have 
-weight zero. If \code{FALSE}, all levels are retained. 
+\item{drop}{Logical value. If \code{TRUE}, any levels of the new factor that
+are dropped if all occurrences in the newly reconstructed object have
+weight zero. If \code{FALSE}, all levels are retained.
 (This argument is ignored if there is no \code{.wgt.} column
 in \code{object@grid}.)}
 
@@ -44,10 +44,10 @@ of levels of \code{fac}.}
 
 \item{refname}{Character name(s) of the reference factor(s)}
 
-\item{newlevs}{Character vector or factor of the same length as that of the (combined) levels for 
+\item{newlevs}{Character vector or factor of the same length as that of the (combined) levels for
 \code{refname}. The grouping factor \code{newname} will have the unique
 values of \code{newlevs} as its levels. The order of levels in \code{newlevs}
-is the same as the order of the level combinations produced by 
+is the same as the order of the level combinations produced by
 \code{\link{expand.grid}} applied to the levels of \code{refname} -- that is, the
 first factor's levels change the fastest and the last one's vary the slowest.}
 
@@ -55,7 +55,7 @@ first factor's levels change the fastest and the last one's vary the slowest.}
 \code{1:k}, where \code{k} is the number of levels of \code{fac}.
 This determines which position each level of \code{fac} will occupy
 after the levels are permuted; thus, if the
-levels of \code{fac} are \code{A,B,C,D}, and \code{pos = c(3,1,2,4)}, 
+levels of \code{fac} are \code{A,B,C,D}, and \code{pos = c(3,1,2,4)},
 then the permuted levels will be \code{B,C,A,D}.}
 }
 \value{
@@ -63,8 +63,8 @@ A modified object of class \code{emmGrid}
 }
 \description{
 These functions manipulate the levels of factors comprising a reference
-grid by combining factor levels, splitting a factor's levels into 
-combinations of newly-defined factors, creating a grouping factor in which 
+grid by combining factor levels, splitting a factor's levels into
+combinations of newly-defined factors, creating a grouping factor in which
 factor(s) levels are nested, or permuting the order of levels of a factor
 }
 \section{The \code{comb_facs} function}{
@@ -75,39 +75,39 @@ replaces the factors that comprise it.
 
 \emph{Additional note:}
 The choice of whether to drop levels or not can make a profound difference.
-If the goal is to combine factors for use in \code{joint_tests}, we advise \emph{against} 
+If the goal is to combine factors for use in \code{joint_tests}, we advise \emph{against}
 \code{drop = TRUE} because that might change the weights used in deriving marginal means.
-If combining factors in a nested structure, dropping unused cases can considerably reduce 
+If combining factors in a nested structure, dropping unused cases can considerably reduce
 the storage required.
 }
 
 \section{The \code{split_fac} function}{
 
 The levels in \code{newfacs} are expanded via \code{\link{expand.grid}} into
-combinations of levels, and the factor \code{fac} is replaced by those 
-factor combinations. Unlike \code{add_grouping}, this creates a crossed, 
+combinations of levels, and the factor \code{fac} is replaced by those
+factor combinations. Unlike \code{add_grouping}, this creates a crossed,
 rather than a nested structure. Note that the order of factor combinations
-is systematic with the levels of first factor in \code{newfacs} varying 
+is systematic with the levels of first factor in \code{newfacs} varying
 the fastest; and those factor combinations are assigned respectively
 to the levels of \code{fac} as displayed in \code{str(object)}.
 }
 
 \section{The \code{add_grouping} function}{
 
-This function adds a grouping factor to an existing reference grid or other 
+This function adds a grouping factor to an existing reference grid or other
 \code{emmGrid} object, such that the levels of one or more existing factors (call them the
 reference factors) are mapped to a smaller number of levels of the new
-grouping factor. The reference factors are then nested in a 
+grouping factor. The reference factors are then nested in a
 new grouping factor named \code{newname}, and a new nesting structure
 \code{refname \%in\% newname}.
-This facilitates obtaining marginal means of the grouping factor, and 
+This facilitates obtaining marginal means of the grouping factor, and
 contrasts thereof.
 
 
 \emph{Additional notes:} By default, the levels of \code{newname} will be ordered
-  alphabetically. To dictate a different ordering of levels, supply 
+  alphabetically. To dictate a different ordering of levels, supply
   \code{newlevs} as a \code{factor} having its levels in the desired order.
-  
+
 When \code{refname} specifies more than one factor, this can
   fundamentally (and permanently) change what is meant by the levels of those
   individual factors. For instance, in the \code{gwrg} example below, there
@@ -118,9 +118,9 @@ When \code{refname} specifies more than one factor, this can
 
 \section{The \code{add_submodels} function}{
 
-This function updates \code{object} with a named list of submodels specified in 
+This function updates \code{object} with a named list of submodels specified in
 \code{...}. These are \code{rbind}ed together and the corresponding rows
-for each submodel are assigned a factor named \code{newname} with levels 
+for each submodel are assigned a factor named \code{newname} with levels
 equal to the names in \code{...}. This facilitates comparing estimates obtained
 from different submodels. For this to work, the underlying model object must be of
 a class supported by the \code{submodel} argument of \code{\link{update.emmGrid}}.
@@ -130,10 +130,10 @@ a class supported by the \code{submodel} argument of \code{\link{update.emmGrid}
 
 This function permutes the levels of \code{fac}. The returned object
 has the same factors, same \code{by} variables, but with the levels
-of \code{fac} permuted. 
+of \code{fac} permuted.
 The order of the columns in \code{object@grid} may be altered.
 
-NOTE: \code{fac} must not be nested in another factor. \code{permute_levels} 
+NOTE: \code{fac} must not be nested in another factor. \code{permute_levels}
 throws an error when \code{fac} is nested.
 
 NOTE: Permuting the levels of a numeric predictor is tricky. For example,
@@ -145,7 +145,7 @@ you must add the arguments \code{style = "factor"} and \code{nesting.order = TRU
 mtcars.lm <- lm(mpg ~ factor(vs)+factor(cyl)*factor(gear), data = mtcars)
 (v.c.g <- ref_grid(mtcars.lm))
 (v.cg <- comb_facs(v.c.g, c("cyl", "gear")))
-  
+
 # One use is obtaining a single test for the joint contributions of two factors:
 joint_tests(v.c.g)
 
@@ -172,7 +172,7 @@ emmeans(gfrg, "brand")
 
 ### More than one reference factor
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-gwrg <- add_grouping(ref_grid(warp.lm), 
+gwrg <- add_grouping(ref_grid(warp.lm),
     "prod",  c("tension", "wool"),  c(2, 1, 1,  1, 2, 1))
         # level combinations:         LA MA HA  LB MB HB
 
@@ -182,7 +182,7 @@ emmeans(gwrg, "prod")
 
 ## Using 'add_submodels' to compare adjusted and unadjusted means
 fibint.lm <- lm(strength ~ machine * diameter, data = fiber)
-fibsub <- add_submodels(emmeans(fibint.lm, "machine"), 
+fibsub <- add_submodels(emmeans(fibint.lm, "machine"),
     full = ~ ., additive = ~ . - machine:diameter, unadj = ~ machine)
 emmeans(fibsub, pairwise ~ model | machine, adjust = "none")
 

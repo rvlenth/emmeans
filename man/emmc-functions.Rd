@@ -78,13 +78,13 @@ both \code{exclude} and \code{include}.}
 \item{max.degree}{Integer specifying the maximum degree of polynomial contrasts}
 
 \item{scores}{Set of values of length \code{length(levs)} over which
-orthogonal polynomials are computed. The default scores are the 
+orthogonal polynomials are computed. The default scores are the
 consecutive integers \code{seq_along(levs)}.
 (If \code{exclude} or \code{include}
-are used, the default scores are subsetted accordingly; and if \code{scores} 
+are used, the default scores are subsetted accordingly; and if \code{scores}
 is specified, its length must be the same as that of the subsetted \code{levs}).}
 
-\item{ref}{Integer(s) or character(s) specifying which level(s) to use 
+\item{ref}{Integer(s) or character(s) specifying which level(s) to use
 as the reference. Character values must exactly match elements of \code{levs}
 (including any enhancements -- see examples)}
 
@@ -130,7 +130,7 @@ approximate when the standard errors differ.
 \code{poly.emmc} uses equally-spaced factor levels; coefficients are derived from the
 \code{\link[stats]{poly}} function, but an \emph{ad hoc} algorithm is used to
 scale them to integer coefficients that are (usually) the same as in
-published tables of orthogonal polynomial contrasts. On the other hand, 
+published tables of orthogonal polynomial contrasts. On the other hand,
 \code{opoly.emmc}'s coefficients are always normalized (sum of squares equals 1),
 but allows the user to choose alternate reference points in \code{scores}, as in the
 \code{\link{contr.poly}} function.
@@ -165,14 +165,14 @@ respectively, as in subtracting the overall EMM from each EMM. The default
 multiplicity adjustment method is \code{"fdr"}. This is a Bonferroni-based
 method and is slightly conservative; see \code{\link[stats]{p.adjust}}.
 
-\code{nrmlz.emmc} is a wrapper that can be used with any other \code{.emmc} 
-function that will normalize the contrast coefficients so that the sum of its 
+\code{nrmlz.emmc} is a wrapper that can be used with any other \code{.emmc}
+function that will normalize the contrast coefficients so that the sum of its
 squares equals 1. Just provide the root name of the function in \code{family},
 along with any other arguments to pass to it.
 
-\code{wtcon.emmc} generates weighted contrasts based on the function 
+\code{wtcon.emmc} generates weighted contrasts based on the function
 \code{\link[multcomp]{contrMat}} function in the \pkg{multcomp} package,
-using the provided \code{type} as documented there. If the user provides 
+using the provided \code{type} as documented there. If the user provides
 \code{wts}, they have to conform to the length of \code{levs}; however,
 if \code{wts} is not specified, \code{contrast} will fill-in what is
 required, and usually this is safer (especially when \code{by != NULL}
@@ -199,7 +199,7 @@ contrast(warp.emm, "poly")
 contrast(warp.emm, "trt.vs.ctrl", ref = "M")
 \dontrun{
 ## Same when enhanced labeling is used:
-contrast(warp.emm, "trt.vs.ctrl", 
+contrast(warp.emm, "trt.vs.ctrl",
          enhance.levels = "tension", ref = "tensionM")}
 
 # Comparisons with grand mean

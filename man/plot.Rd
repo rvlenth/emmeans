@@ -44,12 +44,12 @@ overlap reflects as much as possible the significance of the comparison of
 the two estimates. (A warning is issued if this can't be done.)
 Note that comparison arrows are not available with `summary_emm` objects.}
 
-\item{colors}{Optional character vector of colors to use for estimates, CIs, PIs, 
+\item{colors}{Optional character vector of colors to use for estimates, CIs, PIs,
 and comparison arrows, respectively. If missing, these are derived from
 \code{ink}, \code{paper}, and \code{accent} in the theme's \code{geom} element.
 \code{ink} is used for the estimates, \code{accent} is used for comparison arrows,
 and a contrasting color to \code{accent} is blended with \code{paper} for
-the intervals. 
+the intervals.
 If just one color is given, estimates and intervals are made from
 various blends of that color and \code{paper}, and \code{accent}
 color is used for comparison arrows.}
@@ -63,7 +63,7 @@ color is used for comparison arrows.}
 \item{intervals}{If specified, it is used to set \code{CIs}. This is the previous
 argument name for \code{CIs} and is provided for backward compatibility.}
 
-\item{...}{Additional arguments passed to \code{\link{update.emmGrid}}, 
+\item{...}{Additional arguments passed to \code{\link{update.emmGrid}},
 \code{\link{summary.emmGrid}},
 \code{\link{predict.emmGrid}}, or
 \code{\link[lattice:xyplot]{dotplot}}}
@@ -75,11 +75,11 @@ plotted horizontally or vertically}
 
 \item{ylab}{Character label for vertical axis}
 
-\item{facetlab}{Character or function method used to label facets in a 
+\item{facetlab}{Character or function method used to label facets in a
 multi-panel plot (with the \code{ggplot} engine).
 Default is \code{"label_both"}, meaning that both factor names and levels are shown,
 You can use \code{"label_value"} to save space, or \code{"label_context"}
-to decide automatically (often wrongly). See the help page for 
+to decide automatically (often wrongly). See the help page for
 \code{ggplot2::labellers}}
 
 \item{layout}{Numeric value passed to \code{\link[lattice:xyplot]{dotplot}}
@@ -103,11 +103,11 @@ If \code{plotit = TRUE}, a graphical object is returned.
   in the object. Confidence limits are named \code{lower.CL} and
   \code{upper.CL}, prediction limits are named \code{lpl} and \code{upl}, and
   comparison-arrow limits are named \code{lcmpl} and \code{ucmpl}.
-  There is also a variable named \code{pri.fac} which contains the factor 
+  There is also a variable named \code{pri.fac} which contains the factor
   combinations that are \emph{not} among the \code{by} variables.
 }
 \description{
-Methods are provided to plot EMMs as side-by-side CIs, and optionally to display 
+Methods are provided to plot EMMs as side-by-side CIs, and optionally to display
   \dQuote{comparison arrows} for displaying pairwise comparisons.
 }
 \note{
@@ -133,8 +133,8 @@ is no need to compare them with anything higher or lower, respectively. See
 the \href{../doc/xplanations.html#arrows}{\code{vignette("xplanations",
 "emmeans")}} for details on how these are derived.
 
-If \code{adjust} or \code{int.adjust} are not supplied, they default to the 
-internal \code{adjust} setting saved in \code{pairs(x)} and \code{x} 
+If \code{adjust} or \code{int.adjust} are not supplied, they default to the
+internal \code{adjust} setting saved in \code{pairs(x)} and \code{x}
 respectively (see \code{\link{update.emmGrid}}).
 }
 
@@ -145,22 +145,22 @@ plot(warp.emm)
 
 plot(warp.emm, PIs = TRUE, comparisons = TRUE)
 
-with_emm_options(gg.theme = ggplot2::theme_dark(), 
+with_emm_options(gg.theme = ggplot2::theme_dark(),
     plot(warp.emm, PIs = TRUE, comparisons = TRUE))
 
-plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none", 
+plot(warp.emm, by = NULL, comparisons = TRUE, adjust = "none",
      horizontal = FALSE, colors = "blue")
 
 ### Using a transformed scale (also demonstrating 'facetlab' argument)
 pigs.lm <- lm(log(conc + 2) ~ source * factor(percent), data = pigs)
 pigs.emm <- emmeans(pigs.lm, ~ percent | source)
-plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10), 
+plot(pigs.emm, type = "scale", breaks = seq(20, 100, by = 10),
      facetlab = "label_value")
 
-# Based on a summary. 
+# Based on a summary.
 # To get a transformed axis, must specify 'scale'; but it does not necessarily
 # have to be the same as the actual response transformation
 pigs.ci <- confint(pigs.emm, type = "response")
-plot(pigs.ci, scale = scales::log10_trans(), 
+plot(pigs.ci, scale = scales::log10_trans(),
      facetlab = \(x) ggplot2::label_both(x, sep = " = "))
 }

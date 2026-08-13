@@ -31,26 +31,26 @@ recover_data.rms = function(object, ...) {
 # 1. If multivariate - like mlm method?
 # 2. orm cases?
 
-#' @exportS3Method emm_basis rms          
-emm_basis.rms = function(object, trms, xlev, grid, 
-        mode = c("middle", "latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"), 
+#' @exportS3Method emm_basis rms
+emm_basis.rms = function(object, trms, xlev, grid,
+        mode = c("middle", "latent", "linear.predictor", "cum.prob", "exc.prob", "prob", "mean.class"),
         vcov., ...) {
     mode = match.arg(mode)
-    bhat = coef(object) 
+    bhat = coef(object)
     if (missing(vcov.))
         V = vcov(object, intercepts = "all")
     else
         V = .my.vcov(object, vcov.)
     misc = list()
-    
+
     X = predict(object, newdata = grid, type = "x")
     #xnames = dimnames(X)[[2]]
     #intcpts = setdiff(names(bhat), xnames)
     nint = length(bhat) - ncol(X)
     intcpts = names(bhat)[seq_len(nint)]
     xnames = setdiff(names(bhat), intcpts)
-        
-    if (length(intcpts) == 1) 
+
+    if (length(intcpts) == 1)
         mode = "single" # stealth mode for ordinary single-intercept case
     if (mode %in% c("single", "middle", "latent")) {
         X = cbind(1, X)
@@ -67,7 +67,7 @@ emm_basis.rms = function(object, trms, xlev, grid,
         else if (mode == "latent") {
             bhat = c(mean(bhat[intcpts]), bhat[xnames])
             nx = length(xnames)
-            J1 = rbind(rep(1/nint, nint), 
+            J1 = rbind(rep(1/nint, nint),
                        matrix(0, nrow = nx, ncol = nint))
             J2 = rbind(0, diag(1, nx))
             J = cbind(J1, J2)
@@ -89,7 +89,7 @@ emm_basis.rms = function(object, trms, xlev, grid,
             misc$respName = as.character.default(object$terms)[2]
         }
     }
-    
+
     # I think rms does not allow rank deficiency...
     nbasis = estimability::all.estble
     if (!is.null(object$family)) {
@@ -98,7 +98,7 @@ emm_basis.rms = function(object, trms, xlev, grid,
         else {
             misc$tran = object$family
             if (misc$tran == "logistic") misc$tran = "logit"
-            misc$inv.lbl = switch(class(object)[1], 
+            misc$inv.lbl = switch(class(object)[1],
                 orm = "exc.prob",
                 lrm = ifelse(nint == 1, "prob", "exc.prob"),
                 "response")
@@ -108,11 +108,11 @@ emm_basis.rms = function(object, trms, xlev, grid,
     }
     else {
         dfargs = list(df = object$df.residual)
-        if (is.null(dfargs$df)) 
+        if (is.null(dfargs$df))
             dfargs$df = Inf
         dffun = function(k, dfargs) dfargs$df
     }
-    list(X=X, bhat=bhat, nbasis=nbasis, V=V, 
+    list(X=X, bhat=bhat, nbasis=nbasis, V=V,
          dffun=dffun, dfargs=dfargs, misc=misc)
 }
 

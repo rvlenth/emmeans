@@ -39,3 +39,5 @@ vignettes/extending.rnw   # we substituted an Rmd vignette
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^doc$
+^Meta$

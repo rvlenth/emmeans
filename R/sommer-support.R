@@ -26,11 +26,11 @@ recover_data.mmer = function(object, data, ...) {
     if (is.null(data))
         data = object$data
     fcall = call("mmer", formula = object$call$fixed, data = data)
-    emmeans::recover_data(fcall, delete.response(terms(object$call$fixed)), 
+    emmeans::recover_data(fcall, delete.response(terms(object$call$fixed)),
                           object$call$na.method.V, ...)
 }
 
-#' @exportS3Method emm_basis mmer         
+#' @exportS3Method emm_basis mmer
 emm_basis.mmer = function(object, trms, xlev, grid, ...) {
     cf = object$Beta
     bhat = cf$Estimate
@@ -38,7 +38,7 @@ emm_basis.mmer = function(object, trms, xlev, grid, ...) {
     # if we can get contrasts from the object, fix next line
     X = model.matrix(trms, m, contrasts.arg = NULL)
     V = .my.vcov(object, vcov. = function(., ...) .$VarBeta)
-    
+
     if ((k <- length(bhat)) < ncol(X)) {  # we have rank deficiencies
         QR = qr(model.matrix(trms, object$data, contrasts.arg = NULL))
         bhat = rep(NA, ncol(X))
@@ -46,12 +46,12 @@ emm_basis.mmer = function(object, trms, xlev, grid, ...) {
         nbasis = estimability::nonest.basis(QR)
     }
     else
-        nbasis = estimability::all.estble 
+        nbasis = estimability::all.estble
     misc = list()
     # soup-up following if (1) glms allowed or (2) d.f. available
     dfargs = list(df = object$df.residual)
     dffun = function(k, dfargs) Inf
-    bas = list(X = X, bhat = bhat, nbasis = nbasis, V = V, 
+    bas = list(X = X, bhat = bhat, nbasis = nbasis, V = V,
                dffun = dffun, dfargs = dfargs, misc = misc)
     # check for multiv resp
     k = length(levels(cf$Trait))

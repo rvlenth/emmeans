@@ -18,7 +18,7 @@ knitr::opts_chunk$set(fig.width = 4.5, fig.height = 2.0, class.output = "ro",
 
 <!-- @index Vignettes!Explanations supplement -->
 
-This vignette provides additional documentation for some methods 
+This vignette provides additional documentation for some methods
 implemented in the **emmeans** package.
 
 [Index of all vignette topics](vignette-topics.html)
@@ -34,7 +34,7 @@ implemented in the **emmeans** package.
 
 
 ## Sub-models {#submodels}
-<!-- @index `submodel`; Alias matrix; EMMs!Projecting to a submodel; 
+<!-- @index `submodel`; Alias matrix; EMMs!Projecting to a submodel;
              Constrained marginal means -->
 
 Estimated marginal means (EMMs) and other statistics computed by the **emmeans**
@@ -48,9 +48,9 @@ them as is otherwise done for marginal means.
 
 Two things to know before getting into details:
 
-  1. The `submodel` option uses information from the fixed-effects portion 
+  1. The `submodel` option uses information from the fixed-effects portion
      of the model matrix
-  2. Not all model classes are supported for the `submodel` option. 
+  2. Not all model classes are supported for the `submodel` option.
 
 Now some details. Suppose that we have a fixed-effects model matrix $X$, and let
 $X_1$ denote a sub-matrix of $X$ whose columns correspond to a specified
@@ -79,17 +79,17 @@ Here are some intuitive observations:
 
 These three points provide three ways of saying nearly the same thing, namely
 that we are excluding the effects in $X_2$. Note that in  a rank-deficient situation,
-there are different possible generalized inverses, and so in (1), $A$ is not unique. 
+there are different possible generalized inverses, and so in (1), $A$ is not unique.
 However, the predictions in (2) are unique. In ordinary regression models, (1), (2),
 and (3) all apply and will be the same as predictions from re-fitting the model with
-model matrix $X_1$; however, in generalized linear models, mixed models, etc., 
+model matrix $X_1$; however, in generalized linear models, mixed models, etc.,
 re-fitting will likely produce somewhat different results. That is because fitting
 such models involves iterative weighting, and the re-fitted models will probably
 not have the same weights. However, point (3) will still hold: the predictions
 obtained with a submodel will involve only the columns of $L_1$ and hence
 constrain all effects outside of the sub-model to be zero. Therefore,
-when it really matters to get the correct estimates from the stated sub-model, 
-the user should actually fit that sub-model unless the full model is an 
+when it really matters to get the correct estimates from the stated sub-model,
+the user should actually fit that sub-model unless the full model is an
 ordinary linear regression.
 
 A technicality: Most writers define the alias matrix as $(X_1'X_1)^-X_1'X_2$,
@@ -98,7 +98,7 @@ including all columns of $X$ here just because it makes the notation very
 simple; the $X_1$ portion of $X$ just reduces to the identity (at least in the
 case where $X_1$ is full-rank).
 
-A word on computation: 
+A word on computation:
 Like many matrix expressions, we do not compute $A$ directly as shown. Instead,
 we use the QR decomposition of $X_1$, obtainable via the R call `Z <- qr(X1)`.
 Then the alias matrix is computed via `A <- qr.coef(Z, X)`. In fact, nothing
@@ -115,7 +115,7 @@ that up via `A[is.na(A)] <- 0`.
 If we specify `submodel = "minimal"`, the software figures out the sub-model by
 extracting terms involving only factors that have not already been averaged
 over. If the user specifies `submodel = "type2"`, an additional step is
-performed: Let $X_1$ have only the highest-order effect in the minimal model, and $X_0$ 
+performed: Let $X_1$ have only the highest-order effect in the minimal model, and $X_0$
 denote the matrix of all columns of $X$ whose columns do not contain the effect in $X_1$.
 We then replace $Z$
 by the QR decomposition of $[I - X_0(X_0'X_0)^-X_0']X_1^*$. This projects
@@ -131,17 +131,17 @@ for obtaining type II estimable functions in SAS `PROC GLM`. However, we (as wel
 from SAS, treating covariates no differently than factors.
 
 ### A note on multivariate models {#mult.submodel}
-<!-- @index `submodel`!in a multivariate model; 
+<!-- @index `submodel`!in a multivariate model;
             Multivariate models!with `submodel` -->
 Recall that **emmeans** generates a constructed factor for the levels of a multivariate
 response. That factor (or factors) is completely ignored in any sub-model calculations.
-The $X$ and $X_1$ matrices described above involve only the predictors in the right-hand 
+The $X$ and $X_1$ matrices described above involve only the predictors in the right-hand
 side of the model equation . The multivariate response "factor" implicitly interacts
 with everything in the right-hand-side model; and the same is true of any sub-model.
 So it is not possible to consider sub-models where terms are omitted from among those
 multivariate interactions (note that it is also impossible to fit a
 multivariate sub-model that excludes those interactions).
-The only way to remove consideration of multivariate effects is 
+The only way to remove consideration of multivariate effects is
 to average over them via a call to `emmeans()`.
 
 
@@ -149,7 +149,7 @@ to average over them via a call to `emmeans()`.
 
 <!-- This section is a rewrite of an answer I provided on Stack Overflow,
   https://stackoverflow.com/questions/61779348/how-does-emmeans-calculate-confidence-intervals-used-to-compare-means/61822331#61822331 -->
-  
+
 ## Comparison arrows {#arrows}
 <!-- @index Comparisons!Graphical!How arrows are determined;
             Comparison arrows!Derivation -->
@@ -169,19 +169,19 @@ Let the EMMs be denoted $m_1, m_2, ..., m_k$. For simplicity, let us assume that
 these are ordered: $m_1 \le m_2 \le \cdots \le m_k$. Let $d_{ij} = m_j - m_i$
 denote the difference between the $i$th and $j$th EMM. Then the $(1 - \alpha)$
 confidence interval for the true difference $\delta_{ij} = \mu_j - \mu_i$ is
-$$  d_{ij} - e_{ij}\quad\mbox{to}\quad d_{ij} + e_{ij} $$ 
+$$  d_{ij} - e_{ij}\quad\mbox{to}\quad d_{ij} + e_{ij} $$
 where $e_{ij}$ is the "margin of error"
 for the difference; i.e., $e_{ij} = t\cdot SE(d_{ij})$ for some critical value $t$ (equal to $t_{\alpha/2}$ when no multiplicity adjustment is used). Note that
 $d_{ij}$ is statistically significant if, and only if, $d_{ij} > e_{ij}$.
 
-Now, how to get the comparison arrows? These arrows are plotted with origins at the $m_i$; we have an arrow of length $L_i$ pointing to the left, and an arrow of length $R_i$ pointing to the right. To compare EMMs $m_i$ and $m_j$ (and remembering that we are supposing that $m_i \le m_j$), we propose to look to see if the arrows extending right from $m_i$ and left from $m_j$ overlap or not. So, ideally, if we want overlap to be identified with statistical non-significance, we want 
+Now, how to get the comparison arrows? These arrows are plotted with origins at the $m_i$; we have an arrow of length $L_i$ pointing to the left, and an arrow of length $R_i$ pointing to the right. To compare EMMs $m_i$ and $m_j$ (and remembering that we are supposing that $m_i \le m_j$), we propose to look to see if the arrows extending right from $m_i$ and left from $m_j$ overlap or not. So, ideally, if we want overlap to be identified with statistical non-significance, we want
 $$    R_i + L_j = e_{ij}   \quad\mbox{for all } i < j $$
 
 If we can do that, then the two arrows will overlap if, and only if, $d_{ij} < e_{ij}$.
 
-This is easy to accomplish if all the $e_{ij}$ are equal: just set all $L_i = R_j = \frac12e_{12}$. But with differing $e_{ij}$ values, it may or may not even be possible to obtain suitable arrow lengths. 
+This is easy to accomplish if all the $e_{ij}$ are equal: just set all $L_i = R_j = \frac12e_{12}$. But with differing $e_{ij}$ values, it may or may not even be possible to obtain suitable arrow lengths.
 
-The code in **emmeans** uses an *ad hoc* weighted regression method to solve the above equations. We give greater weights to cases where $d_{ij}$ is close to $e_{ij}$, because those are the cases where it is more critical that we get the lengths of the arrows right. 
+The code in **emmeans** uses an *ad hoc* weighted regression method to solve the above equations. We give greater weights to cases where $d_{ij}$ is close to $e_{ij}$, because those are the cases where it is more critical that we get the lengths of the arrows right.
 Once the regression equations are solved, we test to make sure that $R_i + L_j < d_{ij}$ when the difference is significant, and $\ge d_{ij}$ when it is not. If one or more of those checks fails, a warning is issued.
 
 That's the essence of the algorithm. Note, however, that there are a few complications that need to be handled:
@@ -190,9 +190,9 @@ That's the essence of the algorithm. Note, however, that there are a few complic
   * Depending on the number $k$ of EMMs and the number of tied minima and maxima, the system of equations could be under-determined, over-determined, or just right.
   * It is possible that the solution could result in some $L_i$ or $R_j$ being negative. That would result in an error.
 
-In summary, the algorithm does not always work (in fact it is possible to construct cases where no solution is possible). But we try to do the best we can. The main reason for trying to do this is to encourage people to not ever use confidence intervals for the $m_i$ as a means of testing the comparisons $d_{ij}$. That is almost always incorrect. 
+In summary, the algorithm does not always work (in fact it is possible to construct cases where no solution is possible). But we try to do the best we can. The main reason for trying to do this is to encourage people to not ever use confidence intervals for the $m_i$ as a means of testing the comparisons $d_{ij}$. That is almost always incorrect.
 
-What is better yet is to simply avoid using comparison arrows altogether and use `pwpp()` or `pwpm()` to display the *P* values directly. 
+What is better yet is to simply avoid using comparison arrows altogether and use `pwpp()` or `pwpm()` to display the *P* values directly.
 
 ### Examples and tests
 Here is a constructed example with specified means and somewhat unequal SEs
@@ -237,7 +237,7 @@ plot(foo8, CIs = FALSE, comparisons = TRUE)
 
 Now the solution actually leads to negative arrow lengths.
 
-What is happening here is we are continually reducing the SE of within-B comparisons 
+What is happening here is we are continually reducing the SE of within-B comparisons
 while keeping the others the same. These all work out if we use `B` as a `by` variable:
 ```{r, message = FALSE, fig.alt = "Plot D - foo8, separate panels for each B. This is a nicely behaved plot because we are not mixing together between-B and within-B SEs."}
 plot(foo8, CIs = FALSE, comparisons = TRUE, by = "B")
@@ -250,7 +250,7 @@ pwpm(foo6)
 ```
 
 ### Related reading on comparisons
-The following reference (as well as some articles referenced therein) have been 
+The following reference (as well as some articles referenced therein) have been
 suggested to me as relating to similar issues:
 
 Franz, V.H., Loftus, G.R. (2012) Standard errors and confidence intervals in within-subjects designs: Generalizing Loftus and Masson (1994) and avoiding the biases of alternative accounts. *Psychonomic Bulletin and Review* **19**, 395-–404. https://doi.org/10.3758/s13423-012-0230-1
@@ -265,7 +265,7 @@ context of `joint_tests()`, this means that certain main- and interaction
 effects cannot be estimated, leading to reduced degrees of freedom in the joint
 tests. Instead, the estimable parts of these lost effects are pooled together
 into a set of contrasts labeled `(confounded)` in the output (as long as
-`showconf = TRUE`). Here is a simple illustration based on the `warpbreaks` 
+`showconf = TRUE`). Here is a simple illustration based on the `warpbreaks`
 dataset with the last cell removed.
 ```{r}
 options(contrasts = c("contr.treatment", "contr.poly"))   ## ensure system default
@@ -274,13 +274,13 @@ w.lm <- lm(breaks ~ wool * tension, data = w)
 w.rg <- ref_grid(w.lm)
 (jt <- joint_tests(w.rg))
 ```
-With no empty cells, we would have had 1 d.f. for `wool`, 2 d.f. for `tension`, 
+With no empty cells, we would have had 1 d.f. for `wool`, 2 d.f. for `tension`,
 and 2 d.f. for `wool:tension`, for a total of 5 d.f. (6 cells, 6 - 1 = 5 d.f.
-for contrasts among them). With the missing cell, we can estimate only 
+for contrasts among them). With the missing cell, we can estimate only
 5 - 1 = 4 d.f. worth of effects, and the `(confounding)` part accounts for
 2 of them that are not purely main effects nor interaction effects.
 
-How do we obtain these extra 2 d.f.? Well, first of all, it is easy to 
+How do we obtain these extra 2 d.f.? Well, first of all, it is easy to
 obtain a joint test of *all* comparisons among the cell means
 ```{r}
 (test.all <- test(contrast(w.rg, "consec"), joint = TRUE))
@@ -317,7 +317,7 @@ the `jt` results above. That's all there is to it!
 ## Intricacies of offsets {#offsets}
 <!-- @index Offsets!`offset()` term vs. `offset` argument in model;
      Examples!`Insurance`              -->
-Many model-fitting functions provide two ways of specifying model offsets: 
+Many model-fitting functions provide two ways of specifying model offsets:
 in the model formula, or in a separate `offset` argument. The purpose of this section
 is to discuss how to deal with these in **emmeans**, and in particular, why
 we decided to handle them differently, even though they seem equivalent.
@@ -330,17 +330,17 @@ mod1 <- glm(Claims ~ District + Group + Age + offset(log(Holders)),
             family = poisson)
 mod2 <- glm(Claims ~ District + Group + Age,
             offset = log(Holders),
-            data = Insurance, 
+            data = Insurance,
             family = poisson)
 ```
-Both models specify, in different ways, an offset of `log(Holders)`; 
+Both models specify, in different ways, an offset of `log(Holders)`;
 and they both have the same regression coefficients and fitted values.
 
 We do not treat these two models in the same way in **emmeans**.
 In `mod1`, the offset is out there as part of the model formula, and so it
 is treated as such in making predictions: the linear prediction includes the term
-`log(Holders)`, with a regression coefficient of 1. In `mod2`, the model formula 
-does not include the variable `Holders`, so we don't use it as a predictor. Instead, 
+`log(Holders)`, with a regression coefficient of 1. In `mod2`, the model formula
+does not include the variable `Holders`, so we don't use it as a predictor. Instead,
 we regard the `offset` argument as implying that there is a covariate
 that is computed in advance of fitting the model, and constrained to have a
 regression coefficient of 1. Let's see how this plays out by looking at the reference grids:
@@ -366,12 +366,12 @@ Thinking through this, these offsets are the logs of the arithmetic and geometri
 means, respectively, of `Holders`; and it is the fact that the offset is logged that
 makes those EMMs differ.
 
-With Poisson models, we often want to estimate rates rather than counts; and we 
+With Poisson models, we often want to estimate rates rather than counts; and we
 can do that by specifying an offset of $\log 1 = 0$ to get a rate per holder:
 ```{r}
 emmeans(rg1, "Age", offset = 0, type = "response")
 ```
-We'd get exactly the same estimates using `rg2` because in both cases, we are 
+We'd get exactly the same estimates using `rg2` because in both cases, we are
 forcing the offset to be zero.
 
 Finally, suppose we want to use different offsets for each age group. This is

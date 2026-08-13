@@ -22,7 +22,7 @@
 # Extra examples
 
 #' Run or list additional examples
-#' 
+#'
 #' This function exists so as to provide cleaner-looking examples in
 #' help files when it must be run conditionally on another package.
 #' Typically we want to run the code (\code{run = TRUE} is the default),
@@ -33,20 +33,20 @@
 #' @param run Logical choosing whether or not to run the example code
 #' @param list Logical choosing whether or not to list the example code
 #' @param ... Used only by the developer
-#' 
+#'
 #' @export
-#' 
+#'
 #' @examples
 #' # List an example
 #' emm_example("qdrg-biglm", list = TRUE)
-#' 
+#'
 #' # Run an example
 #' if (require(biglm))
 #'     emm_example("qdrg-biglm")
-#' 
+#'
 emm_example = function(name, run = !list, list = FALSE, ...) {
     test = (\(test = FALSE, ...) test)(...)
-    if(test) {
+    if (test) {
         file = paste0("inst/extexamples/", name, ".R")
         filestg = paste0("inst/extexamples/", name, ".R")
     }
@@ -60,7 +60,7 @@ emm_example = function(name, run = !list, list = FALSE, ...) {
         cat(readLines(file), sep = "\n")
         cat("\n")
     }
-    if(run) {
+    if (run) {
         prompt.echo = try(get("prompt.echo", parent.frame(3)), silent = TRUE)
         continue.echo = try(get("continue.echo", parent.frame(3)), silent = TRUE)
         if (inherits(prompt.echo, "try-error")) {
@@ -68,7 +68,7 @@ emm_example = function(name, run = !list, list = FALSE, ...) {
             continue.echo = getOption("continue")
         }
         message("\n--- Running code from '", filestg, "'")
-        source(file, echo = TRUE, verbose = FALSE, 
+        source(file, echo = TRUE, verbose = FALSE,
                prompt.echo = prompt.echo, continue.echo = continue.echo)
         cat("\n")
     }

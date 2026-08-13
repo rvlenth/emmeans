@@ -25,20 +25,20 @@
 ### emmGrid object - For reference grids, emmeans results, etc.
 
 #' The \code{emmGrid} class
-#' 
+#'
 #' The \code{emmGrid} class encapsulates linear functions of regression
 #' parameters, defined over a grid of predictors. This includes reference
 #' grids and grids of marginal means thereof (aka estimated marginal means).
 #' Objects of class `emmGrid` may be used independently of the underlying model
 #' object. Instances are created primarily by \code{\link{ref_grid}} and
 #' \code{\link{emmeans}}, and several related functions.
-#'   
-#' @rdname emmGrid-class 
+#'
+#' @rdname emmGrid-class
 #' @slot model.info list. Contains the elements \code{call} (the call that
 #'   produced the model), \code{terms} (its \code{terms} object), and
 #'   \code{xlev} (factor-level information)
-#' @slot roles list. Contains at least the elements \code{predictors}, 
-#'   \code{responses}, and \code{multresp}. Each is a character vector of names 
+#' @slot roles list. Contains at least the elements \code{predictors},
+#'   \code{responses}, and \code{multresp}. Each is a character vector of names
 #'   of these variables.
 #' @slot grid data.frame. Contains the combinations of the variables that define
 #'   the reference grid. In addition, there is an auxiliary column named
@@ -61,8 +61,8 @@
 #' @slot bhat numeric. The regression coefficients. If there is a multivariate
 #'   response, the matrix of coefficients is flattened to a single vector, and
 #'   \code{linfct} and \code{V} redefined appropriately. Important: \code{bhat}
-#'   must \emph{include} any \code{NA} values produced as a result of 
-#'   collinearity in the predictors. These are taken care of later in the 
+#'   must \emph{include} any \code{NA} values produced as a result of
+#'   collinearity in the predictors. These are taken care of later in the
 #'   estimability check.
 #' @slot nbasis matrix. The basis for the non-estimable functions of the
 #'   regression coefficients. Every EMM will correspond to a linear combination
@@ -86,25 +86,25 @@
 #'   \code{NA} otherwise. When it is non-trivial, the \code{\link{as.mcmc.emmGrid}}
 #'   method returns \code{post.beta \%*\% t(linfct)}, which is a sample from the
 #'   posterior distribution of the EMMs.
-#' 
+#'
 #' @section Methods:
-#'   All methods for these objects are S3 methods except for \code{show}. 
+#'   All methods for these objects are S3 methods except for \code{show}.
 #'   They include \code{\link{[.emmGrid}}, \code{\link{as.glht.emmGrid}},
 #'   \code{\link{as.mcmc.emmGrid}}, \code{\link{as.mcmc.list.emmGrid}} (see \pkg{coda}),
 #'   \code{\link{cld.emmGrid}} (see \pkg{multcomp}),
-#'   \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}}, 
+#'   \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}},
 #'   \code{\link{contrast.emmGrid}}, \code{\link{pairs.emmGrid}},
 #'   \code{\link{plot.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{print.emmGrid}},
-#'   \code{\link{rbind.emmGrid}}, \code{show.emmGrid}, \code{\link{str.emmGrid}}, 
-#'   \code{\link{summary.emmGrid}}, \code{\link{test.emmGrid}}, 
-#'   \code{\link{update.emmGrid}}, \code{\link{vcov.emmGrid}}, and 
+#'   \code{\link{rbind.emmGrid}}, \code{show.emmGrid}, \code{\link{str.emmGrid}},
+#'   \code{\link{summary.emmGrid}}, \code{\link{test.emmGrid}},
+#'   \code{\link{update.emmGrid}}, \code{\link{vcov.emmGrid}}, and
 #'   \code{\link{xtable.emmGrid}}
-#' 
+#'
 #' @export
 setClass("emmGrid", slots = c(
     model.info = "list",
     roles = "list",
-    grid = "data.frame", 
+    grid = "data.frame",
     levels = "list",
     matlevs = "list",
     linfct = "matrix",

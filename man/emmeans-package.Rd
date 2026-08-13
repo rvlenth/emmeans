@@ -4,7 +4,7 @@
 \alias{emmeans-package}
 \title{Estimated marginal means (aka Least-squares means)}
 \description{
-This package provides methods for obtaining estimated marginal means (EMMs, also 
+This package provides methods for obtaining estimated marginal means (EMMs, also
 known as least-squares means) for factor combinations in a variety of models.
 Supported models include [generalized linear] models, models for counts,
 multivariate, multinomial and ordinal responses, survival models, GEEs, and
@@ -44,8 +44,8 @@ definitions of EMMs, in that it is possible to include multiple levels of
 covariates in the grid. }
 
 \item{Models supported}{As is mentioned in the package description, many
-types of models are supported by the package. 
-See \href{../doc/models.html}{vignette("models", "emmeans")} for full details. 
+types of models are supported by the package.
+See \href{../doc/models.html}{vignette("models", "emmeans")} for full details.
 Some models may require other packages be
 installed in order to  access all of the available features.
 For models not explicitly supported, it may still be possible to do basic
@@ -72,7 +72,7 @@ contrasts among the estimates; several standard contrast families are
 available such as deviations from the mean, polynomial contrasts, and
 comparisons with one or more controls. Another \code{emmGrid} object is returned,
 which can be summarized or further analyzed. For convenience, a \code{pairs.emmGrid}
-method is provided for the case of pairwise comparisons. 
+method is provided for the case of pairwise comparisons.
 }
 \item{Graphs}{The \code{\link{plot.emmGrid}} method will display
 side-by-side confidence intervals for the estimates, and/or

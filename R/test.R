@@ -44,12 +44,12 @@ test = function(object, null, ...) {
 
 #' @rdname summary.emmGrid
 #' @order 3
-#' @param joint Logical value. If \code{FALSE}, the arguments are passed to 
-#'   \code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
-#'   TRUE}, a joint test of the hypothesis L beta = null is performed, where L 
-#'   is \code{linfct(object)} and beta is the vector of fixed effects estimated 
-#'   by \code{object@betahat}. This will be either an \emph{F} test or a 
-#'   chi-square (Wald) test depending on whether degrees of freedom are 
+#' @param joint Logical value. If \code{FALSE}, the arguments are passed to
+#'   \code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint =
+#'   TRUE}, a joint test of the hypothesis L beta = null is performed, where L
+#'   is \code{linfct(object)} and beta is the vector of fixed effects estimated
+#'   by \code{object@betahat}. This will be either an \emph{F} test or a
+#'   chi-square (Wald) test depending on whether degrees of freedom are
 #'   available. See also \code{\link{joint_tests}}.
 #' @param verbose Logical value. If \code{TRUE} and \code{joint = TRUE}, a table
 #'   of the effects being tested is printed.
@@ -57,16 +57,16 @@ test = function(object, null, ...) {
 #'   missing, all rows of L are used. If not missing, \code{by} variables are
 #'   ignored.
 #' @param status logical. If \code{TRUE}, a \code{note} column showing status
-#'   flags (for rank deficiencies and estimability issues) is displayed even 
-#'   when empty. If \code{FALSE}, the column is included only if there are 
+#'   flags (for rank deficiencies and estimability issues) is displayed even
+#'   when empty. If \code{FALSE}, the column is included only if there are
 #'   such issues.
 #' @method test emmGrid
 #' @export
-test.emmGrid = function(object, null = 0, 
+test.emmGrid = function(object, null = 0,
                     joint = FALSE, verbose = FALSE, rows, by, status = FALSE, ...) {
     # if joint = FALSE, this is a courtesy method for 'contrast'
     # else it computes the F test or Wald test of H0: L*beta = null
-    # where L = object@linfct    
+    # where L = object@linfct
     if (!joint) {
         if (missing(by))
             summary(object, infer=c(FALSE,TRUE), null = null, ...)
@@ -74,16 +74,16 @@ test.emmGrid = function(object, null = 0,
             summary(object, infer=c(FALSE,TRUE), null = null, by = by, ...)
     }
     else {
-        if(verbose) {
+        if (verbose) {
             cat("Joint test of the following linear predictions\n")
             print(cbind(object@grid, equals = null))
-        } 
+        }
         L = object@linfct
         bhat = object@bhat
         estble.idx = which(!is.na(object@bhat))
         bhat = bhat[estble.idx]
         est.flag = !is.na(object@nbasis[1])
-        if(est.flag) {
+        if (est.flag) {
             est.tol = get_emm_option("estble.tol")
             nbasis = zapsmall(object@nbasis)
         }
@@ -92,12 +92,12 @@ test.emmGrid = function(object, null = 0,
             by.rows = list(sel.rows = rows)
         else {
             by.rows = list(all = seq_len(nrow(L)))
-            if(missing(by)) 
+            if (missing(by))
                 by = object@misc$by.vars
-            if (!is.null(by)) 
+            if (!is.null(by))
                 by.rows = .find.by.rows(object@grid, by)
         }
-        
+
         # my own zapsmall fcn - sets a hard limit
         zapsm = function(x, tol = 1e-7) {
             x[abs(x) < tol] = 0
@@ -111,8 +111,8 @@ test.emmGrid = function(object, null = 0,
             narows = apply(LL, 1, function(x) any(is.na(x)) | all(x == 0))
             LL = LL[!narows, , drop = FALSE]
             rrflag = 0 + 2 * any(narows)  ## flag for estimability issue
-            
-            if(est.flag)  { 
+
+            if (est.flag)  {
                 if (any(!estimability::is.estble(LL, nbasis, est.tol))) {
                     LL = estimability::estble.subspace(zapsm(LL), nbasis)
                     rrflag = bitwOr(rrflag, 2)
@@ -123,9 +123,9 @@ test.emmGrid = function(object, null = 0,
             r = qrLt$rank
             if (r == 0)
                 return(c(df1 = 0, df2 = NA, F.ratio = NA, p.value = NA, note = 3))
-            
+
             if (r < nrow(LL)) {
-                if(!all(null == 0))
+                if (!all(null == 0))
                     stop("Rows are linearly dependent - cannot do the test when 'null' != 0")
                 rrflag = bitwOr(rrflag, 1)
             }
@@ -137,7 +137,7 @@ test.emmGrid = function(object, null = 0,
                 r = length(nz)
                 tR = tR[nz, nz, drop = FALSE]
             }
-            if(length(null) < r) null = rep(null, r)
+            if (length(null) < r) null = rep(null, r)
             tQ = tQ.all = t(qr.Q(qrLt))[nz, , drop = FALSE]
             # tQ.all will have all the columns. tQ may get subsetted
             # NOW get rid of the NA parts...
@@ -149,12 +149,12 @@ test.emmGrid = function(object, null = 0,
             if (inherits(F, "try-error"))
                 c(df1 = r, df2 = NA,  F.ratio = NA, p.value = NA, note = 1)
             else {
-                if(is.null(df2 <- object@misc$df))
+                if (is.null(df2 <- object@misc$df))
                     df2 = min(apply(tQ, 1, function(.) object@dffun(., object@dfargs)))
-                if (is.na(df2)) 
+                if (is.na(df2))
                     df2 = Inf
                 p.value = suppressWarnings(pf(F, r, df2, lower.tail = FALSE))
-                rtn = c(round(c(df1 = r, df2 = df2), 2), 
+                rtn = c(round(c(df1 = r, df2 = df2), 2),
                         F.ratio = round(F, 3), p.value = p.value, note = rrflag)
                 # Note: Following will screw-up joint_tests if some df2's are finite and others infinite
                 if (is.infinite(df2)) {
@@ -164,11 +164,11 @@ test.emmGrid = function(object, null = 0,
                 rtn
             }
         })
-        
+
         ef = lapply(result, function(r) attr(r, "L"))
         if (length(unique(sapply(result, length))) > 1) { # some results don't have chisq
             result = lapply(result, \(x) {
-                if (length(x) == 5) 
+                if (length(x) == 5)
                     x = c(x[1:3], Chisq = NA, x[4:5])
                 x
             })
@@ -180,7 +180,7 @@ test.emmGrid = function(object, null = 0,
         }
         class(result) = c("summary_emm", "data.frame")
         attr(result, "estName") = "F.ratio"
-        attr(result, "est.fcns") = lapply(ef, zapsmall)        
+        attr(result, "est.fcns") = lapply(ef, zapsmall)
         if (!status && all(result$note == 0))
             result$note = NULL
         else {
@@ -188,7 +188,7 @@ test.emmGrid = function(object, null = 0,
                 attr(result, "mesg") = .dep.msg
             if (any(result$note %in% c(2,3)))
                 attr(result, "mesg") = c(attr(result, "mesg"), .est.msg)
-            result$note = sapply(result$note, function(x) 
+            result$note = sapply(result$note, function(x)
                 switch(x + 1, "", " d", "   e", " d e"))
         }
         result
@@ -211,7 +211,7 @@ test.emmGrid = function(object, null = 0,
 #' \code{joint = TRUE}. Optionally, one or more of the predictors may be used as
 #' \code{by} variable(s), so that separate tables of tests are produced for
 #' each combination of them.
-#' 
+#'
 #' In models with only factors, no covariates, these tests correspond to
 #' \dQuote{type III} tests a la \pkg{SAS}, as long as equal-weighted averaging
 #' is used and there are no estimability issues. When covariates are present and
@@ -221,7 +221,7 @@ test.emmGrid = function(object, null = 0,
 #' always tests contrasts among EMMs, in the context of the reference grid,
 #' whereas SAS's type III tests are tests of model coefficients -- which may or may
 #' not have anything to do with EMMs or contrasts.
-#' 
+#'
 #' @param object a fitted model, \code{emmGrid}, or \code{emm_list}. If the
 #'   latter, its first element is used.
 #' @param cov.reduce a function.
@@ -242,34 +242,34 @@ test.emmGrid = function(object, null = 0,
 #'    \code{vignette("xplanations")} for more information.
 #' @param ... additional arguments passed to \code{ref_grid} and \code{emmeans}
 #'
-#' @return a \code{summary_emm} object (same as is produced by 
+#' @return a \code{summary_emm} object (same as is produced by
 #'   \code{\link{summary.emmGrid}}). All effects for which there are no
-#'   estimable contrasts are omitted from the results. 
+#'   estimable contrasts are omitted from the results.
 #'   There may be an additional row named \code{(confounded)} which accounts
-#'   for additional degrees of freedom for effects not accounted for in the 
+#'   for additional degrees of freedom for effects not accounted for in the
 #'   preceding rows.
-#'   
+#'
 #'   The returned object also includes an \code{"est.fcns"} attribute, which is a
 #'   named list containing the linear functions associated with each joint test.
-#'   Each row of these is standardized to have length 1. 
+#'   Each row of these is standardized to have length 1.
 #'   No estimable functions are included for confounded effects.
-#'   
+#'
 #' @section Dealing with covariates:
-#' A covariate (or any other predictor) must have \emph{more than one value in 
+#' A covariate (or any other predictor) must have \emph{more than one value in
 #' the reference grid} in order to test its effect and be included in the results.
 #' Therefore, when \code{object} is a model, we default to \code{cov.reduce = meanint}
 #' which sets each covariate at a symmetric interval about its mean. But
-#' when \code{object} is an existing reference grid, it often has only one value 
+#' when \code{object} is an existing reference grid, it often has only one value
 #' for covariates, in which case they are excluded from the joint tests.
-#' 
+#'
 #' While having two points is sufficient when the covariate term has a linear trend,
 #' you need more than two when some kind of curved trend (polynomial, spline, etc.)
-#' is present -- else \code{joint_tests()} will not show enough degrees of freedom 
+#' is present -- else \code{joint_tests()} will not show enough degrees of freedom
 #' for terms involving the covariate. You may specify these points manually using \code{at},
 #' or by including an \code{npts} argument in \code{cov.reduce}, via \code{make.meanint}
 #' or \code{make.symmint()}. With some kinds of curved trends, the joint tests of
 #' covariate terms may become somewhat meaningless.
-#' 
+#'
 #' Covariates present further complications in that their values in the
 #' reference grid can affect the joint tests of \emph{other} effects. When
 #' covariates are centered around their means (the default), then the tests we
@@ -281,29 +281,29 @@ test.emmGrid = function(object, null = 0,
 #' means with covariates set at or around zero do not make much sense in the
 #' context of interpreting estimated marginal means, unless the covariate means
 #' really are zero.
-#' 
+#'
 #' See the examples below with the \code{toy} dataset.
-#' 
+#'
 #' @note \code{joint_tests} is flaky with models having nested fixed effects. In
 #' some cases, terms that could be relevant are not identified, or confounded
 #' with unidentifiable terms.
-#' 
+#'
 #' @seealso \code{\link{test}}
 #' @order 1
 #' @export
 #'
 #' @examples
 #' pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
-#' 
+#'
 #' (jt <- joint_tests(pigs.lm))             ## will be same as type III ANOVA
-#' 
+#'
 #' ### Estimable functions associated with "percent"
 #' attr(jt, "est.fcns") $ "percent"
-#' 
+#'
 #' joint_tests(pigs.lm, weights = "outer")  ## differently weighted
-#' 
+#'
 #' joint_tests(pigs.lm, by = "source")      ## separate joint tests of 'percent'
-#' 
+#'
 #' ### Comparisons with type III tests in SAS
 #' toy = data.frame(
 #'     treat = rep(c("A", "B"), c(4, 6)),
@@ -312,46 +312,46 @@ test.emmGrid = function(object, null = 0,
 #' toy.fac = lm(resp ~ treat * factor(female), data = toy)
 #' toy.cov = lm(resp ~ treat * female, data = toy)
 #' # (These two models have identical fitted values and residuals)
-#' 
+#'
 #' # -- SAS output we'd get with toy.fac --
 #' ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 #' ## treat            1    488.8928571    488.8928571    404.60   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## treat*female     1      1.7500000      1.7500000      1.45   0.2741
-#' # 
+#' #
 #' # -- SAS output we'd get with toy.cov --
 #' ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 #' ## treat            1    252.0833333    252.0833333    208.62   <.0001
 #' ## female           1     78.8928571     78.8928571     65.29   0.0002
 #' ## female*treat     1      1.7500000      1.7500000      1.45   0.2741
-#' 
+#'
 #' joint_tests(toy.fac)
 #' joint_tests(toy.cov)   # female is regarded as a 2-level factor by default
-#' 
+#'
 #' ## Treat 'female' as a numeric covariate (via cov.keep = 0)
 #' ## ... then tests depend on where we center things
-#' 
+#'
 #' # Center around the mean
 #' joint_tests(toy.cov, cov.keep = 0, cov.reduce = make.meanint(delta = 1))
 #' # Center around zero (like SAS's results for toy.cov)
 #' joint_tests(toy.cov, cov.keep = 0, cov.reduce = make.symmint(ctr = 0, delta = 1))
 #' # Center around 0.5 (like SAS's results for toy.fac)
 #' joint_tests(toy.cov, cov.keep = 0, cov.reduce = range)
-#' 
+#'
 #' ### Example with empty cells and confounded effects
-#' low3 <- unlist(attr(ubds, "cells")[1:3]) 
+#' low3 <- unlist(attr(ubds, "cells")[1:3])
 #' ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
-#' 
+#'
 #' # Show overall joint tests by C:
 #' ref_grid(ubds.lm, by = "C") |> contrast("consec") |> test(joint = TRUE)
-#' 
+#'
 #' # Break each of the above into smaller components:
 #' joint_tests(ubds.lm, by = "C")
-#' 
-joint_tests = function(object, by = NULL, show0df = FALSE, 
+#'
+joint_tests = function(object, by = NULL, show0df = FALSE,
                        showconf = TRUE,
                        cov.reduce = make.meanint(1), ...) {
-    
+
     # hidden defaults for contrast methods and which basis to use for all contrasts
     use.contr = (function(use.contr = c("consec", "consec"), ...) use.contr)(...)
 
@@ -362,9 +362,9 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     }
     facs = setdiff(names(object@levels), c(by, "1"))
 
-    if(length(facs) == 0)
+    if (length(facs) == 0)
         stop("There are no factors to test")
-    
+
     # Use "factors" attr if avail to screen-out interactions not in model
     # For any factors not in model (created by emmeans fcns), assume they interact w/ everything
     trmtbl = attr(object@model.info$terms, "factors")
@@ -389,16 +389,16 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 
     do.test = function(these, facs, result, ...) {
         if ((k <- length(these)) > 0) {
-            if(any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) { # term is in model
+            if (any(apply(trmtbl[these, , drop = FALSE], 2, prod) != 0)) { # term is in model
                 nesters = NULL
                 if (!is.null(nesting)) {
                     nst = intersect(these, names(nesting))
                     if (length(nst) > 0)
                         nesters = unlist(nesting[nst]) # proceed only if these includes all nesters
                 }
-                if (is.null(nesting) || length(setdiff(nesters, these)) == 0) {   
+                if (is.null(nesting) || length(setdiff(nesters, these)) == 0) {
                     emm = emmeans(object, these, by = by, ...)
-                    tst = test(contrast(emm, interaction = use.contr[1], by = union(by, nesters)), 
+                    tst = test(contrast(emm, interaction = use.contr[1], by = union(by, nesters)),
                                by = by, joint = TRUE, status = TRUE)
                     ef = attr(tst, "est.fcns") # get this before we subset the results
                     tst = tst[names(tst) != "Chisq"]   # could have some with Chisq and some without
@@ -424,11 +424,11 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
     result = suppressMessages(do.test(character(0), facs, NULL, ...))
     if (!is.null(result) && all(is.infinite(result$df2) | is.na(result$df2))) {
         w = which(names(result) == "F.ratio")
-        result = cbind(result[, 1:w], Chisq = result$F.ratio * result$df1, 
+        result = cbind(result[, 1:w], Chisq = result$F.ratio * result$df1,
                        result[, (w+1):ncol(result)])
     }
-    
-    
+
+
     ## look at as-yet-unexplained effects
     if (showconf) {
         tmp = contrast(object, use.contr[2], by = by, name = ".cnt.", ...)
@@ -442,7 +442,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
                 efi = if (!is.null(nm)) lapply(ef, function(e) e[[nm]])
                 else ef
                 efi = do.call(rbind, efi)
-                if(!is.null(efi)) {
+                if (!is.null(efi)) {
                     lf = rbind(lf, efi)     # stack 'em up into lf
                     rows = c(rows, r[seq_len(nrow(efi))])   # rows w/ same by combs
                 }
@@ -454,7 +454,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
             tmpe = tmp
             tmpe@linfct = lf
             tmpe@grid = tmp@grid[rows, , drop = FALSE]
-            
+
             ref = conf = test(tmp, joint = TRUE, status = TRUE)
             tst = test(tmpe, joint = TRUE)
             conf$df1 = ref$df1 - tst$df1
@@ -465,30 +465,30 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
             result = rbind(result, conf)
         }
     }
-    
+
     result = result[order(result[[1]]), -1, drop = FALSE]
     est.fcns = est.fcns[order(ef.ord)]
-    if(!show0df) {
+    if (!show0df) {
         result = result[result$df1 > 0, , drop = FALSE]
-        if(!is.null(by))
+        if (!is.null(by))
             est.fcns = lapply(est.fcns, function(x) x[!sapply(x, is.null)])
         est.fcns = est.fcns[!sapply(est.fcns, is.null)]
     }
-        
+
     class(result) = c("summary_emm", "data.frame")
     attr(result, "estName") = "F.ratio"
     attr(result, "by.vars") = by
     nms = colnames(object@linfct)
-    if(is.null(by)) 
+    if (is.null(by))
         est.fcns = lapply(est.fcns, function(x) {
-            if(!is.null(x)) colnames(x) = nms; x})
-    else 
+            if (!is.null(x)) colnames(x) = nms; x})
+    else
         est.fcns = lapply(est.fcns, function(L) lapply(L, function(x) {
-            if(!is.null(x)) colnames(x) = nms; x}))
+            if (!is.null(x)) colnames(x) = nms; x}))
     attr(result, "est.fcns") = est.fcns
     if (any(result$note != "")) {
         msg = character(0)
-        if (any(result$note %in% c(" d", " d e")))  
+        if (any(result$note %in% c(" d", " d e")))
             msg = .dep.msg
         if (any(result$note %in% c("   e", " d e")))
             msg = c(msg, .est.msg)
@@ -508,7 +508,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 #'   width of the interval is \code{2*delta}.
 #' @param npts  number of points to include in the interval
 #'
-#' @return \code{make.meanint} returns the function 
+#' @return \code{make.meanint} returns the function
 #' \code{function(x) mean(x) + delta * c(-1, 1)},
 #'   and \code{make.symmint(ctr, delta)} returns the function
 #' \code{function(x) ctr + delta * c(-1, 1)}
@@ -518,7 +518,7 @@ joint_tests = function(object, by = NULL, show0df = FALSE,
 #' back-compatibility reasons. These functions are available primarily for use
 #' with \code{cov.reduce}.
 #' @export
-make.meanint = function(delta = 1, npts = 2) 
+make.meanint = function(delta = 1, npts = 2)
     function(x) mean(x) + delta * seq(-1, 1, length.out = npts)
 
 #' @rdname joint_tests
@@ -533,13 +533,13 @@ meanint = function(x) mean(x) + c(-1, 1)
 #' @order 8
 #' @export
 make.symmint = function(ctr, delta = 1, npts = 2) {
-    function(x) ctr + delta * seq(-1, 1, length.out = npts) 
+    function(x) ctr + delta * seq(-1, 1, length.out = npts)
 }
 
 #' @rdname joint_tests
 #' @order 9
 #' @export
-symmint = function(ctr) 
+symmint = function(ctr)
     make.symmint(ctr, 1)
 
 

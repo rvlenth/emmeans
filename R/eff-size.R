@@ -2,22 +2,22 @@
 
 
 #' Calculate Cohen effect sizes and confidence bounds thereof
-#' 
+#'
 #' Standardized effect sizes are typically calculated using pairwise differences of estimates,
 #' divided by the SD of the population providing the context for those effects.
 #' This function calculates effect sizes from an \code{emmGrid} object,
 #' and confidence intervals for them, accounting for uncertainty in both the estimated
-#' effects and the population SD. 
-#' 
+#' effects and the population SD.
+#'
 #' Any \code{by} variables specified in \code{object} will remain in force in the returned
 #' effects, unless overridden in the optional arguments.
-#' 
+#'
 #' For models having a single random effect, such as those fitted using
 #' \code{\link{lm}}; in that case, the \code{stats::sigma} and
 #' \code{stats::df.residual} functions may be useful for specifying \code{sigma}
 #' and \code{edf}. For models with more than one random effect, \code{sigma} may
-#' be based on some combination of the random-effect variances. 
-#' 
+#' be based on some combination of the random-effect variances.
+#'
 #' Specifying \code{edf} can be rather unintuitive but is also relatively
 #' uncritical; but the smaller the value, the wider the confidence intervals for
 #' effect size. The value of \code{sqrt(2/edf)} can be interpreted as the
@@ -28,15 +28,15 @@
 #' \code{Inf} is allowable, in which case you are assuming that \code{sigma} is
 #' known exactly. Obviously, this narrows the confidence intervals for the
 #' effect sizes -- unrealistically if in fact \code{sigma} is unknown.
-#' 
 #'
-#' @param object an \code{\link[=emmGrid-class]{emmGrid}} object, 
-#' typically one defining the EMMs to 
+#'
+#' @param object an \code{\link[=emmGrid-class]{emmGrid}} object,
+#' typically one defining the EMMs to
 #' be contrasted. If instead, \code{class(object) == "emm_list"},
 #' such as is produced by \code{emmeans(model, pairwise ~ treatment)},
-#' a message is displayed; the contrasts already therein are used; and 
+#' a message is displayed; the contrasts already therein are used; and
 #' \code{method} is replaced by \code{"identity"}.
-#' @param sigma numeric scalar, value of the population SD. 
+#' @param sigma numeric scalar, value of the population SD.
 #' @param edf numeric scalar that specifies the equivalent degrees of freedom
 #'   for the \code{sigma}. This is a way of specifying the uncertainty in \code{sigma},
 #'   in that we regard our estimate of \code{sigma^2} as being proportional to
@@ -49,7 +49,7 @@
 #' @param ... Additional arguments passed to \code{contrast}
 #'
 #' @return an \code{\link[=emmGrid-class]{emmGrid}} object containing the effect sizes
-#' 
+#'
 #' @section Computation:
 #' This function uses calls to \code{\link{regrid}} to put the estimated
 #' marginal means (EMMs) on the log scale. Then an extra element is added to
@@ -60,47 +60,47 @@
 #' Finally, the results are re-gridded back to the original scale and the
 #' desired contrasts are computed using \code{method}. In the log-scaling
 #' part, we actually rescale the absolute values and keep track of the signs.
-#' 
+#'
 #' @note
 #' The effects are always computed on the scale of the \emph{linear-predictor};
 #' any response transformation or link function is completely ignored. If you
 #' wish to base the effect sizes on the response scale, it is \emph{not} enough
 #' to replace \code{object} with \code{regrid(object)}, because this
-#' back-transformation changes the SD required to compute effect sizes. 
-#' 
+#' back-transformation changes the SD required to compute effect sizes.
+#'
 #' @note
 #' \strong{Paired data:} Be careful with paired-data situations, where Cohen's d is typically referenced to
 #' the SD of the \emph{paired differences} rather than the \emph{residual} SD.
 #' You may need to enlarge \code{sigma} by a factor of \code{sqrt(2)} to obtain
 #' comparable results with other software.
-#' 
+#'
 #' @note
 #' \strong{Disclaimer:} There is substantial disagreement among practitioners on
 #' what is the appropriate \code{sigma} to use in computing effect sizes; or,
 #' indeed, whether \emph{any} effect-size measure is appropriate for some
-#' situations. The user is completely responsible for specifying 
+#' situations. The user is completely responsible for specifying
 #' appropriate parameters (or for failing to do so).
-#' 
+#'
 #' Cohen effect sizes do not even exist for generalized linear models or other
-#' models lacking an additive residual error term. 
-#' 
+#' models lacking an additive residual error term.
+#'
 #' @export
-#' @note 
+#' @note
 #' The examples here illustrate a sobering message that effect sizes are often not nearly as accurate as you may think.
 #'
 #' @examples
 #' fiber.lm <- lm(strength ~ diameter + machine, data = fiber)
-#' 
+#'
 #' emm <- emmeans(fiber.lm, "machine")
 #' eff_size(emm, sigma = sigma(fiber.lm), edf = df.residual(fiber.lm))
-#' 
+#'
 #' # or equivalently:
 #' eff_size(pairs(emm), sigma(fiber.lm), df.residual(fiber.lm), method = "identity")
-#' 
-#' 
+#'
+#'
 #' ### Mixed model example:
 #' if (require(nlme)) withAutoprint({
-#'   Oats.lme <- lme(yield ~ Variety + factor(nitro), 
+#'   Oats.lme <- lme(yield ~ Variety + factor(nitro),
 #'                   random = ~ 1 | Block / Variety,
 #'                   data = Oats)
 #'   # Combine variance estimates
@@ -111,13 +111,13 @@
 #'   eff_size(emmV, sigma = totSD, edf = 5)
 #'   eff_size(emmV, sigma = totSD, edf = 51)
 #' }, spaced = TRUE)
-#' 
-#' 
+#'
+#'
 
 eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     ### Lame attempt to warn if unsuitable...
     # obj.sig = object@misc$sigma
-    # if(is.null(obj.sig) || is.na(obj.sig[1]))
+    # if (is.null(obj.sig) || is.na(obj.sig[1]))
     #     warning("'eff_size()' results are highly suspect for many models.\n",
     #             " Cohen effect sizes are not even defined for generalized linear models.\n",
     #             " See documentation notes.", call. = FALSE)
@@ -127,10 +127,10 @@ eff_size = function(object, sigma, edf, method = "pairwise", ...) {
         method = "identity"
     }
     SE.logsigma = sqrt(1 / (2 * edf))
- 
+
     object = update(object, tran = NULL)
     object = regrid(object, transform = "response")
-    
+
     # put on absolute scale
     emm = object@bhat
     sgn = sign(emm)
@@ -138,7 +138,7 @@ eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     sgn[emm < 1e-15] = 0
     emm[sgn == 0] = 1
     object@bhat = emm
-    
+
     # put on log scale and incorporate the SD estimate
     logobj = regrid(object, transform = "log")
     logobj@bhat = c(logobj@bhat, log(sigma))
@@ -150,12 +150,12 @@ eff_size = function(object, sigma, edf, method = "pairwise", ...) {
     logobj@grid = data.frame(dummy = 1:n)
     logobj@linfct = diag(n)
     logobj@misc$by = NULL
-    
+
     con = contrast(logobj, "trt.vs.ctrlk", by = NULL)
     con = regrid(con, transform = "response")
     object@bhat = con@bhat * sgn
     object@V = con@V
-    update(contrast(object, method, adjust = "none", ...), 
+    update(contrast(object, method, adjust = "none", ...),
            estName = "effect.size", infer = c(TRUE, FALSE),
-           initMesg = paste("sigma used for effect sizes:", signif(sigma, digits = 4)))
+           initMesg = paste("sigma used for effect sizes:", signif (sigma, digits = 4)))
 }

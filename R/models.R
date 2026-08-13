@@ -22,10 +22,10 @@
 # documentation for models
 
 #' Models supported in \pkg{emmeans}
-#' 
+#'
 #' Documentation for models has been moved to a vignette. To access it,
 #' use \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
-#' 
+#'
 #' @name models
 NULL
 

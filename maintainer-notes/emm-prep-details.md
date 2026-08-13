@@ -79,7 +79,7 @@ the results the next day. Here is the script:
 reverse_check = function(reverse = list(which = "all"), Ncpus = 3) {
     
     tar = dir(pattern = "*.tar.gz")
-    if(length(tar) == 0)
+    if (length(tar) == 0)
         stop("No .tar.gz files found")
     ans = menu(tar, graphics = FALSE, title = "Choose tarball, or 0 to cancel")
     if (ans == 0) return(NULL)
