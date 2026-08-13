@@ -39,7 +39,7 @@ compatibility with both \code{multcompView::multcompLetters(..., reversed, ...)}
 In addition, if both \code{sort} and \code{reversed} are TRUE, the sort
 order of results is reversed.}
 
-\item{signif.sets}{Logical value. If \code{FALSE} (and \code{delta = 0}), a 
+\item{signif.sets}{Logical value. If \code{FALSE} (and \code{delta = 0}), a
 \sQuote{traditional}
 compact-letter display is constructed with groupings representing sets of
 estimates that are not statistically different. If \code{TRUE}, the criteria
@@ -62,13 +62,13 @@ an \code{adjust} method)}
 }
 \value{
 A \code{\link[=summary.emmGrid]{summary_emm}} object showing the estimated marginal means
-plus an additional column labeled \code{.group} (when \code{signif.sets = FALSE}), 
-\code{.signif.set} (when \code{signif.sets = TRUE}), or \code{.equiv.set} 
+plus an additional column labeled \code{.group} (when \code{signif.sets = FALSE}),
+\code{.signif.set} (when \code{signif.sets = TRUE}), or \code{.equiv.set}
 (when \code{delta > 0}).
 }
 \description{
-A method for \code{multcomp::cld()} is provided for users desiring to produce 
-compact-letter displays (CLDs). 
+A method for \code{multcomp::cld()} is provided for users desiring to produce
+compact-letter displays (CLDs).
 This method uses the Piepho (2004) algorithm (as implemented in the
 \pkg{multcompView} package) to generate a compact letter display of all
 pairwise comparisons of estimated marginal means. The function obtains (possibly
@@ -80,28 +80,28 @@ common.
 \note{
 We warn that the default display encourages a poor
 practice in interpreting significance tests. Such CLDs are misleading because they
-visually group means with comparisons \emph{P} > \code{alpha} as though they 
+visually group means with comparisons \emph{P} > \code{alpha} as though they
 are equal, when in fact we have only failed to prove that they differ.
 A better alternative if one wants to show groupings is to specify an equivalence
 threshold \code{delta}; then groupings will be based on actual findings of
 equivalence. Another way to display actual findings is to set
-\code{signif.sets = TRUE}, so that estimates in the same group are those 
+\code{signif.sets = TRUE}, so that estimates in the same group are those
 found to be statistically \emph{different}. Obviously, these different options
 require different interpretations of the results; the annotations and the label
 given the final column help guide how to assess the results.
 
-As further alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P} 
+As further alternatives, consider \code{\link{pwpp}} (graphical display of \emph{P}
 values) or \code{\link{pwpm}} (matrix display).
 }
 \examples{
-if(requireNamespace("multcomp"))
+if (requireNamespace("multcomp"))
     emm_example("cld-multcomp")
     # Use emm_example("cld-multcomp", list = TRUE) # to just list the code
 
 }
 \references{
-Piepho, Hans-Peter (2004) An algorithm for a letter-based 
-  representation of all pairwise comparisons, 
-  Journal of Computational and Graphical Statistics, 
+Piepho, Hans-Peter (2004) An algorithm for a letter-based
+  representation of all pairwise comparisons,
+  Journal of Computational and Graphical Statistics,
   13(2), 456-466.
 }

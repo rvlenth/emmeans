@@ -17,9 +17,9 @@ A data frame with 60 observations and 5 variables:
 }
 }
 \source{
-Cai, Weijie (2014) \emph{Making Comparisons Fair: How LS-Means Unify 
+Cai, Weijie (2014) \emph{Making Comparisons Fair: How LS-Means Unify
   the Analysis of Linear Models}, SAS Institute, Inc. Technical paper 142-2014,
-  page 12, 
+  page 12,
   \url{http://support.sas.com/resources/papers/proceedings14/SAS060-2014.pdf}
 }
 \usage{
@@ -27,7 +27,7 @@ neuralgia
 }
 \description{
 These data arise from a study of analgesic effects of treatments of elderly
-patients who have neuralgia. Two treatments and a placebo are compared. The 
+patients who have neuralgia. Two treatments and a placebo are compared. The
 response variable is whether the patient reported pain or not. Researchers
 recorded the age and gender of 60 patients along with the duration of
 complaint before the treatment began.
@@ -35,8 +35,8 @@ complaint before the treatment began.
 \examples{
 # Model and analysis shown in the SAS report:
 neuralgia.glm <- glm(Pain ~ Treatment * Sex + Age, family = binomial(),
-   data = neuralgia) 
-pairs(emmeans(neuralgia.glm, ~ Treatment, at = list(Sex = "F")), 
+   data = neuralgia)
+pairs(emmeans(neuralgia.glm, ~ Treatment, at = list(Sex = "F")),
     reverse = TRUE, type = "response", adjust = "bonferroni")
 
 }

@@ -54,19 +54,19 @@ width of the interval is \code{2*delta}.}
 \item{x}{argument for \code{meanint} and \code{symmint}}
 }
 \value{
-a \code{summary_emm} object (same as is produced by 
+a \code{summary_emm} object (same as is produced by
   \code{\link{summary.emmGrid}}). All effects for which there are no
-  estimable contrasts are omitted from the results. 
+  estimable contrasts are omitted from the results.
   There may be an additional row named \code{(confounded)} which accounts
-  for additional degrees of freedom for effects not accounted for in the 
+  for additional degrees of freedom for effects not accounted for in the
   preceding rows.
-  
+
   The returned object also includes an \code{"est.fcns"} attribute, which is a
   named list containing the linear functions associated with each joint test.
-  Each row of these is standardized to have length 1. 
+  Each row of these is standardized to have length 1.
   No estimable functions are included for confounded effects.
 
-\code{make.meanint} returns the function 
+\code{make.meanint} returns the function
 \code{function(x) mean(x) + delta * c(-1, 1)},
   and \code{make.symmint(ctr, delta)} returns the function
 \code{function(x) ctr + delta * c(-1, 1)}
@@ -104,16 +104,16 @@ with unidentifiable terms.
 }
 \section{Dealing with covariates}{
 
-A covariate (or any other predictor) must have \emph{more than one value in 
+A covariate (or any other predictor) must have \emph{more than one value in
 the reference grid} in order to test its effect and be included in the results.
 Therefore, when \code{object} is a model, we default to \code{cov.reduce = meanint}
 which sets each covariate at a symmetric interval about its mean. But
-when \code{object} is an existing reference grid, it often has only one value 
+when \code{object} is an existing reference grid, it often has only one value
 for covariates, in which case they are excluded from the joint tests.
 
 While having two points is sufficient when the covariate term has a linear trend,
 you need more than two when some kind of curved trend (polynomial, spline, etc.)
-is present -- else \code{joint_tests()} will not show enough degrees of freedom 
+is present -- else \code{joint_tests()} will not show enough degrees of freedom
 for terms involving the covariate. You may specify these points manually using \code{at},
 or by including an \code{npts} argument in \code{cov.reduce}, via \code{make.meanint}
 or \code{make.symmint()}. With some kinds of curved trends, the joint tests of
@@ -160,7 +160,7 @@ toy.cov = lm(resp ~ treat * female, data = toy)
 ## treat            1    488.8928571    488.8928571    404.60   <.0001
 ## female           1     78.8928571     78.8928571     65.29   0.0002
 ## treat*female     1      1.7500000      1.7500000      1.45   0.2741
-# 
+#
 # -- SAS output we'd get with toy.cov --
 ## Source          DF    Type III SS    Mean Square   F Value   Pr > F
 ## treat            1    252.0833333    252.0833333    208.62   <.0001
@@ -181,7 +181,7 @@ joint_tests(toy.cov, cov.keep = 0, cov.reduce = make.symmint(ctr = 0, delta = 1)
 joint_tests(toy.cov, cov.keep = 0, cov.reduce = range)
 
 ### Example with empty cells and confounded effects
-low3 <- unlist(attr(ubds, "cells")[1:3]) 
+low3 <- unlist(attr(ubds, "cells")[1:3])
 ubds.lm <- lm(y ~ A*B*C, data = ubds, subset = -low3)
 
 # Show overall joint tests by C:

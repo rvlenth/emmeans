@@ -29,7 +29,7 @@ methods. You may also include a \code{which} argument; see Details.}
   there is a \code{multcomp::glht} method.
 
 \code{as.glht} returns an object of class \code{glht} or \code{glht_list}
-  according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}. 
+  according to whether \code{object} is of class \code{emmGrid} or \code{emm_list}.
   See Details below for more on \code{glht_list}s.
 }
 \description{
@@ -44,7 +44,7 @@ The multivariate-\eqn{t} routines used by \code{glht} require that all
   The user may override this via the \code{df} argument.
 }
 \section{Details for \code{emm}}{
-  
+
 \code{emm} is meant to be called only \emph{from} \code{"glht"} as its second
 (\code{linfct}) argument. It works similarly to \code{multcomp::mcp},
 except with \code{specs} (and optionally \code{by} and \code{contr}
@@ -62,15 +62,15 @@ on whether the indexes are valid, and the keyword \code{which} must be spelled-o
 
 When no \code{by} variable is in force, we obtain a \code{glht} object; otherwise
 it is a \code{glht_list}. The latter is defined in \pkg{emmeans}, not \pkg{multcomp},
-and is simply a \code{list} of \code{glht} objects. 
+and is simply a \code{list} of \code{glht} objects.
 Appropriate convenience methods \code{coef},
 \code{confint}, \code{plot}, \code{summary}, and \code{vcov} are provided,
 which simply apply the corresponding \code{glht} methods to each member.
 }
 
 \examples{
-if(require(multcomp, quietly = TRUE)) 
-    emm_example("glht-multcomp") 
+if (require(multcomp, quietly = TRUE))
+    emm_example("glht-multcomp")
     # Use emm_example("glht-multcomp", list = TRUE) # to see just the code
-    
+
 }

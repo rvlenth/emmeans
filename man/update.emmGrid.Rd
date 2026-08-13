@@ -25,7 +25,7 @@ shown.}
 \item{x}{an \code{emmGrid} object}
 
 \item{value}{\code{list} or replacement levels. See the documentation for
-\code{update.emmGrid} with the \code{levels} argument, 
+\code{update.emmGrid} with the \code{levels} argument,
 as well as the section below on \dQuote{Replaciong levels}}
 
 \item{by.vars, mesg}{Attributes that can be altered in \code{update.summary_emm}}
@@ -38,15 +38,15 @@ an updated \code{emmGrid} object.
 }
 \description{
 Objects of class \code{emmGrid} contain several settings that affect such things as
-what arguments to pass to \code{\link{summary.emmGrid}}. 
+what arguments to pass to \code{\link{summary.emmGrid}}.
 The \code{update} method allows safer management of these settings than
 by direct modification of its slots.
 }
 \note{
-When it makes sense, an option set by \code{update} will persist into 
+When it makes sense, an option set by \code{update} will persist into
 future results based on that object. But some options are disabled as well.
 For example, a \code{calc} option will be nulled-out if \code{contrast}
-is called, because it probably will not make sense to do the same 
+is called, because it probably will not make sense to do the same
 calculations on the contrast results, and in fact the variable(s) needed
 may not even still exist.
 \code{factor(percent)}.
@@ -113,7 +113,7 @@ inferences; used in Tukey adjustment}
 of \code{infer} in \code{\link{summary.emmGrid}}.}
 
 \item{\code{level}}{(numeric) is the default confidence level, \code{level},
-in \code{\link{summary.emmGrid}}. \emph{Note:} You must specify all five letters 
+in \code{\link{summary.emmGrid}}. \emph{Note:} You must specify all five letters
 of \sQuote{level} to distinguish it from the slot name \sQuote{levels}.}
 
 \item{\code{df}}{(numeric) overrides the default degrees of freedom with a
@@ -142,17 +142,17 @@ of displaying predictions in \code{\link{summary.emmGrid}},
 \item{\code{bias.adjust}, \code{frequentist}}{(logical) These
 are used by \code{summary} if the value of these arguments are not specified.}
 
-\item{\code{estType}}{(\code{character}) is used internally to determine 
-what \code{adjust} methods are appropriate. It should match one of 
+\item{\code{estType}}{(\code{character}) is used internally to determine
+what \code{adjust} methods are appropriate. It should match one of
 \samp{c("prediction", "contrast", "pairs")}. As an example of why this is needed,
-the Tukey adjustment should only be used for pairwise comparisons 
+the Tukey adjustment should only be used for pairwise comparisons
 (\code{estType = "pairs"}); if \code{estType} is some other string, Tukey
 adjustments are not allowed.}
 
-\item{\code{avgd.over}}{(\code{character)} vector) are the names of the 
-variables whose levels are averaged over in obtaining marginal averages of 
-predictions, i.e., estimated marginal means. Changing this might produce a 
-misleading printout, but setting it to \code{character(0)} will suppress the 
+\item{\code{avgd.over}}{(\code{character)} vector) are the names of the
+variables whose levels are averaged over in obtaining marginal averages of
+predictions, i.e., estimated marginal means. Changing this might produce a
+misleading printout, but setting it to \code{character(0)} will suppress the
 \dQuote{averaged over} message in the summary.}
 
 \item{\code{initMesg}}{(\code{character}) is a string that is added to the
@@ -173,25 +173,25 @@ if needed, the list is expanded using \code{expand.grid}. These results replace
 current variable names and levels. This specification changes the \code{levels},
 \code{grid}, \code{roles}, and \code{misc} slots in the updated \code{emmGrid},
 and resets \code{pri.vars}, \code{by.vars}, \code{adjust}, \code{famSize},
-and \code{avgd.over}. In addition, if there is nesting of factors, that may be 
+and \code{avgd.over}. In addition, if there is nesting of factors, that may be
 altered; a warning is issued if it involves something other than mere name changes.
 \emph{Note:} All six letters of \code{levels} is needed in order to distinguish
 it from \code{level}.}
 
-\item{\code{submodel}}{\code{formula} or \code{character} value specifying a 
-submodel (requires this feature being supported by underlying methods 
-for the model class). When specified, the \code{linfct} slot is replaced by 
-its aliases for the specified sub-model. Any factors in the sub-model that 
-do not appear in the model matrix are ignored, as are any interactions that 
-are not in the main model, and any factors associate with multivariate responses. 
-The estimates displayed are then computed as if 
+\item{\code{submodel}}{\code{formula} or \code{character} value specifying a
+submodel (requires this feature being supported by underlying methods
+for the model class). When specified, the \code{linfct} slot is replaced by
+its aliases for the specified sub-model. Any factors in the sub-model that
+do not appear in the model matrix are ignored, as are any interactions that
+are not in the main model, and any factors associate with multivariate responses.
+The estimates displayed are then computed as if
 the sub-model had been fitted. (However, the standard errors will be based on the
-error variance(s) of the full model.) 
+error variance(s) of the full model.)
 \emph{Note:} The formula should refer only to predictor names, \emph{excluding} any
-function calls (such as \code{factor} or \code{poly}) that appear in the 
+function calls (such as \code{factor} or \code{poly}) that appear in the
 original model formula. See the example.
 
-The character values allowed should partially 
+The character values allowed should partially
 match \code{"minimal"} or \code{"type2"}. With \code{"minimal"}, the sub-model
 is taken to be the one only involving the surviving factors in \code{object}
 (the ones averaged over being omitted). Specifying \code{"type2"} is the same as
@@ -213,8 +213,8 @@ whereas the \code{submodel} calculations preserve the final weights used in
 fitting the full model.}
 
 \item{(any other slot name)}{If the name matches an element of
-\code{slotNames(object)} other than \code{levels}, that slot is replaced by 
-the supplied value, if it is of the required class (otherwise an error occurs). 
+\code{slotNames(object)} other than \code{levels}, that slot is replaced by
+the supplied value, if it is of the required class (otherwise an error occurs).
 
 The user must be very careful in
 replacing slots because they are interrelated; for example, the lengths
@@ -227,7 +227,7 @@ conform.}
 
 The \code{levels<-} method uses \code{update.emmGrid} to replace the
 levels of one or more factors. This method allows selectively replacing
-the levels of just one factor (via subsetting operators), whereas 
+the levels of just one factor (via subsetting operators), whereas
 \code{update(x, levels = list(...))} requires a list of \emph{all} factors
 and their levels. If any factors are to be renamed, we must replace all
 levels and include the new names in the replacements. See the examples.
@@ -245,7 +245,7 @@ pigs.lm <- lm(log(conc) ~ source * factor(percent), data = pigs)
 
 # Reference grid that knows about the transformation
 # and asks to include the sample size in any summaries:
-pigs.rg <- update(ref_grid(pigs.lm), tran = "log", 
+pigs.rg <- update(ref_grid(pigs.lm), tran = "log",
                     predict.type = "response",
                     calc = c(n = ~.wgt.))
 emmeans(pigs.rg, "source")
@@ -269,7 +269,7 @@ fibz.lm <- lm(strength ~ machine * zd, data = fiber)
 lev <- levels(fibz.rg)
 levels(fibz.rg) <- list (
     machine = lev$machine,
-    diameter = with(attributes(zd), 
+    diameter = with(attributes(zd),
                     `scaled:center` + `scaled:scale` * lev$zd) )
 fibz.rg
 

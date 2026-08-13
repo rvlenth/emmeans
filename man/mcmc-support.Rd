@@ -30,7 +30,7 @@ one variable involved, the elements of \code{names} are used cyclically.}
 MCMC chain available, an \code{\link[coda]{mcmc.list}} object is returned
 by \code{as.mcmc}, with separate EMMs posteriors in each chain.}
 
-\item{likelihood}{Character value or function. If given, simulations are made from 
+\item{likelihood}{Character value or function. If given, simulations are made from
 the corresponding posterior predictive distribution. If not given, we obtain
 the posterior distribution of the parameters in \code{object}. See Prediction
 section below.}
@@ -49,8 +49,8 @@ non-estimable, an error is thrown.)}
 An object of class \code{\link[coda]{mcmc}} or \code{\link[coda]{mcmc.list}}.
 }
 \description{
-When a model is fitted using Markov chain Monte Carlo (MCMC) methods, 
-its reference grid contains a \code{post.beta} slot. These functions 
+When a model is fitted using Markov chain Monte Carlo (MCMC) methods,
+its reference grid contains a \code{post.beta} slot. These functions
 transform those posterior samples to posterior samples of EMMs or
 related contrasts. They can then be summarized or plotted using,
 e.g., functions in the \pkg{coda} package.
@@ -72,14 +72,14 @@ results. The \code{as.mcmc.list} method is guaranteed to return an
 
 When \code{likelihood} is specified, it is used to simulate values from the
 posterior predictive distribution corresponding to the given likelihood and
-the posterior distribution of parameter values. Denote the likelihood 
+the posterior distribution of parameter values. Denote the likelihood
 function as \eqn{f(y|\theta,\phi)}, where \eqn{y} is a response, \eqn{\theta}
 is the parameter estimated in \code{object}, and \eqn{\phi} comprises zero or
-more additional parameters to be specified. If \code{likelihood} is a 
-function, that function should take as its first argument a vector of 
+more additional parameters to be specified. If \code{likelihood} is a
+function, that function should take as its first argument a vector of
 \eqn{\theta} values (each corresponding to one row of \code{object@grid}).
 Any \eqn{\phi} values should be specified as additional named function
-arguments, and passed to \code{likelihood} via \code{...}. This function should 
+arguments, and passed to \code{likelihood} via \code{...}. This function should
 simulate values of \eqn{y}.
 
 A few standard likelihoods are available by specifying \code{likelihood} as
@@ -87,9 +87,9 @@ a character value. They are:
 \describe{
   \item{\code{"normal"}}{The normal distribution with mean \eqn{\theta} and
   standard deviation specified by additional argument \code{sigma}}
-  \item{\code{"binomial"}}{The binomial distribution with success probability 
+  \item{\code{"binomial"}}{The binomial distribution with success probability
     \eqn{theta}, and number of trials specified by \code{trials}}
-  \item{\code{"poisson"}}{The Poisson distribution with mean \eqn{theta} 
+  \item{\code{"poisson"}}{The Poisson distribution with mean \eqn{theta}
     (no additional parameters)}
   \item{\code{"gamma"}}{The gamma distribution with scale parameter \eqn{\theta}
     and shape parameter specified by \code{shape}}
@@ -97,8 +97,8 @@ a character value. They are:
 }
 
 \examples{
-if(requireNamespace("coda")) 
+if (requireNamespace("coda"))
     emm_example("as.mcmc-coda")
     # Use emm_example("as.mcmc-coda", list = TRUE) # to see just the code
-    
+
 }

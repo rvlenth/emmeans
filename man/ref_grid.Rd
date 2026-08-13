@@ -60,13 +60,13 @@ grid is reconstructed via \code{\link{regrid}} with the argument
 \code{transform = regrid}. See the section below on prediction types and
 transformations. \emph{Note:} This argument was named \code{transform} in
 version 1.7.2 and earlier. For compatibility with old code, \code{transform}
-is still accepted if found among \code{...}, 
+is still accepted if found among \code{...},
 as long as it doesn't match \code{tran}.}
 
 \item{nesting}{If the model has nested fixed effects, this may be specified
 here via a character vector or named \code{list} specifying the nesting
 structure. Specifying \code{nesting} overrides any nesting structure that
-is automatically detected. See the section below on Recovering or Overriding 
+is automatically detected. See the section below on Recovering or Overriding
 Model Information.}
 
 \item{offset}{Numeric scalar value (if a vector, only the first element is
@@ -83,21 +83,21 @@ Note: This applies only when the family is \code{"gaussian"}; for other families
 
 \item{counterfactuals}{\code{counterfactuals} specifies character
 names of counterfactual factors. If this is non-missing, a reference grid
-is created consisting of combinations of counterfactual levels 
+is created consisting of combinations of counterfactual levels
 and the actual levels of those same factors.
 This grid is always converted to the response transformation scale
-and averaged over the actual factor levels. See the section below 
+and averaged over the actual factor levels. See the section below
 on counterfactuals.}
 
 \item{nuisance, non.nuisance, wt.nuis}{If \code{nuisance} is a vector of predictor names,
-those predictors are omitted from the reference grid. Instead, the result 
-will be as if we had averaged over the levels of those factors, with either 
-equal or proportional weights as specified in \code{wt.nuis} (see the 
-\code{weights} argument in \code{\link{emmeans}}). The factors in 
+those predictors are omitted from the reference grid. Instead, the result
+will be as if we had averaged over the levels of those factors, with either
+equal or proportional weights as specified in \code{wt.nuis} (see the
+\code{weights} argument in \code{\link{emmeans}}). The factors in
 \code{nuisance} must not interact with other factors, not even other
 nuisance factors. Specifying nuisance factors can save considerable
 storage and computation time, and help avoid exceeding the maximum
-reference-grid size (\code{get_emm_option("rg.limit")}). 
+reference-grid size (\code{get_emm_option("rg.limit")}).
 (\emph{Note:} For certain models where the \code{emm_basis} method returns a
 re-gridded parameterization, nuisance factors cannot be used, and an error
 is thrown.)}
@@ -130,12 +130,12 @@ functions, in that those functions pass their \code{...} arguments to
 \code{ref_grid}.
 
 The reference grid consists of combinations of independent variables over
-which predictions are made. 
+which predictions are made.
 Estimated marginal means are defined as these
 predictions, or marginal averages thereof. The grid is determined by first
 reconstructing the data used in fitting the model (see
 \code{\link{recover_data}}), or by using the \code{data.frame} provided in
-\code{data}. 
+\code{data}.
 
 By \dQuote{independent variables,} we mean (in most cases) the results of
 \code{all.vars()} applied to the fixed-effects part of the right-hand side of
@@ -157,7 +157,7 @@ recovering/overriding model information.
 The system default for \code{cov.keep} causes models
   containing indicator variables to be handled differently than in
   \pkg{emmeans} version 1.4.1 or earlier. To replicate older
-  analyses, change the default via 
+  analyses, change the default via
   \samp{emm_options(cov.keep = character(0))}.
 
 Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
@@ -166,23 +166,23 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   code associated with \code{cov.keep}.
 }
 \section{Using \code{cov.reduce} and \code{cov.keep}}{
- 
+
   The \code{cov.keep} argument was not available in \pkg{emmeans} versions
   1.4.1 and earlier. Any covariates named in this list are treated as if they
   are factors: all the unique levels are kept in the reference grid. The user
   may also specify an integer value, in which case any covariate having no more
   than that number of unique values is implicitly included in \code{cov.keep}.
-  The default for \code{cov.keep} is set and retrieved via the 
+  The default for \code{cov.keep} is set and retrieved via the
   \code{\link{emm_options}} framework, and the system default is \code{"2"},
   meaning that covariates having only two unique values are automatically
   treated as two-level factors. See also the Note below on backward compatibility.
-  
+
   There is a subtle distinction between including a covariate in \code{cov.keep}
-  and specifying its values manually in \code{at}: Covariates included in 
+  and specifying its values manually in \code{at}: Covariates included in
   \code{cov.keep} are treated as factors for purposes of weighting, while
   specifying levels in \code{at} will not include the covariate in weighting.
   See the \code{mtcars.lm} example below for an illustration.
-  
+
   \code{cov.reduce} may be a function,
   logical value, formula, or a named list of these.
   If a single function, it is applied to each covariate.
@@ -198,7 +198,7 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   with the reference grid as \code{newdata}. (This is done \emph{after} the
   reference grid is determined.) A formula is appropriate here when you think
   experimental conditions affect the covariate as well as the response.
-  
+
   To allow for situations where a simple \code{lm()} call as described above won't
   be adequate, a formula of the form \code{ext ~ fcnname} is also supported,
   where the left-hand side may be \code{ext}, \code{extern}, or
@@ -216,7 +216,7 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   formulas' left-hand sides.) Any unresolved covariates are reduced using
   \code{"mean"}.
 
-  Any \code{cov.reduce} of \code{cov.keep} specification for a covariate 
+  Any \code{cov.reduce} of \code{cov.keep} specification for a covariate
   also named in \code{at} is ignored.
 }
 
@@ -269,8 +269,8 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   \code{vcov.} argument, specifying a matrix or a function. If a matrix, it
   must be square and of the same dimension and parameter order of the fixed
   effects. If a function, must return a suitable matrix when it is called
-  with arguments \code{(object, ...)}. Be careful with possible 
-  unintended conflicts with arguments in \code{...}; for example, 
+  with arguments \code{(object, ...)}. Be careful with possible
+  unintended conflicts with arguments in \code{...}; for example,
   \code{sandwich::vcovHAC()} has optional arguments \code{adjust} and \code{weights}
   that may be intended for \code{emmeans()} but will also be passed to \code{vcov.()}.
 
@@ -280,7 +280,7 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   discern which factors are nested in other factors, but it is not always
   obvious, and if it misses some, the user must specify this structure via
   \code{nesting}; or later using \code{\link{update.emmGrid}}. The
-  \code{nesting} argument may be a character vector, a named \code{list}, 
+  \code{nesting} argument may be a character vector, a named \code{list},
   or \code{NULL}.
   If a \code{list}, each name should be the name of a single factor in the
   grid, and its entry a character vector of the name(s) of its grouping
@@ -317,16 +317,16 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
 
 \section{Prediction types and transformations}{
 
-  Transformations can exist because of a link function in a generalized linear model, 
+  Transformations can exist because of a link function in a generalized linear model,
   or as a response transformation, or even both. In many cases, they are auto-detected,
   for example a model formula of the form \code{sqrt(y) ~ ...}. Even transformations
   containing multiplicative or additive constants, such as \code{2*sqrt(y + pi) ~ ...},
   are auto-detected. A response transformation of \code{y + 1 ~ ...} is \emph{not}
   auto-detected, but \code{I(y + 1) ~ ...} is interpreted as \code{identity(y + 1) ~ ...}.
   A warning is issued if it gets too complicated.
-  Complex transformations like the Box-Cox transformation are not auto-detected; but see 
+  Complex transformations like the Box-Cox transformation are not auto-detected; but see
   the help page for \code{\link{make.tran}} for information on some advanced methods.
-  
+
   There is a subtle difference
   between specifying \samp{type = "response"} and \samp{regrid =
   "response"}. While the summary statistics for the grid itself are the same,
@@ -338,15 +338,15 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   already on the response scale so that the EMMs will be the arithmetic means
   of those response-scale predictions. To add further to the possibilities,
   \emph{geometric} means of the response-scale predictions are obtainable via
-  \samp{regrid = "log", type = "response"}. See also the help page for 
+  \samp{regrid = "log", type = "response"}. See also the help page for
   \code{\link{regrid}}.
-  
-  \emph{Order-of-processing issues:} 
-  The \code{regrid} argument, if present, is acted on immediately after the reference 
+
+  \emph{Order-of-processing issues:}
+  The \code{regrid} argument, if present, is acted on immediately after the reference
   grid is constructed, while some of the \code{...} arguments may be used to
   update the object at the very end. Thus, code like
   \code{ref_grid(mod, tran = "sqrt", regrid = "response")} will not work correctly
-  if the intention was to specify the response transformation, because the re-grid 
+  if the intention was to specify the response transformation, because the re-grid
   is done \emph{before} it processes \code{tran = "sqrt"}. To get the intended
   result, do
   \code{regrid(ref_grid(mod, tran = "sqrt"), transform = "response")}.
@@ -361,21 +361,21 @@ Some earlier versions of \pkg{emmeans} offer a \code{covnest} argument.
   levels into the entire dataset. Thus, predictions from this grid are those
   of each observation under each of the counterfactual levels. For this to
   make sense, we require an assumption of exchangeability of these levels.
-  
+
   This grid is always converted to the response scale, as G-computation on
   the linear-predictor scale produces the same results as ordinary weighted EMMs.
   If we have counterfactual factors \code{A, B}, the reference grid also includes
   factors \code{actual_A, actual_B} which are used to track which observations
-  originally had the \code{A, B} levels before they were changed by the 
+  originally had the \code{A, B} levels before they were changed by the
   counterfactuals code. We average the response-scale predictions for each
-  combination of actual levels and imputed levels (and multivariate levels, 
+  combination of actual levels and imputed levels (and multivariate levels,
   if any). See additional discussion of how \code{\link{emmeans}} handles
   counterfactuals under that documentation.
-  
+
   Currently, counterfactuals are not supported when the reference grid
   requires post-processing (e.g., ordinal models with \code{mode = "prob"}).
-  Cases where we have nested factor levels can be complicated if mixed-in with counterfactuals, 
-  and we make no guarantees. 
+  Cases where we have nested factor levels can be complicated if mixed-in with counterfactuals,
+  and we make no guarantees.
   Note that past implementations included arguments \code{wt.counter} and \code{avg.counter},
   which are now deprecated and are just ignored if specified.
 }
@@ -440,7 +440,7 @@ ref_grid(MOats.lm, mult.names = "nitro")
 ref_grid(MOats.lm, mult.levs = list(T=LETTERS[1:2], U=letters[1:2]))
 
 # Comparing estimates with and without counterfactuals
-neuralgia.glm <- glm(Pain ~ Treatment + Sex + Age + Duration, 
+neuralgia.glm <- glm(Pain ~ Treatment + Sex + Age + Duration,
                      family = binomial(), data = neuralgia)
 emmeans(neuralgia.glm, "Treatment", type = "response")
 
@@ -452,7 +452,7 @@ require("splines")
 my.knots = c(2.5, 3, 3.5)
 mod = lm(Sepal.Length ~ Species * ns(Sepal.Width, knots = my.knots), data = iris)
 ## my.knots is not a predictor, so need to name it in 'params'
-ref_grid(mod, params = "my.knots") 
+ref_grid(mod, params = "my.knots")
 
 }
 \seealso{
@@ -461,6 +461,6 @@ Reference grids are of class \code{\link[=emmGrid-class]{emmGrid}},
   \code{\link{summary.emmGrid}}. Reference grids are fundamental to
   \code{\link{emmeans}}. Supported models are detailed in
   \href{../doc/models.html}{\code{vignette("models", "emmeans")}}.
-  See \code{\link{update.emmGrid}} for details of arguments that can be in 
+  See \code{\link{update.emmGrid}} for details of arguments that can be in
   \code{options} (or in \code{...}).
 }

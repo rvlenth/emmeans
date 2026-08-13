@@ -32,18 +32,18 @@ three sizes of cars, and two sides of the car.
 }
 \details{
 The data are from a statement by Texaco, Inc., to the Air and Water Pollution
-Subcommittee of the Senate Public Works Committee on June 26, 1973.    
+Subcommittee of the Senate Public Works Committee on June 26, 1973.
 Mr. John McKinley, President of Texaco, cited an automobile filter developed
-by Associated Octel Company as effective in reducing pollution. However, 
-questions had been raised about the effects of filters on vehicle performance, 
-fuel consumption, exhaust gas back pressure, and silencing. On the last 
+by Associated Octel Company as effective in reducing pollution. However,
+questions had been raised about the effects of filters on vehicle performance,
+fuel consumption, exhaust gas back pressure, and silencing. On the last
 question, he referred to the data included here as evidence that the silencing
 properties of the Octel filter were at least equal to those of standard silencers.
 }
 \note{
 While the data source claims that \code{noise} is measured in decibels,
   the values are implausible. I believe that these measurements are actually
-  in tenths of dB (centibels?). Looking at the values in the dataset, note 
+  in tenths of dB (centibels?). Looking at the values in the dataset, note
   that every measurement ends in 0 or 5, and it is reasonable to believe that
   measurements are accurate to the nearest half of a decibel.
   %%% Thanks to an email communication from a speech/hearing scientist

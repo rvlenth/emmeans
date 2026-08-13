@@ -11,7 +11,7 @@ pwpp(emm, method = "pairwise", by, sort = TRUE, values = TRUE,
 \arguments{
 \item{emm}{An \code{emmGrid} object}
 
-\item{method}{Character or list. Passed to \code{\link{contrast}}, and defines 
+\item{method}{Character or list. Passed to \code{\link{contrast}}, and defines
 the contrasts to be displayed. Any contrast method may be used,
 provided that each contrast includes one coefficient of \code{1},
 one coefficient of \code{-1}, and the rest \code{0}. That is, calling
@@ -20,7 +20,7 @@ one estimate minus another estimate.}
 
 \item{by}{Character vector of variable(s) in the grid to condition on. These will
 create different panels, one for each level or level-combination.
-Grid factors not in \code{by} are the \emph{primary} factors: 
+Grid factors not in \code{by} are the \emph{primary} factors:
 whose levels or level combinations are compared pairwise.}
 
 \item{sort}{Logical value. If \code{TRUE}, levels of the factor combinations are
@@ -38,7 +38,7 @@ it may be desirable to specify \code{FALSE} or use \code{rows}
 so that some panels are vertically stacked.}
 
 \item{rows}{Character vector of which \code{by} variable(s) are used to define
-rows of the panel layout. Those variables in \code{by} not included in 
+rows of the panel layout. Those variables in \code{by} not included in
 \code{rows} define columns in the array of panels.
 A \code{"."} indicates that only one row
 is used, so all panels are stacked side-by-side.}
@@ -61,18 +61,18 @@ adjust the position. Changing it by one unit should shift the position by
 about one character width (right if positive, left if negative).
 Note that this interacts with \code{aes$label} below.}
 
-\item{aes}{optional named list of lists. Entries considered are \code{point}, 
+\item{aes}{optional named list of lists. Entries considered are \code{point},
 \code{segment}, and \code{label}, and contents are passed to the respective
-\code{ggplot2::geom_xxx()} functions. These affect rendering of points, 
-line segments joining them, and value labels. 
+\code{ggplot2::geom_xxx()} functions. These affect rendering of points,
+line segments joining them, and value labels.
 Defaults are \code{point = list(size = 2)},
 \code{segment = list()}, and \code{label = list(size = 2.5)}.}
 
-\item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}}, 
+\item{...}{Additional arguments passed to \code{contrast} and \code{\link{summary.emmGrid}},
 as well as to \code{geom_segment} and \code{geom_label}}
 }
 \description{
-Constructs a plot of P values associated with pairwise comparisons of 
+Constructs a plot of P values associated with pairwise comparisons of
 estimated marginal means.
 }
 \details{
@@ -84,7 +84,7 @@ and which levels are compared. In addition, factor levels are color-coded, and t
 and half-line segments appear in the color of the other level.
 The P-value scale is nonlinear, so as to stretch-out smaller P values and
 compress larger ones.
-P values smaller than 0.0004 are altered and plotted in a way that makes 
+P values smaller than 0.0004 are altered and plotted in a way that makes
   them more distinguishable from one another.
 
 If \code{xlab}, \code{ylab}, and \code{xsub} are not provided, reasonable labels
@@ -95,7 +95,7 @@ thresholds or one-sided tests.
 If \code{emm} is the result of a Bayesian analysis, the plot is based on
   summaries with \code{frequentist = TRUE}.
 
-The \pkg{ggplot2} and \pkg{scales} packages must be installed in order 
+The \pkg{ggplot2} and \pkg{scales} packages must be installed in order
   for \code{pwpp} to work.
 
 Additional plot aesthetics are available by adding them to the returned object;
@@ -108,7 +108,7 @@ pwpp(emm)
 pwpp(emm, method = "trt.vs.ctrl1", type = "response", side = ">")
 
 # custom aesthetics:
-my.aes <- list(point = list(shape = "square"), 
+my.aes <- list(point = list(shape = "square"),
                segment = list(linetype = "dashed", color = "red"),
                label = list(family = "serif", fontface = "italic"))
 my.pal <- c("darkgreen", "blue", "magenta", "orange")

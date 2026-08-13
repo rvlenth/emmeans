@@ -15,19 +15,19 @@ that is supported, such as the result of a call to \code{lm} or
 \href{../doc/models.html}{\code{vignette("models", "emmeans")}} for details.}
 
 \item{specs}{A \code{character} vector specifying the names of the predictors
-over which EMMs are desired. \code{specs} may also be a \code{formula}
-or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
-is described in the Overview section below. 
-Specifying \code{.} as the only factor name
-creates a list of specifications for all model terms.
+  over which EMMs are desired. \code{specs} may also be a \code{formula}
+  or a \code{list} (optionally named) of valid \code{spec}s. Use of formulas
+  is described in the Overview section below.
+  Specifying \code{.} as the only factor name
+  creates a list of specifications for all model terms.
 
-\bold{Note:} We recommend \emph{against} using two-sided formulas; see the
-note below for \code{contr}.}
+  \bold{Note:} We recommend \emph{against} using two-sided formulas; see the
+  note below for \code{contr}.}
 
 \item{by}{A character vector specifying the names of predictors to condition on.}
 
 \item{fac.reduce}{A function that combines the rows of a matrix into a single
-vector. This implements the ``marginal averaging'' aspect of EMMs. 
+vector. This implements the ``marginal averaging'' aspect of EMMs.
 The default is the mean of the rows. Typically if it is overridden,
 it would be some kind of weighted mean of the rows. If \code{fac.reduce} is
 nonlinear, bizarre results are likely, and EMMs will not be
@@ -49,27 +49,27 @@ section below.)}
 \item{weights}{Character value, numeric vector, or numeric matrix specifying
 weights to use in averaging predictions. See \dQuote{Weights} section below.
 Also, if \code{object} is not already a reference grid, \code{weights}
-(if it is character) is passed to \code{ref_grid} as \code{wt.nuis} in case 
-nuisance factors are specified. We can override this by specifying 
+(if it is character) is passed to \code{ref_grid} as \code{wt.nuis} in case
+nuisance factors are specified. We can override this by specifying
 \code{wt.nuis} explicitly.
 This more-or-less makes the weighting of nuisance factors consistent with
 that of primary factors.}
 
 \item{offset}{Numeric vector or scalar. If specified, this adds an offset to
 the predictions, or overrides any offset in the model or its
-reference grid. If a vector of length differing from the number of rows in 
+reference grid. If a vector of length differing from the number of rows in
 the result, it is subsetted or cyclically recycled.}
 
 \item{...}{When \code{object} is not already a \code{"emmGrid"}
 object, these arguments are passed to \code{\link{ref_grid}}. Common
-examples are \code{at}, \code{cov.reduce}, \code{data}, \code{type}, 
+examples are \code{at}, \code{cov.reduce}, \code{data}, \code{type},
 \code{regrid}, \code{df}, \code{nesting}, and \code{vcov.}.
 Model-type-specific options (see
 \href{../doc/models.html}{\code{vignette("models", "emmeans")}}), commonly
 \code{mode}, may be used here as well. In addition, if the model formula
 contains references to variables that are not predictors, you must provide
 a \code{params} argument with a list of their names.
-These arguments may also be used in lieu of \code{options}. See the 
+These arguments may also be used in lieu of \code{options}. See the
 \sQuote{Options} section below.}
 
 \item{tran}{Placeholder to prevent it from being included in \code{...}.
@@ -93,8 +93,8 @@ or factor combinations in a linear model; and optionally, comparisons or
 contrasts among them. EMMs are also known as least-squares means.
 }
 \details{
-Users should also consult the documentation for \code{\link{ref_grid}}, 
-because many important options for EMMs are implemented there, via the 
+Users should also consult the documentation for \code{\link{ref_grid}},
+because many important options for EMMs are implemented there, via the
 \code{...} argument.
 }
 \section{Overview}{
@@ -112,7 +112,7 @@ If \code{specs} is a \code{formula}, it should be of the form \code{~ specs},
 \code{~ specs | by}, \code{contr ~ specs}, or \code{contr ~ specs | by}. The
 formula is parsed and the variables therein are used as the arguments
 \code{specs}, \code{by}, and \code{contr} as indicated. The left-hand side is
-optional (and we don't recommend it), but if specified it should be the 
+optional (and we don't recommend it), but if specified it should be the
 name of a contrast family (e.g., \code{pairwise}). Operators like
 \code{*} or \code{:} are needed in the formula to delineate names, but
 otherwise are ignored.
@@ -125,13 +125,13 @@ coded rather inefficiently. While it is permissible to include contrasts
 via a \code{contr} argument or formula left-hand-side, we recommend instead
 doing this in a follow-up test with \code{\link{contrast.emm_list}}. \emph{Caution}:
 In models with nested fixed effects, using \code{.} creates results where
-nested factors interact with nesting factors; in those cases, any contrasts 
+nested factors interact with nesting factors; in those cases, any contrasts
 you specify will go across nests, which is likely not what is desired.
 
 In the special case where the mean (or weighted mean) of all the predictions
 is desired, specify \code{specs} as \code{~ 1} or \code{"1"}.
 
-A number of standard contrast families are provided. They can be identified 
+A number of standard contrast families are provided. They can be identified
 as functions having names ending in \code{.emmc} -- see the documentation
 for \code{\link{emmc-functions}} for details -- including how to write your
 own \code{.emmc} function for custom contrasts.
@@ -144,7 +144,7 @@ If \code{weights} is a vector, its length must equal
   If a matrix, each row of the matrix is used in turn, wrapping back to the
   first row as needed.  When in doubt about what is being averaged (or how
   many), first call \code{emmeans} with \code{weights = "show.levels"}.
-  
+
 If \code{weights} is a string, it should partially match one of the following:
 \describe{
 \item{\code{"equal"}}{Use an equally weighted average.}
@@ -176,14 +176,14 @@ are ignored.
 
 Counterfactual reference grids (see the documentation for \code{\link{ref_grid}})
 contain pairs of imputed and actual factor levels, and are handled in a special way.
-For starters, the \code{weights} argument is ignored and we always use 
+For starters, the \code{weights} argument is ignored and we always use
 \code{"cells"} weights.
-Our understanding is that if factors \code{A, B} are specified as counterfactuals, 
-the marginal means for \code{A} should still be the same as if \code{A} were the only 
+Our understanding is that if factors \code{A, B} are specified as counterfactuals,
+the marginal means for \code{A} should still be the same as if \code{A} were the only
 counterfactual. Accordingly, in computing these marginal means, we
 exclude all cases where \code{B != actual_B}, because if \code{A} were the only
 counterfactual, \code{B} will stay at its actual level.
-We also take special pains to "remember" information about actual and 
+We also take special pains to "remember" information about actual and
 imputed levels of counterfactuals so that appropriate results are obtained when
 \code{emmeans} is applied to a previous \code{emmeans} result.
 }
@@ -191,8 +191,8 @@ imputed levels of counterfactuals so that appropriate results are obtained when
 \section{Offsets}{
 
 Unlike in \code{ref_grid}, an offset need not be scalar. If not enough values
-are supplied, they are cyclically recycled. For a vector of offsets, it is 
-important to understand that the ordering of results goes with the first 
+are supplied, they are cyclically recycled. For a vector of offsets, it is
+important to understand that the ordering of results goes with the first
 name in \code{specs} varying fastest. If there are any \code{by} factors,
 those vary slower than all the primary ones, but the first \code{by} variable
 varies the fastest within that hierarchy. See the examples.
@@ -202,23 +202,23 @@ varies the fastest within that hierarchy. See the examples.
 
   Arguments that could go in \code{options} may instead be included in \code{...},
   typically, arguments such as \code{type}, \code{infer}, etc. that in essence
-  are passed to \code{\link{summary.emmGrid}}. Arguments in both places are 
+  are passed to \code{\link{summary.emmGrid}}. Arguments in both places are
   overridden by the ones in \code{...}.
-  
+
   There is a danger that \code{...} arguments could partially match those used
   by both \code{ref_grid} and \code{update.emmGrid}, creating a conflict.
-  If these occur, usually they can be resolved by providing complete (or at least 
+  If these occur, usually they can be resolved by providing complete (or at least
   longer) argument names; or by isolating non-\code{ref_grid} arguments in
   \code{options}; or by calling \code{ref_grid} separately and passing the
   result as \code{object}. See a not-run example below.
-  
+
   Also, when \code{specs} is a two-sided formula, or \code{contr} is specified,
   there is potential confusion concerning which \code{...} arguments
   apply to the means, and which to the contrasts. When such confusion is possible,
-  we suggest doing things separately 
-  (a call to \code{emmeans} with no contrasts, followed by a call to 
+  we suggest doing things separately
+  (a call to \code{emmeans} with no contrasts, followed by a call to
   \code{\link{contrast}}). We treat
-  \code{adjust} as a special case: it is applied to the \code{emmeans} results 
+  \code{adjust} as a special case: it is applied to the \code{emmeans} results
   \emph{only} if there are
   no contrasts specified, otherwise it is passed only to \code{contrast}.
 }
@@ -249,6 +249,6 @@ contrast(allsets, "eff")    # all effects
 }
 }
 \seealso{
-\code{\link{ref_grid}}, \code{\link{contrast}}, 
+\code{\link{ref_grid}}, \code{\link{contrast}},
 \href{../doc/models.html}{vignette("models", "emmeans")}
 }

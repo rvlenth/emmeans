@@ -15,7 +15,7 @@ A data frame with 100 observations, 5 variables,
   \item{y}{A numeric variable}
 }
 In addition, \code{attr(ubds, "cells")} consists of a named list of length 27 with the row numbers for
-each combination of \code{A, B, C}. For example, 
+each combination of \code{A, B, C}. For example,
 \code{attr(ubds, "cells")[["213"]]} has the row numbers corresponding
 to levels \code{A == 2, B == 1, C == 3}. The entries are ordered by
 length, so the first entry is the cell with the lowest frequency.
@@ -27,14 +27,14 @@ ubds
 This is a simulated unbalanced dataset with three factors
 and two numeric variables. There are true relationships among these variables.
 This dataset can be useful in testing or illustrating messy-data situations.
-There are no missing data, and there is at least one observation for every 
+There are no missing data, and there is at least one observation for every
 factor combination; however, the \code{"cells"} attribute makes it simple
 to construct subsets that have empty cells.
 }
 \examples{
  # Omit the three lowest-frequency cells
- low3 <- unlist(attr(ubds, "cells")[1:3]) 
+ low3 <- unlist(attr(ubds, "cells")[1:3])
  messy.lm <- lm(y ~ (x + A + B + C)^3, data = ubds, subset = -low3)
-  
+
 }
 \keyword{datasets}

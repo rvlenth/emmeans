@@ -57,7 +57,7 @@ A revised object of class \code{emmGrid}
 
 The result of \code{e1 + e2} is the same as \code{rbind(e1, e2)}
 
-The \code{rbind} method for \code{emm_list} objects simply combines 
+The \code{rbind} method for \code{emm_list} objects simply combines
 the \code{emmGrid} objects comprising the first element of \code{...}.
 Note that the returned object is not yet summarized, so any \code{adjust}
 parameters apply to the combined \code{emmGrid}.
@@ -68,20 +68,20 @@ returns a single \code{summary_emm} object. This combined object
 original summaries, since those quantities have already been computed.
 
 \code{force_regular} adds extra (invisible) rows to an \code{emmGrid} object
-  to make it a regular grid (all combinations of factors). This regular structure is 
+  to make it a regular grid (all combinations of factors). This regular structure is
   needed by \code{emmeans}. An object can become irregular by, for example,
   subsetting rows, or by obtaining contrasts of a nested structure.
 }
 \description{
 These functions provide methods for \code{\link[base:cbind]{rbind}} and
 \code{\link[base:Extract]{[}} that may be used to combine \code{emmGrid} objects
-together, or to extract a subset of cases. The primary reason for 
+together, or to extract a subset of cases. The primary reason for
 doing this would be to obtain multiplicity-adjusted results for smaller
 or larger families of tests or confidence intervals.
 }
 \note{
 \code{rbind} throws an error if there are incompatibilities in
-  the objects' coefficients, covariance structures, etc. But they 
+  the objects' coefficients, covariance structures, etc. But they
   are allowed to have different factors; a missing level \code{'.'}
   is added to factors as needed.
 
@@ -93,7 +93,7 @@ with \code{\link{update.emmGrid}}.
 warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
 warp.rg <- ref_grid(warp.lm)
 
-# Do all pairwise comparisons within rows or within columns, 
+# Do all pairwise comparisons within rows or within columns,
 # all considered as one faily of tests:
 w.t <- pairs(emmeans(warp.rg, ~ wool | tension))
 t.w <- pairs(emmeans(warp.rg, ~ tension | wool))

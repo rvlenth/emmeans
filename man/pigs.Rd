@@ -7,7 +7,7 @@
 \format{
 A data frame with 29 observations and 3 variables:
 \describe{
-  \item{source}{Source of protein in the diet (factor with 3 levels: 
+  \item{source}{Source of protein in the diet (factor with 3 levels:
     fish meal, soybean meal, dried skim milk)}
   \item{percent}{Protein percentage in the diet (numeric with 4 values:
     9, 12, 15, and 18)}

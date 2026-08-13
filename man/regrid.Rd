@@ -13,22 +13,22 @@ regrid(object, transform = c("response", "mu", "unlink", "none", "pass",
 \item{object}{An object of class \code{emmGrid}}
 
 \item{transform}{Character, list, or logical value. If \code{"response"},
-\code{"mu"}, or \code{TRUE}, the inverse transformation is applied to the
-estimates in the grid (but if there is both a link function and a response
-transformation, \code{"mu"} back-transforms only the link part); if
-\code{"none"} or \code{FALSE}, \code{object} is re-gridded so that its
-\code{bhat} slot contains \code{predict(object)} and its \code{linfct} slot
-is the identity. Any internal transformation information is preserved. If
-\code{transform = "pass"}, the object is not re-gridded in any way (this
-may be useful in conjunction with \code{N.sim}).
+  \code{"mu"}, or \code{TRUE}, the inverse transformation is applied to the
+  estimates in the grid (but if there is both a link function and a response
+  transformation, \code{"mu"} back-transforms only the link part); if
+  \code{"none"} or \code{FALSE}, \code{object} is re-gridded so that its
+  \code{bhat} slot contains \code{predict(object)} and its \code{linfct} slot
+  is the identity. Any internal transformation information is preserved. If
+  \code{transform = "pass"}, the object is not re-gridded in any way (this
+  may be useful in conjunction with \code{N.sim}).
 
-If \code{transform} is a character value in \code{links} (which is the set
-of valid arguments for the \code{\link{make.link}} function, excepting
-\code{"identity"}), or if \code{transform} is a list of the same form as
-returned by \code{make.links} or \code{\link{make.tran}}, the results are
-formulated as if the response had been transformed with that link function.}
+  If \code{transform} is a character value in \code{links} (which is the set
+  of valid arguments for the \code{\link{make.link}} function, excepting
+  \code{"identity"}), or if \code{transform} is a list of the same form as
+  returned by \code{make.links} or \code{\link{make.tran}}, the results are
+  formulated as if the response had been transformed with that link function.}
 
-\item{inv.link.lbl}{Character value. This applies only when \code{transform} 
+\item{inv.link.lbl}{Character value. This applies only when \code{transform}
 is in \code{links}, and is used to label the predictions if subsequently summarized
 with \code{type = "response"}.}
 
@@ -39,16 +39,16 @@ when one specifies \code{transform = "log"} but desires summaries to be
 produced by default on the response scale.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
-back-transforming (\code{transform = "response"}). This requires a valid value of 
+back-transforming (\code{transform = "response"}). This requires a valid value of
 \code{sigma} to exist in the object or be specified.}
 
-\item{sigma}{Error SD assumed for bias correction (when 
+\item{sigma}{Error SD assumed for bias correction (when
 \code{transform = "response"} and a transformation
 is in effect). If not specified,
 \code{object@misc$sigma} is used, and a warning is issued if it is not found.}
 
-\item{N.sim}{Integer value. If specified and \code{object} is based on a 
-frequentist model (i.e., does not have a posterior sample), then a fake 
+\item{N.sim}{Integer value. If specified and \code{object} is based on a
+frequentist model (i.e., does not have a posterior sample), then a fake
 posterior sample is generated using the function \code{sim}.}
 
 \item{sim}{A function of three arguments (no names are assumed).
@@ -63,9 +63,9 @@ An \code{emmGrid} object with the requested changes
 }
 \description{
 The typical use of this function is to cause EMMs to be computed on
-a different scale, e.g., the back-transformed scale rather than the 
-linear-predictor scale. In other words, if you want back-transformed 
-results, do you want to average and then back-transform, or 
+a different scale, e.g., the back-transformed scale rather than the
+linear-predictor scale. In other words, if you want back-transformed
+results, do you want to average and then back-transform, or
 back-transform and then average?
 }
 \details{
@@ -77,7 +77,7 @@ when \code{transform = "response"}, the result of \code{\link{summary.emmGrid}}
 after applying \code{regrid} is identical to the summary of the original
 object using \samp{type="response"}. But subsequent EMMs or
 contrasts will be conducted on the new scale -- which is
-the reason this function exists. 
+the reason this function exists.
 
 This function may also be used to simulate a sample of regression
 coefficients for a frequentist model for subsequent use as though it were a
@@ -88,14 +88,14 @@ simply returned with the only change being the addition of the simulated
 sample.
 }
 \note{
-Another way to use \code{regrid} is to supply a \code{regrid} 
+Another way to use \code{regrid} is to supply a \code{regrid}
   argument to \code{\link{ref_grid}} (either directly of indirectly via
   \code{\link{emmeans}}), in which case its value is passed to \code{regrid} as
   \code{transform}. This is often a simpler approach if the reference
   grid has not already been constructed.
 }
 \section{Degrees of freedom}{
-  
+
 In cases where the
 degrees of freedom depended on the linear function being estimated (e.g.,
 Satterthwaite method), the d.f.
@@ -104,7 +104,7 @@ is substituted in the returned object, whereby the calculated d.f. for a new
 linear function will be the minimum d.f. among those having nonzero
 coefficients. This is kind of an \emph{ad hoc} method, and it can
 over-estimate the degrees of freedom in some cases. An annotation is
-displayed below any subsequent summary results stating that the 
+displayed below any subsequent summary results stating that the
 degrees-of-freedom method is inherited from the previous method at
 the time of re-gridding.
 }

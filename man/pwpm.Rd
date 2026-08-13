@@ -17,27 +17,27 @@ Grid factors not in \code{by} are the \emph{primary} factors:
 whose levels or level combinations are compared pairwise.}
 
 \item{reverse}{Logical value passed to \code{\link{pairs.emmGrid}}.
-Thus, \code{FALSE} specifies \code{"pairwise"} comparisons 
+Thus, \code{FALSE} specifies \code{"pairwise"} comparisons
 (earlier vs. later), and \code{TRUE} specifies \code{"revpairwise"}
 comparisons (later vs. earlier).}
 
-\item{pvals}{Logical value. If \code{TRUE}, the pairwise differences 
+\item{pvals}{Logical value. If \code{TRUE}, the pairwise differences
 of the EMMs are included in each matrix according to \code{flip}.}
 
 \item{means}{Logical value. If \code{TRUE}, the estimated marginal means
 (EMMs) from \code{emm} are included in the matrix diagonal(s).}
 
-\item{diffs}{Logical value. If \code{TRUE}, the pairwise differences 
+\item{diffs}{Logical value. If \code{TRUE}, the pairwise differences
 of the EMMs are included in each matrix according to \code{flip}.}
 
-\item{flip}{Logical value that determines where P values and differences 
+\item{flip}{Logical value that determines where P values and differences
 are placed. \code{FALSE} places the P values in the upper triangle
 and differences in the lower, and \code{TRUE} does just the opposite.}
 
 \item{digits}{Integer. Number of digits to display. If missing,
 an optimal number of digits is determined.}
 
-\item{...}{Additional arguments passed to \code{\link{contrast.emmGrid}} and 
+\item{...}{Additional arguments passed to \code{\link{contrast.emmGrid}} and
 \code{\link{summary.emmGrid}}. You should \emph{not} include \code{method}
 here, because pairwise comparisons are always used.}
 }
@@ -51,8 +51,8 @@ pairwise differences, and P values. The user may opt to exclude any of these
 via arguments \code{means}, \code{diffs}, and \code{pvals}, respectively.
 To control the direction of the pairwise differences, use \code{reverse};
 and to control what appears in the upper and lower triangle(s), use \code{flip}.
-Optional arguments are passed to \code{contrast.emmGrid} and/or 
-\code{summary.emmGrid}, making it possible to control what estimates 
+Optional arguments are passed to \code{contrast.emmGrid} and/or
+\code{summary.emmGrid}, making it possible to control what estimates
 and tests are displayed.
 }
 \note{

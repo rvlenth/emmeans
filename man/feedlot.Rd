@@ -37,13 +37,13 @@ covariate, \code{ewt}, is thought to be dependent on \code{herd} due to
 different genetic backgrounds, breeding history, etc. The levels of
 \code{herd} ordered to similarity of genetic background.
 
-Note: There are some empty cells in the cross-classification of 
+Note: There are some empty cells in the cross-classification of
 \code{herd} and \code{diet}.
 }
 \examples{
 feedlot.lm <- lm(swt ~ ewt + herd*diet, data = feedlot)
 
-# Obtain EMMs with a separate reference value of ewt for each 
+# Obtain EMMs with a separate reference value of ewt for each
 # herd. This reproduces the last part of Table 2 in the reference
 emmeans(feedlot.lm,  ~ diet | herd,  cov.reduce = ewt ~ herd)
 

@@ -7,7 +7,7 @@
 \format{
 A data frame with 15 observations and 3 variables:
 \describe{
-  \item{\code{machine}}{a factor with levels \code{A} \code{B} \code{C}. 
+  \item{\code{machine}}{a factor with levels \code{A} \code{B} \code{C}.
     This is the primary factor of interest.}
   \item{\code{strength}}{a numeric vector. The response variable.}
   \item{\code{diameter}}{a numeric vector. A covariate.}

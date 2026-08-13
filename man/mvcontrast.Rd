@@ -29,7 +29,7 @@ nulled-out if it would result in no primary factors being contrasted.}
 more limited that in \code{contrast}, and any default adjustment returned
 via \code{method} is ignored.}
 
-\item{show.ests}{Logical flag determining whether the multivariate means 
+\item{show.ests}{Logical flag determining whether the multivariate means
 are displayed}
 
 \item{...}{Additional arguments passed to \code{contrast}}
@@ -67,7 +67,7 @@ MOats.emm <- emmeans(MOats.lm, ~ Variety | rep.meas)
 mvcontrast(MOats.emm, "consec", show.ests = TRUE)  # mult.name defaults to rep.meas
 
 # Test each mean against a specified null vector
-mvcontrast(MOats.emm, "identity", name = "Variety", 
+mvcontrast(MOats.emm, "identity", name = "Variety",
            null = c(80, 100, 120, 140), adjust = "none")
 # (Note 'name' is passed to contrast() and overrides default name "contrast")
 
@@ -76,6 +76,6 @@ mvcontrast(MOats.emm, "trt.vs.ctrl1", mult.name = "Variety")
 
 }
 \references{
-Hotelling, Harold (1931) "The generalization of Student's ratio", 
+Hotelling, Harold (1931) "The generalization of Student's ratio",
   \emph{Annals of Mathematical Statistics} 2(3), 360–378. doi:10.1214/aoms/1177732979
 }

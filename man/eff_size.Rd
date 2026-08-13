@@ -7,11 +7,11 @@
 eff_size(object, sigma, edf, method = "pairwise", ...)
 }
 \arguments{
-\item{object}{an \code{\link[=emmGrid-class]{emmGrid}} object, 
-typically one defining the EMMs to 
+\item{object}{an \code{\link[=emmGrid-class]{emmGrid}} object,
+typically one defining the EMMs to
 be contrasted. If instead, \code{class(object) == "emm_list"},
 such as is produced by \code{emmeans(model, pairwise ~ treatment)},
-a message is displayed; the contrasts already therein are used; and 
+a message is displayed; the contrasts already therein are used; and
 \code{method} is replaced by \code{"identity"}.}
 
 \item{sigma}{numeric scalar, value of the population SD.}
@@ -47,7 +47,7 @@ For models having a single random effect, such as those fitted using
 \code{\link{lm}}; in that case, the \code{stats::sigma} and
 \code{stats::df.residual} functions may be useful for specifying \code{sigma}
 and \code{edf}. For models with more than one random effect, \code{sigma} may
-be based on some combination of the random-effect variances. 
+be based on some combination of the random-effect variances.
 
 Specifying \code{edf} can be rather unintuitive but is also relatively
 uncritical; but the smaller the value, the wider the confidence intervals for
@@ -75,7 +75,7 @@ comparable results with other software.
 \strong{Disclaimer:} There is substantial disagreement among practitioners on
 what is the appropriate \code{sigma} to use in computing effect sizes; or,
 indeed, whether \emph{any} effect-size measure is appropriate for some
-situations. The user is completely responsible for specifying 
+situations. The user is completely responsible for specifying
 appropriate parameters (or for failing to do so).
 
 Cohen effect sizes do not even exist for generalized linear models or other
@@ -108,7 +108,7 @@ eff_size(pairs(emm), sigma(fiber.lm), df.residual(fiber.lm), method = "identity"
 
 ### Mixed model example:
 if (require(nlme)) withAutoprint({
-  Oats.lme <- lme(yield ~ Variety + factor(nitro), 
+  Oats.lme <- lme(yield ~ Variety + factor(nitro),
                   random = ~ 1 | Block / Variety,
                   data = Oats)
   # Combine variance estimates

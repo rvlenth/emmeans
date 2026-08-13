@@ -19,14 +19,14 @@ A data frame with 107 observations and 4 variables:
 }
 \source{
 Milliken, G. A. and Johnson, D. E. (1984)
-\emph{Analysis of Messy Data -- Volume I: Designed Experiments}. 
+\emph{Analysis of Messy Data -- Volume I: Designed Experiments}.
 Van Nostrand, ISBN 0-534-02713-7.
 }
 \usage{
 nutrition
 }
 \description{
-This observational dataset involves three factors, but where several factor 
+This observational dataset involves three factors, but where several factor
 combinations are missing. It is used as a case study in Milliken and Johnson,
 Chapter 17, p.202. (You may also find it in the second edition, p.278.)
 }
@@ -41,7 +41,7 @@ nutr.aov <- aov(gain ~ (group + age + race)^2, data = nutrition)
 
 # Summarize predictions for age group 3
 nutr.emm <- emmeans(nutr.aov, ~ race * group, at = list(age="3"))
-                   
+
 emmip(nutr.emm, race ~ group)
 
 # Hispanics seem exceptional; but this doesn't test out due to very sparse data

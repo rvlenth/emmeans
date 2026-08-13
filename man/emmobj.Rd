@@ -17,7 +17,7 @@ emmobj(bhat, V, levels, linfct = diag(length(bhat)), df = NA, dffun,
 estimates defined by \code{linfct}. If not a list, we assume one factor
 named \code{"level"}}
 
-\item{linfct}{Matrix. Linear functions of \code{bhat} for each combination 
+\item{linfct}{Matrix. Linear functions of \code{bhat} for each combination
 of \code{levels}.}
 
 \item{df}{Numeric value or function with arguments \code{(x, dfargs)}. If a
@@ -61,17 +61,17 @@ The arguments must be conformable. This includes that the length of
  \code{bhat}, the number of columns of \code{linfct}, and the number of
  columns of \code{post.beta} must all be equal. And that the product of
  lengths in \code{levels} must be equal to the number of rows of
- \code{linfct}. The \code{grid} slot of the returned object is generated 
+ \code{linfct}. The \code{grid} slot of the returned object is generated
  by \code{\link{expand.grid}} using \code{levels} as its arguments. So the
  rows of \code{linfct} should be in corresponding order.
- 
+
 The functions \code{qdrg} and \code{\link{emmobj}} are close cousins, in that
 they both produce \code{emmGrid} objects. When starting with summary
 statistics for an existing grid, \code{emmobj} is more useful, while
 \code{qdrg} is more useful when starting from an unsupported fitted model.
 }
 \examples{
-# Given summary statistics for 4 cells in a 2 x 2 layout, obtain 
+# Given summary statistics for 4 cells in a 2 x 2 layout, obtain
 # marginal means and comparisons thereof. Assume heteroscedasticity
 # and use the Satterthwaite method
 levels <- list(trt = c("A", "B"), dose = c("high", "low"))
@@ -81,7 +81,7 @@ n <-    c(44,   11,   37,   24)
 se2 = s^2 / n
 Satt.df <- function(x, dfargs)
     sum(x * dfargs$v)^2 / sum((x * dfargs$v)^2 / (dfargs$n - 1))
-    
+
 expt.emm <- emmobj(bhat = ybar, V = diag(se2),
     levels = levels, linfct = diag(c(1, 1, 1, 1)),
     df = Satt.df, dfargs = list(v = se2, n = n), estName = "mean")
@@ -96,12 +96,12 @@ rbind(pairs(trt.emm), pairs(dose.emm), adjust = "mvt")
 means = c(71.50000,  89.66667, 110.83333, 118.50000)
 semeans = c(5.540591, 6.602048, 8.695358, 7.303221)
 sediffs = c(7.310571,  9.894724,  7.463615, 10.248306,  4.935698,  8.694507)
-foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs, 
+foo = emmobj(bhat = means, se.bhat = semeans, se.diff = sediffs,
              levels = list(nitro = seq(0, .6, by = .2)), df = 10)
 plot(foo, comparisons = TRUE)
 
 }
 \seealso{
-\code{\link{qdrg}}, an alternative that is useful when starting 
+\code{\link{qdrg}}, an alternative that is useful when starting
   with a fitted model not supported in \pkg{emmeans}.
 }

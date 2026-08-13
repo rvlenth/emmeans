@@ -21,7 +21,7 @@ or of a special transformation described under Details.}
 Also, for the same reason, if \code{alpha} is of length more than 1,
 it is taken as \code{param}.}
 
-\item{y}{A numeric response variable used (\emph{and required}) with \code{type = "scale"}, 
+\item{y}{A numeric response variable used (\emph{and required}) with \code{type = "scale"},
 where \code{scale(y)} determines \code{alpha} and \code{beta}.}
 
 \item{inner}{another transformation. See the section on compound transformations}
@@ -31,7 +31,7 @@ where \code{scale(y)} determines \code{alpha} and \code{beta}.}
 \value{
 A \code{list} having at least the same elements as those returned by
   \code{\link{make.link}}. The \code{linkfun} component is the transformation
-  itself. Each of the functions is associated with an environment where any 
+  itself. Each of the functions is associated with an environment where any
   parameter values are defined.
 
 \code{inverse} returns the reciprocal of its argument. It allows
@@ -49,7 +49,7 @@ transformation was already applied in an existing model).
 }
 \note{
 The \code{genlog} transformation is technically unneeded, because
-  a response transformation of the form \code{log(y + c)} is now auto-detected 
+  a response transformation of the form \code{log(y + c)} is now auto-detected
   by \code{\link{ref_grid}}.
 
 We modify certain \code{\link{make.link}} results in transformations
@@ -74,7 +74,7 @@ The primary purpose of \code{make.tran} is to support transformations that
 require additional parameters, specified as \code{alpha} and \code{beta};
 these are the onse shown in the argument-matching list. However, standard
 transformations supported by \code{stats::make.link} are also supported.
-In the following discussion of ones requiring parameters, 
+In the following discussion of ones requiring parameters,
 we use \eqn{\alpha} and \eqn{\beta} to
 denote \code{alpha} and \code{beta}, and \eqn{y} to denote the response variable.
 The \code{type} argument specifies the following transformations:
@@ -85,7 +85,7 @@ The \code{type} argument specifies the following transformations:
 \item{\code{"power"}}{Power transformation: \eqn{(y-\beta)^\alpha}, where \eqn{y > \beta}.
   When \eqn{\alpha = 0}, \eqn{\log(y-\beta)} is used instead.}
 \item{\code{"boxcox"}}{The Box-Cox transformation (unscaled by the geometric
-  mean): \eqn{((y - \beta)^\alpha - 1) / \alpha}, where \eqn{y > \beta}. 
+  mean): \eqn{((y - \beta)^\alpha - 1) / \alpha}, where \eqn{y > \beta}.
   When \eqn{\alpha = 0}, \eqn{\log(y - \beta)}
   is used.}
 \item{\code{"sympower"}}{A symmetrized power transformation on the whole real
@@ -97,19 +97,19 @@ The \code{type} argument specifies the following transformations:
   \eqn{\sin^{-1}(y/\alpha)^{1/2}}. Typically, \code{alpha} will be either 1 (default) or 100.}
 \item{\code{"atanh"}}{Arctanh transformation:
   \eqn{\tanh^{-1}(y/\alpha)}. Typically, \code{alpha} will be either 1 (default) or 100.}
-\item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the 
+\item{\code{"bcnPower"}}{Box-Cox with negatives allowed, as described for the
   \code{bcnPower} function in the \pkg{car} package. It is defined as the Box-Cox
-  transformation \eqn{(z^\alpha - 1) / \alpha} of the variable \eqn{z = y + (y^2+\beta^2)^{1/2}}. 
+  transformation \eqn{(z^\alpha - 1) / \alpha} of the variable \eqn{z = y + (y^2+\beta^2)^{1/2}}.
   Note that this requires both parameters and that \code{beta > 0}.}
 \item{\code{"scale"}}{This one is a little different than the others, in that
-  \code{alpha} and \code{beta} are ignored; instead, they are determined by calling 
+  \code{alpha} and \code{beta} are ignored; instead, they are determined by calling
   \code{scale(y, ...)}. The user should give as \code{y} the response variable in the
   model to be fitted to its scaled version.}
 
 }
 
-Note that with the \code{"power"}, \code{"boxcox"}, or \code{"sympower"} transformations, 
-the argument \code{beta} specifies a location shift. 
+Note that with the \code{"power"}, \code{"boxcox"}, or \code{"sympower"} transformations,
+the argument \code{beta} specifies a location shift.
 In the \code{"genpower"} transformation, \code{beta} specifies
 the base of the logarithm -- however, quirkily, the default of \code{beta = 0}
 is taken to be the natural logarithm. For example,
@@ -132,7 +132,7 @@ examining the model formula. These are \code{log}, \code{log2}, \code{log10},
 \code{log1p},
 \code{sqrt}, \code{logit}, \code{probit}, \code{cauchit}, \code{cloglog}; as
 well as (for a response variable \code{y}) \code{asin(sqrt(y))},
-\code{asinh(sqrt(y))}, \code{atanh(y)}, and \code{sqrt(y) + sqrt(y+1)}. 
+\code{asinh(sqrt(y))}, \code{atanh(y)}, and \code{sqrt(y) + sqrt(y+1)}.
 In addition, any
 constant multiple of these (e.g., \code{2*sqrt(y)}) is auto-detected and
 appropriately scaled (see also the \code{tran.mult} argument in
@@ -151,16 +151,16 @@ specifying \code{inner} for the other function. For example, the
 transformation \eqn{1/\sqrt{y}} can be created either by
 \code{make.tran("inverse", inner = "sqrt")} or by \code{make.tran("power",
 -0.5)}. In principle, transformations can be compounded to any depth.
-Also, if \code{type} is \code{"scale"}, \code{y} is replaced by 
+Also, if \code{type} is \code{"scale"}, \code{y} is replaced by
 \code{inner$linkfun(y)}, because that will be the variable that is scaled.
 }
 
 \examples{
 # Fit a model using an oddball transformation:
 bctran <- make.tran("boxcox", 0.368)
-warp.bc <- with(bctran, 
+warp.bc <- with(bctran,
     lm(linkfun(breaks) ~ wool * tension, data = warpbreaks))
-# Obtain back-transformed LS means:    
+# Obtain back-transformed LS means:
 emmeans(warp.bc, ~ tension | wool, type = "response")
 
 ### Using a scaled response...

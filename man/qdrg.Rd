@@ -29,8 +29,8 @@ qdrg(formula, data, coef, vcov, df, mcmc, object, subset, weights, contrasts,
 
 \item{mcmc}{Posterior sample of fixed-effect coefficients}
 
-\item{object}{Optional model object. \emph{This rarely works!}; 
-but if provided, we try to set 
+\item{object}{Optional model object. \emph{This rarely works!};
+but if provided, we try to set
 other arguments based on an expectation that `object` has a similar
 structure to `lm` objects. See Details.}
 
@@ -47,8 +47,8 @@ structure to `lm` objects. See Details.}
 in \code{coef}.}
 
 \item{ordinal}{\code{list} with elements \code{dim} and \code{mode}.
-\code{ordinal$dim} (integer) is the number of levels in an ordinal response. If 
-\code{ordinal} is provided, the intercept terms are modified appropriate to predicting 
+\code{ordinal$dim} (integer) is the number of levels in an ordinal response. If
+\code{ordinal} is provided, the intercept terms are modified appropriate to predicting
 an ordinal response, as described in \code{vignette("models")}, Section O,
 using \code{ordinal$mode} as the \code{mode} argument (if not
 provided, \code{"latent"} is assumed).
@@ -66,7 +66,7 @@ for it to work correctly.}
 An \code{emmGrid} object constructed from the arguments
 }
 \description{
-This function may make it possible to compute a reference grid for a model 
+This function may make it possible to compute a reference grid for a model
 object that is otherwise not supported.
 }
 \details{
@@ -78,7 +78,7 @@ was fitted. Sometimes one or more of these quantities contains extra parameters,
 and if so, you may need to subset them to make everything conformable. For a given \code{formula} and \code{data},
 you can find out what is needed via \code{colnames(model.matrix(formula, data))}.
 (However, for an ordinal model, we expect the first \code{ordinal.dim - 1} coefficients
-to replace \code{(Intercept)}. And for a multivariate model, we expect \code{coef} 
+to replace \code{(Intercept)}. And for a multivariate model, we expect \code{coef}
 to be a matrix with these row names, and \code{vcov} to have as many rows and columns as
 the total number of elements of \code{coef}.)
 
@@ -89,7 +89,7 @@ models, it may suffice override just one or two of these
 defaults. The possibility of a custom \code{qdrg} method also provides a
 minimal way for package developers to provide \pkg{emmeans} support: it doesn't
 allow directly applying \code{emmeans()} on the model, but at least the user
-can obtain a reference grid, and then go from there. Note that when using a `qdrg` 
+can obtain a reference grid, and then go from there. Note that when using a `qdrg`
 method, it is best for the user to specify `object =` explicitly in the
 call, since `object` is not the first argument of `qdrg()`. However, if the
 first argument is not a formula, the function is retried with it as \code{object}.
@@ -100,8 +100,8 @@ statistics for an existing grid, \code{emmobj} is more useful, while
 \code{qdrg} is more useful when starting from a fitted model.
 }
 \note{
-For backwards compatibility, an argument \code{ordinal.dim} is invisibly 
-supported as part of \code{...}, and if present, sets 
+For backwards compatibility, an argument \code{ordinal.dim} is invisibly
+supported as part of \code{...}, and if present, sets
 \code{ordinal = list(dim = ordinal.dim, mode = "latent")}
 }
 \section{Rank deficiencies}{
@@ -121,13 +121,13 @@ package.
 \examples{
 # In these examples, use emm_example(..., list = TRUE) # to see just the code
 
-if (require(biglm, quietly = TRUE)) 
+if (require(biglm, quietly = TRUE))
     emm_example("qdrg-biglm")
-    
-if(require(coda, quietly = TRUE) && require(lme4, quietly = TRUE)) 
+
+if (require(coda, quietly = TRUE) && require(lme4, quietly = TRUE))
     emm_example("qdrg-coda")
-    
-if(require(ordinal, quietly = TRUE)) 
+
+if (require(ordinal, quietly = TRUE))
     emm_example("qdrg-ordinal")
 
 }

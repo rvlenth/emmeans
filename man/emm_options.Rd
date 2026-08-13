@@ -22,8 +22,8 @@ emm_defaults
 \arguments{
 \item{...}{Option names and values (see Details)}
 
-\item{disable}{If non-missing, this will reset all options to their defaults 
-if \code{disable} tests \code{TRUE} (but first save them for possible later 
+\item{disable}{If non-missing, this will reset all options to their defaults
+if \code{disable} tests \code{TRUE} (but first save them for possible later
 restoration). Otherwise, all previously saved options
 are restored. This is important for bug reporting; please see the section below
 on reproducible bugs. When \code{disable} is specified, the other arguments are ignored.}
@@ -35,13 +35,13 @@ on reproducible bugs. When \code{disable} is specified, the other arguments are 
 \item{expr}{Expression to evaluate. If missing, the last element of \code{...} is used.}
 }
 \value{
-\code{emm_options} returns the current options (same as the result 
+\code{emm_options} returns the current options (same as the result
   of \samp{getOption("emmeans")}) -- invisibly, unless called with no arguments.
 
-\code{get_emm_option} returns the currently stored option for \code{x}, 
+\code{get_emm_option} returns the currently stored option for \code{x},
   or its default value if not found.
 
-\code{with_emm_options()} temporarily sets the options in \code{...}, then 
+\code{with_emm_options()} temporarily sets the options in \code{...}, then
   evaluates \code{try(expr)} and returns the result.
 }
 \description{
@@ -50,8 +50,8 @@ the \pkg{emmeans} package. These options are set separately for different contex
 which \code{emmGrid} objects are created, in a named list of option lists.
 }
 \details{
-\pkg{emmeans}'s options are stored as a list in the system option \code{"emmeans"}. 
-Thus, \code{emm_options(foo = bar)} is the same as 
+\pkg{emmeans}'s options are stored as a list in the system option \code{"emmeans"}.
+Thus, \code{emm_options(foo = bar)} is the same as
 \code{options(emmeans = list(..., foo = bar))} where \code{...} represents any
 previously existing options. The list \code{emm_defaults} contains the default
 values in case the corresponding element of system option \code{emmeans} is \code{NULL}.
@@ -73,21 +73,21 @@ object.}
   affect the latter four is \code{"predict.type"}.}
 \item{\code{allow.na.levs}}{A logical value that if \code{TRUE} (the default), allows
   \code{NA} to be among the levels of a factor. Older versions of \pkg{emmeans} did not
-  allow this. So if problems come up (say in a messy dataset that includes incomplete cases), 
+  allow this. So if problems come up (say in a messy dataset that includes incomplete cases),
   try setting this to \code{FALSE}.}
 \item{\code{sep}}{A character value to use as a separator in labeling factor combinations.
-  Such labels are potentially used in several places such as \code{\link{contrast}} and 
+  Such labels are potentially used in several places such as \code{\link{contrast}} and
   \code{\link{plot.emmGrid}} when combinations of factors are compared or plotted.
   The default is \code{" "}.}
 \item{\code{parens}}{Character vector that determines which labels are parenthesized
   when they are contrasted. The first element is a regular expression, and the second and
-  third elements are used as left and right parentheses. 
+  third elements are used as left and right parentheses.
   See details for the \code{parens} argument in \code{\link{contrast}}. The default
-  will parenthesize labels containing the four arithmetic operators, 
+  will parenthesize labels containing the four arithmetic operators,
   using round parentheses.}
 \item{\code{cov.keep}}{The default value of \code{cov.keep} in \code{\link{ref_grid}}.
   Defaults to \code{"2"}, i.e., two-level covariates are treated like factors.}
-\item{\code{graphics.engine}}{A character value matching 
+\item{\code{graphics.engine}}{A character value matching
   \code{c("ggplot", "lattice")}, setting the default engine to use in
   \code{\link{emmip}} and \code{\link{plot.emmGrid}}.  Defaults to \code{"ggplot"}.}
 \item{\code{gg.theme}}{An integer. Set it to 1 or 2 if you want the appearance
@@ -109,7 +109,7 @@ object.}
   levels of the factors involved; but it excludes the levels of any multivariate
   responses because those are not yet known. The reference grid consists of all
   possible combinations of the predictors, and this can become huge if there are
-  several factors. An error is thrown if this limit is exceeded. One can use the 
+  several factors. An error is thrown if this limit is exceeded. One can use the
   \code{nuisance} argument of \code{\link{ref_grid}} to collapse on nuisance
   factors, thus making the grid smaller. Defaults to 10,000.}
 \item{\code{simplify.names}}{A logical value controlling whether to
@@ -122,26 +122,26 @@ object.}
   of their confidence intervals; but always at least 3 digits. If
   \code{FALSE}, the system value \code{getOption("digits")} is used.}
 \item{\code{pval.digits}}{An integer indicating the precision with which
-  p-values are printed. Integers between \code{2} and \code{6} are acceptable; the default is 
+  p-values are printed. Integers between \code{2} and \code{6} are acceptable; the default is
 \code{4}. Floating point numbers are truncated. If a number outside the accepted range is
 used, the nearest acceptable integer will be used instead. Non-numeric arguments are ignored.}
-\item{\code{back.bias.adj}}{A logical value controlling whether we 
+\item{\code{back.bias.adj}}{A logical value controlling whether we
   try to adjust bias when back-transforming. If \code{FALSE}, we use naive
   back transformation. If \code{TRUE} \emph{and \code{sigma} is available and valid}, a
   second-order adjustment is applied to estimate the mean on the response
   scale. A warning is issued if no valid \code{sigma} is available}
-\item{\code{enable.submodel}}{A logical value. If \code{TRUE}, enables support 
+\item{\code{enable.submodel}}{A logical value. If \code{TRUE}, enables support
   for selected model classes to implement the \code{submodel} option. If
   \code{FALSE}, this support is disabled. Setting this option to \code{FALSE}
   could save excess memory consumption.}
-  
+
 }%%% end describe{}
 Some other options have more specific purposes:
 \describe{
 \item{\code{estble.tol}}{Tolerance for determining estimability in
 rank-deficient cases. If absent, the value in \code{emm_defaults$estble.tol)}
 is used.}
-\item{\code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the 
+\item{\code{save.ref_grid}}{Logical value of \code{TRUE} if you wish the
 latest reference grid created to be saved in \code{.Last.ref_grid}.
 The default is \code{FALSE}.}
 \item{Options for \code{lme4::lmerMod} models}{Options \code{lmer.df},
@@ -150,8 +150,8 @@ and \code{lmerTest.limit}
 options affect how degrees of freedom are computed for \code{lmerMod} objects
 produced by the \pkg{lme4} package). See that section of the "models" vignette
 for details.}
-\item{\code{post.ci.method}}{method for estimating confidence intervals for Bayesian models. 
-Options are \code{"HPD"} (default) or \code{"quantile"}.} 
+\item{\code{post.ci.method}}{method for estimating confidence intervals for Bayesian models.
+Options are \code{"HPD"} (default) or \code{"quantile"}.}
 } %%%%%% end \describe
 }
 \section{Reproducible bugs}{
@@ -162,11 +162,11 @@ are essentially configuration settings that may affect how/whether the code
 runs, and the settings for these options may cause subtle effects that may be
 hard to reproduce. Therefore, when sending a bug report, please create a reproducible
 example and make sure the bug occurs with all options set at their defaults.
-This is done by preceding it with  \code{emm_options(disable = TRUE)}. 
+This is done by preceding it with  \code{emm_options(disable = TRUE)}.
 
 By the way, \code{disable} works like a stack (LIFO buffer), in that \code{disable = TRUE}
-is equivalent to \code{emm_options(saved.opts = emm_options())} and 
-\code{emm_options(disable = FALSE)} is equivalent to 
+is equivalent to \code{emm_options(saved.opts = emm_options())} and
+\code{emm_options(disable = FALSE)} is equivalent to
 \code{options(emmeans = get_emm_option("saved.opts"))}. To completely erase
 all options, use \code{options(emmeans = NULL)}
 }
@@ -177,7 +177,7 @@ all options, use \code{options(emmeans = NULL)}
 Thus, if the user wants certain options set on startup, this can be arranged by
 setting the \code{emmeans} option in one's startup script. For example,
 the user's \code{.Rprofile} file could contain:
-\preformatted{    options(emmeans = list(summary = list(predict.type = "response"), 
+\preformatted{    options(emmeans = list(summary = list(predict.type = "response"),
                            lmer.df = "satterthwaite"))}
 }
 
@@ -187,7 +187,7 @@ emm_options(ref_grid = list(level = .90),
             contrast = list(infer = c(TRUE,FALSE)),
             estble.tol = 1e-6)
 # Sets default confidence level to .90 for objects created by ref.grid
-# AS WELL AS emmeans called with a model object (since it creates a 
+# AS WELL AS emmeans called with a model object (since it creates a
 # reference grid). In addition, when we call 'contrast', 'pairs', etc.,
 # confidence intervals rather than tests are displayed by default.
 }

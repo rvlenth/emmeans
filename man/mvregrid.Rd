@@ -17,7 +17,7 @@ response. (Note that this will entail first re-gridding to the response scale
 if necessary.)}
 
 \item{mult.name}{The name of the multivariate factor to be transformed.
-If missing, we use \code{object@roles$multresp}, and throw an error message 
+If missing, we use \code{object@roles$multresp}, and throw an error message
 if it is \code{NULL} or ambiguous; in that case, the user must repeat the
 call with \code{mult.name} specified.}
 
@@ -27,7 +27,7 @@ call with \code{mult.name} specified.}
 the number of columns created by \code{fcn}). If missing, we use the column names
 of the newly created variable.}
 
-\item{fcn}{The multivariate function to apply. If character, we look for it 
+\item{fcn}{The multivariate function to apply. If character, we look for it
 in the namespace of the \pkg{compositions} package.}
 
 \item{...}{Additional arguments passed to \code{fcn}}
@@ -44,7 +44,7 @@ models that have a compositional response.
 If a multivariate response transformation was used in fitting the model,
 its name is auto-detected, and in that case we need not specify \code{fcn}
 as long as its inverse can be found in the namespace of the \pkg{compositions}
-package. (That package need not be installed unless \code{fcn} is a character 
+package. (That package need not be installed unless \code{fcn} is a character
 value.) For some such models, auto-detection process throws a
 warning message, especially if \code{cbind} is also present in the model
 formula.
@@ -52,7 +52,7 @@ formula.
 Currently, no bias-adjustment option is available.
 }
 \examples{
-if(requireNamespace("compositions"))
+if (requireNamespace("compositions"))
     emm_example("mvregrid")
     # Use emm_example("mvregrid", list = TRUE) # to see just the code
 

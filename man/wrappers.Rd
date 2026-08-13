@@ -41,15 +41,15 @@ The result of the call to \code{em}\emph{xxxx}, suitably modified.
 \description{
 These are wrappers for \code{\link{emmeans}} and related functions to provide
 backward compatibility, or for users who may prefer to
-use other terminology than \dQuote{estimated marginal means} -- namely 
+use other terminology than \dQuote{estimated marginal means} -- namely
 \dQuote{least-squares means}. These functions also provide the functionality
 formerly provided by the \pkg{lsmeans} package, which is now just a front-end
 for \pkg{emmeans}.
 }
 \details{
 For each function with \code{ls}\emph{xxxx} in its name,
-the same function named \code{em}\emph{xxxx} is called. Any estimator names or 
-list items beginning with \dQuote{em} are replaced with \dQuote{ls} 
+the same function named \code{em}\emph{xxxx} is called. Any estimator names or
+list items beginning with \dQuote{em} are replaced with \dQuote{ls}
 before the results are returned
 }
 \examples{

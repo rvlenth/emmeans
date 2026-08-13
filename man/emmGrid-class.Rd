@@ -19,8 +19,8 @@ object. Instances are created primarily by \code{\link{ref_grid}} and
 produced the model), \code{terms} (its \code{terms} object), and
 \code{xlev} (factor-level information)}
 
-\item{\code{roles}}{list. Contains at least the elements \code{predictors}, 
-\code{responses}, and \code{multresp}. Each is a character vector of names 
+\item{\code{roles}}{list. Contains at least the elements \code{predictors},
+\code{responses}, and \code{multresp}. Each is a character vector of names
 of these variables.}
 
 \item{\code{grid}}{data.frame. Contains the combinations of the variables that define
@@ -48,8 +48,8 @@ with the rows of \code{grid}, and the columns with elements of \code{bhat}.}
 \item{\code{bhat}}{numeric. The regression coefficients. If there is a multivariate
 response, the matrix of coefficients is flattened to a single vector, and
 \code{linfct} and \code{V} redefined appropriately. Important: \code{bhat}
-must \emph{include} any \code{NA} values produced as a result of 
-collinearity in the predictors. These are taken care of later in the 
+must \emph{include} any \code{NA} values produced as a result of
+collinearity in the predictors. These are taken care of later in the
 estimability check.}
 
 \item{\code{nbasis}}{matrix. The basis for the non-estimable functions of the
@@ -83,16 +83,16 @@ posterior distribution of the EMMs.}
 
 \section{Methods}{
 
-  All methods for these objects are S3 methods except for \code{show}. 
+  All methods for these objects are S3 methods except for \code{show}.
   They include \code{\link{[.emmGrid}}, \code{\link{as.glht.emmGrid}},
   \code{\link{as.mcmc.emmGrid}}, \code{\link{as.mcmc.list.emmGrid}} (see \pkg{coda}),
   \code{\link{cld.emmGrid}} (see \pkg{multcomp}),
-  \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}}, 
+  \code{\link{coef.emmGrid}}, \code{\link{confint.emmGrid}},
   \code{\link{contrast.emmGrid}}, \code{\link{pairs.emmGrid}},
   \code{\link{plot.emmGrid}}, \code{\link{predict.emmGrid}}, \code{\link{print.emmGrid}},
-  \code{\link{rbind.emmGrid}}, \code{show.emmGrid}, \code{\link{str.emmGrid}}, 
-  \code{\link{summary.emmGrid}}, \code{\link{test.emmGrid}}, 
-  \code{\link{update.emmGrid}}, \code{\link{vcov.emmGrid}}, and 
+  \code{\link{rbind.emmGrid}}, \code{show.emmGrid}, \code{\link{str.emmGrid}},
+  \code{\link{summary.emmGrid}}, \code{\link{test.emmGrid}},
+  \code{\link{update.emmGrid}}, \code{\link{vcov.emmGrid}}, and
   \code{\link{xtable.emmGrid}}
 }
 

@@ -45,23 +45,23 @@ intervals, if \code{infer[1]} is \code{TRUE}.}
 or confidence limits; or to adjust comparison arrows in \code{plot}. See
 the P-value adjustments section below.}
 
-\item{by}{Character name(s) of variables to use for grouping into separate 
+\item{by}{Character name(s) of variables to use for grouping into separate
 tables. This affects the family of tests considered in adjusted \emph{P}
 values.}
 
-\item{cross.adjust}{Character: \eqn{p}-value adjustment method to 
-additionally apply \emph{across} 
+\item{cross.adjust}{Character: \eqn{p}-value adjustment method to
+additionally apply \emph{across}
 the \code{by} groups. See the section on P-value adjustments for details.}
 
 \item{type}{Character: type of prediction desired. This only has an effect if
-there is a known transformation or link function. \code{"response"} 
-specifies that the inverse transformation be applied. \code{"mu"} (or 
+there is a known transformation or link function. \code{"response"}
+specifies that the inverse transformation be applied. \code{"mu"} (or
 equivalently, \code{"unlink"}) is usually the same as \code{"response"},
-but in the case where the model has both a link function and a response 
-transformation, only the link part is back-transformed. Other valid values 
+but in the case where the model has both a link function and a response
+transformation, only the link part is back-transformed. Other valid values
 are \code{"link"}, \code{"lp"}, and \code{"linear.predictor"}; these are
 equivalent, and request that results be shown for the linear predictor,
-with no back-transformation. The default is \code{"link"}, unless the 
+with no back-transformation. The default is \code{"link"}, unless the
 \code{"predict.type"} option is in force; see \code{\link{emm_options}},
 and also the section below on transformations and links.}
 
@@ -72,7 +72,7 @@ specifies asymptotic results).}
 \item{calc}{Named list of character value(s) or formula(s).
 The expressions in \code{char} are evaluated and appended to the
 summary, just after the \code{df} column. The expression may include
-any names up through \code{df} in the summary, any additional names in 
+any names up through \code{df} in the summary, any additional names in
 \code{object@grid} (such as \code{.wgt.} or \code{.offset.}), or any
 earlier elements of \code{calc}.}
 
@@ -96,14 +96,14 @@ left-tailed (\code{-1}, \code{"-"}, \code{"<"}, \code{"left"}, or
 more details.}
 
 \item{frequentist}{Ignored except if a Bayesian model was fitted. If missing
-or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise, 
+or \code{FALSE}, the object is passed to \code{\link{hpd.summary}}. Otherwise,
 a logical value of \code{TRUE} will have it return a frequentist summary.}
 
 \item{bias.adjust}{Logical value for whether to adjust for bias in
-back-transforming (\code{type = "response"}). This requires a valid value of 
+back-transforming (\code{type = "response"}). This requires a valid value of
 \code{sigma} to exist in the object or be specified.}
 
-\item{sigma}{Error SD assumed for bias correction (when 
+\item{sigma}{Error SD assumed for bias correction (when
 \code{type = "response"} and a transformation
 is in effect), or for constructing prediction intervals. If not specified,
 \code{object@misc$sigma} is used, and a warning is issued if it is not found
@@ -111,22 +111,22 @@ or not valid.
 \emph{Note:} \code{sigma} may be a vector, but be careful that it correctly
 corresponds (perhaps after recycling) to the order of the reference grid.}
 
-\item{...}{Optional arguments such as \code{scheffe.rank} 
-(see \dQuote{P-value adjustments}). 
-In \code{confint.emmGrid}, 
-\code{predict.emmGrid}, and 
+\item{...}{Optional arguments such as \code{scheffe.rank}
+(see \dQuote{P-value adjustments}).
+In \code{confint.emmGrid},
+\code{predict.emmGrid}, and
 \code{test.emmGrid}, these arguments are passed to
 \code{summary.emmGrid}. These arguments are also passed to \code{mvregrid}
 when we have a multivariate transformation.}
 
 \item{parm}{(Required argument for \code{confint} methods, but not used)}
 
-\item{joint}{Logical value. If \code{FALSE}, the arguments are passed to 
-\code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint = 
-TRUE}, a joint test of the hypothesis L beta = null is performed, where L 
-is \code{linfct(object)} and beta is the vector of fixed effects estimated 
-by \code{object@betahat}. This will be either an \emph{F} test or a 
-chi-square (Wald) test depending on whether degrees of freedom are 
+\item{joint}{Logical value. If \code{FALSE}, the arguments are passed to
+\code{\link{summary.emmGrid}} with \code{infer=c(FALSE, TRUE)}. If \code{joint =
+TRUE}, a joint test of the hypothesis L beta = null is performed, where L
+is \code{linfct(object)} and beta is the vector of fixed effects estimated
+by \code{object@betahat}. This will be either an \emph{F} test or a
+chi-square (Wald) test depending on whether degrees of freedom are
 available. See also \code{\link{joint_tests}}.}
 
 \item{verbose}{Logical value. If \code{TRUE} and \code{joint = TRUE}, a table
@@ -137,14 +137,14 @@ missing, all rows of L are used. If not missing, \code{by} variables are
 ignored.}
 
 \item{status}{logical. If \code{TRUE}, a \code{note} column showing status
-flags (for rank deficiencies and estimability issues) is displayed even 
-when empty. If \code{FALSE}, the column is included only if there are 
+flags (for rank deficiencies and estimability issues) is displayed even
+when empty. If \code{FALSE}, the column is included only if there are
 such issues.}
 
-\item{interval}{Type of interval desired (partial matching is allowed): 
+\item{interval}{Type of interval desired (partial matching is allowed):
 \code{"none"} for no intervals,
-  otherwise confidence or prediction intervals with given arguments, 
-  via \code{\link{confint.emmGrid}}. 
+  otherwise confidence or prediction intervals with given arguments,
+  via \code{\link{confint.emmGrid}}.
   Note: prediction intervals are not available
   unless the model family is \code{"gaussian"}.}
 
@@ -158,17 +158,17 @@ such issues.}
 
 \item{destroy.annotations}{Logical value. If \code{FALSE}, an object of class
 \code{summary_emm} is returned (which inherits from \code{data.frame}),
-but if displayed, details like confidence levels, P-value adjustments, 
+but if displayed, details like confidence levels, P-value adjustments,
 transformations, etc. are also shown. But unlike the result
 of \code{summary}, the number of digits displayed
 is obtained from \code{getOption("digits")} rather than using the
-optimal digits algorithm we usually use. Thus, it is formatted more like a 
+optimal digits algorithm we usually use. Thus, it is formatted more like a
 regular data frame, but with any annotations and groupings still intact.
-If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is 
+If \code{TRUE} (not recommended), a \dQuote{plain vanilla} data frame is
 returned, based on \code{row.names} and \code{check.names}.}
 
 \item{as.df}{Logical value. With \code{x[..., as.df = TRUE]}, the result is
-object is coerced to a \code{\link{data.frame}} before the subscripting 
+object is coerced to a \code{\link{data.frame}} before the subscripting
 is applied. With \code{as.df = FALSE}, the result is
 returned as a \code{summary_emm} object when possible.}
 }
@@ -177,14 +177,14 @@ returned as a \code{summary_emm} object when possible.}
   \code{test.emmGrid} return an object of class \code{"summary_emm"}, which
   is an extension of \code{\link{data.frame}} but with a special \code{print}
   method that displays it with custom formatting. For models fitted using
-  MCMC methods, the call is diverted to \code{\link{hpd.summary}} (with 
+  MCMC methods, the call is diverted to \code{\link{hpd.summary}} (with
   \code{prob} set to \code{level}, if specified); one may
-  alternatively use general MCMC summarization tools with the 
+  alternatively use general MCMC summarization tools with the
   results of \code{as.mcmc}.
 
 \code{predict} returns a vector of predictions for each row of \code{object@grid}.
 
-The \code{as.data.frame} method returns an object that inherits 
+The \code{as.data.frame} method returns an object that inherits
   from \code{"data.frame"}.
 }
 \description{
@@ -198,17 +198,17 @@ default, summaries for Bayesian models are diverted to
 \code{\link{hpd.summary}}.
 }
 \details{
-\code{confint.emmGrid} is equivalent to \code{summary.emmGrid with 
-infer = c(TRUE, FALSE)}. The function \code{test.emmGrid}, when called with 
-\code{joint = FALSE}, is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}. 
+\code{confint.emmGrid} is equivalent to \code{summary.emmGrid with
+infer = c(TRUE, FALSE)}. The function \code{test.emmGrid}, when called with
+\code{joint = FALSE}, is equivalent to \code{summary.emmGrid} with \code{infer = c(FALSE, TRUE)}.
 
 With \code{joint = TRUE}, \code{test.emmGrid} calculates the Wald test of the
 hypothesis \code{linfct \%*\% bhat = null}, where \code{linfct} and
 \code{bhat} refer to slots in \code{object} (possibly subsetted according to
 \code{by} or \code{rows}). An error is thrown if any row of \code{linfct} is
 non-estimable. It is permissible for the rows of \code{linfct} to be linearly
-dependent, as long as \code{null == 0}, in which case a reduced set of 
-contrasts is tested. Linear dependence and nonzero \code{null} cause an 
+dependent, as long as \code{null == 0}, in which case a reduced set of
+contrasts is tested. Linear dependence and nonzero \code{null} cause an
 error. The returned object has an additional \code{"est.fcns"} attribute, which
 is a list of the linear functions associated with the joint test.
 }
@@ -216,7 +216,7 @@ is a list of the linear functions associated with the joint test.
 In doing testing and a transformation and/or link is in force, any
   \code{null} and/or \code{delta} values specified must always be on the
   scale of the linear predictor, regardless of the setting for `type`. If
-  \code{type = "response"}, the null value displayed in the summary table 
+  \code{type = "response"}, the null value displayed in the summary table
   will be back-transformed from the value supplied by the user. But the
   displayed \code{delta} will not be changed, because there (often) is
   not a natural way to back-transform it.
@@ -244,12 +244,12 @@ If a data frame is needed, \code{summary}, \code{confint},
 \section{Defaults}{
 
   The \code{misc} slot in \code{object} may contain default values for
-  \code{by}, \code{calc}, \code{infer}, \code{level}, \code{adjust}, 
-  \code{type}, \code{null}, \code{side}, and \code{delta}. 
+  \code{by}, \code{calc}, \code{infer}, \code{level}, \code{adjust},
+  \code{type}, \code{null}, \code{side}, and \code{delta}.
   These defaults vary depending
   on the code that created the object. The \code{\link{update}} method may be
-  used to change these defaults. In addition, any options set using 
-  \samp{emm_options(summary = ...)} will trump those stored in the object's 
+  used to change these defaults. In addition, any options set using
+  \samp{emm_options(summary = ...)} will trump those stored in the object's
   \code{misc} slot.
 }
 
@@ -260,22 +260,22 @@ If a data frame is needed, \code{summary}, \code{confint},
   \samp{object@misc$inv.lbl}. Any \eqn{t} or \eqn{z} tests are still performed
   on the scale of the linear predictor, not the inverse-transformed one.
   Similarly, confidence intervals are computed on the linear-predictor scale,
-  then inverse-transformed. 
-  
+  then inverse-transformed.
+
   Be aware that only univariate transformations and links are
-  supported in this way. Some multivariate transformations are supported by 
+  supported in this way. Some multivariate transformations are supported by
   \code{\link{mvregrid}}.
 }
 
 \section{Bias adjustment when back-transforming}{
 
   When \code{bias.adjust} is \code{TRUE}, then back-transformed estimates
-  are adjusted by adding 
+  are adjusted by adding
   \eqn{0.5 h''(u)\sigma^2}, where \eqn{h} is the inverse transformation and
   \eqn{u} is the linear predictor. This is based on a second-order Taylor
   expansion. There are better or exact adjustments for certain specific
   cases, and these may be incorporated in future updates.
-  
+
   Note: In certain models, e.g., those with non-gaussian families,
   \code{sigma} is initialized as \code{NA}, and so by default, bias adjustment
   is skipped and a warning is issued. You may override this by specifying a
@@ -284,14 +284,14 @@ If a data frame is needed, \code{summary}, \code{confint},
   you probably should \emph{not} use \code{sigma(model)}, and instead you should create an
   appropriate value using the estimated random effects, e.g., from \code{VarCorr(model)}.
   An example is provided in the \dQuote{transformations} vignette.
-  
+
   \emph{A word of caution:} This bias-adjustment method is merely a one-term
   correction, and it multiplies \code{sigma^2}. When \code{sigma} is reasonably
   small relative to the scale of the response, this is fine; but when
   \code{sigma} is large, this bias adjustment can produce bizarre and
   out-of-range results. Consider for example a logit or probit model where
   the back-transformed response is constrained to the interval [0, 1]; if
-  \code{sigma} is more than 1, the adjustment can 
+  \code{sigma} is more than 1, the adjustment can
   easily pull the estimate outside of these constraints.
 }
 
@@ -303,7 +303,7 @@ If a data frame is needed, \code{summary}, \code{confint},
   \code{\link{rbind.emmGrid}} for how to combine tables). If there are non-estimable
   cases in a \code{by} group, those cases are \emph{excluded} before determining
   the adjustment; that means there could be different adjustments in different groups.
-  
+
   The valid values of \code{adjust} are as follows:
   \describe{
   \item{\code{"tukey"}}{Uses the Studentized range distribution with the number
@@ -323,7 +323,7 @@ If a data frame is needed, \code{summary}, \code{confint},
     (a conservative adjustment in many cases).}
   \item{\code{"bonferroni"}}{Multiplies \eqn{p} values, or divides significance
     levels by the number of estimates. This is a conservative adjustment.}
-  \item{\code{"dunnettx"}}{Uses our own\emph{ad hoc} approximation to the 
+  \item{\code{"dunnettx"}}{Uses our own\emph{ad hoc} approximation to the
     Dunnett distribution for a family of estimates having pairwise
     correlations of \eqn{0.5} (as is true when comparing treatments with a
     control with equal sample sizes). The accuracy of the approximation
@@ -361,11 +361,11 @@ If a data frame is needed, \code{summary}, \code{confint},
   one-step adjustment, but it can be very slow. One may use
   \code{\link{as.glht}} with methods in the \pkg{multcomp} package to obtain
   non-conservative multi-step adjustments to tests.
-  
+
   \emph{Warning:} Non-estimable cases are \emph{included} in the family to which adjustments
   are applied. You may wish to subset the object using the \code{[]} operator
   to work around this problem.
-  
+
   The \code{cross.adjust} argument is a way of specifying a multiplicity
   adjustment across the \code{by} groups (otherwise by default, each group is
   treated as a separate family in regards to multiplicity adjustments). It
@@ -384,44 +384,44 @@ If a data frame is needed, \code{summary}, \code{confint},
   yet conservative) overall adjustments are available when it is possible to
   use an \dQuote{exact} within-group method (e.g., \code{adjust = "tukey"}
   for pairwise comparisons) and \code{cross.adjust} as a conservative
-  adjustment. [\code{cross.adjust} methods other than \code{"none"}, 
-  \code{"bonferroni"}, or \code{"sidak"} do not seem advisable, but other 
+  adjustment. [\code{cross.adjust} methods other than \code{"none"},
+  \code{"bonferroni"}, or \code{"sidak"} do not seem advisable, but other
   \code{p.adjust} methods are available if you can make sense of them.]
 }
 
 \section{Tests of significance, nonsuperiority, noninferiority, or equivalence}{
 
   When \code{delta = 0}, test statistics are the usual tests of significance.
-  They are of the form 
-  \samp{(estimate - null)/SE}. Notationally: 
+  They are of the form
+  \samp{(estimate - null)/SE}. Notationally:
   \describe{
     \item{Significance}{\eqn{H_0: \theta = \theta_0}  versus \cr
        \eqn{H_1: \theta < \theta_0} (left-sided), or\cr
       \eqn{H_1: \theta > \theta_0} (right-sided), or\cr
       \eqn{H_1: \theta \ne \theta_0} (two-sided)\cr
       The test statistic is\cr
-      \eqn{t = (Q - \theta_0)/SE}\cr 
+      \eqn{t = (Q - \theta_0)/SE}\cr
       where \eqn{Q} is our estimate of \eqn{\theta};
-      then left, right, or two-sided \eqn{p} values are produced, 
+      then left, right, or two-sided \eqn{p} values are produced,
       depending on \code{side}.}
   }
   When \code{delta} is positive, the test statistic depends on \code{side} as
   follows.
   \describe{
   \item{Left-sided (nonsuperiority)}{\eqn{H_0: \theta \ge \theta_0 + \delta}
-    versus \eqn{H_1: \theta < \theta_0 + \delta}\cr 
-    \eqn{t = (Q - \theta_0 - \delta)/SE}\cr 
+    versus \eqn{H_1: \theta < \theta_0 + \delta}\cr
+    \eqn{t = (Q - \theta_0 - \delta)/SE}\cr
     The \eqn{p} value is the lower-tail probability.}
   \item{Right-sided (noninferiority)}{\eqn{H_0: \theta \le \theta_0 - \delta}
-    versus \eqn{H_1: \theta > \theta_0 - \delta}\cr 
+    versus \eqn{H_1: \theta > \theta_0 - \delta}\cr
     \eqn{t = (Q - \theta_0 + \delta)/SE}\cr
     The \eqn{p} value is the upper-tail probability.}
   \item{Two-sided (equivalence)}{\eqn{H_0: |\theta - \theta_0| \ge \delta}
     versus \eqn{H_1: |\theta - \theta_0| < \delta}\cr
     \eqn{t = (|Q - \theta_0| - \delta)/SE}\cr
     The \eqn{p} value is the \emph{lower}-tail probability.\cr
-    Note that \eqn{t} is the maximum of \eqn{t_{nonsup}} and \eqn{-t_{noninf}}. 
-    This is equivalent to choosing the less 
+    Note that \eqn{t} is the maximum of \eqn{t_{nonsup}} and \eqn{-t_{noninf}}.
+    This is equivalent to choosing the less
     significant result in the two-one-sided-test (TOST) procedure.}
   } %%%%%%%%%%%% end \describe{}
 }
@@ -431,14 +431,14 @@ If a data frame is needed, \code{summary}, \code{confint},
   When the model is rank-deficient, each row \code{x} of \code{object}'s
   \code{linfct} slot is checked for estimability. If \code{sum(x*bhat)}
   is found to be non-estimable, then the string \code{NonEst} is displayed for the
-  estimate, and associated statistics are set to \code{NA}. 
+  estimate, and associated statistics are set to \code{NA}.
   The estimability check is performed
   using the orthonormal basis \code{N} in the \code{nbasis} slot for the null
   space of the rows of the model matrix. Estimability fails when
   \eqn{||Nx||^2 / ||x||^2} exceeds \code{tol}, which by default is
   \code{1e-8}. You may change it via \code{\link{emm_options}} by setting
   \code{estble.tol} to the desired value.
-  
+
   See the warning above that non-estimable cases are still included when
   determining the family size for \emph{P}-value adjustments.
 }
