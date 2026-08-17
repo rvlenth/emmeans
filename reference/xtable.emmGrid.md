@@ -102,7 +102,7 @@ if (requireNamespace("xtable"))
 #> 
 #> > xtable::xtable(pigsint.emm, type = "response")
 #> % latex table generated in R 4.6.1 by xtable 1.8-8 package
-#> % Thu Aug 13 20:33:44 2026
+#> % Mon Aug 17 22:56:54 2026
 #> \begin{table}[ht]
 #> \centering
 #> \begin{tabular}{rrrrrr}
