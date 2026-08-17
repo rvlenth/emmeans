@@ -6,6 +6,7 @@ title: "NEWS for the emmeans package"
   * Bug fix in how an image was rendered in the "Basics" vignette. 
   * Updated logo that is canonically correct
   * Contributing guide added to the repository
+  * Bug fix for offsets affecting how the data set was recovered
 
 ## emmeans 2.0.4
   * Updated logo (now hexagonal)
