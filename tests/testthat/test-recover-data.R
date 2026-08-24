@@ -22,3 +22,11 @@ test_that("data recovery for mgcv gams", {
 #names(fit2$model); delete.response(terms(fit2))
 #names(fit3$model); delete.response(terms(fit3))
 
+data(penguins)
+penguins$bill_len[[1]] = NA
+
+test_that("data recovery for missing/subset data", {
+  peng_lm = lm(bill_dep ~ log(bill_len) * species, data = subset(penguins, body_mass > 2500))
+  expect_no_error(recover_data(penq_lm))
+})
+
