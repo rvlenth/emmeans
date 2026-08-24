@@ -30,6 +30,8 @@
 
 - **Paul Schmidt**. Contributor.
 
+- **Wes Brooks**. Contributor.
+
 ## Citation
 
 Source:

@@ -5,7 +5,9 @@
 - Bug fix in how an image was rendered in the “Basics” vignette.
 - Updated logo that is canonically correct
 - Contributing guide added to the repository
-- Bug fix for offsets affecting how the data set was recovered
+- Bug fixes for data set recovery when offsets were present, and with
+  missing data and subsetting
+- Bug fix for NA handling when subsetting data
 
 ## emmeans 2.0.4
 
