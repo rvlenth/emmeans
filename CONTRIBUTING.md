@@ -1,7 +1,7 @@
 ---
 title: "How to Contribute to **emmeans**"
 author: "Russ Lenth and Julia Piaskowski"
-date: "2026-7-22"
+date: "2026-07-22"
 ---
 
 Welcome! We presume you're reading this because you want to contribute to

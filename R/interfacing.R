@@ -205,8 +205,14 @@ recover_data.call = function(object, trms, na.action, data = NULL,
     vars = union(vars, addl.vars)
 
     if (!missing(frame)) {
-        if (is.null(data) && !.has.fcns(trms))
-            data = frame
+        # frame is typically object$model, and we can often use it instead of 
+        # recreating the dataset. But the exception is when its names include
+        # things like 'offset(n)' or 'I(x^2)'
+        if (is.null(data)) {
+            frmfrm = paste("~", paste(names(frame), collapse = "+")) |> as.formula()
+            if (!.has.fcns(frmfrm))
+                data = frame
+        }
         if ("(offset)" %in% names(data))
             vars = union(vars, "(offset)")
     }
