@@ -41,3 +41,5 @@ vignettes/extending.rnw   # we substituted an Rmd vignette
 ^pkgdown$
 ^doc$
 ^Meta$
+^CONTRIBUTING.md
+^.lintr
