@@ -9,14 +9,8 @@
 
 # For now we are including tests in the build
 ## ^tests/*
-
-
-
 # This keeps showing up lately, but I don't want it
 ^Rplots.pdf
-
-.lintr
-.lintr/*
 
 # Issue templates etc.
 .github
@@ -44,3 +38,6 @@ vignettes/extending.rnw   # we substituted an Rmd vignette
 ^pkgdown$
 ^doc$
 ^Meta$
+^CONTRIBUTING.md
+^.lintr
+^revdep/

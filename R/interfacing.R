@@ -263,7 +263,7 @@ recover_data.call = function(object, trms, na.action, data = NULL,
             return(.rd.error(vars, fcall))
         if (possibly.random) {
             chk = eval(fcall, env, parent.frame())
-            if (!all(chk == tbl))
+            if (!identical(chk, tbl))
                 stop("Data appear to be randomized -- ",
                      "cannot consistently recover the data\n",
                      "Move the randomization ",

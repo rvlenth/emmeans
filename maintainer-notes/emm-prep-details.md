@@ -111,6 +111,11 @@ or other nuisance. It's a painful process.
 
 If there is a problem, contact the package developer. These issues need to be resolved (CRAN will ask). 
 
+**Some notes on reverse dependencies**
+
+- Use `devtools::revdep()` to find all reverse dependencies
+- Use `revdepcheck::revdep_check(num_workers = 3)` to check all
+
 ### build a TarBall
 
 *(if needed)*
