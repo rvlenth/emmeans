@@ -275,7 +275,7 @@
         stop("'termlabels' must be a character vector of length at least one")
     has.resp = !is.null(response)
     termlabels = sapply(trimws(termlabels), function(x)
-        if (length(grep("\\$|\\[\\[", x)) > 0) x
+        if (length(grep("\\$|\\[\\[|\\(", x)) > 0) x
         else paste0("`", x, "`"))
     termtext = paste(if (has.resp) "response", "~",
                      paste(termlabels, collapse = "+"), collapse = "")
