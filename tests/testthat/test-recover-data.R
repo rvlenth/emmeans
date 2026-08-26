@@ -25,8 +25,15 @@ test_that("data recovery for mgcv gams", {
 data(penguins)
 penguins$bill_len[[1]] = NA
 
+
 test_that("data recovery for missing/subset data", {
   peng_lm = lm(bill_dep ~ log(bill_len) * species, data = subset(penguins, body_mass > 2500))
-  expect_no_error(recover_data(penq_lm))
+  expect_no_error(recover_data(peng_lm))
+})
+
+test_that("data recovery for variables with spaces", {
+  colnames(ToothGrowth) <- c('len', 'choice of supplement', 'dose')
+  tooth = stats::aov(`len` ~ `choice of supplement`, ToothGrowth)
+  expect_no_error(recover_data(tooth))
 })
 
