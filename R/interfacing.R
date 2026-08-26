@@ -209,7 +209,15 @@ recover_data.call = function(object, trms, na.action, data = NULL,
         # recreating the dataset. But the exception is when its names include
         # things like 'offset(n)' or 'I(x^2)'
         if (is.null(data)) {
-            frmfrm = paste("~", paste(names(frame), collapse = "+")) |> as.formula()
+          #///new
+            nms = names(frame) # why not use vars instead of frame? 
+            spc = grep("[ ]", nms)
+            nms[spc] = paste0("`", nms[spc], "`")
+            frmfrm = reformulate(nms)
+          
+          ### ///end new
+           # frmfrm = paste("~", paste(names(frame), collapse = "+")) |> as.formula() # original
+          
             if (!.has.fcns(frmfrm))
                 data = frame
         }
