@@ -43,3 +43,4 @@ vignettes/extending.rnw   # we substituted an Rmd vignette
 ^Meta$
 ^CONTRIBUTING.md
 ^.lintr
+^revdep/
