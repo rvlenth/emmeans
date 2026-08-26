@@ -17,11 +17,6 @@ test_that("data recovery for mgcv gams", {
     expect_no_error(recover_data(fit3))
 })
 
-# these are not great tests at this time, not even sure what they are testing, a bit too meta
-#names(fit1$model); delete.response(terms(fit1))
-#names(fit2$model); delete.response(terms(fit2))
-#names(fit3$model); delete.response(terms(fit3))
-
 data(penguins)
 penguins$bill_len[[1]] = NA
 
@@ -37,3 +32,11 @@ test_that("data recovery for variables with spaces", {
   expect_no_error(recover_data(tooth))
 })
 
+test_that("data recovery for interactions", {
+  org.quad <- lm(cbind(sales1, sales2) ~ poly(price1, price2, degree = 2) + day + store, data = oranges)
+  org.int <- lm(cbind(sales1, sales2) ~ price1 * price2 + day + store, data = oranges)
+  org.add <- lm(cbind(sales1, sales2) ~ price1 + price2 + day + store, data = oranges)
+  expect_no_error(recover_data(org.quad))
+  expect_no_error(recover_data(org.int))
+  expect_no_error(recover_data(org.add))
+})
