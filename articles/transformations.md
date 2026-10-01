@@ -378,12 +378,10 @@ confint(neur.Trt.emm)](transformations_files/figure-html/unnamed-chunk-13-1.png)
 plot(neur.Trt.emm, type = "response")
 ```
 
-\<img
-src=“/home/runner/work/emmeans/emmeans/docs/articles/transformations_files/figure-html/unnamed-chunk-13-2.png”
-class=“r-plt” alt=“Plot B: Display of the results of
-confint(neur.Trt.emm, type =”response”). These intervals are markedly
-skewed right\|left for low\|high estimated probabilities” width=“432”
-/\>
+![Plot B: Display of the results of confint(neur.Trt.emm, type =
+"response"). These intervals are markedly skewed right\|left for
+low\|high estimated
+probabilities](transformations_files/figure-html/unnamed-chunk-13-2.png)
 
 Besides whether or not we see response values, there is a dramatic
 difference in the symmetry of the intervals.
