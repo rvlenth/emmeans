@@ -11,6 +11,7 @@
 ## ^tests/*
 # This keeps showing up lately, but I don't want it
 ^Rplots.pdf
+^.*\.code-workspace$
 
 # Issue templates etc.
 .github
@@ -41,4 +42,3 @@ vignettes/extending.rnw   # we substituted an Rmd vignette
 ^CONTRIBUTING.md
 ^.lintr
 ^revdep/
-*.code-workspace
