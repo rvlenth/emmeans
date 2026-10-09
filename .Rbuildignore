@@ -41,3 +41,4 @@ vignettes/extending.rnw   # we substituted an Rmd vignette
 ^CONTRIBUTING.md
 ^.lintr
 ^revdep/
+*.code-workspace
