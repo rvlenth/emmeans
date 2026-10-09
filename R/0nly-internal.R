@@ -271,8 +271,10 @@
 #
 .reformulate <- function (termlabels, response = NULL, intercept = TRUE, env = parent.frame())
 {
-    if (!is.character(termlabels) || !length(termlabels))
-        stop("'termlabels' must be a character vector of length at least one")
+    if(length(termlabels) == 0)
+        return(reformulate(character(0), env = env))
+    if (!is.character(termlabels))
+        stop("'termlabels' must be a character vector")
     has.resp = !is.null(response)
     termlabels = sapply(trimws(termlabels), function(x)
         if (length(grep("\\$|\\[\\[|\\(", x)) > 0) x
