@@ -245,7 +245,7 @@ emmeans:::recover_data.lm
 ##     recover_data(fcall, delete.response(terms(object)), object$na.action, 
 ##         frame = frame, pwts = weights(object), ...)
 ## }
-## <bytecode: 0x55ec5fb8d798>
+## <bytecode: 0x565217a58798>
 ## <environment: namespace:emmeans>
 ```
 
@@ -379,7 +379,7 @@ MASS:::predict.lqs
 ##     X <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
 ##     drop(X %*% object$coefficients)
 ## }
-## <bytecode: 0x55ec6b1ebe78>
+## <bytecode: 0x5652231c8148>
 ## <environment: namespace:MASS>
 ```
 
