@@ -840,16 +840,16 @@ bayestestR::p_rope(pairs(cbpp.rg), range = c(-0.25, 0.25))
 ```
 
 ``` ro
-## Proportion of samples inside the ROPE [-0.25, 0.25]
+## # Proportion of samples inside the ROPE [-0.25, 0.25]:
 ## 
-## contrast          | p (ROPE)
-## ----------------------------
-## period1 - period2 |    0.021
-## period1 - period3 |    0.015
-## period1 - period4 |    0.004
-## period2 - period3 |    0.367
-## period2 - period4 |    0.184
-## period3 - period4 |    0.290
+## contrast          | Inside ROPE
+## -------------------------------
+## period1 - period2 |      2.10 %
+## period1 - period3 |      1.50 %
+## period1 - period4 |      0.40 %
+## period2 - period3 |     36.70 %
+## period2 - period4 |     18.40 %
+## period3 - period4 |     29.00 %
 ```
 
 Both of these sets of results suggest that period 1 is different from

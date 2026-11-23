@@ -1240,7 +1240,7 @@ lme4::VarCorr(cbpp.glmer)
 
 ``` ro
 ##  Groups Name        Std.Dev.
-##  unit   (Intercept) 0.89107 
+##  unit   (Intercept) 0.89108 
 ##  herd   (Intercept) 0.18396
 ```
 

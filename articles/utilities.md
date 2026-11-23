@@ -529,7 +529,7 @@ warp.gls <- gls(breaks ~ treat, weights = varIdent(form = ~ 1|treat), data = war
 
 ``` ro
 ##  treat emmean   SE   df lower.CL upper.CL
-##  A.L     44.6 6.03 7.97     30.6     58.5
+##  A.L     44.6 6.03 7.99     30.6     58.5
 ##  B.L     28.2 3.29 8.00     20.6     35.8
 ##  A.M     24.0 2.89 8.00     17.3     30.7
 ##  B.M     28.8 3.14 8.00     21.5     36.0
@@ -566,7 +566,7 @@ contrast(warp.fac, "consec", by = "wool")
 ``` ro
 ## wool = A:
 ##  contrast estimate   SE   df t.ratio p.value
-##  M - L     -20.556 6.69 11.4  -3.074  0.0203
+##  M - L     -20.556 6.69 11.5  -3.074  0.0203
 ##  H - M       0.556 4.48 15.6   0.124  0.9899
 ## 
 ## wool = B:

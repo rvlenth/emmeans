@@ -187,7 +187,7 @@ emmeans(rg, ~ ., type = "response")
 ## 
 ## $`emmeans of percent`
 ##  percent response   SE  df asymp.LCL asymp.UCL
-##        9     31.2 1.13 Inf      29.0      33.4
+##        9     31.2 1.13 Inf      29.0      33.5
 ##       12     37.4 1.27 Inf      35.0      40.0
 ##       15     38.7 1.50 Inf      35.9      41.7
 ##       18     42.1 1.98 Inf      38.4      46.2
@@ -245,7 +245,7 @@ emmeans:::recover_data.lm
 ##     recover_data(fcall, delete.response(terms(object)), object$na.action, 
 ##         frame = frame, pwts = weights(object), ...)
 ## }
-## <bytecode: 0x565217a58798>
+## <bytecode: 0x56d41c047e58>
 ## <environment: namespace:emmeans>
 ```
 
@@ -379,7 +379,7 @@ MASS:::predict.lqs
 ##     X <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
 ##     drop(X %*% object$coefficients)
 ## }
-## <bytecode: 0x5652231c8148>
+## <bytecode: 0x56d423188028>
 ## <environment: namespace:MASS>
 ```
 

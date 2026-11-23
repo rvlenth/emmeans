@@ -165,9 +165,9 @@ if (require(nlme)) withAutoprint({
 #> > VarCorr(Oats.lme)
 #>             Variance     StdDev  
 #> Block =     pdLogChol(1)         
-#> (Intercept) 214.4722     14.64487
+#> (Intercept) 214.4723     14.64487
 #> Variety =   pdLogChol(1)         
-#> (Intercept) 109.6928     10.47343
+#> (Intercept) 109.6930     10.47344
 #> Residual    162.5591     12.74987
 #> 
 #> > (totSD <- sqrt(214.4724 + 109.6931 + 162.559))
